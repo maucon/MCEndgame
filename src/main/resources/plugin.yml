@@ -1,0 +1,46 @@
+name: MC-Endgame
+version: '${version}'
+main: de.fuballer.mcendgame.MCEndgame
+api-version: "1.20"
+prefix: MC-ENDGAME
+load: STARTUP
+depend: [ FastAsyncWorldEdit ]
+
+commands:
+  dungeon-killer:
+    usage: "§CUsage /<command> [player]"
+    aliases: [ killer, lastdeath, showkiller ]
+
+  dungeon-remaining:
+    usage: "§CUsage /<command>"
+    aliases: [ remaining, monsters, monstercount ]
+
+  dungeon-filter:
+    usage: "§CUsage /<command>"
+    aliases: [ filter, lootfilter, dungeonfilter ]
+
+  dungeon-artifacts:
+    usage: "§CUsage /<command>"
+    aliases: [ artifacts, artifact ]
+
+  dungeon-artifact-give:
+    usage: "§CUsage /<command> player artifact-type tier"
+    aliases: [ giveartifact ]
+    permission: op
+
+  item-info:
+    usage: "§CUsage /<command>"
+    aliases: [ statitem ]
+
+  dungeon-statistics:
+    usage: "§CUsage /<command>"
+    aliases: [ statistics, stats, dungeonstats ]
+
+  dungeon-progress:
+    usage: "§CUsage /<command> (get [player] | set player level [progress])"
+    aliases: [ progress ]
+    permission: op
+
+  dungeon-build-calculation:
+    usage: "§CUsage /<command> damage.."
+    aliases: [ ehp, build-calculation, calcs ]
