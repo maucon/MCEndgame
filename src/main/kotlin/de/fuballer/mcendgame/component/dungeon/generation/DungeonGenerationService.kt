@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.generation
 
 import com.sk89q.worldedit.bukkit.BukkitWorld
+import com.sk89q.worldedit.extent.clipboard.Clipboard
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats
 import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.math.transform.AffineTransform
@@ -16,11 +17,11 @@ import de.fuballer.mcendgame.framework.stereotype.Service
 import de.fuballer.mcendgame.random.RandomPick
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
 import java.awt.Point
-import java.io.File
-import java.io.IOException
+
 
 class DungeonGenerationService(
     private val dungeonLeaveRepo: DungeonLeaveRepository,
@@ -98,21 +99,25 @@ class DungeonGenerationService(
         rotation: Int,
         world: World
     ) {
-        val schematic = File("${DungeonGenerationSettings.SCHEMATIC_LOCATION}/${dungeonType.typeName}/$schematicName.schem")
-        try {
-            var transform = AffineTransform()
-            transform = transform.rotateY((rotation * 90).toDouble())
+        val schematicPath = DungeonGenerationSettings.getSchematicPath(dungeonType, schematicName)
+        val inputStream = javaClass.getResourceAsStream(schematicPath)!!
 
-            val finalTransform = transform
-
-            pasteSchematic(schematic, location, rotation, finalTransform, world)
-        } catch (e: Exception) {
-            e.printStackTrace()
+        val format = ClipboardFormats.findByAlias("schem")
+        if (format == null) {
+            Bukkit.getLogger().severe("Couldn't find schematic: $schematicPath")
+            return
         }
+
+        val clipboard = format.load(inputStream)
+
+        val transform = AffineTransform()
+            .rotateY((rotation * 90).toDouble())
+
+        pasteSchematic(clipboard, location, rotation, transform, world)
     }
 
     private fun pasteSchematic(
-        schematic: File,
+        clipboard: Clipboard,
         location: Location,
         rotation: Int,
         transform: AffineTransform?,
@@ -124,20 +129,9 @@ class DungeonGenerationService(
             location.y,
             location.z + if (rotation == 1 || rotation == 2) 15 else 0
         )
-        try {
-            val format = ClipboardFormats.findByFile(schematic)
-            if (format == null) {
-                println("Couldn't find schematic: " + schematic.absolutePath)
-                return
-            }
 
-            val editSession = format
-                .load(schematic)
-                .paste(bukkitWorld, vector, false, false, transform)
-            editSession.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+        clipboard.paste(bukkitWorld, vector, false, false, transform)
+            .close()
     }
 
     private fun spawnBoss(bossRoomPos: Point, mapTier: Int, world: World) {

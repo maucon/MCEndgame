@@ -1,12 +1,11 @@
 package de.fuballer.mcendgame.component.dungeon.generation
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.dungeon.generation.data.DungeonType
 import de.fuballer.mcendgame.random.RandomOption
-import java.io.File
 
 object DungeonGenerationSettings {
-    val SCHEMATIC_LOCATION = File(MCEndgame.DATA_FOLDER.toString() + "/schematics")
+    fun getSchematicPath(dungeonType: DungeonType, schematicName: String) =
+        "/schematics/${dungeonType.typeName}/$schematicName.schem"
 
     var DUNGEON_WIDTH = 10
     var DUNGEON_HEIGHT = 10
