@@ -53,8 +53,10 @@ tiers, more powerful versions of the `Heart of Corruption` will be dropped by bo
 providing the potential for a +2 level increase in an enchantment. However, it's worth mentioning that the risk of item destruction is also amplified
 with the more powerful version of the `Heart of Corruption`.
 
+<p>
 <img src="https://media.discordapp.net/attachments/807226379049238539/1128666361871212635/Screenshot_2023-07-12_133411.png" width="212" height="300"  alt="dropped item"/>
 <img src="https://media.discordapp.net/attachments/807226379049238539/1128666361548259398/Screenshot_2023-07-12_133249.png" width="200" height="300"  alt="corrupted item"/>
+</p>
 
 #### Killstreak
 
