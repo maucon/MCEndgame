@@ -97,6 +97,8 @@ For more info about the commands see `plugin.yml`
 
 ## Getting Started
 
+You can download a pre-built Jar via the `Releases` section or build it yourself.
+
 ### Building the Plugin Jar
 
 1. Clone the repo
