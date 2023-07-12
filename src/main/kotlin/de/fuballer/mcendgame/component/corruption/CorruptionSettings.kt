@@ -11,8 +11,8 @@ import org.bukkit.inventory.ItemStack
 
 object CorruptionSettings {
     private val BASE_ITEM = Material.FERMENTED_SPIDER_EYE
-    private val ITEM_NAME = ChatColor.DARK_RED.toString() + "Hearth of Corruption"
-    private val ITEM_NAME_DOUBLE = ChatColor.DARK_RED.toString() + "Hearth of Corruption"
+    private val ITEM_NAME = ChatColor.DARK_RED.toString() + "Heart of Corruption"
+    private val ITEM_NAME_DOUBLE = ChatColor.DARK_RED.toString() + "Heart of Corruption"
     private val ITEM_LORE = listOf(ChatColor.WHITE.toString() + "Corrupts an item, modifying it unpredictably.")
     val ITEM_LORE_DOUBLE = listOf(ChatColor.WHITE.toString() + "Corrupts an item, modifying it unpredictably. Twice!")
     val CORRUPTION_TAG_LORE = listOf(ChatColor.DARK_RED.toString() + "Corrupted")

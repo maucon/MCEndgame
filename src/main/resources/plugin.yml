@@ -7,7 +7,7 @@ load: STARTUP
 depend: [ FastAsyncWorldEdit ]
 
 commands:
-  dungeon-killer:
+  killer:
     usage: "§CUsage /<command> [player]"
     aliases: [ killer, lastdeath, showkiller ]
 
