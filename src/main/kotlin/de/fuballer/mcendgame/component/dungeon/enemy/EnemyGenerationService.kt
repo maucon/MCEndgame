@@ -95,12 +95,12 @@ class EnemyGenerationService(
     }
 
     private fun addEffectUntilLoad(entity: Creature) {
-        val effect = PotionEffect(PotionEffectType.LUCK, 1, 0)
+        val effect = PotionEffect(PotionEffectType.LUCK, 1, 0, false, false)
         entity.addPotionEffect(effect)
     }
 
     private fun addTemporarySlowfalling(entity: Creature) {
-        val effect = PotionEffect(PotionEffectType.SLOW_FALLING, 40, 0)
+        val effect = PotionEffect(PotionEffectType.SLOW_FALLING, 40, 0, false, false)
         entity.addPotionEffect(effect)
     }
 
@@ -126,7 +126,7 @@ class EnemyGenerationService(
         val strengthAmplifier = EnemyGenerationSettings.calculateStrengthAmplifier(random, mapTier)
         if (strengthAmplifier < 0) return
 
-        val potionEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, Int.MAX_VALUE, strengthAmplifier, true)
+        val potionEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, Int.MAX_VALUE, strengthAmplifier, false, false)
         entity.addPotionEffect(potionEffect)
     }
 
