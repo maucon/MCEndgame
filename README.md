@@ -110,9 +110,7 @@ You can download a pre-built Jar via the `Releases` section or build it yourself
 1. Set up your Minecraft [Paper](https://papermc.io/) Server
 2. Download [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/) (Bukkit Version)
 3. Place the `MC-Endgame` and `FastAsyncWorldEdit` Jar into the plugins folder
-4. Create folder `MC-Endgame` in the `plugins` folder
-5. Copy the `schematics` folder into the `plugins` folder (found `src/main/resources`)
-6. Start the server
+4. Start the server
 
 ## Contributing
 
