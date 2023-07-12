@@ -19,5 +19,5 @@ enum class PotionEffect(
     INVISIBILITY(PotionEffectType.INVISIBILITY, 0),
     ;
 
-    fun getPotionEffect() = org.bukkit.potion.PotionEffect(type, duration, amplifier, true)
+    fun getPotionEffect() = org.bukkit.potion.PotionEffect(type, duration, amplifier, false, false)
 }

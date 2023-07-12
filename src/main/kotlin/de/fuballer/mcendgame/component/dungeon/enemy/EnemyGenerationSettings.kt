@@ -10,8 +10,8 @@ import org.bukkit.entity.EntityType
 import java.util.*
 
 object EnemyGenerationSettings {
-    const val MIN_MOBS_PER_TILE = 2
-    const val MAX_MOBS_PER_TILE = 5
+    private const val MIN_MOBS_PER_TILE = 2
+    private const val MAX_MOBS_PER_TILE = 5
     const val MOB_XZ_SPREAD = 1.5
 
     fun calculateMobCount(random: Random): Int {

@@ -6,7 +6,7 @@ import org.bukkit.entity.EntityType
 import java.util.*
 
 object KillerSettings {
-    const val COMMAND_NAME = "dungeon-killer"
+    const val COMMAND_NAME = "killer"
 
     val INVENTORY_TITLE = ChatColor.BLACK.toString() + "Killer"
     val NO_KILLER_FOUND_MESSAGE = ChatColor.RED.toString() + "No entity found."

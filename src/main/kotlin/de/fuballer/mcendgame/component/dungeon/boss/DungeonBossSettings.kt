@@ -21,7 +21,7 @@ object DungeonBossSettings {
 
     val BOSS_ENTITY_TYPE = EntityType.RAVAGER
     val BOSS_POTION_EFFECTS = listOf(
-        PotionEffect(PotionEffectType.FIRE_RESISTANCE, Int.MAX_VALUE, 0, true)
+        PotionEffect(PotionEffectType.FIRE_RESISTANCE, Int.MAX_VALUE, 0, false, false)
     )
     private const val BOSS_EXTRA_HEALTH_PER_TIER = 5
     fun calculateAddedBossHealth(mapTier: Int) = mapTier * BOSS_EXTRA_HEALTH_PER_TIER
@@ -41,13 +41,13 @@ object DungeonBossSettings {
     fun getAbilityOptions(mapTier: Int) = ABILITY_TYPES.filter { it.option.minLevel <= mapTier }
 
     const val ARROWS_COUNT = 5
-    const val ARROWS_TIME_DIFFERENCE: Long = 4 //in Ticks
+    const val ARROWS_TIME_DIFFERENCE: Long = 4 // in ticks
 
-    val SPEED_EFFECT = PotionEffect(PotionEffectType.SPEED, 20, 4, true)
+    val SPEED_EFFECT = PotionEffect(PotionEffectType.SPEED, 20, 4, false, false)
 
     const val FIRE_CASCADE_DISTANCE = 1
     const val FIRE_CASCADE_STEPS_AFTER_PLAYER = 15
-    const val FIRE_CASCADE_ACTIVATION_DELAY: Long = 10 //in Ticks
+    const val FIRE_CASCADE_ACTIVATION_DELAY: Long = 10 // in ticks
 
     const val FIRE_CASCADE_STEP_DELAY = 0.7 //in Ticks
 
