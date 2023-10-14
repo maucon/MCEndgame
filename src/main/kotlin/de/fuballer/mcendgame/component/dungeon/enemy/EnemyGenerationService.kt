@@ -58,7 +58,7 @@ class EnemyGenerationService(
         world: World
     ) {
         for (i in 0 until amount) {
-            val entityEquip = RandomPick.pick(EnemyGenerationSettings.DUNGEON_MOBS).option
+            val entityType = RandomPick.pick(EnemyGenerationSettings.DUNGEON_MOBS).option
             val entity = world.spawnEntity(
                 Location(
                     world,
@@ -66,18 +66,20 @@ class EnemyGenerationService(
                     DungeonGenerationSettings.MOB_Y_POS,
                     z + EnemyGenerationSettings.MOB_XZ_SPREAD * (random.nextDouble() * 2 - 1)
                 ),
-                entityEquip.type
+                entityType.type
             ) as Creature
 
+            entity.customName = entityType.customName
+
             entity.removeWhenFarAway = false
-            if (entityEquip.canHaveEquip) {
+            if (entityType.canHaveEquip) {
                 statItemService.setCreatureEquipment(entity, mapTier)
             }
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)
             addEffectsToEntity(entity, mapTier)
-            applyNamePrefix(entity)
+            //applyNamePrefix(entity)
         }
 
         remainingService.addMobs(world, amount)
