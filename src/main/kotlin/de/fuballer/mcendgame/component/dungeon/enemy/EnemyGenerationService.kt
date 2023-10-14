@@ -69,7 +69,10 @@ class EnemyGenerationService(
                 entityType.type
             ) as Creature
 
-            entity.customName = entityType.customName
+            if (entityType.customName != null) {
+                entity.customName = entityType.customName
+                entity.isCustomNameVisible = false
+            }
 
             entity.removeWhenFarAway = false
             if (entityType.canHaveEquip) {

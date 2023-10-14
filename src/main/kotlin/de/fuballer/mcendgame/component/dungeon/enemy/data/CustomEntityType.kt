@@ -5,7 +5,7 @@ import org.bukkit.entity.EntityType
 enum class CustomEntityType(
     val type: EntityType,
     val customName: String?,
-    val canHaveEquip: Boolean
+    val canHaveEquip: Boolean,
 ) {
     ZOMBIE(EntityType.ZOMBIE, null, true),
     HUSK(EntityType.HUSK, null, true),

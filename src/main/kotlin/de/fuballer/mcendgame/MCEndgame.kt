@@ -24,6 +24,8 @@ import de.fuballer.mcendgame.component.dungeon.creeper_explode.CreeperExplodeLis
 import de.fuballer.mcendgame.component.dungeon.creeper_explode.CreeperExplodeService
 import de.fuballer.mcendgame.component.dungeon.enemy.EnemyGenerationListener
 import de.fuballer.mcendgame.component.dungeon.enemy.EnemyGenerationService
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entities.NecromancerListener
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entities.NecromancerService
 import de.fuballer.mcendgame.component.dungeon.enemy.targeting.EnemyTargetingListener
 import de.fuballer.mcendgame.component.dungeon.enemy.targeting.EnemyTargetingService
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationService
@@ -123,6 +125,7 @@ class MCEndgame : JavaPlugin() {
         FilterService::class.java,
         LootingService::class.java,
         CreeperExplodeService::class.java,
+        NecromancerService::class.java,
 
         MapDeviceListener::class.java,
         RecipeListener::class.java,
@@ -145,6 +148,7 @@ class MCEndgame : JavaPlugin() {
         ArtifactEffectsListener::class.java,
         StatisticsListener::class.java,
         WorldGenerationListener::class.java,
+        NecromancerListener::class.java,
 
         BuildCalculationCommand::class.java,
         KillerCommand::class.java,
