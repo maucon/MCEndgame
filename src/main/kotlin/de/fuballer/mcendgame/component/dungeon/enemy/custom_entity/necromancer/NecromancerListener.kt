@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.custom_entities
+package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.necromancer
 
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import org.bukkit.event.EventHandler

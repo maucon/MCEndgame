@@ -26,32 +26,37 @@ import java.util.*
 class StatItemService : Service {
     private val random = Random()
 
-    fun setCreatureEquipment(creature: Creature, mapTier: Int) {
+    fun setCreatureEquipment(creature: Creature, mapTier: Int, weapons: Boolean, armor: Boolean) {
         val equipment = creature.equipment!!
 
-        getSortableEquipment(mapTier, StatItemSettings.HELMETS, EquipmentSlot.HEAD)?.also {
-            equipment.helmet = it
-            equipment.helmetDropChance = 0f
+        if (weapons) {
+            createMainHandItem(mapTier, creature)?.also {
+                equipment.setItemInMainHand(it)
+                equipment.itemInMainHandDropChance = 0f
+            }
+            createOffHandItem(mapTier)?.also {
+                equipment.setItemInOffHand(it)
+                equipment.itemInOffHandDropChance = 0f
+            }
         }
-        getSortableEquipment(mapTier, StatItemSettings.CHESTPLATES, EquipmentSlot.CHEST)?.also {
-            equipment.chestplate = it
-            equipment.chestplateDropChance = 0f
-        }
-        getSortableEquipment(mapTier, StatItemSettings.LEGGINGS, EquipmentSlot.LEGS)?.also {
-            equipment.leggings = it
-            equipment.leggingsDropChance = 0f
-        }
-        getSortableEquipment(mapTier, StatItemSettings.BOOTS, EquipmentSlot.FEET)?.also {
-            equipment.boots = it
-            equipment.bootsDropChance = 0f
-        }
-        createMainHandItem(mapTier, creature)?.also {
-            equipment.setItemInMainHand(it)
-            equipment.itemInMainHandDropChance = 0f
-        }
-        createOffHandItem(mapTier)?.also {
-            equipment.setItemInOffHand(it)
-            equipment.itemInOffHandDropChance = 0f
+
+        if (armor) {
+            getSortableEquipment(mapTier, StatItemSettings.HELMETS, EquipmentSlot.HEAD)?.also {
+                equipment.helmet = it
+                equipment.helmetDropChance = 0f
+            }
+            getSortableEquipment(mapTier, StatItemSettings.CHESTPLATES, EquipmentSlot.CHEST)?.also {
+                equipment.chestplate = it
+                equipment.chestplateDropChance = 0f
+            }
+            getSortableEquipment(mapTier, StatItemSettings.LEGGINGS, EquipmentSlot.LEGS)?.also {
+                equipment.leggings = it
+                equipment.leggingsDropChance = 0f
+            }
+            getSortableEquipment(mapTier, StatItemSettings.BOOTS, EquipmentSlot.FEET)?.also {
+                equipment.boots = it
+                equipment.bootsDropChance = 0f
+            }
         }
     }
 

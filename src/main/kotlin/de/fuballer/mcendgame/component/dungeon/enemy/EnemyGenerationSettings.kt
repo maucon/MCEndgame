@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.enemy.data.*
 import de.fuballer.mcendgame.random.RandomOption
 import de.fuballer.mcendgame.random.SortableRandomOption
@@ -20,11 +21,11 @@ object EnemyGenerationSettings {
         RandomOption(25, CustomEntityType.ZOMBIE),
         RandomOption(10, CustomEntityType.HUSK),
         RandomOption(15, CustomEntityType.SKELETON),
-        RandomOption(5,CustomEntityType.STRAY),
+        RandomOption(5, CustomEntityType.STRAY),
         RandomOption(1, CustomEntityType.WITHER_SKELETON),
         RandomOption(4, CustomEntityType.CREEPER),
-        RandomOption(3,CustomEntityType.WITCH),
-        RandomOption(25,CustomEntityType.NECROMANCER)
+        RandomOption(3, CustomEntityType.WITCH),
+        RandomOption(25, CustomEntityType.NECROMANCER)
     )
 
     val RESISTANCE_EFFECTS = listOf(

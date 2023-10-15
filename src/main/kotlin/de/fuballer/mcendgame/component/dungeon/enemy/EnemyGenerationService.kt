@@ -75,9 +75,7 @@ class EnemyGenerationService(
             }
 
             entity.removeWhenFarAway = false
-            if (entityType.canHaveEquip) {
-                statItemService.setCreatureEquipment(entity, mapTier)
-            }
+            statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.canHaveArmor)
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)
