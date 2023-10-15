@@ -7,7 +7,7 @@ enum class CustomEntityType(
     val customName: String?,
     val canHaveWeapons: Boolean,
     val canHaveArmor: Boolean,
-    val dropsBaseLoot: Boolean,
+    val dropBaseLoot: Boolean,
 ) {
     ZOMBIE(EntityType.ZOMBIE, null, true,true, true),
     HUSK(EntityType.HUSK, null, true,true,  true),

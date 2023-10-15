@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.artifact
 import de.fuballer.mcendgame.component.artifact.db.Artifact
 import de.fuballer.mcendgame.component.artifact.db.ArtifactRepository
 import de.fuballer.mcendgame.component.artifact.db.ArtifactType
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.framework.stereotype.Service
 import de.fuballer.mcendgame.helper.WorldHelper
@@ -13,6 +14,7 @@ import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import java.text.DecimalFormat
 import java.util.*
 
@@ -78,6 +80,11 @@ class ArtifactService(
     fun onEntityDeath(event: EntityDeathEvent) {
         if (WorldHelper.isNotDungeonWorld(event.entity.world)) return
         if (event.entity !is Monster) return
+
+        if (event.entity.persistentDataContainer.has(Keys.DROP_BASE_LOOT_KEY, PersistentDataType.BOOLEAN)) {
+            val dropArtifact = event.entity.persistentDataContainer.get(Keys.DROP_BASE_LOOT_KEY, PersistentDataType.BOOLEAN)
+            if (dropArtifact != null && !dropArtifact) return
+        }
 
         if (random.nextDouble() > ArtifactSettings.ARTIFACT_DROP_CHANCE) return
 

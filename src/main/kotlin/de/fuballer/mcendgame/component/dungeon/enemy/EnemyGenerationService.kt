@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
 import de.fuballer.mcendgame.MCEndgame
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.remaining.RemainingService
@@ -16,6 +17,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.EntityPotionEffectEvent
 import org.bukkit.inventory.EntityEquipment
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.awt.Point
@@ -76,6 +78,10 @@ class EnemyGenerationService(
 
             entity.removeWhenFarAway = false
             statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.canHaveArmor)
+
+            if (!entityType.dropBaseLoot)
+                entity.persistentDataContainer.set(Keys.DROP_BASE_LOOT_KEY, PersistentDataType.BOOLEAN, false)
+            entity.persistentDataContainer.set(Keys.MAP_TIER_KEY, PersistentDataType.INTEGER, mapTier)
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)
