@@ -17,7 +17,11 @@ class NecromancerService {
         }
     }
 
-    private fun summonMinions(summoner: LivingEntity, minionType: CustomEntityType, amount: Int) {
+    private fun summonMinions(
+        summoner: LivingEntity,
+        minionType: CustomEntityType,
+        amount: Int
+    ) {
         val world = summoner.world
 
         for (i in 0 until amount) {
