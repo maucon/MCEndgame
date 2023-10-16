@@ -25,7 +25,13 @@ import java.util.*
 class StatItemService : Service {
     private val random = Random()
 
-    fun setCreatureEquipment(creature: Creature, mapTier: Int, weapons: Boolean, ranged: Boolean, armor: Boolean) {
+    fun setCreatureEquipment(
+        creature: Creature,
+        mapTier: Int,
+        weapons: Boolean,
+        ranged: Boolean,
+        armor: Boolean,
+    ) {
         val equipment = creature.equipment!!
 
         if (weapons) {
@@ -113,15 +119,14 @@ class StatItemService : Service {
         item.itemMeta = meta
     }
 
-
     private fun createMainHandItem(mapTier: Int, ranged: Boolean): ItemStack? {
-        if (ranged) return createSkeletonMainHandItem(mapTier)
+        if (ranged) return createRangedMainHandItem(mapTier)
 
         val itemProbability = RandomPick.pick(StatItemSettings.MAINHAND_PROBABILITIES).option ?: return null
         return getSortableEquipment(mapTier, itemProbability, EquipmentSlot.HAND)
     }
 
-    private fun createSkeletonMainHandItem(mapTier: Int): ItemStack? {
+    private fun createRangedMainHandItem(mapTier: Int): ItemStack? {
         val itemProbability = RandomPick.pick(StatItemSettings.RANGED_MAINHAND_PROBABILITIES).option
         return getSortableEquipment(mapTier, itemProbability, EquipmentSlot.HAND)
     }

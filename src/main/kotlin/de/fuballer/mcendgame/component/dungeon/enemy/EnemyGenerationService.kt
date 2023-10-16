@@ -79,8 +79,9 @@ class EnemyGenerationService(
 
             statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
 
-            if (!entityType.dropBaseLoot)
+            if (!entityType.dropBaseLoot) {
                 entity.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
+            }
             entity.persistentDataContainer.set(Keys.MAP_TIER, PersistentDataType.INTEGER, mapTier)
 
             addEffectUntilLoad(entity)
@@ -113,7 +114,7 @@ class EnemyGenerationService(
         entity.addPotionEffect(effect)
     }
 
-    public fun addEffectsToEntity(
+    fun addEffectsToEntity(
         entity: Creature,
         mapTier: Int
     ) {

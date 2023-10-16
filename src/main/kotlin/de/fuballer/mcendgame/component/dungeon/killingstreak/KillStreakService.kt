@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.KillStreakIncreaseEvent
 import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.helper.PersistentDataUtil
 import de.fuballer.mcendgame.helper.TimerTask
 import de.fuballer.mcendgame.helper.WorldHelper
 import org.bukkit.World
@@ -32,8 +33,7 @@ class KillStreakService(
         val world = entity.world
         if (WorldHelper.isNotDungeonWorld(world)) return
 
-        if (event.entity.persistentDataContainer.has(Keys.IS_MINION, PersistentDataType.BOOLEAN))
-            if (event.entity.persistentDataContainer.get(Keys.IS_MINION, PersistentDataType.BOOLEAN) == true) return
+        if (PersistentDataUtil.getValue(entity.persistentDataContainer, Keys.IS_MINION, PersistentDataType.BOOLEAN) == true) return
 
         val killStreak = killStreakRepo.findById(world.name) ?: return
         killStreak.streak++

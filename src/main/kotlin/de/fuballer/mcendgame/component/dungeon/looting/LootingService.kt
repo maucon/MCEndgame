@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.killingstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killingstreak.db.KillStreakRepository
 import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.helper.PersistentDataUtil
 import de.fuballer.mcendgame.helper.WorldHelper
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -26,7 +27,7 @@ class LootingService(
         val world = entity.world
         if (WorldHelper.isNotDungeonWorld(world)) return
 
-        if (!canDropEquipment(entity)) return
+        if (PersistentDataUtil.getValue(entity.persistentDataContainer, Keys.DROP_EQUIPMENT, PersistentDataType.BOOLEAN) == false) return
 
         val looting = getLootingLevel(entity.killer)
         for (item in getEquipment(entity.equipment)) {
@@ -43,11 +44,6 @@ class LootingService(
                 world.dropItemNaturally(entity.location, item)
             }
         }
-    }
-
-    private fun canDropEquipment(entity: Entity): Boolean {
-        if (!entity.persistentDataContainer.has(Keys.DROP_EQUIPMENT, PersistentDataType.BOOLEAN)) return true
-        return entity.persistentDataContainer.get(Keys.DROP_EQUIPMENT, PersistentDataType.BOOLEAN) ?: return true
     }
 
     private fun getLootingLevel(player: Player?): Int {

@@ -6,6 +6,7 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionsEntity
 import de.fuballer.mcendgame.component.statitem.StatItemService
+import de.fuballer.mcendgame.helper.PersistentDataUtil
 import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
@@ -27,7 +28,7 @@ class SummonerService(
         health: Double,
     ) {
         val world = summoner.world
-        val mapTier = getMapTier(summoner)
+        val mapTier = PersistentDataUtil.getValue(summoner.persistentDataContainer, Keys.MAP_TIER, PersistentDataType.INTEGER) ?: -1
 
         val minions = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
@@ -70,10 +71,5 @@ class SummonerService(
         val attributeInstance = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) ?: return
         attributeInstance.baseValue = health
         entity.health = health
-    }
-
-    private fun getMapTier(entity: LivingEntity): Int {
-        if (!entity.persistentDataContainer.has(Keys.MAP_TIER, PersistentDataType.INTEGER)) return -1
-        return entity.persistentDataContainer.get(Keys.MAP_TIER, PersistentDataType.INTEGER) ?: return -1
     }
 }

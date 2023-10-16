@@ -6,6 +6,7 @@ import de.fuballer.mcendgame.component.remaining.db.RemainingRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.helper.PersistentDataUtil
 import de.fuballer.mcendgame.helper.WorldHelper
 import org.bukkit.World
 import org.bukkit.entity.Monster
@@ -41,8 +42,7 @@ class RemainingService(
         val entity = event.entity as Monster
         if (RemainingSettings.IGNORED_MOBS.contains(entity.type)) return
 
-        if (event.entity.persistentDataContainer.has(Keys.IS_MINION, PersistentDataType.BOOLEAN))
-            if (event.entity.persistentDataContainer.get(Keys.IS_MINION, PersistentDataType.BOOLEAN) == true) return
+        if (PersistentDataUtil.getValue(entity.persistentDataContainer, Keys.IS_MINION, PersistentDataType.BOOLEAN) == true) return
 
         val world = entity.world
         if (WorldHelper.isNotDungeonWorld(world)) return
