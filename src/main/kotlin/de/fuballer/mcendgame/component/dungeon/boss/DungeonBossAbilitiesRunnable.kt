@@ -2,14 +2,14 @@ package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.dungeon.boss.db.BossAbility
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
-import de.fuballer.mcendgame.random.RandomPick
+import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
+import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
-import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 import kotlin.math.pow
@@ -18,8 +18,7 @@ import kotlin.math.sqrt
 class DungeonBossAbilitiesRunnable(
     private val dungeonBossRepo: DungeonBossRepository,
     private val boss: Creature,
-    private val level: Int,
-    private val plugin: Plugin
+    private val level: Int
 ) : BukkitRunnable() {
     private var ticksSinceAbility = 0
     private val abilityCooldown = DungeonBossSettings.getBossAbilityCooldown(level)
@@ -44,7 +43,7 @@ class DungeonBossAbilitiesRunnable(
         val target = boss.target ?: return false
 
         val possibleAbilities = DungeonBossSettings.getAbilityOptions(level)
-        when (RandomPick.pick(possibleAbilities).option) {
+        when (RandomUtil.pick(possibleAbilities).option) {
             BossAbility.ARROWS -> shootArrows(target, false)
             BossAbility.FIRE_ARROWS -> shootArrows(target, true)
             BossAbility.SPEED -> giveSpeed()
@@ -57,7 +56,7 @@ class DungeonBossAbilitiesRunnable(
 
     private fun shootArrows(target: LivingEntity, burning: Boolean) {
         for (i in 1..DungeonBossSettings.ARROWS_COUNT)
-            ShootArrowRunnable(target, boss, burning).runTaskLater(plugin, i * DungeonBossSettings.ARROWS_TIME_DIFFERENCE)
+            ShootArrowRunnable(target, boss, burning).runTaskLater(i * DungeonBossSettings.ARROWS_TIME_DIFFERENCE)
     }
 
     private class ShootArrowRunnable(
@@ -92,10 +91,10 @@ class DungeonBossAbilitiesRunnable(
             val sound = (i - 1) % DungeonBossSettings.FIRE_CASCADE_STEPS_PER_SOUND == 0
 
             CastFireCascadeRunnable(boss, 0.0, boss.location.add(offsetVector), true, sound)
-                .runTaskLater(plugin, stepDelay)
+                .runTaskLater(stepDelay)
 
             CastFireCascadeRunnable(boss, DungeonBossSettings.FIRE_CASCADE_DAMAGE + level * DungeonBossSettings.FIRE_CASCADE_DAMAGE_PER_LEVEL, boss.location.add(offsetVector), false, sound)
-                .runTaskLater(plugin, stepDelay + DungeonBossSettings.FIRE_CASCADE_ACTIVATION_DELAY)
+                .runTaskLater(stepDelay + DungeonBossSettings.FIRE_CASCADE_ACTIVATION_DELAY)
 
             offsetVector.add(addVector)
             i++

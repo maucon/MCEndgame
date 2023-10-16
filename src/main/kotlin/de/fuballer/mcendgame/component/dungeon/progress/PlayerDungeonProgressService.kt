@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.dungeon.progress.db.PlayerDungeonProgress
 import de.fuballer.mcendgame.component.dungeon.progress.db.PlayerDungeonProgressRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.WorldHelper
+import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerRespawnEvent
@@ -29,7 +29,7 @@ class PlayerDungeonProgressService(
 
     fun onEntityDeath(event: EntityDeathEvent) {
         val player = event.entity
-        if (WorldHelper.isNotDungeonWorld(player.world)) return
+        if (WorldUtil.isNotDungeonWorld(player.world)) return
         if (player !is Player) return
 
         val entity = playerDungeonProgressRepo.findById(player.uniqueId)
@@ -44,7 +44,7 @@ class PlayerDungeonProgressService(
 
     fun onPlayerRespawn(event: PlayerRespawnEvent) {
         val player = event.player
-        if (WorldHelper.isNotDungeonWorld(player.world)) return
+        if (WorldUtil.isNotDungeonWorld(player.world)) return
 
         val (_, level, progress) = getPlayerDungeonLevel(player.uniqueId)
         player.sendMessage(PlayerDungeonProgressSettings.getRegressMessage(level, progress))

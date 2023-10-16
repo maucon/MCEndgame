@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.progress.command
 
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSettings
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
-import de.fuballer.mcendgame.helper.PluginUtil
+import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player

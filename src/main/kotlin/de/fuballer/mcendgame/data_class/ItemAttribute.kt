@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.domain.equipment
+package de.fuballer.mcendgame.data_class
 
 import org.bukkit.attribute.Attribute
 

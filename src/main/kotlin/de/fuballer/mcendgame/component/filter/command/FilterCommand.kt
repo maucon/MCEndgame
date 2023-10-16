@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.filter.FilterSettings
 import de.fuballer.mcendgame.component.filter.db.FilterEntity
 import de.fuballer.mcendgame.component.filter.db.FilterRepository
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
-import de.fuballer.mcendgame.helper.PluginUtil
+import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender

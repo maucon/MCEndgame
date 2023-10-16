@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.db
 
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import de.fuballer.mcendgame.configuration.PluginConfiguration
 import de.fuballer.mcendgame.framework.stereotype.Entity
-import de.fuballer.mcendgame.helper.PluginUtil
 import java.io.File
 import java.io.FileReader
 import java.lang.reflect.ParameterizedType
@@ -30,7 +30,7 @@ open class PersistableMapRepository<ID, ENTITY : Entity<ID>> : AbstractMapReposi
     }
 
     override fun load() {
-        dbFile = File(PluginUtil.getDataFolder(), fileName)
+        dbFile = File(PluginConfiguration.dataFolder(), fileName)
         if (!dbFile.exists()) return
 
         val reader = FileReader(dbFile)

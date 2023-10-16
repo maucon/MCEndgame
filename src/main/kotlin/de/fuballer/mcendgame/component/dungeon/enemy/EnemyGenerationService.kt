@@ -6,9 +6,9 @@ import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.remaining.RemainingService
 import de.fuballer.mcendgame.component.statitem.StatItemService
 import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.PluginUtil
-import de.fuballer.mcendgame.helper.WorldHelper
-import de.fuballer.mcendgame.random.RandomPick
+import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Difficulty
 import org.bukkit.Location
 import org.bukkit.Material
@@ -60,7 +60,7 @@ class EnemyGenerationService(
         world: World
     ) {
         for (i in 0 until amount) {
-            val entityType = RandomPick.pick(EnemyGenerationSettings.DUNGEON_MOBS).option
+            val entityType = RandomUtil.pick(EnemyGenerationSettings.DUNGEON_MOBS).option
             val entity = world.spawnEntity(
                 Location(
                     world,
@@ -99,7 +99,7 @@ class EnemyGenerationService(
         if (effect.type != PotionEffectType.LUCK) return
 
         val entity = event.entity as? LivingEntity ?: return
-        if (WorldHelper.isNotDungeonWorld(entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(entity.world)) return
 
         entity.health = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
     }
@@ -119,10 +119,10 @@ class EnemyGenerationService(
         mapTier: Int
     ) {
         val potionEffects = listOfNotNull(
-            RandomPick.pick(EnemyGenerationSettings.RESISTANCE_EFFECTS, mapTier).option,
-            RandomPick.pick(EnemyGenerationSettings.SPEED_EFFECTS, mapTier).option,
-            RandomPick.pick(EnemyGenerationSettings.FIRE_RESISTANCE_EFFECT, mapTier).option,
-            RandomPick.pick(EnemyGenerationSettings.INVISIBILITY_EFFECT).option,
+            RandomUtil.pick(EnemyGenerationSettings.RESISTANCE_EFFECTS, mapTier).option,
+            RandomUtil.pick(EnemyGenerationSettings.SPEED_EFFECTS, mapTier).option,
+            RandomUtil.pick(EnemyGenerationSettings.FIRE_RESISTANCE_EFFECT, mapTier).option,
+            RandomUtil.pick(EnemyGenerationSettings.INVISIBILITY_EFFECT).option,
         ).map { it.getPotionEffect() }
 
         entity.addPotionEffects(potionEffects)

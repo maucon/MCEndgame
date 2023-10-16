@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.dungeon.boss.db.BossAbility
-import de.fuballer.mcendgame.random.RandomOption
+import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.entity.EntityType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType

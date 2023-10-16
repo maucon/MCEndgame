@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.killer.db
 
 import de.fuballer.mcendgame.component.killer.KillerSettings
-import de.fuballer.mcendgame.helper.PluginUtil
+import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute

@@ -3,16 +3,18 @@ package de.fuballer.mcendgame.component.mapdevice.db
 import de.fuballer.mcendgame.component.mapdevice.MapDeviceSettings
 import de.fuballer.mcendgame.db.PersistableMapRepository
 import de.fuballer.mcendgame.domain.Portal
-import de.fuballer.mcendgame.helper.PluginUtil
+import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.Server
 import org.bukkit.entity.Entity
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.Plugin
 import java.util.*
 
 class MapDeviceRepository(
-    private val plugin: Plugin
+    private val plugin: Plugin,
+    private val server: Server
 ) : PersistableMapRepository<UUID, MapDeviceEntity>() {
     override fun load() {
         super.load()
@@ -20,7 +22,7 @@ class MapDeviceRepository(
         PluginUtil.scheduleSyncDelayedTask {
             this.map = findAll()
                 .map {
-                    val world = PluginUtil.getServer().getWorld(it.worldName) ?: return@map null
+                    val world = server.getWorld(it.worldName) ?: return@map null
 
                     val location = Location(world, it.x.toDouble(), it.y.toDouble(), it.z.toDouble())
                     val mapDevice = world.getBlockAt(location)

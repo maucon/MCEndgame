@@ -2,19 +2,23 @@ package de.fuballer.mcendgame.component.dungeon.world
 
 import de.fuballer.mcendgame.component.dungeon.world.db.ManagedWorldEntity
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
+import de.fuballer.mcendgame.data_class.TimerTask
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
+import de.fuballer.mcendgame.framework.annotation.Qualifier
 import de.fuballer.mcendgame.framework.stereotype.Service
 import de.fuballer.mcendgame.helper.FileHelper
-import de.fuballer.mcendgame.helper.PluginUtil
-import de.fuballer.mcendgame.helper.TimerTask
+import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.*
 import org.bukkit.plugin.Plugin
 import java.io.File
 import java.util.*
 
 class WorldManageService(
-    private val worldManageRepo: WorldManageRepository
+    private val worldManageRepo: WorldManageRepository,
+    private val fileHelper: FileHelper,
+    @Qualifier("worldContainer")
+    private val worldContainer: File
 ) : Service {
     override fun initialize(plugin: Plugin) {
         startWorldCleaningTimer()
@@ -60,8 +64,8 @@ class WorldManageService(
         worldManageRepo.findAll().forEach {
             PluginUtil.unloadWorld(it.world)
 
-            val toDelete = File("${PluginUtil.getWorldContainer()}/${it.world.name}")
-            FileHelper.deleteFile(toDelete)
+            val toDelete = File("$worldContainer/${it.world.name}")
+            fileHelper.deleteFile(toDelete)
         }
     }
 
@@ -90,8 +94,8 @@ class WorldManageService(
             PluginUtil.unloadWorld(world)
             worldManageRepo.delete(name)
 
-            val toDelete = File("${PluginUtil.getWorldContainer()}/$name")
-            FileHelper.deleteFile(toDelete)
+            val toDelete = File("$worldContainer/$name")
+            fileHelper.deleteFile(toDelete)
         }
     }
 }

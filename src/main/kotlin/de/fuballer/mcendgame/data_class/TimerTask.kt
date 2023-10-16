@@ -1,8 +1,8 @@
-package de.fuballer.mcendgame.helper
+package de.fuballer.mcendgame.data_class
 
 import java.util.TimerTask
 
-class TimerTask(
+data class TimerTask(
     private val runnable: Runnable
 ) : TimerTask() {
     override fun run() {

@@ -1,7 +1,8 @@
 package de.fuballer.mcendgame.domain.equipment
 
 import de.fuballer.mcendgame.component.statitem.StatItemSettings
-import de.fuballer.mcendgame.random.RandomOption
+import de.fuballer.mcendgame.data_class.ItemAttribute
+import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Material
 
 interface Equipment {

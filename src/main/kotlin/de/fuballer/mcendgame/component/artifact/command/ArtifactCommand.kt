@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 import de.fuballer.mcendgame.component.artifact.db.ArtifactEntity
 import de.fuballer.mcendgame.component.artifact.db.ArtifactRepository
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
-import de.fuballer.mcendgame.helper.PluginUtil
+import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player

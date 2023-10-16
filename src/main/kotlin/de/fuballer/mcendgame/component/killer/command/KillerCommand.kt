@@ -10,7 +10,8 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class KillerCommand(
-    private val killerRepo: KillerRepository
+    private val killerRepo: KillerRepository,
+    private val commandHelper: CommandHelper
 ) : CommandHandler {
     override fun getCommand() = KillerSettings.COMMAND_NAME
 
@@ -27,7 +28,7 @@ class KillerCommand(
             return true
         }
 
-        val targetPlayer = CommandHelper.getPlayer(commandExecutor, args[0]) ?: return false
+        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[0]) ?: return false
         showKiller(commandExecutor, targetPlayer)
         return true
     }

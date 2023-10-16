@@ -11,7 +11,8 @@ import org.bukkit.entity.Player
 import java.util.*
 
 class DungeonProgressCommand(
-    private val dungeonProgressRepo: PlayerDungeonProgressRepository
+    private val dungeonProgressRepo: PlayerDungeonProgressRepository,
+    private val commandHelper: CommandHelper
 ) : CommandHandler {
     override fun getCommand() = PlayerDungeonProgressSettings.COMMAND_NAME
 
@@ -24,7 +25,7 @@ class DungeonProgressCommand(
         val commandExecutor = sender as? Player ?: return false
         if (args.isEmpty()) return false
 
-        val commandAction = CommandHelper.getCommandAction(args[0]) ?: return false
+        val commandAction = commandHelper.getCommandAction(args[0]) ?: return false
         return when (commandAction) {
             CommandAction.GET -> printDungeonProgress(args, commandExecutor)
             CommandAction.SET -> setDungeonProgress(args, commandExecutor)
@@ -40,7 +41,7 @@ class DungeonProgressCommand(
         val targetPlayer =
             if (args.size == 1) commandExecutor
             else {
-                CommandHelper.getPlayer(commandExecutor, args[1]) ?: return true
+                commandHelper.getPlayer(commandExecutor, args[1]) ?: return true
             }
 
         val entity = dungeonProgressRepo.findById(targetPlayer.uniqueId)
@@ -61,7 +62,7 @@ class DungeonProgressCommand(
     ): Boolean {
         if (args.size !in 3..4) return false
 
-        val targetPlayer = CommandHelper.getPlayer(commandExecutor, args[1]) ?: return false
+        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[1]) ?: return false
         val level = args[2].toIntOrNull() ?: return false
 
         val progress =

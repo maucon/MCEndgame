@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.generation
 
 import de.fuballer.mcendgame.component.dungeon.generation.data.DungeonType
-import de.fuballer.mcendgame.random.RandomOption
+import de.fuballer.mcendgame.util.random.RandomOption
 
 object DungeonGenerationSettings {
     fun getSchematicPath(dungeonType: DungeonType, schematicName: String) =

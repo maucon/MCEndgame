@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.random
+package de.fuballer.mcendgame.util.random
 
 open class RandomOption<T>(
     val weight: Int,

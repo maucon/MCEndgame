@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.component.artifact.db.ArtifactType
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.WorldHelper
+import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color
 import org.bukkit.DyeColor
 import org.bukkit.Particle
@@ -30,7 +30,7 @@ class ArtifactEffectsService(
 
     fun onEntityDeath(event: EntityDeathEvent) {
         val entity = event.entity
-        if (WorldHelper.isNotDungeonWorld(entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (entity is Player) return
 
         val player = entity.killer ?: return
@@ -38,7 +38,7 @@ class ArtifactEffectsService(
     }
 
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
-        if (WorldHelper.isNotDungeonWorld(event.entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
         if (event.entity is Player) {
             onPlayerDamageByEntity(event)
@@ -53,7 +53,7 @@ class ArtifactEffectsService(
 
     fun onShootBow(event: EntityShootBowEvent) {
         val player = event.entity as? Player ?: return
-        if (WorldHelper.isNotDungeonWorld(player.world)) return
+        if (WorldUtil.isNotDungeonWorld(player.world)) return
 
         val arrowsTier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.ADDITIONAL_ARROWS) ?: return
 
@@ -82,7 +82,7 @@ class ArtifactEffectsService(
     }
 
     fun onPlayerJoin(event: PlayerJoinEvent) {
-        if (WorldHelper.isDungeonWorld(event.player.world)) {
+        if (WorldUtil.isDungeonWorld(event.player.world)) {
             testForMovementSpeedJoin(event.player)
             testForAttackSpeedJoin(event.player)
             testForAttackDamageJoin(event.player)
@@ -96,7 +96,7 @@ class ArtifactEffectsService(
     }
 
     fun onEntityBreed(event: PlayerInteractEntityEvent) {
-        if (WorldHelper.isNotDungeonWorld(event.rightClicked.world)) return
+        if (WorldUtil.isNotDungeonWorld(event.rightClicked.world)) return
         if (event.rightClicked !is Animals) return
         event.isCancelled = true
     }
@@ -343,7 +343,7 @@ class ArtifactEffectsService(
     fun onEntityTarget(event: EntityTargetEvent) {
         val entity = event.entity
 
-        if (WorldHelper.isNotDungeonWorld(event.entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         if (entity !is Wolf) return
 
         if (event.target !is Player) return

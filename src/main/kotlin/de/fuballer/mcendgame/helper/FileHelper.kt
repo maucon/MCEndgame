@@ -1,8 +1,12 @@
 package de.fuballer.mcendgame.helper
 
+import de.fuballer.mcendgame.framework.stereotype.Service
 import java.io.File
+import java.util.logging.Logger
 
-object FileHelper {
+class FileHelper(
+    private val logger: Logger
+) : Service {
     fun deleteFile(file: File) {
         if (file.isDirectory) {
             file.list()!!
@@ -15,6 +19,6 @@ object FileHelper {
         } catch (_: Exception) {
         }
 
-        PluginUtil.getLogger().warning("Couldn't delete file: " + file.path)
+        logger.warning("Couldn't delete file: " + file.path)
     }
 }

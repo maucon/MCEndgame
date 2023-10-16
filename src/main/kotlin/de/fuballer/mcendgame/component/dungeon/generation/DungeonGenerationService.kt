@@ -14,7 +14,7 @@ import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveEntity
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.random.RandomPick
+import de.fuballer.mcendgame.util.random.RandomUtil
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
@@ -35,7 +35,7 @@ class DungeonGenerationService(
         leaveLocation: Location
     ): Location {
         val world = worldManageService.createWorld(mapTier)
-        val dungeonType = RandomPick.pick(DungeonGenerationSettings.DUNGEON_TYPES).option
+        val dungeonType = RandomUtil.pick(DungeonGenerationSettings.DUNGEON_TYPES).option
 
         val dungeonLayoutGenerator = DungeonLayoutGenerator()
         dungeonLayoutGenerator.generateDungeon(

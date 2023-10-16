@@ -6,7 +6,8 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionsEntity
 import de.fuballer.mcendgame.component.statitem.StatItemService
-import de.fuballer.mcendgame.helper.PersistentDataUtil
+import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
@@ -17,7 +18,7 @@ class SummonerService(
     private val minionRepo: MinionRepository,
     private val statItemService: StatItemService,
     private val enemyGenerationService: EnemyGenerationService,
-) {
+) : Service {
     fun summonMinions(
         summoner: LivingEntity,
         minionType: CustomEntityType,

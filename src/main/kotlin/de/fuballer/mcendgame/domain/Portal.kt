@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.domain
 
 import de.fuballer.mcendgame.component.dungeon.world.WorldSettings
 import de.fuballer.mcendgame.component.mapdevice.MapDeviceSettings
-import de.fuballer.mcendgame.helper.PluginUtil
-import de.fuballer.mcendgame.helper.WorldHelper
+import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -64,7 +64,7 @@ class Portal(
 
         val world = teleportationTargetLocation.world ?: return
 
-        if (WorldHelper.isDungeonWorld(world)) {
+        if (WorldUtil.isDungeonWorld(world)) {
             teleportPlayerAndSetGameMode(player, teleportationTargetLocation, GameMode.SURVIVAL, GameMode.ADVENTURE)
         } else if (WorldSettings.DEFAULT_WORLD_NAMES.contains(world.name)) {
             teleportPlayerAndSetGameMode(player, teleportationTargetLocation, GameMode.ADVENTURE, GameMode.SURVIVAL)

@@ -1,3 +1,3 @@
 package de.fuballer.mcendgame.framework.stereotype
 
-interface Configuration
+interface Configuration : Injectable

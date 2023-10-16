@@ -11,7 +11,8 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class GiveArtifactCommand(
-    private val artifactService: ArtifactService
+    private val artifactService: ArtifactService,
+    private val commandHelper: CommandHelper
 ) : CommandHandler {
     override fun getCommand() = ArtifactSettings.GIVE_ARTIFACT_COMMAND_NAME
 
@@ -24,7 +25,7 @@ class GiveArtifactCommand(
         if (sender !is Player) return false
         if (args.size < 3 || !ArtifactType.entries.map { it.name }.contains(args[1].uppercase())) return false
 
-        val targetPlayer = CommandHelper.getOnlinePlayer(sender, args[0]) ?: return true
+        val targetPlayer = commandHelper.getOnlinePlayer(sender, args[0]) ?: return true
 
         val type = ArtifactType.valueOf(args[1].uppercase())
         val tier = args[2].toIntOrNull() ?: return false

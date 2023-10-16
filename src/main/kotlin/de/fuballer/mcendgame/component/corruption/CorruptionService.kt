@@ -4,9 +4,9 @@ import de.fuballer.mcendgame.component.corruption.data.AttributeWithModifier
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.component.statitem.StatItemSettings
 import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.AttributeHelper
-import de.fuballer.mcendgame.helper.PluginUtil
-import de.fuballer.mcendgame.random.RandomPick
+import de.fuballer.mcendgame.util.AttributeUtil
+import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -79,7 +79,7 @@ class CorruptionService : Service {
             player.world.playSound(player.location, Sound.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1f, 1f)
         }
 
-        AttributeHelper.setAttributeLore(result, true)
+        AttributeUtil.setAttributeLore(result, true)
 
         when (event.action) {
             InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_SOME ->
@@ -125,7 +125,7 @@ class CorruptionService : Service {
             if (hasExtraAttributes(item)) CorruptionSettings.CORRUPTIONS
             else CorruptionSettings.ALTERNATE_CORRUPTIONS
 
-        when (RandomPick.pick(corruptions).option) {
+        when (RandomUtil.pick(corruptions).option) {
             CorruptionChanceType.CORRUPT_ENCHANTS -> corruptEnchant(item)
             CorruptionChanceType.CORRUPT_STATS -> corruptStats(item)
             CorruptionChanceType.CORRUPT_DESTROY -> {
@@ -195,7 +195,7 @@ class CorruptionService : Service {
             val baseAttributes = equipment.baseAttributes
 
             for ((baseAttribute, modifier) in baseAttributes) {
-                val baseValue = AttributeHelper.getActualAttributeValue(baseAttribute, modifier)
+                val baseValue = AttributeUtil.getActualAttributeValue(baseAttribute, modifier)
 
                 for (possibleAttribute in possibleAttributesList) {
                     if (baseAttribute != possibleAttribute.attribute

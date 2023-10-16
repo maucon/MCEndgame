@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.WorldHelper
+import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
@@ -47,7 +47,7 @@ class DungeonLeaveService(
 
     fun onEntityDeath(event: EntityDeathEvent) {
         val entity = event.entity
-        if (WorldHelper.isNotDungeonWorld(entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (entity !is Player) return
 
         val playerDungeonLeaveEvent = PlayerDungeonLeaveEvent(entity)

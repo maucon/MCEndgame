@@ -7,7 +7,8 @@ import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.WorldHelper
+import de.fuballer.mcendgame.util.PluginUtil.runTaskTimer
+import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.attribute.Attribute
@@ -19,13 +20,11 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.Plugin
 import java.util.*
 
 class DungeonBossService(
     private val dungeonBossRepo: DungeonBossRepository,
-    private val worldManageRepo: WorldManageRepository,
-    private val plugin: Plugin
+    private val worldManageRepo: WorldManageRepository
 ) : Service {
     private val random = Random()
 
@@ -62,13 +61,13 @@ class DungeonBossService(
 
     fun onEntityDamage(event: EntityDamageEvent) {
         val entity = event.entity
-        if (WorldHelper.isNotDungeonWorld(event.entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         if (entity.type == EntityType.RAVAGER) (entity as LivingEntity).setAI(true)
     }
 
     fun onEntityTarget(event: EntityTargetEvent) {
         val entity = event.entity
-        if (WorldHelper.isNotDungeonWorld(entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (entity.type == EntityType.RAVAGER) onBossTarget(event)
     }
 
@@ -85,13 +84,8 @@ class DungeonBossService(
         val runnable = DungeonBossAbilitiesRunnable(
             dungeonBossRepo,
             entity as Creature,
-            mapTier,
-            plugin
-        ).runTaskTimer(
-            plugin,
-            0,
-            DungeonBossSettings.BOSS_ABILITY_CHECK_PERIOD.toLong()
-        )
+            mapTier
+        ).runTaskTimer(0, DungeonBossSettings.BOSS_ABILITY_CHECK_PERIOD.toLong())
 
         dungeonBoss.abilityTask = runnable
         dungeonBossRepo.save(dungeonBoss)

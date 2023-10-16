@@ -1,9 +1,9 @@
-package de.fuballer.mcendgame.random
+package de.fuballer.mcendgame.util.random
 
 import java.util.*
 import kotlin.math.max
 
-object RandomPick {
+object RandomUtil {
     private val random = Random()
 
     fun <T : RandomOption<*>> pick(

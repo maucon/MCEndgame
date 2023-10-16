@@ -10,7 +10,8 @@ import org.bukkit.entity.Player
 import java.util.*
 
 class StatisticsCommand(
-    private val statisticsRepo: StatisticsRepository
+    private val statisticsRepo: StatisticsRepository,
+    private val commandHelper: CommandHelper
 ) : CommandHandler {
     override fun getCommand() = StatisticsSettings.COMMAND_NAME
 
@@ -27,7 +28,7 @@ class StatisticsCommand(
             return true
         }
 
-        val targetPlayer = CommandHelper.getPlayer(commandExecutor, args[0]) ?: return true
+        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[0]) ?: return true
         showStatistics(commandExecutor, targetPlayer.uniqueId)
 
         return true

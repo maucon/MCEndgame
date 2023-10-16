@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.corruption
 
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
-import de.fuballer.mcendgame.helper.ItemCreator
-import de.fuballer.mcendgame.random.RandomOption
+import de.fuballer.mcendgame.util.ItemCreatorUtil
+import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -32,12 +32,12 @@ object CorruptionSettings {
 
     const val PRESENT_ENCHANT_WEIGHT_MULTIPLIER = 3
 
-    private val CORRUPTION_ITEM = ItemCreator.create(
+    private val CORRUPTION_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),
         ITEM_NAME,
         ITEM_LORE
     )
-    private val DOUBLE_CORRUPTION_ITEM = ItemCreator.create(
+    private val DOUBLE_CORRUPTION_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),
         ITEM_NAME_DOUBLE,
         ITEM_LORE_DOUBLE,

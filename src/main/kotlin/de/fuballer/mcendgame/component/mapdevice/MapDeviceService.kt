@@ -12,7 +12,7 @@ import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.PluginUtil
+import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.*
 import org.bukkit.block.data.type.RespawnAnchor
 import org.bukkit.enchantments.Enchantment
@@ -38,7 +38,8 @@ class MapDeviceService(
     private val worldManageRepo: WorldManageRepository,
     private val dungeonGenerationService: DungeonGenerationService,
     private val playerDungeonProgressService: PlayerDungeonProgressService,
-    private val plugin: Plugin
+    private val plugin: Plugin,
+    private val server: Server
 ) : Service {
     override fun initialize(plugin: Plugin) {
         createRecipe(plugin)
@@ -177,7 +178,7 @@ class MapDeviceService(
     }
 
     private fun clearBuggedArmorStands() {
-        for (world in PluginUtil.getServer().worlds) {
+        for (world in server.worlds) {
             clearBuggedArmorStands(world)
         }
     }
