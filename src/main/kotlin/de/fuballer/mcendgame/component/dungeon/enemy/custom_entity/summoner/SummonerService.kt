@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionReposit
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionsEntity
 import de.fuballer.mcendgame.component.statitem.StatItemService
 import org.bukkit.World
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.persistence.PersistentDataType
@@ -23,13 +24,14 @@ class SummonerService(
         weapons: Boolean,
         ranged: Boolean,
         armor: Boolean,
+        health: Double,
     ) {
         val world = summoner.world
         val mapTier = getMapTier(summoner)
 
         val minions = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
-            minions.add(summonMinion(world, summoner, mapTier, minionType, weapons, ranged, armor))
+            minions.add(summonMinion(world, summoner, mapTier, minionType, weapons, ranged, armor, health))
         }
 
         if (!minionRepo.exists(summoner.uniqueId))
@@ -46,8 +48,11 @@ class SummonerService(
         weapons: Boolean,
         ranged: Boolean,
         armor: Boolean,
+        health: Double,
     ): LivingEntity {
         val minion = world.spawnEntity(summoner.location, minionType.type) as LivingEntity
+
+        setHealth(minion, health)
 
         minion.persistentDataContainer.set(Keys.IS_MINION, PersistentDataType.BOOLEAN, true)
         minion.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
@@ -59,6 +64,12 @@ class SummonerService(
         minion.persistentDataContainer.set(Keys.DROP_EQUIPMENT, PersistentDataType.BOOLEAN, false)
 
         return minion
+    }
+
+    private fun setHealth(entity: LivingEntity, health: Double) {
+        val attributeInstance = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) ?: return
+        attributeInstance.baseValue = health
+        entity.health = health
     }
 
     private fun getMapTier(entity: LivingEntity): Int {
