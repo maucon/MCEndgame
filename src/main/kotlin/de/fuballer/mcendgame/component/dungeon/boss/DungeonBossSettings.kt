@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.dungeon.boss.db.BossAbility
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.random.RandomOption
 import org.bukkit.entity.EntityType
 import org.bukkit.potion.PotionEffect
@@ -19,7 +20,7 @@ object DungeonBossSettings {
         return DOUBLE_CORRUPTION_CHANCE_PER_TIER * (mapTier - DOUBLE_CORRUPTION_TIER_OFFSET)
     }
 
-    val BOSS_ENTITY_TYPE = EntityType.RAVAGER
+    val BOSS_ENTITY_TYPE = CustomEntityType.DEMONIC_GOLEM
     val BOSS_POTION_EFFECTS = listOf(
         PotionEffect(PotionEffectType.FIRE_RESISTANCE, Int.MAX_VALUE, 0, false, false)
     )

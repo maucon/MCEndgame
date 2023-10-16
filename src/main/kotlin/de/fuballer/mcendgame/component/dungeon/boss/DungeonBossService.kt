@@ -35,7 +35,10 @@ class DungeonBossService(
     ): Creature {
         location.yaw = 180f
 
-        val boss = world.spawnEntity(location, DungeonBossSettings.BOSS_ENTITY_TYPE) as Creature
+        val boss = world.spawnEntity(location, DungeonBossSettings.BOSS_ENTITY_TYPE.type) as Creature
+        boss.customName = DungeonBossSettings.BOSS_ENTITY_TYPE.customName
+        boss.isCustomNameVisible = false
+
         addBossAttributes(boss, mapTier)
 
         val entity = DungeonBossEntity(boss.uniqueId, mapTier, null)
