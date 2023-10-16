@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
+import de.fuballer.mcendgame.component.dungeon.boss.db.BossType
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
@@ -35,13 +36,15 @@ class DungeonBossService(
     ): Creature {
         location.yaw = 180f
 
-        val boss = world.spawnEntity(location, DungeonBossSettings.BOSS_ENTITY_TYPE.type) as Creature
-        boss.customName = DungeonBossSettings.BOSS_ENTITY_TYPE.customName
+        val bossType = BossType.getRandom()
+
+        val boss = world.spawnEntity(location, bossType.customEntityType.type) as Creature
+        boss.customName = bossType.customEntityType.customName
         boss.isCustomNameVisible = false
 
         addBossAttributes(boss, mapTier)
 
-        val entity = DungeonBossEntity(boss.uniqueId, mapTier, null)
+        val entity = DungeonBossEntity(boss.uniqueId, mapTier, null, bossType)
         dungeonBossRepo.save(entity)
 
         return boss
@@ -79,23 +82,24 @@ class DungeonBossService(
         val worldName = entity.world.name
         val uuid = entity.uniqueId
 
-        val dungeonBoss = dungeonBossRepo.findById(uuid) ?: return
-        val abilityTask = dungeonBoss.abilityTask
+        val dungeonBossEntity = dungeonBossRepo.findById(uuid) ?: return
+        val abilityTask = dungeonBossEntity.abilityTask
         if (abilityTask != null && !abilityTask.isCancelled) return
 
         val mapTier = worldManageRepo.findById(worldName)?.mapTier ?: 1
         val runnable = DungeonBossAbilitiesRunnable(
             dungeonBossRepo,
             entity as Creature,
-            mapTier
+            dungeonBossEntity.type,
+            mapTier,
         ).runTaskTimer(
             MCEndgame.PLUGIN,
             0,
             DungeonBossSettings.BOSS_ABILITY_CHECK_PERIOD.toLong()
         )
 
-        dungeonBoss.abilityTask = runnable
-        dungeonBossRepo.save(dungeonBoss)
+        dungeonBossEntity.abilityTask = runnable
+        dungeonBossRepo.save(dungeonBossEntity)
     }
 
     fun onEntityDeath(event: EntityDeathEvent) {

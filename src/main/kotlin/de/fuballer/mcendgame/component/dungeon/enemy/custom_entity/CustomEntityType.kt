@@ -20,5 +20,6 @@ enum class CustomEntityType(
 
     NECROMANCER(EntityType.EVOKER, "Necromancer", false, false, true, false),
 
-    DEMONIC_GOLEM(EntityType.RAVAGER, "Demonic Golem", false, false, false, false)
+    RAVAGER(EntityType.RAVAGER, null, false, false, false, false),
+    DEMONIC_GOLEM(EntityType.RAVAGER, "Demonic Golem", false, false, false, false),
 }

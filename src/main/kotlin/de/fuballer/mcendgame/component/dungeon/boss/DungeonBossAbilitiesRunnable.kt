@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.dungeon.boss.db.BossAbility
+import de.fuballer.mcendgame.component.dungeon.boss.db.BossType
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.random.RandomPick
 import org.bukkit.Bukkit
@@ -19,6 +20,7 @@ import kotlin.math.sqrt
 class DungeonBossAbilitiesRunnable(
     private val dungeonBossRepo: DungeonBossRepository,
     private val boss: Creature,
+    private val bossType: BossType,
     private val level: Int
 ) : BukkitRunnable() {
     private var ticksSinceAbility = 0
@@ -43,8 +45,7 @@ class DungeonBossAbilitiesRunnable(
     private fun useAbility(): Boolean {
         val target = boss.target ?: return false
 
-        val possibleAbilities = DungeonBossSettings.getAbilityOptions(level)
-        when (RandomPick.pick(possibleAbilities).option) {
+        when (RandomPick.pick(bossType.abilities).option) {
             BossAbility.ARROWS -> shootArrows(target, false)
             BossAbility.FIRE_ARROWS -> shootArrows(target, true)
             BossAbility.SPEED -> giveSpeed()

@@ -20,7 +20,6 @@ object DungeonBossSettings {
         return DOUBLE_CORRUPTION_CHANCE_PER_TIER * (mapTier - DOUBLE_CORRUPTION_TIER_OFFSET)
     }
 
-    val BOSS_ENTITY_TYPE = CustomEntityType.DEMONIC_GOLEM
     val BOSS_POTION_EFFECTS = listOf(
         PotionEffect(PotionEffectType.FIRE_RESISTANCE, Int.MAX_VALUE, 0, false, false)
     )
@@ -31,16 +30,6 @@ object DungeonBossSettings {
     fun calculateAddedBossDamage(mapTier: Int) = mapTier * BOSS_EXTRA_DAMAGE_PER_TIER
 
     const val BOSS_ABILITY_CHECK_PERIOD = 5 // in ticks
-    private val ABILITY_TYPES = listOf(
-        RandomOption(40, BossAbility.ARROWS),
-        RandomOption(30, BossAbility.FIRE_ARROWS),
-        RandomOption(50, BossAbility.SPEED),
-        RandomOption(40, BossAbility.FIRE_CASCADE),
-        RandomOption(20, BossAbility.DARKNESS),
-        RandomOption(50, BossAbility.LEAP),
-    )
-
-    fun getAbilityOptions(mapTier: Int) = ABILITY_TYPES.filter { it.option.minLevel <= mapTier }
 
     const val ARROWS_COUNT = 5
     const val ARROWS_TIME_DIFFERENCE: Long = 4 // in ticks

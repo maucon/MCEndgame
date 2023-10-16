@@ -8,5 +8,6 @@ data class DungeonBossEntity(
     override var id: UUID,
 
     var mapTier: Int,
-    var abilityTask: BukkitTask?
+    var abilityTask: BukkitTask?,
+    var type: BossType,
 ) : Entity<UUID>
