@@ -19,7 +19,7 @@ object StatItemSettings {
     val STAT_ITEM_COMMAND_ITEM_TYPE_COLOR = "${ChatColor.BLACK}${ChatColor.UNDERLINE}"
     val STAT_ITEM_COMMAND_ATTRIBUTE_COLOR = "${ChatColor.DARK_GREEN}"
     val STAT_ITEM_COMMAND_VALUE_COLOR = "${ChatColor.BLACK}"
-    const val STAT_ITEM_BOOK_AUTHOR = "MCEndgame"
+    const val STAT_ITEM_BOOK_AUTHOR = "MCEndgameTp"
     const val STAT_ITEM_BOOK_TITLE = "ItemStats"
 
     val SLOT_LORE_COLOR = ChatColor.GRAY
