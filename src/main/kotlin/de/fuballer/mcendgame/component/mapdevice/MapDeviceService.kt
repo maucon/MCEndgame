@@ -13,6 +13,7 @@ import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.helper.PluginUtil
 import org.bukkit.*
 import org.bukkit.block.data.type.RespawnAnchor
 import org.bukkit.enchantments.Enchantment
@@ -56,7 +57,7 @@ class MapDeviceService(
         if (!placedItemLore.contains(MapDeviceSettings.ITEM_LORE_LINE)) return
 
         val block = event.block
-        block.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, FixedMetadataValue(MCEndgame.PLUGIN, MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY))
+        block.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, FixedMetadataValue(MCEndgame.INSTANCE, MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY))
 
         val entity = MapDeviceEntity(block.location)
         mapDeviceRepo.save(entity)
@@ -69,7 +70,7 @@ class MapDeviceService(
         val block = event.block
         if (!block.hasMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY)) return
 
-        block.removeMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, MCEndgame.PLUGIN)
+        block.removeMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, MCEndgame.INSTANCE)
 
         val location = block.location
         val entity = mapDeviceRepo.findByLocation(location) ?: return
@@ -176,7 +177,7 @@ class MapDeviceService(
     }
 
     private fun clearBuggedArmorStands() {
-        for (world in Bukkit.getWorlds()) {
+        for (world in PluginUtil.getServer().worlds) {
             clearBuggedArmorStands(world)
         }
     }
@@ -200,7 +201,10 @@ class MapDeviceService(
     }
 
     private fun getMapDeviceInventory(player: Player): Inventory {
-        val inventory = Bukkit.createInventory(null, InventoryType.HOPPER, MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE)
+        val inventory = PluginUtil.createInventory(
+            InventoryType.HOPPER,
+            MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE
+        )
 
         inventory.setItem(0, MapDeviceSettings.OPEN_PORTALS_ITEM)
         inventory.setItem(1, MapDeviceSettings.FILLER_ITEM)

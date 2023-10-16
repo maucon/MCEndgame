@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.killer.command
 
 import de.fuballer.mcendgame.component.killer.KillerSettings
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
-import org.bukkit.Bukkit
+import de.fuballer.mcendgame.helper.PluginUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -18,7 +18,7 @@ class KillerTabCompleter : CommandTabCompleter {
     ): List<String>? {
         if (sender !is Player) return null
         return when (args.size) {
-            1 -> Bukkit.getOfflinePlayers().mapNotNull { it.name }
+            1 -> PluginUtil.getOfflinePlayers().mapNotNull { it.name }
             else -> listOf()
         }
     }

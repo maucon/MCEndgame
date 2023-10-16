@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.component.dungeon.world
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.dungeon.world.db.ManagedWorldEntity
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.stereotype.Service
 import de.fuballer.mcendgame.helper.FileHelper
+import de.fuballer.mcendgame.helper.PluginUtil
 import de.fuballer.mcendgame.helper.TimerTask
 import org.bukkit.*
 import org.bukkit.plugin.Plugin
@@ -38,7 +38,7 @@ class WorldManageService(
             .type(WorldType.FLAT)
             .generateStructures(false)
 
-        val world = Bukkit.createWorld(worldCreator)!!.apply {
+        val world = PluginUtil.createWorld(worldCreator).apply {
             setGameRule(GameRule.KEEP_INVENTORY, true)
             setGameRule(GameRule.MOB_GRIEFING, false)
             setGameRule(GameRule.DO_MOB_SPAWNING, false)
@@ -58,9 +58,9 @@ class WorldManageService(
 
     private fun deleteAllWorldFiles() {
         worldManageRepo.findAll().forEach {
-            Bukkit.unloadWorld(it.world, false)
+            PluginUtil.unloadWorld(it.world)
 
-            val toDelete = File("${MCEndgame.WORLD_CONTAINER}/${it.world.name}")
+            val toDelete = File("${PluginUtil.getWorldContainer()}/${it.world.name}")
             FileHelper.deleteFile(toDelete)
         }
     }
@@ -83,15 +83,15 @@ class WorldManageService(
     private fun deleteWorld(world: World) {
         val name = world.name
 
-        Bukkit.getScheduler().runTask(MCEndgame.PLUGIN, Runnable {
+        PluginUtil.scheduleTask {
             val dungeonWorldDeleteEvent = DungeonWorldDeleteEvent(world)
             EventGateway.apply(dungeonWorldDeleteEvent)
 
-            Bukkit.unloadWorld(name, false)
+            PluginUtil.unloadWorld(world)
             worldManageRepo.delete(name)
 
-            val toDelete = File(MCEndgame.WORLD_CONTAINER.toString() + "/" + name)
+            val toDelete = File("${PluginUtil.getWorldContainer()}/$name")
             FileHelper.deleteFile(toDelete)
-        })
+        }
     }
 }

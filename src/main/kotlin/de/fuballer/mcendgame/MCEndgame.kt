@@ -75,18 +75,11 @@ import de.fuballer.mcendgame.component.statitem.command.StatItemCommand
 import de.fuballer.mcendgame.component.statitem.command.StatItemTabCompleter
 import de.fuballer.mcendgame.framework.DependencyInjector
 import de.fuballer.mcendgame.framework.stereotype.*
-import org.bukkit.Bukkit
+import de.fuballer.mcendgame.helper.PluginUtil
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
-import java.io.File
 
 class MCEndgame : JavaPlugin() {
-    private val repositories: List<Repository<*, *>>
-    private val services: List<Service>
-    private val listener: List<EventListener>
-    private val commandHandler: List<CommandHandler>
-    private val tabCompleter: List<CommandTabCompleter>
-
     private val injectableClassObjects = mutableSetOf<Class<*>>(
         ArtifactRepository::class.java,
         RecipeRepository::class.java,
@@ -167,10 +160,14 @@ class MCEndgame : JavaPlugin() {
         StatItemTabCompleter::class.java
     )
 
+    private val repositories: List<Repository<*, *>>
+    private val services: List<Service>
+    private val listener: List<EventListener>
+    private val commandHandler: List<CommandHandler>
+    private val tabCompleter: List<CommandTabCompleter>
+
     companion object {
-        var DATA_FOLDER: File = File("")
-        lateinit var WORLD_CONTAINER: File
-        lateinit var PLUGIN: Plugin
+        lateinit var INSTANCE: Plugin
     }
 
     init {
@@ -184,13 +181,9 @@ class MCEndgame : JavaPlugin() {
     }
 
     override fun onEnable() {
-        Bukkit.getLogger().info("Enabling MC-Endgame")
+        INSTANCE = this
 
-        DATA_FOLDER = this.dataFolder
-        WORLD_CONTAINER = server.worldContainer
-        PLUGIN = Bukkit.getPluginManager().getPlugin("MC-Endgame")!!
-
-        listener.forEach { Bukkit.getPluginManager().registerEvents(it, this) }
+        listener.forEach { PluginUtil.registerEvents(it) }
 
         repositories.forEach { it.load() }
         services.forEach { it.initialize(this) }
@@ -198,15 +191,13 @@ class MCEndgame : JavaPlugin() {
         commandHandler.forEach { getCommand(it.getCommand())!!.setExecutor(it) }
         tabCompleter.forEach { getCommand(it.getCommand())!!.tabCompleter = it }
 
-        Bukkit.getLogger().info("Enabled MC-Endgame")
+        logger.info("Enabled MC-Endgame")
     }
 
     override fun onDisable() {
-        Bukkit.getLogger().info("Disabling MC-Endgame")
-
         services.forEach { it.terminate() }
         repositories.forEach { it.flush() }
 
-        Bukkit.getLogger().info("Disabled MC-Endgame")
+        logger.info("Disabled MC-Endgame")
     }
 }

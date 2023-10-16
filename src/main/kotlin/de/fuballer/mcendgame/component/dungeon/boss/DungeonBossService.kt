@@ -86,7 +86,7 @@ class DungeonBossService(
             entity as Creature,
             mapTier
         ).runTaskTimer(
-            MCEndgame.PLUGIN,
+            MCEndgame.INSTANCE,
             0,
             DungeonBossSettings.BOSS_ABILITY_CHECK_PERIOD.toLong()
         )

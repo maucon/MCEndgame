@@ -14,10 +14,10 @@ import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveEntity
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.helper.PluginUtil
 import de.fuballer.mcendgame.random.RandomPick
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
 import java.awt.Point
@@ -104,7 +104,7 @@ class DungeonGenerationService(
 
         val format = ClipboardFormats.findByAlias("schem")
         if (format == null) {
-            Bukkit.getLogger().severe("Couldn't find schematic: $schematicPath")
+            PluginUtil.getLogger().severe("Couldn't find schematic: $schematicPath")
             return
         }
 

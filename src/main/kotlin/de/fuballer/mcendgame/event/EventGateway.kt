@@ -1,10 +1,8 @@
 package de.fuballer.mcendgame.event
 
-import org.bukkit.Bukkit
+import de.fuballer.mcendgame.helper.PluginUtil
 import org.bukkit.event.Event
 
 object EventGateway {
-    fun apply(event: Event) {
-        Bukkit.getServer().pluginManager.callEvent(event)
-    }
+    fun apply(event: Event) = PluginUtil.getPluginManager().callEvent(event)
 }

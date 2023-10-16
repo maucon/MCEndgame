@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.progress.command
 
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSettings
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
-import org.bukkit.Bukkit
+import de.fuballer.mcendgame.helper.PluginUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -20,7 +20,7 @@ class DungeonProgressTabCompleter : CommandTabCompleter {
 
         return when (args.size) {
             1 -> listOf("get", "set")
-            2 -> Bukkit.getOfflinePlayers().mapNotNull { it.name }
+            2 -> PluginUtil.getOfflinePlayers().mapNotNull { it.name }
             3 -> {
                 if (args[0] == "get") return listOf()
                 return listOf("<level>")

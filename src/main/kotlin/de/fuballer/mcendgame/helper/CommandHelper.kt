@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.helper
 
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
@@ -12,7 +11,7 @@ object CommandHelper {
     fun getCommandAction(arg: String) = CommandAction.values().find { it.actionName == arg }
 
     fun getOnlinePlayer(commandExecutor: Player, playerName: String): Player? {
-        val player = Bukkit.getPlayer(playerName)
+        val player = PluginUtil.getServer().getPlayer(playerName)
         if (player != null) return player;
 
         commandExecutor.sendMessage(ONLINE_PLAYER_NOT_FOUND_MESSAGE)
@@ -20,7 +19,7 @@ object CommandHelper {
     }
 
     fun getPlayer(commandExecutor: Player, playerName: String): OfflinePlayer? {
-        val player = Bukkit.getOfflinePlayers()
+        val player = PluginUtil.getOfflinePlayers()
             .find { it.name == playerName }
 
         if (player != null) return player;

@@ -56,7 +56,7 @@ class DungeonBossAbilitiesRunnable(
 
     private fun shootArrows(target: LivingEntity, burning: Boolean) {
         for (i in 1..DungeonBossSettings.ARROWS_COUNT)
-            ShootArrowRunnable(target, boss, burning).runTaskLater(MCEndgame.PLUGIN, i * DungeonBossSettings.ARROWS_TIME_DIFFERENCE)
+            ShootArrowRunnable(target, boss, burning).runTaskLater(MCEndgame.INSTANCE, i * DungeonBossSettings.ARROWS_TIME_DIFFERENCE)
     }
 
     private class ShootArrowRunnable(
@@ -91,10 +91,10 @@ class DungeonBossAbilitiesRunnable(
             val sound = (i - 1) % DungeonBossSettings.FIRE_CASCADE_STEPS_PER_SOUND == 0
 
             CastFireCascadeRunnable(boss, 0.0, boss.location.add(offsetVector), true, sound)
-                .runTaskLater(MCEndgame.PLUGIN, stepDelay)
+                .runTaskLater(MCEndgame.INSTANCE, stepDelay)
 
             CastFireCascadeRunnable(boss, DungeonBossSettings.FIRE_CASCADE_DAMAGE + level * DungeonBossSettings.FIRE_CASCADE_DAMAGE_PER_LEVEL, boss.location.add(offsetVector), false, sound)
-                .runTaskLater(MCEndgame.PLUGIN, stepDelay + DungeonBossSettings.FIRE_CASCADE_ACTIVATION_DELAY)
+                .runTaskLater(MCEndgame.INSTANCE, stepDelay + DungeonBossSettings.FIRE_CASCADE_ACTIVATION_DELAY)
 
             offsetVector.add(addVector)
             i++

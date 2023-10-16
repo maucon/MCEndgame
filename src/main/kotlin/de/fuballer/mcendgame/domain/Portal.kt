@@ -1,10 +1,13 @@
 package de.fuballer.mcendgame.domain
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.dungeon.world.WorldSettings
 import de.fuballer.mcendgame.component.mapdevice.MapDeviceSettings
+import de.fuballer.mcendgame.helper.PluginUtil
 import de.fuballer.mcendgame.helper.WorldHelper
-import org.bukkit.*
+import org.bukkit.Color
+import org.bukkit.GameMode
+import org.bukkit.Location
+import org.bukkit.Particle
 import org.bukkit.Particle.DustOptions
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
@@ -75,23 +78,19 @@ class Portal(
         portalEntity!!.remove()
         portalEntityId = null
 
-        Bukkit.getScheduler().cancelTask(particleTaskId)
+        PluginUtil.cancelTask(particleTaskId)
     }
 
     private fun startParticleTask() =
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(
-            MCEndgame.PLUGIN,
-            {
-                portalLocationWorld.spawnParticle(
-                    Particle.REDSTONE,
-                    portalLocation.x, portalLocation.y + 1, portalLocation.z,
-                    2, 0.2, 0.35, 0.2, 0.0001,
-                    DustOptions(Color.PURPLE, 1f)
-                )
-            },
-            0,
-            1
-        )
+        PluginUtil.scheduleSyncRepeatingTask(0, 1)
+        {
+            portalLocationWorld.spawnParticle(
+                Particle.REDSTONE,
+                portalLocation.x, portalLocation.y + 1, portalLocation.z,
+                2, 0.2, 0.35, 0.2, 0.0001,
+                DustOptions(Color.PURPLE, 1f)
+            )
+        }
 
     private fun teleportPlayerAndSetGameMode(
         player: Player,

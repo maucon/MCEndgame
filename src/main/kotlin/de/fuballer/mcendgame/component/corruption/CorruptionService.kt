@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.component.corruption
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.corruption.data.AttributeWithModifier
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.component.statitem.StatItemSettings
 import de.fuballer.mcendgame.framework.stereotype.Service
 import de.fuballer.mcendgame.helper.AttributeHelper
+import de.fuballer.mcendgame.helper.PluginUtil
 import de.fuballer.mcendgame.random.RandomPick
 import org.bukkit.GameMode
 import org.bukkit.Material
@@ -34,14 +34,14 @@ class CorruptionService : Service {
         ) return
 
         event.result = addCorruptionTag(base.clone())
-        val plugin = MCEndgame.PLUGIN
-        plugin.server.scheduler.runTask(plugin, Runnable {
+
+        PluginUtil.scheduleTask {
             event.inventory.repairCost = 1
 
             for (viewer in event.inventory.viewers) {
                 (viewer as? Player)?.setWindowProperty(InventoryView.Property.REPAIR_COST, 1)
             }
-        })
+        }
     }
 
     fun onInventoryClick(event: InventoryClickEvent) {

@@ -1,14 +1,17 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.remaining.RemainingService
 import de.fuballer.mcendgame.component.statitem.StatItemService
 import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.helper.PluginUtil
 import de.fuballer.mcendgame.helper.WorldHelper
 import de.fuballer.mcendgame.random.RandomPick
-import org.bukkit.*
+import org.bukkit.Difficulty
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Creature
@@ -39,13 +42,10 @@ class EnemyGenerationService(
 
                 if (startPoint.x == x && startPoint.y == y) continue
 
-                Bukkit.getScheduler().runTask(
-                    MCEndgame.PLUGIN,
-                    Runnable {
-                        val mobCount = EnemyGenerationSettings.calculateMobCount(random)
-                        spawnMobs(mobCount, -x * 16.0 - 8, -y * 16.0 - 8, mapTier, world)
-                    }
-                )
+                PluginUtil.scheduleTask {
+                    val mobCount = EnemyGenerationSettings.calculateMobCount(random)
+                    spawnMobs(mobCount, -x * 16.0 - 8, -y * 16.0 - 8, mapTier, world)
+                }
             }
         }
     }
