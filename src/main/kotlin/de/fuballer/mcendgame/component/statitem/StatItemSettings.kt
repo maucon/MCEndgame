@@ -142,10 +142,10 @@ object StatItemSettings {
         RandomOption(10, PICKAXES),
         RandomOption(10, SHOVELS),
         RandomOption(10, HOES),
+        RandomOption(1, TRIDENTS),
     )
-    val SKELETON_MAINHAND_PROBABILITIES = listOf<RandomOption<List<SortableRandomOption<out Equipment>>>>(
+    val RANGED_MAINHAND_PROBABILITIES = listOf<RandomOption<List<SortableRandomOption<out Equipment>>>>(
         RandomOption(100, BOWS),
-        RandomOption(5, TRIDENTS),
     )
 
     val SMITHING_MAP: Map<Material, Equipment> = mapOf(

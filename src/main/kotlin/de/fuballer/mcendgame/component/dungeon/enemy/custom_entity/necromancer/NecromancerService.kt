@@ -33,7 +33,7 @@ class NecromancerService(
             return
         }
 
-        summonerService.summonMinions(event.entity, CustomEntityType.SKELETON, spawnAmount, true, true)
+        summonerService.summonMinions(event.entity, CustomEntityType.SKELETON, spawnAmount, true, false, true)
         event.isCancelled = true
     }
 

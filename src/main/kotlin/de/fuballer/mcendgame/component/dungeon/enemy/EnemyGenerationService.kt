@@ -75,9 +75,9 @@ class EnemyGenerationService(
                 entity.customName = entityType.customName
                 entity.isCustomNameVisible = false
             }
-
             entity.removeWhenFarAway = false
-            statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.canHaveArmor)
+
+            statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
 
             if (!entityType.dropBaseLoot)
                 entity.persistentDataContainer.set(Keys.DROP_BASE_LOOT_KEY, PersistentDataType.BOOLEAN, false)
