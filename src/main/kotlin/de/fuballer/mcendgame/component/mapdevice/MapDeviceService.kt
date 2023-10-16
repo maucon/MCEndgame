@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.mapdevice
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationService
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressService
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSettings
@@ -38,7 +37,8 @@ class MapDeviceService(
     private val mapDeviceRepo: MapDeviceRepository,
     private val worldManageRepo: WorldManageRepository,
     private val dungeonGenerationService: DungeonGenerationService,
-    private val playerDungeonProgressService: PlayerDungeonProgressService
+    private val playerDungeonProgressService: PlayerDungeonProgressService,
+    private val plugin: Plugin
 ) : Service {
     override fun initialize(plugin: Plugin) {
         createRecipe(plugin)
@@ -57,7 +57,7 @@ class MapDeviceService(
         if (!placedItemLore.contains(MapDeviceSettings.ITEM_LORE_LINE)) return
 
         val block = event.block
-        block.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, FixedMetadataValue(MCEndgame.INSTANCE, MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY))
+        block.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, FixedMetadataValue(plugin, MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY))
 
         val entity = MapDeviceEntity(block.location)
         mapDeviceRepo.save(entity)
@@ -70,7 +70,7 @@ class MapDeviceService(
         val block = event.block
         if (!block.hasMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY)) return
 
-        block.removeMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, MCEndgame.INSTANCE)
+        block.removeMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, plugin)
 
         val location = block.location
         val entity = mapDeviceRepo.findByLocation(location) ?: return
@@ -292,7 +292,7 @@ class MapDeviceService(
             player.setStatistic(Statistic.BREAK_ITEM, toolType, player.getStatistic(Statistic.BREAK_ITEM, toolType) + 1)
         }
 
-        toolMeta.damage = toolMeta.damage + 1
+        toolMeta.damage += 1
         tool.itemMeta = toolMeta
     }
 }

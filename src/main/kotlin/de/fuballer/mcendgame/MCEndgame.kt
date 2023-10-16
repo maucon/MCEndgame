@@ -73,6 +73,7 @@ import de.fuballer.mcendgame.component.statitem.StatItemListener
 import de.fuballer.mcendgame.component.statitem.StatItemService
 import de.fuballer.mcendgame.component.statitem.command.StatItemCommand
 import de.fuballer.mcendgame.component.statitem.command.StatItemTabCompleter
+import de.fuballer.mcendgame.configuration.PluginConfiguration
 import de.fuballer.mcendgame.framework.DependencyInjector
 import de.fuballer.mcendgame.framework.stereotype.*
 import de.fuballer.mcendgame.helper.PluginUtil
@@ -157,20 +158,25 @@ class MCEndgame : JavaPlugin() {
         KillerTabCompleter::class.java,
         RemainingTabCompleter::class.java,
         StatisticsTabCompleter::class.java,
-        StatItemTabCompleter::class.java
+        StatItemTabCompleter::class.java,
+
+        PluginConfiguration::class.java
     )
 
-    private val repositories: List<Repository<*, *>>
-    private val services: List<Service>
-    private val listener: List<EventListener>
-    private val commandHandler: List<CommandHandler>
-    private val tabCompleter: List<CommandTabCompleter>
+    private lateinit var repositories: List<Repository<*, *>>
+    private lateinit var services: List<Service>
+    private lateinit var listener: List<EventListener>
+    private lateinit var commandHandler: List<CommandHandler>
+    private lateinit var tabCompleter: List<CommandTabCompleter>
+    private lateinit var configurations: List<Configuration>
 
     companion object {
         lateinit var INSTANCE: Plugin
     }
 
-    init {
+    override fun onEnable() {
+        INSTANCE = this
+
         val injectedObjects = DependencyInjector.instantiateClasses(injectableClassObjects)
 
         repositories = injectedObjects.filterIsInstance<Repository<*, *>>()
@@ -178,10 +184,7 @@ class MCEndgame : JavaPlugin() {
         listener = injectedObjects.filterIsInstance<EventListener>()
         commandHandler = injectedObjects.filterIsInstance<CommandHandler>()
         tabCompleter = injectedObjects.filterIsInstance<CommandTabCompleter>()
-    }
-
-    override fun onEnable() {
-        INSTANCE = this
+        configurations = injectedObjects.filterIsInstance<Configuration>()
 
         listener.forEach { PluginUtil.registerEvents(it) }
 

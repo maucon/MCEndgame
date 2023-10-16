@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
@@ -20,11 +19,13 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.Plugin
 import java.util.*
 
 class DungeonBossService(
     private val dungeonBossRepo: DungeonBossRepository,
-    private val worldManageRepo: WorldManageRepository
+    private val worldManageRepo: WorldManageRepository,
+    private val plugin: Plugin
 ) : Service {
     private val random = Random()
 
@@ -84,9 +85,10 @@ class DungeonBossService(
         val runnable = DungeonBossAbilitiesRunnable(
             dungeonBossRepo,
             entity as Creature,
-            mapTier
+            mapTier,
+            plugin
         ).runTaskTimer(
-            MCEndgame.INSTANCE,
+            plugin,
             0,
             DungeonBossSettings.BOSS_ABILITY_CHECK_PERIOD.toLong()
         )

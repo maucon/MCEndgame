@@ -14,21 +14,21 @@ import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveEntity
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.PluginUtil
 import de.fuballer.mcendgame.random.RandomPick
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
 import org.bukkit.World
 import java.awt.Point
-
+import java.util.logging.Logger
 
 class DungeonGenerationService(
     private val dungeonLeaveRepo: DungeonLeaveRepository,
     private val worldManageService: WorldManageService,
     private val dungeonBossService: DungeonBossService,
     private val dungeonLeaveService: DungeonLeaveService,
-    private val enemyGenerationService: EnemyGenerationService
+    private val enemyGenerationService: EnemyGenerationService,
+    private val logger: Logger
 ) : Service {
     fun generateDungeon(
         mapTier: Int,
@@ -104,7 +104,7 @@ class DungeonGenerationService(
 
         val format = ClipboardFormats.findByAlias("schem")
         if (format == null) {
-            PluginUtil.getLogger().severe("Couldn't find schematic: $schematicPath")
+            logger.severe("Couldn't find schematic: $schematicPath")
             return
         }
 

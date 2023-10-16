@@ -8,7 +8,7 @@ val ONLINE_PLAYER_NOT_FOUND_MESSAGE = "${ChatColor.RED}Player not found or onlin
 val OFFLINE_PLAYER_NOT_FOUND_MESSAGE = "${ChatColor.RED}Player not found!"
 
 object CommandHelper {
-    fun getCommandAction(arg: String) = CommandAction.values().find { it.actionName == arg }
+    fun getCommandAction(arg: String) = CommandAction.entries.find { it.actionName == arg }
 
     fun getOnlinePlayer(commandExecutor: Player, playerName: String): Player? {
         val player = PluginUtil.getServer().getPlayer(playerName)

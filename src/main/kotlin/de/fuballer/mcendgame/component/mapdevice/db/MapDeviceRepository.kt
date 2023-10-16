@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.mapdevice.db
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.mapdevice.MapDeviceSettings
 import de.fuballer.mcendgame.db.PersistableMapRepository
 import de.fuballer.mcendgame.domain.Portal
@@ -9,9 +8,12 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Entity
 import org.bukkit.metadata.FixedMetadataValue
+import org.bukkit.plugin.Plugin
 import java.util.*
 
-class MapDeviceRepository : PersistableMapRepository<UUID, MapDeviceEntity>() {
+class MapDeviceRepository(
+    private val plugin: Plugin
+) : PersistableMapRepository<UUID, MapDeviceEntity>() {
     override fun load() {
         super.load()
 
@@ -25,7 +27,7 @@ class MapDeviceRepository : PersistableMapRepository<UUID, MapDeviceEntity>() {
 
                     if (mapDevice.type != Material.RESPAWN_ANCHOR) return@map null
 
-                    mapDevice.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, FixedMetadataValue(MCEndgame.INSTANCE, MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY))
+                    mapDevice.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, FixedMetadataValue(plugin, MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY))
                     MapDeviceEntity(location).apply { id = it.id }
                 }
                 .filterNotNull()

@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.dungeon.boss.db.BossAbility
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.random.RandomPick
@@ -10,6 +9,7 @@ import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
+import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 import kotlin.math.pow
@@ -18,7 +18,8 @@ import kotlin.math.sqrt
 class DungeonBossAbilitiesRunnable(
     private val dungeonBossRepo: DungeonBossRepository,
     private val boss: Creature,
-    private val level: Int
+    private val level: Int,
+    private val plugin: Plugin
 ) : BukkitRunnable() {
     private var ticksSinceAbility = 0
     private val abilityCooldown = DungeonBossSettings.getBossAbilityCooldown(level)
@@ -56,7 +57,7 @@ class DungeonBossAbilitiesRunnable(
 
     private fun shootArrows(target: LivingEntity, burning: Boolean) {
         for (i in 1..DungeonBossSettings.ARROWS_COUNT)
-            ShootArrowRunnable(target, boss, burning).runTaskLater(MCEndgame.INSTANCE, i * DungeonBossSettings.ARROWS_TIME_DIFFERENCE)
+            ShootArrowRunnable(target, boss, burning).runTaskLater(plugin, i * DungeonBossSettings.ARROWS_TIME_DIFFERENCE)
     }
 
     private class ShootArrowRunnable(
@@ -91,10 +92,10 @@ class DungeonBossAbilitiesRunnable(
             val sound = (i - 1) % DungeonBossSettings.FIRE_CASCADE_STEPS_PER_SOUND == 0
 
             CastFireCascadeRunnable(boss, 0.0, boss.location.add(offsetVector), true, sound)
-                .runTaskLater(MCEndgame.INSTANCE, stepDelay)
+                .runTaskLater(plugin, stepDelay)
 
             CastFireCascadeRunnable(boss, DungeonBossSettings.FIRE_CASCADE_DAMAGE + level * DungeonBossSettings.FIRE_CASCADE_DAMAGE_PER_LEVEL, boss.location.add(offsetVector), false, sound)
-                .runTaskLater(MCEndgame.INSTANCE, stepDelay + DungeonBossSettings.FIRE_CASCADE_ACTIVATION_DELAY)
+                .runTaskLater(plugin, stepDelay + DungeonBossSettings.FIRE_CASCADE_ACTIVATION_DELAY)
 
             offsetVector.add(addVector)
             i++

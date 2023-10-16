@@ -22,7 +22,7 @@ class GiveArtifactCommand(
         args: Array<out String>
     ): Boolean {
         if (sender !is Player) return false
-        if (args.size < 3 || !ArtifactType.values().map { it.name }.contains(args[1].uppercase())) return false
+        if (args.size < 3 || !ArtifactType.entries.map { it.name }.contains(args[1].uppercase())) return false
 
         val targetPlayer = CommandHelper.getOnlinePlayer(sender, args[0]) ?: return true
 
