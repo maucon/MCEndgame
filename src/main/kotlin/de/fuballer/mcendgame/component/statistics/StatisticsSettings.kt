@@ -6,7 +6,7 @@ object StatisticsSettings {
     const val COMMAND_NAME = "dungeon-statistics"
     val PLAYER_NO_STATISTICS_MESSAGE = "${ChatColor.RED}Player has no dungeon statistics!"
 
-    const val STATISTICS_BOOK_AUTHOR = "MCEndgame"
+    const val STATISTICS_BOOK_AUTHOR = "MCEndgameTp"
     const val STATISTICS_BOOK_TITLE = "ItemStats"
 
     private val STATISTICS_BOOK_HEADLINE_COLOR = "" + ChatColor.BLACK + ChatColor.UNDERLINE

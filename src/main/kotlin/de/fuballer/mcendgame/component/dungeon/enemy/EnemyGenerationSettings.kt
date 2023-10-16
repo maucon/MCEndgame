@@ -1,9 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
-import de.fuballer.mcendgame.component.dungeon.enemy.data.DifficultyBaseStats
-import de.fuballer.mcendgame.component.dungeon.enemy.data.EntityEquip
-import de.fuballer.mcendgame.component.dungeon.enemy.data.MobDamagePrefix
-import de.fuballer.mcendgame.component.dungeon.enemy.data.PotionEffect
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
+import de.fuballer.mcendgame.component.dungeon.enemy.data.*
 import de.fuballer.mcendgame.random.RandomOption
 import de.fuballer.mcendgame.random.SortableRandomOption
 import org.bukkit.entity.EntityType
@@ -20,13 +18,14 @@ object EnemyGenerationSettings {
     }
 
     val DUNGEON_MOBS = listOf(
-        RandomOption(25, EntityEquip(EntityType.ZOMBIE, true)),
-        RandomOption(10, EntityEquip(EntityType.HUSK, true)),
-        RandomOption(15, EntityEquip(EntityType.SKELETON, true)),
-        RandomOption(5, EntityEquip(EntityType.STRAY, true)),
-        RandomOption(1, EntityEquip(EntityType.WITHER_SKELETON, true)),
-        RandomOption(4, EntityEquip(EntityType.CREEPER, false)),
-        RandomOption(3, EntityEquip(EntityType.WITCH, false))
+        RandomOption(25, CustomEntityType.ZOMBIE),
+        RandomOption(10, CustomEntityType.HUSK),
+        RandomOption(15, CustomEntityType.SKELETON),
+        RandomOption(5, CustomEntityType.STRAY),
+        RandomOption(1, CustomEntityType.WITHER_SKELETON),
+        RandomOption(4, CustomEntityType.CREEPER),
+        RandomOption(3, CustomEntityType.WITCH),
+        RandomOption(25, CustomEntityType.NECROMANCER)
     )
 
     val RESISTANCE_EFFECTS = listOf(

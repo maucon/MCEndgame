@@ -19,7 +19,7 @@ object StatItemSettings {
     val STAT_ITEM_COMMAND_ITEM_TYPE_COLOR = "${ChatColor.BLACK}${ChatColor.UNDERLINE}"
     val STAT_ITEM_COMMAND_ATTRIBUTE_COLOR = "${ChatColor.DARK_GREEN}"
     val STAT_ITEM_COMMAND_VALUE_COLOR = "${ChatColor.BLACK}"
-    const val STAT_ITEM_BOOK_AUTHOR = "MCEndgame"
+    const val STAT_ITEM_BOOK_AUTHOR = "MCEndgameTp"
     const val STAT_ITEM_BOOK_TITLE = "ItemStats"
 
     val SLOT_LORE_COLOR = ChatColor.GRAY
@@ -142,10 +142,10 @@ object StatItemSettings {
         RandomOption(10, PICKAXES),
         RandomOption(10, SHOVELS),
         RandomOption(10, HOES),
+        RandomOption(1, TRIDENTS),
     )
-    val SKELETON_MAINHAND_PROBABILITIES = listOf<RandomOption<List<SortableRandomOption<out Equipment>>>>(
+    val RANGED_MAINHAND_PROBABILITIES = listOf<RandomOption<List<SortableRandomOption<out Equipment>>>>(
         RandomOption(100, BOWS),
-        RandomOption(5, TRIDENTS),
     )
 
     val SMITHING_MAP: Map<Material, Equipment> = mapOf(

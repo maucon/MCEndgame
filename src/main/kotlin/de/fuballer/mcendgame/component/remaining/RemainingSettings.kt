@@ -15,7 +15,5 @@ object RemainingSettings {
 
     val IGNORED_MOBS = listOf(
         EntityType.RAVAGER,
-        EntityType.EVOKER,
-        EntityType.VEX
     )
 }

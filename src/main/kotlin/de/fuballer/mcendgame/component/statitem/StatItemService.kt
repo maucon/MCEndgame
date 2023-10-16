@@ -11,7 +11,6 @@ import de.fuballer.mcendgame.random.SortableRandomOption
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Creature
-import org.bukkit.entity.EntityType
 import org.bukkit.event.enchantment.EnchantItemEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
@@ -26,32 +25,43 @@ import java.util.*
 class StatItemService : Service {
     private val random = Random()
 
-    fun setCreatureEquipment(creature: Creature, mapTier: Int) {
+    fun setCreatureEquipment(
+        creature: Creature,
+        mapTier: Int,
+        weapons: Boolean,
+        ranged: Boolean,
+        armor: Boolean,
+    ) {
         val equipment = creature.equipment!!
 
-        getSortableEquipment(mapTier, StatItemSettings.HELMETS, EquipmentSlot.HEAD)?.also {
-            equipment.helmet = it
-            equipment.helmetDropChance = 0f
+        if (weapons) {
+            createMainHandItem(mapTier, ranged)?.also {
+                equipment.setItemInMainHand(it)
+                equipment.itemInMainHandDropChance = 0f
+            }
+            createOffHandItem(mapTier)?.also {
+                equipment.setItemInOffHand(it)
+                equipment.itemInOffHandDropChance = 0f
+            }
         }
-        getSortableEquipment(mapTier, StatItemSettings.CHESTPLATES, EquipmentSlot.CHEST)?.also {
-            equipment.chestplate = it
-            equipment.chestplateDropChance = 0f
-        }
-        getSortableEquipment(mapTier, StatItemSettings.LEGGINGS, EquipmentSlot.LEGS)?.also {
-            equipment.leggings = it
-            equipment.leggingsDropChance = 0f
-        }
-        getSortableEquipment(mapTier, StatItemSettings.BOOTS, EquipmentSlot.FEET)?.also {
-            equipment.boots = it
-            equipment.bootsDropChance = 0f
-        }
-        createMainHandItem(mapTier, creature)?.also {
-            equipment.setItemInMainHand(it)
-            equipment.itemInMainHandDropChance = 0f
-        }
-        createOffHandItem(mapTier)?.also {
-            equipment.setItemInOffHand(it)
-            equipment.itemInOffHandDropChance = 0f
+
+        if (armor) {
+            getSortableEquipment(mapTier, StatItemSettings.HELMETS, EquipmentSlot.HEAD)?.also {
+                equipment.helmet = it
+                equipment.helmetDropChance = 0f
+            }
+            getSortableEquipment(mapTier, StatItemSettings.CHESTPLATES, EquipmentSlot.CHEST)?.also {
+                equipment.chestplate = it
+                equipment.chestplateDropChance = 0f
+            }
+            getSortableEquipment(mapTier, StatItemSettings.LEGGINGS, EquipmentSlot.LEGS)?.also {
+                equipment.leggings = it
+                equipment.leggingsDropChance = 0f
+            }
+            getSortableEquipment(mapTier, StatItemSettings.BOOTS, EquipmentSlot.FEET)?.also {
+                equipment.boots = it
+                equipment.bootsDropChance = 0f
+            }
         }
     }
 
@@ -109,18 +119,15 @@ class StatItemService : Service {
         item.itemMeta = meta
     }
 
-
-    private fun createMainHandItem(mapTier: Int, creature: Creature): ItemStack? {
-        if (creature.type == EntityType.SKELETON || creature.type == EntityType.STRAY) {
-            return createSkeletonMainHandItem(mapTier)
-        }
+    private fun createMainHandItem(mapTier: Int, ranged: Boolean): ItemStack? {
+        if (ranged) return createRangedMainHandItem(mapTier)
 
         val itemProbability = RandomPick.pick(StatItemSettings.MAINHAND_PROBABILITIES).option ?: return null
         return getSortableEquipment(mapTier, itemProbability, EquipmentSlot.HAND)
     }
 
-    private fun createSkeletonMainHandItem(mapTier: Int): ItemStack? {
-        val itemProbability = RandomPick.pick(StatItemSettings.SKELETON_MAINHAND_PROBABILITIES).option
+    private fun createRangedMainHandItem(mapTier: Int): ItemStack? {
+        val itemProbability = RandomPick.pick(StatItemSettings.RANGED_MAINHAND_PROBABILITIES).option
         return getSortableEquipment(mapTier, itemProbability, EquipmentSlot.HAND)
     }
 
