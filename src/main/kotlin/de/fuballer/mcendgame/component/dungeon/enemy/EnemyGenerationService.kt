@@ -113,7 +113,7 @@ class EnemyGenerationService(
         entity.addPotionEffect(effect)
     }
 
-    private fun addEffectsToEntity(
+    public fun addEffectsToEntity(
         entity: Creature,
         mapTier: Int
     ) {

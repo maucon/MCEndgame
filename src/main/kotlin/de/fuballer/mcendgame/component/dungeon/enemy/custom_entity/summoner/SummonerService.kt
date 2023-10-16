@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner
 
+import de.fuballer.mcendgame.component.dungeon.enemy.EnemyGenerationService
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionRepository
@@ -13,6 +14,7 @@ import org.bukkit.persistence.PersistentDataType
 class SummonerService(
     private val minionRepo: MinionRepository,
     private val statItemService: StatItemService,
+    private val enemyGenerationService: EnemyGenerationService,
 ) {
     fun summonMinions(
         summoner: LivingEntity,
@@ -31,6 +33,7 @@ class SummonerService(
 
             if (mapTier >= 0 && minion is Creature) {
                 statItemService.setCreatureEquipment(minion, mapTier, weapons, armor)
+                enemyGenerationService.addEffectsToEntity(minion, mapTier)
                 minion.persistentDataContainer.set(Keys.DROP_EQUIPMENT_KEY, PersistentDataType.BOOLEAN, false)
             }
 
