@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.remaining.RemainingService
@@ -19,6 +20,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.EntityPotionEffectEvent
 import org.bukkit.inventory.EntityEquipment
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.awt.Point
@@ -58,7 +60,7 @@ class EnemyGenerationService(
         world: World
     ) {
         for (i in 0 until amount) {
-            val entityEquip = RandomPick.pick(EnemyGenerationSettings.DUNGEON_MOBS).option
+            val entityType = RandomPick.pick(EnemyGenerationSettings.DUNGEON_MOBS).option
             val entity = world.spawnEntity(
                 Location(
                     world,
@@ -66,18 +68,26 @@ class EnemyGenerationService(
                     DungeonGenerationSettings.MOB_Y_POS,
                     z + EnemyGenerationSettings.MOB_XZ_SPREAD * (random.nextDouble() * 2 - 1)
                 ),
-                entityEquip.type
+                entityType.type
             ) as Creature
 
-            entity.removeWhenFarAway = false
-            if (entityEquip.canHaveEquip) {
-                statItemService.setCreatureEquipment(entity, mapTier)
+            if (entityType.customName != null) {
+                entity.customName = entityType.customName
+                entity.isCustomNameVisible = false
             }
+            entity.removeWhenFarAway = false
+
+            statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
+
+            if (!entityType.dropBaseLoot) {
+                entity.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
+            }
+            entity.persistentDataContainer.set(Keys.MAP_TIER, PersistentDataType.INTEGER, mapTier)
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)
             addEffectsToEntity(entity, mapTier)
-            applyNamePrefix(entity)
+            //applyNamePrefix(entity)
         }
 
         remainingService.addMobs(world, amount)
@@ -104,7 +114,7 @@ class EnemyGenerationService(
         entity.addPotionEffect(effect)
     }
 
-    private fun addEffectsToEntity(
+    fun addEffectsToEntity(
         entity: Creature,
         mapTier: Int
     ) {
