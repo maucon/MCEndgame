@@ -42,7 +42,7 @@ class DungeonBossService(
         boss.customName = bossType.customEntityType.customName
         boss.isCustomNameVisible = false
 
-        addBossAttributes(boss, mapTier)
+        addBossAttributes(boss, mapTier, bossType)
 
         val entity = DungeonBossEntity(boss.uniqueId, mapTier, null, bossType)
         dungeonBossRepo.save(entity)
@@ -50,19 +50,23 @@ class DungeonBossService(
         return boss
     }
 
-    private fun addBossAttributes(boss: Creature, mapTier: Int) {
+    private fun addBossAttributes(boss: Creature, mapTier: Int, bossType: BossType) {
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
         boss.removeWhenFarAway = false
         boss.setAI(false)
 
         var attributeInstance = boss.getAttribute(Attribute.GENERIC_MAX_HEALTH) ?: return
-        val newHealth = attributeInstance.baseValue + DungeonBossSettings.calculateAddedBossHealth(mapTier)
+        val newHealth = bossType.baseHealth + mapTier * bossType.healthPerTier
         attributeInstance.baseValue = newHealth
-        boss.health = attributeInstance.value
+        boss.health = newHealth
 
         attributeInstance = boss.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) ?: return
-        val newDamage = attributeInstance.baseValue + DungeonBossSettings.calculateAddedBossDamage(mapTier)
+        val newDamage = bossType.baseDamage + mapTier * bossType.damagePerTier
         attributeInstance.baseValue = newDamage
+
+        attributeInstance = boss.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) ?: return
+        val newSpeed = bossType.speed
+        attributeInstance.baseValue = newSpeed
     }
 
     fun onEntityDamage(event: EntityDamageEvent) {

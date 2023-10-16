@@ -1,9 +1,5 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
-import de.fuballer.mcendgame.component.dungeon.boss.db.BossAbility
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.random.RandomOption
-import org.bukkit.entity.EntityType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -23,11 +19,6 @@ object DungeonBossSettings {
     val BOSS_POTION_EFFECTS = listOf(
         PotionEffect(PotionEffectType.FIRE_RESISTANCE, Int.MAX_VALUE, 0, false, false)
     )
-    private const val BOSS_EXTRA_HEALTH_PER_TIER = 5
-    fun calculateAddedBossHealth(mapTier: Int) = mapTier * BOSS_EXTRA_HEALTH_PER_TIER
-
-    private const val BOSS_EXTRA_DAMAGE_PER_TIER = 2
-    fun calculateAddedBossDamage(mapTier: Int) = mapTier * BOSS_EXTRA_DAMAGE_PER_TIER
 
     const val BOSS_ABILITY_CHECK_PERIOD = 5 // in ticks
 
