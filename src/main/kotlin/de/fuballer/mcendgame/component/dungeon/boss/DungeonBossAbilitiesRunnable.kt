@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.dungeon.boss.db.BossAbility
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.random.RandomPick
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -49,6 +50,7 @@ class DungeonBossAbilitiesRunnable(
             BossAbility.SPEED -> giveSpeed()
             BossAbility.FIRE_CASCADE -> castFireCascade(target)
             BossAbility.DARKNESS -> applyDarkness()
+            BossAbility.LEAP -> leap(target)
         }
 
         return true
@@ -157,5 +159,10 @@ class DungeonBossAbilitiesRunnable(
                 player.addPotionEffect(DungeonBossSettings.DARKNESS_EFFECT)
             }
         }
+    }
+
+    private fun leap(target: LivingEntity) {
+        val vec = target.location.subtract(boss.location).multiply(0.25)
+        boss.velocity = Vector(vec.x, vec.y + vec.length() / 4, vec.z)
     }
 }

@@ -37,6 +37,7 @@ object DungeonBossSettings {
         RandomOption(50, BossAbility.SPEED),
         RandomOption(40, BossAbility.FIRE_CASCADE),
         RandomOption(20, BossAbility.DARKNESS),
+        RandomOption(50, BossAbility.LEAP),
     )
 
     fun getAbilityOptions(mapTier: Int) = ABILITY_TYPES.filter { it.option.minLevel <= mapTier }

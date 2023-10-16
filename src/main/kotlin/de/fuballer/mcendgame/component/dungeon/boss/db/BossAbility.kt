@@ -8,4 +8,5 @@ enum class BossAbility(
     SPEED(5),
     FIRE_CASCADE(8),
     DARKNESS(10),
+    LEAP(0),
 }
