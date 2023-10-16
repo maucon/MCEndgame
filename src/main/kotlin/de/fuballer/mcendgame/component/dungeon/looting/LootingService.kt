@@ -46,8 +46,8 @@ class LootingService(
     }
 
     private fun canDropEquipment(entity: Entity): Boolean {
-        if (!entity.persistentDataContainer.has(Keys.DROP_EQUIPMENT_KEY, PersistentDataType.BOOLEAN)) return true
-        return entity.persistentDataContainer.get(Keys.DROP_EQUIPMENT_KEY, PersistentDataType.BOOLEAN) ?: return true
+        if (!entity.persistentDataContainer.has(Keys.DROP_EQUIPMENT, PersistentDataType.BOOLEAN)) return true
+        return entity.persistentDataContainer.get(Keys.DROP_EQUIPMENT, PersistentDataType.BOOLEAN) ?: return true
     }
 
     private fun getLootingLevel(player: Player?): Int {

@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.killingstreak
 
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.killingstreak.db.KillStreakEntity
 import de.fuballer.mcendgame.component.dungeon.killingstreak.db.KillStreakRepository
 import de.fuballer.mcendgame.event.DungeonOpenEvent
@@ -19,6 +20,7 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.persistence.PersistentDataType
 import java.util.*
 import kotlin.math.min
 
@@ -29,6 +31,9 @@ class KillStreakService(
         val entity = event.entity as? Monster ?: return
         val world = entity.world
         if (WorldHelper.isNotDungeonWorld(world)) return
+
+        if (event.entity.persistentDataContainer.has(Keys.IS_MINION, PersistentDataType.BOOLEAN))
+            if (event.entity.persistentDataContainer.get(Keys.IS_MINION, PersistentDataType.BOOLEAN) == true) return
 
         val killStreak = killStreakRepo.findById(world.name) ?: return
         killStreak.streak++

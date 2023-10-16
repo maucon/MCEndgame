@@ -49,19 +49,20 @@ class SummonerService(
     ): LivingEntity {
         val minion = world.spawnEntity(summoner.location, minionType.type) as LivingEntity
 
-        minion.persistentDataContainer.set(Keys.DROP_BASE_LOOT_KEY, PersistentDataType.BOOLEAN, false)
+        minion.persistentDataContainer.set(Keys.IS_MINION, PersistentDataType.BOOLEAN, true)
+        minion.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
 
         if (mapTier < 0 || minion !is Creature) return minion
 
         statItemService.setCreatureEquipment(minion, mapTier, weapons, ranged, armor)
         enemyGenerationService.addEffectsToEntity(minion, mapTier)
-        minion.persistentDataContainer.set(Keys.DROP_EQUIPMENT_KEY, PersistentDataType.BOOLEAN, false)
+        minion.persistentDataContainer.set(Keys.DROP_EQUIPMENT, PersistentDataType.BOOLEAN, false)
 
         return minion
     }
 
     private fun getMapTier(entity: LivingEntity): Int {
-        if (!entity.persistentDataContainer.has(Keys.MAP_TIER_KEY, PersistentDataType.INTEGER)) return -1
-        return entity.persistentDataContainer.get(Keys.MAP_TIER_KEY, PersistentDataType.INTEGER) ?: return -1
+        if (!entity.persistentDataContainer.has(Keys.MAP_TIER, PersistentDataType.INTEGER)) return -1
+        return entity.persistentDataContainer.get(Keys.MAP_TIER, PersistentDataType.INTEGER) ?: return -1
     }
 }

@@ -81,8 +81,8 @@ class ArtifactService(
         if (WorldHelper.isNotDungeonWorld(event.entity.world)) return
         if (event.entity !is Monster) return
 
-        if (event.entity.persistentDataContainer.has(Keys.DROP_BASE_LOOT_KEY, PersistentDataType.BOOLEAN)) {
-            val dropArtifact = event.entity.persistentDataContainer.get(Keys.DROP_BASE_LOOT_KEY, PersistentDataType.BOOLEAN)
+        if (event.entity.persistentDataContainer.has(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN)) {
+            val dropArtifact = event.entity.persistentDataContainer.get(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN)
             if (dropArtifact != null && !dropArtifact) return
         }
 

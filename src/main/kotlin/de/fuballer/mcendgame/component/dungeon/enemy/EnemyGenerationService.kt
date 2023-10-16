@@ -80,8 +80,8 @@ class EnemyGenerationService(
             statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
 
             if (!entityType.dropBaseLoot)
-                entity.persistentDataContainer.set(Keys.DROP_BASE_LOOT_KEY, PersistentDataType.BOOLEAN, false)
-            entity.persistentDataContainer.set(Keys.MAP_TIER_KEY, PersistentDataType.INTEGER, mapTier)
+                entity.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
+            entity.persistentDataContainer.set(Keys.MAP_TIER, PersistentDataType.INTEGER, mapTier)
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)
