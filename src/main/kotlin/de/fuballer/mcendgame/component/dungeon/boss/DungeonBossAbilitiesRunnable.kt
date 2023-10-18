@@ -5,16 +5,11 @@ import de.fuballer.mcendgame.component.dungeon.boss.db.BossType
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
-import de.fuballer.mcendgame.random.RandomPick
+import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
+import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Ageable
-import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
-import de.fuballer.mcendgame.util.random.RandomUtil
-import org.bukkit.Location
-import org.bukkit.Particle
-import org.bukkit.Sound
-import org.bukkit.SoundCategory
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -191,7 +186,7 @@ class DungeonBossAbilitiesRunnable(
             pillar.health = 1.0
         }
 
-        GravitationPillarPullRunnable(pillar).runTaskLater(MCEndgame.PLUGIN, DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
+        GravitationPillarPullRunnable(pillar).runTaskLater(DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
     }
 
     private class GravitationPillarPullRunnable(
@@ -203,13 +198,13 @@ class DungeonBossAbilitiesRunnable(
                 return
             }
 
-            val entities =
-                pillar.world.getNearbyEntities(
-                    pillar.location,
-                    DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
-                    DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
-                    DungeonBossSettings.GRAVITATION_PILLAR_RANGE
-                )
+            val entities = pillar.world.getNearbyEntities(
+                pillar.location,
+                DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
+                DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
+                DungeonBossSettings.GRAVITATION_PILLAR_RANGE
+            )
+
             var players = entities.filterIsInstance<Player>()
             players = players.filter { it.gameMode == GameMode.ADVENTURE || it.gameMode == GameMode.SURVIVAL }
 
@@ -220,7 +215,7 @@ class DungeonBossAbilitiesRunnable(
 
             pillar.world.playSound(pillar.location, Sound.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 1.5f, 0.5f)
 
-            GravitationPillarPullRunnable(pillar).runTaskLater(MCEndgame.PLUGIN, DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
+            GravitationPillarPullRunnable(pillar).runTaskLater(DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
         }
     }
 }
