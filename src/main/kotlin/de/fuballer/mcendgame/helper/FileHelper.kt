@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.helper
 
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import java.io.File
 import java.util.logging.Logger
 
-@Service
+@Component
 class FileHelper(
     private val logger: Logger
 ) {

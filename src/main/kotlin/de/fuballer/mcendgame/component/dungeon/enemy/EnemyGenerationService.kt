@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSetti
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.remaining.RemainingService
 import de.fuballer.mcendgame.component.statitem.StatItemService
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -21,7 +21,7 @@ import org.bukkit.potion.PotionEffectType
 import java.awt.Point
 import java.util.*
 
-@Service
+@Component
 class EnemyGenerationService(
     private val statItemService: StatItemService,
     private val remainingService: RemainingService

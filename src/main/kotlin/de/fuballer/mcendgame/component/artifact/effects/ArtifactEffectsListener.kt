@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.artifact.effects
 
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -12,7 +12,7 @@ import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
 
-@Service
+@Component
 class ArtifactEffectsListener(
     private val artifactEffectsService: ArtifactEffectsService
 ) : EventListener {

@@ -13,7 +13,7 @@ import de.fuballer.mcendgame.component.dungeon.leave.DungeonLeaveService
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveEntity
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.random.RandomUtil
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -22,7 +22,7 @@ import org.bukkit.World
 import java.awt.Point
 import java.util.logging.Logger
 
-@Service
+@Component
 class DungeonGenerationService(
     private val dungeonLeaveRepo: DungeonLeaveRepository,
     private val worldManageService: WorldManageService,

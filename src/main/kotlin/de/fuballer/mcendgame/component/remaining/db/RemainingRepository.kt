@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.remaining.db
 
 import de.fuballer.mcendgame.framework.AbstractMapRepository
-import de.fuballer.mcendgame.framework.annotation.Repository
+import de.fuballer.mcendgame.framework.annotation.Component
 
-@Repository
+@Component
 class RemainingRepository : AbstractMapRepository<String, RemainingEntity>()

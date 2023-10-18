@@ -2,14 +2,14 @@ package de.fuballer.mcendgame.component.killer
 
 import de.fuballer.mcendgame.component.killer.db.KillerEntity
 import de.fuballer.mcendgame.component.killer.db.KillerRepository
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 
-@Service
+@Component
 class KillerService(
     private val killerRepo: KillerRepository
 ) {

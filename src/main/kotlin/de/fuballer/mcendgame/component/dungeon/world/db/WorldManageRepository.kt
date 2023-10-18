@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.world.db
 
 import de.fuballer.mcendgame.framework.AbstractMapRepository
-import de.fuballer.mcendgame.framework.annotation.Repository
+import de.fuballer.mcendgame.framework.annotation.Component
 
-@Repository
+@Component
 class WorldManageRepository : AbstractMapRepository<String, ManagedWorldEntity>()

@@ -3,11 +3,11 @@ package de.fuballer.mcendgame.component.recipe
 import de.fuballer.mcendgame.component.recipe.db.RecipeEntity
 import de.fuballer.mcendgame.component.recipe.db.RecipeRepository
 import de.fuballer.mcendgame.event.DiscoverRecipeAddEvent
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.Server
 import org.bukkit.event.player.PlayerJoinEvent
 
-@Service
+@Component
 class RecipeService(
     private val discoverRecipeRepo: RecipeRepository,
     private val server: Server

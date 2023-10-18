@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.component.artifact.db.ArtifactRepository
 import de.fuballer.mcendgame.component.artifact.db.ArtifactType
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -19,7 +19,7 @@ import org.bukkit.persistence.PersistentDataType
 import java.text.DecimalFormat
 import java.util.*
 
-@Service
+@Component
 class ArtifactService(
     private val artifactRepo: ArtifactRepository,
     private val worldManageRepo: WorldManageRepository

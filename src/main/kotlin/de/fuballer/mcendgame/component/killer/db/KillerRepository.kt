@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.killer.db
 
 import de.fuballer.mcendgame.framework.AbstractMapRepository
-import de.fuballer.mcendgame.framework.annotation.Repository
+import de.fuballer.mcendgame.framework.annotation.Component
 import java.util.*
 
-@Repository
+@Component
 class KillerRepository : AbstractMapRepository<UUID, KillerEntity>()

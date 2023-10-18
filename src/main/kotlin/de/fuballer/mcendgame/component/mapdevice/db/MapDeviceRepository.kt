@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.mapdevice.db
 import de.fuballer.mcendgame.component.mapdevice.MapDeviceSettings
 import de.fuballer.mcendgame.domain.PersistableMapRepository
 import de.fuballer.mcendgame.domain.Portal
-import de.fuballer.mcendgame.framework.annotation.Repository
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.Location
 import org.bukkit.Material
@@ -13,9 +13,8 @@ import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
-@Repository
+@Component
 class MapDeviceRepository(
-    private val plugin: JavaPlugin,
     private val server: Server
 ) : PersistableMapRepository<UUID, MapDeviceEntity>() {
     override fun initialize(plugin: JavaPlugin) {

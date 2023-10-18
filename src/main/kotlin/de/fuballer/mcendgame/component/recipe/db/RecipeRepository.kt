@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.recipe.db
 
 import de.fuballer.mcendgame.framework.AbstractMapRepository
-import de.fuballer.mcendgame.framework.annotation.Repository
+import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.NamespacedKey
 
-@Repository
+@Component
 class RecipeRepository : AbstractMapRepository<NamespacedKey, RecipeEntity>()

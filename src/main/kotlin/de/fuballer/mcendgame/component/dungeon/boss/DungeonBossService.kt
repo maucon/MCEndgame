@@ -8,7 +8,7 @@ import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PluginUtil.runTaskTimer
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Location
@@ -24,7 +24,7 @@ import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-@Service
+@Component
 class DungeonBossService(
     private val dungeonBossRepo: DungeonBossRepository,
     private val worldManageRepo: WorldManageRepository

@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.component.dungeon.world
 
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.event.EventHandler
 import org.bukkit.event.world.WorldInitEvent
 
-@Service
+@Component
 class WorldGenerationListener : EventListener {
     @EventHandler
     fun onWorldInit(event: WorldInitEvent) {

@@ -5,8 +5,8 @@ import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.domain.data_class.TimerTask
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.annotation.Qualifier
-import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.helper.FileHelper
 import de.fuballer.mcendgame.util.PluginUtil
@@ -15,7 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.util.*
 
-@Service
+@Component
 class WorldManageService(
     private val worldManageRepo: WorldManageRepository,
     private val fileHelper: FileHelper,

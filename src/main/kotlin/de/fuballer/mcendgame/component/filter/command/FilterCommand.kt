@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.filter.command
 import de.fuballer.mcendgame.component.filter.FilterSettings
 import de.fuballer.mcendgame.component.filter.db.FilterEntity
 import de.fuballer.mcendgame.component.filter.db.FilterRepository
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.Material
@@ -13,7 +13,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
-@Service
+@Component
 class FilterCommand(
     private val filterRepo: FilterRepository
 ) : CommandHandler {

@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.statitem.command
 import com.google.common.collect.Multimap
 import de.fuballer.mcendgame.component.statitem.StatItemSettings
 import de.fuballer.mcendgame.domain.data_class.ItemAttribute
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.util.AttributeUtil
 import org.bukkit.Material
@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.java.JavaPlugin
 
-@Service
+@Component
 class StatItemCommand : CommandHandler {
     override fun initialize(plugin: JavaPlugin) = plugin.getCommand(StatItemSettings.COMMAND_NAME)!!.setExecutor(this)
 

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.antibug
 
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
@@ -9,7 +9,7 @@ import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 
-@Service
+@Component
 class DungeonAntiBugService {
     fun onPlayerItemConsume(event: PlayerItemConsumeEvent) {
         if (WorldUtil.isNotDungeonWorld(event.player.world)) return

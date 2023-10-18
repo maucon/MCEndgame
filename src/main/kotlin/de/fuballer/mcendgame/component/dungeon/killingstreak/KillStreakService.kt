@@ -8,7 +8,7 @@ import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.KillStreakIncreaseEvent
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Server
@@ -26,7 +26,7 @@ import org.bukkit.persistence.PersistentDataType
 import java.util.*
 import kotlin.math.min
 
-@Service
+@Component
 class KillStreakService(
     private val killStreakRepo: KillStreakRepository,
     private val server: Server

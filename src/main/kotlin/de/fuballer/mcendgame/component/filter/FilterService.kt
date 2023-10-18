@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.filter
 
 import de.fuballer.mcendgame.component.filter.db.FilterRepository
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityPickupItemEvent
@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 
-@Service
+@Component
 class FilterService(
     private val filterRepo: FilterRepository
 ) {

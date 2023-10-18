@@ -1,14 +1,14 @@
 package de.fuballer.mcendgame.component.artifact.command
 
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
-@Service
+@Component
 class ArtifactTabCompleter : CommandTabCompleter {
     override fun initialize(plugin: JavaPlugin) {
         plugin.getCommand(ArtifactSettings.COMMAND_NAME)!!.tabCompleter = this

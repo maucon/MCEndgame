@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.build_calculation
 
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import org.bukkit.attribute.Attribute
 import org.bukkit.command.Command
@@ -13,7 +13,7 @@ import java.math.RoundingMode
 import kotlin.math.max
 import kotlin.math.min
 
-@Service
+@Component
 class BuildCalculationCommand : CommandHandler {
     override fun initialize(plugin: JavaPlugin) = plugin.getCommand(BuildCalculationSettings.COMMAND_NAME)!!.setExecutor(this)
 

@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.artifact.ArtifactService
 import de.fuballer.mcendgame.component.artifact.db.ArtifactType
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color
 import org.bukkit.DyeColor
@@ -22,7 +22,7 @@ import java.util.*
 import kotlin.math.PI
 import kotlin.math.min
 
-@Service
+@Component
 class ArtifactEffectsService(
     private val artifactService: ArtifactService
 ) {

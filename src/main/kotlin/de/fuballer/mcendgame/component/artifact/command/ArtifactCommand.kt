@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.artifact.ArtifactService
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 import de.fuballer.mcendgame.component.artifact.db.ArtifactEntity
 import de.fuballer.mcendgame.component.artifact.db.ArtifactRepository
-import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.command.Command
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import java.lang.Integer.min
 
-@Service
+@Component
 class ArtifactCommand(
     private val artifactRepo: ArtifactRepository,
     private val artifactService: ArtifactService
