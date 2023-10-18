@@ -176,7 +176,7 @@ class DungeonBossAbilitiesRunnable(
         pillar.persistentDataContainer.set(Keys.IS_MINION, PersistentDataType.BOOLEAN, true)
         pillar.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
 
-        val attributeInstance = boss.getAttribute(Attribute.GENERIC_MAX_HEALTH)
+        val attributeInstance = pillar.getAttribute(Attribute.GENERIC_MAX_HEALTH)
         if (attributeInstance != null) {
             attributeInstance.baseValue = 1.0
             pillar.health = 1.0
