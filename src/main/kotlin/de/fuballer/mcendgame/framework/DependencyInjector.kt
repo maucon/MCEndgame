@@ -48,20 +48,37 @@ object DependencyInjector {
     }
 
     private fun mapMethodsToDependentBeans(clazz: Class<*>): List<DependentBean> {
-        val classObject = clazz.constructors.first().newInstance()
+        val classDependentBean = mapClassToDependentBean(clazz).first()
 
-        return clazz.methods
-            .filter { it.isAnnotationPresent(Bean::class.java) }
-            .map {
-                val bean = it.getAnnotation(Bean::class.java)
-                val qualifierName = bean.name.ifEmpty { it.name }
+        val dependentBeans = mutableListOf<DependentBean>().apply {
+            add(classDependentBean)
+            addAll(
+                clazz.methods
+                    .filter { it.isAnnotationPresent(Bean::class.java) }
+                    .map {
+                        val bean = it.getAnnotation(Bean::class.java)
+                        val qualifierName = bean.name.ifEmpty { it.name }
 
-                DependentBean(
-                    BeanQualifier(it.returnType, qualifierName.lowercase()),
-                    mapParameterToQualifiedBeans(it.parameters.asList())
-                )
-                { args -> it.invoke(classObject, *args) }
-            }
+                        val dependencies = mutableListOf(classDependentBean.beanQualifier)
+                        dependencies.addAll(mapParameterToQualifiedBeans(it.parameters.asList()))
+
+                        DependentBean(
+                            BeanQualifier(it.returnType, qualifierName.lowercase()),
+                            dependencies
+                        )
+                        { args ->
+                            val classObject = args[0]
+                            val realArgs = args.toMutableList()
+                                .apply { removeAt(0) }
+                                .toTypedArray()
+
+                            it.invoke(classObject, *realArgs)
+                        }
+                    }
+            )
+        }
+
+        return dependentBeans
     }
 
     private fun mapParameterToQualifiedBeans(parameter: List<Parameter>) =
