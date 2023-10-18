@@ -2,14 +2,19 @@ package de.fuballer.mcendgame.component.artifact.command.give_artifact
 
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 import de.fuballer.mcendgame.component.artifact.db.ArtifactType
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 
+@Service
 class GiveArtifactTabCompleter : CommandTabCompleter {
-    override fun getCommand() = ArtifactSettings.GIVE_ARTIFACT_COMMAND_NAME
+    override fun initialize(plugin: JavaPlugin) {
+        plugin.getCommand(ArtifactSettings.COMMAND_NAME)!!.tabCompleter = this
+    }
 
     override fun onTabComplete(
         sender: CommandSender,
@@ -21,7 +26,7 @@ class GiveArtifactTabCompleter : CommandTabCompleter {
 
         return when (args.size) {
             1 -> PluginUtil.getOnlinePlayers().map { it.name }
-            2 -> ArtifactType.values().map(Enum<*>::name).filter { it.startsWith(args[1], true) }
+            2 -> ArtifactType.entries.map(Enum<*>::name).filter { it.startsWith(args[1], true) }
             3 -> listOf("0", "1", "2", "3").filter { it.startsWith(args[2], true) }
             else -> listOf()
         }

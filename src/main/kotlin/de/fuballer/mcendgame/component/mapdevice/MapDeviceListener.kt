@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.mapdevice
 
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
@@ -8,6 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 
+@Service
 class MapDeviceListener(
     private val mapDeviceService: MapDeviceService
 ) : EventListener {

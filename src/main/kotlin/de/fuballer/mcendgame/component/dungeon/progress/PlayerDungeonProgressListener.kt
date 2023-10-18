@@ -1,11 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.progress
 
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 
+@Service
 class PlayerDungeonProgressListener(
     private val playerDungeonProgressService: PlayerDungeonProgressService
 ) : EventListener {

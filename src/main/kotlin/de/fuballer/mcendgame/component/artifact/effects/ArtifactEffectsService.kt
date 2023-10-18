@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.artifact.ArtifactService
 import de.fuballer.mcendgame.component.artifact.db.ArtifactType
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color
 import org.bukkit.DyeColor
@@ -22,10 +22,10 @@ import java.util.*
 import kotlin.math.PI
 import kotlin.math.min
 
-
+@Service
 class ArtifactEffectsService(
     private val artifactService: ArtifactService
-) : Service {
+) {
     private val random = Random()
 
     fun onEntityDeath(event: EntityDeathEvent) {
@@ -331,7 +331,7 @@ class ArtifactEffectsService(
             wolf.addPotionEffect(potionEffect)
 
             wolf.isInvulnerable = true
-            wolf.collarColor = DyeColor.values().random()
+            wolf.collarColor = DyeColor.entries.toTypedArray().random()
         }
     }
 

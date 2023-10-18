@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.db
+package de.fuballer.mcendgame.framework
 
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import de.fuballer.mcendgame.framework.stereotype.Repository

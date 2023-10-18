@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.component.remaining.db.RemainingEntity
 import de.fuballer.mcendgame.component.remaining.db.RemainingRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.World
@@ -13,9 +13,10 @@ import org.bukkit.entity.Monster
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.persistence.PersistentDataType
 
+@Service
 class RemainingService(
     private val remainingRepo: RemainingRepository
-) : Service {
+) {
     fun addMobs(world: World, count: Int) {
         val name = world.name
 

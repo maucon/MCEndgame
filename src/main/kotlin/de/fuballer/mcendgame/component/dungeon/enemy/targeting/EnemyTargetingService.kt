@@ -1,12 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.targeting
 
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Monster
 import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason
 
-class EnemyTargetingService : Service {
+@Service
+class EnemyTargetingService {
     fun onEntityTarget(event: EntityTargetEvent) {
         val entity = event.entity
 

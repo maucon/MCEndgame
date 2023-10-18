@@ -1,14 +1,13 @@
 package de.fuballer.mcendgame.framework
 
-import de.fuballer.mcendgame.framework.annotation.Bean
-import de.fuballer.mcendgame.framework.annotation.Qualifier
-import de.fuballer.mcendgame.framework.stereotype.Configuration
-import de.fuballer.mcendgame.framework.stereotype.Injectable
+import de.fuballer.mcendgame.framework.annotation.*
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
 import java.lang.reflect.Parameter
 
 object DependencyInjector {
+    private val componentAnnotations = arrayOf(Repository::class.java, Service::class.java, Configuration::class.java)
+
     fun instantiateClasses(startingClass: Class<*>): Collection<Any> {
         val injectables = scanForInjectables(startingClass)
         val dependentBeans = mapToDependentBeans(injectables)
@@ -17,17 +16,16 @@ object DependencyInjector {
 
     private fun scanForInjectables(startingClass: Class<*>): Set<Class<*>> {
         val reflection = Reflections(startingClass)
-        val query = Scanners.SubTypes.with(Injectable::class.java)
+        val query = Scanners.TypesAnnotated.with(*componentAnnotations)
 
         return reflection.get(query)
-            .filter { !it.contains("de.fuballer.mcendgame.db") }
             .map { Class.forName(it) }
             .filter { !it.isInterface && !it.isAnnotation }
             .toSet()
     }
 
     private fun mapToDependentBeans(classes: Set<Class<*>>) = classes.flatMap { clazz ->
-        if (Configuration::class.java.isAssignableFrom(clazz)) {
+        if (clazz.isAnnotationPresent(Configuration::class.java)) {
             mapMethodsToDependentBeans(clazz)
         } else {
             mapClassToDependentBean(clazz)

@@ -2,19 +2,22 @@ package de.fuballer.mcendgame.component.dungeon.progress.command
 
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSettings
 import de.fuballer.mcendgame.component.dungeon.progress.db.PlayerDungeonProgressRepository
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandAction
 import de.fuballer.mcendgame.helper.CommandHelper
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
+@Service
 class DungeonProgressCommand(
     private val dungeonProgressRepo: PlayerDungeonProgressRepository,
     private val commandHelper: CommandHelper
 ) : CommandHandler {
-    override fun getCommand() = PlayerDungeonProgressSettings.COMMAND_NAME
+    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(PlayerDungeonProgressSettings.COMMAND_NAME)!!.setExecutor(this)
 
     override fun onCommand(
         sender: CommandSender,
@@ -86,7 +89,7 @@ class DungeonProgressCommand(
     private fun updateDungeonLevel(
         player: UUID,
         level: Int,
-        progress: Int? = null
+        progress: Int?
     ): Boolean {
         if (level !in 1..10000) return false
         progress?.let { if (it !in 0 until PlayerDungeonProgressSettings.DUNGEON_LEVEL_INCREASE_THRESHOLD) return false }

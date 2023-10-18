@@ -4,17 +4,20 @@ import de.fuballer.mcendgame.component.artifact.ArtifactService
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 import de.fuballer.mcendgame.component.artifact.db.Artifact
 import de.fuballer.mcendgame.component.artifact.db.ArtifactType
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 
+@Service
 class GiveArtifactCommand(
     private val artifactService: ArtifactService,
     private val commandHelper: CommandHelper
 ) : CommandHandler {
-    override fun getCommand() = ArtifactSettings.GIVE_ARTIFACT_COMMAND_NAME
+    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ArtifactSettings.GIVE_ARTIFACT_COMMAND_NAME)!!.setExecutor(this)
 
     override fun onCommand(
         sender: CommandSender,

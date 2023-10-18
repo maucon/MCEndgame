@@ -1,9 +1,11 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.loot
 
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 
+@Service
 class EnemyLootListener(
     private val enemyLootService: EnemyLootService
 ) : EventListener {

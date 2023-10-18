@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.domain.equipment.armor
 
-import de.fuballer.mcendgame.data_class.ItemAttribute
+import de.fuballer.mcendgame.domain.data_class.ItemAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption

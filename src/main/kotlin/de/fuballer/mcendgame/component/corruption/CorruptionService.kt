@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.corruption
 import de.fuballer.mcendgame.component.corruption.data.AttributeWithModifier
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.component.statitem.StatItemSettings
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.AttributeUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -19,7 +19,8 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 import kotlin.math.abs
 
-class CorruptionService : Service {
+@Service
+class CorruptionService {
     private val random = Random()
 
     fun onAnvilPrepare(event: PrepareAnvilEvent) {
@@ -67,7 +68,7 @@ class CorruptionService : Service {
         val corruptionLore = corruptionMeta.lore ?: return
 
         if (player.gameMode != GameMode.CREATIVE) {
-            player.level = player.level - 1
+            player.level -= 1
         }
 
         corruptItem(result, player)

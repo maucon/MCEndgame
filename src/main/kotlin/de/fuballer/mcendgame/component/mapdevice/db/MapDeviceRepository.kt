@@ -1,23 +1,25 @@
 package de.fuballer.mcendgame.component.mapdevice.db
 
 import de.fuballer.mcendgame.component.mapdevice.MapDeviceSettings
-import de.fuballer.mcendgame.db.PersistableMapRepository
+import de.fuballer.mcendgame.domain.PersistableMapRepository
 import de.fuballer.mcendgame.domain.Portal
+import de.fuballer.mcendgame.framework.annotation.Repository
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Server
 import org.bukkit.entity.Entity
 import org.bukkit.metadata.FixedMetadataValue
-import org.bukkit.plugin.Plugin
+import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
+@Repository
 class MapDeviceRepository(
-    private val plugin: Plugin,
+    private val plugin: JavaPlugin,
     private val server: Server
 ) : PersistableMapRepository<UUID, MapDeviceEntity>() {
-    override fun load() {
-        super.load()
+    override fun initialize(plugin: JavaPlugin) {
+        super.initialize(plugin)
 
         PluginUtil.scheduleSyncDelayedTask {
             this.map = findAll()

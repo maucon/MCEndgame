@@ -1,12 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.creeper_explode
 
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.ExplosionPrimeEvent
 
-class CreeperExplodeService : Service {
+@Service
+class CreeperExplodeService {
     fun onEntityPrimed(event: ExplosionPrimeEvent) {
         val entity = event.entity
 

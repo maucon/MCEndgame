@@ -11,7 +11,8 @@ import de.fuballer.mcendgame.event.DiscoverRecipeAddEvent
 import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.*
 import org.bukkit.block.data.type.RespawnAnchor
@@ -30,18 +31,19 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.metadata.FixedMetadataValue
-import org.bukkit.plugin.Plugin
+import org.bukkit.plugin.java.JavaPlugin
 import kotlin.math.max
 
+@Service
 class MapDeviceService(
     private val mapDeviceRepo: MapDeviceRepository,
     private val worldManageRepo: WorldManageRepository,
     private val dungeonGenerationService: DungeonGenerationService,
     private val playerDungeonProgressService: PlayerDungeonProgressService,
-    private val plugin: Plugin,
+    private val plugin: JavaPlugin,
     private val server: Server
-) : Service {
-    override fun initialize(plugin: Plugin) {
+) : LifeCycleListener {
+    override fun initialize(plugin: JavaPlugin) {
         createRecipe(plugin)
         clearBuggedArmorStands()
     }
@@ -193,7 +195,7 @@ class MapDeviceService(
         }
     }
 
-    private fun createRecipe(plugin: Plugin) {
+    private fun createRecipe(plugin: JavaPlugin) {
         val key = NamespacedKey(plugin, MapDeviceSettings.MAP_DEVICE_ITEM_KEY)
         val recipe = MapDeviceSettings.getMapDeviceCraftingRecipe(key)
 

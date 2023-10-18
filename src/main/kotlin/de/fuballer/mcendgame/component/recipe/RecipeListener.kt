@@ -1,10 +1,12 @@
 package de.fuballer.mcendgame.component.recipe
 
 import de.fuballer.mcendgame.event.DiscoverRecipeAddEvent
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerJoinEvent
 
+@Service
 class RecipeListener(
     private val recipeService: RecipeService
 ) : EventListener {

@@ -1,12 +1,13 @@
 package de.fuballer.mcendgame.helper
 
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Service
 import java.io.File
 import java.util.logging.Logger
 
+@Service
 class FileHelper(
     private val logger: Logger
-) : Service {
+) {
     fun deleteFile(file: File) {
         if (file.isDirectory) {
             file.list()!!

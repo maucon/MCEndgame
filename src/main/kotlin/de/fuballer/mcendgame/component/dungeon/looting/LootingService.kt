@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.dungeon.looting
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.killingstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killingstreak.db.KillStreakRepository
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Material
@@ -16,9 +16,10 @@ import org.bukkit.inventory.meta.Damageable
 import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
+@Service
 class LootingService(
     private val killStreakRepo: KillStreakRepository
-) : Service {
+) {
     private val random = Random()
 
     fun onEntityDeath(event: EntityDeathEvent) {

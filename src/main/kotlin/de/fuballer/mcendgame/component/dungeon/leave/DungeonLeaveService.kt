@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -17,9 +17,10 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 
+@Service
 class DungeonLeaveService(
     private val dungeonLeaveRepo: DungeonLeaveRepository
-) : Service {
+) {
     fun onPlayerEntityInteract(event: PlayerInteractAtEntityEvent) {
         val entity = event.rightClicked as? ArmorStand ?: return
         if (!dungeonLeaveRepo.exists(entity.world.name)) return

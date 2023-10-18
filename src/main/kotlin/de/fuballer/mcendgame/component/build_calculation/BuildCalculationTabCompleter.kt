@@ -1,12 +1,17 @@
 package de.fuballer.mcendgame.component.build_calculation
 
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 
+@Service
 class BuildCalculationTabCompleter : CommandTabCompleter {
-    override fun getCommand() = BuildCalculationSettings.COMMAND_NAME
+    override fun initialize(plugin: JavaPlugin) {
+        plugin.getCommand(BuildCalculationSettings.COMMAND_NAME)!!.tabCompleter = this
+    }
 
     override fun onTabComplete(
         sender: CommandSender,

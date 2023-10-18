@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.statitem
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.AttributeUtil
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -22,7 +22,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import java.util.*
 
-class StatItemService : Service {
+@Service
+class StatItemService {
     private val random = Random()
 
     fun setCreatureEquipment(

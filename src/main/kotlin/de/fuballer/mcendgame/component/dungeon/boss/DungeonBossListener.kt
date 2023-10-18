@@ -1,11 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityTargetEvent
 
+@Service
 class DungeonBossListener(
     private val dungeonBossService: DungeonBossService
 ) : EventListener {

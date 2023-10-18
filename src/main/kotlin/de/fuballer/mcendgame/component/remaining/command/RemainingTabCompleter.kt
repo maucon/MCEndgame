@@ -1,13 +1,18 @@
 package de.fuballer.mcendgame.component.remaining.command
 
 import de.fuballer.mcendgame.component.remaining.RemainingSettings
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 
+@Service
 class RemainingTabCompleter : CommandTabCompleter {
-    override fun getCommand() = RemainingSettings.COMMAND_NAME
+    override fun initialize(plugin: JavaPlugin) {
+        plugin.getCommand(RemainingSettings.COMMAND_NAME)!!.tabCompleter = this
+    }
 
     override fun onTabComplete(
         sender: CommandSender,

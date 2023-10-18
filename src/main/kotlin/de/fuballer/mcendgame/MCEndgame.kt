@@ -1,47 +1,35 @@
 package de.fuballer.mcendgame
 
 import de.fuballer.mcendgame.framework.DependencyInjector
-import de.fuballer.mcendgame.framework.stereotype.*
+import de.fuballer.mcendgame.framework.stereotype.EventListener
+import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.PluginUtil
-import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 
 class MCEndgame : JavaPlugin() {
-    private lateinit var repositories: List<Repository<*, *>>
-    private lateinit var services: List<Service>
-    private lateinit var listener: List<EventListener>
-    private lateinit var commandHandler: List<CommandHandler>
-    private lateinit var tabCompleter: List<CommandTabCompleter>
-
     companion object {
-        lateinit var INSTANCE: Plugin
+        lateinit var INSTANCE: JavaPlugin
     }
+
+    private var lifeCycleListener: List<LifeCycleListener>? = null
+    private var listener: List<EventListener>? = null
 
     override fun onEnable() {
         INSTANCE = this
 
         val injectedObjects = DependencyInjector.instantiateClasses(this::class.java)
 
-        repositories = injectedObjects.filterIsInstance<Repository<*, *>>()
-        services = injectedObjects.filterIsInstance<Service>()
         listener = injectedObjects.filterIsInstance<EventListener>()
-        commandHandler = injectedObjects.filterIsInstance<CommandHandler>()
-        tabCompleter = injectedObjects.filterIsInstance<CommandTabCompleter>()
+            .onEach { PluginUtil.registerEvents(it) }
 
-        listener.forEach { PluginUtil.registerEvents(it) }
-
-        repositories.forEach { it.load() }
-        services.forEach { it.initialize(this) }
-
-        commandHandler.forEach { getCommand(it.getCommand())!!.setExecutor(it) }
-        tabCompleter.forEach { getCommand(it.getCommand())!!.tabCompleter = it }
+        lifeCycleListener = injectedObjects.filterIsInstance<LifeCycleListener>()
+            .onEach { it.initialize(this) }
 
         logger.info("Enabled MC-Endgame")
     }
 
     override fun onDisable() {
-        services.forEach { it.terminate() }
-        repositories.forEach { it.flush() }
+        lifeCycleListener?.forEach { it.terminate() }
 
         logger.info("Disabled MC-Endgame")
     }

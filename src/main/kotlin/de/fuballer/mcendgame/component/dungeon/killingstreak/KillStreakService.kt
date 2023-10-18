@@ -3,12 +3,12 @@ package de.fuballer.mcendgame.component.dungeon.killingstreak
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.killingstreak.db.KillStreakEntity
 import de.fuballer.mcendgame.component.dungeon.killingstreak.db.KillStreakRepository
-import de.fuballer.mcendgame.data_class.TimerTask
+import de.fuballer.mcendgame.domain.data_class.TimerTask
 import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.KillStreakIncreaseEvent
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Server
@@ -26,10 +26,11 @@ import org.bukkit.persistence.PersistentDataType
 import java.util.*
 import kotlin.math.min
 
+@Service
 class KillStreakService(
     private val killStreakRepo: KillStreakRepository,
     private val server: Server
-) : Service {
+) {
     fun onEntityDeath(event: EntityDeathEvent) {
         val entity = event.entity as? Monster ?: return
         val world = entity.world
