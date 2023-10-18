@@ -71,10 +71,8 @@ class EnemyGenerationService(
                 entityType.type
             ) as Creature
 
-            if (entityType.customName != null) {
-                entity.customName = entityType.customName
-                entity.isCustomNameVisible = false
-            }
+            entity.customName = entityType.customName
+            entity.isCustomNameVisible = false
             entity.removeWhenFarAway = false
 
             statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)

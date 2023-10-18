@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
+import de.fuballer.mcendgame.component.dungeon.boss.db.BossType
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
@@ -35,28 +36,37 @@ class DungeonBossService(
     ): Creature {
         location.yaw = 180f
 
-        val boss = world.spawnEntity(location, DungeonBossSettings.BOSS_ENTITY_TYPE) as Creature
-        addBossAttributes(boss, mapTier)
+        val bossType = BossType.getRandom()
 
-        val entity = DungeonBossEntity(boss.uniqueId, mapTier, null)
+        val boss = world.spawnEntity(location, bossType.customEntityType.type) as Creature
+        boss.customName = bossType.customEntityType.customName
+        boss.isCustomNameVisible = false
+
+        addBossAttributes(boss, mapTier, bossType)
+
+        val entity = DungeonBossEntity(boss.uniqueId, mapTier, null, bossType)
         dungeonBossRepo.save(entity)
 
         return boss
     }
 
-    private fun addBossAttributes(boss: Creature, mapTier: Int) {
+    private fun addBossAttributes(boss: Creature, mapTier: Int, bossType: BossType) {
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
         boss.removeWhenFarAway = false
         boss.setAI(false)
 
         var attributeInstance = boss.getAttribute(Attribute.GENERIC_MAX_HEALTH) ?: return
-        val newHealth = attributeInstance.baseValue + DungeonBossSettings.calculateAddedBossHealth(mapTier)
+        val newHealth = bossType.baseHealth + mapTier * bossType.healthPerTier
         attributeInstance.baseValue = newHealth
-        boss.health = attributeInstance.value
+        boss.health = newHealth
 
         attributeInstance = boss.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) ?: return
-        val newDamage = attributeInstance.baseValue + DungeonBossSettings.calculateAddedBossDamage(mapTier)
+        val newDamage = bossType.baseDamage + mapTier * bossType.damagePerTier
         attributeInstance.baseValue = newDamage
+
+        attributeInstance = boss.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) ?: return
+        val newSpeed = bossType.speed
+        attributeInstance.baseValue = newSpeed
     }
 
     fun onEntityDamage(event: EntityDamageEvent) {
@@ -76,23 +86,24 @@ class DungeonBossService(
         val worldName = entity.world.name
         val uuid = entity.uniqueId
 
-        val dungeonBoss = dungeonBossRepo.findById(uuid) ?: return
-        val abilityTask = dungeonBoss.abilityTask
+        val dungeonBossEntity = dungeonBossRepo.findById(uuid) ?: return
+        val abilityTask = dungeonBossEntity.abilityTask
         if (abilityTask != null && !abilityTask.isCancelled) return
 
         val mapTier = worldManageRepo.findById(worldName)?.mapTier ?: 1
         val runnable = DungeonBossAbilitiesRunnable(
             dungeonBossRepo,
             entity as Creature,
-            mapTier
+            dungeonBossEntity.type,
+            mapTier,
         ).runTaskTimer(
             MCEndgame.PLUGIN,
             0,
             DungeonBossSettings.BOSS_ABILITY_CHECK_PERIOD.toLong()
         )
 
-        dungeonBoss.abilityTask = runnable
-        dungeonBossRepo.save(dungeonBoss)
+        dungeonBossEntity.abilityTask = runnable
+        dungeonBossRepo.save(dungeonBossEntity)
     }
 
     fun onEntityDeath(event: EntityDeathEvent) {
