@@ -9,23 +9,17 @@ import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
-import org.bukkit.Difficulty
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.attribute.Attribute
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.EntityPotionEffectEvent
-import org.bukkit.inventory.EntityEquipment
-import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.awt.Point
 import java.util.*
-import kotlin.math.ceil
 
 @Service
 class EnemyGenerationService(
@@ -137,89 +131,5 @@ class EnemyGenerationService(
 
         val potionEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, Int.MAX_VALUE, strengthAmplifier, false, false)
         entity.addPotionEffect(potionEffect)
-    }
-
-    private fun applyNamePrefix(creature: Creature) {
-        val isMelee = isMelee(creature)
-        val damage = getDamage(creature, isMelee)
-        val prefix = EnemyGenerationSettings.calculateMobPrefix(damage) ?: return
-
-        creature.removePotionEffect(PotionEffectType.INVISIBILITY)
-        creature.customName = "$prefix ${creature.name}"
-        creature.isCustomNameVisible = true
-    }
-
-    private fun isMelee(creature: Creature): Boolean {
-        val type = creature.type
-        if (!EnemyGenerationSettings.RANGED_MOBS.containsKey(type)) return true
-
-        val equipment = creature.equipment ?: return true
-        return equipment.itemInMainHand.type != Material.BOW
-    }
-
-    private fun getDamage(
-        creature: Creature,
-        melee: Boolean
-    ): Double {
-        val type = creature.type
-
-        val difficultyBaseStats = (if (melee) EnemyGenerationSettings.MELEE_MOBS[type] else EnemyGenerationSettings.RANGED_MOBS[type])
-            ?: return 0.0
-
-        var damage = when (creature.world.difficulty) {
-            Difficulty.EASY -> difficultyBaseStats.dmgEasy
-            Difficulty.NORMAL -> difficultyBaseStats.dmgNormal
-            else -> difficultyBaseStats.dmgHard
-        }
-
-        val equipment = creature.equipment
-        if (equipment != null) damage = applyWeaponDamage(damage, equipment, melee)
-        if (melee) damage = applyStrength(damage, creature)
-
-        return damage
-    }
-
-    private fun applyStrength(
-        damage: Double,
-        creature: Creature
-    ): Double {
-        val effect = creature.getPotionEffect(PotionEffectType.INCREASE_DAMAGE) ?: return damage
-        return damage + 3 * (1 + effect.amplifier)
-    }
-
-    private fun applyWeaponDamage(
-        damage: Double,
-        equipment: EntityEquipment,
-        melee: Boolean
-    ): Double {
-        var calcDamage = damage
-        val mainHand = equipment.itemInMainHand
-
-        if (melee) {
-            if (mainHand.containsEnchantment(Enchantment.DAMAGE_ALL)) calcDamage += 0.5 + 0.5 * mainHand.getEnchantmentLevel(Enchantment.DAMAGE_ALL)
-            calcDamage += getItemAddedDamage(mainHand)
-
-            val offHand = equipment.itemInOffHand
-            if (offHand.type != Material.SHIELD) return damage
-            getItemAddedDamage(offHand)
-        } else {
-            if (mainHand.containsEnchantment(Enchantment.ARROW_DAMAGE))
-                calcDamage = ceil(damage * (1.25 + 0.25 * mainHand.getEnchantmentLevel(Enchantment.ARROW_DAMAGE)))
-        }
-
-        return calcDamage
-    }
-
-    private fun getItemAddedDamage(item: ItemStack): Double {
-        var damage = 0.0
-
-        val meta = item.itemMeta ?: return damage
-        if (!meta.hasAttributeModifiers()) return damage
-        val attributeModifiers = meta.getAttributeModifiers(Attribute.GENERIC_ATTACK_DAMAGE) ?: return damage
-
-        for (attributeModifier in attributeModifiers)
-            damage += attributeModifier.amount
-
-        return damage
     }
 }

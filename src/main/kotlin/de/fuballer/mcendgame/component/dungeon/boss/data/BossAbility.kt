@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.boss.db
+package de.fuballer.mcendgame.component.dungeon.boss.data
 
 enum class BossAbility{
     ARROWS,

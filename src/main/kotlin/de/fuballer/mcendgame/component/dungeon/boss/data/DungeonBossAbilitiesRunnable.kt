@@ -1,7 +1,6 @@
-package de.fuballer.mcendgame.component.dungeon.boss
+package de.fuballer.mcendgame.component.dungeon.boss.data
 
-import de.fuballer.mcendgame.component.dungeon.boss.db.BossAbility
-import de.fuballer.mcendgame.component.dungeon.boss.db.BossType
+import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
