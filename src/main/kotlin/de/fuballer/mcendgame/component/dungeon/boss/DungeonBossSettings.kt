@@ -1,8 +1,5 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
-import de.fuballer.mcendgame.component.dungeon.boss.db.BossAbility
-import de.fuballer.mcendgame.util.random.RandomOption
-import org.bukkit.entity.EntityType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -19,35 +16,20 @@ object DungeonBossSettings {
         return DOUBLE_CORRUPTION_CHANCE_PER_TIER * (mapTier - DOUBLE_CORRUPTION_TIER_OFFSET)
     }
 
-    val BOSS_ENTITY_TYPE = EntityType.RAVAGER
     val BOSS_POTION_EFFECTS = listOf(
         PotionEffect(PotionEffectType.FIRE_RESISTANCE, Int.MAX_VALUE, 0, false, false)
     )
-    private const val BOSS_EXTRA_HEALTH_PER_TIER = 5
-    fun calculateAddedBossHealth(mapTier: Int) = mapTier * BOSS_EXTRA_HEALTH_PER_TIER
-
-    private const val BOSS_EXTRA_DAMAGE_PER_TIER = 2
-    fun calculateAddedBossDamage(mapTier: Int) = mapTier * BOSS_EXTRA_DAMAGE_PER_TIER
 
     const val BOSS_ABILITY_CHECK_PERIOD = 5 // in ticks
-    private val ABILITY_TYPES = listOf(
-        RandomOption(40, BossAbility.ARROWS),
-        RandomOption(30, BossAbility.FIRE_ARROWS),
-        RandomOption(50, BossAbility.SPEED),
-        RandomOption(40, BossAbility.FIRE_CASCADE),
-        RandomOption(20, BossAbility.DARKNESS),
-    )
-
-    fun getAbilityOptions(mapTier: Int) = ABILITY_TYPES.filter { it.option.minLevel <= mapTier }
 
     const val ARROWS_COUNT = 5
-    const val ARROWS_TIME_DIFFERENCE: Long = 4 // in ticks
+    const val ARROWS_TIME_DIFFERENCE = 4L // in ticks
 
     val SPEED_EFFECT = PotionEffect(PotionEffectType.SPEED, 20, 4, false, false)
 
     const val FIRE_CASCADE_DISTANCE = 1
     const val FIRE_CASCADE_STEPS_AFTER_PLAYER = 15
-    const val FIRE_CASCADE_ACTIVATION_DELAY: Long = 10 // in ticks
+    const val FIRE_CASCADE_ACTIVATION_DELAY = 10L // in ticks
 
     const val FIRE_CASCADE_STEP_DELAY = 0.7 //in Ticks
 
@@ -58,6 +40,9 @@ object DungeonBossSettings {
 
     const val DARKNESS_EFFECT_RADIUS = 30
     val DARKNESS_EFFECT = PotionEffect(PotionEffectType.DARKNESS, 160, 1, true)
+
+    const val GRAVITATION_PILLAR_RANGE = 20.0
+    const val GRAVITATION_PILLAR_COOLDOWN = 40L //in Ticks
 
     fun getBossAbilityCooldown(bossLevel: Int) = 30 + 120 / (1 + bossLevel / 5)
 }
