@@ -5,10 +5,10 @@ import de.fuballer.mcendgame.component.artifact.db.ArtifactRepository
 import de.fuballer.mcendgame.component.artifact.db.ArtifactType
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
-import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.PersistentDataUtil
-import de.fuballer.mcendgame.helper.WorldHelper
-import de.fuballer.mcendgame.random.RandomPick
+import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.entity.Monster
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.inventory.InventoryAction
@@ -19,10 +19,11 @@ import org.bukkit.persistence.PersistentDataType
 import java.text.DecimalFormat
 import java.util.*
 
+@Component
 class ArtifactService(
     private val artifactRepo: ArtifactRepository,
     private val worldManageRepo: WorldManageRepository
-) : Service {
+) {
     private val random = Random()
     private val format = DecimalFormat("0.#")
 
@@ -52,7 +53,7 @@ class ArtifactService(
     fun onInventoryClick(event: InventoryClickEvent) {
         if (!event.view.title.contains(ArtifactSettings.ARTIFACTS_WINDOW_TITLE, true)) return
 
-        if (WorldHelper.isDungeonWorld(event.whoClicked.world)) {
+        if (WorldUtil.isDungeonWorld(event.whoClicked.world)) {
             event.whoClicked.sendMessage(ArtifactSettings.CANNOT_CHANGE_ARTIFACTS_MESSAGE)
             event.isCancelled = true
             return
@@ -79,18 +80,18 @@ class ArtifactService(
     }
 
     fun onEntityDeath(event: EntityDeathEvent) {
-        if (WorldHelper.isNotDungeonWorld(event.entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         if (event.entity !is Monster) return
 
-        if(PersistentDataUtil.getValue(event.entity.persistentDataContainer, Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN) == false) return
+        if (PersistentDataUtil.getValue(event.entity.persistentDataContainer, Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN) == false) return
 
         if (random.nextDouble() > ArtifactSettings.ARTIFACT_DROP_CHANCE) return
 
         val worldName = event.entity.world.name
         val mapTier = worldManageRepo.findById(worldName)?.mapTier ?: 1
 
-        val type = RandomPick.pick(ArtifactSettings.ARTIFACT_TYPES).option
-        val tier = RandomPick.pick(ArtifactSettings.ARTIFACT_TIERS, mapTier).option
+        val type = RandomUtil.pick(ArtifactSettings.ARTIFACT_TYPES).option
+        val tier = RandomUtil.pick(ArtifactSettings.ARTIFACT_TIERS, mapTier).option
 
         val artifactItem = getArtifactAsItem(Artifact(type, tier))
         event.entity.world.dropItemNaturally(event.entity.location, artifactItem)
@@ -166,7 +167,7 @@ class ArtifactService(
         val displayName = item.itemMeta?.displayName ?: return null
 
         var artifactType: ArtifactType? = null
-        for (type in ArtifactType.values()) {
+        for (type in ArtifactType.entries) {
             if (displayName.contains(type.displayName)) {
                 artifactType = type
                 break

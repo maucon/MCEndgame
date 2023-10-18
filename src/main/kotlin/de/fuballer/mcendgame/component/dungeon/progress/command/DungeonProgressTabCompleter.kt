@@ -1,14 +1,19 @@
 package de.fuballer.mcendgame.component.dungeon.progress.command
 
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSettings
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
-import org.bukkit.Bukkit
+import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 
+@Component
 class DungeonProgressTabCompleter : CommandTabCompleter {
-    override fun getCommand() = PlayerDungeonProgressSettings.COMMAND_NAME
+    override fun initialize(plugin: JavaPlugin) {
+        plugin.getCommand(PlayerDungeonProgressSettings.COMMAND_NAME)!!.tabCompleter = this
+    }
 
     override fun onTabComplete(
         sender: CommandSender,
@@ -20,7 +25,7 @@ class DungeonProgressTabCompleter : CommandTabCompleter {
 
         return when (args.size) {
             1 -> listOf("get", "set")
-            2 -> Bukkit.getOfflinePlayers().mapNotNull { it.name }
+            2 -> PluginUtil.getOfflinePlayers().mapNotNull { it.name }
             3 -> {
                 if (args[0] == "get") return listOf()
                 return listOf("<level>")

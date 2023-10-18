@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.boss.db
 
+import de.fuballer.mcendgame.component.dungeon.boss.data.BossType
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import org.bukkit.scheduler.BukkitTask
 import java.util.*

@@ -1,17 +1,18 @@
 package de.fuballer.mcendgame.component.filter
 
 import de.fuballer.mcendgame.component.filter.db.FilterRepository
-import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.WorldHelper
+import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 
+@Component
 class FilterService(
     private val filterRepo: FilterRepository
-) : Service {
+) {
     fun onInventoryClick(event: InventoryClickEvent) {
         if (!event.view.title.equals(FilterSettings.FILTER_WINDOW_TITLE, ignoreCase = true)) return
         event.isCancelled = true
@@ -42,7 +43,7 @@ class FilterService(
 
     fun onEntityItemPickup(event: EntityPickupItemEvent) {
         val player = event.entity as? Player ?: return
-        if (WorldHelper.isNotDungeonWorld(event.entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
         val item = event.item.itemStack.type
         val uuid = player.uniqueId

@@ -6,13 +6,15 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionsEntity
 import de.fuballer.mcendgame.component.statitem.StatItemService
-import de.fuballer.mcendgame.helper.PersistentDataUtil
+import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.persistence.PersistentDataType
 
+@Component
 class SummonerService(
     private val minionRepo: MinionRepository,
     private val statItemService: StatItemService,

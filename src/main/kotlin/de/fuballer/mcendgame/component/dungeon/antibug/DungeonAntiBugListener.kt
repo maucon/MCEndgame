@@ -1,11 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.antibug
 
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 
+@Component
 class DungeonAntiBugListener(
     private val dungeonAntiBugService: DungeonAntiBugService
 ) : EventListener {

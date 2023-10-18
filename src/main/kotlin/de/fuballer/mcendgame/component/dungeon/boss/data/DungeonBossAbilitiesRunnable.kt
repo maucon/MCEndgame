@@ -1,12 +1,11 @@
-package de.fuballer.mcendgame.component.dungeon.boss
+package de.fuballer.mcendgame.component.dungeon.boss.data
 
-import de.fuballer.mcendgame.MCEndgame
-import de.fuballer.mcendgame.component.dungeon.boss.db.BossAbility
-import de.fuballer.mcendgame.component.dungeon.boss.db.BossType
+import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
-import de.fuballer.mcendgame.random.RandomPick
+import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
+import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Ageable
@@ -47,7 +46,7 @@ class DungeonBossAbilitiesRunnable(
     private fun useAbility(): Boolean {
         val target = boss.target ?: return false
 
-        when (RandomPick.pick(bossType.abilities).option) {
+        when (RandomUtil.pick(bossType.abilities).option) {
             BossAbility.ARROWS -> shootArrows(target, false)
             BossAbility.FIRE_ARROWS -> shootArrows(target, true)
             BossAbility.SPEED -> giveSpeed()
@@ -62,7 +61,7 @@ class DungeonBossAbilitiesRunnable(
 
     private fun shootArrows(target: LivingEntity, burning: Boolean) {
         for (i in 1..DungeonBossSettings.ARROWS_COUNT)
-            ShootArrowRunnable(target, boss, burning).runTaskLater(MCEndgame.PLUGIN, i * DungeonBossSettings.ARROWS_TIME_DIFFERENCE)
+            ShootArrowRunnable(target, boss, burning).runTaskLater(i * DungeonBossSettings.ARROWS_TIME_DIFFERENCE)
     }
 
     private class ShootArrowRunnable(
@@ -97,10 +96,10 @@ class DungeonBossAbilitiesRunnable(
             val sound = (i - 1) % DungeonBossSettings.FIRE_CASCADE_STEPS_PER_SOUND == 0
 
             CastFireCascadeRunnable(boss, 0.0, boss.location.add(offsetVector), true, sound)
-                .runTaskLater(MCEndgame.PLUGIN, stepDelay)
+                .runTaskLater(stepDelay)
 
             CastFireCascadeRunnable(boss, DungeonBossSettings.FIRE_CASCADE_DAMAGE + level * DungeonBossSettings.FIRE_CASCADE_DAMAGE_PER_LEVEL, boss.location.add(offsetVector), false, sound)
-                .runTaskLater(MCEndgame.PLUGIN, stepDelay + DungeonBossSettings.FIRE_CASCADE_ACTIVATION_DELAY)
+                .runTaskLater(stepDelay + DungeonBossSettings.FIRE_CASCADE_ACTIVATION_DELAY)
 
             offsetVector.add(addVector)
             i++
@@ -186,7 +185,7 @@ class DungeonBossAbilitiesRunnable(
             pillar.health = 1.0
         }
 
-        GravitationPillarPullRunnable(pillar).runTaskLater(MCEndgame.PLUGIN, DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
+        GravitationPillarPullRunnable(pillar).runTaskLater(DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
     }
 
     private class GravitationPillarPullRunnable(
@@ -198,13 +197,13 @@ class DungeonBossAbilitiesRunnable(
                 return
             }
 
-            val entities =
-                pillar.world.getNearbyEntities(
-                    pillar.location,
-                    DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
-                    DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
-                    DungeonBossSettings.GRAVITATION_PILLAR_RANGE
-                )
+            val entities = pillar.world.getNearbyEntities(
+                pillar.location,
+                DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
+                DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
+                DungeonBossSettings.GRAVITATION_PILLAR_RANGE
+            )
+
             var players = entities.filterIsInstance<Player>()
             players = players.filter { it.gameMode == GameMode.ADVENTURE || it.gameMode == GameMode.SURVIVAL }
 
@@ -215,7 +214,7 @@ class DungeonBossAbilitiesRunnable(
 
             pillar.world.playSound(pillar.location, Sound.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 1.5f, 0.5f)
 
-            GravitationPillarPullRunnable(pillar).runTaskLater(MCEndgame.PLUGIN, DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
+            GravitationPillarPullRunnable(pillar).runTaskLater(DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
         }
     }
 }

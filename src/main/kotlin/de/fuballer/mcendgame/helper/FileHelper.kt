@@ -1,24 +1,25 @@
 package de.fuballer.mcendgame.helper
 
-import org.bukkit.Bukkit
+import de.fuballer.mcendgame.framework.annotation.Component
 import java.io.File
+import java.util.logging.Logger
 
-object FileHelper {
+@Component
+class FileHelper(
+    private val logger: Logger
+) {
     fun deleteFile(file: File) {
         if (file.isDirectory) {
-            file.list()?.also { subFiles ->
-                for (subFile in subFiles) {
-                    deleteFile(File(file, subFile))
-                }
-            }
+            file.list()!!
+                .map { File(file, it) }
+                .forEach { deleteFile(it) }
         }
 
         try {
-            if (!file.delete()) {
-                Bukkit.getLogger().warning("Couldn't delete file: " + file.path)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+            if (file.delete()) return
+        } catch (_: Exception) {
         }
+
+        logger.warning("Couldn't delete file: " + file.path)
     }
 }

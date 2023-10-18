@@ -1,15 +1,16 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.dungeon.boss.db.BossType
+import de.fuballer.mcendgame.component.dungeon.boss.data.BossType
+import de.fuballer.mcendgame.component.dungeon.boss.data.DungeonBossAbilitiesRunnable
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.WorldHelper
+import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.PluginUtil.runTaskTimer
+import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.attribute.Attribute
@@ -23,10 +24,11 @@ import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
+@Component
 class DungeonBossService(
     private val dungeonBossRepo: DungeonBossRepository,
     private val worldManageRepo: WorldManageRepository
-) : Service {
+) {
     private val random = Random()
 
     fun spawnNewMapBoss(
@@ -71,13 +73,13 @@ class DungeonBossService(
 
     fun onEntityDamage(event: EntityDamageEvent) {
         val entity = event.entity
-        if (WorldHelper.isNotDungeonWorld(event.entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         if (entity.type == EntityType.RAVAGER) (entity as LivingEntity).setAI(true)
     }
 
     fun onEntityTarget(event: EntityTargetEvent) {
         val entity = event.entity
-        if (WorldHelper.isNotDungeonWorld(entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (entity.type == EntityType.RAVAGER) onBossTarget(event)
     }
 
@@ -95,12 +97,8 @@ class DungeonBossService(
             dungeonBossRepo,
             entity as Creature,
             dungeonBossEntity.type,
-            mapTier,
-        ).runTaskTimer(
-            MCEndgame.PLUGIN,
-            0,
-            DungeonBossSettings.BOSS_ABILITY_CHECK_PERIOD.toLong()
-        )
+            mapTier
+        ).runTaskTimer(0, DungeonBossSettings.BOSS_ABILITY_CHECK_PERIOD.toLong())
 
         dungeonBossEntity.abilityTask = runnable
         dungeonBossRepo.save(dungeonBossEntity)

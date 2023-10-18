@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.component.corruption
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.corruption.data.AttributeWithModifier
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.component.statitem.StatItemSettings
-import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.AttributeHelper
-import de.fuballer.mcendgame.random.RandomPick
+import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.AttributeUtil
+import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -19,7 +19,8 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 import kotlin.math.abs
 
-class CorruptionService : Service {
+@Component
+class CorruptionService {
     private val random = Random()
 
     fun onAnvilPrepare(event: PrepareAnvilEvent) {
@@ -34,14 +35,14 @@ class CorruptionService : Service {
         ) return
 
         event.result = addCorruptionTag(base.clone())
-        val plugin = MCEndgame.PLUGIN
-        plugin.server.scheduler.runTask(plugin, Runnable {
+
+        PluginUtil.scheduleTask {
             event.inventory.repairCost = 1
 
             for (viewer in event.inventory.viewers) {
                 (viewer as? Player)?.setWindowProperty(InventoryView.Property.REPAIR_COST, 1)
             }
-        })
+        }
     }
 
     fun onInventoryClick(event: InventoryClickEvent) {
@@ -67,7 +68,7 @@ class CorruptionService : Service {
         val corruptionLore = corruptionMeta.lore ?: return
 
         if (player.gameMode != GameMode.CREATIVE) {
-            player.level = player.level - 1
+            player.level -= 1
         }
 
         corruptItem(result, player)
@@ -79,7 +80,7 @@ class CorruptionService : Service {
             player.world.playSound(player.location, Sound.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1f, 1f)
         }
 
-        AttributeHelper.setAttributeLore(result, true)
+        AttributeUtil.setAttributeLore(result, true)
 
         when (event.action) {
             InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_SOME ->
@@ -125,7 +126,7 @@ class CorruptionService : Service {
             if (hasExtraAttributes(item)) CorruptionSettings.CORRUPTIONS
             else CorruptionSettings.ALTERNATE_CORRUPTIONS
 
-        when (RandomPick.pick(corruptions).option) {
+        when (RandomUtil.pick(corruptions).option) {
             CorruptionChanceType.CORRUPT_ENCHANTS -> corruptEnchant(item)
             CorruptionChanceType.CORRUPT_STATS -> corruptStats(item)
             CorruptionChanceType.CORRUPT_DESTROY -> {
@@ -195,7 +196,7 @@ class CorruptionService : Service {
             val baseAttributes = equipment.baseAttributes
 
             for ((baseAttribute, modifier) in baseAttributes) {
-                val baseValue = AttributeHelper.getActualAttributeValue(baseAttribute, modifier)
+                val baseValue = AttributeUtil.getActualAttributeValue(baseAttribute, modifier)
 
                 for (possibleAttribute in possibleAttributesList) {
                     if (baseAttribute != possibleAttribute.attribute

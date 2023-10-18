@@ -1,10 +1,12 @@
 package de.fuballer.mcendgame.component.killer
 
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 
+@Component
 class KillerListener(
     private val killerService: KillerService
 ) : EventListener {

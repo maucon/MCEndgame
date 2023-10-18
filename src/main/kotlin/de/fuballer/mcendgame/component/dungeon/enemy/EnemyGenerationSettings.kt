@@ -1,9 +1,11 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.data.*
-import de.fuballer.mcendgame.random.RandomOption
-import de.fuballer.mcendgame.random.SortableRandomOption
+import de.fuballer.mcendgame.component.dungeon.enemy.data.DifficultyBaseStats
+import de.fuballer.mcendgame.component.dungeon.enemy.data.MobDamagePrefix
+import de.fuballer.mcendgame.component.dungeon.enemy.data.PotionEffect
+import de.fuballer.mcendgame.util.random.RandomOption
+import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.entity.EntityType
 import java.util.*
 

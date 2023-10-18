@@ -1,33 +1,41 @@
 package de.fuballer.mcendgame.component.mapdevice.db
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.mapdevice.MapDeviceSettings
-import de.fuballer.mcendgame.db.PersistableMapRepository
+import de.fuballer.mcendgame.domain.PersistableMapRepository
 import de.fuballer.mcendgame.domain.Portal
-import org.bukkit.Bukkit
+import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.Server
 import org.bukkit.entity.Entity
 import org.bukkit.metadata.FixedMetadataValue
+import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
-class MapDeviceRepository : PersistableMapRepository<UUID, MapDeviceEntity>() {
-    override fun load() {
-        super.load()
+@Component
+class MapDeviceRepository(
+    private val server: Server
+) : PersistableMapRepository<UUID, MapDeviceEntity>() {
+    override fun initialize(plugin: JavaPlugin) {
+        super.initialize(plugin)
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(MCEndgame.PLUGIN) {
+        PluginUtil.scheduleSyncDelayedTask {
             this.map = findAll()
                 .map {
-                    val world = Bukkit.getServer().getWorld(it.worldName) ?: return@map null
+                    val world = server.getWorld(it.worldName) ?: return@map null
 
                     val location = Location(world, it.x.toDouble(), it.y.toDouble(), it.z.toDouble())
                     val mapDevice = world.getBlockAt(location)
 
                     if (mapDevice.type != Material.RESPAWN_ANCHOR) return@map null
 
-                    mapDevice.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, FixedMetadataValue(MCEndgame.PLUGIN, MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY))
+                    mapDevice.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, FixedMetadataValue(plugin, MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY))
                     MapDeviceEntity(location).apply { id = it.id }
-                }.filterNotNull().associateBy { it.id }.toMutableMap()
+                }
+                .filterNotNull()
+                .associateBy { it.id }
+                .toMutableMap()
         }
     }
 

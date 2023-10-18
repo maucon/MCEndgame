@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.killingstreak
 
 import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -10,6 +11,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
+@Component
 class KillStreakListener(
     private val killStreakService: KillStreakService
 ) : EventListener {

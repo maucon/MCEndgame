@@ -2,9 +2,10 @@ package de.fuballer.mcendgame.component.statitem.command
 
 import com.google.common.collect.Multimap
 import de.fuballer.mcendgame.component.statitem.StatItemSettings
-import de.fuballer.mcendgame.domain.equipment.ItemAttribute
+import de.fuballer.mcendgame.domain.data_class.ItemAttribute
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
-import de.fuballer.mcendgame.helper.AttributeHelper
+import de.fuballer.mcendgame.util.AttributeUtil
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
@@ -13,9 +14,11 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
+import org.bukkit.plugin.java.JavaPlugin
 
+@Component
 class StatItemCommand : CommandHandler {
-    override fun getCommand() = StatItemSettings.COMMAND_NAME
+    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(StatItemSettings.COMMAND_NAME)!!.setExecutor(this)
 
     override fun onCommand(
         sender: CommandSender,
@@ -139,7 +142,7 @@ class StatItemCommand : CommandHandler {
                 presentValue = amValue
                 break
             }
-            if (amValue != AttributeHelper.getActualAttributeValue(attribute, baseValue)) {
+            if (amValue != AttributeUtil.getActualAttributeValue(attribute, baseValue)) {
                 presentValue = amValue
                 break
             }
@@ -156,7 +159,7 @@ class StatItemCommand : CommandHandler {
         var text = ""
 
         for ((attribute, value) in maxAttributes) {
-            val attributeString = "${StatItemSettings.STAT_ITEM_COMMAND_ATTRIBUTE_COLOR}${AttributeHelper.getAttributeAsString(attribute)}:"
+            val attributeString = "${StatItemSettings.STAT_ITEM_COMMAND_ATTRIBUTE_COLOR}${AttributeUtil.getAttributeAsString(attribute)}:"
             text = text.plus("$attributeString\n")
 
             val presentValue = presentAttributeValues[attribute] ?: 0.0
@@ -164,8 +167,8 @@ class StatItemCommand : CommandHandler {
                 String.format(
                     "   %s%.2f / %s (%.2f%%)",
                     StatItemSettings.STAT_ITEM_COMMAND_VALUE_COLOR,
-                    AttributeHelper.getDisplayedValue(attribute, presentValue),
-                    AttributeHelper.getDisplayedValue(attribute, value),
+                    AttributeUtil.getDisplayedValue(attribute, presentValue),
+                    AttributeUtil.getDisplayedValue(attribute, value),
                     presentValue / value * 100
                 )
             )

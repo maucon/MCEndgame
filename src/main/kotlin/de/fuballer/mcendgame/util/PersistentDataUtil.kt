@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.helper
+package de.fuballer.mcendgame.util
 
 import org.bukkit.NamespacedKey
 import org.bukkit.persistence.PersistentDataContainer

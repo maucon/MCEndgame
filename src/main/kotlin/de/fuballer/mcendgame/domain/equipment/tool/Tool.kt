@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.domain.equipment.tool
 
+import de.fuballer.mcendgame.domain.data_class.ItemAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
-import de.fuballer.mcendgame.domain.equipment.ItemAttribute
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
-import de.fuballer.mcendgame.random.RandomOption
+import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 

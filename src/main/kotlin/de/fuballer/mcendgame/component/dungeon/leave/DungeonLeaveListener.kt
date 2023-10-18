@@ -2,12 +2,14 @@ package de.fuballer.mcendgame.component.dungeon.leave
 
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.EventListener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 
+@Component
 class DungeonLeaveListener(
     private val dungeonLeaveService: DungeonLeaveService
 ) : EventListener {

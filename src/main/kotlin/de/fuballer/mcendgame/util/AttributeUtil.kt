@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.helper
+package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
 import de.fuballer.mcendgame.component.statitem.StatItemSettings
@@ -15,7 +15,7 @@ import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.abs
 
-object AttributeHelper {
+object AttributeUtil {
     private val decimalFormat = DecimalFormat("#.##")
 
     fun getActualAttributeValue(attribute: Attribute, value: Double): Double {

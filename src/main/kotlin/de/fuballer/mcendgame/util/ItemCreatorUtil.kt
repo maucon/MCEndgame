@@ -1,10 +1,10 @@
-package de.fuballer.mcendgame.helper
+package de.fuballer.mcendgame.util
 
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
-object ItemCreator {
+object ItemCreatorUtil {
     fun create(
         itemStack: ItemStack,
         itemName: String?,

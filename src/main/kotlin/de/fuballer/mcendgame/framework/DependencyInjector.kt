@@ -1,85 +1,140 @@
 package de.fuballer.mcendgame.framework
 
-import de.fuballer.mcendgame.framework.stereotype.Injectable
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.lang.reflect.Modifier
+import de.fuballer.mcendgame.framework.annotation.Bean
+import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Configuration
+import de.fuballer.mcendgame.framework.annotation.Qualifier
+import org.reflections.Reflections
+import org.reflections.scanners.Scanners
+import java.lang.reflect.Parameter
 
 object DependencyInjector {
-    fun getInjectedObjects(): MutableCollection<Any> {
-        val classObjects = getInjectableClassObjects().toMutableSet()
-        return instantiateClasses(classObjects)
+    private val componentAnnotations = arrayOf(Component::class.java, Configuration::class.java)
+
+    fun instantiateClasses(startingClass: Class<*>): Collection<Any> {
+        val injectables = scanForInjectables(startingClass)
+        val dependentBeans = mapToDependentBeans(injectables)
+        return instantiateDependentBeans(dependentBeans)
     }
 
-    private fun getInjectableClassObjects() = getInjectableClassObjects("de.fuballer.mcendgame", mutableSetOf())
+    private fun scanForInjectables(startingClass: Class<*>): Set<Class<*>> {
+        val reflection = Reflections(startingClass)
+        val query = Scanners.TypesAnnotated.with(*componentAnnotations)
 
-    private fun getInjectableClassObjects(
-        packageName: String,
-        classes: MutableSet<Class<*>>
-    ): Set<Class<*>> {
-        val systemClassLoader = ClassLoader.getSystemClassLoader()
-        val stream = systemClassLoader.getResourceAsStream(packageName.replace("[.]".toRegex(), "/"))!!
-        val reader = BufferedReader(InputStreamReader(stream))
+        return reflection.get(query)
+            .map { Class.forName(it) }
+            .filter { !it.isInterface && !it.isAnnotation }
+            .toSet()
+    }
 
-        for (line in reader.lines()) {
-            if (!line.endsWith(".class")) {
-                val subPackageClasses = getInjectableClassObjects("$packageName.$line", classes)
-                classes.addAll(subPackageClasses)
-                continue
-            }
+    private fun mapToDependentBeans(classes: Set<Class<*>>) = classes.flatMap { clazz ->
+        if (clazz.isAnnotationPresent(Configuration::class.java)) {
+            mapMethodsToDependentBeans(clazz)
+        } else {
+            mapClassToDependentBean(clazz)
+        }
+    }
 
-            val clazz = getClass(line, packageName) ?: continue
-            if (!Injectable::class.java.isAssignableFrom(clazz)) continue
-            if (clazz.isInterface) continue
-            if (Modifier.isAbstract(clazz.modifiers)) continue
+    private fun mapClassToDependentBean(clazz: Class<*>): List<DependentBean> {
+        val constructor = clazz.constructors.first()
 
-            classes.add(clazz)
+        return listOf(
+            DependentBean(
+                BeanQualifier(clazz, clazz.simpleName.lowercase()),
+                mapParameterToQualifiedBeans(constructor.parameters.asList())
+            )
+            { args -> constructor.newInstance(*args) }
+        )
+    }
+
+    private fun mapMethodsToDependentBeans(clazz: Class<*>): List<DependentBean> {
+        val classDependentBean = mapClassToDependentBean(clazz).first()
+
+        val dependentBeans = mutableListOf<DependentBean>().apply {
+            add(classDependentBean)
+            addAll(
+                clazz.methods
+                    .filter { it.isAnnotationPresent(Bean::class.java) }
+                    .map {
+                        val bean = it.getAnnotation(Bean::class.java)
+                        val qualifierName = bean.name.ifEmpty { it.name }
+
+                        val dependencies = mutableListOf(classDependentBean.beanQualifier)
+                        dependencies.addAll(mapParameterToQualifiedBeans(it.parameters.asList()))
+
+                        DependentBean(
+                            BeanQualifier(it.returnType, qualifierName.lowercase()),
+                            dependencies
+                        )
+                        { args ->
+                            val classObject = args[0]
+                            val realArgs = args.toMutableList()
+                                .apply { removeAt(0) }
+                                .toTypedArray()
+
+                            it.invoke(classObject, *realArgs)
+                        }
+                    }
+            )
         }
 
-        return classes
+        return dependentBeans
     }
 
-    private fun getClass(
-        className: String,
-        packageName: String
-    ): Class<*>? {
-        try {
-            return Class.forName(packageName + "." + className.substring(0, className.lastIndexOf('.')))
-        } catch (_: ExceptionInInitializerError) {
-        } catch (_: NoClassDefFoundError) {
-        }
-        return null
-    }
-
-    fun instantiateClasses(classes: MutableSet<Class<*>>): MutableCollection<Any> {
-        // zero dependencies
-        val map = classes
-            .filter { it.constructors[0].parameterCount == 0 }
-            .onEach { classes.remove(it) }
-            .associateWith { it.constructors[0].newInstance() }
-            .toMutableMap()
-
-        while (classes.isNotEmpty()) {
-            val done = mutableSetOf<Any>()
-
-            classLoop@ for (clazz in classes) {
-                val constructor = clazz.constructors.first()
-                val constructorParams = mutableListOf<Any>()
-
-                for (parameterType in constructor.parameterTypes) {
-                    val paramType = map[parameterType] ?: continue@classLoop
-                    constructorParams.add(paramType)
-                }
-
-                map[clazz] = constructor.newInstance(*constructorParams.toTypedArray())
-                done.add(clazz)
-            }
-
-            if (!classes.removeAll(done)) {
-                throw IllegalStateException("Couldn't resolve dependencies!")
+    private fun mapParameterToQualifiedBeans(parameter: List<Parameter>) =
+        parameter.map {
+            if (it.isAnnotationPresent(Qualifier::class.java)) {
+                val qualifier = it.getAnnotation(Qualifier::class.java)
+                BeanQualifier(it.type, qualifier.name.lowercase())
+            } else {
+                val classType = it.type
+                BeanQualifier(classType, classType.simpleName.lowercase())
             }
         }
 
-        return map.values
+    private fun instantiateDependentBeans(beans: List<DependentBean>): Collection<Any> {
+        val instantiatedBeans = mutableMapOf<BeanQualifier, Any>()
+        val toInstantiate = beans.toMutableList()
+        toInstantiate.sortBy { it.dependencies.size }
+
+        while (toInstantiate.isNotEmpty()) {
+            val instantiated = mutableListOf<DependentBean>()
+
+            for (dependentBean in toInstantiate) {
+                val dependencies = gatherDependencies(dependentBean.dependencies, instantiatedBeans) ?: continue
+
+                val classObject = dependentBean.constructor.invoke(dependencies)
+                instantiatedBeans[dependentBean.beanQualifier] = classObject
+
+                instantiated.add(dependentBean)
+            }
+
+            if (!toInstantiate.removeAll(instantiated)) {
+                throw IllegalStateException("Couldn't resolve ${toInstantiate.size} dependencies!")
+            }
+        }
+
+        return instantiatedBeans.values
     }
+
+    private fun gatherDependencies(
+        dependencies: List<BeanQualifier>,
+        instantiatedClasses: MutableMap<BeanQualifier, Any>
+    ): Array<Any>? {
+        val resolvedDependencies = dependencies.mapNotNull { instantiatedClasses[it] }
+        if (dependencies.size != resolvedDependencies.size) return null
+
+        return resolvedDependencies.toTypedArray()
+    }
+
+    private data class DependentBean(
+        val beanQualifier: BeanQualifier,
+        val dependencies: List<BeanQualifier>,
+        val constructor: (Array<Any>) -> Any
+    )
+
+    private data class BeanQualifier(
+        val type: Class<*>,
+        val qualifier: String
+    )
 }

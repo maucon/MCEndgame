@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.mapdevice
 
-import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationService
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressService
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSettings
@@ -12,7 +11,9 @@ import de.fuballer.mcendgame.event.DiscoverRecipeAddEvent
 import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
-import de.fuballer.mcendgame.framework.stereotype.Service
+import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
+import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.*
 import org.bukkit.block.data.type.RespawnAnchor
 import org.bukkit.enchantments.Enchantment
@@ -30,16 +31,19 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.metadata.FixedMetadataValue
-import org.bukkit.plugin.Plugin
+import org.bukkit.plugin.java.JavaPlugin
 import kotlin.math.max
 
+@Component
 class MapDeviceService(
     private val mapDeviceRepo: MapDeviceRepository,
     private val worldManageRepo: WorldManageRepository,
     private val dungeonGenerationService: DungeonGenerationService,
-    private val playerDungeonProgressService: PlayerDungeonProgressService
-) : Service {
-    override fun initialize(plugin: Plugin) {
+    private val playerDungeonProgressService: PlayerDungeonProgressService,
+    private val plugin: JavaPlugin,
+    private val server: Server
+) : LifeCycleListener {
+    override fun initialize(plugin: JavaPlugin) {
         createRecipe(plugin)
         clearBuggedArmorStands()
     }
@@ -56,7 +60,7 @@ class MapDeviceService(
         if (!placedItemLore.contains(MapDeviceSettings.ITEM_LORE_LINE)) return
 
         val block = event.block
-        block.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, FixedMetadataValue(MCEndgame.PLUGIN, MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY))
+        block.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, FixedMetadataValue(plugin, MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY))
 
         val entity = MapDeviceEntity(block.location)
         mapDeviceRepo.save(entity)
@@ -69,7 +73,7 @@ class MapDeviceService(
         val block = event.block
         if (!block.hasMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY)) return
 
-        block.removeMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, MCEndgame.PLUGIN)
+        block.removeMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, plugin)
 
         val location = block.location
         val entity = mapDeviceRepo.findByLocation(location) ?: return
@@ -176,7 +180,7 @@ class MapDeviceService(
     }
 
     private fun clearBuggedArmorStands() {
-        for (world in Bukkit.getWorlds()) {
+        for (world in server.worlds) {
             clearBuggedArmorStands(world)
         }
     }
@@ -191,7 +195,7 @@ class MapDeviceService(
         }
     }
 
-    private fun createRecipe(plugin: Plugin) {
+    private fun createRecipe(plugin: JavaPlugin) {
         val key = NamespacedKey(plugin, MapDeviceSettings.MAP_DEVICE_ITEM_KEY)
         val recipe = MapDeviceSettings.getMapDeviceCraftingRecipe(key)
 
@@ -200,7 +204,10 @@ class MapDeviceService(
     }
 
     private fun getMapDeviceInventory(player: Player): Inventory {
-        val inventory = Bukkit.createInventory(null, InventoryType.HOPPER, MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE)
+        val inventory = PluginUtil.createInventory(
+            InventoryType.HOPPER,
+            MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE
+        )
 
         inventory.setItem(0, MapDeviceSettings.OPEN_PORTALS_ITEM)
         inventory.setItem(1, MapDeviceSettings.FILLER_ITEM)
@@ -288,7 +295,7 @@ class MapDeviceService(
             player.setStatistic(Statistic.BREAK_ITEM, toolType, player.getStatistic(Statistic.BREAK_ITEM, toolType) + 1)
         }
 
-        toolMeta.damage = toolMeta.damage + 1
+        toolMeta.damage += 1
         tool.itemMeta = toolMeta
     }
 }

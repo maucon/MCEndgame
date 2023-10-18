@@ -1,18 +1,21 @@
 package de.fuballer.mcendgame.component.build_calculation
 
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import org.bukkit.attribute.Attribute
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.math.max
 import kotlin.math.min
 
+@Component
 class BuildCalculationCommand : CommandHandler {
-    override fun getCommand() = BuildCalculationSettings.COMMAND_NAME
+    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(BuildCalculationSettings.COMMAND_NAME)!!.setExecutor(this)
 
     override fun onCommand(
         sender: CommandSender,

@@ -2,16 +2,19 @@ package de.fuballer.mcendgame.component.remaining.command
 
 import de.fuballer.mcendgame.component.remaining.RemainingSettings
 import de.fuballer.mcendgame.component.remaining.db.RemainingRepository
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
-import de.fuballer.mcendgame.helper.WorldHelper
+import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 
+@Component
 class RemainingCommand(
     private val remainingRepository: RemainingRepository
 ) : CommandHandler {
-    override fun getCommand() = RemainingSettings.COMMAND_NAME
+    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(RemainingSettings.COMMAND_NAME)!!.setExecutor(this)
 
     override fun onCommand(
         sender: CommandSender,
@@ -22,7 +25,7 @@ class RemainingCommand(
         val commandExecutor = sender as? Player ?: return false
 
         val world = commandExecutor.world
-        if (WorldHelper.isNotDungeonWorld(world)) {
+        if (WorldUtil.isNotDungeonWorld(world)) {
             commandExecutor.sendMessage(RemainingSettings.NOT_IN_DUNGEON_ERROR)
             return true
         }

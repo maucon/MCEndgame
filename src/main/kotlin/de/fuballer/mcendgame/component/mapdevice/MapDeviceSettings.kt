@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.mapdevice
 
-import de.fuballer.mcendgame.helper.ItemCreator.create
+import de.fuballer.mcendgame.util.ItemCreatorUtil.create
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.NamespacedKey

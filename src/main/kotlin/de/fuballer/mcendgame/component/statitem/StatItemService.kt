@@ -3,11 +3,11 @@ package de.fuballer.mcendgame.component.statitem
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
-import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.AttributeHelper
-import de.fuballer.mcendgame.random.RandomOption
-import de.fuballer.mcendgame.random.RandomPick
-import de.fuballer.mcendgame.random.SortableRandomOption
+import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.AttributeUtil
+import de.fuballer.mcendgame.util.random.RandomOption
+import de.fuballer.mcendgame.util.random.RandomUtil
+import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Creature
@@ -22,7 +22,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import java.util.*
 
-class StatItemService : Service {
+@Component
+class StatItemService {
     private val random = Random()
 
     fun setCreatureEquipment(
@@ -75,7 +76,7 @@ class StatItemService : Service {
         if (!meta.hasLore()) return
 
         val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        meta.lore = AttributeHelper.getAttributeLore(equipment, meta, false)
+        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
         item.itemMeta = meta
     }
 
@@ -86,7 +87,7 @@ class StatItemService : Service {
         val lore = meta.lore ?: return
 
         val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        meta.lore = AttributeHelper.getAttributeLore(equipment, meta, lore.contains(CorruptionSettings.CORRUPTION_TAG_LORE[0]))
+        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, lore.contains(CorruptionSettings.CORRUPTION_TAG_LORE[0]))
         item.itemMeta = meta
     }
 
@@ -97,12 +98,12 @@ class StatItemService : Service {
         val attributes = meta.attributeModifiers ?: return
         val smithingEquipment = StatItemSettings.SMITHING_MAP[item.type] ?: return
 
-        if (!AttributeHelper.removeAttributeBaseStats(smithingEquipment, meta)) return
+        if (!AttributeUtil.removeAttributeBaseStats(smithingEquipment, meta)) return
 
         val slot = attributes.values().first().slot
         val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        AttributeHelper.addAttributeBaseStats(equipment, meta, slot)
-        meta.lore = AttributeHelper.getAttributeLore(equipment, meta, false)
+        AttributeUtil.addAttributeBaseStats(equipment, meta, slot)
+        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
         item.itemMeta = meta
     }
 
@@ -115,19 +116,19 @@ class StatItemService : Service {
         if (!meta.hasLore()) return
 
         val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        meta.lore = AttributeHelper.getAttributeLore(equipment, meta, false)
+        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
         item.itemMeta = meta
     }
 
     private fun createMainHandItem(mapTier: Int, ranged: Boolean): ItemStack? {
         if (ranged) return createRangedMainHandItem(mapTier)
 
-        val itemProbability = RandomPick.pick(StatItemSettings.MAINHAND_PROBABILITIES).option ?: return null
+        val itemProbability = RandomUtil.pick(StatItemSettings.MAINHAND_PROBABILITIES).option ?: return null
         return getSortableEquipment(mapTier, itemProbability, EquipmentSlot.HAND)
     }
 
     private fun createRangedMainHandItem(mapTier: Int): ItemStack? {
-        val itemProbability = RandomPick.pick(StatItemSettings.RANGED_MAINHAND_PROBABILITIES).option
+        val itemProbability = RandomUtil.pick(StatItemSettings.RANGED_MAINHAND_PROBABILITIES).option
         return getSortableEquipment(mapTier, itemProbability, EquipmentSlot.HAND)
     }
 
@@ -136,7 +137,7 @@ class StatItemService : Service {
             return getUnsortableEquipment(mapTier, StatItemSettings.OTHER_ITEMS)
         }
 
-        val itemProbability = RandomPick.pick(StatItemSettings.MAINHAND_PROBABILITIES).option ?: return null
+        val itemProbability = RandomUtil.pick(StatItemSettings.MAINHAND_PROBABILITIES).option ?: return null
         return getSortableEquipment(mapTier, itemProbability, EquipmentSlot.HAND)
     }
 
@@ -145,7 +146,7 @@ class StatItemService : Service {
         equipmentProbabilities: List<SortableRandomOption<out Equipment?>>,
         slot: EquipmentSlot
     ): ItemStack? {
-        val equipment = RandomPick.pick(equipmentProbabilities, StatItemSettings.calculateEquipmentRollTries(mapTier)).option ?: return null
+        val equipment = RandomUtil.pick(equipmentProbabilities, StatItemSettings.calculateEquipmentRollTries(mapTier)).option ?: return null
         return getEquipment(mapTier, equipment, slot)
     }
 
@@ -153,7 +154,7 @@ class StatItemService : Service {
         mapTier: Int,
         equipmentProbabilities: List<RandomOption<out Equipment>>
     ): ItemStack {
-        val equipment = RandomPick.pick(equipmentProbabilities).option
+        val equipment = RandomUtil.pick(equipmentProbabilities).option
         return getEquipment(mapTier, equipment, EquipmentSlot.OFF_HAND)
     }
 
@@ -178,7 +179,7 @@ class StatItemService : Service {
         enchants: List<RandomOption<ItemEnchantment>>
     ) {
         repeat(StatItemSettings.calculateEnchantTries(mapTier)) {
-            val itemEnchantment = RandomPick.pick(enchants).option
+            val itemEnchantment = RandomUtil.pick(enchants).option
 
             if (itemMeta.getEnchantLevel(itemEnchantment.enchantment) < itemEnchantment.level) {
                 itemMeta.addEnchant(itemEnchantment.enchantment, itemEnchantment.level, true)
@@ -193,14 +194,14 @@ class StatItemService : Service {
         slot: EquipmentSlot
     ) {
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
-        AttributeHelper.addAttributeBaseStats(equipment, itemMeta, slot)
+        AttributeUtil.addAttributeBaseStats(equipment, itemMeta, slot)
 
         val rolledAttributesCopy = equipment.rolledAttributes.toMutableList()
 
-        val statAmount = RandomPick.pick(StatItemSettings.STAT_AMOUNTS, mapTier).option
+        val statAmount = RandomUtil.pick(StatItemSettings.STAT_AMOUNTS, mapTier).option
         repeat(statAmount) {
 
-            val rolledAttributeOption = RandomPick.pick(rolledAttributesCopy)
+            val rolledAttributeOption = RandomUtil.pick(rolledAttributesCopy)
             val (attribute, value) = rolledAttributeOption.option
 
             val random = random.nextDouble()
@@ -221,6 +222,6 @@ class StatItemService : Service {
             rolledAttributesCopy.remove(rolledAttributeOption)
         }
 
-        itemMeta.lore = AttributeHelper.getAttributeLore(equipment, itemMeta, false)
+        itemMeta.lore = AttributeUtil.getAttributeLore(equipment, itemMeta, false)
     }
 }

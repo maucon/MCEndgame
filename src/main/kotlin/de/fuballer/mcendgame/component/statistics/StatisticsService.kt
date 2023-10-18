@@ -7,17 +7,18 @@ import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.KillStreakIncreaseEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
-import de.fuballer.mcendgame.framework.stereotype.Service
-import de.fuballer.mcendgame.helper.WorldHelper
+import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.*
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import kotlin.math.max
 
+@Component
 class StatisticsService(
     private val statisticsRepo: StatisticsRepository
-) : Service {
+) {
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player.uniqueId
         if (!statisticsRepo.exists(player)) {
@@ -26,7 +27,7 @@ class StatisticsService(
     }
 
     fun onEntityDeath(event: EntityDeathEvent) {
-        if (WorldHelper.isNotDungeonWorld(event.entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
         if (event.entity is Player) {
             val player = event.entity.uniqueId
@@ -46,7 +47,7 @@ class StatisticsService(
     }
 
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
-        if (WorldHelper.isNotDungeonWorld(event.entity.world)) return
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
         var damager = event.damager
         damager = testIfDamagerIsArrow(damager)

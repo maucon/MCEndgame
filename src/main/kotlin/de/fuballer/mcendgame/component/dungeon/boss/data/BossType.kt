@@ -1,7 +1,7 @@
-package de.fuballer.mcendgame.component.dungeon.boss.db
+package de.fuballer.mcendgame.component.dungeon.boss.data
 
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.random.RandomOption
+import de.fuballer.mcendgame.util.random.RandomOption
 
 enum class BossType(
     val customEntityType: CustomEntityType,
@@ -36,6 +36,6 @@ enum class BossType(
     );
 
     companion object {
-        fun getRandom() = values().random()
+        fun getRandom() = entries.toTypedArray().random()
     }
 }

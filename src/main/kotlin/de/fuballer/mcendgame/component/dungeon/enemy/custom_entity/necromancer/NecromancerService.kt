@@ -4,10 +4,12 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityT
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionsEntity
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.SummonerService
+import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.entity.Spellcaster
 import org.bukkit.event.entity.EntitySpellCastEvent
 import kotlin.math.min
 
+@Component
 class NecromancerService(
     private val minionRepo: MinionRepository,
     private val summonerService: SummonerService,

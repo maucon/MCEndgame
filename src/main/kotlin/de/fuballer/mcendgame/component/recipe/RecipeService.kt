@@ -3,13 +3,15 @@ package de.fuballer.mcendgame.component.recipe
 import de.fuballer.mcendgame.component.recipe.db.RecipeEntity
 import de.fuballer.mcendgame.component.recipe.db.RecipeRepository
 import de.fuballer.mcendgame.event.DiscoverRecipeAddEvent
-import de.fuballer.mcendgame.framework.stereotype.Service
-import org.bukkit.Bukkit
+import de.fuballer.mcendgame.framework.annotation.Component
+import org.bukkit.Server
 import org.bukkit.event.player.PlayerJoinEvent
 
+@Component
 class RecipeService(
-    private val discoverRecipeRepo: RecipeRepository
-) : Service {
+    private val discoverRecipeRepo: RecipeRepository,
+    private val server: Server
+) {
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player
 
@@ -20,7 +22,7 @@ class RecipeService(
     }
 
     fun onDiscoverRecipeAdd(event: DiscoverRecipeAddEvent) {
-        Bukkit.addRecipe(event.recipe)
+        server.addRecipe(event.recipe)
 
         val entity = RecipeEntity(event.key)
         discoverRecipeRepo.save(entity)

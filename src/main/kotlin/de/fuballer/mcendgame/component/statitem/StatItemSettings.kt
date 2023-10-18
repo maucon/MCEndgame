@@ -6,8 +6,8 @@ import de.fuballer.mcendgame.domain.equipment.armor.Chestplate
 import de.fuballer.mcendgame.domain.equipment.armor.Helmet
 import de.fuballer.mcendgame.domain.equipment.armor.Leggings
 import de.fuballer.mcendgame.domain.equipment.tool.*
-import de.fuballer.mcendgame.random.RandomOption
-import de.fuballer.mcendgame.random.SortableRandomOption
+import de.fuballer.mcendgame.util.random.RandomOption
+import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import kotlin.math.pow
