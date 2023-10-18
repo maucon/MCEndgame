@@ -9,10 +9,10 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.random.RandomPick
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
+import org.bukkit.entity.Ageable
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.entity.Zombie
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
@@ -175,7 +175,7 @@ class DungeonBossAbilitiesRunnable(
         pillar.customName = CustomEntityType.STONE_PILLAR.customName
         pillar.setAI(false)
         pillar.isSilent = true
-        if (pillar is Zombie) pillar.setAdult()
+        if (pillar is Ageable) pillar.setAdult()
         pillar.equipment?.also { it.clear() }
         pillar.persistentDataContainer.set(Keys.IS_MINION, PersistentDataType.BOOLEAN, true)
         pillar.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
