@@ -12,6 +12,7 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.entity.Zombie
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
@@ -173,6 +174,9 @@ class DungeonBossAbilitiesRunnable(
         val pillar = boss.world.spawnEntity(boss.location, CustomEntityType.STONE_PILLAR.type) as LivingEntity
         pillar.customName = CustomEntityType.STONE_PILLAR.customName
         pillar.setAI(false)
+        pillar.isSilent = true
+        if (pillar is Zombie) pillar.setAdult()
+        pillar.equipment?.also { it.clear() }
         pillar.persistentDataContainer.set(Keys.IS_MINION, PersistentDataType.BOOLEAN, true)
         pillar.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
 
@@ -209,7 +213,7 @@ class DungeonBossAbilitiesRunnable(
                 player.velocity = Vector(vec.x, vec.y + vec.length() / 5, vec.z)
             }
 
-            pillar.world.playSound(pillar.location, Sound.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 0.7f, 0.5f)
+            pillar.world.playSound(pillar.location, Sound.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 1.5f, 0.5f)
 
             GravitationPillarPullRunnable(pillar).runTaskLater(MCEndgame.PLUGIN, DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
         }
