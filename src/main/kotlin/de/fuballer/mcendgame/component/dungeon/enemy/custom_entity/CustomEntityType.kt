@@ -22,4 +22,6 @@ enum class CustomEntityType(
 
     RAVAGER(EntityType.RAVAGER, null, false, false, false, false),
     DEMONIC_GOLEM(EntityType.RAVAGER, "Demonic Golem", false, false, false, false),
+
+    STONE_PILLAR(EntityType.ZOMBIE, "Stone Pillar", false, false, false, false),
 }

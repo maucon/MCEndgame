@@ -7,4 +7,5 @@ enum class BossAbility{
     FIRE_CASCADE,
     DARKNESS,
     LEAP,
+    GRAVITATION_PILLAR,
 }

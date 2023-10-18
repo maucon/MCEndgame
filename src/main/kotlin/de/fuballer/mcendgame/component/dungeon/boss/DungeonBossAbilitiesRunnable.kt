@@ -4,14 +4,15 @@ import de.fuballer.mcendgame.MCEndgame
 import de.fuballer.mcendgame.component.dungeon.boss.db.BossAbility
 import de.fuballer.mcendgame.component.dungeon.boss.db.BossType
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
 import de.fuballer.mcendgame.random.RandomPick
-import org.bukkit.Bukkit
-import org.bukkit.Location
-import org.bukkit.Particle
-import org.bukkit.Sound
-import org.bukkit.SoundCategory
+import org.bukkit.*
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 import kotlin.math.pow
@@ -52,6 +53,7 @@ class DungeonBossAbilitiesRunnable(
             BossAbility.FIRE_CASCADE -> castFireCascade(target)
             BossAbility.DARKNESS -> applyDarkness()
             BossAbility.LEAP -> leap(target)
+            BossAbility.GRAVITATION_PILLAR -> summonGravitationPillar()
         }
 
         return true
@@ -165,5 +167,51 @@ class DungeonBossAbilitiesRunnable(
     private fun leap(target: LivingEntity) {
         val vec = target.location.subtract(boss.location).multiply(0.25)
         boss.velocity = Vector(vec.x, vec.y + vec.length() / 4, vec.z)
+    }
+
+    private fun summonGravitationPillar() {
+        val pillar = boss.world.spawnEntity(boss.location, CustomEntityType.STONE_PILLAR.type) as LivingEntity
+        pillar.customName = CustomEntityType.STONE_PILLAR.customName
+        pillar.setAI(false)
+        pillar.persistentDataContainer.set(Keys.IS_MINION, PersistentDataType.BOOLEAN, true)
+        pillar.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
+
+        val attributeInstance = boss.getAttribute(Attribute.GENERIC_MAX_HEALTH)
+        if (attributeInstance != null) {
+            attributeInstance.baseValue = 1.0
+            pillar.health = 1.0
+        }
+
+        GravitationPillarPullRunnable(pillar).runTaskLater(MCEndgame.PLUGIN, DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
+    }
+
+    private class GravitationPillarPullRunnable(
+        private val pillar: LivingEntity,
+    ) : BukkitRunnable() {
+        override fun run() {
+            if (pillar.isDead) {
+                this.cancel()
+                return
+            }
+
+            val entities =
+                pillar.world.getNearbyEntities(
+                    pillar.location,
+                    DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
+                    DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
+                    DungeonBossSettings.GRAVITATION_PILLAR_RANGE
+                )
+            var players = entities.filterIsInstance<Player>()
+            players = players.filter { it.gameMode == GameMode.ADVENTURE || it.gameMode == GameMode.SURVIVAL }
+
+            for (player in players) {
+                val vec = pillar.location.subtract(player.location).multiply(0.1)
+                player.velocity = Vector(vec.x, vec.y + vec.length() / 5, vec.z)
+            }
+
+            pillar.world.playSound(pillar.location, Sound.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 0.7f, 0.5f)
+
+            GravitationPillarPullRunnable(pillar).runTaskLater(MCEndgame.PLUGIN, DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
+        }
     }
 }

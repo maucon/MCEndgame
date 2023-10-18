@@ -26,9 +26,9 @@ enum class BossType(
     DEMONIC_GOLEM(
         CustomEntityType.DEMONIC_GOLEM,
         listOf(
-            RandomOption(50, BossAbility.LEAP),
             RandomOption(30, BossAbility.DARKNESS),
             RandomOption(50, BossAbility.FIRE_CASCADE),
+            RandomOption(40, BossAbility.GRAVITATION_PILLAR),
         ),
         150.0, 10.0,
         20.0, 3.0,

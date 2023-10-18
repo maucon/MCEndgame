@@ -23,13 +23,13 @@ object DungeonBossSettings {
     const val BOSS_ABILITY_CHECK_PERIOD = 5 // in ticks
 
     const val ARROWS_COUNT = 5
-    const val ARROWS_TIME_DIFFERENCE: Long = 4 // in ticks
+    const val ARROWS_TIME_DIFFERENCE = 4L // in ticks
 
     val SPEED_EFFECT = PotionEffect(PotionEffectType.SPEED, 20, 4, false, false)
 
     const val FIRE_CASCADE_DISTANCE = 1
     const val FIRE_CASCADE_STEPS_AFTER_PLAYER = 15
-    const val FIRE_CASCADE_ACTIVATION_DELAY: Long = 10 // in ticks
+    const val FIRE_CASCADE_ACTIVATION_DELAY = 10L // in ticks
 
     const val FIRE_CASCADE_STEP_DELAY = 0.7 //in Ticks
 
@@ -40,6 +40,9 @@ object DungeonBossSettings {
 
     const val DARKNESS_EFFECT_RADIUS = 30
     val DARKNESS_EFFECT = PotionEffect(PotionEffectType.DARKNESS, 160, 1, true)
+
+    const val GRAVITATION_PILLAR_RANGE = 20.0
+    const val GRAVITATION_PILLAR_COOLDOWN = 40L //in Ticks
 
     fun getBossAbilityCooldown(bossLevel: Int) = 30 + 120 / (1 + bossLevel / 5)
 }
