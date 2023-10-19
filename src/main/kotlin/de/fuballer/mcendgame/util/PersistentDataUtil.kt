@@ -1,16 +1,17 @@
 package de.fuballer.mcendgame.util
 
-import org.bukkit.NamespacedKey
-import org.bukkit.persistence.PersistentDataContainer
-import org.bukkit.persistence.PersistentDataType
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
+import org.bukkit.entity.Entity
 
 object PersistentDataUtil {
     fun <T> getValue(
-        persistentDataContainer: PersistentDataContainer,
-        key: NamespacedKey,
-        dataType: PersistentDataType<*, T>
-    ): T? {
-        if (!persistentDataContainer.has(key, dataType)) return null
-        return persistentDataContainer.get(key, dataType)!!
-    }
+        entity: Entity,
+        typeKey: DataTypeKeys.TypeKey<T>
+    ): T? = entity.persistentDataContainer.get(typeKey.key, typeKey.dataType)
+
+    fun <T> setValue(
+        entity: Entity,
+        typeKey: DataTypeKeys.TypeKey<T>,
+        value: T & Any
+    ) = entity.persistentDataContainer.set(typeKey.key, typeKey.dataType, value)
 }

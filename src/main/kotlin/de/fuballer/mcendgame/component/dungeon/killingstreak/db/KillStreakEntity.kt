@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.killingstreak.db
 
-import de.fuballer.mcendgame.domain.data_class.TimerTask
+import de.fuballer.mcendgame.domain.TimerTask
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import org.bukkit.boss.BossBar
 

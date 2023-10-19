@@ -1,11 +1,12 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.remaining.RemainingService
 import de.fuballer.mcendgame.component.statitem.StatItemService
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -14,8 +15,8 @@ import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Raider
 import org.bukkit.event.entity.EntityPotionEffectEvent
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.awt.Point
@@ -70,17 +71,19 @@ class EnemyGenerationService(
             entity.isCustomNameVisible = false
             entity.removeWhenFarAway = false
 
+            if (entity is Raider) {
+                entity.isPatrolLeader = false
+            }
+
             statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
 
-            if (!entityType.dropBaseLoot) {
-                entity.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
-            }
-            entity.persistentDataContainer.set(Keys.MAP_TIER, PersistentDataType.INTEGER, mapTier)
+            PersistentDataUtil.setValue(entity, DataTypeKeys.DROP_BASE_LOOT, entityType.dropBaseLoot)
+            PersistentDataUtil.setValue(entity, DataTypeKeys.MAP_TIER, mapTier)
+            PersistentDataUtil.setValue(entity, DataTypeKeys.HIDE_EQUIPMENT, entityType.hideEquipment)
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)
             addEffectsToEntity(entity, mapTier)
-            //applyNamePrefix(entity)
         }
 
         remainingService.addMobs(world, amount)

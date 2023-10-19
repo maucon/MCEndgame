@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.configuration
 
-import de.fuballer.mcendgame.MCEndgame
+import com.comphenix.protocol.ProtocolManager
 import de.fuballer.mcendgame.framework.annotation.Bean
 import de.fuballer.mcendgame.framework.annotation.Configuration
 import org.bukkit.Server
@@ -16,18 +16,25 @@ class PluginConfiguration {
     fun plugin(): JavaPlugin = PluginConfiguration.plugin()
 
     @Bean
-    fun logger(): Logger = MCEndgame.INSTANCE.logger
+    fun logger(): Logger = plugin().logger
 
     @Bean
-    fun worldContainer(): File = MCEndgame.INSTANCE.server.worldContainer
+    fun worldContainer(): File = plugin().server.worldContainer
 
     @Bean
     fun server(): Server = PluginConfiguration.server()
 
+    @Bean
+    fun protocolManager(): ProtocolManager = PluginConfiguration.protocolManager()
+
     companion object {
-        fun plugin(): JavaPlugin = MCEndgame.INSTANCE
-        fun scheduler(): BukkitScheduler = MCEndgame.INSTANCE.server.scheduler
-        fun pluginManager(): PluginManager = MCEndgame.INSTANCE.server.pluginManager
-        fun server(): Server = MCEndgame.INSTANCE.server
+        lateinit var INSTANCE: JavaPlugin
+        lateinit var PROTOCOL_MANAGER: ProtocolManager
+
+        fun plugin(): JavaPlugin = INSTANCE
+        fun scheduler(): BukkitScheduler = INSTANCE.server.scheduler
+        fun pluginManager(): PluginManager = INSTANCE.server.pluginManager
+        fun server(): Server = INSTANCE.server
+        fun protocolManager(): ProtocolManager = PROTOCOL_MANAGER
     }
 }

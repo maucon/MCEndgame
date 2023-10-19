@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.domain.data_class
+package de.fuballer.mcendgame.domain
 
 import java.util.TimerTask
 

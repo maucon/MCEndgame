@@ -134,6 +134,6 @@ Should you have any questions or encounter any difficulties, please don't hesita
 
 ## Acknowledgments
 
-* [FastAsyncWorldEdit]()
+* [FastAsyncWorldEdit](https://github.com/IntellectualSites/FastAsyncWorldEdit)
 * [README-Template](https://github.com/othneildrew/Best-README-Template)
 * [Choose an Open Source License](https://choosealicense.com/)

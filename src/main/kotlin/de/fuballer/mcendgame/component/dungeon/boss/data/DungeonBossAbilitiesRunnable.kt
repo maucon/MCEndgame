@@ -3,7 +3,8 @@ package de.fuballer.mcendgame.component.dungeon.boss.data
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.*
@@ -12,7 +13,6 @@ import org.bukkit.entity.Ageable
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 import kotlin.math.pow
@@ -171,13 +171,16 @@ class DungeonBossAbilitiesRunnable(
 
     private fun summonGravitationPillar() {
         val pillar = boss.world.spawnEntity(boss.location, CustomEntityType.STONE_PILLAR.type) as LivingEntity
+
         pillar.customName = CustomEntityType.STONE_PILLAR.customName
         pillar.setAI(false)
         pillar.isSilent = true
+
         if (pillar is Ageable) pillar.setAdult()
         pillar.equipment?.also { it.clear() }
-        pillar.persistentDataContainer.set(Keys.IS_MINION, PersistentDataType.BOOLEAN, true)
-        pillar.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
+
+        PersistentDataUtil.setValue(pillar, DataTypeKeys.IS_MINION, true)
+        PersistentDataUtil.setValue(pillar, DataTypeKeys.DROP_BASE_LOOT, false)
 
         val attributeInstance = pillar.getAttribute(Attribute.GENERIC_MAX_HEALTH)
         if (attributeInstance != null) {
