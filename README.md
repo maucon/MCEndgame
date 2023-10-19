@@ -109,8 +109,10 @@ You can download a pre-built Jar via the `Releases` section or build it yourself
 
 1. Set up your Minecraft [Paper](https://papermc.io/) Server
 2. Download [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/) (Bukkit Version)
-3. Place the `MC-Endgame` and `FastAsyncWorldEdit` Jar into the plugins folder
-4. Start the server
+3. Download [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
+4. Place the downloaded libraries into the plugins folder
+5. Place the `MC-Endgame` Jar into the plugins folder
+6. Start the server
 
 ## Contributing
 
@@ -134,6 +136,7 @@ Should you have any questions or encounter any difficulties, please don't hesita
 
 ## Acknowledgments
 
-* [FastAsyncWorldEdit]()
+* [FastAsyncWorldEdit](https://github.com/IntellectualSites/FastAsyncWorldEdit)
+* [ProtocolLib](https://github.com/aadnk/ProtocolLib)
 * [README-Template](https://github.com/othneildrew/Best-README-Template)
 * [Choose an Open Source License](https://choosealicense.com/)

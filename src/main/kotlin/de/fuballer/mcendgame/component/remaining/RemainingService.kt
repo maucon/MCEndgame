@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.remaining
 
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
 import de.fuballer.mcendgame.component.remaining.db.RemainingEntity
 import de.fuballer.mcendgame.component.remaining.db.RemainingRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
@@ -11,7 +11,6 @@ import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.World
 import org.bukkit.entity.Monster
 import org.bukkit.event.entity.EntityDeathEvent
-import org.bukkit.persistence.PersistentDataType
 
 @Component
 class RemainingService(
@@ -43,7 +42,7 @@ class RemainingService(
         val entity = event.entity as Monster
         if (RemainingSettings.IGNORED_MOBS.contains(entity.type)) return
 
-        if (PersistentDataUtil.getValue(entity.persistentDataContainer, Keys.IS_MINION, PersistentDataType.BOOLEAN) == true) return
+        if (PersistentDataUtil.getValue(entity, DataTypeKeys.IS_MINION) == true) return
 
         val world = entity.world
         if (WorldUtil.isNotDungeonWorld(world)) return

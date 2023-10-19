@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.looting
 
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.killingstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killingstreak.db.KillStreakRepository
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -13,7 +13,6 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.EntityEquipment
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
-import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
 @Component
@@ -27,7 +26,7 @@ class LootingService(
         val world = entity.world
         if (WorldUtil.isNotDungeonWorld(world)) return
 
-        if (PersistentDataUtil.getValue(entity.persistentDataContainer, Keys.DROP_EQUIPMENT, PersistentDataType.BOOLEAN) == false) return
+        if (PersistentDataUtil.getValue(entity, DataTypeKeys.DROP_EQUIPMENT) == false) return
 
         val looting = getLootingLevel(entity.killer)
         for (item in getEquipment(entity.equipment)) {

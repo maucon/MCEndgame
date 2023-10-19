@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.statitem.command
 
 import com.google.common.collect.Multimap
 import de.fuballer.mcendgame.component.statitem.StatItemSettings
-import de.fuballer.mcendgame.domain.data_class.ItemAttribute
+import de.fuballer.mcendgame.domain.equipment.ItemAttribute
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.util.AttributeUtil

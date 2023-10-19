@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner
 
 import de.fuballer.mcendgame.component.dungeon.enemy.EnemyGenerationService
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.Keys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionsEntity
 import de.fuballer.mcendgame.component.statitem.StatItemService
@@ -12,7 +12,6 @@ import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
-import org.bukkit.persistence.PersistentDataType
 
 @Component
 class SummonerService(
@@ -30,7 +29,7 @@ class SummonerService(
         health: Double,
     ) {
         val world = summoner.world
-        val mapTier = PersistentDataUtil.getValue(summoner.persistentDataContainer, Keys.MAP_TIER, PersistentDataType.INTEGER) ?: -1
+        val mapTier = PersistentDataUtil.getValue(summoner, DataTypeKeys.MAP_TIER) ?: -1
 
         val minions = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
@@ -57,14 +56,15 @@ class SummonerService(
 
         setHealth(minion, health)
 
-        minion.persistentDataContainer.set(Keys.IS_MINION, PersistentDataType.BOOLEAN, true)
-        minion.persistentDataContainer.set(Keys.DROP_BASE_LOOT, PersistentDataType.BOOLEAN, false)
+        PersistentDataUtil.setValue(minion, DataTypeKeys.IS_MINION, true)
+        PersistentDataUtil.setValue(minion, DataTypeKeys.DROP_BASE_LOOT, false)
 
         if (mapTier < 0 || minion !is Creature) return minion
 
         statItemService.setCreatureEquipment(minion, mapTier, weapons, ranged, armor)
         enemyGenerationService.addEffectsToEntity(minion, mapTier)
-        minion.persistentDataContainer.set(Keys.DROP_EQUIPMENT, PersistentDataType.BOOLEAN, false)
+
+        PersistentDataUtil.setValue(minion, DataTypeKeys.DROP_EQUIPMENT, false)
 
         return minion
     }

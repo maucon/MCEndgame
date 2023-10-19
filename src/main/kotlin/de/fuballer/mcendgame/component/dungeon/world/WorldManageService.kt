@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.world
 
 import de.fuballer.mcendgame.component.dungeon.world.db.ManagedWorldEntity
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
-import de.fuballer.mcendgame.domain.data_class.TimerTask
+import de.fuballer.mcendgame.domain.TimerTask
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component

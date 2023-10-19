@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionReposit
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionsEntity
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.SummonerService
 import de.fuballer.mcendgame.framework.annotation.Component
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Spellcaster
 import org.bukkit.event.entity.EntitySpellCastEvent
 import kotlin.math.min
@@ -12,20 +13,20 @@ import kotlin.math.min
 @Component
 class NecromancerService(
     private val minionRepo: MinionRepository,
-    private val summonerService: SummonerService,
+    private val summonerService: SummonerService
 ) {
-    private fun isNecromancer(event: EntitySpellCastEvent) =
-        event.entityType == CustomEntityType.NECROMANCER.type
-                && event.entity.customName == CustomEntityType.NECROMANCER.customName
-
     fun onEntitySpellCast(event: EntitySpellCastEvent) {
-        if (!isNecromancer(event)) return
+        if (!isNecromancer(event.entity)) return
 
         if (event.spell == Spellcaster.Spell.SUMMON_VEX)
-            onSummonVexSpell(event)
+            summonVexSpell(event)
     }
 
-    private fun onSummonVexSpell(event: EntitySpellCastEvent) {
+    private fun isNecromancer(entity: Entity) =
+        entity.type == CustomEntityType.NECROMANCER.type
+                && entity.customName == CustomEntityType.NECROMANCER.customName
+
+    private fun summonVexSpell(event: EntitySpellCastEvent) {
         val minionsEntity = minionRepo.findById(event.entity.uniqueId)
             ?: MinionsEntity(event.entity.uniqueId)
 
