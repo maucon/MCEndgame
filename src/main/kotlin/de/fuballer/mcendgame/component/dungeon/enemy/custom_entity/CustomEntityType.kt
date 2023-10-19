@@ -1,5 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity
 
+import de.fuballer.mcendgame.util.PersistentDataUtil
+import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 
 enum class CustomEntityType(
@@ -23,6 +25,17 @@ enum class CustomEntityType(
 
     RAVAGER(EntityType.RAVAGER, null, false, false, false, false, false),
     DEMONIC_GOLEM(EntityType.RAVAGER, "Demonic Golem", false, false, false, false, false),
+    MINOTAUR(EntityType.IRON_GOLEM, "Minotaur", false, false, false, false, false),
+    NAGA(EntityType.SKELETON, "Naga", true, true, true, false, true),
 
     STONE_PILLAR(EntityType.ZOMBIE, "Stone Pillar", false, false, false, false, true),
+
+    POISON_SPIT(EntityType.LLAMA_SPIT, "Poison Spit", false, false, false, false, false);
+
+    companion object{
+        fun isType(entity: Entity, customEntityType: CustomEntityType): Boolean {
+            val type = PersistentDataUtil.getValue(entity, DataTypeKeys.ENTITY_TYPE) ?: return false
+            return type == customEntityType.toString()
+        }
+    }
 }

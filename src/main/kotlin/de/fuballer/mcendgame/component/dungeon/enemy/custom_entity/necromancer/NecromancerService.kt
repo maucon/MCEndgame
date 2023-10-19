@@ -16,15 +16,11 @@ class NecromancerService(
     private val summonerService: SummonerService
 ) {
     fun onEntitySpellCast(event: EntitySpellCastEvent) {
-        if (!isNecromancer(event.entity)) return
+        if (!CustomEntityType.isType(event.entity, CustomEntityType.NECROMANCER)) return
 
         if (event.spell == Spellcaster.Spell.SUMMON_VEX)
             summonVexSpell(event)
     }
-
-    private fun isNecromancer(entity: Entity) =
-        entity.type == CustomEntityType.NECROMANCER.type
-                && entity.customName == CustomEntityType.NECROMANCER.customName
 
     private fun summonVexSpell(event: EntitySpellCastEvent) {
         val minionsEntity = minionRepo.findById(event.entity.uniqueId)
