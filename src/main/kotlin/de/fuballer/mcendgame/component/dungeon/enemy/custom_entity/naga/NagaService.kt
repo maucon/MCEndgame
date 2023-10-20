@@ -50,5 +50,4 @@ class NagaService {
 
         damagedEntity.addPotionEffect(NagaSettings.POISON_EFFECT)
     }
-
 }
