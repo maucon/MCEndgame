@@ -48,6 +48,7 @@ enum class BossType(
         CustomEntityType.NAGA,
         listOf(
             RandomOption(30, BossAbility.SPEED),
+            RandomOption(50, BossAbility.POISON_CLOUD),
         ),
         80.0, 4.0,
         15.0, 4.0,

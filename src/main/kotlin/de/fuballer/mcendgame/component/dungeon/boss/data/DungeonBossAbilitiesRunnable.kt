@@ -4,15 +4,13 @@ import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.util.FindEntitiesUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
-import org.bukkit.entity.Ageable
-import org.bukkit.entity.Creature
-import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
+import org.bukkit.entity.*
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 import kotlin.math.pow
@@ -54,6 +52,7 @@ class DungeonBossAbilitiesRunnable(
             BossAbility.DARKNESS -> applyDarkness()
             BossAbility.LEAP -> leap(target)
             BossAbility.GRAVITATION_PILLAR -> summonGravitationPillar()
+            BossAbility.POISON_CLOUD -> createPoisonClouds()
         }
 
         return true
@@ -200,16 +199,7 @@ class DungeonBossAbilitiesRunnable(
                 return
             }
 
-            val entities = pillar.world.getNearbyEntities(
-                pillar.location,
-                DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
-                DungeonBossSettings.GRAVITATION_PILLAR_RANGE,
-                DungeonBossSettings.GRAVITATION_PILLAR_RANGE
-            )
-
-            var players = entities.filterIsInstance<Player>()
-            players = players.filter { it.gameMode == GameMode.ADVENTURE || it.gameMode == GameMode.SURVIVAL }
-
+            val players = FindEntitiesUtil.getNearbyPlayers(pillar, DungeonBossSettings.GRAVITATION_PILLAR_RANGE)
             for (player in players) {
                 val vec = pillar.location.subtract(player.location).multiply(0.1)
                 player.velocity = Vector(vec.x, vec.y + vec.length() / 5, vec.z)
@@ -219,5 +209,25 @@ class DungeonBossAbilitiesRunnable(
 
             GravitationPillarPullRunnable(pillar).runTaskLater(DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
         }
+    }
+
+    private fun createPoisonClouds() {
+        FindEntitiesUtil.getNearbyPlayers(boss, DungeonBossSettings.POISON_CLOUD_RANGE)
+            .forEach {
+                val spawnLoc = Location(it.location.world, it.location.x, it.location.blockY.toDouble(), it.location.z)
+                while (it.world.getBlockAt(spawnLoc).isPassable) {
+                    spawnLoc.subtract(0.0, 1.0, 0.0)
+                }
+                spawnLoc.add(0.0, 1.0, 0.0)
+
+                val cloud = it.world.spawnEntity(spawnLoc, EntityType.AREA_EFFECT_CLOUD) as AreaEffectCloud
+                cloud.color = Color.GREEN
+                cloud.duration = DungeonBossSettings.POISON_CLOUD_DURATION
+                cloud.radius = DungeonBossSettings.POISON_CLOUD_RADIUS
+                cloud.radiusPerTick = DungeonBossSettings.POISON_CLOUD_RADIUS_PER_TICK
+                cloud.addCustomEffect(DungeonBossSettings.POISON_CLOUD_EFFECT, true)
+                cloud.reapplicationDelay = DungeonBossSettings.POISON_CLOUD_REAPPLICATION_DELAY
+                cloud.waitTime = DungeonBossSettings.POISON_CLOUD_REAPPLICATION_DELAY
+            }
     }
 }
