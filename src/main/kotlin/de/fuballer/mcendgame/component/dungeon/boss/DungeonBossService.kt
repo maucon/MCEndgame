@@ -5,10 +5,12 @@ import de.fuballer.mcendgame.component.dungeon.boss.data.BossType
 import de.fuballer.mcendgame.component.dungeon.boss.data.DungeonBossAbilitiesRunnable
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskTimer
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Location
@@ -44,6 +46,11 @@ class DungeonBossService(
         boss.customName = bossType.customEntityType.customName
         boss.isCustomNameVisible = false
 
+        PersistentDataUtil.setValue(boss, DataTypeKeys.DROP_BASE_LOOT, false)
+        PersistentDataUtil.setValue(boss, DataTypeKeys.DROP_EQUIPMENT, false)
+        PersistentDataUtil.setValue(boss, DataTypeKeys.HIDE_EQUIPMENT, bossType.customEntityType.hideEquipment)
+        PersistentDataUtil.setValue(boss, DataTypeKeys.ENTITY_TYPE, bossType.customEntityType.toString())
+
         addBossAttributes(boss, mapTier, bossType)
 
         val entity = DungeonBossEntity(boss.uniqueId, mapTier, null, bossType)
@@ -74,13 +81,13 @@ class DungeonBossService(
     fun onEntityDamage(event: EntityDamageEvent) {
         val entity = event.entity
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
-        if (entity.type == EntityType.RAVAGER) (entity as LivingEntity).setAI(true)
+        if (dungeonBossRepo.exists(entity.uniqueId)) (entity as LivingEntity).setAI(true)
     }
 
     fun onEntityTarget(event: EntityTargetEvent) {
         val entity = event.entity
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
-        if (entity.type == EntityType.RAVAGER) onBossTarget(event)
+        if (dungeonBossRepo.exists(entity.uniqueId)) onBossTarget(event)
     }
 
     private fun onBossTarget(event: EntityTargetEvent) {

@@ -80,6 +80,7 @@ class EnemyGenerationService(
             PersistentDataUtil.setValue(entity, DataTypeKeys.DROP_BASE_LOOT, entityType.dropBaseLoot)
             PersistentDataUtil.setValue(entity, DataTypeKeys.MAP_TIER, mapTier)
             PersistentDataUtil.setValue(entity, DataTypeKeys.HIDE_EQUIPMENT, entityType.hideEquipment)
+            PersistentDataUtil.setValue(entity, DataTypeKeys.ENTITY_TYPE, entityType.toString())
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)

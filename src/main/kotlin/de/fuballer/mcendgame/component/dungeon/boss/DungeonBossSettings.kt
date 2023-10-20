@@ -44,5 +44,12 @@ object DungeonBossSettings {
     const val GRAVITATION_PILLAR_RANGE = 20.0
     const val GRAVITATION_PILLAR_COOLDOWN = 40L //in Ticks
 
+    const val POISON_CLOUD_RANGE = 20.0
+    const val POISON_CLOUD_DURATION = 100 //in Ticks
+    const val POISON_CLOUD_RADIUS = 3f
+    const val POISON_CLOUD_RADIUS_PER_TICK = 0.015f
+    val POISON_CLOUD_EFFECT = PotionEffect(PotionEffectType.HARM, 0, 1, true)
+    const val POISON_CLOUD_REAPPLICATION_DELAY = 10 //in Ticks
+
     fun getBossAbilityCooldown(bossLevel: Int) = 30 + 120 / (1 + bossLevel / 5)
 }

@@ -33,6 +33,26 @@ enum class BossType(
         150.0, 10.0,
         20.0, 3.0,
         0.2
+    ),
+    MINOTAUR(
+        CustomEntityType.MINOTAUR,
+        listOf(
+            RandomOption(20, BossAbility.SPEED),
+            RandomOption(50, BossAbility.LEAP),
+        ),
+        100.0, 5.0,
+        12.0, 3.0,
+        0.4
+    ),
+    NAGA(
+        CustomEntityType.NAGA,
+        listOf(
+            RandomOption(30, BossAbility.SPEED),
+            RandomOption(50, BossAbility.POISON_CLOUD),
+        ),
+        80.0, 4.0,
+        15.0, 4.0,
+        0.3
     );
 
     companion object {
