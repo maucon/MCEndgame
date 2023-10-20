@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.artifact
 
-import de.fuballer.mcendgame.component.artifact.db.ArtifactType
+import de.fuballer.mcendgame.component.artifact.data.ArtifactType
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.ChatColor

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.data
+package de.fuballer.mcendgame.component.dungeon.enemy
 
 import org.bukkit.potion.PotionEffectType
 

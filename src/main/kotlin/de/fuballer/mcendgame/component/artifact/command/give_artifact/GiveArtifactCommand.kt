@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.artifact.command.give_artifact
 
 import de.fuballer.mcendgame.component.artifact.ArtifactService
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.component.artifact.db.Artifact
-import de.fuballer.mcendgame.component.artifact.db.ArtifactType
+import de.fuballer.mcendgame.component.artifact.data.Artifact
+import de.fuballer.mcendgame.component.artifact.data.ArtifactType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper

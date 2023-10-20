@@ -10,22 +10,15 @@ import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.World
 import org.bukkit.entity.Monster
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 
 @Component
 class RemainingService(
     private val remainingRepo: RemainingRepository
-) {
-    fun addMobs(world: World, count: Int) {
-        val name = world.name
-
-        val entity = remainingRepo.findById(name)
-            ?: RemainingEntity(name)
-
-        entity.remaining += count
-        remainingRepo.save(entity)
-    }
-
+) : Listener {
+    @EventHandler
     fun onDungeonComplete(event: DungeonCompleteEvent) {
         val remaining = remainingRepo.findById(event.world.name) ?: return
         remaining.bossAlive = false
@@ -33,10 +26,12 @@ class RemainingService(
         remainingRepo.save(remaining)
     }
 
+    @EventHandler
     fun onDungeonWorldDelete(event: DungeonWorldDeleteEvent) {
         remainingRepo.delete(event.world.name)
     }
 
+    @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
         if (event.entity !is Monster) return
         val entity = event.entity as Monster
@@ -48,5 +43,15 @@ class RemainingService(
         if (WorldUtil.isNotDungeonWorld(world)) return
 
         addMobs(world, -1)
+    }
+
+    fun addMobs(world: World, count: Int) {
+        val name = world.name
+
+        val entity = remainingRepo.findById(name)
+            ?: RemainingEntity(name)
+
+        entity.remaining += count
+        remainingRepo.save(entity)
     }
 }

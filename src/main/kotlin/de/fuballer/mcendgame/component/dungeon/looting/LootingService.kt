@@ -9,6 +9,8 @@ import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.EntityEquipment
 import org.bukkit.inventory.ItemStack
@@ -18,9 +20,10 @@ import java.util.*
 @Component
 class LootingService(
     private val killStreakRepo: KillStreakRepository
-) {
+) : Listener {
     private val random = Random()
 
+    @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
         val entity = event.entity
         val world = entity.world

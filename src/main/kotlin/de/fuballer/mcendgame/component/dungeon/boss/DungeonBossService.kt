@@ -18,8 +18,9 @@ import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.Entity
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityTargetEvent
@@ -30,8 +31,42 @@ import java.util.*
 class DungeonBossService(
     private val dungeonBossRepo: DungeonBossRepository,
     private val worldManageRepo: WorldManageRepository
-) {
+) : Listener {
     private val random = Random()
+
+    @EventHandler
+    fun onEntityDeath(event: EntityDeathEvent) {
+        val entity = event.entity
+        val uuid = entity.uniqueId
+
+        val mapTier = dungeonBossRepo.findById(uuid)?.mapTier ?: return
+
+        val world = entity.world
+
+        event.drops.clear()
+        dropBossLoot(entity, mapTier)
+
+        val dungeonCompleteEvent = DungeonCompleteEvent(mapTier, world)
+        EventGateway.apply(dungeonCompleteEvent)
+
+        dungeonBossRepo.delete(uuid)
+    }
+
+    @EventHandler
+    fun onEntityTarget(event: EntityTargetEvent) {
+        val entity = event.entity
+        if (WorldUtil.isNotDungeonWorld(entity.world)) return
+
+        if (dungeonBossRepo.exists(entity.uniqueId)) onBossTarget(event)
+    }
+
+    @EventHandler
+    fun onEntityDamage(event: EntityDamageEvent) {
+        val entity = event.entity
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
+
+        if (dungeonBossRepo.exists(entity.uniqueId)) (entity as LivingEntity).setAI(true)
+    }
 
     fun spawnNewMapBoss(
         world: World,
@@ -78,18 +113,6 @@ class DungeonBossService(
         attributeInstance.baseValue = newSpeed
     }
 
-    fun onEntityDamage(event: EntityDamageEvent) {
-        val entity = event.entity
-        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
-        if (dungeonBossRepo.exists(entity.uniqueId)) (entity as LivingEntity).setAI(true)
-    }
-
-    fun onEntityTarget(event: EntityTargetEvent) {
-        val entity = event.entity
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
-        if (dungeonBossRepo.exists(entity.uniqueId)) onBossTarget(event)
-    }
-
     private fun onBossTarget(event: EntityTargetEvent) {
         val entity = event.entity
         val worldName = entity.world.name
@@ -109,23 +132,6 @@ class DungeonBossService(
 
         dungeonBossEntity.abilityTask = runnable
         dungeonBossRepo.save(dungeonBossEntity)
-    }
-
-    fun onEntityDeath(event: EntityDeathEvent) {
-        val entity = event.entity
-        val uuid = entity.uniqueId
-
-        val mapTier = dungeonBossRepo.findById(uuid)?.mapTier ?: return
-
-        val world = entity.world
-
-        event.drops.clear()
-        dropBossLoot(entity, mapTier)
-
-        val dungeonCompleteEvent = DungeonCompleteEvent(mapTier, world)
-        EventGateway.apply(dungeonCompleteEvent)
-
-        dungeonBossRepo.delete(uuid)
     }
 
     private fun dropBossLoot(

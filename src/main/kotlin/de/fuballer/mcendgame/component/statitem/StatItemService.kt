@@ -11,6 +11,8 @@ import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Creature
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.enchantment.EnchantItemEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
@@ -23,8 +25,66 @@ import org.bukkit.inventory.meta.ItemMeta
 import java.util.*
 
 @Component
-class StatItemService {
+class StatItemService : Listener {
     private val random = Random()
+
+    @EventHandler
+    fun onEnchant(event: EnchantItemEvent) {
+        val item = event.item
+        val enchants = event.enchantsToAdd
+        val damageAllTier = enchants[Enchantment.DAMAGE_ALL] ?: return
+
+        item.addEnchantment(Enchantment.DAMAGE_ALL, damageAllTier)
+        val meta = item.itemMeta ?: return
+        if (!meta.hasLore()) return
+
+        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
+        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
+        item.itemMeta = meta
+    }
+
+    @EventHandler
+    fun onAnvilPrepare(event: PrepareAnvilEvent) {
+        val item = event.result ?: return
+        val meta = item.itemMeta ?: return
+        if (!meta.hasLore()) return
+        val lore = meta.lore ?: return
+
+        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
+        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, lore.contains(CorruptionSettings.CORRUPTION_TAG_LORE[0]))
+        item.itemMeta = meta
+    }
+
+    @EventHandler
+    fun onSmithingPrepare(event: PrepareSmithingEvent) {
+        val item = event.result ?: return
+        val meta = item.itemMeta ?: return
+        if (!meta.hasLore()) return
+        val attributes = meta.attributeModifiers ?: return
+        val smithingEquipment = StatItemSettings.SMITHING_MAP[item.type] ?: return
+
+        if (!AttributeUtil.removeAttributeBaseStats(smithingEquipment, meta)) return
+
+        val slot = attributes.values().first().slot
+        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
+        AttributeUtil.addAttributeBaseStats(equipment, meta, slot)
+        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
+        item.itemMeta = meta
+    }
+
+    @EventHandler
+    fun onGrindstoneUse(event: InventoryClickEvent) {
+        val inventory = event.inventory
+        if (inventory.type != InventoryType.GRINDSTONE || event.rawSlot != 2) return
+
+        val item = inventory.getItem(2) ?: return
+        val meta = item.itemMeta ?: return
+        if (!meta.hasLore()) return
+
+        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
+        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
+        item.itemMeta = meta
+    }
 
     fun setCreatureEquipment(
         creature: Creature,
@@ -64,60 +124,6 @@ class StatItemService {
                 equipment.bootsDropChance = 0f
             }
         }
-    }
-
-    fun onEnchant(event: EnchantItemEvent) {
-        val item = event.item
-        val enchants = event.enchantsToAdd
-        val damageAllTier = enchants[Enchantment.DAMAGE_ALL] ?: return
-
-        item.addEnchantment(Enchantment.DAMAGE_ALL, damageAllTier)
-        val meta = item.itemMeta ?: return
-        if (!meta.hasLore()) return
-
-        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
-        item.itemMeta = meta
-    }
-
-    fun onAnvilPrepare(event: PrepareAnvilEvent) {
-        val item = event.result ?: return
-        val meta = item.itemMeta ?: return
-        if (!meta.hasLore()) return
-        val lore = meta.lore ?: return
-
-        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, lore.contains(CorruptionSettings.CORRUPTION_TAG_LORE[0]))
-        item.itemMeta = meta
-    }
-
-    fun onSmithingPrepare(event: PrepareSmithingEvent) {
-        val item = event.result ?: return
-        val meta = item.itemMeta ?: return
-        if (!meta.hasLore()) return
-        val attributes = meta.attributeModifiers ?: return
-        val smithingEquipment = StatItemSettings.SMITHING_MAP[item.type] ?: return
-
-        if (!AttributeUtil.removeAttributeBaseStats(smithingEquipment, meta)) return
-
-        val slot = attributes.values().first().slot
-        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        AttributeUtil.addAttributeBaseStats(equipment, meta, slot)
-        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
-        item.itemMeta = meta
-    }
-
-    fun onGrindstoneUse(event: InventoryClickEvent) {
-        val inventory = event.inventory
-        if (inventory.type != InventoryType.GRINDSTONE || event.rawSlot != 2) return
-
-        val item = inventory.getItem(2) ?: return
-        val meta = item.itemMeta ?: return
-        if (!meta.hasLore()) return
-
-        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
-        item.itemMeta = meta
     }
 
     private fun createMainHandItem(mapTier: Int, ranged: Boolean): ItemStack? {

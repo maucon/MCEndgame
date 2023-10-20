@@ -20,6 +20,8 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
@@ -42,7 +44,7 @@ class MapDeviceService(
     private val playerDungeonProgressService: PlayerDungeonProgressService,
     private val plugin: JavaPlugin,
     private val server: Server
-) : LifeCycleListener {
+) : Listener, LifeCycleListener {
     override fun initialize(plugin: JavaPlugin) {
         createRecipe(plugin)
         clearBuggedArmorStands()
@@ -53,6 +55,7 @@ class MapDeviceService(
             .forEach { closePortals(it) }
     }
 
+    @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent) {
         val placedItem = event.itemInHand
         val placedItemMeta = placedItem.itemMeta ?: return
@@ -68,6 +71,7 @@ class MapDeviceService(
         mapDeviceRepo.flush()
     }
 
+    @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         val player = event.player
         val block = event.block
@@ -92,6 +96,7 @@ class MapDeviceService(
         event.isCancelled = true
     }
 
+    @EventHandler
     fun onPlayerInteract(event: PlayerInteractEvent) {
         if (event.action != Action.RIGHT_CLICK_BLOCK) return
         val block = event.clickedBlock ?: return
@@ -112,6 +117,7 @@ class MapDeviceService(
         mapDeviceRepo.save(entity)
     }
 
+    @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         if (!event.view.title.equals(MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE, ignoreCase = true)) return
         val inventory = event.inventory
@@ -129,6 +135,7 @@ class MapDeviceService(
         handleOnInventoryClick(clickedSlot, event.whoClicked as Player)
     }
 
+    @EventHandler
     fun onPlayerEntityInteract(event: PlayerInteractAtEntityEvent) {
         val entity = event.rightClicked as? ArmorStand ?: return
 

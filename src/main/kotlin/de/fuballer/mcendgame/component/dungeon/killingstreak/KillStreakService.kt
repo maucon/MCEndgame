@@ -17,6 +17,8 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Monster
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
@@ -29,7 +31,8 @@ import kotlin.math.min
 class KillStreakService(
     private val killStreakRepo: KillStreakRepository,
     private val server: Server
-) {
+) : Listener {
+    @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
         val entity = event.entity as? Monster ?: return
         val world = entity.world
@@ -49,6 +52,7 @@ class KillStreakService(
         EventGateway.apply(killStreakIncreaseEvent)
     }
 
+    @EventHandler
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
         if (event.damage < KillStreakSettings.MIN_DMG_FOR_EXTRA_TIME) return
         val entity = event.entity as? Monster ?: return
@@ -68,6 +72,7 @@ class KillStreakService(
         killStreakRepo.save(killStreak)
     }
 
+    @EventHandler
     fun onPlayerQuit(event: PlayerQuitEvent) {
         val player = event.player
         val world = event.player.world
@@ -76,6 +81,7 @@ class KillStreakService(
         removePlayerFromBossBar(player, world)
     }
 
+    @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player
         val world = event.player.world
@@ -84,6 +90,7 @@ class KillStreakService(
         addPlayerToBossBar(player, world)
     }
 
+    @EventHandler
     fun onPlayerChangedWorld(event: PlayerChangedWorldEvent) {
         val player = event.player
         val world = event.player.world
@@ -95,6 +102,7 @@ class KillStreakService(
         }
     }
 
+    @EventHandler
     fun onDungeonWorldDelete(event: DungeonWorldDeleteEvent) {
         val worldName = event.world.name
 
@@ -104,6 +112,7 @@ class KillStreakService(
         killStreakRepo.delete(worldName)
     }
 
+    @EventHandler
     fun onDungeonOpen(event: DungeonOpenEvent) {
         val name = event.dungeonWorld.name
         if (killStreakRepo.exists(name)) return

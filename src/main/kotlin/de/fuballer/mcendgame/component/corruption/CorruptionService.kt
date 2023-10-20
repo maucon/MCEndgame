@@ -13,6 +13,8 @@ import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.inventory.*
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
@@ -20,9 +22,10 @@ import java.util.*
 import kotlin.math.abs
 
 @Component
-class CorruptionService {
+class CorruptionService : Listener {
     private val random = Random()
 
+    @EventHandler
     fun onAnvilPrepare(event: PrepareAnvilEvent) {
         val inventory = event.inventory
 
@@ -45,9 +48,36 @@ class CorruptionService {
         }
     }
 
+    @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         inventoryClickCorruption(event)
         preventCorruptedItemModification(event)
+    }
+
+    @EventHandler
+    fun onCrafting(event: CraftItemEvent) {
+        val isAnyItemCorrupted = event.inventory.storageContents
+            .any { hasCorruptionTag(it) }
+
+        if (isAnyItemCorrupted) {
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler
+    fun onInventoryDrag(event: InventoryDragEvent) {
+        val item = event.oldCursor
+        if (!hasCorruptionTag(item)) return
+
+        val inventory = event.inventory
+        if (isAllowedInventoryType(inventory.type)) return
+
+        val isAnySlotNotInInventory = event.rawSlots
+            .any { it < inventory.size }
+
+        if (isAnySlotNotInInventory) {
+            event.isCancelled = true
+        }
     }
 
     private fun inventoryClickCorruption(event: InventoryClickEvent) {
@@ -98,7 +128,7 @@ class CorruptionService {
         inventory.setItem(2, null)
 
         val corruptionStack = inventory.getItem(1) ?: return
-        corruptionStack.amount = corruptionStack.amount - 1
+        corruptionStack.amount -= 1
         inventory.setItem(1, corruptionStack)
 
         event.isCancelled = true
@@ -228,15 +258,6 @@ class CorruptionService {
         item.itemMeta = meta
     }
 
-    fun onCrafting(event: CraftItemEvent) {
-        val isAnyItemCorrupted = event.inventory.storageContents
-            .any { hasCorruptionTag(it) }
-
-        if (isAnyItemCorrupted) {
-            event.isCancelled = true
-        }
-    }
-
     private fun preventCorruptedItemModification(event: InventoryClickEvent) {
         val inventory = event.inventory
         if (isAllowedInventoryType(inventory.type)) return
@@ -261,21 +282,6 @@ class CorruptionService {
         } ?: return
 
         if (hasCorruptionTag(item)) {
-            event.isCancelled = true
-        }
-    }
-
-    fun onInventoryDrag(event: InventoryDragEvent) {
-        val item = event.oldCursor
-        if (!hasCorruptionTag(item)) return
-
-        val inventory = event.inventory
-        if (isAllowedInventoryType(inventory.type)) return
-
-        val isAnySlotNotInInventory = event.rawSlots
-            .any { it < inventory.size }
-
-        if (isAnySlotNotInInventory) {
             event.isCancelled = true
         }
     }

@@ -1,12 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.necromancer
 
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionRepository
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.MinionsEntity
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.SummonerService
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.db.MinionRepository
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.db.MinionsEntity
 import de.fuballer.mcendgame.framework.annotation.Component
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Spellcaster
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntitySpellCastEvent
 import kotlin.math.min
 
@@ -14,7 +15,8 @@ import kotlin.math.min
 class NecromancerService(
     private val minionRepo: MinionRepository,
     private val summonerService: SummonerService
-) {
+) : Listener {
+    @EventHandler
     fun onEntitySpellCast(event: EntitySpellCastEvent) {
         if (!CustomEntityType.isType(event.entity, CustomEntityType.NECROMANCER)) return
 

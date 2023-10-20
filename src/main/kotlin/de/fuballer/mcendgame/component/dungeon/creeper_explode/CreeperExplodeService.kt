@@ -4,10 +4,13 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.ExplosionPrimeEvent
 
 @Component
-class CreeperExplodeService {
+class CreeperExplodeService : Listener {
+    @EventHandler
     fun onEntityPrimed(event: ExplosionPrimeEvent) {
         val entity = event.entity
 

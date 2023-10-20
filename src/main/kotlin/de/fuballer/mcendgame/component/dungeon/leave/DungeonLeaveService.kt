@@ -13,6 +13,8 @@ import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerRespawnEvent
@@ -20,7 +22,8 @@ import org.bukkit.event.player.PlayerRespawnEvent
 @Component
 class DungeonLeaveService(
     private val dungeonLeaveRepo: DungeonLeaveRepository
-) {
+) : Listener {
+    @EventHandler
     fun onPlayerEntityInteract(event: PlayerInteractAtEntityEvent) {
         val entity = event.rightClicked as? ArmorStand ?: return
         if (!dungeonLeaveRepo.exists(entity.world.name)) return
@@ -34,6 +37,7 @@ class DungeonLeaveService(
         portal.teleportPlayer(player, false)
     }
 
+    @EventHandler
     fun onPlayerRespawn(event: PlayerRespawnEvent) {
         val player = event.player
         val world = player.world
@@ -46,6 +50,7 @@ class DungeonLeaveService(
         }
     }
 
+    @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
         val entity = event.entity
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
@@ -55,8 +60,15 @@ class DungeonLeaveService(
         EventGateway.apply(playerDungeonLeaveEvent)
     }
 
+    @EventHandler
     fun onDungeonWorldDelete(event: DungeonWorldDeleteEvent) {
         dungeonLeaveRepo.delete(event.world.name)
+    }
+
+    @EventHandler
+    fun onDungeonComplete(event: DungeonCompleteEvent) {
+        val dungeonLeave = dungeonLeaveRepo.findById(event.world.name) ?: return
+        dungeonLeave.portals.forEach { it.activate() }
     }
 
     fun createPortal(
@@ -70,11 +82,6 @@ class DungeonLeaveService(
         dungeonLeave.portals.add(portal)
 
         dungeonLeaveRepo.save(dungeonLeave)
-    }
-
-    fun onDungeonComplete(event: DungeonCompleteEvent) {
-        val dungeonLeave = dungeonLeaveRepo.findById(event.world.name) ?: return
-        dungeonLeave.portals.forEach { it.activate() }
     }
 
     private fun getPortal(entity: Entity) =
