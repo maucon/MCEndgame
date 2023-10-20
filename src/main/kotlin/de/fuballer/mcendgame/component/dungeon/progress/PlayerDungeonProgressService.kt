@@ -6,6 +6,8 @@ import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 import java.util.*
@@ -14,7 +16,8 @@ import kotlin.math.max
 @Component
 class PlayerDungeonProgressService(
     private val playerDungeonProgressRepo: PlayerDungeonProgressRepository
-) {
+) : Listener {
+    @EventHandler
     fun onDungeonComplete(event: DungeonCompleteEvent) {
         for (player in event.world.players) {
             val completedTier = getPlayerDungeonLevel(player.uniqueId).level
@@ -28,6 +31,7 @@ class PlayerDungeonProgressService(
         }
     }
 
+    @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
         val player = event.entity
         if (WorldUtil.isNotDungeonWorld(player.world)) return
@@ -43,6 +47,7 @@ class PlayerDungeonProgressService(
         playerDungeonProgressRepo.flush()
     }
 
+    @EventHandler
     fun onPlayerRespawn(event: PlayerRespawnEvent) {
         val player = event.player
         if (WorldUtil.isNotDungeonWorld(player.world)) return

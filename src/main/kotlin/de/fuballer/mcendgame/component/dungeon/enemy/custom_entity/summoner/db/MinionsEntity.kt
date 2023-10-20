@@ -1,10 +1,11 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity
+package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.db
 
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import org.bukkit.entity.LivingEntity
-import java.util.UUID
+import java.util.*
 
 class MinionsEntity(
     override var id: UUID,
+
     var minions: MutableSet<LivingEntity> = mutableSetOf(),
 ) : Entity<UUID>

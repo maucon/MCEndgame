@@ -3,9 +3,9 @@ package de.fuballer.mcendgame
 import com.comphenix.protocol.ProtocolLibrary
 import de.fuballer.mcendgame.configuration.PluginConfiguration
 import de.fuballer.mcendgame.framework.DependencyInjector
-import de.fuballer.mcendgame.framework.stereotype.EventListener
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.PluginUtil
+import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 
 class MCEndgame : JavaPlugin() {
@@ -17,7 +17,7 @@ class MCEndgame : JavaPlugin() {
 
         val injectedObjects = DependencyInjector.instantiateClasses(this::class.java)
 
-        injectedObjects.filterIsInstance<EventListener>()
+        injectedObjects.filterIsInstance<Listener>()
             .onEach { PluginUtil.registerEvents(it) }
 
         lifeCycleListener = injectedObjects.filterIsInstance<LifeCycleListener>()

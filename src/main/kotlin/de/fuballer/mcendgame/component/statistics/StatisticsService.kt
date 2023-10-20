@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.statistics
 
-import de.fuballer.mcendgame.component.dungeon.enemy.data.MobDamagePrefix
 import de.fuballer.mcendgame.component.statistics.db.StatisticsEntity
 import de.fuballer.mcendgame.component.statistics.db.StatisticsRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
@@ -10,6 +9,8 @@ import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.*
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -18,7 +19,8 @@ import kotlin.math.max
 @Component
 class StatisticsService(
     private val statisticsRepo: StatisticsRepository
-) {
+) : Listener {
+    @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player.uniqueId
         if (!statisticsRepo.exists(player)) {
@@ -26,6 +28,7 @@ class StatisticsService(
         }
     }
 
+    @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
@@ -46,6 +49,7 @@ class StatisticsService(
         onMonsterKilledByPlayer(monster, player)
     }
 
+    @EventHandler
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
@@ -62,6 +66,7 @@ class StatisticsService(
         }
     }
 
+    @EventHandler
     fun onDungeonComplete(event: DungeonCompleteEvent) {
         for (player in event.world.players) {
             val statistics = statisticsRepo.findById(player.uniqueId) ?: return
@@ -72,6 +77,7 @@ class StatisticsService(
         }
     }
 
+    @EventHandler
     fun onDungeonOpen(event: DungeonOpenEvent) {
         val statistics = statisticsRepo.findById(event.player.uniqueId) ?: return
         statistics.dungeonsOpened++
@@ -79,6 +85,7 @@ class StatisticsService(
         statisticsRepo.save(statistics)
     }
 
+    @EventHandler
     fun onKillStreakIncrease(event: KillStreakIncreaseEvent) {
         val killStreak = event.killstreak
 
@@ -94,7 +101,8 @@ class StatisticsService(
         }
     }
 
-    fun onPlayerDungeonLeave(@Suppress("UNUSED_PARAMETER") event: PlayerDungeonLeaveEvent) {
+    @EventHandler
+    fun onPlayerDungeonLeave(event: PlayerDungeonLeaveEvent) {
         statisticsRepo.flush()
     }
 
@@ -106,7 +114,6 @@ class StatisticsService(
         statistics.totalKills++
 
         testForMobType(monster, statistics)
-        testForMobStrength(monster, statistics)
 
         statisticsRepo.save(statistics)
     }
@@ -119,16 +126,6 @@ class StatisticsService(
 
         if (!statistics.mobTypeKills.containsKey(entityType)) return
         statistics.mobTypeKills[entityType] = statistics.mobTypeKills[entityType]!! + 1
-    }
-
-    private fun testForMobStrength(
-        monster: Monster,
-        statistics: StatisticsEntity
-    ) {
-        val prefix = monster.name.split(" ")[0]
-        val mobDamagePrefix = MobDamagePrefix.fromPrefixStartsWith(prefix) ?: return
-
-        statistics.strongerMobKills[mobDamagePrefix] = statistics.strongerMobKills[mobDamagePrefix]!! + 1
     }
 
     private fun testIfDamagerIsArrow(damager: Entity): Entity {

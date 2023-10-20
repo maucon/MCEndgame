@@ -1,7 +1,6 @@
-package de.fuballer.mcendgame.component.artifact.effects
+package de.fuballer.mcendgame.component.artifact
 
-import de.fuballer.mcendgame.component.artifact.ArtifactService
-import de.fuballer.mcendgame.component.artifact.db.ArtifactType
+import de.fuballer.mcendgame.component.artifact.data.ArtifactType
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -13,6 +12,8 @@ import org.bukkit.Particle.DustOptions
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.*
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.*
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -25,9 +26,10 @@ import kotlin.math.min
 @Component
 class ArtifactEffectsService(
     private val artifactService: ArtifactService
-) {
+) : Listener {
     private val random = Random()
 
+    @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
         val entity = event.entity
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
@@ -37,6 +39,7 @@ class ArtifactEffectsService(
         onEntityKilledByPlayer(event, player)
     }
 
+    @EventHandler
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
@@ -51,6 +54,7 @@ class ArtifactEffectsService(
         }
     }
 
+    @EventHandler
     fun onShootBow(event: EntityShootBowEvent) {
         val player = event.entity as? Player ?: return
         if (WorldUtil.isNotDungeonWorld(player.world)) return
@@ -81,6 +85,7 @@ class ArtifactEffectsService(
         }
     }
 
+    @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
         if (WorldUtil.isDungeonWorld(event.player.world)) {
             testForMovementSpeedJoin(event.player)
@@ -95,12 +100,14 @@ class ArtifactEffectsService(
         }
     }
 
+    @EventHandler
     fun onEntityBreed(event: PlayerInteractEntityEvent) {
         if (WorldUtil.isNotDungeonWorld(event.rightClicked.world)) return
         if (event.rightClicked !is Animals) return
         event.isCancelled = true
     }
 
+    @EventHandler
     fun onPlayerDungeonJoin(event: PlayerDungeonJoinEvent) {
         val player = event.player
 
@@ -111,6 +118,7 @@ class ArtifactEffectsService(
         testForMaxHealthJoin(player)
     }
 
+    @EventHandler
     fun onPlayerDungeonLeave(event: PlayerDungeonLeaveEvent) {
         val player = event.player
 
@@ -119,6 +127,18 @@ class ArtifactEffectsService(
         testForAttackSpeedLeave(player)
         testForAttackDamageLeave(player)
         testForMaxHealthLeave(player)
+    }
+
+    @EventHandler
+    fun onEntityTarget(event: EntityTargetEvent) {
+        val entity = event.entity
+
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
+        if (entity !is Wolf) return
+
+        if (event.target !is Player) return
+
+        event.isCancelled = true
     }
 
     private fun onPlayerDamageByEntity(event: EntityDamageByEntityEvent) {
@@ -339,15 +359,4 @@ class ArtifactEffectsService(
         player.world.getEntitiesByClass(Wolf::class.java)
             .filter { it.owner == player }
             .forEach { it.remove() }
-
-    fun onEntityTarget(event: EntityTargetEvent) {
-        val entity = event.entity
-
-        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
-        if (entity !is Wolf) return
-
-        if (event.target !is Player) return
-
-        event.isCancelled = true
-    }
 }

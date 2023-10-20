@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.artifact.db
+package de.fuballer.mcendgame.component.artifact.data
 
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 

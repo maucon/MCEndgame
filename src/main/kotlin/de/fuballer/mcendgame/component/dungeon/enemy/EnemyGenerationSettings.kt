@@ -1,12 +1,8 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.data.DifficultyBaseStats
-import de.fuballer.mcendgame.component.dungeon.enemy.data.MobDamagePrefix
-import de.fuballer.mcendgame.component.dungeon.enemy.data.PotionEffect
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
-import org.bukkit.entity.EntityType
 import java.util.*
 
 object EnemyGenerationSettings {
@@ -65,23 +61,4 @@ object EnemyGenerationSettings {
 
         return strengthAmplifier
     }
-
-    val MELEE_MOBS = mapOf(
-        EntityType.ZOMBIE to DifficultyBaseStats(2.5, 3.0, 4.5),
-        EntityType.HUSK to DifficultyBaseStats(2.0, 3.0, 4.0),
-        EntityType.WITHER_SKELETON to DifficultyBaseStats(5.0, 8.0, 12.0),
-        EntityType.SPIDER to DifficultyBaseStats(2.0, 2.0, 3.0),
-        EntityType.CAVE_SPIDER to DifficultyBaseStats(2.0, 2.0, 3.0),
-        EntityType.SKELETON to DifficultyBaseStats(2.0, 2.0, 3.0),
-        EntityType.STRAY to DifficultyBaseStats(2.0, 2.0, 3.0),
-    )
-    val RANGED_MOBS = mapOf(
-        EntityType.SKELETON to DifficultyBaseStats(4.0, 4.0, 4.0),
-        EntityType.STRAY to DifficultyBaseStats(3.0, 3.5, 4.5)
-    )
-
-    fun calculateMobPrefix(damage: Double) =
-        MobDamagePrefix.values()
-            .find { damage >= it.minDamage }
-            ?.prefix
 }

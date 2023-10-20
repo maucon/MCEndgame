@@ -16,6 +16,8 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Raider
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityPotionEffectEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -26,8 +28,20 @@ import java.util.*
 class EnemyGenerationService(
     private val statItemService: StatItemService,
     private val remainingService: RemainingService
-) {
+) : Listener {
     private val random = Random()
+
+    @EventHandler
+    fun onEntityPotionEffect(event: EntityPotionEffectEvent) {
+        if (event.cause != EntityPotionEffectEvent.Cause.EXPIRATION) return
+        val effect = event.oldEffect ?: return
+        if (effect.type != PotionEffectType.LUCK) return
+
+        val entity = event.entity as? LivingEntity ?: return
+        if (WorldUtil.isNotDungeonWorld(entity.world)) return
+
+        entity.health = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
+    }
 
     fun summonMonsters(
         layoutTiles: Array<Array<LayoutTile>>,
@@ -88,17 +102,6 @@ class EnemyGenerationService(
         }
 
         remainingService.addMobs(world, amount)
-    }
-
-    fun onEntityPotionEffect(event: EntityPotionEffectEvent) {
-        if (event.cause != EntityPotionEffectEvent.Cause.EXPIRATION) return
-        val effect = event.oldEffect ?: return
-        if (effect.type != PotionEffectType.LUCK) return
-
-        val entity = event.entity as? LivingEntity ?: return
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
-
-        entity.health = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
     }
 
     private fun addEffectUntilLoad(entity: Creature) {

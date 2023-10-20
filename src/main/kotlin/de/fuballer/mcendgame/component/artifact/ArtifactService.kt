@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.artifact
 
-import de.fuballer.mcendgame.component.artifact.db.Artifact
+import de.fuballer.mcendgame.component.artifact.data.Artifact
+import de.fuballer.mcendgame.component.artifact.data.ArtifactType
 import de.fuballer.mcendgame.component.artifact.db.ArtifactRepository
-import de.fuballer.mcendgame.component.artifact.db.ArtifactType
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -10,6 +10,8 @@ import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.entity.Monster
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -22,33 +24,11 @@ import java.util.*
 class ArtifactService(
     private val artifactRepo: ArtifactRepository,
     private val worldManageRepo: WorldManageRepository
-) {
+) : Listener {
     private val random = Random()
     private val format = DecimalFormat("0.#")
 
-    fun getArtifactAsItem(artifact: Artifact): ItemStack {
-        val item = ItemStack(ArtifactSettings.ARTIFACT_BASE_TYPE)
-        val meta = item.itemMeta ?: return item
-
-        meta.setDisplayName("" + ArtifactSettings.ARTIFACT_TIER_COLORS[artifact.tier] + artifact.type.displayName)
-        meta.lore = artifact.type.values[artifact.tier]?.let { getLoreWithValues(artifact.type.displayLore, it) }
-
-        item.itemMeta = meta
-        return item
-    }
-
-    private fun getLoreWithValues(lore: List<String>, values: List<Double>): List<String> {
-        val loreWithVal = lore.toMutableList()
-
-        for (i in values.indices) {
-            for (l in lore.indices) {
-                loreWithVal[l] = loreWithVal[l].replace("($i)", format.format(values[i]))
-            }
-        }
-
-        return loreWithVal
-    }
-
+    @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         if (!event.view.title.contains(ArtifactSettings.ARTIFACTS_WINDOW_TITLE, true)) return
 
@@ -73,11 +53,13 @@ class ArtifactService(
         artifactRepo.flush()
     }
 
+    @EventHandler
     fun onInventoryDrag(event: InventoryDragEvent) {
         if (!event.view.title.contains(ArtifactSettings.ARTIFACTS_WINDOW_TITLE, true)) return
         event.isCancelled = true
     }
 
+    @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         if (event.entity !is Monster) return
@@ -94,6 +76,29 @@ class ArtifactService(
 
         val artifactItem = getArtifactAsItem(Artifact(type, tier))
         event.entity.world.dropItemNaturally(event.entity.location, artifactItem)
+    }
+
+    fun getArtifactAsItem(artifact: Artifact): ItemStack {
+        val item = ItemStack(ArtifactSettings.ARTIFACT_BASE_TYPE)
+        val meta = item.itemMeta ?: return item
+
+        meta.setDisplayName("" + ArtifactSettings.ARTIFACT_TIER_COLORS[artifact.tier] + artifact.type.displayName)
+        meta.lore = artifact.type.values[artifact.tier]?.let { getLoreWithValues(artifact.type.displayLore, it) }
+
+        item.itemMeta = meta
+        return item
+    }
+
+    private fun getLoreWithValues(lore: List<String>, values: List<Double>): List<String> {
+        val loreWithVal = lore.toMutableList()
+
+        for (i in values.indices) {
+            for (l in lore.indices) {
+                loreWithVal[l] = loreWithVal[l].replace("($i)", format.format(values[i]))
+            }
+        }
+
+        return loreWithVal
     }
 
     private fun onMoveToOtherInv(event: InventoryClickEvent) {

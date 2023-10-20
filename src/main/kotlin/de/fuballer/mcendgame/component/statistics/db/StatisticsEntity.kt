@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.component.statistics.db
 
 import de.fuballer.mcendgame.component.dungeon.enemy.EnemyGenerationSettings
-import de.fuballer.mcendgame.component.dungeon.enemy.data.MobDamagePrefix
 import de.fuballer.mcendgame.component.statistics.StatisticsSettings
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import org.bukkit.Material
@@ -19,10 +18,6 @@ data class StatisticsEntity(
     var deaths: Int = 0,
 
     var totalKills: Int = 0,
-    var strongerMobKills: MutableMap<MobDamagePrefix, Int> =
-        MobDamagePrefix.values()
-            .associateWith { 0 }
-            .toMutableMap(),
     var mobTypeKills: MutableMap<EntityType, Int> =
         EnemyGenerationSettings.DUNGEON_MOBS
             .associate { it.option.type to 0 }
@@ -70,13 +65,6 @@ data class StatisticsEntity(
         page1 = page1.plus("${StatisticsSettings.DEATHS_TEXT}\n   $deaths\n")
         page1 = page1.plus("${StatisticsSettings.KILLSTREAK_TEXT}\n   $highestKillstreak\n")
         pages.add(page1)
-
-        var page2 = "${StatisticsSettings.STATISTICS_BOOK_MOB_KILLS_HEADLINE}\n\n"
-        for (strengthType in strongerMobKills.keys.reversed()) {
-            val amountString = "${StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR}${strongerMobKills[strengthType]}"
-            page2 = page2.plus("${strengthType.prefix}:\n   $amountString\n")
-        }
-        pages.add(page2)
 
         var page3 = ""
         for (mobType in mobTypeKills.keys) {
