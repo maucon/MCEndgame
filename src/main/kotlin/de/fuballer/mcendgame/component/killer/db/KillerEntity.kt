@@ -22,12 +22,14 @@ class KillerEntity(
     private var spawnEgg: ItemStack
     private var equipment: Array<ItemStack?>
     private var potions: List<ItemStack>
+    private var damage: ItemStack
     private var health: ItemStack
 
     init {
         spawnEgg = getSpawnEgg(entity)
         equipment = getEquipment(entity)
         potions = getPotions(entity)
+        damage = getDamage(entity)
         health = getHealth(entity)
     }
 
@@ -38,7 +40,8 @@ class KillerEntity(
         )
 
         inventory.setItem(9, spawnEgg)
-        inventory.setItem(10, health)
+        inventory.setItem(10, damage)
+        inventory.setItem(11, health)
         (0..5).forEach { inventory.setItem(12 + it, equipment[it]) }
         potions.indices.forEach { inventory.setItem(26 - it, potions[it]) }
 
@@ -50,7 +53,7 @@ class KillerEntity(
         val spawnEgg = ItemStack(KillerSettings.ENTITY_SPAWN_EGGS.getOrDefault(type, KillerSettings.DEFAULT_SPAWN_EGG), 1)
 
         val meta = spawnEgg.itemMeta ?: return spawnEgg
-        meta.setDisplayName(ChatColor.BLUE.toString() + entity.name)
+        meta.setDisplayName(ChatColor.BLUE.toString() + (entity.customName ?: entity.name))
 
         if (entity is Ageable && !entity.isAdult) meta.lore = KillerSettings.BABY_LORE
 
@@ -86,11 +89,26 @@ class KillerEntity(
         }
     }
 
+    private fun getDamage(entity: Entity): ItemStack {
+        val damage = ItemStack(Material.RED_DYE, 1)
+        val meta = damage.itemMeta ?: return damage
+
+        meta.setDisplayName(ChatColor.RED.toString() + "0 Damage")
+        damage.itemMeta = meta
+
+        if (entity !is LivingEntity) return damage
+        val attribute = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) ?: return damage
+
+        meta.setDisplayName(ChatColor.RED.toString() + attribute.value.toInt() + " Damage")
+        damage.itemMeta = meta
+        return damage
+    }
+
     private fun getHealth(entity: Entity): ItemStack {
-        val health = ItemStack(Material.RED_DYE, 1)
+        val health = ItemStack(Material.GREEN_DYE, 1)
         val meta = health.itemMeta ?: return health
 
-        meta.setDisplayName(ChatColor.RED.toString() + "0 Health")
+        meta.setDisplayName(ChatColor.GREEN.toString() + "0 Health")
         health.itemMeta = meta
 
         if (entity !is LivingEntity) return health
