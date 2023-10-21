@@ -18,10 +18,10 @@ class EnemyDamagingService : Listener {
         val damager = event.damager
 
         if (WorldUtil.isNotDungeonWorld(damager.world)) return
-        if (DungeonUtil.isPlayerOrCompanion(damager)) return
+        if (!DungeonUtil.isEnemyOrProjectile(damager)) return
 
         val target = event.entity
-        if (!DungeonUtil.isPlayerOrCompanion(target)) {
+        if (DungeonUtil.isEnemyOrProjectile(target)) {
             event.isCancelled = true
             return
         }

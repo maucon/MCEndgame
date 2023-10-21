@@ -64,6 +64,7 @@ enum class CustomEntityType(
             PersistentDataUtil.setValue(entity, DataTypeKeys.MAP_TIER, mapTier)
             PersistentDataUtil.setValue(entity, DataTypeKeys.HIDE_EQUIPMENT, type.data.hideEquipment)
             PersistentDataUtil.setValue(entity, DataTypeKeys.ENTITY_TYPE, type.toString())
+            PersistentDataUtil.setValue(entity, DataTypeKeys.IS_ENEMY, true)
         }
 
         private fun setAttributes(entity: LivingEntity, data: CustomEntityData, mapTier: Int) {

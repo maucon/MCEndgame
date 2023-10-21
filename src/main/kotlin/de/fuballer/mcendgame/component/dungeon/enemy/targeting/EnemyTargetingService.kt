@@ -15,7 +15,7 @@ class EnemyTargetingService : Listener {
         val entity = event.entity
 
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
-        if (DungeonUtil.isPlayerOrCompanion(entity)) return
+        if (!DungeonUtil.isEnemyOrProjectile(entity)) return
 
         if (event.reason == TargetReason.TARGET_ATTACKED_NEARBY_ENTITY) {
             event.isCancelled = true
@@ -23,7 +23,7 @@ class EnemyTargetingService : Listener {
         }
 
         val target = event.target ?: return
-        if (DungeonUtil.isPlayerOrCompanion(target)) return
+        if (!DungeonUtil.isEnemyOrProjectile(target)) return
 
         event.isCancelled = true
     }
