@@ -35,7 +35,7 @@ object CustomEntitySettings {
 
     val RAVAGER_DATA = CustomEntityData(
         true, false, true, false, true,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        1.0, 0.0, 0.0, 0.0, 0.0, 0.0
     )
 
     val NECROMANCER_DATA = CustomEntityData(
@@ -49,15 +49,15 @@ object CustomEntitySettings {
 
     val DEMONIC_GOLEM_DATA = CustomEntityData(
         true, false, true, false, true,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        1.0, 0.0, 0.0, 0.0, 0.0, 0.0
     )
     val MINOTAUR_DATA = CustomEntityData(
         true, false, true, false, true,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        1.0, 0.0, 0.0, 0.0, 0.0, 0.0
     )
     val NAGA_DATA = CustomEntityData(
         true, true, true, false, true,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        1.0, 0.0, 0.0, 0.0, 0.0, 0.0
     )
 
     val STONE_PILLAR_DATA = CustomEntityData(
@@ -67,6 +67,6 @@ object CustomEntitySettings {
 
     val POISON_SPIT_DATA = CustomEntityData(
         false, false, false, false, true,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        1.0, 0.0, 0.0, 0.0, 0.0, 0.0
     )
 }

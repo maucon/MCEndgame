@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
 
 object DungeonUtil {
-    fun isEnemyOrProjectile(entity: Entity): Boolean {
+    fun isEnemyOrEnemyProjectile(entity: Entity): Boolean {
         if (PersistentDataUtil.getValue(entity, DataTypeKeys.IS_ENEMY) == true) return true
         val proj = entity as? Projectile ?: return false
 
