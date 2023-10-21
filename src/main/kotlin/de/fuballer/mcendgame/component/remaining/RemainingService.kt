@@ -9,7 +9,6 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.World
-import org.bukkit.entity.Monster
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
@@ -33,11 +32,8 @@ class RemainingService(
 
     @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
-        if (event.entity !is Monster) return
-        val entity = event.entity as Monster
-        if (RemainingSettings.IGNORED_MOBS.contains(entity.type)) return
-
-        if (PersistentDataUtil.getValue(entity, DataTypeKeys.IS_MINION) == true) return
+        val entity = event.entity
+        if (PersistentDataUtil.getValue(entity, DataTypeKeys.IS_ENEMY) != true) return
 
         val world = entity.world
         if (WorldUtil.isNotDungeonWorld(world)) return

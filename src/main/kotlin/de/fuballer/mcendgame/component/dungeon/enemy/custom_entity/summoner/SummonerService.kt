@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEn
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.db.MinionRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.db.MinionsEntity
+import de.fuballer.mcendgame.component.remaining.RemainingService
 import de.fuballer.mcendgame.component.statitem.StatItemService
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
@@ -18,6 +19,7 @@ class SummonerService(
     private val minionRepo: MinionRepository,
     private val statItemService: StatItemService,
     private val enemyGenerationService: EnemyGenerationService,
+    private val remainingService: RemainingService,
 ) {
     fun summonMinions(
         summoner: LivingEntity,
@@ -34,6 +36,8 @@ class SummonerService(
         for (i in 0 until amount) {
             minions.add(summonMinion(summoner, mapTier, minionType, weapons, ranged, armor, health))
         }
+
+        remainingService.addMobs(summoner.world, amount)
 
         if (!minionRepo.exists(summoner.uniqueId))
             minionRepo.save(MinionsEntity(summoner.uniqueId, minions))
