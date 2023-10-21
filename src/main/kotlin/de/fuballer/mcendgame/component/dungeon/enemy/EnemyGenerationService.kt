@@ -1,13 +1,11 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.remaining.RemainingService
 import de.fuballer.mcendgame.component.statitem.StatItemService
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -16,7 +14,6 @@ import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Raider
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityPotionEffectEvent
@@ -87,7 +84,8 @@ class EnemyGenerationService(
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)
-            addEffectsToEntity(entity, mapTier)
+            val canBeInvisible = !entityType.data.hideEquipment
+            addEffectsToEntity(entity, mapTier, canBeInvisible)
         }
 
         remainingService.addMobs(world, amount)
@@ -105,15 +103,20 @@ class EnemyGenerationService(
 
     fun addEffectsToEntity(
         entity: Creature,
-        mapTier: Int
+        mapTier: Int,
+        canBeInvisible: Boolean,
     ) {
-        val potionEffects = listOfNotNull(
+        val effects = mutableListOf(
             RandomUtil.pick(EnemyGenerationSettings.STRENGTH_EFFECTS, mapTier).option,
             RandomUtil.pick(EnemyGenerationSettings.RESISTANCE_EFFECTS, mapTier).option,
             RandomUtil.pick(EnemyGenerationSettings.SPEED_EFFECTS, mapTier).option,
             RandomUtil.pick(EnemyGenerationSettings.FIRE_RESISTANCE_EFFECT, mapTier).option,
-            RandomUtil.pick(EnemyGenerationSettings.INVISIBILITY_EFFECT).option,
-        ).map { it.getPotionEffect() }
+        )
+        if (canBeInvisible) {
+            effects.add(RandomUtil.pick(EnemyGenerationSettings.INVISIBILITY_EFFECT).option)
+        }
+
+        val potionEffects = effects.filterNotNull().map { it.getPotionEffect() }
 
         entity.addPotionEffects(potionEffects)
     }
