@@ -23,7 +23,8 @@ object EnemyGenerationSettings {
         RandomOption(1, CustomEntityType.WITHER_SKELETON),
         RandomOption(4, CustomEntityType.CREEPER),
         RandomOption(3, CustomEntityType.WITCH),
-        RandomOption(25, CustomEntityType.NECROMANCER)
+        RandomOption(5, CustomEntityType.NECROMANCER),
+        RandomOption(2, CustomEntityType.REAPER),
     )
 
     val RESISTANCE_EFFECTS = listOf(

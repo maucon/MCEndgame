@@ -22,6 +22,7 @@ enum class CustomEntityType(
     WITCH(EntityType.WITCH, null, false, false, false, true, false),
 
     NECROMANCER(EntityType.EVOKER, "Necromancer", true, false, true, false, true),
+    REAPER(EntityType.WITHER_SKELETON, "Reaper", true, false, true, false, true),
 
     RAVAGER(EntityType.RAVAGER, null, false, false, false, false, false),
     DEMONIC_GOLEM(EntityType.RAVAGER, "Demonic Golem", false, false, false, false, false),
