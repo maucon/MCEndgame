@@ -99,7 +99,7 @@ class KillerEntity(
         if (entity !is LivingEntity) return damage
         val attribute = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) ?: return damage
 
-        meta.setDisplayName(ChatColor.RED.toString() + attribute.value.toInt() + " Damage")
+        meta.setDisplayName(ChatColor.RED.toString() + attribute.baseValue.toInt() + " Damage")
         damage.itemMeta = meta
         return damage
     }
@@ -114,7 +114,7 @@ class KillerEntity(
         if (entity !is LivingEntity) return health
         val attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) ?: return health
 
-        meta.setDisplayName(ChatColor.RED.toString() + attribute.value.toInt() + " Health")
+        meta.setDisplayName(ChatColor.RED.toString() + attribute.baseValue.toInt() + " Health")
         health.itemMeta = meta
         return health
     }
