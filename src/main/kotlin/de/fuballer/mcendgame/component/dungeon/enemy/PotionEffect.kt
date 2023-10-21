@@ -7,6 +7,10 @@ enum class PotionEffect(
     private val amplifier: Int,
     private val duration: Int = Int.MAX_VALUE
 ) {
+    STRENGTH_1(PotionEffectType.INCREASE_DAMAGE, 0),
+    STRENGTH_2(PotionEffectType.INCREASE_DAMAGE, 1),
+    STRENGTH_3(PotionEffectType.INCREASE_DAMAGE, 2),
+    STRENGTH_4(PotionEffectType.INCREASE_DAMAGE, 3),
     RESISTANCE_1(PotionEffectType.DAMAGE_RESISTANCE, 0),
     RESISTANCE_2(PotionEffectType.DAMAGE_RESISTANCE, 1),
     RESISTANCE_3(PotionEffectType.DAMAGE_RESISTANCE, 2),

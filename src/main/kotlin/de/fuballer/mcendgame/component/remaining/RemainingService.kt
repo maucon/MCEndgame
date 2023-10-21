@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.remaining
 
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.remaining.db.RemainingEntity
 import de.fuballer.mcendgame.component.remaining.db.RemainingRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent

@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner
 
 import de.fuballer.mcendgame.component.dungeon.enemy.EnemyGenerationService
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.db.MinionRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.db.MinionsEntity
 import de.fuballer.mcendgame.component.statitem.StatItemService

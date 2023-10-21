@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.killingstreak
 
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.killingstreak.db.KillStreakEntity
 import de.fuballer.mcendgame.component.dungeon.killingstreak.db.KillStreakRepository
 import de.fuballer.mcendgame.domain.TimerTask

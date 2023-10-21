@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity
+package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data
 
 import de.fuballer.mcendgame.util.PluginUtil.createNamespacedKey
 import org.bukkit.NamespacedKey

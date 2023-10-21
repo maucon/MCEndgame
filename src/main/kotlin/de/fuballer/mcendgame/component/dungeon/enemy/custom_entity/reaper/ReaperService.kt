@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.reaper
 
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler

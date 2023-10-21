@@ -137,7 +137,7 @@ class DungeonGenerationService(
 
     private fun spawnBoss(bossRoomPos: Point, mapTier: Int, world: World) {
         val bossLocation = Location(world, -bossRoomPos.x * 16.0 - 8, DungeonGenerationSettings.MOB_Y_POS - .2, -bossRoomPos.y * 16.0 + 24)
-        dungeonBossService.spawnNewMapBoss(world, bossLocation, mapTier)
+        dungeonBossService.spawnNewMapBoss(bossLocation, mapTier)
     }
 
     private fun getStartLocation(layoutTiles: Array<Array<LayoutTile>>, startRoomPos: Point, world: World): Location {
