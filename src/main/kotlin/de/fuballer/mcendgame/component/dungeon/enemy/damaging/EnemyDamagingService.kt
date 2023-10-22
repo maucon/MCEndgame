@@ -22,6 +22,6 @@ class EnemyDamagingService : Listener {
             return
         }
 
-        event.damage *= 2.0 / 3.0
+        event.damage *= 2.0 / 3.0 // worlds on hard mode multiply damage by 1,5x, so we revert that
     }
 }
