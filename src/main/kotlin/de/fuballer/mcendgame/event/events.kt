@@ -60,3 +60,14 @@ class DiscoverRecipeAddEvent(
     val key: NamespacedKey,
     val recipe: Recipe
 ) : HandleableEvent()
+
+/**
+ * Thrown whenever a recipe is added to the discoverable recipes
+ *
+ * @param world world mobs got spawned in
+ * @param count count of spawned mobs
+ */
+class DungeonEnemySpawnedEvent(
+    val world: World,
+    val count: Int
+) : HandleableEvent()

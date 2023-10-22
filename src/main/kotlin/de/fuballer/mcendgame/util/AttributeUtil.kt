@@ -7,6 +7,7 @@ import org.bukkit.ChatColor
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
@@ -148,6 +149,15 @@ object AttributeUtil {
                 ?: return false
         }
         return true
+    }
+
+    fun setEntityAttribute(
+        entity: LivingEntity,
+        attribute: Attribute,
+        value: Double
+    ) {
+        val attributeInstance = entity.getAttribute(attribute) ?: return
+        attributeInstance.baseValue = value
     }
 
     private fun getAttributeLine(

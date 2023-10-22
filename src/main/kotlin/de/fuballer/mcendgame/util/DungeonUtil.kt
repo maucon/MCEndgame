@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import org.bukkit.GameMode
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -18,7 +19,23 @@ object DungeonUtil {
         return PersistentDataUtil.getValue(shooterEntity, DataTypeKeys.IS_ENEMY) == true
     }
 
-    fun getNearbyPlayers(entity: LivingEntity, range: Double) = getNearbyPlayers(entity, range, range, range)
+    fun getNearbyPlayers(
+        entity: LivingEntity,
+        range: Double
+    ) = getNearbyPlayers(entity, range, range, range)
+
+    fun setBasicAttributes(
+        entity: LivingEntity,
+        health: Double,
+        attackDamage: Double,
+        movementSpeed: Double
+    ) {
+        AttributeUtil.setEntityAttribute(entity, Attribute.GENERIC_MAX_HEALTH, health)
+        entity.health = health
+
+        AttributeUtil.setEntityAttribute(entity, Attribute.GENERIC_ATTACK_DAMAGE, attackDamage)
+        AttributeUtil.setEntityAttribute(entity, Attribute.GENERIC_MOVEMENT_SPEED, movementSpeed)
+    }
 
     private fun getNearbyPlayers(entity: LivingEntity, x: Double, y: Double, z: Double): List<Player> {
         val entities = entity.world.getNearbyEntities(entity.location, x, y, z)
