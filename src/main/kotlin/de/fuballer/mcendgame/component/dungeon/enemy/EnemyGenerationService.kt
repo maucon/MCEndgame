@@ -3,8 +3,9 @@ package de.fuballer.mcendgame.component.dungeon.enemy
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
-import de.fuballer.mcendgame.component.remaining.RemainingService
 import de.fuballer.mcendgame.component.statitem.StatItemService
+import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
+import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.WorldUtil
@@ -24,8 +25,7 @@ import java.util.*
 
 @Component
 class EnemyGenerationService(
-    private val statItemService: StatItemService,
-    private val remainingService: RemainingService
+    private val statItemService: StatItemService
 ) : Listener {
     private val random = Random()
 
@@ -88,7 +88,8 @@ class EnemyGenerationService(
             addEffectsToEntity(entity, mapTier, canBeInvisible)
         }
 
-        remainingService.addMobs(world, amount)
+        val event = DungeonEnemySpawnedEvent(world, amount)
+        EventGateway.apply(event)
     }
 
     private fun addEffectUntilLoad(entity: Creature) {

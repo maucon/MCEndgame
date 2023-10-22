@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data
 
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntitySettings
+import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.Location
-import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
@@ -68,18 +68,11 @@ enum class CustomEntityType(
         }
 
         private fun setAttributes(entity: LivingEntity, data: CustomEntityData, mapTier: Int) {
-            var attributeInstance = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) ?: return
             val newHealth = data.maxLifeBase + mapTier * data.maxLifePerTier
-            attributeInstance.baseValue = newHealth
-            entity.health = newHealth
-
-            attributeInstance = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) ?: return
             val newDamage = data.damageBase + mapTier * data.damagePerTier
-            attributeInstance.baseValue = newDamage
-
-            attributeInstance = entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) ?: return
             val newSpeed = data.speedBase + mapTier * data.speedPerTier
-            attributeInstance.baseValue = newSpeed
+
+            DungeonUtil.setBasicAttributes(entity, newHealth, newDamage, newSpeed)
         }
     }
 }

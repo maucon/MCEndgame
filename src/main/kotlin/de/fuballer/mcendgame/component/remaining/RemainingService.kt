@@ -4,11 +4,10 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataType
 import de.fuballer.mcendgame.component.remaining.db.RemainingEntity
 import de.fuballer.mcendgame.component.remaining.db.RemainingRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
+import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
-import de.fuballer.mcendgame.util.WorldUtil
-import org.bukkit.World
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
@@ -35,19 +34,20 @@ class RemainingService(
         val entity = event.entity
         if (PersistentDataUtil.getValue(entity, DataTypeKeys.IS_ENEMY) != true) return
 
-        val world = entity.world
-        if (WorldUtil.isNotDungeonWorld(world)) return
+        val remainingEntity = remainingRepo.findById(entity.world.name) ?: return
+        remainingEntity.remaining -= 1
 
-        addMobs(world, -1)
+        remainingRepo.save(remainingEntity)
     }
 
-    fun addMobs(world: World, count: Int) {
-        val name = world.name
+    @EventHandler
+    fun onDungeonEnemySpawned(event: DungeonEnemySpawnedEvent) {
+        val name = event.world.name
 
         val entity = remainingRepo.findById(name)
             ?: RemainingEntity(name)
 
-        entity.remaining += count
+        entity.remaining += event.count
         remainingRepo.save(entity)
     }
 }

@@ -9,14 +9,15 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEn
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
+import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskTimer
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -76,12 +77,13 @@ class DungeonBossService(
         location.yaw = 180f
 
         val bossType = BossType.getRandom()
-
         val boss = CustomEntityType.spawnCustomEntity(bossType.customEntityType, location, mapTier) as Creature
 
         PersistentDataUtil.setValue(boss, DataTypeKeys.DROP_EQUIPMENT, false)
-
         setBossAttributes(boss, mapTier, bossType)
+
+        val event = DungeonEnemySpawnedEvent(location.world!!, 1)
+        EventGateway.apply(event)
 
         val entity = DungeonBossEntity(boss.uniqueId, mapTier, null, bossType)
         dungeonBossRepo.save(entity)
@@ -94,18 +96,11 @@ class DungeonBossService(
         boss.removeWhenFarAway = false
         boss.setAI(false)
 
-        var attributeInstance = boss.getAttribute(Attribute.GENERIC_MAX_HEALTH) ?: return
         val newHealth = bossType.baseHealth + mapTier * bossType.healthPerTier
-        attributeInstance.baseValue = newHealth
-        boss.health = newHealth
-
-        attributeInstance = boss.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) ?: return
         val newDamage = bossType.baseDamage + mapTier * bossType.damagePerTier
-        attributeInstance.baseValue = newDamage
-
-        attributeInstance = boss.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) ?: return
         val newSpeed = bossType.speed
-        attributeInstance.baseValue = newSpeed
+
+        DungeonUtil.setBasicAttributes(boss, newHealth, newDamage, newSpeed)
     }
 
     private fun onBossTarget(event: EntityTargetEvent) {

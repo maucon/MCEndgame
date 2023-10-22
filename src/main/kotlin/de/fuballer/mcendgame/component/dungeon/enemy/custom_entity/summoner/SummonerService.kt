@@ -5,11 +5,11 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEn
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.db.MinionRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.db.MinionsEntity
-import de.fuballer.mcendgame.component.remaining.RemainingService
 import de.fuballer.mcendgame.component.statitem.StatItemService
+import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
+import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
-import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
@@ -18,8 +18,7 @@ import org.bukkit.entity.LivingEntity
 class SummonerService(
     private val minionRepo: MinionRepository,
     private val statItemService: StatItemService,
-    private val enemyGenerationService: EnemyGenerationService,
-    private val remainingService: RemainingService,
+    private val enemyGenerationService: EnemyGenerationService
 ) {
     fun summonMinions(
         summoner: LivingEntity,
@@ -37,7 +36,8 @@ class SummonerService(
             minions.add(summonMinion(summoner, mapTier, minionType, weapons, ranged, armor, health))
         }
 
-        remainingService.addMobs(summoner.world, amount)
+        val event = DungeonEnemySpawnedEvent(summoner.world, amount)
+        EventGateway.apply(event)
 
         if (!minionRepo.exists(summoner.uniqueId))
             minionRepo.save(MinionsEntity(summoner.uniqueId, minions))
