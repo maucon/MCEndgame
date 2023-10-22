@@ -7,10 +7,10 @@ object DungeonGenerationSettings {
     fun getSchematicPath(dungeonType: DungeonType, schematicName: String) =
         "/schematics/${dungeonType.typeName}/$schematicName.schem"
 
-    var DUNGEON_WIDTH = 10
-    var DUNGEON_HEIGHT = 10
-    var DUNGEON_JUNCTION_PROBABILITY = .5
-    var DUNGEON_MAX_ADJACENT_TILE_DIFF = 6
+    var DUNGEON_WIDTH = 6
+    var DUNGEON_HEIGHT = 9
+    var DUNGEON_JUNCTION_PROBABILITY = .2
+    var DUNGEON_MAX_ADJACENT_TILE_DIFF = 8
     var DUNGEON_BOSS_ROOM_X_TILE = DUNGEON_WIDTH / 2
 
     val DUNGEON_TYPES = listOf(

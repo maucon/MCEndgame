@@ -5,7 +5,8 @@ import de.fuballer.mcendgame.component.dungeon.boss.data.BossType
 import de.fuballer.mcendgame.component.dungeon.boss.data.DungeonBossAbilitiesRunnable
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.EventGateway
@@ -69,7 +70,6 @@ class DungeonBossService(
     }
 
     fun spawnNewMapBoss(
-        world: World,
         location: Location,
         mapTier: Int
     ): Creature {
@@ -77,16 +77,11 @@ class DungeonBossService(
 
         val bossType = BossType.getRandom()
 
-        val boss = world.spawnEntity(location, bossType.customEntityType.type) as Creature
-        boss.customName = bossType.customEntityType.customName
-        boss.isCustomNameVisible = false
+        val boss = CustomEntityType.spawnCustomEntity(bossType.customEntityType, location, mapTier) as Creature
 
-        PersistentDataUtil.setValue(boss, DataTypeKeys.DROP_BASE_LOOT, false)
         PersistentDataUtil.setValue(boss, DataTypeKeys.DROP_EQUIPMENT, false)
-        PersistentDataUtil.setValue(boss, DataTypeKeys.HIDE_EQUIPMENT, bossType.customEntityType.hideEquipment)
-        PersistentDataUtil.setValue(boss, DataTypeKeys.ENTITY_TYPE, bossType.customEntityType.toString())
 
-        addBossAttributes(boss, mapTier, bossType)
+        setBossAttributes(boss, mapTier, bossType)
 
         val entity = DungeonBossEntity(boss.uniqueId, mapTier, null, bossType)
         dungeonBossRepo.save(entity)
@@ -94,7 +89,7 @@ class DungeonBossService(
         return boss
     }
 
-    private fun addBossAttributes(boss: Creature, mapTier: Int, bossType: BossType) {
+    private fun setBossAttributes(boss: Creature, mapTier: Int, bossType: BossType) {
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
         boss.removeWhenFarAway = false
         boss.setAI(false)

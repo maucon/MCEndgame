@@ -1,10 +1,11 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner
 
 import de.fuballer.mcendgame.component.dungeon.enemy.EnemyGenerationService
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.db.MinionRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.db.MinionsEntity
+import de.fuballer.mcendgame.component.remaining.RemainingService
 import de.fuballer.mcendgame.component.statitem.StatItemService
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
@@ -18,6 +19,7 @@ class SummonerService(
     private val minionRepo: MinionRepository,
     private val statItemService: StatItemService,
     private val enemyGenerationService: EnemyGenerationService,
+    private val remainingService: RemainingService,
 ) {
     fun summonMinions(
         summoner: LivingEntity,
@@ -28,13 +30,14 @@ class SummonerService(
         armor: Boolean,
         health: Double,
     ) {
-        val world = summoner.world
         val mapTier = PersistentDataUtil.getValue(summoner, DataTypeKeys.MAP_TIER) ?: -1
 
         val minions = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
-            minions.add(summonMinion(world, summoner, mapTier, minionType, weapons, ranged, armor, health))
+            minions.add(summonMinion(summoner, mapTier, minionType, weapons, ranged, armor, health))
         }
+
+        remainingService.addMobs(summoner.world, amount)
 
         if (!minionRepo.exists(summoner.uniqueId))
             minionRepo.save(MinionsEntity(summoner.uniqueId, minions))
@@ -43,7 +46,6 @@ class SummonerService(
     }
 
     private fun summonMinion(
-        world: World,
         summoner: LivingEntity,
         mapTier: Int,
         minionType: CustomEntityType,
@@ -52,7 +54,7 @@ class SummonerService(
         armor: Boolean,
         health: Double,
     ): LivingEntity {
-        val minion = world.spawnEntity(summoner.location, minionType.type) as LivingEntity
+        val minion = CustomEntityType.spawnCustomEntity(minionType, summoner.location, mapTier) as LivingEntity
 
         setHealth(minion, health)
 
@@ -62,7 +64,8 @@ class SummonerService(
         if (mapTier < 0 || minion !is Creature) return minion
 
         statItemService.setCreatureEquipment(minion, mapTier, weapons, ranged, armor)
-        enemyGenerationService.addEffectsToEntity(minion, mapTier)
+        val canBeInvisible = !minionType.data.hideEquipment
+        enemyGenerationService.addEffectsToEntity(minion, mapTier, canBeInvisible)
 
         PersistentDataUtil.setValue(minion, DataTypeKeys.DROP_EQUIPMENT, false)
 

@@ -2,9 +2,9 @@ package de.fuballer.mcendgame.component.dungeon.boss.data
 
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
-import de.fuballer.mcendgame.util.FindEntitiesUtil
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
+import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -199,7 +199,7 @@ class DungeonBossAbilitiesRunnable(
                 return
             }
 
-            val players = FindEntitiesUtil.getNearbyPlayers(pillar, DungeonBossSettings.GRAVITATION_PILLAR_RANGE)
+            val players = DungeonUtil.getNearbyPlayers(pillar, DungeonBossSettings.GRAVITATION_PILLAR_RANGE)
             for (player in players) {
                 val vec = pillar.location.subtract(player.location).multiply(0.1)
                 player.velocity = Vector(vec.x, vec.y + vec.length() / 5, vec.z)
@@ -212,7 +212,7 @@ class DungeonBossAbilitiesRunnable(
     }
 
     private fun createPoisonClouds() {
-        FindEntitiesUtil.getNearbyPlayers(boss, DungeonBossSettings.POISON_CLOUD_RANGE)
+        DungeonUtil.getNearbyPlayers(boss, DungeonBossSettings.POISON_CLOUD_RANGE)
             .forEach {
                 val spawnLoc = Location(it.location.world, it.location.x, it.location.blockY.toDouble(), it.location.z)
                 while (it.world.getBlockAt(spawnLoc).isPassable) {

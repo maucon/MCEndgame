@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity
+package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data
 
 import de.fuballer.mcendgame.util.PluginUtil.createNamespacedKey
 import org.bukkit.NamespacedKey
@@ -11,6 +11,7 @@ object DataTypeKeys {
     val IS_MINION = TypeKey(createNamespacedKey("is-minion"), PersistentDataType.BOOLEAN)
     val HIDE_EQUIPMENT = TypeKey(createNamespacedKey("hide-equipment"), PersistentDataType.BOOLEAN)
     val ENTITY_TYPE = TypeKey(createNamespacedKey("entity-type"), PersistentDataType.STRING)
+    val IS_ENEMY = TypeKey(createNamespacedKey("is-enemy"), PersistentDataType.BOOLEAN)
 
     class TypeKey<T>(
         val key: NamespacedKey,

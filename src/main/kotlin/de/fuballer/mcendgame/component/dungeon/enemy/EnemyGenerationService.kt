@@ -1,12 +1,11 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.remaining.RemainingService
 import de.fuballer.mcendgame.component.statitem.StatItemService
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -15,7 +14,6 @@ import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Raider
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityPotionEffectEvent
@@ -71,34 +69,23 @@ class EnemyGenerationService(
     ) {
         for (i in 0 until amount) {
             val entityType = RandomUtil.pick(EnemyGenerationSettings.DUNGEON_MOBS).option
-            val entity = world.spawnEntity(
+            val entity = CustomEntityType.spawnCustomEntity(
+                entityType,
                 Location(
                     world,
                     x + EnemyGenerationSettings.MOB_XZ_SPREAD * (random.nextDouble() * 2 - 1),
                     DungeonGenerationSettings.MOB_Y_POS,
                     z + EnemyGenerationSettings.MOB_XZ_SPREAD * (random.nextDouble() * 2 - 1)
                 ),
-                entityType.type
+                mapTier
             ) as Creature
 
-            entity.customName = entityType.customName
-            entity.isCustomNameVisible = false
-            entity.removeWhenFarAway = false
-
-            if (entity is Raider) {
-                entity.isPatrolLeader = false
-            }
-
-            statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
-
-            PersistentDataUtil.setValue(entity, DataTypeKeys.DROP_BASE_LOOT, entityType.dropBaseLoot)
-            PersistentDataUtil.setValue(entity, DataTypeKeys.MAP_TIER, mapTier)
-            PersistentDataUtil.setValue(entity, DataTypeKeys.HIDE_EQUIPMENT, entityType.hideEquipment)
-            PersistentDataUtil.setValue(entity, DataTypeKeys.ENTITY_TYPE, entityType.toString())
+            statItemService.setCreatureEquipment(entity, mapTier, entityType.data.canHaveWeapons, entityType.data.isRanged, entityType.data.canHaveArmor)
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)
-            addEffectsToEntity(entity, mapTier)
+            val canBeInvisible = !entityType.data.hideEquipment
+            addEffectsToEntity(entity, mapTier, canBeInvisible)
         }
 
         remainingService.addMobs(world, amount)
@@ -116,27 +103,21 @@ class EnemyGenerationService(
 
     fun addEffectsToEntity(
         entity: Creature,
-        mapTier: Int
+        mapTier: Int,
+        canBeInvisible: Boolean,
     ) {
-        val potionEffects = listOfNotNull(
+        val effects = mutableListOf(
+            RandomUtil.pick(EnemyGenerationSettings.STRENGTH_EFFECTS, mapTier).option,
             RandomUtil.pick(EnemyGenerationSettings.RESISTANCE_EFFECTS, mapTier).option,
             RandomUtil.pick(EnemyGenerationSettings.SPEED_EFFECTS, mapTier).option,
             RandomUtil.pick(EnemyGenerationSettings.FIRE_RESISTANCE_EFFECT, mapTier).option,
-            RandomUtil.pick(EnemyGenerationSettings.INVISIBILITY_EFFECT).option,
-        ).map { it.getPotionEffect() }
+        )
+        if (canBeInvisible) {
+            effects.add(RandomUtil.pick(EnemyGenerationSettings.INVISIBILITY_EFFECT).option)
+        }
+
+        val potionEffects = effects.filterNotNull().map { it.getPotionEffect() }
 
         entity.addPotionEffects(potionEffects)
-        addStrengthToEntity(entity, mapTier)
-    }
-
-    private fun addStrengthToEntity(
-        entity: Creature,
-        mapTier: Int
-    ) {
-        val strengthAmplifier = EnemyGenerationSettings.calculateStrengthAmplifier(random, mapTier)
-        if (strengthAmplifier < 0) return
-
-        val potionEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, Int.MAX_VALUE, strengthAmplifier, false, false)
-        entity.addPotionEffect(potionEffect)
     }
 }

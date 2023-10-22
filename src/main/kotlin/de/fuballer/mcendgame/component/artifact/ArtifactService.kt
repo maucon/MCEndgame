@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.artifact
 import de.fuballer.mcendgame.component.artifact.data.Artifact
 import de.fuballer.mcendgame.component.artifact.data.ArtifactType
 import de.fuballer.mcendgame.component.artifact.db.ArtifactRepository
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil

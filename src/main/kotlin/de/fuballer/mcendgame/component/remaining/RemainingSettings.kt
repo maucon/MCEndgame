@@ -12,8 +12,4 @@ object RemainingSettings {
     val BOSS_DEAD = ChatColor.GREEN.toString() + "(Boss killed)"
     val NOT_IN_DUNGEON_ERROR = ChatColor.RED.toString() + "Currently not in a dungeon."
     val GENERAL_ERROR = ChatColor.RED.toString() + "An error occurred."
-
-    val IGNORED_MOBS = listOf(
-        EntityType.RAVAGER,
-    )
 }
