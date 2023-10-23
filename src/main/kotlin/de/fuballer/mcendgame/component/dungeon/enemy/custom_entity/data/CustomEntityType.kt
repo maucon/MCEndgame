@@ -25,7 +25,7 @@ enum class CustomEntityType(
 
     NECROMANCER(EntityType.EVOKER, "Necromancer", CustomEntitySettings.NECROMANCER_DATA),
     REAPER(EntityType.WITHER_SKELETON, "Reaper", CustomEntitySettings.REAPER_DATA),
-    CHUPACABRA(EntityType.WOLF, "Chupacabra", CustomEntitySettings.NAGA_DATA),
+    CHUPACABRA(EntityType.WOLF, "Chupacabra", CustomEntitySettings.CHUPACABRA_DATA),
     DEMONIC_GOLEM(EntityType.RAVAGER, "Demonic Golem", CustomEntitySettings.DEMONIC_GOLEM_DATA),
     MINOTAUR(EntityType.IRON_GOLEM, "Minotaur", CustomEntitySettings.MINOTAUR_DATA),
     NAGA(EntityType.SKELETON, "Naga", CustomEntitySettings.NAGA_DATA),

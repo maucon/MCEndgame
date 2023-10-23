@@ -38,9 +38,6 @@ class SummonerService(
         minionRepo.getById(summoner.uniqueId).minions.forEach {
             if (it is Creature)
                 it.target = target
-            if (it is Wolf){
-                it.isAngry = true
-            }
         }
     }
 
