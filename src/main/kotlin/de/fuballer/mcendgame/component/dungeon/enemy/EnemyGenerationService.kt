@@ -67,6 +67,7 @@ class EnemyGenerationService(
         mapTier: Int,
         world: World
     ) {
+        val entities = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
             val entityType = RandomUtil.pick(EnemyGenerationSettings.DUNGEON_MOBS).option
             val entity = CustomEntityType.spawnCustomEntity(
@@ -86,9 +87,11 @@ class EnemyGenerationService(
             addTemporarySlowfalling(entity)
             val canBeInvisible = !entityType.data.hideEquipment
             addEffectsToEntity(entity, mapTier, canBeInvisible)
+
+            entities.add(entity)
         }
 
-        val event = DungeonEnemySpawnedEvent(world, amount)
+        val event = DungeonEnemySpawnedEvent(world, entities)
         EventGateway.apply(event)
     }
 

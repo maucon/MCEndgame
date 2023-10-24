@@ -7,6 +7,7 @@ import org.bukkit.Server
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitScheduler
+import org.bukkit.scoreboard.ScoreboardManager
 import java.io.File
 import java.util.logging.Logger
 
@@ -36,5 +37,6 @@ class PluginConfiguration {
         fun pluginManager(): PluginManager = INSTANCE.server.pluginManager
         fun server(): Server = INSTANCE.server
         fun protocolManager(): ProtocolManager = PROTOCOL_MANAGER
+        fun scoreboardManager(): ScoreboardManager = plugin().server.scoreboardManager!!
     }
 }

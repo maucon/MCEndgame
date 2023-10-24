@@ -11,10 +11,8 @@ import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.attribute.Attribute
-import org.bukkit.entity.AnimalTamer
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Wolf
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityTargetEvent
 
@@ -57,7 +55,7 @@ class SummonerService(
             minions.add(summonMinion(summoner, mapTier, minionType, weapons, ranged, armor, health))
         }
 
-        val event = DungeonEnemySpawnedEvent(summoner.world, amount)
+        val event = DungeonEnemySpawnedEvent(summoner.world, minions)
         EventGateway.apply(event)
 
         if (!minionRepo.exists(summoner.uniqueId))

@@ -82,7 +82,7 @@ class DungeonBossService(
         PersistentDataUtil.setValue(boss, DataTypeKeys.DROP_EQUIPMENT, false)
         setBossAttributes(boss, mapTier, bossType)
 
-        val event = DungeonEnemySpawnedEvent(location.world!!, 1)
+        val event = DungeonEnemySpawnedEvent(location.world!!, setOf(boss))
         EventGateway.apply(event)
 
         val entity = DungeonBossEntity(boss.uniqueId, mapTier, null, bossType)
