@@ -48,7 +48,11 @@ object CustomEntitySettings {
     )
     val CHUPACABRA_DATA = CustomEntityData(
         true, false, true, false, true,
-        5.0, 0.0, 5.0, 2.5, 0.35, 0.005
+        5.0, 0.0, 5.0, 2.5, 0.35, 0.0
+    )
+    val STALKER_DATA = CustomEntityData(
+        true, false, true, false, true,
+        10.0, 0.0, 4.0, 1.5, 0.45, 0.0
     )
 
     val DEMONIC_GOLEM_DATA = CustomEntityData(

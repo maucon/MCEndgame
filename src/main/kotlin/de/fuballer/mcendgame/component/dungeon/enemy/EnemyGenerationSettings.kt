@@ -25,6 +25,7 @@ object EnemyGenerationSettings {
         RandomOption(3, CustomEntityType.WITCH),
         RandomOption(5, CustomEntityType.NECROMANCER),
         RandomOption(1, CustomEntityType.REAPER),
+        RandomOption(5, CustomEntityType.STALKER),
     )
 
     val STRENGTH_EFFECTS = listOf(
