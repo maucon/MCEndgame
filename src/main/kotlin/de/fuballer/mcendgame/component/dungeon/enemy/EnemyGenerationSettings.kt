@@ -60,14 +60,4 @@ object EnemyGenerationSettings {
         RandomOption(100, null),
         RandomOption(10, PotionEffect.INVISIBILITY),
     )
-
-    private const val EXTRA_MOB_STRENGTH_CHANCE = .4
-
-    fun calculateStrengthAmplifier(random: Random, mapTier: Int): Int {
-        var strengthAmplifier = -1
-        for (i in 0 until mapTier)
-            if (random.nextDouble() < EXTRA_MOB_STRENGTH_CHANCE) strengthAmplifier++
-
-        return strengthAmplifier
-    }
 }

@@ -1,9 +1,11 @@
 package de.fuballer.mcendgame.component.artifact
 
 import de.fuballer.mcendgame.component.artifact.data.ArtifactType
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color
 import org.bukkit.DyeColor
@@ -135,6 +137,7 @@ class ArtifactEffectsService(
 
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         if (entity !is Wolf) return
+        if (PersistentDataUtil.getValue(entity, DataTypeKeys.IS_ENEMY) == true) return
 
         if (event.target !is Player) return
 

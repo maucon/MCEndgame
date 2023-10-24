@@ -11,8 +11,12 @@ import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.attribute.Attribute
+import org.bukkit.entity.AnimalTamer
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Wolf
+import org.bukkit.event.EventHandler
+import org.bukkit.event.entity.EntityTargetEvent
 
 @Component
 class SummonerService(
@@ -20,8 +24,25 @@ class SummonerService(
     private val statItemService: StatItemService,
     private val enemyGenerationService: EnemyGenerationService
 ) {
+    @EventHandler
+    fun onEntityTarget(event: EntityTargetEvent) {
+        val summoner = event.entity as? Creature ?: return
+        if (!minionRepo.exists(summoner.uniqueId)) return
+
+        setMinionsTarget(summoner)
+    }
+
+    private fun setMinionsTarget(summoner: Creature) {
+        val target = summoner.target ?: return
+
+        minionRepo.getById(summoner.uniqueId).minions.forEach {
+            if (it is Creature)
+                it.target = target
+        }
+    }
+
     fun summonMinions(
-        summoner: LivingEntity,
+        summoner: Creature,
         minionType: CustomEntityType,
         amount: Int,
         weapons: Boolean,
@@ -43,6 +64,8 @@ class SummonerService(
             minionRepo.save(MinionsEntity(summoner.uniqueId, minions))
         else
             minionRepo.getById(summoner.uniqueId).minions.addAll(minions)
+
+        setMinionsTarget(summoner)
     }
 
     private fun summonMinion(
