@@ -47,7 +47,7 @@ class RemainingService(
         val entity = remainingRepo.findById(name)
             ?: RemainingEntity(name)
 
-        entity.remaining += event.count
+        entity.remaining += event.entities.size
         remainingRepo.save(entity)
     }
 }

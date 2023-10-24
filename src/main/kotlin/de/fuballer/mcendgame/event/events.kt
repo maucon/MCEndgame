@@ -3,6 +3,8 @@ package de.fuballer.mcendgame.event
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.World
+import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Recipe
 
@@ -69,5 +71,5 @@ class DiscoverRecipeAddEvent(
  */
 class DungeonEnemySpawnedEvent(
     val world: World,
-    val count: Int
+    val entities: Set<LivingEntity>
 ) : HandleableEvent()
