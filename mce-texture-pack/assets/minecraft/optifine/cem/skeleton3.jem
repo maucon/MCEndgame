@@ -1,0 +1,316 @@
+{
+	"credit": "Made with Blockbench",
+	"textureSize": [128, 128],
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "headwear",
+			"id": "headwear",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0],
+			"submodels": [
+				{
+					"id": "harpy",
+					"invertAxis": "xy",
+					"translate": [0, 24, 0],
+					"submodels": [
+						{
+							"id": "harpyBody",
+							"invertAxis": "xy",
+							"translate": [0, 0, 0],
+							"submodels": [
+								{
+									"id": "harpyLowerBody",
+									"invertAxis": "xy",
+									"translate": [0, 0, 0],
+									"boxes": [
+										{"coordinates": [-3, -11, 0.75, 6, 5, 3], "textureOffset": [59, 0]}
+									]
+								},
+								{
+									"id": "harpyUpperBodyAnim",
+									"invertAxis": "xy",
+									"translate": [0, 0, 0],
+									"submodels": [
+										{
+											"id": "harpyUpperBody",
+											"invertAxis": "xy",
+											"translate": [0, -4, 0],
+											"rotate": [-15, 0, 0],
+											"boxes": [
+												{"coordinates": [-3.5, -3.25, -0.75, 7, 8, 4], "textureOffset": [77, 0]},
+												{"coordinates": [-3.5, -13.25, 3.25, 7, 10, 0], "textureOffset": [99, 0]}
+											],
+											"submodels": [
+												{
+													"id": "harpyChest",
+													"invertAxis": "xy",
+													"translate": [0, 2.75, -0.75],
+													"rotate": [25, 0, 0],
+													"boxes": [
+														{"coordinates": [-3, -2.78919, -0.04911, 6, 3, 2], "textureOffset": [80, 12]}
+													]
+												},
+												{
+													"id": "harpyWingLeft",
+													"invertAxis": "xy",
+													"translate": [-3.5, 0, 3.25],
+													"submodels": [
+														{
+															"id": "harpyWingLeftUpper",
+															"invertAxis": "xy",
+															"translate": [3.5, 0, -2.75],
+															"boxes": [
+																{"coordinates": [-9.5, -5, 2.75, 6, 15, 0], "textureOffset": [96, 16]}
+															]
+														},
+														{
+															"id": "harpyWingLeftLower",
+															"invertAxis": "xy",
+															"translate": [-6, 0, 0],
+															"boxes": [
+																{"coordinates": [-10, -9, 0, 10, 19, 0], "textureOffset": [108, 16]}
+															]
+														}
+													]
+												},
+												{
+													"id": "harpyWingRight",
+													"invertAxis": "xy",
+													"translate": [3.5, 0, 3.25],
+													"submodels": [
+														{
+															"id": "harpyWingRightUpper",
+															"invertAxis": "xy",
+															"translate": [-3.5, 0, -2.75],
+															"boxes": [
+																{"coordinates": [3.5, -5, 2.75, 6, 15, 0], "textureOffset": [68, 16]}
+															]
+														},
+														{
+															"id": "harpyWingRightLower",
+															"invertAxis": "xy",
+															"translate": [6, 0, 0],
+															"boxes": [
+																{"coordinates": [0, -9, 0, 10, 19, 0], "textureOffset": [48, 16]}
+															]
+														}
+													]
+												},
+												{
+													"id": "harpyArmLeftAnim",
+													"invertAxis": "xy",
+													"translate": [-3.5, 2.5, 1],
+													"submodels": [
+														{
+															"id": "harpyArmLeft",
+															"invertAxis": "xy",
+															"translate": [0, 0, 0],
+															"rotate": [7.38733, 1.29876, -9.91615],
+															"boxes": [
+																{"coordinates": [-2, -10, -1, 2, 11, 2], "textureOffset": [104, 44]}
+															]
+														}
+													]
+												},
+												{
+													"id": "harpyArmRightAnim",
+													"invertAxis": "xy",
+													"translate": [3.5, 2.5, 1],
+													"submodels": [
+														{
+															"id": "harpyArmRight",
+															"invertAxis": "xy",
+															"translate": [0, 0, 0],
+															"rotate": [7.38733, -1.29876, 9.91615],
+															"boxes": [
+																{"coordinates": [0, -10, -1, 2, 11, 2], "textureOffset": [64, 44]}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"id": "harpyHead",
+											"invertAxis": "xy",
+											"translate": [0, 0, 0],
+											"boxes": [
+												{"coordinates": [-4, 0, -4, 8, 8, 8], "textureOffset": [72, 23]},
+												{"coordinates": [-4, -8, -4, 8, 8, 8], "textureOffset": [72, 46]}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "harpyLegLeft",
+							"invertAxis": "xy",
+							"translate": [-2.25, -11, 2.5],
+							"rotate": [0, 5, 0],
+							"submodels": [
+								{
+									"id": "harpyLegLeftUpper",
+									"invertAxis": "xy",
+									"translate": [0, -2, -1],
+									"rotate": [45, 0, 0],
+									"boxes": [
+										{"coordinates": [-2, -1.75, -2.75, 4, 5, 4], "textureOffset": [100, 35]},
+										{"coordinates": [-1, -5.75, -1.5, 2, 4, 2], "textureOffset": [92, 39]}
+									]
+								},
+								{
+									"id": "harpyLegLeftLower",
+									"invertAxis": "xy",
+									"translate": [0, -6.43301, -3.78109],
+									"rotate": [-60, 0, 0],
+									"boxes": [
+										{"coordinates": [-1.02, -4, -0.25, 2, 6, 2], "textureOffset": [116, 36]}
+									],
+									"submodels": [
+										{
+											"id": "harpyLeftToeOne",
+											"invertAxis": "xy",
+											"translate": [-0.25, -3.75, -1.25],
+											"rotate": [0, 25, 0],
+											"boxes": [
+												{"coordinates": [-1, -0.45999, -2, 1, 1, 4], "textureOffset": [83, 41]}
+											]
+										},
+										{
+											"id": "harpyLeftToeTwo",
+											"invertAxis": "xy",
+											"translate": [1.25, -3.75, -0.75],
+											"rotate": [0, -25, 0],
+											"boxes": [
+												{"coordinates": [-1, -0.47999, -2.10001, 1, 1, 4], "textureOffset": [83, 41]}
+											]
+										},
+										{
+											"id": "harpyLeftToeThree",
+											"invertAxis": "xy",
+											"translate": [0.04685, -3.75, -1.28869],
+											"boxes": [
+												{"coordinates": [-0.5, -0.5, -2, 1, 1, 4], "textureOffset": [83, 41]}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "harpyLegRight",
+							"invertAxis": "xy",
+							"translate": [2.25, -11, 2.5],
+							"rotate": [0, -5, 0],
+							"submodels": [
+								{
+									"id": "harpyLegRightUpper",
+									"invertAxis": "xy",
+									"translate": [-5.5, -2, -1],
+									"rotate": [45, 0, 0],
+									"boxes": [
+										{"coordinates": [3.5, -1.75, -2.75, 4, 5, 4], "textureOffset": [60, 35]},
+										{"coordinates": [4.5, -5.75, -1.5, 2, 4, 2], "textureOffset": [76, 39]}
+									]
+								},
+								{
+									"id": "harpyLegRightLower",
+									"invertAxis": "xy",
+									"translate": [-0.02, -6.43301, -3.78109],
+									"rotate": [-60, 0, 0],
+									"boxes": [
+										{"coordinates": [-0.96, -4, -0.25, 2, 6, 2], "textureOffset": [52, 36]}
+									],
+									"submodels": [
+										{
+											"id": "harpyRightToeOne",
+											"invertAxis": "xy",
+											"translate": [-0.23, -3.25, -1.25],
+											"rotate": [0, 25, 0],
+											"boxes": [
+												{"coordinates": [-1, -0.95999, -2, 1, 1, 4], "textureOffset": [83, 41]}
+											]
+										},
+										{
+											"id": "harpyRightToeTwo",
+											"invertAxis": "xy",
+											"translate": [1.27, -3.25, -0.75],
+											"rotate": [0, -25, 0],
+											"boxes": [
+												{"coordinates": [-1, -0.97999, -2.10001, 1, 1, 4], "textureOffset": [83, 41]}
+											]
+										},
+										{
+											"id": "harpyRightToeThree",
+											"invertAxis": "xy",
+											"translate": [0.06685, -3.25, -1.28869],
+											"boxes": [
+												{"coordinates": [-0.5, -1, -2, 1, 1, 4], "textureOffset": [83, 41]}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			],
+			"animations": [
+				{
+					"harpyHead.rx": "torad(head_pitch)",
+					"harpyHead.ry": "torad(head_yaw)",
+					"harpyArmLeftAnim.rz": "torad(-6) + sin(age * 0.1) * 0.085",
+					"harpyArmRightAnim.rz": "-harpyArmLeftAnim.rz",
+					"harpyLegLeft.rx": "sin(age * 0.1) * 0.085",
+					"harpyLegRight.rx": "sin((age + 3) * 0.1) * 0.085",
+					"harpyChest.rx": "torad(-25) + sin(age*0.1) * 0.035",
+					"var.wing_state": "var.wing_state + frame_time * 20 * 0.2",
+					"harpyWingLeft.ry": "torad(-15) + sin(var.wing_state) * 0.65",
+					"harpyWingLeftLower.ry": "sin(var.wing_state) * 0.4",
+					"harpyWingRight.ry": "torad(15) - sin(var.wing_state) * 0.65",
+					"harpyWingRightLower.ry": "-sin(var.wing_state) * 0.4",
+					"harpy.ty": "-24 - sin(var.wing_state) * 0.5"
+				}
+			]
+		},
+		{
+			"part": "left_arm",
+			"id": "left_arm",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [5, -22, 0]
+		},
+		{
+			"part": "right_arm",
+			"id": "right_arm",
+			"invertAxis": "xy",
+			"translate": [-5, -22, 0]
+		},
+		{
+			"part": "left_leg",
+			"id": "left_leg",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [2, -12, -0.1]
+		},
+		{
+			"part": "right_leg",
+			"id": "right_leg",
+			"invertAxis": "xy",
+			"translate": [-2, -12, -0.1]
+		}
+	]
+}

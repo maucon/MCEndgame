@@ -12,17 +12,6 @@ enum class BossType(
     val damagePerTier: Double,
     val speed: Double,
 ) {
-    RAVAGER(
-        CustomEntityType.RAVAGER,
-        listOf(
-            RandomOption(40, BossAbility.ARROWS),
-            RandomOption(30, BossAbility.FIRE_ARROWS),
-            RandomOption(50, BossAbility.SPEED),
-        ),
-        100.0, 5.0,
-        12.0, 2.0,
-        0.35
-    ),
     DEMONIC_GOLEM(
         CustomEntityType.DEMONIC_GOLEM,
         listOf(
@@ -44,15 +33,16 @@ enum class BossType(
         12.0, 3.0,
         0.4
     ),
-    NAGA(
-        CustomEntityType.NAGA,
+    CERBERUS(
+        CustomEntityType.CERBERUS,
         listOf(
-            RandomOption(30, BossAbility.SPEED),
-            RandomOption(50, BossAbility.POISON_CLOUD),
+            RandomOption(30, BossAbility.FIRE_ARROWS),
+            RandomOption(50, BossAbility.FIRE_CASCADE),
+            RandomOption(25, BossAbility.DARKNESS),
         ),
-        80.0, 4.0,
-        15.0, 4.0,
-        0.3
+        100.0, 5.0,
+        15.0, 3.5,
+        0.35
     );
 
     companion object {

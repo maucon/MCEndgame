@@ -21,7 +21,6 @@ enum class CustomEntityType(
     WITHER_SKELETON(EntityType.WITHER_SKELETON, null, CustomEntitySettings.WITHER_SKELETON_DATA),
     CREEPER(EntityType.CREEPER, null, CustomEntitySettings.CREEPER_DATA),
     WITCH(EntityType.WITCH, null, CustomEntitySettings.WITCH_DATA),
-    RAVAGER(EntityType.RAVAGER, null, CustomEntitySettings.RAVAGER_DATA),
 
     NECROMANCER(EntityType.EVOKER, "Necromancer", CustomEntitySettings.NECROMANCER_DATA),
     REAPER(EntityType.WITHER_SKELETON, "Reaper", CustomEntitySettings.REAPER_DATA),
@@ -30,6 +29,11 @@ enum class CustomEntityType(
     DEMONIC_GOLEM(EntityType.RAVAGER, "Demonic Golem", CustomEntitySettings.DEMONIC_GOLEM_DATA),
     MINOTAUR(EntityType.IRON_GOLEM, "Minotaur", CustomEntitySettings.MINOTAUR_DATA),
     NAGA(EntityType.SKELETON, "Naga", CustomEntitySettings.NAGA_DATA),
+    CYCLOPS(EntityType.ZOMBIE, "Cyclops", CustomEntitySettings.CYCLOPS_DATA),
+    HARPY(EntityType.SKELETON, "Harpy", CustomEntitySettings.HARPY_DATA),
+    CERBERUS(EntityType.RAVAGER, "Cerberus", CustomEntitySettings.CERBERUS_DATA),
+    SUCCUBUS(EntityType.ZOMBIE, "Succubus", CustomEntitySettings.SUCCUBUS_DATA),
+    INCUBUS(EntityType.ZOMBIE, "Incubus", CustomEntitySettings.INCUBUS_DATA),
 
     STONE_PILLAR(EntityType.ZOMBIE, "Stone Pillar", CustomEntitySettings.STONE_PILLAR_DATA),
 
