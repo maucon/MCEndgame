@@ -65,7 +65,27 @@ object CustomEntitySettings {
     )
     val NAGA_DATA = CustomEntityData(
         true, true, true, false, true,
+        10.0, 0.0, 5.0, 2.5, 0.35, 0.0
+    )
+    val CYCLOPS_DATA = CustomEntityData(
+        true, false, true, false, true,
+        20.0, 0.0, 5.0, 2.5, 0.25, 0.0
+    )
+    val HARPY_DATA = CustomEntityData(
+        true, true, true, false, true,
+        14.0, 0.0, 7.0, 3.0, 0.33, 0.0
+    )
+    val CERBERUS_DATA = CustomEntityData(
+        true, false, true, false, true,
         1.0, 0.0, 0.0, 0.0, 0.0, 0.0
+    )
+    val SUCCUBUS_DATA = CustomEntityData(
+        true, false, true, false, true,
+        15.0, 0.0, 7.0, 3.0, 0.3, 0.0
+    )
+    val INCUBUS_DATA = CustomEntityData(
+        true, false, true, false, true,
+        22.0, 0.0, 3.0, 2.0, 0.25, 0.0
     )
 
     val STONE_PILLAR_DATA = CustomEntityData(
