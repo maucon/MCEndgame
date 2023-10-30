@@ -16,7 +16,7 @@ object EnemyGenerationSettings {
     }
 
     val DUNGEON_MOBS = listOf(
-        /*RandomOption(25, CustomEntityType.ZOMBIE),
+        RandomOption(25, CustomEntityType.ZOMBIE),
         RandomOption(10, CustomEntityType.HUSK),
         RandomOption(15, CustomEntityType.SKELETON),
         RandomOption(5, CustomEntityType.STRAY),
@@ -25,12 +25,12 @@ object EnemyGenerationSettings {
         RandomOption(3, CustomEntityType.WITCH),
         RandomOption(5, CustomEntityType.NECROMANCER),
         RandomOption(3, CustomEntityType.REAPER),
-        RandomOption(5, CustomEntityType.STALKER),*/
+        RandomOption(5, CustomEntityType.STALKER),
         RandomOption(5, CustomEntityType.NAGA),
         RandomOption(5, CustomEntityType.CYCLOPS),
         RandomOption(5, CustomEntityType.HARPY),
-        //RandomOption(5, CustomEntityType.SUCCUBUS),
-        //RandomOption(5, CustomEntityType.INCUBUS),
+        RandomOption(5, CustomEntityType.SUCCUBUS),
+        RandomOption(5, CustomEntityType.INCUBUS),
     )
 
     val STRENGTH_EFFECTS = listOf(
