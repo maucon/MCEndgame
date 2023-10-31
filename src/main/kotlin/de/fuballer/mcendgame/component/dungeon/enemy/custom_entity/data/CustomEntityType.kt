@@ -57,6 +57,7 @@ enum class CustomEntityType(
             if (entity !is LivingEntity) return entity
             setAttributes(entity, customEntityType.data, mapTier)
             entity.removeWhenFarAway = false
+            entity.isSilent = customEntityType.data.isSilent
 
             if (entity is Raider) {
                 entity.isPatrolLeader = false

@@ -6,6 +6,7 @@ data class CustomEntityData(
     val canHaveArmor: Boolean,
     val dropBaseLoot: Boolean,
     val hideEquipment: Boolean,
+    val isSilent: Boolean,
 
     val maxLifeBase: Double,
     val maxLifePerTier: Double,
