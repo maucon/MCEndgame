@@ -1,0 +1,134 @@
+{
+	"credit": "Made with Blockbench",
+	"textureSize": [64, 64],
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "headwear",
+			"id": "headwear",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0],
+			"submodels": [
+				{
+					"id": "hatchery",
+					"invertAxis": "xy",
+					"translate": [0, 24, 0],
+					"submodels": [
+						{
+							"id": "hatcheryBase",
+							"invertAxis": "xy",
+							"translate": [0, 0, 0],
+							"boxes": [
+								{"coordinates": [-6, -24, -6, 12, 8, 12], "textureOffset": [0, 44]}
+							]
+						},
+						{
+							"id": "hatcheryMid",
+							"invertAxis": "xy",
+							"translate": [0, 0, 0],
+							"boxes": [
+								{"coordinates": [-4, -16, -4, 8, 10, 8], "textureOffset": [8, 25]}
+							]
+						},
+						{
+							"id": "hatcheryFlap0",
+							"invertAxis": "xy",
+							"translate": [0, -6, -4],
+							"boxes": [
+								{"coordinates": [-3.5, 0, 0, 7, 2, 1], "textureOffset": [16, 21]},
+								{"coordinates": [-2.5, 2, 0, 5, 1, 1], "textureOffset": [18, 18]},
+								{"coordinates": [-1, 3, 0, 2, 1, 1], "textureOffset": [21, 15]}
+							]
+						},
+						{
+							"id": "hatcheryFlap1",
+							"invertAxis": "xy",
+							"translate": [-4, -6, 0],
+							"rotate": [0, 90, 0],
+							"boxes": [
+								{"coordinates": [-3.5, 0, 0, 7, 2, 1], "textureOffset": [16, 21]},
+								{"coordinates": [-2.5, 2, 0, 5, 1, 1], "textureOffset": [18, 18]},
+								{"coordinates": [-1, 3, 0, 2, 1, 1], "textureOffset": [21, 15]}
+							]
+						},
+						{
+							"id": "hatcheryFlap2",
+							"invertAxis": "xy",
+							"translate": [0, -6, 4],
+							"rotate": [0, -180, 0],
+							"boxes": [
+								{"coordinates": [-3.5, 0, 0, 7, 2, 1], "textureOffset": [16, 21]},
+								{"coordinates": [-2.5, 2, 0, 5, 1, 1], "textureOffset": [18, 18]},
+								{"coordinates": [-1, 3, 0, 2, 1, 1], "textureOffset": [21, 15]}
+							]
+						},
+						{
+							"id": "hatcheryFlap3",
+							"invertAxis": "xy",
+							"translate": [4, -6, 0],
+							"rotate": [0, -90, 0],
+							"boxes": [
+								{"coordinates": [-3.5, 0, 0, 7, 2, 1], "textureOffset": [16, 21]},
+								{"coordinates": [-2.5, 2, 0, 5, 1, 1], "textureOffset": [18, 18]},
+								{"coordinates": [-1, 3, 0, 2, 1, 1], "textureOffset": [21, 15]}
+							]
+						}
+					]
+				}
+			],
+			"animations": [
+				{
+					"hatcheryBase.sx": "1 + sin(age * 0.1) * 0.05",
+					"hatcheryBase.sz": "1 + sin(age * 0.1) * 0.05",
+					"hatcheryMid.sx": "1 + sin((age - 3) * 0.1) * 0.05",
+					"hatcheryMid.sz": "1 + sin((age - 3) * 0.1) * 0.05",
+					"hatcheryFlap0.rx": "torad(-31) - torad(sin((age - 3) * 0.1) * 30)",
+					"hatcheryFlap0.tz": "-4 - sin((age - 3) * 0.1) * 0.15",
+					"hatcheryFlap1.rx": "torad(-31) - torad(sin((age - 3) * 0.1) * 30)",
+					"hatcheryFlap1.tx": "4 + sin((age - 3) * 0.1) * 0.15",
+					"hatcheryFlap2.rx": "torad(-31) - torad(sin((age - 3) * 0.1) * 30)",
+					"hatcheryFlap2.tz": "4 + sin((age - 3) * 0.1) * 0.15",
+					"hatcheryFlap3.rx": "torad(-31) - torad(sin((age - 3) * 0.1) * 30)",
+					"hatcheryFlap3.tx": "-4 - sin((age - 3) * 0.1) * 0.15"
+				}
+			]
+		},
+		{
+			"part": "left_arm",
+			"id": "left_arm",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [5, -22, 0]
+		},
+		{
+			"part": "right_arm",
+			"id": "right_arm",
+			"invertAxis": "xy",
+			"translate": [-5, -22, 0]
+		},
+		{
+			"part": "left_leg",
+			"id": "left_leg",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [2, -12, -0.1]
+		},
+		{
+			"part": "right_leg",
+			"id": "right_leg",
+			"invertAxis": "xy",
+			"translate": [-2, -12, -0.1]
+		}
+	]
+}

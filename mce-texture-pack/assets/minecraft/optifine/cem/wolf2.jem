@@ -1,0 +1,310 @@
+{
+	"credit": "Made with Blockbench",
+	"textureSize": [64, 64],
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [-1, -10.5, 7]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -10, -2],
+			"submodels": [
+				{
+					"id": "invert",
+					"invertAxis": "xy",
+					"translate": [0, 10, 2],
+					"submodels": [
+						{
+							"id": "chupacabra",
+							"invertAxis": "xy",
+							"translate": [0, -8, -2],
+							"submodels": [
+								{
+									"id": "chupBody",
+									"invertAxis": "xy",
+									"translate": [0, 0, 0],
+									"submodels": [
+										{
+											"id": "chupUpperBody",
+											"invertAxis": "xy",
+											"translate": [0, 8.5, 5.25],
+											"boxes": [
+												{"coordinates": [-4, -3, -9.25, 8, 7, 9], "textureOffset": [0, 0]}
+											],
+											"submodels": [
+												{
+													"id": "chupLegLeft",
+													"invertAxis": "xy",
+													"translate": [-5, 2.5, -7.75],
+													"submodels": [
+														{
+															"id": "chupLegLeftUpper",
+															"invertAxis": "xy",
+															"translate": [1, 0, 0],
+															"rotate": [-25, 0, 0],
+															"boxes": [
+																{"coordinates": [-2, -7, -1, 2, 8, 2], "textureOffset": [8, 40]}
+															]
+														},
+														{
+															"id": "chupLegLeftLower",
+															"invertAxis": "xy",
+															"translate": [0, -5.5, 3],
+															"rotate": [20, 0, 0],
+															"boxes": [
+																{"coordinates": [-1.02, -2, -1, 2, 2, 2], "textureOffset": [8, 51]},
+																{"coordinates": [-1.02, -8, -1, 2, 3, 2], "textureOffset": [8, 55]},
+																{"coordinates": [-1.02, -5, 0, 1, 2, 1], "textureOffset": [16, 53]},
+																{"coordinates": [-1.02, -5, -1, 1, 1, 1], "textureOffset": [16, 56]},
+																{"coordinates": [-0.02, -5, 0, 1, 1, 1], "textureOffset": [16, 58]},
+																{"coordinates": [-0.02, -3, -1, 1, 1, 1], "textureOffset": [16, 51]},
+																{"coordinates": [-0.5, -5.5, -0.5, 1, 4, 1], "textureOffset": [60, 39]}
+															]
+														}
+													]
+												},
+												{
+													"id": "chupLegRight",
+													"invertAxis": "xy",
+													"translate": [5, 2.75, -7.75],
+													"submodels": [
+														{
+															"id": "chupLegRightUpper",
+															"invertAxis": "xy",
+															"translate": [-1, -0.25, 0],
+															"rotate": [-25, 0, 0],
+															"boxes": [
+																{"coordinates": [0, -1, -1, 2, 2, 2], "textureOffset": [34, 41]},
+																{"coordinates": [0, -7, -1, 2, 3, 2], "textureOffset": [34, 45]},
+																{"coordinates": [0, -4, -1, 1, 1, 1], "textureOffset": [42, 48]},
+																{"coordinates": [1, -3, 0, 1, 2, 1], "textureOffset": [42, 45]},
+																{"coordinates": [0, -2, 0, 1, 1, 1], "textureOffset": [42, 43]},
+																{"coordinates": [1, -2, -1, 1, 1, 1], "textureOffset": [42, 41]},
+																{"coordinates": [0.5, -4, -0.5, 1, 3, 1], "textureOffset": [60, 45]}
+															]
+														},
+														{
+															"id": "chupLegRightLower",
+															"invertAxis": "xy",
+															"translate": [0, -5.75, 3],
+															"rotate": [20, 0, 0],
+															"boxes": [
+																{"coordinates": [-0.98, -6, -1, 2, 6, 2], "textureOffset": [34, 51]},
+																{"coordinates": [0.02, -7, -1, 1, 1, 1], "textureOffset": [42, 54]},
+																{"coordinates": [-0.98, -8, 0, 1, 2, 1], "textureOffset": [42, 51]},
+																{"coordinates": [-0.5, -8, -0.5, 1, 2, 1], "textureOffset": [60, 50]}
+															]
+														}
+													]
+												},
+												{
+													"id": "chupHead",
+													"invertAxis": "xy",
+													"translate": [0, -2.15901, -8.38388],
+													"submodels": [
+														{
+															"id": "chupMainHead",
+															"invertAxis": "xy",
+															"translate": [0, 4.40901, -2.11612],
+															"boxes": [
+																{"coordinates": [-3, -1.5, -3.25, 6, 6, 4], "textureOffset": [0, 28]}
+															],
+															"submodels": [
+																{
+																	"id": "chupMouthTop",
+																	"invertAxis": "xy",
+																	"translate": [0, -0.5, -3.25],
+																	"boxes": [
+																		{"coordinates": [-1.5, 0.02, -3, 3, 2, 4], "textureOffset": [22, 26]}
+																	]
+																},
+																{
+																	"id": "chupMouthBottom",
+																	"invertAxis": "xy",
+																	"translate": [0, -0.5, -3.25],
+																	"boxes": [
+																		{"coordinates": [-1.5, -0.98, -3, 3, 1, 4], "textureOffset": [22, 33]}
+																	]
+																},
+																{
+																	"id": "chupEarRight",
+																	"invertAxis": "xy",
+																	"translate": [2, 4.5, 0.25],
+																	"boxes": [
+																		{"coordinates": [-1, 0, -0.5, 2, 2, 1], "textureOffset": [46, 61]},
+																		{"coordinates": [0, 2, -0.5, 1, 2, 1], "textureOffset": [47, 57]}
+																	]
+																},
+																{
+																	"id": "chupEarLeft",
+																	"invertAxis": "xy",
+																	"translate": [-4, -10.75, 5.25],
+																	"boxes": [
+																		{"coordinates": [1, 15.25, -5.5, 2, 1, 1], "textureOffset": [53, 62]},
+																		{"coordinates": [1, 16.25, -5.5, 1, 1, 1], "textureOffset": [54, 59]}
+																	]
+																}
+															]
+														},
+														{
+															"id": "chupNeck",
+															"invertAxis": "xy",
+															"translate": [0, 2.25, -2.25],
+															"rotate": [-45, 0, 0],
+															"boxes": [
+																{"coordinates": [-2, -3.34099, -0.61612, 4, 6, 4], "textureOffset": [38, 28]}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"id": "chupLowerBody",
+											"invertAxis": "xy",
+											"translate": [0, 8.5, 5],
+											"boxes": [
+												{"coordinates": [-3, -2.98, -1, 6, 5, 7], "textureOffset": [37, 4]}
+											],
+											"submodels": [
+												{
+													"id": "chupHindLegLeft",
+													"invertAxis": "xy",
+													"translate": [-4, -1.5, 4.5],
+													"submodels": [
+														{
+															"id": "chupHindlegLeftUpper",
+															"invertAxis": "xy",
+															"translate": [1, 0, 0],
+															"rotate": [40, 0, 0],
+															"boxes": [
+																{"coordinates": [-2, -1, -1, 2, 2, 2], "textureOffset": [21, 41]},
+																{"coordinates": [-2, -6, -1, 2, 3, 2], "textureOffset": [21, 45]},
+																{"coordinates": [-1, -3, -1, 1, 1, 1], "textureOffset": [29, 46]},
+																{"coordinates": [-1, -3, 0, 1, 2, 1], "textureOffset": [29, 43]},
+																{"coordinates": [-2, -2, 0, 1, 1, 1], "textureOffset": [29, 41]},
+																{"coordinates": [-1.5, -3.5, -0.5, 1, 3, 1], "textureOffset": [60, 34]}
+															]
+														},
+														{
+															"id": "chupHindlegLeftLower",
+															"invertAxis": "xy",
+															"translate": [0, -3.5, -3.75],
+															"rotate": [-35, 0, 0],
+															"boxes": [
+																{"coordinates": [-1.02, -7, -1, 2, 7, 2], "textureOffset": [21, 51]}
+															]
+														}
+													]
+												},
+												{
+													"id": "chupHindLegRight",
+													"invertAxis": "xy",
+													"translate": [4, -1.5, 4.5],
+													"submodels": [
+														{
+															"id": "chupHindlegRightUpper",
+															"invertAxis": "xy",
+															"translate": [-1, 0, 0],
+															"rotate": [40, 0, 0],
+															"boxes": [
+																{"coordinates": [0, -6, -1, 2, 7, 2], "textureOffset": [47, 41]}
+															]
+														},
+														{
+															"id": "chupHindlegRightLower",
+															"invertAxis": "xy",
+															"translate": [0.015, -3.5, -3.75],
+															"rotate": [-35, 0, 0],
+															"boxes": [
+																{"coordinates": [-0.995, -3, -1, 2, 3, 2], "textureOffset": [47, 51]},
+																{"coordinates": [-0.995, -5, -1, 1, 2, 1], "textureOffset": [55, 51]},
+																{"coordinates": [0.005, -4, 0, 1, 1, 1], "textureOffset": [55, 54]},
+																{"coordinates": [-0.515, -7, -0.25, 1, 4, 1], "textureOffset": [60, 59]}
+															]
+														}
+													]
+												},
+												{
+													"id": "chupTail",
+													"invertAxis": "xy",
+													"translate": [-0.1, 0.3, 6.15],
+													"boxes": [
+														{"coordinates": [-0.9, -4.05, -0.15, 2, 5, 2], "textureOffset": [52, 23]},
+														{"coordinates": [-0.9, -6.05, -0.15, 1, 2, 1], "textureOffset": [60, 27]},
+														{"coordinates": [0.1, -5.05, -0.15, 1, 1, 1], "textureOffset": [60, 23]},
+														{"coordinates": [-0.9, -5.05, 0.85, 1, 1, 1], "textureOffset": [60, 25]},
+														{"coordinates": [-0.4, -7.05, 0.35, 1, 3, 1], "textureOffset": [60, 54]}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			],
+			"animations": [
+				{
+					"invert.rx": "-body.rx",
+					"chupLegLeft.rx": "sin(limb_swing*0.75) * limb_speed",
+					"chupLegRight.rx": "-sin(limb_swing*0.75) * limb_speed",
+					"chupHindLegLeft.rx": "-sin(limb_swing*0.75) * limb_speed",
+					"chupHindLegRight.rx": "sin(limb_swing*0.75) * limb_speed",
+					"chupTail.rx": "sin(limb_swing*0.5) * limb_speed * 0.1",
+					"chupMainHead.rz": "sin(limb_swing*0.75) * limb_speed * 0.05",
+					"chupUpperBody.rx": "if(limb_speed < 0.01,sin(age*0.1) * 0.025, 0)",
+					"chupHead.rx": "torad(head_pitch*0.25) + if(limb_speed < 0.01, -sin(age*0.1) * 0.025, 0)",
+					"chupMainHead.rx": "torad(head_pitch*0.25)",
+					"chupHead.ry": "torad(head_yaw/2)",
+					"var.swing_state": "max(swing_progress, var.swing_state - 0.1 * frame_time * 20)",
+					"chupMouthTop.rx": "-torad(var.swing_state*5)",
+					"chupMouthBottom.rx": "torad(var.swing_state*45)"
+				}
+			]
+		},
+		{
+			"part": "mane",
+			"id": "mane",
+			"invertAxis": "xy",
+			"translate": [-1, -10, -2]
+		},
+		{
+			"part": "leg1",
+			"id": "leg1",
+			"invertAxis": "xy",
+			"translate": [-2.5, -8, -7]
+		},
+		{
+			"part": "leg2",
+			"id": "leg2",
+			"invertAxis": "xy",
+			"translate": [0.5, -8, -7]
+		},
+		{
+			"part": "leg3",
+			"id": "leg3",
+			"invertAxis": "xy",
+			"translate": [-2.5, -8, 4]
+		},
+		{
+			"part": "leg4",
+			"id": "leg4",
+			"invertAxis": "xy",
+			"translate": [0.5, -8, 4]
+		},
+		{
+			"part": "tail",
+			"id": "tail",
+			"invertAxis": "xy",
+			"translate": [-1, -12, -10]
+		}
+	]
+}
