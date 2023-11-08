@@ -1,0 +1,110 @@
+{
+	"credit": "Made with Blockbench",
+	"textureSize": [32, 32],
+	"models": [
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, 0, 0],
+			"submodels": [
+				{
+					"id": "leech",
+					"invertAxis": "xy",
+					"translate": [0, -5, 0],
+					"boxes": [
+						{"coordinates": [-3.5, 2, -3.75, 7, 7, 6], "textureOffset": [1, 0]}
+					],
+					"submodels": [
+						{
+							"id": "leechTail0",
+							"invertAxis": "xy",
+							"translate": [0, 5.25, 2.25],
+							"rotate": [10, 0, 0],
+							"boxes": [
+								{"coordinates": [-1.5, -1.5, -1, 3, 3, 3], "textureOffset": [0, 14]}
+							],
+							"submodels": [
+								{
+									"id": "leechTail1",
+									"invertAxis": "xy",
+									"translate": [0, 0, 2],
+									"rotate": [35, 0, 0],
+									"boxes": [
+										{"coordinates": [-1, -1, -1, 2, 2, 4], "textureOffset": [0, 21]}
+									],
+									"submodels": [
+										{
+											"id": "leechTail2",
+											"invertAxis": "xy",
+											"translate": [0, 0, 3],
+											"rotate": [30, 0, 0],
+											"boxes": [
+												{"coordinates": [-0.5, -0.5, -1, 1, 1, 5], "textureOffset": [13, 21]}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"part": "left_wing",
+			"id": "left_wing",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [1.5, -9, 3]
+		},
+		{
+			"part": "right_wing",
+			"id": "right_wing",
+			"invertAxis": "xy",
+			"translate": [-1.5, -9, 3]
+		},
+		{
+			"part": "front_legs",
+			"id": "front_legs",
+			"invertAxis": "xy",
+			"translate": [1.5, -2, 2]
+		},
+		{
+			"part": "middle_legs",
+			"id": "middle_legs",
+			"invertAxis": "xy",
+			"translate": [1.5, -2, 0]
+		},
+		{
+			"part": "back_legs",
+			"id": "back_legs",
+			"invertAxis": "xy",
+			"translate": [1.5, -2, -2]
+		},
+		{
+			"part": "left_antenna",
+			"id": "left_antenna",
+			"invertAxis": "xy",
+			"translate": [0, -7, 5]
+		},
+		{
+			"part": "stinger",
+			"id": "stinger",
+			"invertAxis": "xy",
+			"translate": [0, -5, 0]
+		},
+		{
+			"part": "right_antenna",
+			"id": "right_antenna",
+			"invertAxis": "xy",
+			"translate": [0, -7, 5]
+		},
+		{
+			"part": "torso",
+			"id": "torso",
+			"invertAxis": "xy",
+			"translate": [0, -5, 0]
+		}
+	]
+}
