@@ -8,6 +8,8 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Raider
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 enum class CustomEntityType(
     val type: EntityType,
@@ -62,6 +64,7 @@ enum class CustomEntityType(
 
             if (entity !is LivingEntity) return entity
             setAttributes(entity, customEntityType.data, mapTier)
+            entity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 1, 0, false, false))
             entity.removeWhenFarAway = false
             entity.isSilent = customEntityType.data.isSilent
 
