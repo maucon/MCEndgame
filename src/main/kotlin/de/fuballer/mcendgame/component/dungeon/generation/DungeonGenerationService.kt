@@ -7,18 +7,19 @@ import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.math.transform.AffineTransform
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossService
 import de.fuballer.mcendgame.component.dungeon.enemy.EnemyGenerationService
-import de.fuballer.mcendgame.component.dungeon.generation.data.DungeonType
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.dungeon.leave.DungeonLeaveService
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveEntity
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
+import de.fuballer.mcendgame.component.dungeon.type.DungeonType
+import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.random.RandomUtil
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.entity.Player
 import java.awt.Point
 import java.util.logging.Logger
 
@@ -29,14 +30,16 @@ class DungeonGenerationService(
     private val dungeonBossService: DungeonBossService,
     private val dungeonLeaveService: DungeonLeaveService,
     private val enemyGenerationService: EnemyGenerationService,
+    private val dungeonTypeService: DungeonTypeService,
     private val logger: Logger
 ) {
     fun generateDungeon(
+        player: Player,
         mapTier: Int,
         leaveLocation: Location
     ): Location {
-        val world = worldManageService.createWorld(mapTier)
-        val dungeonType = RandomUtil.pick(DungeonGenerationSettings.DUNGEON_TYPES).option
+        val world = worldManageService.createWorld(player, mapTier)
+        val dungeonType = dungeonTypeService.getRandomDungeonType(player)
 
         val dungeonLayoutGenerator = DungeonLayoutGenerator()
         dungeonLayoutGenerator.generateDungeon(

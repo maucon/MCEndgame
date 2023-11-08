@@ -3,7 +3,6 @@ package de.fuballer.mcendgame.event
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.World
-import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Recipe
@@ -12,6 +11,7 @@ import org.bukkit.inventory.Recipe
  * Thrown whenever a dungeon got completed (boss died)
  */
 data class DungeonCompleteEvent(
+    val player: Player,
     val mapTier: Int,
     val world: World
 ) : HandleableEvent()

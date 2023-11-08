@@ -178,7 +178,7 @@ class MapDeviceService(
         val mapDeviceLocation = mapDevice.location
         val mapTier = playerDungeonProgressService.getPlayerDungeonLevel(player.uniqueId).level
         val leaveLocation = mapDeviceLocation.clone().add(0.5, 1.0, 0.5)
-        val teleportLocation = dungeonGenerationService.generateDungeon(mapTier, leaveLocation)
+        val teleportLocation = dungeonGenerationService.generateDungeon(player, mapTier, leaveLocation)
 
         val dungeonOpenEvent = DungeonOpenEvent(player, teleportLocation.world!!)
         EventGateway.apply(dungeonOpenEvent)

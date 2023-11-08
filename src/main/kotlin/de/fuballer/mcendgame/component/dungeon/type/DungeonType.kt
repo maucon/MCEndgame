@@ -1,6 +1,8 @@
-package de.fuballer.mcendgame.component.dungeon.generation.data
+package de.fuballer.mcendgame.component.dungeon.type
 
-enum class DungeonType(val typeName: String) {
+enum class DungeonType(
+    val typeName: String
+) {
     CATACOMBS("catacombs"),
     CATACOMBS_ALTERNATIVE("catacombs_alternative"),
     LUSH_CAVE("lush_cave"),
