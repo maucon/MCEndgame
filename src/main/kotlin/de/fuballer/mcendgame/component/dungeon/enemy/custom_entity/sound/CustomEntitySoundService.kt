@@ -12,7 +12,6 @@ import org.bukkit.event.entity.EntityDeathEvent
 
 @Component
 class CustomEntitySoundService : Listener {
-
     @EventHandler
     fun onEntityDamage(event: EntityDamageEvent) {
         val entity = event.entity
