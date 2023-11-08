@@ -72,12 +72,12 @@ class DungeonBossService(
     }
 
     fun spawnNewMapBoss(
+        bossType: BossType,
         location: Location,
         mapTier: Int
     ): Creature {
         location.yaw = 180f
 
-        val bossType = BossType.getRandom()
         val boss = CustomEntityType.spawnCustomEntity(bossType.customEntityType, location, mapTier) as Creature
 
         PersistentDataUtil.setValue(boss, DataTypeKeys.DROP_EQUIPMENT, false)

@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.component.dungeon.generation
 
-import de.fuballer.mcendgame.component.dungeon.type.DungeonType
+import de.fuballer.mcendgame.component.dungeon.type.data.DungeonMapType
 
 object DungeonGenerationSettings {
-    fun getSchematicPath(dungeonType: DungeonType, schematicName: String) =
-        "/schematics/${dungeonType.typeName}/$schematicName.schem"
+    fun getSchematicPath(dungeonMapType: DungeonMapType, schematicName: String) =
+        "/schematics/${dungeonMapType.typeName}/$schematicName.schem"
 
     var DUNGEON_WIDTH = 6
     var DUNGEON_HEIGHT = 9

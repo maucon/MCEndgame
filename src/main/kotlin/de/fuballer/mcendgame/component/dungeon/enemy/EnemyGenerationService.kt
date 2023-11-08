@@ -9,6 +9,7 @@ import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Location
 import org.bukkit.World
@@ -42,6 +43,7 @@ class EnemyGenerationService(
     }
 
     fun summonMonsters(
+        randomEntityTypes: List<RandomOption<CustomEntityType>>,
         layoutTiles: Array<Array<LayoutTile>>,
         startPoint: Point,
         mapTier: Int,
@@ -54,13 +56,14 @@ class EnemyGenerationService(
 
                 PluginUtil.scheduleTask {
                     val mobCount = EnemyGenerationSettings.calculateMobCount(random)
-                    spawnMobs(mobCount, -x * 16.0 - 8, -y * 16.0 - 8, mapTier, world)
+                    spawnMobs(randomEntityTypes, mobCount, -x * 16.0 - 8, -y * 16.0 - 8, mapTier, world)
                 }
             }
         }
     }
 
     private fun spawnMobs(
+        randomEntityTypes: List<RandomOption<CustomEntityType>>,
         amount: Int,
         x: Double,
         z: Double,
@@ -69,7 +72,7 @@ class EnemyGenerationService(
     ) {
         val entities = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
-            val entityType = RandomUtil.pick(EnemyGenerationSettings.DUNGEON_MOBS).option
+            val entityType = RandomUtil.pick(randomEntityTypes).option
             val entity = CustomEntityType.spawnCustomEntity(
                 entityType,
                 Location(

@@ -1,11 +1,11 @@
-package de.fuballer.mcendgame.component.dungeon.type
+package de.fuballer.mcendgame.component.dungeon.type.data
 
-enum class DungeonType(
+enum class DungeonMapType(
     val typeName: String
 ) {
     CATACOMBS("catacombs"),
     CATACOMBS_ALTERNATIVE("catacombs_alternative"),
     LUSH_CAVE("lush_cave"),
     MINE("mine"),
-    ICE_CAVE("ice_cave")
+    ICE_CAVE("ice_cave");
 }

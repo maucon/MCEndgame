@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.type
 
+import de.fuballer.mcendgame.component.dungeon.type.data.DungeonType
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeEntity
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
@@ -22,13 +23,14 @@ class DungeonTypeService(
         val playerId = player.uniqueId
 
         if (playerDungeonTypeRepo.exists(playerId)) {
-            return playerDungeonTypeRepo.findById(playerId)!!.dungeonType
+            return playerDungeonTypeRepo.getById(playerId).dungeonType
         }
 
         val dungeonType = RandomUtil.pick(DungeonTypeSettings.DUNGEON_TYPE_WEIGHTS).option
-        var entity = PlayerDungeonTypeEntity(playerId, dungeonType)
 
-        entity = playerDungeonTypeRepo.save(entity)
+        val entity = PlayerDungeonTypeEntity(playerId, dungeonType)
+            .also { playerDungeonTypeRepo.save(it) }
+
         return entity.dungeonType
     }
 }
