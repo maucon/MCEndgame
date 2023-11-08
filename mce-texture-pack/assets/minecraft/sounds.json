@@ -1,5 +1,14 @@
 {
-  "mcendgametest": {
-    "sounds": ["mcendgame/mcendgametest"]
+  "mcendgame_naga_hurt": {
+    "sounds": ["mcendgame/entity/naga/hurt0", "mcendgame/entity/naga/hurt1"]
+  },
+  "mcendgame_naga_death": {
+    "sounds": ["mcendgame/entity/naga/death0"]
+  },
+  "mcendgame_harpy_hurt": {
+    "sounds": ["mcendgame/entity/harpy/hurt0", "mcendgame/entity/harpy/hurt1"]
+  },
+  "mcendgame_harpy_death": {
+    "sounds": ["mcendgame/entity/harpy/death0"]
   }
 }
