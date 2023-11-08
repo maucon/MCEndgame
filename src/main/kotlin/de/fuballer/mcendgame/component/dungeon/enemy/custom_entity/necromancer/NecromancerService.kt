@@ -9,6 +9,7 @@ import org.bukkit.entity.Spellcaster
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntitySpellCastEvent
+import org.bukkit.util.Vector
 import kotlin.math.min
 
 @Component
@@ -36,7 +37,13 @@ class NecromancerService(
             return
         }
 
-        summonerService.summonMinions(event.entity, CustomEntityType.CHUPACABRA, spawnAmount, true, false, true, NecromancerSettings.MINION_HEALTH)
+        summonerService.summonMinions(
+            event.entity,
+            CustomEntityType.CHUPACABRA,
+            spawnAmount, weapons = true, ranged = false, armor = true,
+            NecromancerSettings.MINION_HEALTH,
+            Vector(0, 0, 0)
+        )
         event.isCancelled = true
     }
 
