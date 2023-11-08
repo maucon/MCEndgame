@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.statistics.db
 
-import de.fuballer.mcendgame.component.dungeon.enemy.EnemyGenerationSettings
+import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.component.statistics.StatisticsSettings
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import org.bukkit.Material
@@ -19,8 +19,8 @@ data class StatisticsEntity(
 
     var totalKills: Int = 0,
     var mobTypeKills: MutableMap<EntityType, Int> =
-        EnemyGenerationSettings.DUNGEON_MOBS
-            .associate { it.option.type to 0 }
+        CustomEntityType.entries
+            .associate { it.type to 0 }
             .toMutableMap(),
 
     var damageDealt: Double = 0.0,

@@ -11,6 +11,7 @@ import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.helper.FileHelper
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.*
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.util.*
@@ -38,7 +39,10 @@ class WorldManageService(
         )
     }
 
-    fun createWorld(mapTier: Int): World {
+    fun createWorld(
+        player: Player,
+        mapTier: Int
+    ): World {
         val name = "${WorldSettings.WORLD_PREFIX}${UUID.randomUUID()}"
         val worldCreator = WorldCreator(name)
             .type(WorldType.FLAT)
@@ -56,7 +60,7 @@ class WorldManageService(
             time = 18000
         }
 
-        val entity = ManagedWorldEntity(name, world, mapTier, 0)
+        val entity = ManagedWorldEntity(name, player, world, mapTier, 0)
         worldManageRepo.save(entity)
 
         return world

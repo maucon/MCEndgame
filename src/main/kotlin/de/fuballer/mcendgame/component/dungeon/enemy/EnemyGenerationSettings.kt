@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import java.util.*
@@ -14,24 +13,6 @@ object EnemyGenerationSettings {
         val possibleAddedMobs = MAX_MOBS_PER_TILE - MIN_MOBS_PER_TILE
         return MIN_MOBS_PER_TILE + random.nextInt(possibleAddedMobs)
     }
-
-    val DUNGEON_MOBS = listOf(
-        RandomOption(25, CustomEntityType.ZOMBIE),
-        RandomOption(10, CustomEntityType.HUSK),
-        RandomOption(15, CustomEntityType.SKELETON),
-        RandomOption(5, CustomEntityType.STRAY),
-        RandomOption(2, CustomEntityType.WITHER_SKELETON),
-        RandomOption(4, CustomEntityType.CREEPER),
-        RandomOption(3, CustomEntityType.WITCH),
-        RandomOption(5, CustomEntityType.NECROMANCER),
-        RandomOption(3, CustomEntityType.REAPER),
-        RandomOption(5, CustomEntityType.STALKER),
-        RandomOption(5, CustomEntityType.NAGA),
-        RandomOption(5, CustomEntityType.CYCLOPS),
-        RandomOption(5, CustomEntityType.HARPY),
-        RandomOption(5, CustomEntityType.SUCCUBUS),
-        RandomOption(5, CustomEntityType.INCUBUS),
-    )
 
     val STRENGTH_EFFECTS = listOf(
         SortableRandomOption(250, 0, null),

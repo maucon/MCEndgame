@@ -6,19 +6,21 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats
 import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.math.transform.AffineTransform
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossService
+import de.fuballer.mcendgame.component.dungeon.boss.data.BossType
 import de.fuballer.mcendgame.component.dungeon.enemy.EnemyGenerationService
-import de.fuballer.mcendgame.component.dungeon.generation.data.DungeonType
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.dungeon.leave.DungeonLeaveService
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveEntity
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
+import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
+import de.fuballer.mcendgame.component.dungeon.type.data.DungeonMapType
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.random.RandomUtil
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.entity.Player
 import java.awt.Point
 import java.util.logging.Logger
 
@@ -29,14 +31,17 @@ class DungeonGenerationService(
     private val dungeonBossService: DungeonBossService,
     private val dungeonLeaveService: DungeonLeaveService,
     private val enemyGenerationService: EnemyGenerationService,
+    private val dungeonTypeService: DungeonTypeService,
     private val logger: Logger
 ) {
     fun generateDungeon(
+        player: Player,
         mapTier: Int,
         leaveLocation: Location
     ): Location {
-        val world = worldManageService.createWorld(mapTier)
-        val dungeonType = RandomUtil.pick(DungeonGenerationSettings.DUNGEON_TYPES).option
+        val world = worldManageService.createWorld(player, mapTier)
+        val dungeonType = dungeonTypeService.getRandomDungeonType(player)
+        val rolledDungeonType = dungeonType.roll()
 
         val dungeonLayoutGenerator = DungeonLayoutGenerator()
         dungeonLayoutGenerator.generateDungeon(
@@ -50,12 +55,12 @@ class DungeonGenerationService(
         val startRoomPos = dungeonLayoutGenerator.getStartRoomPos()
 
         runBlocking {
-            launch { loadBossRoom(bossRoomPos, dungeonType, world) }
-            launch { loadLayoutTiles(layoutTiles, dungeonType, world) }
+            launch { loadBossRoom(bossRoomPos, rolledDungeonType.mapType, world) }
+            launch { loadLayoutTiles(layoutTiles, rolledDungeonType.mapType, world) }
         }
 
-        spawnBoss(bossRoomPos, mapTier, world)
-        enemyGenerationService.summonMonsters(layoutTiles, startRoomPos, mapTier, world)
+        spawnBoss(rolledDungeonType.bossType, bossRoomPos, mapTier, world)
+        enemyGenerationService.summonMonsters(rolledDungeonType.entityTypes, layoutTiles, startRoomPos, mapTier, world)
 
         val entity = DungeonLeaveEntity(world.name, mutableListOf(), leaveLocation)
         dungeonLeaveRepo.save(entity)
@@ -70,15 +75,15 @@ class DungeonGenerationService(
 
     private fun loadBossRoom(
         bossRoomPos: Point,
-        dungeonType: DungeonType,
+        dungeonMapType: DungeonMapType,
         world: World
     ) {
-        loadSchematic("boss", dungeonType, Location(world, (-bossRoomPos.x - 2) * 16.0, DungeonGenerationSettings.DUNGEON_Y_POS, bossRoomPos.y * 16.0), 0, world)
+        loadSchematic("boss", dungeonMapType, Location(world, (-bossRoomPos.x - 2) * 16.0, DungeonGenerationSettings.DUNGEON_Y_POS, bossRoomPos.y * 16.0), 0, world)
     }
 
     private fun loadLayoutTiles(
         layoutTiles: Array<Array<LayoutTile>>,
-        dungeonType: DungeonType,
+        dungeonMapType: DungeonMapType,
         world: World
     ) {
         for (x in layoutTiles.indices) {
@@ -88,19 +93,19 @@ class DungeonGenerationService(
                 val schematicLocation = Location(world, (-x - 1) * 16.0, DungeonGenerationSettings.DUNGEON_Y_POS, (-y - 1) * 16.0)
                 val schematicRotation = (schematicName + schematicName).indexOf(layoutTiles[x][y].getRequiredWaysString())
 
-                loadSchematic(schematicName, dungeonType, schematicLocation, schematicRotation, world)
+                loadSchematic(schematicName, dungeonMapType, schematicLocation, schematicRotation, world)
             }
         }
     }
 
     private fun loadSchematic(
         schematicName: String,
-        dungeonType: DungeonType,
+        dungeonMapType: DungeonMapType,
         location: Location,
         rotation: Int,
         world: World
     ) {
-        val schematicPath = DungeonGenerationSettings.getSchematicPath(dungeonType, schematicName)
+        val schematicPath = DungeonGenerationSettings.getSchematicPath(dungeonMapType, schematicName)
         val inputStream = javaClass.getResourceAsStream(schematicPath)!!
 
         val format = ClipboardFormats.findByAlias("schem")
@@ -135,9 +140,13 @@ class DungeonGenerationService(
             .close()
     }
 
-    private fun spawnBoss(bossRoomPos: Point, mapTier: Int, world: World) {
+    private fun spawnBoss(
+        bossType: BossType,
+        bossRoomPos: Point,
+        mapTier: Int, world: World
+    ) {
         val bossLocation = Location(world, -bossRoomPos.x * 16.0 - 8, DungeonGenerationSettings.MOB_Y_POS - .2, -bossRoomPos.y * 16.0 + 24)
-        dungeonBossService.spawnNewMapBoss(bossLocation, mapTier)
+        dungeonBossService.spawnNewMapBoss(bossType, bossLocation, mapTier)
     }
 
     private fun getStartLocation(layoutTiles: Array<Array<LayoutTile>>, startRoomPos: Point, world: World): Location {

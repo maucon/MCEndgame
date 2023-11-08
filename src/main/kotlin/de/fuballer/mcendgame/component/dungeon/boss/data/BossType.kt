@@ -44,8 +44,4 @@ enum class BossType(
         15.0, 3.5,
         0.35
     );
-
-    companion object {
-        fun getRandom() = entries.toTypedArray().random()
-    }
 }

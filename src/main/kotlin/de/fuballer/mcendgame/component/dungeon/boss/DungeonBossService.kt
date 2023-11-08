@@ -44,11 +44,12 @@ class DungeonBossService(
         val mapTier = dungeonBossRepo.findById(uuid)?.mapTier ?: return
 
         val world = entity.world
+        val dungeonWorld = worldManageRepo.getById(world.name)
 
         event.drops.clear()
         dropBossLoot(entity, mapTier)
 
-        val dungeonCompleteEvent = DungeonCompleteEvent(mapTier, world)
+        val dungeonCompleteEvent = DungeonCompleteEvent(dungeonWorld.player, mapTier, world)
         EventGateway.apply(dungeonCompleteEvent)
 
         dungeonBossRepo.delete(uuid)
@@ -71,12 +72,12 @@ class DungeonBossService(
     }
 
     fun spawnNewMapBoss(
+        bossType: BossType,
         location: Location,
         mapTier: Int
     ): Creature {
         location.yaw = 180f
 
-        val bossType = BossType.getRandom()
         val boss = CustomEntityType.spawnCustomEntity(bossType.customEntityType, location, mapTier) as Creature
 
         PersistentDataUtil.setValue(boss, DataTypeKeys.DROP_EQUIPMENT, false)
