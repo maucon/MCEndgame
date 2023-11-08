@@ -64,7 +64,6 @@ enum class CustomEntityType(
 
             if (entity !is LivingEntity) return entity
             setAttributes(entity, customEntityType.data, mapTier)
-            entity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 1, 0, false, false))
             entity.removeWhenFarAway = false
             entity.isSilent = customEntityType.data.isSilent
 
