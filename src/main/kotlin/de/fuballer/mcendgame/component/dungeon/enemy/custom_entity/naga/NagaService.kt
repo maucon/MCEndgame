@@ -50,9 +50,6 @@ class NagaService : Listener {
         if (shooter !is LivingEntity) return
         if (!CustomEntityType.isType(shooter, CustomEntityType.NAGA)) return
 
-        val damage = shooter.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.value ?: return
-        event.damage = damage
-
         damagedEntity.addPotionEffect(NagaSettings.POISON_EFFECT)
     }
 }
