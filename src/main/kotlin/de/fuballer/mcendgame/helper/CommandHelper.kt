@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.helper
 
+import de.fuballer.mcendgame.domain.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.ChatColor
@@ -33,11 +34,4 @@ class CommandHelper(
         commandExecutor.sendMessage(OFFLINE_PLAYER_NOT_FOUND_MESSAGE)
         return null
     }
-}
-
-enum class CommandAction(
-    val actionName: String
-) {
-    GET("get"),
-    SET("set")
 }
