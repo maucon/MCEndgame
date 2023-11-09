@@ -67,7 +67,7 @@ class DiscoverRecipeAddEvent(
  * Thrown whenever a recipe is added to the discoverable recipes
  *
  * @param world world mobs got spawned in
- * @param count count of spawned mobs
+ * @param entities the spawned entities
  */
 class DungeonEnemySpawnedEvent(
     val world: World,
