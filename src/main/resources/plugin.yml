@@ -44,3 +44,7 @@ commands:
   dungeon-build-calculation:
     usage: "§CUsage /<command> damage.."
     aliases: [ ehp, build-calculation, calcs ]
+
+  dungeon-type:
+    usage: "§CUsage /<command> (get [player] | set player dungeon-type)"
+    permission: op

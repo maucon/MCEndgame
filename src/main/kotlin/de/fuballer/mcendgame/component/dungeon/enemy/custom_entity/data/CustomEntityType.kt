@@ -4,6 +4,10 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityS
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.Location
+import org.bukkit.entity.Entity
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Raider
 import org.bukkit.entity.*
 
 enum class CustomEntityType(
