@@ -4,6 +4,8 @@ import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
+import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
+import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
@@ -186,6 +188,9 @@ class DungeonBossAbilitiesRunnable(
             attributeInstance.baseValue = 1.0
             pillar.health = 1.0
         }
+
+        val event = DungeonEnemySpawnedEvent(boss.world, setOf(pillar))
+        EventGateway.apply(event)
 
         GravitationPillarPullRunnable(pillar).runTaskLater(DungeonBossSettings.GRAVITATION_PILLAR_COOLDOWN)
     }
