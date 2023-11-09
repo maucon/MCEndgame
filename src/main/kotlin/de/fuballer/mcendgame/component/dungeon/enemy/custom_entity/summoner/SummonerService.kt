@@ -15,6 +15,7 @@ import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityTargetEvent
+import org.bukkit.util.Vector
 
 @Component
 class SummonerService(
@@ -47,12 +48,13 @@ class SummonerService(
         ranged: Boolean,
         armor: Boolean,
         health: Double,
+        spawnOffset: Vector,
     ) {
         val mapTier = PersistentDataUtil.getValue(summoner, DataTypeKeys.MAP_TIER) ?: -1
 
         val minions = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
-            minions.add(summonMinion(summoner, mapTier, minionType, weapons, ranged, armor, health))
+            minions.add(summonMinion(summoner, mapTier, minionType, weapons, ranged, armor, health, spawnOffset))
         }
 
         val event = DungeonEnemySpawnedEvent(summoner.world, minions)
@@ -74,8 +76,9 @@ class SummonerService(
         ranged: Boolean,
         armor: Boolean,
         health: Double,
+        spawnOffset: Vector,
     ): LivingEntity {
-        val minion = CustomEntityType.spawnCustomEntity(minionType, summoner.location, mapTier) as LivingEntity
+        val minion = CustomEntityType.spawnCustomEntity(minionType, summoner.location.add(spawnOffset), mapTier) as LivingEntity
 
         setHealth(minion, health)
 

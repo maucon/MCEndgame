@@ -17,9 +17,12 @@ enum class DungeonType(
             RandomOption(1, DungeonMapType.CATACOMBS_ALTERNATIVE)
         ),
         listOf(
-            RandomOption(2, CustomEntityType.WITHER_SKELETON),
-            RandomOption(5, CustomEntityType.SUCCUBUS),
-            RandomOption(5, CustomEntityType.INCUBUS),
+            RandomOption(1, CustomEntityType.WITHER_SKELETON),
+            RandomOption(4, CustomEntityType.MAGMA_CUBE),
+            RandomOption(3, CustomEntityType.BLAZE),
+            RandomOption(2, CustomEntityType.SUCCUBUS),
+            RandomOption(2, CustomEntityType.INCUBUS),
+            RandomOption(5, CustomEntityType.IMP),
         ),
         listOf(RandomOption(1, BossType.CERBERUS))
     ),
@@ -30,13 +33,13 @@ enum class DungeonType(
             RandomOption(1, DungeonMapType.CATACOMBS_ALTERNATIVE)
         ),
         listOf(
-            RandomOption(2, CustomEntityType.WITHER_SKELETON),
+            RandomOption(1, CustomEntityType.WITHER_SKELETON),
             RandomOption(5, CustomEntityType.ZOMBIE),
+            RandomOption(3, CustomEntityType.HUSK),
             RandomOption(5, CustomEntityType.SKELETON),
-            RandomOption(5, CustomEntityType.STRAY),
-            RandomOption(5, CustomEntityType.NECROMANCER),
-            RandomOption(5, CustomEntityType.HUSK),
-            RandomOption(5, CustomEntityType.REAPER)
+            RandomOption(3, CustomEntityType.STRAY),
+            RandomOption(1, CustomEntityType.NECROMANCER),
+            RandomOption(1, CustomEntityType.REAPER)
         ),
         listOf(RandomOption(1, BossType.CERBERUS))
     ),
@@ -46,7 +49,8 @@ enum class DungeonType(
             RandomOption(1, DungeonMapType.CATACOMBS_ALTERNATIVE)
         ),
         listOf(
-            RandomOption(2, CustomEntityType.CREEPER),
+            RandomOption(1, CustomEntityType.CREEPER),
+            RandomOption(1, CustomEntityType.HATCHERY),
             RandomOption(5, CustomEntityType.STALKER)
         ),
         listOf(RandomOption(1, BossType.DEMONIC_GOLEM))
@@ -57,10 +61,11 @@ enum class DungeonType(
             RandomOption(1, DungeonMapType.LUSH_CAVE)
         ),
         listOf(
-            RandomOption(2, CustomEntityType.CYCLOPS),
-            RandomOption(5, CustomEntityType.WITCH),
-            RandomOption(5, CustomEntityType.HARPY),
-            RandomOption(5, CustomEntityType.NAGA)
+            RandomOption(5, CustomEntityType.PIGLIN_BRUTE),
+            RandomOption(7, CustomEntityType.CYCLOPS),
+            RandomOption(1, CustomEntityType.WITCH),
+            RandomOption(2, CustomEntityType.HARPY),
+            RandomOption(2, CustomEntityType.NAGA)
         ),
         listOf(RandomOption(1, BossType.MINOTAUR))
     );

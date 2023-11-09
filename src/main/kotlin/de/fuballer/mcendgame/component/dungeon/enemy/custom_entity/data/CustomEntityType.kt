@@ -8,6 +8,8 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Raider
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 enum class CustomEntityType(
     val type: EntityType,
@@ -21,6 +23,9 @@ enum class CustomEntityType(
     WITHER_SKELETON(EntityType.WITHER_SKELETON, null, CustomEntitySettings.WITHER_SKELETON_DATA),
     CREEPER(EntityType.CREEPER, null, CustomEntitySettings.CREEPER_DATA),
     WITCH(EntityType.WITCH, null, CustomEntitySettings.WITCH_DATA),
+    PIGLIN_BRUTE(EntityType.PIGLIN_BRUTE, null, CustomEntitySettings.PIGLIN_BRUTE_DATA),
+    BLAZE(EntityType.BLAZE, null, CustomEntitySettings.BLAZE_DATA),
+    MAGMA_CUBE(EntityType.MAGMA_CUBE, null, CustomEntitySettings.MAGMA_CUBE_DATA),
 
     NECROMANCER(EntityType.EVOKER, "Necromancer", CustomEntitySettings.NECROMANCER_DATA),
     REAPER(EntityType.WITHER_SKELETON, "Reaper", CustomEntitySettings.REAPER_DATA),
@@ -34,6 +39,9 @@ enum class CustomEntityType(
     CERBERUS(EntityType.RAVAGER, "Cerberus", CustomEntitySettings.CERBERUS_DATA),
     SUCCUBUS(EntityType.ZOMBIE, "Succubus", CustomEntitySettings.SUCCUBUS_DATA),
     INCUBUS(EntityType.ZOMBIE, "Incubus", CustomEntitySettings.INCUBUS_DATA),
+    IMP(EntityType.SKELETON, "Imp", CustomEntitySettings.IMP_DATA),
+    HATCHERY(EntityType.SKELETON, "Hatchery", CustomEntitySettings.HATCHERY_DATA),
+    LEECH(EntityType.BEE, "Leech", CustomEntitySettings.LEECH_DATA),
 
     STONE_PILLAR(EntityType.ZOMBIE, "Stone Pillar", CustomEntitySettings.STONE_PILLAR_DATA),
 
