@@ -28,9 +28,6 @@ class PluginConfiguration {
     @Bean
     fun protocolManager(): ProtocolManager = PluginConfiguration.protocolManager()
 
-    @Bean
-    fun scoreboardManager(): ScoreboardManager = PluginConfiguration.scoreboardManager()
-
     companion object {
         lateinit var INSTANCE: JavaPlugin
         lateinit var PROTOCOL_MANAGER: ProtocolManager
