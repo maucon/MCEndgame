@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.naga
+package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.entities.naga
 
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType

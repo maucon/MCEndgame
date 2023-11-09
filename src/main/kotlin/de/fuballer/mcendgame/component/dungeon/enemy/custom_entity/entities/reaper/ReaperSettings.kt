@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.reaper
+package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.entities.reaper
 
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType

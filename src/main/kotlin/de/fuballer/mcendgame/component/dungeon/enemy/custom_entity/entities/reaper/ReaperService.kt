@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.reaper
+package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.entities.reaper
 
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.framework.annotation.Component

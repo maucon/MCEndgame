@@ -1,10 +1,9 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.naga
+package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.entities.naga
 
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
-import org.bukkit.attribute.Attribute
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.LlamaSpit
@@ -35,7 +34,7 @@ class NagaService : Listener {
             proj.customName = CustomEntityType.POISON_SPIT.customName
         }
 
-        entity.world.playSound(entity.location, Sound.ENTITY_SPIDER_HURT, SoundCategory.PLAYERS, 1.5f, 1f)
+        entity.world.playSound(entity.location, Sound.ENTITY_SPIDER_HURT, SoundCategory.HOSTILE, 1f, 1f)
 
         event.isCancelled = true
     }

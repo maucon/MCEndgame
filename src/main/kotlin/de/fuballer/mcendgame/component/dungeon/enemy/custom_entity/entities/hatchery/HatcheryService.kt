@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.hatchery
+package de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.entities.hatchery
 
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.summoner.SummonerService
