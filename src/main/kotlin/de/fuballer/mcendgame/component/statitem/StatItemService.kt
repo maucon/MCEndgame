@@ -10,7 +10,7 @@ import de.fuballer.mcendgame.util.random.RandomUtil
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Creature
+import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.enchantment.EnchantItemEvent
@@ -87,13 +87,13 @@ class StatItemService : Listener {
     }
 
     fun setCreatureEquipment(
-        creature: Creature,
+        livingEntity: LivingEntity,
         mapTier: Int,
         weapons: Boolean,
         ranged: Boolean,
         armor: Boolean,
     ) {
-        val equipment = creature.equipment!!
+        val equipment = livingEntity.equipment!!
 
         if (weapons) {
             createMainHandItem(mapTier, ranged)?.also {

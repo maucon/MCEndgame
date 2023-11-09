@@ -82,7 +82,7 @@ class EnemyGenerationService(
                     z + EnemyGenerationSettings.MOB_XZ_SPREAD * (random.nextDouble() * 2 - 1)
                 ),
                 mapTier
-            ) as Creature
+            ) as LivingEntity
 
             statItemService.setCreatureEquipment(entity, mapTier, entityType.data.canHaveWeapons, entityType.data.isRanged, entityType.data.canHaveArmor)
 
@@ -98,18 +98,18 @@ class EnemyGenerationService(
         EventGateway.apply(event)
     }
 
-    private fun addEffectUntilLoad(entity: Creature) {
+    private fun addEffectUntilLoad(entity: LivingEntity) {
         val effect = PotionEffect(PotionEffectType.LUCK, 1, 0, false, false)
         entity.addPotionEffect(effect)
     }
 
-    private fun addTemporarySlowfalling(entity: Creature) {
+    private fun addTemporarySlowfalling(entity: LivingEntity) {
         val effect = PotionEffect(PotionEffectType.SLOW_FALLING, 40, 0, false, false)
         entity.addPotionEffect(effect)
     }
 
     fun addEffectsToEntity(
-        entity: Creature,
+        entity: LivingEntity,
         mapTier: Int,
         canBeInvisible: Boolean,
     ) {
