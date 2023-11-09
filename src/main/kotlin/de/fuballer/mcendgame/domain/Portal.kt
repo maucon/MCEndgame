@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.domain
 
 import de.fuballer.mcendgame.component.dungeon.world.WorldSettings
-import de.fuballer.mcendgame.component.mapdevice.MapDeviceSettings
+import de.fuballer.mcendgame.component.map_device.MapDeviceSettings
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color

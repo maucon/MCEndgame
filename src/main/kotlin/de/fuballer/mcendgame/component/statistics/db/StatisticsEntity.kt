@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.statistics.db
 
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.component.statistics.StatisticsSettings
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import org.bukkit.Material

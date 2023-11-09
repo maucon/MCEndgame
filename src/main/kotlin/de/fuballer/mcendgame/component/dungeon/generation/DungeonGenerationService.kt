@@ -7,7 +7,7 @@ import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.math.transform.AffineTransform
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossService
 import de.fuballer.mcendgame.component.dungeon.boss.data.BossType
-import de.fuballer.mcendgame.component.dungeon.enemy.EnemyGenerationService
+import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationService
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.dungeon.leave.DungeonLeaveService
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveEntity

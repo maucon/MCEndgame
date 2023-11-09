@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.component.dungeon.boss.data
 
+import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
