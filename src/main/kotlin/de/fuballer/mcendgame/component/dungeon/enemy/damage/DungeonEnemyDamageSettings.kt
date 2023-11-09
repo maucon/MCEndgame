@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.damage
 
 object DungeonEnemyDamageSettings {
-    const val DAMAGE_PER_STRENGTH = 3.0
+    const val PROJECTILE_DAMAGE_PER_STRENGTH = 1.5
 
-    fun getPowerDamageMulti(level: Int) = 1 + (0.25 * (level + 1))
+    fun getPowerDamageMulti(level: Int) = 1 + (level * 0.1)
 }

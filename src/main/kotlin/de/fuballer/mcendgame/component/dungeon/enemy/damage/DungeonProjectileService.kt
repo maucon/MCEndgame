@@ -41,7 +41,7 @@ class DungeonProjectileService : Listener {
 
     private fun getStrengthDamage(entity: LivingEntity): Double {
         val strengthEffect = entity.getPotionEffect(PotionEffectType.INCREASE_DAMAGE) ?: return 0.0
-        return (strengthEffect.amplifier + 1) * DungeonEnemyDamageSettings.DAMAGE_PER_STRENGTH
+        return (strengthEffect.amplifier + 1) * DungeonEnemyDamageSettings.PROJECTILE_DAMAGE_PER_STRENGTH
     }
 
     private fun getPowerDamageMulti(entity: LivingEntity): Double {
