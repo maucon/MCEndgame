@@ -41,9 +41,9 @@ commands:
     aliases: [ progress ]
     permission: op
 
-  dungeon-build-calculation:
+  dungeon-equipment-calculation:
     usage: "§CUsage /<command> damage.."
-    aliases: [ ehp, build-calculation, calcs ]
+    aliases: [ ehp, equipment-calculation, calcs, ec ]
 
   dungeon-type:
     usage: "§CUsage /<command> (get [player] | set player dungeon-type)"

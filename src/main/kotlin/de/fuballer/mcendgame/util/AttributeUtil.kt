@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.statitem.StatItemSettings
+import de.fuballer.mcendgame.component.stat_item.StatItemSettings
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import org.bukkit.ChatColor
 import org.bukkit.attribute.Attribute

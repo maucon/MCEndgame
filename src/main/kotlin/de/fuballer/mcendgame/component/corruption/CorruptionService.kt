@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.corruption
 
 import de.fuballer.mcendgame.component.corruption.data.AttributeWithModifier
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
-import de.fuballer.mcendgame.component.statitem.StatItemSettings
+import de.fuballer.mcendgame.component.stat_item.StatItemSettings
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.AttributeUtil
 import de.fuballer.mcendgame.util.PluginUtil

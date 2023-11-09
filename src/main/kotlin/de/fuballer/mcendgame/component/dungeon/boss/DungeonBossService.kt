@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
+import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.boss.data.BossType
 import de.fuballer.mcendgame.component.dungeon.boss.data.DungeonBossAbilitiesRunnable
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
