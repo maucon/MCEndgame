@@ -4,12 +4,7 @@ import de.fuballer.mcendgame.component.dungeon.enemy.custom_entity.CustomEntityS
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.Location
-import org.bukkit.entity.Entity
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Raider
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
+import org.bukkit.entity.*
 
 enum class CustomEntityType(
     val type: EntityType,
@@ -67,9 +62,7 @@ enum class CustomEntityType(
             entity.removeWhenFarAway = false
             entity.isSilent = customEntityType.data.isSilent
 
-            if (entity is Raider) {
-                entity.isPatrolLeader = false
-            }
+            setMiscellaneous(entity)
 
             return entity
         }
@@ -88,6 +81,21 @@ enum class CustomEntityType(
             val newSpeed = data.speedBase + mapTier * data.speedPerTier
 
             DungeonUtil.setBasicAttributes(entity, newHealth, newDamage, newSpeed)
+        }
+
+        private fun setMiscellaneous(entity: LivingEntity) {
+            if (entity is Raider) {
+                entity.isPatrolLeader = false
+            }
+            if (entity is Ageable) {
+                entity.setAdult()
+            }
+            if (entity is PiglinAbstract) {
+                entity.isImmuneToZombification = true
+            }
+            if (entity is Slime) {
+                entity.size = 2
+            }
         }
     }
 }
