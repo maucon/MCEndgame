@@ -22,10 +22,10 @@ class DungeonBossAbilitiesRunnable(
     private val dungeonBossRepo: DungeonBossRepository,
     private val boss: Creature,
     private val bossType: BossType,
-    private val level: Int
+    private val mapTier: Int
 ) : BukkitRunnable() {
     private var ticksSinceAbility = 0
-    private val abilityCooldown = DungeonBossSettings.getBossAbilityCooldown(level)
+    private val abilityCooldown = DungeonBossSettings.getBossAbilityCooldown(mapTier)
     private var noTargetCount = 0
 
     override fun run() {
@@ -99,7 +99,7 @@ class DungeonBossAbilitiesRunnable(
             CastFireCascadeRunnable(boss, 0.0, boss.location.add(offsetVector), true, sound)
                 .runTaskLater(stepDelay)
 
-            CastFireCascadeRunnable(boss, DungeonBossSettings.FIRE_CASCADE_DAMAGE + level * DungeonBossSettings.FIRE_CASCADE_DAMAGE_PER_LEVEL, boss.location.add(offsetVector), false, sound)
+            CastFireCascadeRunnable(boss, DungeonBossSettings.FIRE_CASCADE_DAMAGE + mapTier * DungeonBossSettings.FIRE_CASCADE_DAMAGE_PER_LEVEL, boss.location.add(offsetVector), false, sound)
                 .runTaskLater(stepDelay + DungeonBossSettings.FIRE_CASCADE_ACTIVATION_DELAY)
 
             offsetVector.add(addVector)

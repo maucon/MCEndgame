@@ -123,11 +123,10 @@ class MapDeviceService(
         val inventory = event.inventory
         val firstSlot = inventory.getItem(0) ?: return
         val firstSlotMeta = firstSlot.itemMeta ?: return
-        val firstSlotLore = firstSlotMeta.lore ?: return
-        if (!firstSlotLore.contains(MapDeviceSettings.OPEN_PORTALS_ITEM_LINE)) return
-        val clickedSlot = event.rawSlot
+        if (!firstSlotMeta.hasDisplayName()) return
+        if (!firstSlotMeta.displayName.contains(MapDeviceSettings.OPEN_PORTALS_ITEM_LINE)) return
 
-        if (clickedSlot !in 0..4) return
+        val clickedSlot = event.rawSlot
         event.isCancelled = true
 
         if (clickedSlot in 1..3) return
@@ -176,7 +175,7 @@ class MapDeviceService(
 
         // slot == 0
         val mapDeviceLocation = mapDevice.location
-        val mapTier = playerDungeonProgressService.getPlayerDungeonLevel(player.uniqueId).level
+        val mapTier = playerDungeonProgressService.getPlayerDungeonLevel(player.uniqueId).tier
         val leaveLocation = mapDeviceLocation.clone().add(0.5, 1.0, 0.5)
         val teleportLocation = dungeonGenerationService.generateDungeon(player, mapTier, leaveLocation)
 
@@ -218,19 +217,19 @@ class MapDeviceService(
 
         inventory.setItem(0, MapDeviceSettings.OPEN_PORTALS_ITEM)
         inventory.setItem(1, MapDeviceSettings.FILLER_ITEM)
-        inventory.setItem(2, getDungeonLevelDisplayItem(player))
+        inventory.setItem(2, getDungeonTierDisplayItem(player))
         inventory.setItem(3, MapDeviceSettings.FILLER_ITEM)
         inventory.setItem(4, MapDeviceSettings.CLOSE_PORTALS_ITEM)
 
         return inventory
     }
 
-    private fun getDungeonLevelDisplayItem(player: Player): ItemStack {
-        val (_, level, progress) = playerDungeonProgressService.getPlayerDungeonLevel(player.uniqueId)
+    private fun getDungeonTierDisplayItem(player: Player): ItemStack {
+        val (_, tier, progress) = playerDungeonProgressService.getPlayerDungeonLevel(player.uniqueId)
         val displayItem = ItemStack(Material.BLUE_STAINED_GLASS_PANE)
         val openPortalsMeta = displayItem.itemMeta ?: return displayItem
 
-        openPortalsMeta.setDisplayName("${ChatColor.GOLD}Level: $level")
+        openPortalsMeta.setDisplayName("${ChatColor.GOLD}Tier: $tier")
         openPortalsMeta.lore = listOf("${ChatColor.BLUE}Progress: $progress/${PlayerDungeonProgressSettings.DUNGEON_LEVEL_INCREASE_THRESHOLD}")
         displayItem.itemMeta = openPortalsMeta
 

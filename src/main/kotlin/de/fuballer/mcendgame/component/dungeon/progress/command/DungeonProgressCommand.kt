@@ -53,7 +53,7 @@ class DungeonProgressCommand(
             return true
         }
 
-        val message = PlayerDungeonProgressSettings.getDungeonProgressMessage(targetPlayer.name!!, entity.level, entity.progress)
+        val message = PlayerDungeonProgressSettings.getDungeonProgressMessage(targetPlayer.name!!, entity.tier, entity.progress)
         commandExecutor.sendMessage(message)
 
         return true
@@ -66,13 +66,13 @@ class DungeonProgressCommand(
         if (args.size !in 3..4) return false
 
         val targetPlayer = commandHelper.getPlayer(commandExecutor, args[1]) ?: return false
-        val level = args[2].toIntOrNull() ?: return false
+        val tier = args[2].toIntOrNull() ?: return false
 
         val progress =
             if (args.size == 4) args[3].toIntOrNull() ?: return false
             else null
 
-        if (!updateDungeonLevel(targetPlayer.uniqueId, level, progress)) return false
+        if (!updateDungeonTier(targetPlayer.uniqueId, tier, progress)) return false
 
         val entity = dungeonProgressRepo.findById(targetPlayer.uniqueId)
         if (entity == null) {
@@ -80,23 +80,23 @@ class DungeonProgressCommand(
             return true
         }
 
-        val message = PlayerDungeonProgressSettings.getNewDungeonProgressMessage(targetPlayer.name!!, entity.level, entity.progress)
+        val message = PlayerDungeonProgressSettings.getNewDungeonProgressMessage(targetPlayer.name!!, entity.tier, entity.progress)
         commandExecutor.sendMessage(message)
 
         return true
     }
 
-    private fun updateDungeonLevel(
+    private fun updateDungeonTier(
         player: UUID,
-        level: Int,
+        tier: Int,
         progress: Int?
     ): Boolean {
-        if (level !in 1..10000) return false
+        if (tier !in 1..10000) return false
         progress?.let { if (it !in 0 until PlayerDungeonProgressSettings.DUNGEON_LEVEL_INCREASE_THRESHOLD) return false }
 
         val entity = dungeonProgressRepo.findById(player) ?: return false
 
-        entity.level = level
+        entity.tier = tier
         progress?.let { entity.progress = it }
 
         dungeonProgressRepo.save(entity)

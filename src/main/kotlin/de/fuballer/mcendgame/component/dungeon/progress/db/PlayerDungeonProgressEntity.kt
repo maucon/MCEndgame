@@ -6,6 +6,6 @@ import java.util.*
 data class PlayerDungeonProgressEntity(
     override var id: UUID,
 
-    var level: Int = 1,
+    var tier: Int = 1,
     var progress: Int = 0
 ) : Entity<UUID>

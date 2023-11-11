@@ -37,7 +37,7 @@ commands:
     aliases: [ statistics, stats, dungeonstats ]
 
   dungeon-progress:
-    usage: "§CUsage /<command> (get [player] | set player level [progress])"
+    usage: "§CUsage /<command> (get [player] | set player tier [progress])"
     aliases: [ progress ]
     permission: op
 

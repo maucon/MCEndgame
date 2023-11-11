@@ -29,7 +29,7 @@ class DungeonProgressTabCompleter : CommandTabCompleter {
             2 -> PluginUtil.getOfflinePlayers().mapNotNull { it.name }
             3 -> {
                 if (args[0] == CommandAction.GET.actionName) return listOf()
-                return listOf("<level>")
+                return listOf("<tier>")
             }
 
             4 -> {
