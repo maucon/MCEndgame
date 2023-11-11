@@ -46,7 +46,7 @@ class StatisticsService(
         val killer = monster.killer ?: return
         val player = killer as? Player ?: return
 
-        onMonsterKilledByPlayer(monster, player)
+        onMonsterKilledByPlayer(player)
     }
 
     @EventHandler
@@ -91,11 +91,7 @@ class StatisticsService(
 
         for (player in event.world.players) {
             val statistics = statisticsRepo.findById(player.uniqueId) ?: return
-
             statistics.highestKillstreak = max(killStreak, statistics.highestKillstreak)
-            if (statistics.killstreakThresholdsReached.containsKey(killStreak)) {
-                statistics.killstreakThresholdsReached[killStreak] = statistics.killstreakThresholdsReached[killStreak]!! + 1
-            }
 
             statisticsRepo.save(statistics)
         }
@@ -106,26 +102,11 @@ class StatisticsService(
         statisticsRepo.flush()
     }
 
-    private fun onMonsterKilledByPlayer(
-        monster: Monster,
-        player: Player
-    ) {
+    private fun onMonsterKilledByPlayer(player: Player) {
         val statistics = statisticsRepo.findById(player.uniqueId) ?: return
         statistics.totalKills++
 
-        testForMobType(monster, statistics)
-
         statisticsRepo.save(statistics)
-    }
-
-    private fun testForMobType(
-        monster: Monster,
-        statistics: StatisticsEntity
-    ) {
-        val entityType = monster.type
-
-        if (!statistics.mobTypeKills.containsKey(entityType)) return
-        statistics.mobTypeKills[entityType] = statistics.mobTypeKills[entityType]!! + 1
     }
 
     private fun testIfDamagerIsArrow(damager: Entity): Entity {

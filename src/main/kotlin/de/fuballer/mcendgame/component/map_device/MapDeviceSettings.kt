@@ -23,15 +23,13 @@ object MapDeviceSettings {
             setIngredient('S', Material.NETHER_STAR)
         }
 
-    val MAP_DEVICE_INVENTORY_TITLE = ChatColor.DARK_PURPLE.toString() + "Map Device"
+    const val MAP_DEVICE_INVENTORY_TITLE = "Map Device"
 
     val OPEN_PORTALS_ITEM_LINE = ChatColor.GREEN.toString() + "Open portals"
-    private val OPEN_PORTALS_ITEM_LORE = listOf(OPEN_PORTALS_ITEM_LINE)
-    val OPEN_PORTALS_ITEM = create(ItemStack(Material.LIME_STAINED_GLASS_PANE), " ", OPEN_PORTALS_ITEM_LORE)
+    val OPEN_PORTALS_ITEM = create(ItemStack(Material.LIME_STAINED_GLASS_PANE), OPEN_PORTALS_ITEM_LINE, listOf())
 
     private val CLOSE_PORTALS_ITEM_LINE = ChatColor.RED.toString() + "Close portals"
-    private val CLOSE_PORTALS_ITEM_LORE = listOf(CLOSE_PORTALS_ITEM_LINE)
-    val CLOSE_PORTALS_ITEM = create(ItemStack(Material.RED_STAINED_GLASS_PANE), " ", CLOSE_PORTALS_ITEM_LORE)
+    val CLOSE_PORTALS_ITEM = create(ItemStack(Material.RED_STAINED_GLASS_PANE), CLOSE_PORTALS_ITEM_LINE, listOf())
 
     val FILLER_ITEM = create(ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", listOf(" "))
 

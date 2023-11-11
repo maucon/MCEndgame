@@ -20,11 +20,11 @@ class PlayerDungeonProgressService(
     @EventHandler
     fun onDungeonComplete(event: DungeonCompleteEvent) {
         for (player in event.world.players) {
-            val completedTier = getPlayerDungeonLevel(player.uniqueId).level
+            val completedTier = getPlayerDungeonLevel(player.uniqueId).tier
 
             if (completedTier <= event.mapTier) {
-                val (_, level, progress) = increasePlayerDungeonLevel(player.uniqueId)
-                player.sendMessage(PlayerDungeonProgressSettings.getProgressMessage(level, progress))
+                val (_, tier, progress) = increasePlayerDungeonLevel(player.uniqueId)
+                player.sendMessage(PlayerDungeonProgressSettings.getProgressMessage(tier, progress))
             } else {
                 player.sendMessage(PlayerDungeonProgressSettings.NO_PROGRESS_MESSAGE)
             }
@@ -40,7 +40,7 @@ class PlayerDungeonProgressService(
         val entity = playerDungeonProgressRepo.findById(player.uniqueId)
             ?: PlayerDungeonProgressEntity(player.uniqueId)
 
-        entity.level = max(entity.level - 1, 1)
+        entity.tier = max(entity.tier - 1, 1)
         entity.progress = 0
 
         playerDungeonProgressRepo.save(entity)
@@ -52,8 +52,8 @@ class PlayerDungeonProgressService(
         val player = event.player
         if (WorldUtil.isNotDungeonWorld(player.world)) return
 
-        val (_, level, progress) = getPlayerDungeonLevel(player.uniqueId)
-        player.sendMessage(PlayerDungeonProgressSettings.getRegressMessage(level, progress))
+        val (_, tier, progress) = getPlayerDungeonLevel(player.uniqueId)
+        player.sendMessage(PlayerDungeonProgressSettings.getRegressMessage(tier, progress))
     }
 
     fun getPlayerDungeonLevel(player: UUID): PlayerDungeonProgressEntity {
@@ -70,7 +70,7 @@ class PlayerDungeonProgressService(
 
         if (++entity.progress >= PlayerDungeonProgressSettings.DUNGEON_LEVEL_INCREASE_THRESHOLD) {
             entity.progress = 0
-            entity.level++
+            entity.tier++
         }
 
         playerDungeonProgressRepo.save(entity)
