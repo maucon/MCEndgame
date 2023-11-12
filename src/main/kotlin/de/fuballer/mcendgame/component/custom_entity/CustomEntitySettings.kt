@@ -15,6 +15,10 @@ object CustomEntitySettings {
         canHaveWeapons = true, isRanged = true, canHaveArmor = true, dropBaseLoot = false, hideEquipment = false, isSilent = false,
         maxLifeBase = 15.0, maxLifePerTier = 0.0, damageBase = 5.0, damagePerTier = 2.5, speedBase = 0.25, speedPerTier = 0.0
     )
+    val MELEE_SKELETON_DATA = CustomEntityData(
+        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = false, isSilent = false,
+        maxLifeBase = 20.0, maxLifePerTier = 0.0, damageBase = 5.0, damagePerTier = 2.5, speedBase = 0.25, speedPerTier = 0.0
+    )
     val STRAY_DATA = CustomEntityData(
         canHaveWeapons = true, isRanged = true, canHaveArmor = true, dropBaseLoot = false, hideEquipment = false, isSilent = false,
         maxLifeBase = 15.0, maxLifePerTier = 0.0, damageBase = 5.0, damagePerTier = 2.5, speedBase = 0.25, speedPerTier = 0.0
