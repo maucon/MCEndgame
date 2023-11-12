@@ -20,13 +20,13 @@ enum class ArtifactType(
     ),
     HEAL_ON_BLOCK(
         "Artifact of Recoup",
-        listOf(ArtifactSettings.ARTIFACT_LORE_FIRST_LINE, "(0)% chance to heal (1) health", "when you block damage with a shield."),
+        listOf(ArtifactSettings.ARTIFACT_LORE_FIRST_LINE, "(0)% chance to heal (1) health", "when you block damage with a shield.", "((2) seconds cooldown)"),
         mutableMapOf(
             // TIER = CHANCE in %
-            0 to listOf(50.0, 1.0),
-            1 to listOf(75.0, 1.0),
-            2 to listOf(100.0, 1.0),
-            3 to listOf(100.0, 2.0),
+            0 to listOf(50.0, 1.0, 1.5),
+            1 to listOf(75.0, 1.0, 1.5),
+            2 to listOf(100.0, 1.0, 1.5),
+            3 to listOf(100.0, 2.0, 1.5),
         )
     ),
     WOLF_COMPANION(
