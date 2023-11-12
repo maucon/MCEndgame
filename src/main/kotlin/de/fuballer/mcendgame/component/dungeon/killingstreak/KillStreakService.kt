@@ -9,14 +9,13 @@ import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.KillStreakIncreaseEvent
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Server
 import org.bukkit.World
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Monster
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.entity.Projectile
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -34,7 +33,9 @@ class KillStreakService(
 ) : Listener {
     @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
-        val entity = event.entity as? Monster ?: return
+        if (PersistentDataUtil.getValue(event.entity, DataTypeKeys.IS_ENEMY) != true) return
+
+        val entity = event.entity as? LivingEntity ?: return
         val world = entity.world
         if (WorldUtil.isNotDungeonWorld(world)) return
 
@@ -55,12 +56,14 @@ class KillStreakService(
     @EventHandler
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
         if (event.damage < KillStreakSettings.MIN_DMG_FOR_EXTRA_TIME) return
-        val entity = event.entity as? Monster ?: return
+
+        if (PersistentDataUtil.getValue(event.entity, DataTypeKeys.IS_ENEMY) != true) return
+
+        val entity = event.entity as? LivingEntity ?: return
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
         val damager = event.damager
-        if (damager is Projectile && damager.shooter !is Player) return
-        if (damager.type != EntityType.PLAYER) return
+        if (!DungeonUtil.isPlayerOrPlayerProjectile(damager)) return
 
         val killStreak = killStreakRepo.findById(entity.world.name) ?: return
         killStreak.timer = min(

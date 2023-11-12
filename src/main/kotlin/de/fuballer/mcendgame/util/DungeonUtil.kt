@@ -19,6 +19,16 @@ object DungeonUtil {
         return PersistentDataUtil.getValue(shooterEntity, DataTypeKeys.IS_ENEMY) == true
     }
 
+    fun isPlayerOrPlayerProjectile(entity: Entity): Boolean {
+        if (entity is Player) return true
+        val proj = entity as? Projectile ?: return false
+
+        val shooter = proj.shooter ?: return false
+        val shooterEntity = shooter as? Entity ?: return false
+
+        return shooterEntity is Player
+    }
+
     fun getNearbyPlayers(
         entity: LivingEntity,
         range: Double
