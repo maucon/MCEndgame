@@ -22,6 +22,7 @@ enum class CustomEntityType(
     PIGLIN_BRUTE(EntityType.PIGLIN_BRUTE, null, CustomEntitySettings.PIGLIN_BRUTE_DATA),
     BLAZE(EntityType.BLAZE, null, CustomEntitySettings.BLAZE_DATA),
     MAGMA_CUBE(EntityType.MAGMA_CUBE, null, CustomEntitySettings.MAGMA_CUBE_DATA),
+    SLIME(EntityType.SLIME, null, CustomEntitySettings.SLIME_DATA),
 
     NECROMANCER(EntityType.EVOKER, "Necromancer", CustomEntitySettings.NECROMANCER_DATA),
     REAPER(EntityType.WITHER_SKELETON, "Reaper", CustomEntitySettings.REAPER_DATA),

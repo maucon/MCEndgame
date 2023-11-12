@@ -47,6 +47,10 @@ object CustomEntitySettings {
         canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = false,
         maxLifeBase = 15.0, maxLifePerTier = 0.0, damageBase = 4.0, damagePerTier = 2.5, speedBase = 0.25, speedPerTier = 0.0
     )
+    val SLIME_DATA = CustomEntityData(
+        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = false,
+        maxLifeBase = 15.0, maxLifePerTier = 0.0, damageBase = 4.0, damagePerTier = 2.5, speedBase = 0.25, speedPerTier = 0.0
+    )
 
     val NECROMANCER_DATA = CustomEntityData(
         canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
@@ -54,7 +58,7 @@ object CustomEntitySettings {
     )
     val REAPER_DATA = CustomEntityData(
         canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
-        maxLifeBase = 20.0, maxLifePerTier = 0.0, damageBase = 10.0, damagePerTier = 3.5, speedBase = 0.3, speedPerTier = 0.0
+        maxLifeBase = 30.0, maxLifePerTier = 0.0, damageBase = 7.0, damagePerTier = 5.0, speedBase = 0.3, speedPerTier = 0.0
     )
     val CHUPACABRA_DATA = CustomEntityData(
         canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
@@ -90,11 +94,11 @@ object CustomEntitySettings {
     )
     val SUCCUBUS_DATA = CustomEntityData(
         canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
-        maxLifeBase = 15.0, maxLifePerTier = 0.0, damageBase = 7.0, damagePerTier = 3.0, speedBase = 0.3, speedPerTier = 0.0
+        maxLifeBase = 20.0, maxLifePerTier = 0.0, damageBase = 7.5, damagePerTier = 5.0, speedBase = 0.3, speedPerTier = 0.0
     )
     val INCUBUS_DATA = CustomEntityData(
         canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
-        maxLifeBase = 22.0, maxLifePerTier = 0.0, damageBase = 3.0, damagePerTier = 2.0, speedBase = 0.25, speedPerTier = 0.0
+        maxLifeBase = 45.0, maxLifePerTier = 0.0, damageBase = 5.0, damagePerTier = 3.5, speedBase = 0.25, speedPerTier = 0.0
     )
     val IMP_DATA = CustomEntityData(
         canHaveWeapons = true, isRanged = true, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,

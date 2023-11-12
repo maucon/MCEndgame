@@ -13,47 +13,53 @@ enum class DungeonType(
     HELL(
         listOf(
             RandomOption(1, DungeonMapType.MINE),
-            RandomOption(1, DungeonMapType.CATACOMBS),
-            RandomOption(1, DungeonMapType.CATACOMBS_ALTERNATIVE)
         ),
         listOf(
-            RandomOption(1, CustomEntityType.WITHER_SKELETON),
-            RandomOption(3, CustomEntityType.MELEE_SKELETON),
-            RandomOption(4, CustomEntityType.MAGMA_CUBE),
-            RandomOption(3, CustomEntityType.BLAZE),
-            RandomOption(2, CustomEntityType.SUCCUBUS),
-            RandomOption(2, CustomEntityType.INCUBUS),
-            RandomOption(5, CustomEntityType.IMP),
+            RandomOption(10, CustomEntityType.WITHER_SKELETON),
+            RandomOption(150, CustomEntityType.MELEE_SKELETON),
+            RandomOption(90, CustomEntityType.SKELETON),
+            RandomOption(20, CustomEntityType.MAGMA_CUBE),
+            RandomOption(20, CustomEntityType.BLAZE),
+            RandomOption(3, CustomEntityType.SUCCUBUS),
+            RandomOption(3, CustomEntityType.INCUBUS),
+            RandomOption(15, CustomEntityType.IMP),
         ),
         listOf(RandomOption(1, BossType.CERBERUS))
     ),
     UNDEAD(
         listOf(
-            RandomOption(1, DungeonMapType.MINE),
-            RandomOption(1, DungeonMapType.CATACOMBS),
-            RandomOption(1, DungeonMapType.CATACOMBS_ALTERNATIVE)
+            RandomOption(5, DungeonMapType.MINE),
+            RandomOption(3, DungeonMapType.CATACOMBS),
+            RandomOption(1, DungeonMapType.CATACOMBS_ALTERNATIVE),
+            RandomOption(1, DungeonMapType.ICE_CAVE),
+            RandomOption(1, DungeonMapType.LUSH_CAVE)
         ),
         listOf(
-            RandomOption(1, CustomEntityType.WITHER_SKELETON),
-            RandomOption(5, CustomEntityType.ZOMBIE),
-            RandomOption(3, CustomEntityType.HUSK),
-            RandomOption(5, CustomEntityType.SKELETON),
-            RandomOption(2, CustomEntityType.MELEE_SKELETON),
-            RandomOption(3, CustomEntityType.STRAY),
-            RandomOption(1, CustomEntityType.NECROMANCER),
-            RandomOption(1, CustomEntityType.REAPER)
+            RandomOption(10, CustomEntityType.WITHER_SKELETON),
+            RandomOption(50, CustomEntityType.ZOMBIE),
+            RandomOption(30, CustomEntityType.HUSK),
+            RandomOption(50, CustomEntityType.SKELETON),
+            RandomOption(20, CustomEntityType.MELEE_SKELETON),
+            RandomOption(30, CustomEntityType.STRAY),
+            RandomOption(12, CustomEntityType.NECROMANCER),
+            RandomOption(3, CustomEntityType.REAPER)
         ),
         listOf(RandomOption(1, BossType.CERBERUS))
     ),
     MONSTER(
         listOf(
-            RandomOption(1, DungeonMapType.CATACOMBS),
-            RandomOption(1, DungeonMapType.CATACOMBS_ALTERNATIVE)
+            RandomOption(3, DungeonMapType.MINE),
+            RandomOption(3, DungeonMapType.CATACOMBS),
+            RandomOption(1, DungeonMapType.CATACOMBS_ALTERNATIVE),
+            RandomOption(1, DungeonMapType.ICE_CAVE),
+            RandomOption(1, DungeonMapType.LUSH_CAVE)
         ),
         listOf(
-            RandomOption(1, CustomEntityType.CREEPER),
-            RandomOption(1, CustomEntityType.HATCHERY),
-            RandomOption(5, CustomEntityType.STALKER)
+            RandomOption(8, CustomEntityType.CREEPER),
+            RandomOption(80, CustomEntityType.ZOMBIE),
+            RandomOption(25, CustomEntityType.SLIME),
+            RandomOption(10, CustomEntityType.HATCHERY),
+            RandomOption(30, CustomEntityType.STALKER)
         ),
         listOf(RandomOption(1, BossType.DEMONIC_GOLEM))
     ),
@@ -63,11 +69,12 @@ enum class DungeonType(
             RandomOption(1, DungeonMapType.LUSH_CAVE)
         ),
         listOf(
-            RandomOption(5, CustomEntityType.PIGLIN_BRUTE),
-            RandomOption(7, CustomEntityType.CYCLOPS),
-            RandomOption(1, CustomEntityType.WITCH),
-            RandomOption(2, CustomEntityType.HARPY),
-            RandomOption(2, CustomEntityType.NAGA)
+            RandomOption(60, CustomEntityType.PIGLIN_BRUTE),
+            RandomOption(50, CustomEntityType.CYCLOPS),
+            RandomOption(20, CustomEntityType.HUSK),
+            RandomOption(5, CustomEntityType.WITCH),
+            RandomOption(10, CustomEntityType.HARPY),
+            RandomOption(10, CustomEntityType.NAGA)
         ),
         listOf(RandomOption(1, BossType.MINOTAUR))
     );
