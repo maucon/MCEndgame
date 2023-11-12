@@ -2,6 +2,8 @@ package de.fuballer.mcendgame.component.dungeon.artifact
 
 import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.artifact.data.ArtifactType
+import de.fuballer.mcendgame.component.dungeon.artifact.db.HealOnBlockArtifactEntity
+import de.fuballer.mcendgame.component.dungeon.artifact.db.HealOnBlockArtifactRepository
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -27,7 +29,8 @@ import kotlin.math.min
 
 @Component
 class ArtifactEffectsService(
-    private val artifactService: ArtifactService
+    private val artifactService: ArtifactService,
+    private val healOnBlockArtifactRepo: HealOnBlockArtifactRepository
 ) : Listener {
     private val random = Random()
 
@@ -210,9 +213,13 @@ class ArtifactEffectsService(
         val entity = event.entity
         val tier = artifactService.highestArtifactLevel(entity.uniqueId, ArtifactType.HEAL_ON_BLOCK) ?: return
 
-        val (blockChance, health) = ArtifactType.HEAL_ON_BLOCK.values[tier]!!
+        val (blockChance, health, cooldown) = ArtifactType.HEAL_ON_BLOCK.values[tier]!!
         val realBlockChance = blockChance / 100.0
         if (random.nextDouble() > realBlockChance) return
+
+        if (isHealOnBlockOnCooldown(entity, cooldown)) return
+
+        updateHealOnBlockActivation(entity)
 
         val loc = entity.location
         val dustOptions = DustOptions(Color.fromRGB(50, 255, 50), 1.0f)
@@ -226,6 +233,20 @@ class ArtifactEffectsService(
         val maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
         val newHealth = min(player.health + health, maxHealth)
         player.health = newHealth
+    }
+
+    private fun isHealOnBlockOnCooldown(entity: Entity, cooldown: Double): Boolean {
+        val cooldownEntity = healOnBlockArtifactRepo.findById(entity.uniqueId) ?: return false
+        val cdMS = (cooldown * 1000).toLong()
+        return cooldownEntity.lastActivationTime + cdMS > System.currentTimeMillis()
+    }
+
+    private fun updateHealOnBlockActivation(entity: Entity) {
+        val cooldownEntity = healOnBlockArtifactRepo.findById(entity.uniqueId)
+            ?: HealOnBlockArtifactEntity(entity.uniqueId)
+
+        cooldownEntity.lastActivationTime = System.currentTimeMillis()
+        healOnBlockArtifactRepo.save(cooldownEntity)
     }
 
     private fun testAdditionalArrowsFriendlyFire(event: EntityDamageByEntityEvent, player: Player) {

@@ -18,6 +18,7 @@ enum class DungeonType(
         ),
         listOf(
             RandomOption(1, CustomEntityType.WITHER_SKELETON),
+            RandomOption(3, CustomEntityType.MELEE_SKELETON),
             RandomOption(4, CustomEntityType.MAGMA_CUBE),
             RandomOption(3, CustomEntityType.BLAZE),
             RandomOption(2, CustomEntityType.SUCCUBUS),
@@ -37,6 +38,7 @@ enum class DungeonType(
             RandomOption(5, CustomEntityType.ZOMBIE),
             RandomOption(3, CustomEntityType.HUSK),
             RandomOption(5, CustomEntityType.SKELETON),
+            RandomOption(2, CustomEntityType.MELEE_SKELETON),
             RandomOption(3, CustomEntityType.STRAY),
             RandomOption(1, CustomEntityType.NECROMANCER),
             RandomOption(1, CustomEntityType.REAPER)

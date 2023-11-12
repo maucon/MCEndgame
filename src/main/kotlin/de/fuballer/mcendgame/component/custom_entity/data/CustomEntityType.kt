@@ -14,6 +14,7 @@ enum class CustomEntityType(
     ZOMBIE(EntityType.ZOMBIE, null, CustomEntitySettings.ZOMBIE_DATA),
     HUSK(EntityType.HUSK, null, CustomEntitySettings.HUSK_DATA),
     SKELETON(EntityType.SKELETON, null, CustomEntitySettings.SKELETON_DATA),
+    MELEE_SKELETON(EntityType.SKELETON, null, CustomEntitySettings.MELEE_SKELETON_DATA),
     STRAY(EntityType.STRAY, null, CustomEntitySettings.STRAY_DATA),
     WITHER_SKELETON(EntityType.WITHER_SKELETON, null, CustomEntitySettings.WITHER_SKELETON_DATA),
     CREEPER(EntityType.CREEPER, null, CustomEntitySettings.CREEPER_DATA),

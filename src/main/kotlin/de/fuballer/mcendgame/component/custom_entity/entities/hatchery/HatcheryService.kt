@@ -5,11 +5,13 @@ import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerService
 import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionRepository
 import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionsEntity
 import de.fuballer.mcendgame.framework.annotation.Component
+import org.bukkit.entity.Bee
 import org.bukkit.entity.Creature
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.util.Vector
+import kotlin.random.Random
 
 @Component
 class HatcheryService(
@@ -25,6 +27,8 @@ class HatcheryService(
     }
 
     private fun summonLeech(event: EntityShootBowEvent) {
+        if (Random.nextDouble() > HatcherySettings.MINION_SPAWN_PROBABILITY) return
+
         val hatchery = event.entity as Creature
         val minionsEntity = minionRepo.findById(hatchery.uniqueId)
             ?: MinionsEntity(event.entity.uniqueId)
@@ -40,9 +44,15 @@ class HatcheryService(
             HatcherySettings.MINION_HEALTH,
             Vector(0, 1, 0)
         )
+
+        setLeechAnger(minionsEntity)
     }
 
     private fun updateMinions(minionsEntity: MinionsEntity) {
         minionsEntity.minions.removeIf { it.isDead }
+    }
+
+    private fun setLeechAnger(minionsEntity: MinionsEntity) {
+        minionsEntity.minions.forEach { (it as Bee).anger = Int.MAX_VALUE }
     }
 }
