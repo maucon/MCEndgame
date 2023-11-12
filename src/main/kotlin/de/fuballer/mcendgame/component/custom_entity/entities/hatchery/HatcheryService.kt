@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.util.Vector
+import kotlin.random.Random
 
 @Component
 class HatcheryService(
@@ -25,6 +26,8 @@ class HatcheryService(
     }
 
     private fun summonLeech(event: EntityShootBowEvent) {
+        if (Random.nextDouble() > HatcherySettings.MINION_SPAWN_PROBABILITY) return
+
         val hatchery = event.entity as Creature
         val minionsEntity = minionRepo.findById(hatchery.uniqueId)
             ?: MinionsEntity(event.entity.uniqueId)
