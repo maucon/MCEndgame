@@ -6,6 +6,8 @@ object PlayerDungeonProgressSettings {
     const val DUNGEON_LEVEL_INCREASE_THRESHOLD = 3
     const val COMMAND_NAME = "dungeon-progress"
 
+    const val MAX_DUNGEON_TIER = 300 // only for the set progress command
+
     val PLAYER_NO_PROGRESS_MESSAGE = "${ChatColor.RED}Player has no dungeon progress!"
 
     fun getDungeonProgressMessage(playerName: String, tier: Int, progress: Int) =
