@@ -9,9 +9,9 @@ object PersistentDataUtil {
         typeKey: DataTypeKeys.TypeKey<T>
     ): T? = entity.persistentDataContainer.get(typeKey.key, typeKey.dataType)
 
-    fun <T> setValue(
+    fun <T : Any> setValue(
         entity: Entity,
         typeKey: DataTypeKeys.TypeKey<T>,
-        value: T & Any
+        value: T
     ) = entity.persistentDataContainer.set(typeKey.key, typeKey.dataType, value)
 }

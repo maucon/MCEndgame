@@ -25,7 +25,7 @@ class DungeonEnemyProjectileService : Listener {
 
         if (shooter !is LivingEntity) return
 
-        if (PersistentDataUtil.getValue(shooter, DataTypeKeys.ENTITY_TYPE) == null) return
+        if (PersistentDataUtil.getValue(shooter, DataTypeKeys.IS_ENEMY) != true) return
 
         val damage = getDamage(shooter) ?: return
         event.damage = damage
