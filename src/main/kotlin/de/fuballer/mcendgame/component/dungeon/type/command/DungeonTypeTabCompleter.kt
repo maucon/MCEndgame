@@ -30,7 +30,9 @@ class DungeonTypeTabCompleter : CommandTabCompleter {
             2 -> PluginUtil.getOfflinePlayers().mapNotNull { it.name }
             3 -> {
                 if (args[0] == CommandAction.GET.actionName) return listOf()
-                return DungeonType.entries.map { it.toString() }
+                return DungeonType.entries
+                    .map { it.toString() }
+                    .filter { it.startsWith(args[2], true) }
             }
 
             else -> listOf()

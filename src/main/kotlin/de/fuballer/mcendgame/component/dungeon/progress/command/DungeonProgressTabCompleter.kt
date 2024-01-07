@@ -29,12 +29,14 @@ class DungeonProgressTabCompleter : CommandTabCompleter {
             2 -> PluginUtil.getOfflinePlayers().mapNotNull { it.name }
             3 -> {
                 if (args[0] == CommandAction.GET.actionName) return listOf()
-                return listOf("<tier>")
+                return (1..PlayerDungeonProgressSettings.MAX_DUNGEON_TIER)
+                    .map { "$it" }
             }
 
             4 -> {
                 if (args[0] == CommandAction.GET.actionName) return listOf()
-                return listOf("[<progress>]")
+                return (0 until PlayerDungeonProgressSettings.DUNGEON_LEVEL_INCREASE_THRESHOLD)
+                    .map { "$it" }
             }
 
             else -> listOf()

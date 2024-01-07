@@ -91,7 +91,7 @@ class DungeonProgressCommand(
         tier: Int,
         progress: Int?
     ): Boolean {
-        if (tier !in 1..10000) return false
+        if (tier !in 1..PlayerDungeonProgressSettings.MAX_DUNGEON_TIER) return false
         progress?.let { if (it !in 0 until PlayerDungeonProgressSettings.DUNGEON_LEVEL_INCREASE_THRESHOLD) return false }
 
         val entity = dungeonProgressRepo.findById(player) ?: return false
