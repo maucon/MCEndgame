@@ -1,0 +1,163 @@
+{
+	"credit": "Made with Blockbench",
+	"textureSize": [128, 128],
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "headwear",
+			"id": "headwear",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0],
+			"submodels": [
+				{
+					"id": "mushroom",
+					"invertAxis": "xy",
+					"translate": [0, 24, 0],
+					"submodels": [
+						{
+							"id": "mushBody",
+							"invertAxis": "xy",
+							"translate": [0, 0, 0],
+							"boxes": [
+								{"coordinates": [-5, -18, -5, 10, 10, 10], "textureOffset": [12, 95]}
+							],
+							"submodels": [
+								{
+									"id": "mushUpperBody",
+									"invertAxis": "xy",
+									"translate": [0, -8, 0],
+									"boxes": [
+										{"coordinates": [-4.5, -1, -4.5, 9, 6, 9], "textureOffset": [14, 79]}
+									],
+									"submodels": [
+										{
+											"id": "mushHead",
+											"invertAxis": "xy",
+											"translate": [0, 5, 0],
+											"boxes": [
+												{"coordinates": [-4, -2, -4, 8, 9, 8], "textureOffset": [16, 61]}
+											],
+											"submodels": [
+												{
+													"id": "mushCap",
+													"invertAxis": "xy",
+													"translate": [0, 6.5, 0],
+													"rotate": [5, 0, 0],
+													"boxes": [
+														{"coordinates": [-8, 0, -8, 16, 2, 16], "textureOffset": [0, 42]},
+														{"coordinates": [-6, 2, -6, 12, 2, 12], "textureOffset": [8, 27]},
+														{"coordinates": [-3.5, 4, -3.5, 7, 2, 7], "textureOffset": [18, 17]}
+													]
+												}
+											]
+										},
+										{
+											"id": "mushArms",
+											"invertAxis": "xy",
+											"translate": [0, 8, 0],
+											"submodels": [
+												{
+													"id": "mushArmLeft",
+													"invertAxis": "xy",
+													"translate": [-4, -2.25, 0.5],
+													"rotate": [0, 0, -5],
+													"boxes": [
+														{"coordinates": [-3, -16, -1.5, 3, 16, 3], "textureOffset": [51, 85]}
+													]
+												},
+												{
+													"id": "mushArmRight",
+													"invertAxis": "xy",
+													"translate": [4, -2.5, 0.5],
+													"rotate": [0, 0, 5],
+													"boxes": [
+														{"coordinates": [0, -15.75, -1.5, 3, 16, 3], "textureOffset": [1, 85]}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "mushLegs",
+							"invertAxis": "xy",
+							"translate": [0, 0, 0],
+							"submodels": [
+								{
+									"id": "mushLegLeft",
+									"invertAxis": "xy",
+									"translate": [2.75, -17.5, 0],
+									"boxes": [
+										{"coordinates": [-8, -6.5, -2.5, 5, 7, 5], "textureOffset": [32, 116]}
+									]
+								},
+								{
+									"id": "mushLegRight",
+									"invertAxis": "xy",
+									"translate": [-2.75, -17.5, 0],
+									"boxes": [
+										{"coordinates": [3, -6.5, -2.5, 5, 7, 5], "textureOffset": [12, 116]}
+									]
+								}
+							]
+						}
+					]
+				}
+			],
+			"animations": [
+				{
+					"mushUpperBody.rx": "torad(head_pitch*0.1)",
+					"mushUpperBody.ry": "torad(head_yaw*0.2)",
+					"mushHead.rx": "torad(head_pitch*0.25)",
+					"mushHead.ry": "torad(head_yaw*0.3)",
+					"mushLegLeft.rx": "sin(limb_swing * 0.5) * limb_speed",
+					"mushLegRight.rx": "-sin(limb_swing * 0.5) * limb_speed",
+					"mushArmLeft.rz": "torad(-6  + sin((age+3) * 0.05) * 2.5)",
+					"mushArmRight.rz": "torad(6  - sin(age * 0.05) * 2.5)",
+					"var.swing_state": "max(swing_progress, var.swing_state - 0.07 * frame_time * 20)",
+					"mushArmLeft.rx": "-sin(limb_swing * 0.5) * limb_speed * 0.2 - torad(var.swing_state * 70)",
+					"mushArmRight.rx": "sin(limb_swing * 0.5) * limb_speed * 0.2 - torad(var.swing_state * 70)"
+				}
+			]
+		},
+		{
+			"part": "left_arm",
+			"id": "left_arm",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [5, -22, 0]
+		},
+		{
+			"part": "right_arm",
+			"id": "right_arm",
+			"invertAxis": "xy",
+			"translate": [-5, -22, 0]
+		},
+		{
+			"part": "left_leg",
+			"id": "left_leg",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [1.9, -12, 0]
+		},
+		{
+			"part": "right_leg",
+			"id": "right_leg",
+			"invertAxis": "xy",
+			"translate": [-1.9, -12, 0]
+		}
+	]
+}

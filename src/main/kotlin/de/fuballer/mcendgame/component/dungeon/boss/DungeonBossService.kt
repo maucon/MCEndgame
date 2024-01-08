@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.dungeon.boss
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
 import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionRepository
 import de.fuballer.mcendgame.component.dungeon.boss.data.BossType
 import de.fuballer.mcendgame.component.dungeon.boss.data.DungeonBossAbilitiesRunnable
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
@@ -32,7 +33,8 @@ import java.util.*
 @Component
 class DungeonBossService(
     private val dungeonBossRepo: DungeonBossRepository,
-    private val worldManageRepo: WorldManageRepository
+    private val worldManageRepo: WorldManageRepository,
+    private val minionRepo: MinionRepository
 ) : Listener {
     private val random = Random()
 
@@ -116,6 +118,7 @@ class DungeonBossService(
         val mapTier = worldManageRepo.findById(worldName)?.mapTier ?: 1
         val runnable = DungeonBossAbilitiesRunnable(
             dungeonBossRepo,
+            minionRepo,
             entity as Creature,
             dungeonBossEntity.type,
             mapTier

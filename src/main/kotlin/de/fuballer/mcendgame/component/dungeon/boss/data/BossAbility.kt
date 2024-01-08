@@ -9,4 +9,5 @@ enum class BossAbility{
     LEAP,
     GRAVITATION_PILLAR,
     POISON_CLOUD,
+    VINES,
 }
