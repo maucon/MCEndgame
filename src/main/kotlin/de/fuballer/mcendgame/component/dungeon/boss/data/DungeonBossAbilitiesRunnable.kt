@@ -2,6 +2,8 @@ package de.fuballer.mcendgame.component.dungeon.boss.data
 
 import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionRepository
+import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionsEntity
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
@@ -20,6 +22,7 @@ import kotlin.math.sqrt
 
 class DungeonBossAbilitiesRunnable(
     private val dungeonBossRepo: DungeonBossRepository,
+    private val minionRepo: MinionRepository,
     private val boss: Creature,
     private val bossType: BossType,
     private val mapTier: Int
@@ -240,14 +243,19 @@ class DungeonBossAbilitiesRunnable(
     private fun summonVines() {
         val amount = DungeonBossSettings.getSummonVineAmount(mapTier)
 
-        val vineSet = mutableSetOf<LivingEntity>()
+        val vines = mutableSetOf<LivingEntity>()
         for (i in 1..amount) {
             val vine = CustomEntityType.spawnCustomEntity(CustomEntityType.VINE, boss.location, mapTier) as LivingEntity
             vine.equipment?.also { it.clear() }
-            vineSet.add(vine)
+            vines.add(vine)
         }
 
-        val event = DungeonEnemySpawnedEvent(boss.world, vineSet)
+        if (!minionRepo.exists(boss.uniqueId))
+            minionRepo.save(MinionsEntity(boss.uniqueId, vines))
+        else
+            minionRepo.getById(boss.uniqueId).minions.addAll(vines)
+
+        val event = DungeonEnemySpawnedEvent(boss.world, vines)
         EventGateway.apply(event)
     }
 }

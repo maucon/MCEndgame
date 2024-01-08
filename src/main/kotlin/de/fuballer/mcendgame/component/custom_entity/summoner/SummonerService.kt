@@ -14,6 +14,7 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.util.Vector
 
@@ -23,6 +24,11 @@ class SummonerService(
     private val statItemService: StatItemService,
     private val enemyGenerationService: EnemyGenerationService
 ) {
+    @EventHandler
+    fun onEntityDeath(event: EntityDeathEvent) {
+        minionRepo.delete(event.entity.uniqueId)
+    }
+
     @EventHandler
     fun onEntityTarget(event: EntityTargetEvent) {
         val summoner = event.entity as? Creature ?: return
