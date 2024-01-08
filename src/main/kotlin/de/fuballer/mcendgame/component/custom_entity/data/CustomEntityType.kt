@@ -39,8 +39,15 @@ enum class CustomEntityType(
     IMP(EntityType.SKELETON, "Imp", CustomEntitySettings.IMP_DATA),
     HATCHERY(EntityType.SKELETON, "Hatchery", CustomEntitySettings.HATCHERY_DATA),
     LEECH(EntityType.BEE, "Leech", CustomEntitySettings.LEECH_DATA),
+    MUSHROOM(EntityType.ZOMBIE, "Mushroom", CustomEntitySettings.MUSHROOM_DATA),
+    FOREST_SKELETON(EntityType.SKELETON, "Forest Skeleton", CustomEntitySettings.FOREST_SKELETON_DATA),
+    MELEE_FOREST_SKELETON(EntityType.SKELETON, "Forest Skeleton", CustomEntitySettings.MELEE_FOREST_SKELETON_DATA),
+    DRYAD(EntityType.ZOMBIE, "Dryad", CustomEntitySettings.DRYAD_DATA),
+    WENDIGO(EntityType.WITHER_SKELETON, "Wendigo", CustomEntitySettings.WENDIGO_DATA),
+    MANDRAGORA(EntityType.RAVAGER, "Mandragora", CustomEntitySettings.MANDRAGORA_DATA),
 
     STONE_PILLAR(EntityType.ZOMBIE, "Stone Pillar", CustomEntitySettings.STONE_PILLAR_DATA),
+    VINE(EntityType.ZOMBIE, "Vine", CustomEntitySettings.VINE_DATA),
 
     POISON_SPIT(EntityType.LLAMA_SPIT, "Poison Spit", CustomEntitySettings.POISON_SPIT_DATA);
 

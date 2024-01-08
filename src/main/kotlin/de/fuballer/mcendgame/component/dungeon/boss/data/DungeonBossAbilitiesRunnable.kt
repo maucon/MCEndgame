@@ -55,6 +55,7 @@ class DungeonBossAbilitiesRunnable(
             BossAbility.LEAP -> leap(target)
             BossAbility.GRAVITATION_PILLAR -> summonGravitationPillar()
             BossAbility.POISON_CLOUD -> createPoisonClouds()
+            BossAbility.VINES -> summonVines()
         }
 
         return true
@@ -234,5 +235,19 @@ class DungeonBossAbilitiesRunnable(
                 cloud.reapplicationDelay = DungeonBossSettings.POISON_CLOUD_REAPPLICATION_DELAY
                 cloud.waitTime = DungeonBossSettings.POISON_CLOUD_REAPPLICATION_DELAY
             }
+    }
+
+    private fun summonVines() {
+        val amount = DungeonBossSettings.getSummonVineAmount(mapTier)
+
+        val vineSet = mutableSetOf<LivingEntity>()
+        for (i in 1..amount) {
+            val vine = CustomEntityType.spawnCustomEntity(CustomEntityType.VINE, boss.location, mapTier) as LivingEntity
+            vine.equipment?.also { it.clear() }
+            vineSet.add(vine)
+        }
+
+        val event = DungeonEnemySpawnedEvent(boss.world, vineSet)
+        EventGateway.apply(event)
     }
 }

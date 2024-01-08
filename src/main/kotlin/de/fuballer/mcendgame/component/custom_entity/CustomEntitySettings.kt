@@ -112,10 +112,38 @@ object CustomEntitySettings {
         canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
         maxLifeBase = 5.0, maxLifePerTier = 0.0, damageBase = 4.0, damagePerTier = 2.5, speedBase = 0.35, speedPerTier = 0.0
     )
+    val MUSHROOM_DATA = CustomEntityData(
+        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
+        maxLifeBase = 20.0, maxLifePerTier = 0.0, damageBase = 5.0, damagePerTier = 2.5, speedBase = 0.23, speedPerTier = 0.0
+    )
+    val FOREST_SKELETON_DATA = CustomEntityData(
+        canHaveWeapons = true, isRanged = true, canHaveArmor = true, dropBaseLoot = false, hideEquipment = false, isSilent = false,
+        maxLifeBase = 15.0, maxLifePerTier = 0.0, damageBase = 5.0, damagePerTier = 2.5, speedBase = 0.25, speedPerTier = 0.0
+    )
+    val MELEE_FOREST_SKELETON_DATA = CustomEntityData(
+        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = false, isSilent = false,
+        maxLifeBase = 20.0, maxLifePerTier = 0.0, damageBase = 5.0, damagePerTier = 2.5, speedBase = 0.25, speedPerTier = 0.0
+    )
+    val DRYAD_DATA = CustomEntityData(
+        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
+        maxLifeBase = 25.0, maxLifePerTier = 0.0, damageBase = 6.0, damagePerTier = 3.5, speedBase = 0.3, speedPerTier = 0.0
+    )
+    val WENDIGO_DATA = CustomEntityData(
+        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
+        maxLifeBase = 25.0, maxLifePerTier = 0.0, damageBase = 7.0, damagePerTier = 4.5, speedBase = 0.3, speedPerTier = 0.0
+    )
+    val MANDRAGORA_DATA = CustomEntityData(
+        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
+        maxLifeBase = 1.0, maxLifePerTier = 0.0, damageBase = 0.0, damagePerTier = 0.0, speedBase = 0.0, speedPerTier = 0.0
+    )
 
     val STONE_PILLAR_DATA = CustomEntityData(
         canHaveWeapons = false, isRanged = false, canHaveArmor = false, dropBaseLoot = false, hideEquipment = true, isSilent = true,
         maxLifeBase = 1.0, maxLifePerTier = 0.0, damageBase = 0.0, damagePerTier = 0.0, speedBase = 0.0, speedPerTier = 0.0
+    )
+    val VINE_DATA = CustomEntityData(
+        canHaveWeapons = false, isRanged = false, canHaveArmor = false, dropBaseLoot = false, hideEquipment = true, isSilent = true,
+        maxLifeBase = 10.0, maxLifePerTier = 0.0, damageBase = 5.0, damagePerTier = 2.5, speedBase = 0.0, speedPerTier = 0.0
     )
 
     val POISON_SPIT_DATA = CustomEntityData(

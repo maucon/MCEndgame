@@ -77,6 +77,19 @@ enum class DungeonType(
             RandomOption(10, CustomEntityType.NAGA)
         ),
         listOf(RandomOption(1, BossType.MINOTAUR))
+    ),
+    FOREST(
+        listOf(
+            RandomOption(1, DungeonMapType.LUSH_CAVE)
+        ),
+        listOf(
+            RandomOption(50, CustomEntityType.FOREST_SKELETON),
+            RandomOption(40, CustomEntityType.MELEE_FOREST_SKELETON),
+            RandomOption(15, CustomEntityType.MUSHROOM),
+            RandomOption(4, CustomEntityType.DRYAD),
+            RandomOption(1, CustomEntityType.WENDIGO)
+        ),
+        listOf(RandomOption(1, BossType.MANDRAGORA))
     );
 
     fun roll() = RolledDungeonType(

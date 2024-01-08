@@ -19,7 +19,7 @@ enum class BossType(
             RandomOption(50, BossAbility.FIRE_CASCADE),
             RandomOption(40, BossAbility.GRAVITATION_PILLAR),
         ),
-        150.0, 10.0,
+        150.0, 8.0,
         20.0, 3.0,
         0.2
     ),
@@ -43,5 +43,15 @@ enum class BossType(
         100.0, 5.0,
         15.0, 3.5,
         0.35
+    ),
+    MANDRAGORA(
+        CustomEntityType.MANDRAGORA,
+        listOf(
+            RandomOption(30, BossAbility.POISON_CLOUD),
+            RandomOption(30, BossAbility.VINES),
+        ),
+        120.0, 6.0,
+        12.0, 3.0,
+        0.3
     );
 }
