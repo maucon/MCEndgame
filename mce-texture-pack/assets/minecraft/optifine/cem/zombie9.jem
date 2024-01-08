@@ -1,0 +1,139 @@
+{
+	"credit": "Made with Blockbench",
+	"textureSize": [16, 64],
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "headwear",
+			"id": "headwear",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0],
+			"submodels": [
+				{
+					"id": "vine0",
+					"invertAxis": "xy",
+					"translate": [0, 0, 0],
+					"boxes": [
+						{"coordinates": [-1.5, -1, -1.5, 3, 7, 3], "textureOffset": [2, 54]}
+					],
+					"submodels": [
+						{
+							"id": "vine1",
+							"invertAxis": "xy",
+							"translate": [0, 5, 0],
+							"boxes": [
+								{"coordinates": [-1.5, 0, -1.5, 3, 6, 3], "textureOffset": [2, 44], "sizeAdd": -0.125}
+							],
+							"submodels": [
+								{
+									"id": "vine2",
+									"invertAxis": "xy",
+									"translate": [0, 4.75, 0],
+									"boxes": [
+										{"coordinates": [-1, 0, -1, 2, 6, 2], "textureOffset": [4, 35], "sizeAdd": 0.25}
+									],
+									"submodels": [
+										{
+											"id": "vine3",
+											"invertAxis": "xy",
+											"translate": [0, 5.5, 0],
+											"boxes": [
+												{"coordinates": [-1, 0, -1, 2, 6, 2], "textureOffset": [4, 26], "sizeAdd": 0.125}
+											],
+											"submodels": [
+												{
+													"id": "vine4",
+													"invertAxis": "xy",
+													"translate": [0, 5, 0],
+													"boxes": [
+														{"coordinates": [-1, 0, -1, 2, 6, 2], "textureOffset": [4, 17]}
+													],
+													"submodels": [
+														{
+															"id": "vine5",
+															"invertAxis": "xy",
+															"translate": [0, 4.75, 0],
+															"boxes": [
+																{"coordinates": [-1, 0, -1, 2, 6, 2], "textureOffset": [4, 8], "sizeAdd": -0.125}
+															],
+															"submodels": [
+																{
+																	"id": "vine6",
+																	"invertAxis": "xy",
+																	"translate": [0, 4.75, 0],
+																	"boxes": [
+																		{"coordinates": [-0.5, 0, -0.5, 1, 6, 1], "textureOffset": [6, 0], "sizeAdd": 0.125}
+																	]
+																}
+															]
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			],
+			"animations": [
+				{
+					"var.attack_state": "max( 0, if(swing_progress > 0 && swing_progress <= 0.5, swing_progress * 2, var.attack_state - 0.05 * frame_time * 20))",
+					"vine0.rx": "torad(sin(age / 20) * 4) + torad(var.attack_state * 20)",
+					"vine1.rx": "torad(sin((age - 15) / 20) * 6) + torad(var.attack_state * 20)",
+					"vine2.rx": "torad(sin((age - 30) / 20) * 8) + torad(var.attack_state * 20)",
+					"vine3.rx": "torad(sin((age - 45) / 20) * 10) + torad(var.attack_state * 20)",
+					"vine4.rx": "torad(sin((age - 60) / 20) * 12) + torad(var.attack_state * 20)",
+					"vine5.rx": "torad(sin((age - 75) / 20) * 14) + torad(var.attack_state * 20)",
+					"vine6.rx": "torad(sin((age - 90) / 20) * 16) + torad(var.attack_state * 20)",
+					"vine0.rz": "torad(sin(age / 17) * 4)",
+					"vine1.rz": "torad(sin((age - 15) / 17) * 6)",
+					"vine2.rz": "torad(sin((age - 30) / 17) * 8)",
+					"vine3.rz": "torad(sin((age - 45) / 17) * 10)",
+					"vine4.rz": "torad(sin((age - 60) / 17) * 12)",
+					"vine5.rz": "torad(sin((age - 75) / 17) * 14)",
+					"vine6.rz": "torad(sin((age - 90) / 17) * 16)"
+				}
+			]
+		},
+		{
+			"part": "left_arm",
+			"id": "left_arm",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [5, -22, 0]
+		},
+		{
+			"part": "right_arm",
+			"id": "right_arm",
+			"invertAxis": "xy",
+			"translate": [-5, -22, 0]
+		},
+		{
+			"part": "left_leg",
+			"id": "left_leg",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [1.9, -12, 0]
+		},
+		{
+			"part": "right_leg",
+			"id": "right_leg",
+			"invertAxis": "xy",
+			"translate": [-1.9, -12, 0]
+		}
+	]
+}
