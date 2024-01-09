@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.map_device.db
 
 import de.fuballer.mcendgame.component.map_device.MapDeviceSettings
-import de.fuballer.mcendgame.domain.PersistableMapRepository
+import de.fuballer.mcendgame.domain.PersistentMapRepository
 import de.fuballer.mcendgame.domain.Portal
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PluginUtil
@@ -16,7 +16,7 @@ import java.util.*
 @Component
 class MapDeviceRepository(
     private val server: Server
-) : PersistableMapRepository<UUID, MapDeviceEntity>() {
+) : PersistentMapRepository<UUID, MapDeviceEntity>() {
     override fun initialize(plugin: JavaPlugin) {
         super.initialize(plugin)
 
