@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.domain
 
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import de.fuballer.mcendgame.framework.AbstractMapRepository
+import de.fuballer.mcendgame.framework.InMemoryMapRepository
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import org.bukkit.plugin.java.JavaPlugin
@@ -15,7 +15,7 @@ import java.nio.file.StandardOpenOption
 const val CONFIG_FILE_SUFFIX = ".db"
 const val CONFIG_FILE_EXTENSION = "json"
 
-open class PersistableMapRepository<ID, ENTITY : Entity<ID>> : AbstractMapRepository<ID, ENTITY>(), LifeCycleListener {
+open class PersistentMapRepository<ID, ENTITY : Entity<ID>> : InMemoryMapRepository<ID, ENTITY>(), LifeCycleListener {
     // please don't ask me about it ಠ╭╮ಠ
     private val entityClass = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[1]
     private val gson = GsonBuilder().setPrettyPrinting().create()

@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.framework
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import de.fuballer.mcendgame.framework.stereotype.Repository
 
-abstract class AbstractMapRepository<ID, ENTITY : Entity<ID>> : Repository<ID, ENTITY> {
+abstract class InMemoryMapRepository<ID, ENTITY : Entity<ID>> : Repository<ID, ENTITY> {
     protected var map = mutableMapOf<ID, ENTITY>()
 
     override fun findAll() = map.values.toList()
@@ -19,7 +19,5 @@ abstract class AbstractMapRepository<ID, ENTITY : Entity<ID>> : Repository<ID, E
         return entity
     }
 
-    override fun delete(id: ID) {
-        map.remove(id)
-    }
+    override fun delete(id: ID) = map.remove(id)
 }

@@ -64,9 +64,9 @@ class DiscoverRecipeAddEvent(
 ) : HandleableEvent()
 
 /**
- * Thrown whenever a recipe is added to the discoverable recipes
+ * Thrown whenever enemies are spawned in a dungeon
  *
- * @param world world mobs got spawned in
+ * @param world the world mobs got spawned in
  * @param entities the spawned entities
  */
 class DungeonEnemySpawnedEvent(
