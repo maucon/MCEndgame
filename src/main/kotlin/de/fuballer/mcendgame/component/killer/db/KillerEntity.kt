@@ -49,8 +49,7 @@ class KillerEntity(
     }
 
     private fun getSpawnEgg(entity: Entity): ItemStack {
-        val type = entity.type
-        val spawnEgg = ItemStack(KillerSettings.ENTITY_SPAWN_EGGS.getOrDefault(type, KillerSettings.DEFAULT_SPAWN_EGG), 1)
+        val spawnEgg = ItemStack(KillerSettings.DEFAULT_SPAWN_EGG)
 
         val meta = spawnEgg.itemMeta ?: return spawnEgg
         meta.setDisplayName(ChatColor.BLUE.toString() + (entity.customName ?: entity.name))

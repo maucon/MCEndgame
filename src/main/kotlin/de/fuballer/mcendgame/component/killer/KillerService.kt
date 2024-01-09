@@ -36,9 +36,6 @@ class KillerService(
     fun onInventoryClick(event: InventoryClickEvent) {
         if (!event.view.title.startsWith(KillerSettings.INVENTORY_TITLE, true)) return
 
-        val spawnEgg = event.inventory.getItem(9) ?: return
-        if (!spawnEgg.type.name.contains("EGG")) return
-
         event.isCancelled = true
     }
 }
