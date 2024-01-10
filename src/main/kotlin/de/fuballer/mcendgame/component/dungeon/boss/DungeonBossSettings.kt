@@ -51,7 +51,7 @@ object DungeonBossSettings {
     val POISON_CLOUD_EFFECT = PotionEffect(PotionEffectType.HARM, 0, 1, true)
     const val POISON_CLOUD_REAPPLICATION_DELAY = 10 //in Ticks
 
-    fun getSummonVineAmount(bossLevel: Int) = 30 + (bossLevel / 5)
+    fun getSummonVineAmount(bossLevel: Int) = bossLevel / 5
 
     fun getBossAbilityCooldown(bossLevel: Int) = 30 + 120 / (1 + bossLevel / 5)
 }

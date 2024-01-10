@@ -14,8 +14,8 @@ object DungeonTypeSettings {
 
     val DUNGEON_TYPE_WEIGHTS = listOf(
         RandomOption(1, DungeonType.HELL),
-        RandomOption(1, DungeonType.MONSTER),
         RandomOption(1, DungeonType.UNDEAD),
         RandomOption(1, DungeonType.MYTHICAL),
+        RandomOption(1, DungeonType.FOREST),
     )
 }
