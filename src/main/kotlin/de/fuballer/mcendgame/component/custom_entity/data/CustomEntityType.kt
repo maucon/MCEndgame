@@ -1,15 +1,19 @@
 package de.fuballer.mcendgame.component.custom_entity.data
 
 import de.fuballer.mcendgame.component.custom_entity.CustomEntitySettings
+import de.fuballer.mcendgame.component.custom_entity.ability.Ability
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.*
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Location
 import org.bukkit.entity.*
 
 enum class CustomEntityType(
     val type: EntityType,
     val customName: String?,
-    val data: CustomEntityData
+    val data: CustomEntityData,
+    val abilities: List<RandomOption<Ability>>? = null
 ) {
     ZOMBIE(EntityType.ZOMBIE, null, CustomEntitySettings.ZOMBIE_DATA),
     HUSK(EntityType.HUSK, null, CustomEntitySettings.HUSK_DATA),
@@ -28,12 +32,38 @@ enum class CustomEntityType(
     REAPER(EntityType.WITHER_SKELETON, "Reaper", CustomEntitySettings.REAPER_DATA),
     CHUPACABRA(EntityType.WOLF, "Chupacabra", CustomEntitySettings.CHUPACABRA_DATA),
     STALKER(EntityType.ZOMBIE, "Stalker", CustomEntitySettings.STALKER_DATA),
-    DEMONIC_GOLEM(EntityType.RAVAGER, "Demonic Golem", CustomEntitySettings.DEMONIC_GOLEM_DATA),
-    MINOTAUR(EntityType.IRON_GOLEM, "Minotaur", CustomEntitySettings.MINOTAUR_DATA),
+    DEMONIC_GOLEM( // Boss
+        EntityType.RAVAGER,
+        "Demonic Golem",
+        CustomEntitySettings.DEMONIC_GOLEM_DATA,
+        listOf(
+            RandomOption(30, ApplyDarknessAbility),
+            RandomOption(50, FireCascadeAbility),
+            RandomOption(40, SummonGravitationPillarAbility),
+        )
+    ),
+    MINOTAUR( // Boss
+        EntityType.IRON_GOLEM,
+        "Minotaur",
+        CustomEntitySettings.MINOTAUR_DATA,
+        listOf(
+            RandomOption(20, ApplySpeedAbility),
+            RandomOption(50, LeapAbility),
+        )
+    ),
     NAGA(EntityType.SKELETON, "Naga", CustomEntitySettings.NAGA_DATA),
     CYCLOPS(EntityType.ZOMBIE, "Cyclops", CustomEntitySettings.CYCLOPS_DATA),
     HARPY(EntityType.SKELETON, "Harpy", CustomEntitySettings.HARPY_DATA),
-    CERBERUS(EntityType.RAVAGER, "Cerberus", CustomEntitySettings.CERBERUS_DATA),
+    CERBERUS( // Boss
+        EntityType.RAVAGER,
+        "Cerberus",
+        CustomEntitySettings.CERBERUS_DATA,
+        listOf(
+            RandomOption(30, ShootFireArrowsAbility),
+            RandomOption(50, FireCascadeAbility),
+            RandomOption(25, ApplyDarknessAbility),
+        )
+    ),
     SUCCUBUS(EntityType.ZOMBIE, "Succubus", CustomEntitySettings.SUCCUBUS_DATA),
     INCUBUS(EntityType.ZOMBIE, "Incubus", CustomEntitySettings.INCUBUS_DATA),
     IMP(EntityType.SKELETON, "Imp", CustomEntitySettings.IMP_DATA),
@@ -44,7 +74,15 @@ enum class CustomEntityType(
     MELEE_FOREST_SKELETON(EntityType.SKELETON, "Forest Skeleton", CustomEntitySettings.MELEE_FOREST_SKELETON_DATA),
     DRYAD(EntityType.ZOMBIE, "Dryad", CustomEntitySettings.DRYAD_DATA),
     WENDIGO(EntityType.WITHER_SKELETON, "Wendigo", CustomEntitySettings.WENDIGO_DATA),
-    MANDRAGORA(EntityType.RAVAGER, "Mandragora", CustomEntitySettings.MANDRAGORA_DATA),
+    MANDRAGORA( // Boss
+        EntityType.RAVAGER,
+        "Mandragora",
+        CustomEntitySettings.MANDRAGORA_DATA,
+        listOf(
+            RandomOption(30, PoisonCloudAbility),
+            RandomOption(30, SummonVinesAbility),
+        )
+    ),
 
     STONE_PILLAR(EntityType.ZOMBIE, "Stone Pillar", CustomEntitySettings.STONE_PILLAR_DATA),
     VINE(EntityType.ZOMBIE, "Vine", CustomEntitySettings.VINE_DATA),
@@ -85,9 +123,9 @@ enum class CustomEntityType(
         }
 
         private fun setAttributes(entity: LivingEntity, data: CustomEntityData, mapTier: Int) {
-            val newHealth = data.maxLifeBase + mapTier * data.maxLifePerTier
-            val newDamage = data.damageBase + mapTier * data.damagePerTier
-            val newSpeed = data.speedBase + mapTier * data.speedPerTier
+            val newHealth = data.baseHealth + mapTier * data.healthPerTier
+            val newDamage = data.baseDamage + mapTier * data.damagePerTier
+            val newSpeed = data.baseSpeed + mapTier * data.speedPerTier
 
             DungeonUtil.setBasicAttributes(entity, newHealth, newDamage, newSpeed)
         }

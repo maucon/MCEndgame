@@ -8,10 +8,10 @@ data class CustomEntityData(
     val hideEquipment: Boolean,
     val isSilent: Boolean,
 
-    val maxLifeBase: Double,
-    val maxLifePerTier: Double,
-    val damageBase: Double,
+    val baseHealth: Double,
+    val healthPerTier: Double,
+    val baseDamage: Double,
     val damagePerTier: Double,
-    val speedBase: Double,
+    val baseSpeed: Double,
     val speedPerTier: Double,
 )

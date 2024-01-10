@@ -152,7 +152,8 @@ class StatItemService : Listener {
         equipmentProbabilities: List<SortableRandomOption<out Equipment?>>,
         slot: EquipmentSlot
     ): ItemStack? {
-        val equipment = RandomUtil.pick(equipmentProbabilities, StatItemSettings.calculateEquipmentRollTries(mapTier)).option ?: return null
+        val rolls = StatItemSettings.calculateEquipmentRollTries(mapTier)
+        val equipment = RandomUtil.pick(equipmentProbabilities, rolls).option ?: return null
         return getEquipment(mapTier, equipment, slot)
     }
 

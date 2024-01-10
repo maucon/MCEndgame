@@ -1,14 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.type.data
 
 import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.boss.data.BossType
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 
 enum class DungeonType(
     private val mapTypes: List<RandomOption<DungeonMapType>>,
     private val entityTypes: List<RandomOption<CustomEntityType>>,
-    private val bossType: List<RandomOption<BossType>>
+    private val bossEntityTypes: List<RandomOption<CustomEntityType>>
 ) {
     HELL(
         listOf(
@@ -24,7 +23,7 @@ enum class DungeonType(
             RandomOption(3, CustomEntityType.INCUBUS),
             RandomOption(15, CustomEntityType.IMP),
         ),
-        listOf(RandomOption(1, BossType.CERBERUS))
+        listOf(RandomOption(1, CustomEntityType.CERBERUS))
     ),
     UNDEAD(
         listOf(
@@ -44,7 +43,7 @@ enum class DungeonType(
             RandomOption(12, CustomEntityType.NECROMANCER),
             RandomOption(3, CustomEntityType.REAPER)
         ),
-        listOf(RandomOption(1, BossType.CERBERUS))
+        listOf(RandomOption(1, CustomEntityType.DEMONIC_GOLEM))
     ),
     MYTHICAL(
         listOf(
@@ -59,7 +58,7 @@ enum class DungeonType(
             RandomOption(10, CustomEntityType.HARPY),
             RandomOption(10, CustomEntityType.NAGA)
         ),
-        listOf(RandomOption(1, BossType.MINOTAUR))
+        listOf(RandomOption(1, CustomEntityType.MINOTAUR))
     ),
     FOREST(
         listOf(
@@ -73,12 +72,12 @@ enum class DungeonType(
             RandomOption(4, CustomEntityType.DRYAD),
             RandomOption(1, CustomEntityType.WENDIGO)
         ),
-        listOf(RandomOption(1, BossType.MANDRAGORA))
+        listOf(RandomOption(1, CustomEntityType.MANDRAGORA))
     );
 
     fun roll() = RolledDungeonType(
         RandomUtil.pick(mapTypes).option,
         entityTypes,
-        RandomUtil.pick(bossType).option
+        RandomUtil.pick(bossEntityTypes).option
     )
 }
