@@ -46,23 +46,6 @@ enum class DungeonType(
         ),
         listOf(RandomOption(1, BossType.CERBERUS))
     ),
-    MONSTER(
-        listOf(
-            RandomOption(3, DungeonMapType.MINE),
-            RandomOption(3, DungeonMapType.CATACOMBS),
-            RandomOption(1, DungeonMapType.CATACOMBS_ALTERNATIVE),
-            RandomOption(1, DungeonMapType.ICE_CAVE),
-            RandomOption(1, DungeonMapType.LUSH_CAVE)
-        ),
-        listOf(
-            RandomOption(8, CustomEntityType.CREEPER),
-            RandomOption(80, CustomEntityType.ZOMBIE),
-            RandomOption(25, CustomEntityType.SLIME),
-            RandomOption(10, CustomEntityType.HATCHERY),
-            RandomOption(30, CustomEntityType.STALKER)
-        ),
-        listOf(RandomOption(1, BossType.DEMONIC_GOLEM))
-    ),
     MYTHICAL(
         listOf(
             RandomOption(1, DungeonMapType.ICE_CAVE),
@@ -86,6 +69,7 @@ enum class DungeonType(
             RandomOption(50, CustomEntityType.FOREST_SKELETON),
             RandomOption(40, CustomEntityType.MELEE_FOREST_SKELETON),
             RandomOption(15, CustomEntityType.MUSHROOM),
+            RandomOption(8, CustomEntityType.STALKER),
             RandomOption(4, CustomEntityType.DRYAD),
             RandomOption(1, CustomEntityType.WENDIGO)
         ),

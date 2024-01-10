@@ -60,7 +60,7 @@ enum class CustomEntityType(
         fun spawnCustomEntity(customEntityType: CustomEntityType, loc: Location, mapTier: Int): Entity? {
             val world = loc.world ?: return null
 
-            val entity = world.spawnEntity(loc, customEntityType.type)
+            val entity = world.spawnEntity(loc, customEntityType.type, false)
             entity.customName = customEntityType.customName
             entity.isCustomNameVisible = false
 

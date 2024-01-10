@@ -37,7 +37,7 @@ class Portal(
         if (active) return
         active = true
 
-        portalEntity = (portalLocationWorld.spawnEntity(portalLocation, EntityType.ARMOR_STAND) as ArmorStand)
+        portalEntity = (portalLocationWorld.spawnEntity(portalLocation, EntityType.ARMOR_STAND, false) as ArmorStand)
             .apply {
                 isInvulnerable = true
                 setGravity(false)

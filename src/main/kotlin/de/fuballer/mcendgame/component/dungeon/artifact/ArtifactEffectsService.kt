@@ -368,7 +368,7 @@ class ArtifactEffectsService(
 
         for (i in 1..count.toInt()) {
             val targetWorld = event.locationToTeleport.world!!
-            val wolf = targetWorld.spawnEntity(event.locationToTeleport, EntityType.WOLF) as Wolf
+            val wolf = targetWorld.spawnEntity(event.locationToTeleport, EntityType.WOLF, false) as Wolf
             wolf.owner = player
 
             val potionEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, Int.MAX_VALUE, realStrength.toInt(), false, false)

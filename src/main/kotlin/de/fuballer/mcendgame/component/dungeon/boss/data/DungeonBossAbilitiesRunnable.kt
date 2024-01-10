@@ -13,8 +13,10 @@ import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.*
-import org.bukkit.attribute.Attribute
-import org.bukkit.entity.*
+import org.bukkit.entity.AreaEffectCloud
+import org.bukkit.entity.Creature
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 import kotlin.math.pow
@@ -175,23 +177,11 @@ class DungeonBossAbilitiesRunnable(
     }
 
     private fun summonGravitationPillar() {
-        val pillar = boss.world.spawnEntity(boss.location, CustomEntityType.STONE_PILLAR.type) as LivingEntity
+        val pillar = CustomEntityType.spawnCustomEntity(CustomEntityType.STONE_PILLAR, boss.location, mapTier) as LivingEntity
 
-        pillar.customName = CustomEntityType.STONE_PILLAR.customName
         pillar.setAI(false)
-        pillar.isSilent = true
-
-        if (pillar is Ageable) pillar.setAdult()
-        pillar.equipment?.also { it.clear() }
 
         PersistentDataUtil.setValue(pillar, DataTypeKeys.IS_MINION, true)
-        PersistentDataUtil.setValue(pillar, DataTypeKeys.DROP_BASE_LOOT, false)
-
-        val attributeInstance = pillar.getAttribute(Attribute.GENERIC_MAX_HEALTH)
-        if (attributeInstance != null) {
-            attributeInstance.baseValue = 1.0
-            pillar.health = 1.0
-        }
 
         val event = DungeonEnemySpawnedEvent(boss.world, setOf(pillar))
         EventGateway.apply(event)
@@ -229,7 +219,7 @@ class DungeonBossAbilitiesRunnable(
                 }
                 spawnLoc.add(0.0, 1.0, 0.0)
 
-                val cloud = it.world.spawnEntity(spawnLoc, EntityType.AREA_EFFECT_CLOUD) as AreaEffectCloud
+                val cloud = it.world.spawnEntity(spawnLoc, EntityType.AREA_EFFECT_CLOUD, false) as AreaEffectCloud
                 cloud.color = Color.GREEN
                 cloud.duration = DungeonBossSettings.POISON_CLOUD_DURATION
                 cloud.radius = DungeonBossSettings.POISON_CLOUD_RADIUS
@@ -244,9 +234,11 @@ class DungeonBossAbilitiesRunnable(
         val amount = DungeonBossSettings.getSummonVineAmount(mapTier)
 
         val vines = mutableSetOf<LivingEntity>()
-        for (i in 1..amount) {
+        for (i in 0 until amount) {
             val vine = CustomEntityType.spawnCustomEntity(CustomEntityType.VINE, boss.location, mapTier) as LivingEntity
-            vine.equipment?.also { it.clear() }
+
+            PersistentDataUtil.setValue(vine, DataTypeKeys.IS_MINION, true)
+
             vines.add(vine)
         }
 
