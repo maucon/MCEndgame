@@ -18,7 +18,7 @@ class ImpService : Listener {
         val entity = event.entity
         if (!CustomEntityType.isType(entity, CustomEntityType.IMP)) return
 
-        val fireball = entity.world.spawnEntity(event.projectile.location, EntityType.SMALL_FIREBALL) as SmallFireball
+        val fireball = entity.world.spawnEntity(event.projectile.location, EntityType.SMALL_FIREBALL, false) as SmallFireball
         fireball.shooter = entity
 
         entity.world.playSound(entity.location, Sound.ITEM_FIRECHARGE_USE, SoundCategory.HOSTILE, 1f, 1f)

@@ -17,7 +17,7 @@ class NagaService : Listener {
         val entity = event.entity
         if (!CustomEntityType.isType(entity, CustomEntityType.NAGA)) return
 
-        val spit = entity.world.spawnEntity(event.projectile.location, EntityType.LLAMA_SPIT) as LlamaSpit
+        val spit = entity.world.spawnEntity(event.projectile.location, EntityType.LLAMA_SPIT, false) as LlamaSpit
         spit.velocity = event.projectile.velocity
 
         spit.shooter = entity

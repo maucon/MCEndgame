@@ -17,7 +17,7 @@ class HarpyService : Listener {
         val entity = event.entity
         if (!CustomEntityType.isType(entity, CustomEntityType.HARPY)) return
 
-        val snowball = entity.world.spawnEntity(event.projectile.location, EntityType.SNOWBALL) as Snowball
+        val snowball = entity.world.spawnEntity(event.projectile.location, EntityType.SNOWBALL, false) as Snowball
         snowball.velocity = event.projectile.velocity
 
         snowball.shooter = entity

@@ -219,7 +219,7 @@ class DungeonBossAbilitiesRunnable(
                 }
                 spawnLoc.add(0.0, 1.0, 0.0)
 
-                val cloud = it.world.spawnEntity(spawnLoc, EntityType.AREA_EFFECT_CLOUD) as AreaEffectCloud
+                val cloud = it.world.spawnEntity(spawnLoc, EntityType.AREA_EFFECT_CLOUD, false) as AreaEffectCloud
                 cloud.color = Color.GREEN
                 cloud.duration = DungeonBossSettings.POISON_CLOUD_DURATION
                 cloud.radius = DungeonBossSettings.POISON_CLOUD_RADIUS
