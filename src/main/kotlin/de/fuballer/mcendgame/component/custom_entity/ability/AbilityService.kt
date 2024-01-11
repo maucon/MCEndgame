@@ -4,37 +4,43 @@ import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityEnt
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityRepository
 import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
-import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
+import de.fuballer.mcendgame.domain.TimerTask
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Creature
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityTargetEvent
+import org.bukkit.plugin.java.JavaPlugin
+import java.util.*
 
 @Component
 class AbilityService(
-    private val entityAbilityRepo: EntityAbilityRepository,
-    private val worldManageRepo: WorldManageRepository
-) : Listener {
+    private val entityAbilityRepo: EntityAbilityRepository
+) : Listener, LifeCycleListener {
+    override fun initialize(plugin: JavaPlugin) {
+        startInactiveCheckTimer()
+    }
+
     @EventHandler
     fun onEntityTarget(event: EntityTargetEvent) {
-        val entity = event.entity
+        val entity = event.entity as? Creature ?: return
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
+        if (event.target !is Player) return
 
         val typeString = PersistentDataUtil.getValue(entity, DataTypeKeys.ENTITY_TYPE) ?: return
         val type = CustomEntityType.valueOf(typeString)
 
         if (type.abilities == null) return
 
-        if (!entityAbilityRepo.exists(entity.uniqueId)) {
-            val entityAbility = EntityAbilityEntity(entity.uniqueId, type)
-            entityAbilityRepo.save(entityAbility)
-        }
+        val entityAbility = entityAbilityRepo.findById(entity.uniqueId)
+            ?: EntityAbilityEntity(entity.uniqueId, type).also { entityAbilityRepo.save(it) }
 
-        startAbilityRunner(event)
+        startAbilityRunner(entity, entityAbility)
     }
 
     @EventHandler
@@ -48,16 +54,28 @@ class AbilityService(
         entityAbilityRepo.delete(uuid)
     }
 
-    private fun startAbilityRunner(event: EntityTargetEvent) {
-        val entity = event.entity as Creature
-        val worldName = entity.world.name
-        val uuid = entity.uniqueId
+    private fun startInactiveCheckTimer() {
+        Timer().schedule(
+            TimerTask { removeInactive() },
+            AbilitySettings.INACTIVE_CHECK_PERIOD,
+            AbilitySettings.INACTIVE_CHECK_PERIOD
+        )
+    }
 
-        val entityAbility = entityAbilityRepo.findById(uuid) ?: return
+    private fun removeInactive() {
+        println("checking")
+        entityAbilityRepo.findAll()
+            .filter { it.abilityRunner == null || it.abilityRunner!!.isCancelled() }
+            .forEach {
+                entityAbilityRepo.delete(it.id)
+            }
+    }
+
+    private fun startAbilityRunner(entity: Creature, entityAbility: EntityAbilityEntity) {
         val abilityRunner = entityAbility.abilityRunner
-        if (abilityRunner != null && abilityRunner.isCancelled()) return
+        if (abilityRunner != null && !abilityRunner.isCancelled()) return
 
-        val mapTier = worldManageRepo.findById(worldName)?.mapTier ?: 1
+        val mapTier = PersistentDataUtil.getValue(entity, DataTypeKeys.MAP_TIER) ?: return
 
         val runner = EntityAbilityRunner(entity, entityAbility.entityType, mapTier)
         runner.run()
