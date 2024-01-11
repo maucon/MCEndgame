@@ -12,7 +12,6 @@ import org.bukkit.entity.Creature
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
-import org.bukkit.event.entity.EntitySpawnEvent
 import org.bukkit.event.entity.EntityTargetEvent
 
 @Component
@@ -21,7 +20,7 @@ class AbilityService(
     private val worldManageRepo: WorldManageRepository
 ) : Listener {
     @EventHandler
-    fun onEntitySpawn(event: EntitySpawnEvent) {
+    fun onEntityTarget(event: EntityTargetEvent) {
         val entity = event.entity
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
 
@@ -30,18 +29,12 @@ class AbilityService(
 
         if (type.abilities == null) return
 
-        val entityAbility = EntityAbilityEntity(entity.uniqueId, type)
-        entityAbilityRepo.save(entityAbility)
-    }
-
-    @EventHandler
-    fun onEntityTarget(event: EntityTargetEvent) {
-        val entity = event.entity
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
-
-        if (entityAbilityRepo.exists(entity.uniqueId)) {
-            startAbilityRunner(event)
+        if (!entityAbilityRepo.exists(entity.uniqueId)) {
+            val entityAbility = EntityAbilityEntity(entity.uniqueId, type)
+            entityAbilityRepo.save(entityAbility)
         }
+
+        startAbilityRunner(event)
     }
 
     @EventHandler
