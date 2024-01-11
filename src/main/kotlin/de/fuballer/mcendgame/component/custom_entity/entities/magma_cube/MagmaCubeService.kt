@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.entities.magma_cube
 
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.type.command
 
+import de.fuballer.mcendgame.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeSettings
-import de.fuballer.mcendgame.component.dungeon.type.data.DungeonType
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeEntity
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeRepository
 import de.fuballer.mcendgame.domain.CommandAction

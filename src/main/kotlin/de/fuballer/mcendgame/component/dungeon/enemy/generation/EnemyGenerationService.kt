@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.generation
 
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.stat_item.StatItemService

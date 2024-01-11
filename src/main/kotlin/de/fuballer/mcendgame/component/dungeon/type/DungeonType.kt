@@ -1,6 +1,7 @@
-package de.fuballer.mcendgame.component.dungeon.type.data
+package de.fuballer.mcendgame.component.dungeon.type
 
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
+import de.fuballer.mcendgame.component.dungeon.type.data.RolledDungeonType
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 

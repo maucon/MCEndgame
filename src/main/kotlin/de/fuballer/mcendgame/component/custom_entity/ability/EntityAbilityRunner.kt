@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.ability
 
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.util.PluginUtil.runTaskTimer
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.entity.Creature
@@ -10,13 +10,12 @@ import org.bukkit.scheduler.BukkitTask
 class EntityAbilityRunner(
     private val entity: Creature,
     private val customEntityType: CustomEntityType,
-    private val mapTier: Int
+    private val abilityCooldown: Int
 ) {
     private var task: BukkitTask? = null
 
     fun run() {
         if (customEntityType.abilities == null) return
-        val abilityCooldown = AbilitySettings.getAbilityCooldown(mapTier)
 
         task = EntityAbilityRunnable(entity, customEntityType, abilityCooldown)
             .runTaskTimer(0, AbilitySettings.ABILITY_CHECK_PERIOD)

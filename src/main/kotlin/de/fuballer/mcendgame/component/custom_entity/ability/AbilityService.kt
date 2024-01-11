@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.component.custom_entity.ability
 
+import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.DataTypeKeys
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityEntity
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityRepository
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
-import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.domain.TimerTask
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
@@ -77,7 +77,8 @@ class AbilityService(
 
         val mapTier = PersistentDataUtil.getValue(entity, DataTypeKeys.MAP_TIER) ?: return
 
-        val runner = EntityAbilityRunner(entity, entityAbility.entityType, mapTier)
+        val abilityCooldown = AbilitySettings.getAbilityCooldown(mapTier)
+        val runner = EntityAbilityRunner(entity, entityAbility.entityType, abilityCooldown)
         runner.run()
 
         entityAbility.abilityRunner = runner

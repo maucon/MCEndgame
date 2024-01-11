@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.DataTypeKeys
 import org.bukkit.entity.Entity
 
 object PersistentDataUtil {

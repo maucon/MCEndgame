@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.type.data
+package de.fuballer.mcendgame.component.dungeon.type
 
 enum class DungeonMapType(
     val typeName: String

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.artifact
 
-import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.artifact.data.ArtifactType
 import de.fuballer.mcendgame.component.dungeon.artifact.db.HealOnBlockArtifactEntity
 import de.fuballer.mcendgame.component.dungeon.artifact.db.HealOnBlockArtifactRepository

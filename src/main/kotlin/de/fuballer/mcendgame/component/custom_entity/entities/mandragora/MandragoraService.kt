@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.entities.mandragora
 
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionRepository
 import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.entity.EntityType

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.generation
 
-import de.fuballer.mcendgame.component.dungeon.type.data.DungeonMapType
+import de.fuballer.mcendgame.component.dungeon.type.DungeonMapType
 
 object DungeonGenerationSettings {
     fun getSchematicPath(dungeonMapType: DungeonMapType, schematicName: String) =

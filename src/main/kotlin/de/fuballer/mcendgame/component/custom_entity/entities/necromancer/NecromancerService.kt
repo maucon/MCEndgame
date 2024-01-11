@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.entities.necromancer
 
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerService
 import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionRepository
 import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionsEntity

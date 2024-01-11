@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 
+import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.DataTypeKeys
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
-import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.PersistentDataUtil

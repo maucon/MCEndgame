@@ -5,15 +5,15 @@ import com.sk89q.worldedit.extent.clipboard.Clipboard
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats
 import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.math.transform.AffineTransform
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossService
 import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationService
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.dungeon.leave.DungeonLeaveService
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveEntity
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
+import de.fuballer.mcendgame.component.dungeon.type.DungeonMapType
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
-import de.fuballer.mcendgame.component.dungeon.type.data.DungeonMapType
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.framework.annotation.Component
 import kotlinx.coroutines.launch

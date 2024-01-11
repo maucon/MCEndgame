@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.entities.leech
 
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import org.bukkit.entity.Bee

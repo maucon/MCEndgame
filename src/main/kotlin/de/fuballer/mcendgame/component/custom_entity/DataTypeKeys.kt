@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.custom_entity.data
+package de.fuballer.mcendgame.component.custom_entity
 
 import de.fuballer.mcendgame.util.PluginUtil.createNamespacedKey
 import org.bukkit.NamespacedKey

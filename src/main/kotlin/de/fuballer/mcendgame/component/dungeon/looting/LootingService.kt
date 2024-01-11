@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.looting
 
-import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.killingstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killingstreak.db.KillStreakRepository
 import de.fuballer.mcendgame.framework.annotation.Component

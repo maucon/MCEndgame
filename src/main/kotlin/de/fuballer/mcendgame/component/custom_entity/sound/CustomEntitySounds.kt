@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.sound
 
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 
 object CustomEntitySounds {
     private val SOUNDS = mapOf(

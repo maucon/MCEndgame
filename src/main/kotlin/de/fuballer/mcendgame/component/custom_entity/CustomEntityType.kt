@@ -1,8 +1,8 @@
-package de.fuballer.mcendgame.component.custom_entity.data
+package de.fuballer.mcendgame.component.custom_entity
 
-import de.fuballer.mcendgame.component.custom_entity.CustomEntitySettings
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.*
+import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityData
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.random.RandomOption
