@@ -60,7 +60,6 @@ class AbilityService(
     }
 
     private fun removeInactive() {
-        println("checking")
         entityAbilityRepo.findAll()
             .filter { it.abilityRunner == null || it.abilityRunner!!.isCancelled() }
             .forEach {

@@ -7,19 +7,20 @@ import java.util.*
 private const val DELIMITER = ","
 
 @Suppress("UNCHECKED_CAST")
-object PersistentUUIDList : PersistentDataType<String, List<UUID>> {
+object PersistentUUIDSet : PersistentDataType<String, Set<UUID>> {
     override fun getPrimitiveType(): Class<String> = String::class.java
 
-    override fun getComplexType(): Class<List<UUID>> = List::class.java as Class<List<UUID>>
+    override fun getComplexType(): Class<Set<UUID>> = Set::class.java as Class<Set<UUID>>
 
-    override fun toPrimitive(complex: List<UUID>, context: PersistentDataAdapterContext): String {
+    override fun toPrimitive(complex: Set<UUID>, context: PersistentDataAdapterContext): String {
         return complex.joinToString(DELIMITER) { it.toString() }
     }
 
-    override fun fromPrimitive(primitive: String, context: PersistentDataAdapterContext): List<UUID> {
-        if (primitive.isEmpty()) return emptyList()
+    override fun fromPrimitive(primitive: String, context: PersistentDataAdapterContext): Set<UUID> {
+        if (primitive.isEmpty()) return emptySet()
 
         return primitive.split(DELIMITER)
             .map { UUID.fromString(it) }
+            .toSet()
     }
 }

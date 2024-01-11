@@ -6,6 +6,7 @@ import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKey
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.util.SummonerUtil
 import org.bukkit.entity.LivingEntity
 
 fun getSummonVineAmount(bossLevel: Int) = bossLevel / 5
@@ -24,6 +25,8 @@ object SummonVinesAbility : Ability {
 
             vines.add(vine)
         }
+
+        SummonerUtil.addMinions(caster, vines)
 
         val event = DungeonEnemySpawnedEvent(caster.world, vines)
         EventGateway.apply(event)

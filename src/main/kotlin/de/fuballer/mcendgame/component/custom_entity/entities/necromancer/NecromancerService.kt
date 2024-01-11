@@ -2,9 +2,8 @@ package de.fuballer.mcendgame.component.custom_entity.entities.necromancer
 
 import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerService
-import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionRepository
-import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionsEntity
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.SummonerUtil
 import org.bukkit.entity.Spellcaster
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -14,7 +13,6 @@ import kotlin.math.min
 
 @Component
 class NecromancerService(
-    private val minionRepo: MinionRepository,
     private val summonerService: SummonerService
 ) : Listener {
     @EventHandler
@@ -26,16 +24,13 @@ class NecromancerService(
     }
 
     private fun summonVexSpell(event: EntitySpellCastEvent) {
-        val minionsEntity = minionRepo.findById(event.entity.uniqueId)
-            ?: MinionsEntity(event.entity.uniqueId)
+        event.isCancelled = true
 
-        updateMinions(minionsEntity)
+        val necromancer = event.entity
+        val minions = SummonerUtil.getMinionEntities(necromancer)
 
-        val spawnAmount = min(NecromancerSettings.SPAWN_AMOUNT, NecromancerSettings.MAX_MINIONS - minionsEntity.minions.size)
-        if (spawnAmount <= 0) {
-            event.isCancelled = true
-            return
-        }
+        val spawnAmount = min(NecromancerSettings.SPAWN_AMOUNT, NecromancerSettings.MAX_MINIONS - minions.size)
+        if (spawnAmount <= 0) return
 
         summonerService.summonMinions(
             event.entity,
@@ -44,10 +39,5 @@ class NecromancerService(
             NecromancerSettings.MINION_HEALTH,
             Vector(0, 0, 0)
         )
-        event.isCancelled = true
-    }
-
-    private fun updateMinions(minionsEntity: MinionsEntity) {
-        minionsEntity.minions.removeIf { it.isDead }
     }
 }

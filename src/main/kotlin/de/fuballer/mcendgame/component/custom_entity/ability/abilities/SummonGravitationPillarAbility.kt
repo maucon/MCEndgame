@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
+import de.fuballer.mcendgame.util.SummonerUtil
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.LivingEntity
@@ -25,6 +26,7 @@ object SummonGravitationPillarAbility : Ability {
         pillar.setAI(false)
 
         PersistentDataUtil.setValue(pillar, DataTypeKeys.IS_MINION, true)
+        SummonerUtil.addMinions(caster, setOf(pillar))
 
         val event = DungeonEnemySpawnedEvent(caster.world, setOf(pillar))
         EventGateway.apply(event)

@@ -2,9 +2,8 @@ package de.fuballer.mcendgame.component.custom_entity.entities.hatchery
 
 import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerService
-import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionRepository
-import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionsEntity
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.SummonerUtil
 import org.bukkit.entity.Bee
 import org.bukkit.entity.Creature
 import org.bukkit.event.EventHandler
@@ -15,7 +14,6 @@ import kotlin.random.Random
 
 @Component
 class HatcheryService(
-    private val minionRepo: MinionRepository,
     private val summonerService: SummonerService
 ) : Listener {
     @EventHandler
@@ -30,12 +28,9 @@ class HatcheryService(
         if (Random.nextDouble() > HatcherySettings.MINION_SPAWN_PROBABILITY) return
 
         val hatchery = event.entity as Creature
-        val minionsEntity = minionRepo.findById(hatchery.uniqueId)
-            ?: MinionsEntity(event.entity.uniqueId)
+        val minions = SummonerUtil.getMinionEntities(hatchery)
 
-        updateMinions(minionsEntity)
-
-        if (minionsEntity.minions.size >= HatcherySettings.MAX_MINIONS) return
+        if (minions.size >= HatcherySettings.MAX_MINIONS) return
 
         summonerService.summonMinions(
             hatchery,
@@ -45,14 +40,11 @@ class HatcheryService(
             Vector(0, 1, 0)
         )
 
-        setLeechAnger(minionsEntity)
+        setLeechAnger(minions)
     }
 
-    private fun updateMinions(minionsEntity: MinionsEntity) {
-        minionsEntity.minions.removeIf { it.isDead }
-    }
-
-    private fun setLeechAnger(minionsEntity: MinionsEntity) {
-        minionsEntity.minions.forEach { (it as Bee).anger = Int.MAX_VALUE }
+    private fun setLeechAnger(minions: Set<Creature>) {
+        minions.filterIsInstance<Bee>()
+            .forEach { it.anger = Int.MAX_VALUE }
     }
 }
