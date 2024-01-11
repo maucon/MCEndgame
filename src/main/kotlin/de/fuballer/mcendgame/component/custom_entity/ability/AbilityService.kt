@@ -1,9 +1,8 @@
 package de.fuballer.mcendgame.component.custom_entity.ability
 
-import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.component.custom_entity.DataTypeKeys
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityEntity
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityRepository
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.domain.TimerTask
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
@@ -32,9 +31,7 @@ class AbilityService(
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (event.target !is Player) return
 
-        val typeString = PersistentDataUtil.getValue(entity, DataTypeKeys.ENTITY_TYPE) ?: return
-        val type = CustomEntityType.valueOf(typeString)
-
+        val type = PersistentDataUtil.getValue(entity, DataTypeKeys.CUSTOM_ENTITY_TYPE) ?: return
         if (type.abilities == null) return
 
         val entityAbility = entityAbilityRepo.findById(entity.uniqueId)

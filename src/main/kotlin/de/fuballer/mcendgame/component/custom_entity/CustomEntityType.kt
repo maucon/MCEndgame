@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.custom_entity
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.*
 import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityData
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -91,8 +92,8 @@ enum class CustomEntityType(
 
     companion object {
         fun isType(entity: Entity, customEntityType: CustomEntityType): Boolean {
-            val type = PersistentDataUtil.getValue(entity, DataTypeKeys.ENTITY_TYPE) ?: return false
-            return type == customEntityType.toString()
+            val type = PersistentDataUtil.getValue(entity, DataTypeKeys.CUSTOM_ENTITY_TYPE) ?: return false
+            return type == customEntityType
         }
 
         fun spawnCustomEntity(customEntityType: CustomEntityType, loc: Location, mapTier: Int): Entity? {
@@ -118,7 +119,7 @@ enum class CustomEntityType(
             PersistentDataUtil.setValue(entity, DataTypeKeys.DROP_BASE_LOOT, type.data.dropBaseLoot)
             PersistentDataUtil.setValue(entity, DataTypeKeys.MAP_TIER, mapTier)
             PersistentDataUtil.setValue(entity, DataTypeKeys.HIDE_EQUIPMENT, type.data.hideEquipment)
-            PersistentDataUtil.setValue(entity, DataTypeKeys.ENTITY_TYPE, type.toString())
+            PersistentDataUtil.setValue(entity, DataTypeKeys.CUSTOM_ENTITY_TYPE, type)
             PersistentDataUtil.setValue(entity, DataTypeKeys.IS_ENEMY, true)
         }
 

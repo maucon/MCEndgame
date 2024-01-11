@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.remaining
 
-import de.fuballer.mcendgame.component.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.remaining.db.RemainingEntity
 import de.fuballer.mcendgame.component.dungeon.remaining.db.RemainingRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
@@ -32,7 +32,7 @@ class RemainingService(
     @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
         val entity = event.entity
-        if (PersistentDataUtil.getValue(entity, DataTypeKeys.IS_ENEMY) != true) return
+        if (!PersistentDataUtil.getBooleanValue(entity, DataTypeKeys.IS_ENEMY)) return
 
         val remainingEntity = remainingRepo.findById(entity.world.name) ?: return
         remainingEntity.remaining -= 1

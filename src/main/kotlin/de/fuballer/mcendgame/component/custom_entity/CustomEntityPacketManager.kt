@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.custom_entity
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolManager
 import com.comphenix.protocol.events.PacketEvent
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.domain.packet.SendingPacketAdapter
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
@@ -29,7 +30,7 @@ class CustomEntityPacketManager(
             val entityId = event.packet.integers.read(0)
             val entity = protocolManager.getEntityFromID(world, entityId) ?: return@SendingPacketAdapter
 
-            val hideEquipment = PersistentDataUtil.getValue(entity, DataTypeKeys.HIDE_EQUIPMENT) ?: return@SendingPacketAdapter
+            val hideEquipment = PersistentDataUtil.getBooleanValue(entity, DataTypeKeys.HIDE_EQUIPMENT)
 
             if (hideEquipment) {
                 event.isCancelled = true

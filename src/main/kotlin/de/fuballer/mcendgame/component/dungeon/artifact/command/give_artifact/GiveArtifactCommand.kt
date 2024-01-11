@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.dungeon.artifact.command.give_artifact
 
 import de.fuballer.mcendgame.component.dungeon.artifact.ArtifactService
 import de.fuballer.mcendgame.component.dungeon.artifact.ArtifactSettings
+import de.fuballer.mcendgame.component.dungeon.artifact.ArtifactType
 import de.fuballer.mcendgame.component.dungeon.artifact.data.Artifact
-import de.fuballer.mcendgame.component.dungeon.artifact.data.ArtifactType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper

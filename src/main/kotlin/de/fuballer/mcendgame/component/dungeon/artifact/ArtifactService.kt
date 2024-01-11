@@ -1,8 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.artifact
 
-import de.fuballer.mcendgame.component.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.artifact.data.Artifact
-import de.fuballer.mcendgame.component.dungeon.artifact.data.ArtifactType
 import de.fuballer.mcendgame.component.dungeon.artifact.db.ArtifactRepository
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
@@ -62,7 +61,7 @@ class ArtifactService(
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         if (event.entity !is Monster) return
 
-        if (PersistentDataUtil.getValue(event.entity, DataTypeKeys.DROP_BASE_LOOT) == false) return
+        if (!PersistentDataUtil.getBooleanValue(event.entity, DataTypeKeys.DROP_BASE_LOOT)) return
 
         if (random.nextDouble() > ArtifactSettings.ARTIFACT_DROP_CHANCE) return
 

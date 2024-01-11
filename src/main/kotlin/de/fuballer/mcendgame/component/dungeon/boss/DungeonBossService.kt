@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
 import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.component.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.damage
 
-import de.fuballer.mcendgame.component.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
@@ -35,7 +35,7 @@ class DungeonEnemyDamagingService : Listener {
         if (entity !is EvokerFangs) return
 
         val owner = entity.owner ?: return
-        if (PersistentDataUtil.getValue(owner, DataTypeKeys.IS_ENEMY) != true) return
+        if (!PersistentDataUtil.getBooleanValue(owner, DataTypeKeys.IS_ENEMY)) return
 
         PersistentDataUtil.setValue(entity, DataTypeKeys.IS_ENEMY, true)
     }

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.sound
 
-import de.fuballer.mcendgame.component.custom_entity.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.SoundCategory
@@ -29,7 +29,7 @@ class CustomEntitySoundService : Listener {
     }
 
     private fun getSounds(entity: Entity): CustomEntitySoundData? {
-        val type = PersistentDataUtil.getValue(entity, DataTypeKeys.ENTITY_TYPE) ?: return null
+        val type = PersistentDataUtil.getValue(entity, DataTypeKeys.CUSTOM_ENTITY_TYPE) ?: return null
         return CustomEntitySounds.getSounds(type)
     }
 }
