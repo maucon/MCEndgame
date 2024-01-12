@@ -7,7 +7,7 @@ import java.util.*
 private const val DELIMITER = ","
 
 @Suppress("UNCHECKED_CAST")
-object PersistentUUIDSet : PersistentDataType<String, Set<UUID>> {
+object PersistentUuidSet : PersistentDataType<String, Set<UUID>> {
     override fun getPrimitiveType(): Class<String> = String::class.java
 
     override fun getComplexType(): Class<Set<UUID>> = Set::class.java as Class<Set<UUID>>
