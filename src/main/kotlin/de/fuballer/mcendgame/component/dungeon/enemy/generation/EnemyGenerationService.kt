@@ -1,12 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.generation
 
-import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.stat_item.StatItemService
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -72,7 +73,7 @@ class EnemyGenerationService(
         val entities = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
             val entityType = RandomUtil.pick(randomEntityTypes).option
-            val entity = CustomEntityType.spawnCustomEntity(
+            val entity = EntityUtil.spawnCustomEntity(
                 entityType,
                 Location(
                     world,
@@ -83,11 +84,11 @@ class EnemyGenerationService(
                 mapTier
             ) as LivingEntity
 
-            statItemService.setCreatureEquipment(entity, mapTier, entityType.data.canHaveWeapons, entityType.data.isRanged, entityType.data.canHaveArmor)
+            statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)
-            val canBeInvisible = !entityType.data.hideEquipment
+            val canBeInvisible = !entityType.hideEquipment
             addEffectsToEntity(entity, mapTier, canBeInvisible)
 
             entities.add(entity)

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.ability
 
-import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.util.PluginUtil.runTaskTimer
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.entity.Creature

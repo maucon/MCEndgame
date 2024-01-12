@@ -1,6 +1,34 @@
 package de.fuballer.mcendgame.component.dungeon.type
 
-import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.blaze.BlazeEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.cerberus.CerberusEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.cyclops.CyclopsEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.demoic_golem.DemonicGolemEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.dryad.DryadEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.forest_skeleton.ForestSkeletonEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.harpy.HarpyEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.husk.HuskEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.imp.ImpEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.incubus.IncubusEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.magma_cube.MagmaCubeEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.mandragora.MandragoraEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.melee_forest_skeleton.MeleeForestSkeletonEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.melee_skeleton.MeleeSkeletonEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.minotaur.MinotaurEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.mushroom.MushroomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.naga.NagaEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.necromancer.NecromancerEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.piglin_brute.PiglinBruteEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.reaper.ReaperEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.skeleton.SkeletonEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.stalker.StalkerEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.stray.StrayEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.succubus.SuccubusEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.wendigo.WendigoEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.witch.WitchEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.wither_skeleton.WitherSkeletonEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.zombie.ZombieEntityType
 import de.fuballer.mcendgame.component.dungeon.type.data.RolledDungeonType
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -15,16 +43,16 @@ enum class DungeonType(
             RandomOption(1, DungeonMapType.MINE),
         ),
         listOf(
-            RandomOption(10, CustomEntityType.WITHER_SKELETON),
-            RandomOption(150, CustomEntityType.MELEE_SKELETON),
-            RandomOption(90, CustomEntityType.SKELETON),
-            RandomOption(20, CustomEntityType.MAGMA_CUBE),
-            RandomOption(20, CustomEntityType.BLAZE),
-            RandomOption(3, CustomEntityType.SUCCUBUS),
-            RandomOption(3, CustomEntityType.INCUBUS),
-            RandomOption(15, CustomEntityType.IMP),
+            RandomOption(10, WitherSkeletonEntityType),
+            RandomOption(150, MeleeForestSkeletonEntityType),
+            RandomOption(90, SkeletonEntityType),
+            RandomOption(20, MagmaCubeEntityType),
+            RandomOption(20, BlazeEntityType),
+            RandomOption(3, SuccubusEntityType),
+            RandomOption(3, IncubusEntityType),
+            RandomOption(15, ImpEntityType),
         ),
-        listOf(RandomOption(1, CustomEntityType.CERBERUS))
+        listOf(RandomOption(1, CerberusEntityType))
     ),
     UNDEAD(
         listOf(
@@ -35,16 +63,16 @@ enum class DungeonType(
             RandomOption(1, DungeonMapType.LUSH_CAVE)
         ),
         listOf(
-            RandomOption(10, CustomEntityType.WITHER_SKELETON),
-            RandomOption(50, CustomEntityType.ZOMBIE),
-            RandomOption(30, CustomEntityType.HUSK),
-            RandomOption(50, CustomEntityType.SKELETON),
-            RandomOption(20, CustomEntityType.MELEE_SKELETON),
-            RandomOption(30, CustomEntityType.STRAY),
-            RandomOption(12, CustomEntityType.NECROMANCER),
-            RandomOption(3, CustomEntityType.REAPER)
+            RandomOption(10, WitherSkeletonEntityType),
+            RandomOption(50, ZombieEntityType),
+            RandomOption(30, HuskEntityType),
+            RandomOption(50, SkeletonEntityType),
+            RandomOption(20, MeleeSkeletonEntityType),
+            RandomOption(30, StrayEntityType),
+            RandomOption(12, NecromancerEntityType),
+            RandomOption(3, ReaperEntityType)
         ),
-        listOf(RandomOption(1, CustomEntityType.DEMONIC_GOLEM))
+        listOf(RandomOption(1, DemonicGolemEntityType))
     ),
     MYTHICAL(
         listOf(
@@ -52,28 +80,28 @@ enum class DungeonType(
             RandomOption(1, DungeonMapType.LUSH_CAVE)
         ),
         listOf(
-            RandomOption(60, CustomEntityType.PIGLIN_BRUTE),
-            RandomOption(50, CustomEntityType.CYCLOPS),
-            RandomOption(20, CustomEntityType.HUSK),
-            RandomOption(5, CustomEntityType.WITCH),
-            RandomOption(10, CustomEntityType.HARPY),
-            RandomOption(10, CustomEntityType.NAGA)
+            RandomOption(60, PiglinBruteEntityType),
+            RandomOption(50, CyclopsEntityType),
+            RandomOption(20, HuskEntityType),
+            RandomOption(5, WitchEntityType),
+            RandomOption(10, HarpyEntityType),
+            RandomOption(10, NagaEntityType)
         ),
-        listOf(RandomOption(1, CustomEntityType.MINOTAUR))
+        listOf(RandomOption(1, MinotaurEntityType))
     ),
     FOREST(
         listOf(
             RandomOption(1, DungeonMapType.LUSH_CAVE)
         ),
         listOf(
-            RandomOption(50, CustomEntityType.FOREST_SKELETON),
-            RandomOption(40, CustomEntityType.MELEE_FOREST_SKELETON),
-            RandomOption(15, CustomEntityType.MUSHROOM),
-            RandomOption(8, CustomEntityType.STALKER),
-            RandomOption(4, CustomEntityType.DRYAD),
-            RandomOption(1, CustomEntityType.WENDIGO)
+            RandomOption(50, ForestSkeletonEntityType),
+            RandomOption(40, MeleeForestSkeletonEntityType),
+            RandomOption(15, MushroomEntityType),
+            RandomOption(8, StalkerEntityType),
+            RandomOption(4, DryadEntityType),
+            RandomOption(1, WendigoEntityType)
         ),
-        listOf(RandomOption(1, CustomEntityType.MANDRAGORA))
+        listOf(RandomOption(1, MandragoraEntityType))
     );
 
     fun roll() = RolledDungeonType(

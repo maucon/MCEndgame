@@ -5,7 +5,7 @@ import com.sk89q.worldedit.extent.clipboard.Clipboard
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats
 import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.math.transform.AffineTransform
-import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossService
 import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationService
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
@@ -141,12 +141,12 @@ class DungeonGenerationService(
     }
 
     private fun spawnBoss(
-        bossEntityType: CustomEntityType,
+        entityType: CustomEntityType,
         bossRoomPos: Point,
         mapTier: Int, world: World
     ) {
         val bossLocation = Location(world, -bossRoomPos.x * 16.0 - 8, DungeonGenerationSettings.MOB_Y_POS - .2, -bossRoomPos.y * 16.0 + 24)
-        dungeonBossService.spawnNewMapBoss(bossEntityType, bossLocation, mapTier)
+        dungeonBossService.spawnNewMapBoss(entityType, bossLocation, mapTier)
     }
 
     private fun getStartLocation(layoutTiles: Array<Array<LayoutTile>>, startRoomPos: Point, world: World): Location {

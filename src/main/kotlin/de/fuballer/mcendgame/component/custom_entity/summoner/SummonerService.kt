@@ -1,12 +1,13 @@
 package de.fuballer.mcendgame.component.custom_entity.summoner
 
-import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationService
 import de.fuballer.mcendgame.component.stat_item.StatItemService
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.SummonerUtil
 import de.fuballer.mcendgame.util.WorldUtil
@@ -77,7 +78,7 @@ class SummonerService(
         health: Double,
         spawnOffset: Vector,
     ): LivingEntity {
-        val minion = CustomEntityType.spawnCustomEntity(minionType, summoner.location.add(spawnOffset), mapTier) as LivingEntity
+        val minion = EntityUtil.spawnCustomEntity(minionType, summoner.location.add(spawnOffset), mapTier) as LivingEntity
         setHealth(minion, health)
 
         PersistentDataUtil.setValue(minion, DataTypeKeys.IS_MINION, true)
@@ -86,9 +87,8 @@ class SummonerService(
         if (mapTier < 0 || minion !is Creature) return minion
 
         statItemService.setCreatureEquipment(minion, mapTier, weapons, ranged, armor)
-        val canBeInvisible = !minionType.data.hideEquipment
+        val canBeInvisible = !minionType.hideEquipment
         enemyGenerationService.addEffectsToEntity(minion, mapTier, canBeInvisible)
-
 
         return minion
     }

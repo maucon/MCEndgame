@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.persistent_data
 
-import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
-import de.fuballer.mcendgame.component.custom_entity.persistent_data.types.PersistentEnum
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.types.PersistentCustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.persistent_data.types.PersistentUUIDSet
 import de.fuballer.mcendgame.util.PluginUtil.createNamespacedKey
 import org.bukkit.NamespacedKey
@@ -13,7 +12,7 @@ object DataTypeKeys {
     val MAP_TIER = TypeKey(createNamespacedKey("map-tier"), PersistentDataType.INTEGER)
     val IS_MINION = TypeKey(createNamespacedKey("is-minion"), PersistentDataType.BOOLEAN)
     val HIDE_EQUIPMENT = TypeKey(createNamespacedKey("hide-equipment"), PersistentDataType.BOOLEAN)
-    val CUSTOM_ENTITY_TYPE = TypeKey(createNamespacedKey("custom-entity-type"), PersistentEnum(CustomEntityType::class))
+    val CUSTOM_ENTITY_TYPE = TypeKey(createNamespacedKey("custom-entity-type"), PersistentCustomEntityType)
     val IS_ENEMY = TypeKey(createNamespacedKey("is-enemy"), PersistentDataType.BOOLEAN)
     val MINIONS = TypeKey(createNamespacedKey("minions"), PersistentUUIDSet)
 

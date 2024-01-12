@@ -1,10 +1,11 @@
 package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 
-import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.types.vine.VineEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
+import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.SummonerUtil
 import org.bukkit.entity.LivingEntity
@@ -19,7 +20,7 @@ object SummonVinesAbility : Ability {
 
         val vines = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
-            val vine = CustomEntityType.spawnCustomEntity(CustomEntityType.VINE, caster.location, mapTier) as LivingEntity
+            val vine = EntityUtil.spawnCustomEntity(VineEntityType, caster.location, mapTier) as LivingEntity
 
             PersistentDataUtil.setValue(vine, DataTypeKeys.IS_MINION, true)
 

@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
@@ -10,6 +10,7 @@ import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Location
@@ -59,13 +60,13 @@ class DungeonBossService(
     }
 
     fun spawnNewMapBoss(
-        customEntityType: CustomEntityType,
+        entityType: CustomEntityType,
         location: Location,
         mapTier: Int
     ): Creature {
         location.yaw = 180f
 
-        val boss = CustomEntityType.spawnCustomEntity(customEntityType, location, mapTier) as Creature
+        val boss = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as Creature
 
         PersistentDataUtil.setValue(boss, DataTypeKeys.DROP_EQUIPMENT, false)
 

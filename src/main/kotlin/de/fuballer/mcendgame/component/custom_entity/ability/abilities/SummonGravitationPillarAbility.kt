@@ -1,11 +1,12 @@
 package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 
-import de.fuballer.mcendgame.component.custom_entity.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.types.stone_pillar.StonePillarEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.DungeonUtil
+import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import de.fuballer.mcendgame.util.SummonerUtil
@@ -22,7 +23,7 @@ object SummonGravitationPillarAbility : Ability {
     override fun cast(caster: LivingEntity, target: LivingEntity) {
         val mapTier = PersistentDataUtil.getValue(caster, DataTypeKeys.MAP_TIER) ?: 1
 
-        val pillar = CustomEntityType.spawnCustomEntity(CustomEntityType.STONE_PILLAR, caster.location, mapTier) as LivingEntity
+        val pillar = EntityUtil.spawnCustomEntity(StonePillarEntityType, caster.location, mapTier) as LivingEntity
         pillar.setAI(false)
 
         PersistentDataUtil.setValue(pillar, DataTypeKeys.IS_MINION, true)
