@@ -45,6 +45,8 @@ enum class CustomEntityType(
     DRYAD(EntityType.ZOMBIE, "Dryad", CustomEntitySettings.DRYAD_DATA),
     WENDIGO(EntityType.WITHER_SKELETON, "Wendigo", CustomEntitySettings.WENDIGO_DATA),
     MANDRAGORA(EntityType.RAVAGER, "Mandragora", CustomEntitySettings.MANDRAGORA_DATA),
+    BUFF_VILLAGER(EntityType.WITHER_SKELETON, "Buff Villager", CustomEntitySettings.BUFF_VILLAGER_DATA),
+    BUFF_WITCH(EntityType.WITHER_SKELETON, "Buff Witch", CustomEntitySettings.BUFF_WITCH_DATA),
 
     STONE_PILLAR(EntityType.ZOMBIE, "Stone Pillar", CustomEntitySettings.STONE_PILLAR_DATA),
     VINE(EntityType.ZOMBIE, "Vine", CustomEntitySettings.VINE_DATA),

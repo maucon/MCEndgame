@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin
 @Component
 class GiveArtifactTabCompleter : CommandTabCompleter {
     override fun initialize(plugin: JavaPlugin) {
-        plugin.getCommand(ArtifactSettings.COMMAND_NAME)!!.tabCompleter = this
+        plugin.getCommand(ArtifactSettings.GIVE_ARTIFACT_COMMAND_NAME)!!.tabCompleter = this
     }
 
     override fun onTabComplete(

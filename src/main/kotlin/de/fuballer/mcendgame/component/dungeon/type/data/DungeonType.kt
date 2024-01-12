@@ -44,7 +44,7 @@ enum class DungeonType(
             RandomOption(12, CustomEntityType.NECROMANCER),
             RandomOption(3, CustomEntityType.REAPER)
         ),
-        listOf(RandomOption(1, BossType.CERBERUS))
+        listOf(RandomOption(1, BossType.DEMONIC_GOLEM))
     ),
     MYTHICAL(
         listOf(
@@ -74,6 +74,16 @@ enum class DungeonType(
             RandomOption(1, CustomEntityType.WENDIGO)
         ),
         listOf(RandomOption(1, BossType.MANDRAGORA))
+    ),
+    VILLAGE(
+        listOf(
+            RandomOption(1, DungeonMapType.ICE_CAVE)
+        ),
+        listOf(
+            RandomOption(50, CustomEntityType.BUFF_VILLAGER),
+            RandomOption(20, CustomEntityType.BUFF_WITCH)
+        ),
+        listOf(RandomOption(1, BossType.MINOTAUR))
     );
 
     fun roll() = RolledDungeonType(

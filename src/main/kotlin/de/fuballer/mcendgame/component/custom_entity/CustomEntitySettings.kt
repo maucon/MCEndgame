@@ -57,11 +57,11 @@ object CustomEntitySettings {
         maxLifeBase = 15.0, maxLifePerTier = 0.0, damageBase = 0.0, damagePerTier = 0.0, speedBase = 0.4, speedPerTier = 0.0
     )
     val REAPER_DATA = CustomEntityData(
-        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
+        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = false,
         maxLifeBase = 30.0, maxLifePerTier = 0.0, damageBase = 7.0, damagePerTier = 5.0, speedBase = 0.3, speedPerTier = 0.0
     )
     val CHUPACABRA_DATA = CustomEntityData(
-        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
+        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = false,
         maxLifeBase = 5.0, maxLifePerTier = 0.0, damageBase = 5.0, damagePerTier = 2.5, speedBase = 0.35, speedPerTier = 0.0
     )
     val STALKER_DATA = CustomEntityData(
@@ -135,6 +135,14 @@ object CustomEntitySettings {
     val MANDRAGORA_DATA = CustomEntityData(
         canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
         maxLifeBase = 1.0, maxLifePerTier = 0.0, damageBase = 0.0, damagePerTier = 0.0, speedBase = 0.0, speedPerTier = 0.0
+    )
+    val BUFF_VILLAGER_DATA = CustomEntityData(
+        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
+        maxLifeBase = 20.0, maxLifePerTier = 0.0, damageBase = 5.0, damagePerTier = 2.5, speedBase = 0.25, speedPerTier = 0.0
+    )
+    val BUFF_WITCH_DATA = CustomEntityData(
+        canHaveWeapons = true, isRanged = false, canHaveArmor = true, dropBaseLoot = false, hideEquipment = true, isSilent = true,
+        maxLifeBase = 20.0, maxLifePerTier = 0.0, damageBase = 5.0, damagePerTier = 2.5, speedBase = 0.25, speedPerTier = 0.0
     )
 
     val STONE_PILLAR_DATA = CustomEntityData(
