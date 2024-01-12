@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.artifact
 
-import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
-import de.fuballer.mcendgame.component.dungeon.artifact.data.ArtifactType
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.artifact.db.HealOnBlockArtifactEntity
 import de.fuballer.mcendgame.component.dungeon.artifact.db.HealOnBlockArtifactRepository
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
@@ -140,7 +139,7 @@ class ArtifactEffectsService(
 
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         if (entity !is Wolf) return
-        if (PersistentDataUtil.getValue(entity, DataTypeKeys.IS_ENEMY) == true) return
+        if (PersistentDataUtil.getBooleanValue(entity, DataTypeKeys.IS_ENEMY)) return
 
         if (event.target !is Player) return
 

@@ -1,49 +1,43 @@
 package de.fuballer.mcendgame.component.custom_entity.summoner
 
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
-import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
-import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionRepository
-import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionsEntity
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationService
 import de.fuballer.mcendgame.component.stat_item.StatItemService
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.util.SummonerUtil
+import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
-import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.util.Vector
+import java.util.*
 
 @Component
 class SummonerService(
-    private val minionRepo: MinionRepository,
     private val statItemService: StatItemService,
     private val enemyGenerationService: EnemyGenerationService
 ) {
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
-        minionRepo.delete(event.entity.uniqueId)
-    }
-
-    @EventHandler
     fun onEntityTarget(event: EntityTargetEvent) {
         val summoner = event.entity as? Creature ?: return
-        if (!minionRepo.exists(summoner.uniqueId)) return
+        val minions = PersistentDataUtil.getValue(summoner, DataTypeKeys.MINIONS) ?: return
 
-        setMinionsTarget(summoner)
+        setMinionsTarget(summoner, minions)
     }
 
-    private fun setMinionsTarget(summoner: Creature) {
+    private fun setMinionsTarget(summoner: Creature, minions: Set<UUID>) {
         val target = summoner.target ?: return
+        val world = summoner.world
 
-        minionRepo.getById(summoner.uniqueId).minions.forEach {
-            if (it is Creature)
-                it.target = target
-        }
+        WorldUtil.getFilteredEntities(world, minions, Creature::class)
+            .forEach { it.target = target }
     }
 
     fun summonMinions(
@@ -63,15 +57,15 @@ class SummonerService(
             minions.add(summonMinion(summoner, mapTier, minionType, weapons, ranged, armor, health, spawnOffset))
         }
 
+        val minionIds = minions.map { it.uniqueId }
+            .toMutableSet()
+
+        SummonerUtil.addMinions(summoner, minions)
+
         val event = DungeonEnemySpawnedEvent(summoner.world, minions)
         EventGateway.apply(event)
 
-        if (!minionRepo.exists(summoner.uniqueId))
-            minionRepo.save(MinionsEntity(summoner.uniqueId, minions))
-        else
-            minionRepo.getById(summoner.uniqueId).minions.addAll(minions)
-
-        setMinionsTarget(summoner)
+        setMinionsTarget(summoner, minionIds)
     }
 
     private fun summonMinion(
@@ -84,20 +78,17 @@ class SummonerService(
         health: Double,
         spawnOffset: Vector,
     ): LivingEntity {
-        val minion = CustomEntityType.spawnCustomEntity(minionType, summoner.location.add(spawnOffset), mapTier) as LivingEntity
-
+        val minion = EntityUtil.spawnCustomEntity(minionType, summoner.location.add(spawnOffset), mapTier) as LivingEntity
         setHealth(minion, health)
 
         PersistentDataUtil.setValue(minion, DataTypeKeys.IS_MINION, true)
-        PersistentDataUtil.setValue(minion, DataTypeKeys.DROP_BASE_LOOT, false)
+        PersistentDataUtil.setValue(minion, DataTypeKeys.DROP_EQUIPMENT, false)
 
         if (mapTier < 0 || minion !is Creature) return minion
 
         statItemService.setCreatureEquipment(minion, mapTier, weapons, ranged, armor)
-        val canBeInvisible = !minionType.data.hideEquipment
+        val canBeInvisible = !minionType.hideEquipment
         enemyGenerationService.addEffectsToEntity(minion, mapTier, canBeInvisible)
-
-        PersistentDataUtil.setValue(minion, DataTypeKeys.DROP_EQUIPMENT, false)
 
         return minion
     }

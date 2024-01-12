@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.damage
 
-import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
@@ -25,7 +25,7 @@ class DungeonEnemyProjectileService : Listener {
 
         if (shooter !is LivingEntity) return
 
-        if (PersistentDataUtil.getValue(shooter, DataTypeKeys.IS_ENEMY) != true) return
+        if (!PersistentDataUtil.getBooleanValue(shooter, DataTypeKeys.IS_ENEMY)) return
 
         val damage = getDamage(shooter) ?: return
         event.damage = damage

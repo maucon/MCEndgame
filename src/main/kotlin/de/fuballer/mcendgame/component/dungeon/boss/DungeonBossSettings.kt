@@ -19,39 +19,4 @@ object DungeonBossSettings {
     val BOSS_POTION_EFFECTS = listOf(
         PotionEffect(PotionEffectType.FIRE_RESISTANCE, Int.MAX_VALUE, 0, false, false)
     )
-
-    const val BOSS_ABILITY_CHECK_PERIOD = 5 // in ticks
-
-    const val ARROWS_COUNT = 5
-    const val ARROWS_TIME_DIFFERENCE = 4L // in ticks
-
-    val SPEED_EFFECT = PotionEffect(PotionEffectType.SPEED, 20, 4, false, false)
-
-    const val FIRE_CASCADE_DISTANCE = 1
-    const val FIRE_CASCADE_STEPS_AFTER_PLAYER = 15
-    const val FIRE_CASCADE_ACTIVATION_DELAY = 10L // in ticks
-
-    const val FIRE_CASCADE_STEP_DELAY = 0.7 //in Ticks
-
-    const val FIRE_CASCADE_STEPS_PER_SOUND = 5
-    const val FIRE_CASCADE_DAMAGE = 5.0
-    const val FIRE_CASCADE_DAMAGE_PER_LEVEL = 3.0
-    const val FIRE_CASCADE_FIRE_TICKS = 100
-
-    const val DARKNESS_EFFECT_RADIUS = 30
-    val DARKNESS_EFFECT = PotionEffect(PotionEffectType.DARKNESS, 160, 1, true)
-
-    const val GRAVITATION_PILLAR_RANGE = 20.0
-    const val GRAVITATION_PILLAR_COOLDOWN = 40L //in Ticks
-
-    const val POISON_CLOUD_RANGE = 20.0
-    const val POISON_CLOUD_DURATION = 100 //in Ticks
-    const val POISON_CLOUD_RADIUS = 3f
-    const val POISON_CLOUD_RADIUS_PER_TICK = 0.015f
-    val POISON_CLOUD_EFFECT = PotionEffect(PotionEffectType.HARM, 0, 1, true)
-    const val POISON_CLOUD_REAPPLICATION_DELAY = 10 //in Ticks
-
-    fun getSummonVineAmount(bossLevel: Int) = bossLevel / 5
-
-    fun getBossAbilityCooldown(bossLevel: Int) = 30 + 120 / (1 + bossLevel / 5)
 }
