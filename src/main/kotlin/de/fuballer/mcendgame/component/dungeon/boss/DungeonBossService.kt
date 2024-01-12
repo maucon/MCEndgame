@@ -1,11 +1,8 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
-import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
-import de.fuballer.mcendgame.component.custom_entity.summoner.db.MinionRepository
-import de.fuballer.mcendgame.component.dungeon.boss.data.BossType
-import de.fuballer.mcendgame.component.dungeon.boss.data.DungeonBossAbilitiesRunnable
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
@@ -13,9 +10,8 @@ import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.DungeonUtil
+import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
-import de.fuballer.mcendgame.util.PluginUtil.runTaskTimer
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Location
 import org.bukkit.World
@@ -26,15 +22,13 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
-import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
 @Component
 class DungeonBossService(
     private val dungeonBossRepo: DungeonBossRepository,
-    private val worldManageRepo: WorldManageRepository,
-    private val minionRepo: MinionRepository
+    private val worldManageRepo: WorldManageRepository
 ) : Listener {
     private val random = Random()
 
@@ -58,14 +52,6 @@ class DungeonBossService(
     }
 
     @EventHandler
-    fun onEntityTarget(event: EntityTargetEvent) {
-        val entity = event.entity
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
-
-        if (dungeonBossRepo.exists(entity.uniqueId)) onBossTarget(event)
-    }
-
-    @EventHandler
     fun onEntityDamage(event: EntityDamageEvent) {
         val entity = event.entity
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
@@ -74,58 +60,27 @@ class DungeonBossService(
     }
 
     fun spawnNewMapBoss(
-        bossType: BossType,
+        entityType: CustomEntityType,
         location: Location,
         mapTier: Int
     ): Creature {
         location.yaw = 180f
 
-        val boss = CustomEntityType.spawnCustomEntity(bossType.customEntityType, location, mapTier) as Creature
+        val boss = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as Creature
 
         PersistentDataUtil.setValue(boss, DataTypeKeys.DROP_EQUIPMENT, false)
-        setBossAttributes(boss, mapTier, bossType)
 
-        val event = DungeonEnemySpawnedEvent(location.world!!, setOf(boss))
-        EventGateway.apply(event)
-
-        val entity = DungeonBossEntity(boss.uniqueId, mapTier, null, bossType)
-        dungeonBossRepo.save(entity)
-
-        return boss
-    }
-
-    private fun setBossAttributes(boss: Creature, mapTier: Int, bossType: BossType) {
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
         boss.removeWhenFarAway = false
         boss.setAI(false)
 
-        val newHealth = bossType.baseHealth + mapTier * bossType.healthPerTier
-        val newDamage = bossType.baseDamage + mapTier * bossType.damagePerTier
-        val newSpeed = bossType.speed
+        val event = DungeonEnemySpawnedEvent(location.world!!, setOf(boss))
+        EventGateway.apply(event)
 
-        DungeonUtil.setBasicAttributes(boss, newHealth, newDamage, newSpeed)
-    }
+        val entity = DungeonBossEntity(boss.uniqueId, mapTier)
+        dungeonBossRepo.save(entity)
 
-    private fun onBossTarget(event: EntityTargetEvent) {
-        val entity = event.entity
-        val worldName = entity.world.name
-        val uuid = entity.uniqueId
-
-        val dungeonBossEntity = dungeonBossRepo.findById(uuid) ?: return
-        val abilityTask = dungeonBossEntity.abilityTask
-        if (abilityTask != null && !abilityTask.isCancelled) return
-
-        val mapTier = worldManageRepo.findById(worldName)?.mapTier ?: 1
-        val runnable = DungeonBossAbilitiesRunnable(
-            dungeonBossRepo,
-            minionRepo,
-            entity as Creature,
-            dungeonBossEntity.type,
-            mapTier
-        ).runTaskTimer(0, DungeonBossSettings.BOSS_ABILITY_CHECK_PERIOD.toLong())
-
-        dungeonBossEntity.abilityTask = runnable
-        dungeonBossRepo.save(dungeonBossEntity)
+        return boss
     }
 
     private fun dropBossLoot(

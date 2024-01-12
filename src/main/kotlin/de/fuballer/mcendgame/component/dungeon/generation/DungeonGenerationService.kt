@@ -5,15 +5,15 @@ import com.sk89q.worldedit.extent.clipboard.Clipboard
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats
 import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.math.transform.AffineTransform
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossService
-import de.fuballer.mcendgame.component.dungeon.boss.data.BossType
 import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationService
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.dungeon.leave.DungeonLeaveService
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveEntity
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
+import de.fuballer.mcendgame.component.dungeon.type.DungeonMapType
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
-import de.fuballer.mcendgame.component.dungeon.type.data.DungeonMapType
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.framework.annotation.Component
 import kotlinx.coroutines.launch
@@ -59,7 +59,7 @@ class DungeonGenerationService(
             launch { loadLayoutTiles(layoutTiles, rolledDungeonType.mapType, world) }
         }
 
-        spawnBoss(rolledDungeonType.bossType, bossRoomPos, mapTier, world)
+        spawnBoss(rolledDungeonType.bossEntityType, bossRoomPos, mapTier, world)
         enemyGenerationService.summonMonsters(rolledDungeonType.entityTypes, layoutTiles, startRoomPos, mapTier, world)
 
         val entity = DungeonLeaveEntity(world.name, mutableListOf(), leaveLocation)
@@ -141,12 +141,12 @@ class DungeonGenerationService(
     }
 
     private fun spawnBoss(
-        bossType: BossType,
+        entityType: CustomEntityType,
         bossRoomPos: Point,
         mapTier: Int, world: World
     ) {
         val bossLocation = Location(world, -bossRoomPos.x * 16.0 - 8, DungeonGenerationSettings.MOB_Y_POS - .2, -bossRoomPos.y * 16.0 + 24)
-        dungeonBossService.spawnNewMapBoss(bossType, bossLocation, mapTier)
+        dungeonBossService.spawnNewMapBoss(entityType, bossLocation, mapTier)
     }
 
     private fun getStartLocation(layoutTiles: Array<Array<LayoutTile>>, startRoomPos: Point, world: World): Location {

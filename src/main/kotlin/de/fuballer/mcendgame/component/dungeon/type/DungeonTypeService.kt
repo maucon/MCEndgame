@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.dungeon.type
 
-import de.fuballer.mcendgame.component.dungeon.type.data.DungeonType
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeEntity
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent

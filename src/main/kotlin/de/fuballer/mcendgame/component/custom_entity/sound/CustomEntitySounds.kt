@@ -1,16 +1,14 @@
 package de.fuballer.mcendgame.component.custom_entity.sound
 
-import de.fuballer.mcendgame.component.custom_entity.data.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.harpy.HarpyEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.naga.NagaEntityType
 
 object CustomEntitySounds {
     private val SOUNDS = mapOf(
-        CustomEntityType.NAGA.toString() to CustomEntitySoundData("mcendgame_naga_hurt", "mcendgame_naga_death", "", ""),
-        CustomEntityType.HARPY.toString() to CustomEntitySoundData("mcendgame_harpy_hurt", "mcendgame_harpy_death", "", ""),
-        CustomEntityType.DEMONIC_GOLEM.toString() to CustomEntitySoundData("mcendgame_demonic_golem_hurt", "mcendgame_demonic_golem_death", "", ""),
-        CustomEntityType.CYCLOPS.toString() to CustomEntitySoundData("mcendgame_cyclops_hurt", "mcendgame_cyclops_death", "", ""),
-        CustomEntityType.MINOTAUR.toString() to CustomEntitySoundData("mcendgame_minotaur_hurt", "mcendgame_minotaur_death", "", ""),
-        CustomEntityType.MANDRAGORA.toString() to CustomEntitySoundData("mcendgame_mandragora_hurt", "mcendgame_mandragora_death", "", ""),
+        NagaEntityType to CustomEntitySoundData("mcendgame_naga_hurt", "mcendgame_naga_death", "mcendgame_naga_hurt"),
+        HarpyEntityType to CustomEntitySoundData("mcendgame_harpy_hurt", "mcendgame_harpy_death", "mcendgame_harpy_hurt")
     )
 
-    fun getSounds(type: String) = SOUNDS[type]
+    fun getSounds(type: CustomEntityType) = SOUNDS[type]
 }

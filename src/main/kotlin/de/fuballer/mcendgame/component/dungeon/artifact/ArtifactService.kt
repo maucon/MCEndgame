@@ -1,10 +1,8 @@
 package de.fuballer.mcendgame.component.dungeon.artifact
 
-import de.fuballer.mcendgame.component.custom_entity.data.DataTypeKeys
+import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.artifact.data.Artifact
-import de.fuballer.mcendgame.component.dungeon.artifact.data.ArtifactType
 import de.fuballer.mcendgame.component.dungeon.artifact.db.ArtifactRepository
-import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
@@ -22,8 +20,7 @@ import java.util.*
 
 @Component
 class ArtifactService(
-    private val artifactRepo: ArtifactRepository,
-    private val worldManageRepo: WorldManageRepository
+    private val artifactRepo: ArtifactRepository
 ) : Listener {
     private val random = Random()
     private val format = DecimalFormat("0.#")
@@ -64,13 +61,11 @@ class ArtifactService(
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         if (event.entity !is Monster) return
 
-        if (PersistentDataUtil.getValue(event.entity, DataTypeKeys.DROP_BASE_LOOT) == false) return
+        if (!PersistentDataUtil.getBooleanValue(event.entity, DataTypeKeys.DROP_BASE_LOOT)) return
 
         if (random.nextDouble() > ArtifactSettings.ARTIFACT_DROP_CHANCE) return
 
-        val worldName = event.entity.world.name
-        val mapTier = worldManageRepo.findById(worldName)?.mapTier ?: 1
-
+        val mapTier = PersistentDataUtil.getValue(event.entity, DataTypeKeys.MAP_TIER) ?: 1
         val type = RandomUtil.pick(ArtifactSettings.ARTIFACT_TYPES).option
         val tier = RandomUtil.pick(ArtifactSettings.ARTIFACT_TIERS, mapTier).option
 
