@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import org.bukkit.entity.EntityType
 
 object NagaEntityType : CustomEntityType {
-    override val type = EntityType.IRON_GOLEM
+    override val type = EntityType.SKELETON
 
     override val customName = "Naga"
     override val canHaveWeapons = true
