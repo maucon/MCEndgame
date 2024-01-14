@@ -2,9 +2,11 @@ package de.fuballer.mcendgame.component.corruption
 
 import de.fuballer.mcendgame.component.corruption.data.AttributeWithModifier
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
+import de.fuballer.mcendgame.component.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.component.stat_item.StatItemSettings
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.AttributeUtil
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.GameMode
@@ -57,7 +59,7 @@ class CorruptionService : Listener {
     @EventHandler
     fun onCrafting(event: CraftItemEvent) {
         val isAnyItemCorrupted = event.inventory.storageContents
-            .any { hasCorruptionTag(it) }
+            .any { isCorrupted(it) }
 
         if (isAnyItemCorrupted) {
             event.isCancelled = true
@@ -67,10 +69,10 @@ class CorruptionService : Listener {
     @EventHandler
     fun onInventoryDrag(event: InventoryDragEvent) {
         val item = event.oldCursor
-        if (!hasCorruptionTag(item)) return
+        if (!isCorrupted(item)) return
 
         val inventory = event.inventory
-        if (isAllowedInventoryType(inventory.type)) return
+        if (CorruptionSettings.isAllowedInventoryType(inventory.type)) return
 
         val isAnySlotNotInInventory = event.rawSlots
             .any { it < inventory.size }
@@ -111,6 +113,7 @@ class CorruptionService : Listener {
         }
 
         AttributeUtil.setAttributeLore(result, true)
+        PersistentDataUtil.setValue(resultMeta, DataTypeKeys.CORRUPTED, true)
 
         when (event.action) {
             InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_SOME ->
@@ -185,7 +188,7 @@ class CorruptionService : Listener {
 
         if (random.nextBoolean()) {
             val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-            val possibleEnchants = equipment.enchantOptions
+            val possibleEnchants = equipment.rollableEnchants
                 .map { it.option.enchantment }
                 .distinct()
                 .toMutableList()
@@ -260,7 +263,7 @@ class CorruptionService : Listener {
 
     private fun preventCorruptedItemModification(event: InventoryClickEvent) {
         val inventory = event.inventory
-        if (isAllowedInventoryType(inventory.type)) return
+        if (CorruptionSettings.isAllowedInventoryType(inventory.type)) return
 
         val inventorySize = inventory.size
         val rawSlot = event.rawSlot
@@ -281,20 +284,13 @@ class CorruptionService : Listener {
             }
         } ?: return
 
-        if (hasCorruptionTag(item)) {
+        if (isCorrupted(item)) {
             event.isCancelled = true
         }
     }
 
-    private fun hasCorruptionTag(item: ItemStack): Boolean {
-        val meta = item.itemMeta ?: return false
-        val lore = meta.lore ?: return false
-
-        return lore.contains(CorruptionSettings.CORRUPTION_TAG_LORE[0])
+    private fun isCorrupted(item: ItemStack): Boolean {
+        val itemMeta = item.itemMeta ?: return true
+        return PersistentDataUtil.getBooleanValue(itemMeta, DataTypeKeys.CORRUPTED)
     }
-
-    private fun isAllowedInventoryType(inventoryType: InventoryType) = inventoryType != InventoryType.GRINDSTONE
-            && inventoryType != InventoryType.ANVIL
-            && inventoryType != InventoryType.ENCHANTING
-            && inventoryType != InventoryType.SMITHING
 }

@@ -1,5 +1,7 @@
 package de.fuballer.mcendgame.domain.equipment.tool
 
+import de.fuballer.mcendgame.component.item_attribute.AttributeType
+import de.fuballer.mcendgame.component.item_attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemAttribute
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
@@ -56,15 +58,15 @@ enum class Hoe(
 
     override val lore = Equipment.MAIN_HAND_SLOT_LORE
 
-    override val rolledAttributes = listOf(
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.5)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.4)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK, 0.5)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 1.5)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_LUCK, 2.5))
+    override val rollableAttributes = listOf(
+        RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+        RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
+        RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+        RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 1.5)),
+        RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
     )
 
-    override val enchantOptions = listOf(
+    override val rollableEnchants = listOf(
         RandomOption(10, ItemEnchantment.MENDING),
         RandomOption(20, ItemEnchantment.UNBREAKING_1),
         RandomOption(15, ItemEnchantment.UNBREAKING_2),

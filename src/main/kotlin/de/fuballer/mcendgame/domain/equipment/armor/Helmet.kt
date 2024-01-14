@@ -1,5 +1,7 @@
 package de.fuballer.mcendgame.domain.equipment.armor
 
+import de.fuballer.mcendgame.component.item_attribute.AttributeType
+import de.fuballer.mcendgame.component.item_attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemAttribute
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
@@ -59,14 +61,14 @@ enum class Helmet(
 
     override val lore = Equipment.HEAD_SLOT_LORE
 
-    override val rolledAttributes = listOf(
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 2.5)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_ARMOR, 2.0)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 2.5)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE, 0.1))
+    override val rollableAttributes = listOf(
+        RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.5)),
+        RandomOption(10, RollableAttribute(AttributeType.ARMOR, 2.0)),
+        RandomOption(10, RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 2.5)),
+        RandomOption(10, RollableAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1))
     )
 
-    override val enchantOptions = listOf(
+    override val rollableEnchants = listOf(
         RandomOption(10, ItemEnchantment.MENDING),
         RandomOption(35, ItemEnchantment.UNBREAKING_1),
         RandomOption(22, ItemEnchantment.UNBREAKING_2),

@@ -1,14 +1,17 @@
 package de.fuballer.mcendgame.component.stat_item
 
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
+import de.fuballer.mcendgame.component.item_attribute.RolledAttribute
+import de.fuballer.mcendgame.component.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.AttributeUtil
+import de.fuballer.mcendgame.util.ItemUtil
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import de.fuballer.mcendgame.util.random.SortableRandomOption
-import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
@@ -51,7 +54,8 @@ class StatItemService : Listener {
         val lore = meta.lore ?: return
 
         val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, lore.contains(CorruptionSettings.CORRUPTION_TAG_LORE[0]))
+        meta.lore =
+            AttributeUtil.getAttributeLore(equipment, meta, lore.contains(CorruptionSettings.CORRUPTION_TAG_LORE[0]))
         item.itemMeta = meta
     }
 
@@ -173,7 +177,7 @@ class StatItemService : Listener {
         val item = ItemStack(equipment.material)
         val itemMeta = item.itemMeta ?: return item
 
-        enchantItem(mapTier, itemMeta, equipment.enchantOptions)
+        enchantItem(mapTier, itemMeta, equipment.rollableEnchants)
         addItemStats(mapTier, equipment, itemMeta, slot)
 
         item.itemMeta = itemMeta
@@ -203,31 +207,31 @@ class StatItemService : Listener {
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
         AttributeUtil.addAttributeBaseStats(equipment, itemMeta, slot)
 
-        val rolledAttributesCopy = equipment.rolledAttributes.toMutableList()
+        val rollableAttributesCopy = equipment.rollableAttributes.toMutableList()
         val statAmount = RandomUtil.pick(StatItemSettings.STAT_AMOUNTS, mapTier).option
+        val rolledAttributes = mutableListOf<RolledAttribute>()
 
         repeat(statAmount) {
-            val rolledAttributeOption = RandomUtil.pick(rolledAttributesCopy)
-            val (attribute, value) = rolledAttributeOption.option
+            val rollableAttributeOption = RandomUtil.pick(rollableAttributesCopy)
+            val rollableAttribute = rollableAttributeOption.option
+            val rolledAttribute = rollableAttribute.roll(mapTier)
 
-            val random = random.nextDouble()
-            val scaling = StatItemSettings.calculateStatValueScaling(random, mapTier)
-            val realValue = value * scaling
+            rolledAttributes.add(rolledAttribute)
 
-            itemMeta.addAttributeModifier(
-                attribute,
-                AttributeModifier(
-                    UUID.randomUUID(),
-                    attribute.key.key,
-                    realValue,
-                    AttributeModifier.Operation.ADD_NUMBER,
-                    slot
-                )
+            rollableAttributesCopy.remove(rollableAttributeOption)
+            if (rolledAttribute.type.vanillaAttributeType == null) return
+
+            val vanillaAttributeType = rolledAttribute.type.vanillaAttributeType
+
+            ItemUtil.addItemModifier(
+                itemMeta,
+                vanillaAttributeType.attribute,
+                rolledAttribute.roll,
+                vanillaAttributeType.scaleType
             )
-
-            rolledAttributesCopy.remove(rolledAttributeOption)
         }
 
+        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.ATTRIBUTES, rolledAttributes)
         itemMeta.lore = AttributeUtil.getAttributeLore(equipment, itemMeta, false)
     }
 }

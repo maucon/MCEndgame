@@ -10,7 +10,6 @@ import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.ChatColor
 import org.bukkit.Material
-import kotlin.math.pow
 
 object StatItemSettings {
     const val COMMAND_NAME = "item-info"
@@ -23,14 +22,6 @@ object StatItemSettings {
     const val STAT_ITEM_BOOK_TITLE = "ItemStats"
 
     val SLOT_LORE_COLOR = ChatColor.GRAY
-
-    private const val STAT_VALUE_RANDOM_EXPONENT_PER_TIER = .05
-    private const val STAT_VALUE_EXPONENT_TIER_OFFSET = 10
-
-    fun calculateStatValueScaling(randomValue: Double, mapTier: Int): Double {
-        if (mapTier <= STAT_VALUE_EXPONENT_TIER_OFFSET) return randomValue
-        return 1 - randomValue.pow(1 + STAT_VALUE_RANDOM_EXPONENT_PER_TIER * (mapTier - STAT_VALUE_EXPONENT_TIER_OFFSET))
-    }
 
     private const val ENCHANT_TRIES_PER_TIER = 0.5
     fun calculateEnchantTries(mapTier: Int) = 1 + (mapTier * ENCHANT_TRIES_PER_TIER).toInt()

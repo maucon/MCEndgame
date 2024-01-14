@@ -180,6 +180,7 @@ class StatItemCommand : CommandHandler {
 
     private fun getMaxAttributes(type: Material): List<ItemAttribute> {
         val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[type] ?: return listOf()
-        return equipment.rolledAttributes.map { it.option }
+        return listOf()
+//        return equipment.rollableAttributes.map { it.option }
     }
 }

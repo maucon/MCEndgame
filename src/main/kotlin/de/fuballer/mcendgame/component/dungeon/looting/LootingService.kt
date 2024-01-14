@@ -29,7 +29,7 @@ class LootingService(
         val world = entity.world
         if (WorldUtil.isNotDungeonWorld(world)) return
 
-        if (!PersistentDataUtil.getBooleanValue(entity, DataTypeKeys.DROP_EQUIPMENT)) return
+        if (!PersistentDataUtil.getBooleanValue(entity, DataTypeKeys.DROP_EQUIPMENT, true)) return
 
         val looting = getLootingLevel(entity.killer)
         for (item in getEquipment(entity.equipment)) {

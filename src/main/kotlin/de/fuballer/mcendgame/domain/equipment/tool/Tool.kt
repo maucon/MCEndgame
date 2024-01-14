@@ -1,5 +1,7 @@
 package de.fuballer.mcendgame.domain.equipment.tool
 
+import de.fuballer.mcendgame.component.item_attribute.AttributeType
+import de.fuballer.mcendgame.component.item_attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemAttribute
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
@@ -11,19 +13,19 @@ enum class Tool(
     override val material: Material,
     override val baseAttributes: List<ItemAttribute>,
     override val lore: String,
-    override val rolledAttributes: List<RandomOption<ItemAttribute>>,
-    override val enchantOptions: List<RandomOption<ItemEnchantment>>,
+    override val rollableAttributes: List<RandomOption<RollableAttribute>>,
+    override val rollableEnchants: List<RandomOption<ItemEnchantment>>,
 ) : Equipment {
     BOW(
         Material.BOW,
         listOf(),
         Equipment.MAIN_HAND_SLOT_LORE,
         listOf(
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.4)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -50,11 +52,11 @@ enum class Tool(
         ),
         Equipment.MAIN_HAND_SLOT_LORE,
         listOf(
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.4)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -81,11 +83,11 @@ enum class Tool(
         listOf(),
         Equipment.OFF_HAND_SLOT_LORE,
         listOf(
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.4)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -106,11 +108,11 @@ enum class Tool(
         listOf(),
         Equipment.OFF_HAND_SLOT_LORE,
         listOf(
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.4)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 1.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -125,11 +127,11 @@ enum class Tool(
         listOf(),
         Equipment.MAIN_HAND_SLOT_LORE,
         listOf(
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.4)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -152,11 +154,11 @@ enum class Tool(
         listOf(),
         Equipment.OFF_HAND_SLOT_LORE,
         listOf(
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.4)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -171,11 +173,11 @@ enum class Tool(
         listOf(),
         Equipment.OFF_HAND_SLOT_LORE,
         listOf(
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.4)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -190,11 +192,11 @@ enum class Tool(
         listOf(),
         Equipment.HEAD_SLOT_LORE,
         listOf(
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.4)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -223,11 +225,11 @@ enum class Tool(
         listOf(),
         Equipment.OFF_HAND_SLOT_LORE,
         listOf(
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.4)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 0.5)),
-            RandomOption(10, ItemAttribute(Attribute.GENERIC_LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),

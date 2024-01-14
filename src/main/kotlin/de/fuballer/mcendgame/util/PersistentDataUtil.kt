@@ -1,22 +1,23 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.persistent_data.DataTypeKeys
-import org.bukkit.entity.Entity
+import org.bukkit.persistence.PersistentDataHolder
 
 object PersistentDataUtil {
     fun <T> getValue(
-        entity: Entity,
+        holder: PersistentDataHolder,
         typeKey: DataTypeKeys.TypeKey<T>
-    ): T? = entity.persistentDataContainer.get(typeKey.key, typeKey.dataType)
+    ): T? = holder.persistentDataContainer.get(typeKey.key, typeKey.dataType)
 
     fun getBooleanValue(
-        entity: Entity,
-        typeKey: DataTypeKeys.TypeKey<Boolean>
-    ): Boolean = entity.persistentDataContainer.get(typeKey.key, typeKey.dataType) ?: false
+        holder: PersistentDataHolder,
+        typeKey: DataTypeKeys.TypeKey<Boolean>,
+        default: Boolean = false
+    ): Boolean = holder.persistentDataContainer.get(typeKey.key, typeKey.dataType) ?: default
 
     fun <T : Any> setValue(
-        entity: Entity,
+        holder: PersistentDataHolder,
         typeKey: DataTypeKeys.TypeKey<T>,
         value: T
-    ) = entity.persistentDataContainer.set(typeKey.key, typeKey.dataType, value)
+    ) = holder.persistentDataContainer.set(typeKey.key, typeKey.dataType, value)
 }

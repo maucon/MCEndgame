@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.domain.equipment
 
+import de.fuballer.mcendgame.component.item_attribute.RollableAttribute
 import de.fuballer.mcendgame.component.stat_item.StatItemSettings
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Material
@@ -8,8 +9,8 @@ interface Equipment {
     val material: Material
     val baseAttributes: List<ItemAttribute>
     val lore: String
-    val rolledAttributes: List<RandomOption<ItemAttribute>>
-    val enchantOptions: List<RandomOption<ItemEnchantment>>
+    val rollableAttributes: List<RandomOption<RollableAttribute>>
+    val rollableEnchants: List<RandomOption<ItemEnchantment>>
 
     companion object {
         val HEAD_SLOT_LORE = "${StatItemSettings.SLOT_LORE_COLOR}When on Head:"
