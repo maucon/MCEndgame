@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.type
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.blaze.BlazeEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.buff_allay.BuffAllayEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.buff_cow.BuffCowEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.buff_villager.BuffVillagerEntityType
@@ -50,7 +51,7 @@ enum class DungeonType(
             RandomOption(150, MeleeForestSkeletonEntityType),
             RandomOption(90, SkeletonEntityType),
             RandomOption(20, MagmaCubeEntityType),
-            RandomOption(20, BuffAllayEntityType),
+            RandomOption(20, BlazeEntityType),
             RandomOption(3, SuccubusEntityType),
             RandomOption(3, IncubusEntityType),
             RandomOption(15, ImpEntityType),
