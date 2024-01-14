@@ -2,6 +2,10 @@ package de.fuballer.mcendgame.component.dungeon.type
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.blaze.BlazeEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.buff_allay.BuffAllayEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.buff_cow.BuffCowEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.buff_villager.BuffVillagerEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.buff_witch.BuffWitchEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.cerberus.CerberusEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.cyclops.CyclopsEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.demoic_golem.DemonicGolemEntityType
@@ -102,6 +106,18 @@ enum class DungeonType(
             RandomOption(1, WendigoEntityType)
         ),
         listOf(RandomOption(1, MandragoraEntityType))
+    ),
+    VILLAGE(
+        listOf(
+            RandomOption(1, DungeonMapType.ICE_CAVE)
+        ),
+        listOf(
+            RandomOption(50, BuffVillagerEntityType),
+            RandomOption(20, BuffWitchEntityType),
+            RandomOption(3, BuffCowEntityType),
+            RandomOption(8, BuffAllayEntityType),
+        ),
+        listOf(RandomOption(1, MinotaurEntityType))
     );
 
     fun roll() = RolledDungeonType(
