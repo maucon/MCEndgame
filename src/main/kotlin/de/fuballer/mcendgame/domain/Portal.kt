@@ -62,13 +62,7 @@ class Portal(
             close()
         }
 
-        val world = teleportationTargetLocation.world ?: return
-
-        if (WorldUtil.isDungeonWorld(world)) {
-            teleportPlayerAndSetGameMode(player, teleportationTargetLocation, GameMode.SURVIVAL, GameMode.ADVENTURE)
-        } else if (WorldSettings.DEFAULT_WORLD_NAMES.contains(world.name)) {
-            teleportPlayerAndSetGameMode(player, teleportationTargetLocation, GameMode.ADVENTURE, GameMode.SURVIVAL)
-        }
+        player.teleport(teleportationTargetLocation)
     }
 
     fun close() {
@@ -91,17 +85,4 @@ class Portal(
                 DustOptions(Color.PURPLE, 1f)
             )
         }
-
-    private fun teleportPlayerAndSetGameMode(
-        player: Player,
-        location: Location,
-        initialGameMode: GameMode,
-        newGameMode: GameMode
-    ) {
-        player.teleport(location)
-
-        if (player.gameMode == initialGameMode) {
-            player.gameMode = newGameMode
-        }
-    }
 }
