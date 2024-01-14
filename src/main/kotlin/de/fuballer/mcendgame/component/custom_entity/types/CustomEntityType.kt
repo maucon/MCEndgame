@@ -11,7 +11,6 @@ interface CustomEntityType {
     val canHaveWeapons: Boolean
     val isRanged: Boolean
     val canHaveArmor: Boolean
-    val dropBaseLoot: Boolean
     val hideEquipment: Boolean
     val isSilent: Boolean
 

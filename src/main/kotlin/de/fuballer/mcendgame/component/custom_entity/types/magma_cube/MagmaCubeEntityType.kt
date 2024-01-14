@@ -10,7 +10,6 @@ object MagmaCubeEntityType : CustomEntityType {
     override val canHaveWeapons = true
     override val isRanged = false
     override val canHaveArmor = true
-    override val dropBaseLoot = false
     override val hideEquipment = true
     override val isSilent = false
 

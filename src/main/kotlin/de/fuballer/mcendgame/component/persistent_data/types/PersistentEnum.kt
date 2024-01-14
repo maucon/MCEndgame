@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.custom_entity.persistent_data.types
+package de.fuballer.mcendgame.component.persistent_data.types
 
 import org.bukkit.persistence.PersistentDataAdapterContext
 import org.bukkit.persistence.PersistentDataType

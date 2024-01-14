@@ -162,15 +162,15 @@ object StatItemSettings {
 
     val MATERIAL_TO_EQUIPMENT = mutableMapOf<Material, Equipment>()
         .apply {
-            putAll(Boots.values().associateBy { it.material })
-            putAll(Chestplate.values().associateBy { it.material })
-            putAll(Helmet.values().associateBy { it.material })
-            putAll(Leggings.values().associateBy { it.material })
-            putAll(Axe.values().associateBy { it.material })
-            putAll(Hoe.values().associateBy { it.material })
-            putAll(Pickaxe.values().associateBy { it.material })
-            putAll(Shovel.values().associateBy { it.material })
-            putAll(Sword.values().associateBy { it.material })
-            putAll(Tool.values().associateBy { it.material })
+            putAll(Boots.entries.associateBy { it.material })
+            putAll(Chestplate.entries.associateBy { it.material })
+            putAll(Helmet.entries.associateBy { it.material })
+            putAll(Leggings.entries.associateBy { it.material })
+            putAll(Axe.entries.associateBy { it.material })
+            putAll(Hoe.entries.associateBy { it.material })
+            putAll(Pickaxe.entries.associateBy { it.material })
+            putAll(Shovel.entries.associateBy { it.material })
+            putAll(Sword.entries.associateBy { it.material })
+            putAll(Tool.entries.associateBy { it.material })
         }
 }

@@ -10,7 +10,6 @@ object SkeletonEntityType : CustomEntityType {
     override val canHaveWeapons = true
     override val isRanged = true
     override val canHaveArmor = true
-    override val dropBaseLoot = false
     override val hideEquipment = false
     override val isSilent = false
 

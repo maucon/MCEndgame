@@ -204,10 +204,9 @@ class StatItemService : Listener {
         AttributeUtil.addAttributeBaseStats(equipment, itemMeta, slot)
 
         val rolledAttributesCopy = equipment.rolledAttributes.toMutableList()
-
         val statAmount = RandomUtil.pick(StatItemSettings.STAT_AMOUNTS, mapTier).option
-        repeat(statAmount) {
 
+        repeat(statAmount) {
             val rolledAttributeOption = RandomUtil.pick(rolledAttributesCopy)
             val (attribute, value) = rolledAttributeOption.option
 

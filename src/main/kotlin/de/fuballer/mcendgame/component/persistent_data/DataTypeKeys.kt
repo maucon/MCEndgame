@@ -1,13 +1,12 @@
-package de.fuballer.mcendgame.component.custom_entity.persistent_data
+package de.fuballer.mcendgame.component.persistent_data
 
-import de.fuballer.mcendgame.component.custom_entity.persistent_data.types.PersistentCustomEntityType
-import de.fuballer.mcendgame.component.custom_entity.persistent_data.types.PersistentUuidSet
+import de.fuballer.mcendgame.component.persistent_data.types.PersistentCustomEntityType
+import de.fuballer.mcendgame.component.persistent_data.types.PersistentUuidSet
 import de.fuballer.mcendgame.util.PluginUtil.createNamespacedKey
 import org.bukkit.NamespacedKey
 import org.bukkit.persistence.PersistentDataType
 
 object DataTypeKeys {
-    val DROP_BASE_LOOT = TypeKey(createNamespacedKey("drop-base-loot"), PersistentDataType.BOOLEAN)
     val DROP_EQUIPMENT = TypeKey(createNamespacedKey("drop-equipment"), PersistentDataType.BOOLEAN)
     val MAP_TIER = TypeKey(createNamespacedKey("map-tier"), PersistentDataType.INTEGER)
     val IS_MINION = TypeKey(createNamespacedKey("is-minion"), PersistentDataType.BOOLEAN)

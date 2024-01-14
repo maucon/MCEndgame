@@ -14,7 +14,6 @@ object MinotaurEntityType : CustomEntityType {
     override val canHaveWeapons = false
     override val isRanged = false
     override val canHaveArmor = false
-    override val dropBaseLoot = false
     override val hideEquipment = true
     override val isSilent = true
 

@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.component.persistent_data.DataTypeKeys
 import org.bukkit.Location
 import org.bukkit.entity.*
 
@@ -31,7 +31,6 @@ object EntityUtil {
     }
 
     private fun setPersistentData(entity: Entity, entityType: CustomEntityType, mapTier: Int) {
-        PersistentDataUtil.setValue(entity, DataTypeKeys.DROP_BASE_LOOT, entityType.dropBaseLoot)
         PersistentDataUtil.setValue(entity, DataTypeKeys.MAP_TIER, mapTier)
         PersistentDataUtil.setValue(entity, DataTypeKeys.HIDE_EQUIPMENT, entityType.hideEquipment)
         PersistentDataUtil.setValue(entity, DataTypeKeys.CUSTOM_ENTITY_TYPE, entityType)

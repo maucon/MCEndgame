@@ -10,7 +10,6 @@ object HatcheryEntityType : CustomEntityType {
     override val canHaveWeapons = false
     override val isRanged = true
     override val canHaveArmor = true
-    override val dropBaseLoot = false
     override val hideEquipment = true
     override val isSilent = true
 

@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.dungeon.remaining
 
-import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.component.dungeon.remaining.db.RemainingEntity
 import de.fuballer.mcendgame.component.dungeon.remaining.db.RemainingRepository
+import de.fuballer.mcendgame.component.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
