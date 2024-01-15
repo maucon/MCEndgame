@@ -20,6 +20,7 @@ object DataTypeKeys {
     // items
     val ATTRIBUTES = TypeKey(createNamespacedKey("attributes"), PersistentRolledAttributeList)
     val CORRUPTED = TypeKey(createNamespacedKey("corrupted"), PersistentDataType.BOOLEAN)
+    val CORRUPTION_ROUNDS = TypeKey(createNamespacedKey("corruption-rounds"), PersistentDataType.INTEGER)
 
     class TypeKey<T>(
         val key: NamespacedKey,

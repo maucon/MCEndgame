@@ -1,7 +1,9 @@
 package de.fuballer.mcendgame.component.corruption
 
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
+import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.util.ItemCreatorUtil
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -37,14 +39,23 @@ object CorruptionSettings {
         ItemStack(BASE_ITEM),
         ITEM_NAME,
         ITEM_LORE
-    )
+    ).also {
+        val itemMeta = it.itemMeta!!
+        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.CORRUPTION_ROUNDS, 1)
+        it.itemMeta = itemMeta
+    }
+
     private val DOUBLE_CORRUPTION_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),
         ITEM_NAME_DOUBLE,
         ITEM_LORE_DOUBLE,
         Enchantment.ARROW_FIRE, 1, true,
         ItemFlag.HIDE_ENCHANTS
-    )
+    ).also {
+        val itemMeta = it.itemMeta!!
+        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.CORRUPTION_ROUNDS, 2)
+        it.itemMeta = itemMeta
+    }
 
     fun getCorruptionItem() = CORRUPTION_ITEM.clone()
     fun getDoubleCorruptionItem() = DOUBLE_CORRUPTION_ITEM.clone()

@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.corruption
 
 import de.fuballer.mcendgame.component.corruption.data.AttributeWithModifier
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.component.stat_item.StatItemSettings
+import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.AttributeUtil
 import de.fuballer.mcendgame.util.ItemUtil
@@ -37,11 +37,10 @@ class CorruptionService : Listener {
 
         val base = inventory.getItem(0) ?: return
         val corruption = inventory.getItem(1) ?: return
+        val corruptionMeta = corruption.itemMeta ?: return
 
         if (!StatItemSettings.MATERIAL_TO_EQUIPMENT.containsKey(base.type)) return
-        if (!corruption.isSimilar(CorruptionSettings.getCorruptionItem())
-            && !corruption.isSimilar(CorruptionSettings.getDoubleCorruptionItem())
-        ) return
+        PersistentDataUtil.getValue(corruptionMeta, DataTypeKeys.CORRUPTION_ROUNDS) ?: return
 
         val result = base.clone()
         ItemUtil.setCorrupted(result)
@@ -78,20 +77,20 @@ class CorruptionService : Listener {
 
         val corruption = inventory.getItem(1) ?: return
         val corruptionMeta = corruption.itemMeta ?: return
-        val corruptionLore = corruptionMeta.lore ?: return
 
         if (player.gameMode != GameMode.CREATIVE) {
             player.level -= 1
         }
 
-        corruptItem(result, player)
-        if (result.type != Material.AIR && corruptionLore.contains(CorruptionSettings.ITEM_LORE_DOUBLE[0])) {
-            corruptItem(result, player)
+        val corruptionRounds = PersistentDataUtil.getValue(corruptionMeta, DataTypeKeys.CORRUPTION_ROUNDS) ?: return
+        repeat(corruptionRounds) {
+            if (result.type == Material.AIR) return@repeat
+
+            corruptItem(result)
         }
 
-        if (result.type != Material.AIR) {
-            player.world.playSound(player.location, Sound.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1f, 1f)
-        }
+        val sound = if (result.type == Material.AIR) Sound.ENTITY_ITEM_BREAK else Sound.BLOCK_ANVIL_USE
+        player.world.playSound(player.location, sound, SoundCategory.PLAYERS, 1f, 1f)
 
         PersistentDataUtil.setValue(resultMeta, DataTypeKeys.CORRUPTED, true)
         result.itemMeta = resultMeta
@@ -118,7 +117,7 @@ class CorruptionService : Listener {
         event.isCancelled = true
     }
 
-    private fun corruptItem(item: ItemStack, player: Player) {
+    private fun corruptItem(item: ItemStack) {
         item.itemMeta ?: return
 
         val corruptions =
@@ -128,11 +127,7 @@ class CorruptionService : Listener {
         when (RandomUtil.pick(corruptions).option) {
             CorruptionChanceType.CORRUPT_ENCHANTS -> corruptEnchant(item)
             CorruptionChanceType.CORRUPT_STATS -> corruptStats(item)
-            CorruptionChanceType.DESTROY -> {
-                item.type = Material.AIR
-                player.world.playSound(player.location, Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 1f, 1f)
-            }
-
+            CorruptionChanceType.DESTROY -> item.type = Material.AIR
             CorruptionChanceType.DO_NOTHING -> {}
         }
     }
