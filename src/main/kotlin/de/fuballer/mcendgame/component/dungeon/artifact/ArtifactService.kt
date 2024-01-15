@@ -2,7 +2,8 @@ package de.fuballer.mcendgame.component.dungeon.artifact
 
 import de.fuballer.mcendgame.component.dungeon.artifact.data.Artifact
 import de.fuballer.mcendgame.component.dungeon.artifact.db.ArtifactRepository
-import de.fuballer.mcendgame.component.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.artifact.ArtifactType
+import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil

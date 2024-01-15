@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.component.stat_item
 
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.item_attribute.RolledAttribute
-import de.fuballer.mcendgame.component.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
+import de.fuballer.mcendgame.domain.attribute.RolledAttribute
+import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.AttributeUtil
 import de.fuballer.mcendgame.util.ItemUtil
@@ -21,7 +21,6 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
-import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
@@ -64,14 +63,12 @@ class StatItemService : Listener {
         val item = event.result ?: return
         val meta = item.itemMeta ?: return
         if (!meta.hasLore()) return
-        val attributes = meta.attributeModifiers ?: return
         val smithingEquipment = StatItemSettings.SMITHING_MAP[item.type] ?: return
 
         if (!AttributeUtil.removeAttributeBaseStats(smithingEquipment, meta)) return
 
-        val slot = attributes.values().first().slot
         val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        AttributeUtil.addAttributeBaseStats(equipment, meta, slot)
+        AttributeUtil.addAttributeBaseStats(equipment, meta)
         meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
         item.itemMeta = meta
     }
@@ -111,19 +108,19 @@ class StatItemService : Listener {
         }
 
         if (armor) {
-            getSortableEquipment(mapTier, StatItemSettings.HELMETS, EquipmentSlot.HEAD)?.also {
+            getSortableEquipment(mapTier, StatItemSettings.HELMETS)?.also {
                 equipment.helmet = it
                 equipment.helmetDropChance = 0f
             }
-            getSortableEquipment(mapTier, StatItemSettings.CHESTPLATES, EquipmentSlot.CHEST)?.also {
+            getSortableEquipment(mapTier, StatItemSettings.CHESTPLATES)?.also {
                 equipment.chestplate = it
                 equipment.chestplateDropChance = 0f
             }
-            getSortableEquipment(mapTier, StatItemSettings.LEGGINGS, EquipmentSlot.LEGS)?.also {
+            getSortableEquipment(mapTier, StatItemSettings.LEGGINGS)?.also {
                 equipment.leggings = it
                 equipment.leggingsDropChance = 0f
             }
-            getSortableEquipment(mapTier, StatItemSettings.BOOTS, EquipmentSlot.FEET)?.also {
+            getSortableEquipment(mapTier, StatItemSettings.BOOTS)?.also {
                 equipment.boots = it
                 equipment.bootsDropChance = 0f
             }
@@ -134,12 +131,12 @@ class StatItemService : Listener {
         if (ranged) return createRangedMainHandItem(mapTier)
 
         val itemProbability = RandomUtil.pick(StatItemSettings.MAINHAND_PROBABILITIES).option ?: return null
-        return getSortableEquipment(mapTier, itemProbability, EquipmentSlot.HAND)
+        return getSortableEquipment(mapTier, itemProbability)
     }
 
     private fun createRangedMainHandItem(mapTier: Int): ItemStack? {
         val itemProbability = RandomUtil.pick(StatItemSettings.RANGED_MAINHAND_PROBABILITIES).option
-        return getSortableEquipment(mapTier, itemProbability, EquipmentSlot.HAND)
+        return getSortableEquipment(mapTier, itemProbability)
     }
 
     private fun createOffHandItem(mapTier: Int): ItemStack? {
@@ -148,17 +145,16 @@ class StatItemService : Listener {
         }
 
         val itemProbability = RandomUtil.pick(StatItemSettings.MAINHAND_PROBABILITIES).option ?: return null
-        return getSortableEquipment(mapTier, itemProbability, EquipmentSlot.HAND)
+        return getSortableEquipment(mapTier, itemProbability)
     }
 
     private fun getSortableEquipment(
         mapTier: Int,
-        equipmentProbabilities: List<SortableRandomOption<out Equipment?>>,
-        slot: EquipmentSlot
+        equipmentProbabilities: List<SortableRandomOption<out Equipment?>>
     ): ItemStack? {
         val rolls = StatItemSettings.calculateEquipmentRollTries(mapTier)
         val equipment = RandomUtil.pick(equipmentProbabilities, rolls).option ?: return null
-        return getEquipment(mapTier, equipment, slot)
+        return getEquipment(mapTier, equipment)
     }
 
     private fun getUnsortableEquipment(
@@ -166,19 +162,18 @@ class StatItemService : Listener {
         equipmentProbabilities: List<RandomOption<out Equipment>>
     ): ItemStack {
         val equipment = RandomUtil.pick(equipmentProbabilities).option
-        return getEquipment(mapTier, equipment, EquipmentSlot.OFF_HAND)
+        return getEquipment(mapTier, equipment)
     }
 
     private fun getEquipment(
         mapTier: Int,
-        equipment: Equipment,
-        slot: EquipmentSlot
+        equipment: Equipment
     ): ItemStack {
         val item = ItemStack(equipment.material)
         val itemMeta = item.itemMeta ?: return item
 
         enchantItem(mapTier, itemMeta, equipment.rollableEnchants)
-        addItemStats(mapTier, equipment, itemMeta, slot)
+        addItemStats(mapTier, equipment, itemMeta)
 
         item.itemMeta = itemMeta
         return item
@@ -201,11 +196,10 @@ class StatItemService : Listener {
     private fun addItemStats(
         mapTier: Int,
         equipment: Equipment,
-        itemMeta: ItemMeta,
-        slot: EquipmentSlot
+        itemMeta: ItemMeta
     ) {
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
-        AttributeUtil.addAttributeBaseStats(equipment, itemMeta, slot)
+        AttributeUtil.addAttributeBaseStats(equipment, itemMeta)
 
         val rollableAttributesCopy = equipment.rollableAttributes.toMutableList()
         val statAmount = RandomUtil.pick(StatItemSettings.STAT_AMOUNTS, mapTier).option
@@ -217,17 +211,15 @@ class StatItemService : Listener {
             val rolledAttribute = rollableAttribute.roll(mapTier)
 
             rolledAttributes.add(rolledAttribute)
-
             rollableAttributesCopy.remove(rollableAttributeOption)
-            if (rolledAttribute.type.vanillaAttributeType == null) return
 
-            val vanillaAttributeType = rolledAttribute.type.vanillaAttributeType
+            val applicableAttributeType = rolledAttribute.type.applicableAttributeType ?: return
 
             ItemUtil.addItemAttribute(
                 itemMeta,
-                vanillaAttributeType.attribute,
+                applicableAttributeType.attribute,
                 rolledAttribute.roll,
-                vanillaAttributeType.scaleType
+                applicableAttributeType.scaleType
             )
         }
 

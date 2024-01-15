@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.component.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.inventory.ItemStack

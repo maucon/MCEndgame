@@ -8,7 +8,6 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.LivingEntity
-import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
@@ -112,24 +111,14 @@ object AttributeUtil {
 
     fun addAttributeBaseStats(
         equipment: Equipment,
-        meta: ItemMeta,
-        slot: EquipmentSlot?
+        meta: ItemMeta
     ) {
         val baseAttributes = equipment.baseAttributes
 
         baseAttributes.forEach { (attribute, value) ->
             val actualValue = getActualAttributeValue(attribute, value)
 
-            meta.addAttributeModifier(
-                attribute,
-                AttributeModifier(
-                    UUID.randomUUID(),
-                    attribute.key.key,
-                    actualValue,
-                    AttributeModifier.Operation.ADD_NUMBER,
-                    slot
-                )
-            )
+            ItemUtil.addItemAttribute(meta, attribute, actualValue, AttributeModifier.Operation.ADD_NUMBER)
         }
     }
 

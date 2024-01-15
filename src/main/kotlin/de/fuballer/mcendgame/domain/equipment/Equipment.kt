@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.domain.equipment
 
-import de.fuballer.mcendgame.component.item_attribute.RollableAttribute
+import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.stat_item.StatItemSettings
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Material

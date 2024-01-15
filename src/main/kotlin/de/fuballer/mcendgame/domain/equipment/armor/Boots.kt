@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.domain.equipment.armor
 
-import de.fuballer.mcendgame.component.item_attribute.AttributeType
-import de.fuballer.mcendgame.component.item_attribute.RollableAttribute
+import de.fuballer.mcendgame.domain.attribute.AttributeType
+import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemAttribute
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
