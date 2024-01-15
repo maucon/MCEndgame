@@ -2,6 +2,9 @@ package de.fuballer.mcendgame.domain.attribute
 
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import java.text.DecimalFormat
+
+private val DECIMAL_FORMAT = DecimalFormat("#.##")
 
 enum class AttributeType(
     val lore: (roll: Double) -> String,
@@ -9,55 +12,55 @@ enum class AttributeType(
 ) {
     // vanilla
     MAX_HEALTH(
-        { "+$it Maximum Health" },
+        { "+${DECIMAL_FORMAT.format(it)} Max Health" },
         ApplicableAttributeType(
             Attribute.GENERIC_MAX_HEALTH, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     KNOCKBACK_RESISTANCE(
-        { "+$it Knockback Resistance" },
+        { "+${DECIMAL_FORMAT.format(it * 10)} Knockback Resistance" },
         ApplicableAttributeType(
             Attribute.GENERIC_KNOCKBACK_RESISTANCE, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     MOVEMENT_SPEED(
-        { "+${it * 100} Movement Speed" },
+        { "+${DECIMAL_FORMAT.format(it * 100)} Movement Speed" },
         ApplicableAttributeType(
             Attribute.GENERIC_MOVEMENT_SPEED, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     ATTACK_DAMAGE(
-        { " $it Attack Damage" },
+        { "+${DECIMAL_FORMAT.format(it)} Attack Damage" },
         ApplicableAttributeType(
             Attribute.GENERIC_ATTACK_DAMAGE, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     ATTACK_KNOCKBACK(
-        { "+$it Attack Knockback" },
+        { "+${DECIMAL_FORMAT.format(it)} Attack Knockback" },
         ApplicableAttributeType(
             Attribute.GENERIC_ATTACK_KNOCKBACK, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     ATTACK_SPEED(
-        { " $it Attack Speed" },
+        { "+${DECIMAL_FORMAT.format(it)} Attack Speed" },
         ApplicableAttributeType(
             Attribute.GENERIC_ATTACK_SPEED, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     ARMOR(
-        { "+$it Armor" },
+        { "+${DECIMAL_FORMAT.format(it)} Armor" },
         ApplicableAttributeType(
             Attribute.GENERIC_ARMOR, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     ARMOR_TOUGHNESS(
-        { "+$it Armor Toughness" },
+        { "+${DECIMAL_FORMAT.format(it)} Armor Toughness" },
         ApplicableAttributeType(
             Attribute.GENERIC_ARMOR_TOUGHNESS, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     LUCK(
-        { "+$it Luck" },
+        { "+${DECIMAL_FORMAT.format(it)} Luck" },
         ApplicableAttributeType(
             Attribute.GENERIC_LUCK, AttributeModifier.Operation.ADD_NUMBER
         )
@@ -65,6 +68,6 @@ enum class AttributeType(
 
     // custom
     HEALTH_SCALED_SIZE(
-        { "${it}% increased size per 2 extra health" }
+        { "${DECIMAL_FORMAT.format(it)}}% increased size per 2 extra health" }
     )
 }

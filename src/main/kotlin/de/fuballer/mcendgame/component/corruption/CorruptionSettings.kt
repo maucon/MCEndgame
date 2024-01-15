@@ -17,12 +17,12 @@ object CorruptionSettings {
     private val ITEM_NAME = ChatColor.DARK_RED.toString() + "Heart of Corruption"
     private val ITEM_NAME_DOUBLE = ChatColor.DARK_RED.toString() + "Heart of Corruption"
     private val ITEM_LORE = listOf(ChatColor.WHITE.toString() + "Corrupts an item, modifying it unpredictably.")
-    val ITEM_LORE_DOUBLE = listOf(ChatColor.WHITE.toString() + "Corrupts an item, modifying it unpredictably. Twice!")
-    val CORRUPTION_TAG_LORE = listOf(ChatColor.DARK_RED.toString() + "Corrupted")
+    private val ITEM_LORE_DOUBLE = listOf(ChatColor.WHITE.toString() + "Corrupts an item, modifying it unpredictably. Twice!")
+    val CORRUPTION_TAG_LORE = ChatColor.DARK_RED.toString() + "Corrupted"
 
     val CORRUPTIONS = listOf(
         RandomOption(40, CorruptionChanceType.CORRUPT_ENCHANTS),
-        RandomOption(40, CorruptionChanceType.CORRUPT_STATS),
+        RandomOption(40, CorruptionChanceType.CORRUPT_ATTRIBUTES),
         RandomOption(10, CorruptionChanceType.DESTROY),
         RandomOption(10, CorruptionChanceType.DO_NOTHING)
     )
@@ -34,6 +34,8 @@ object CorruptionSettings {
     )
 
     const val PRESENT_ENCHANT_WEIGHT_MULTIPLIER = 3
+
+    fun corruptAttributeValue(value: Double, random: Double) = value * (0.5 + random)
 
     private val CORRUPTION_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),

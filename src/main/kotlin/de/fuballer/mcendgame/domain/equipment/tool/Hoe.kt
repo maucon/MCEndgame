@@ -2,57 +2,56 @@ package de.fuballer.mcendgame.domain.equipment.tool
 
 import de.fuballer.mcendgame.domain.attribute.AttributeType
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
+import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
-import de.fuballer.mcendgame.domain.equipment.ItemAttribute
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Material
-import org.bukkit.attribute.Attribute
 
 enum class Hoe(
     override val material: Material,
-    override val baseAttributes: List<ItemAttribute>
+    override val baseAttributes: List<RolledAttribute>
 ) : Equipment {
     WOODEN(
         Material.WOODEN_HOE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 1.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 1.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 1.0)
         )
     ),
     GOLDEN(
         Material.GOLDEN_HOE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 1.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 1.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 1.0)
         )
     ),
     STONE(
         Material.STONE_HOE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 2.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 1.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 2.0)
         )
     ),
     IRON(
         Material.IRON_HOE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 3.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 1.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 3.0)
         )
     ),
     DIAMOND(
         Material.DIAMOND_HOE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 4.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 1.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 4.0)
         )
     ),
     NETHERITE(
         Material.NETHERITE_HOE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 4.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 1.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 4.0)
         )
     );
 

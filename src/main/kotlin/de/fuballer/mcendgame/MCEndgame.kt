@@ -7,11 +7,14 @@ import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.*
 
 class MCEndgame : JavaPlugin() {
     private var lifeCycleListener: List<LifeCycleListener>? = null
 
     override fun onEnable() {
+        Locale.setDefault(Locale.ENGLISH)
+
         PluginConfiguration.INSTANCE = this
         PluginConfiguration.PROTOCOL_MANAGER = ProtocolLibrary.getProtocolManager()
 

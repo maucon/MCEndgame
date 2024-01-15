@@ -2,57 +2,56 @@ package de.fuballer.mcendgame.domain.equipment.tool
 
 import de.fuballer.mcendgame.domain.attribute.AttributeType
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
+import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
-import de.fuballer.mcendgame.domain.equipment.ItemAttribute
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Material
-import org.bukkit.attribute.Attribute
 
 enum class Shovel(
     override val material: Material,
-    override val baseAttributes: List<ItemAttribute>
+    override val baseAttributes: List<RolledAttribute>
 ) : Equipment {
     WOODEN(
         Material.WOODEN_SHOVEL,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 2.5),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 1.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 2.5),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 1.0)
         )
     ),
     GOLDEN(
         Material.GOLDEN_SHOVEL,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 2.5),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 1.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 2.5),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 1.0)
         )
     ),
     STONE(
         Material.STONE_SHOVEL,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 3.5),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 1.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 3.5),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 1.0)
         )
     ),
     IRON(
         Material.IRON_SHOVEL,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 4.5),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 1.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 4.5),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 1.0)
         )
     ),
     DIAMOND(
         Material.DIAMOND_SHOVEL,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 5.5),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 1.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 5.5),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 1.0)
         )
     ),
     NETHERITE(
         Material.NETHERITE_SHOVEL,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 6.5),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 1.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 6.5),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 1.0)
         )
     );
 

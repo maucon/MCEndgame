@@ -56,6 +56,14 @@ class WorldManageService(
             setGameRule(GameRule.DO_WEATHER_CYCLE, false)
             setGameRule(GameRule.DO_FIRE_TICK, false)
             setGameRule(GameRule.RANDOM_TICK_SPEED, 0)
+            setGameRule(GameRule.DO_TILE_DROPS, false)
+            setGameRule(GameRule.BLOCK_EXPLOSION_DROP_DECAY, false)
+            setGameRule(GameRule.DO_PATROL_SPAWNING, false)
+            setGameRule(GameRule.TNT_EXPLOSION_DROP_DECAY, false)
+            setGameRule(GameRule.DO_TRADER_SPAWNING, false)
+            setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false)
+            setGameRule(GameRule.REDUCED_DEBUG_INFO, true)
+
             difficulty = Difficulty.HARD
             time = 18000
         }

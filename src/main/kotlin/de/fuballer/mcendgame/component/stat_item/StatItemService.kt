@@ -1,12 +1,10 @@
 package de.fuballer.mcendgame.component.stat_item
 
-import de.fuballer.mcendgame.component.corruption.CorruptionSettings
+import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
-import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.AttributeUtil
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -37,40 +35,23 @@ class StatItemService : Listener {
         val damageAllTier = enchants[Enchantment.DAMAGE_ALL] ?: return
 
         item.addEnchantment(Enchantment.DAMAGE_ALL, damageAllTier)
-        val meta = item.itemMeta ?: return
-        if (!meta.hasLore()) return
-
-        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
-        item.itemMeta = meta
+        ItemUtil.updateAttributesAndLore(item)
     }
 
     @EventHandler
     fun onAnvilPrepare(event: PrepareAnvilEvent) {
         val item = event.result ?: return
-        val meta = item.itemMeta ?: return
-        if (!meta.hasLore()) return
-        val lore = meta.lore ?: return
+        if (ItemUtil.isVanillaItem(item)) return
 
-        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        meta.lore =
-            AttributeUtil.getAttributeLore(equipment, meta, lore.contains(CorruptionSettings.CORRUPTION_TAG_LORE[0]))
-        item.itemMeta = meta
+        ItemUtil.updateAttributesAndLore(item)
     }
 
     @EventHandler
     fun onSmithingPrepare(event: PrepareSmithingEvent) {
         val item = event.result ?: return
-        val meta = item.itemMeta ?: return
-        if (!meta.hasLore()) return
-        val smithingEquipment = StatItemSettings.SMITHING_MAP[item.type] ?: return
+        if (ItemUtil.isVanillaItem(item)) return
 
-        if (!AttributeUtil.removeAttributeBaseStats(smithingEquipment, meta)) return
-
-        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        AttributeUtil.addAttributeBaseStats(equipment, meta)
-        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
-        item.itemMeta = meta
+        ItemUtil.updateAttributesAndLore(item)
     }
 
     @EventHandler
@@ -79,12 +60,9 @@ class StatItemService : Listener {
         if (inventory.type != InventoryType.GRINDSTONE || event.rawSlot != 2) return
 
         val item = inventory.getItem(2) ?: return
-        val meta = item.itemMeta ?: return
-        if (!meta.hasLore()) return
+        if (ItemUtil.isVanillaItem(item)) return
 
-        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        meta.lore = AttributeUtil.getAttributeLore(equipment, meta, false)
-        item.itemMeta = meta
+        ItemUtil.updateAttributesAndLore(item)
     }
 
     fun setCreatureEquipment(
@@ -176,6 +154,8 @@ class StatItemService : Listener {
         addItemStats(mapTier, equipment, itemMeta)
 
         item.itemMeta = itemMeta
+        ItemUtil.updateAttributesAndLore(item)
+
         return item
     }
 
@@ -199,7 +179,6 @@ class StatItemService : Listener {
         itemMeta: ItemMeta
     ) {
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
-        AttributeUtil.addAttributeBaseStats(equipment, itemMeta)
 
         val rollableAttributesCopy = equipment.rollableAttributes.toMutableList()
         val statAmount = RandomUtil.pick(StatItemSettings.STAT_AMOUNTS, mapTier).option
@@ -224,6 +203,5 @@ class StatItemService : Listener {
         }
 
         PersistentDataUtil.setValue(itemMeta, DataTypeKeys.ATTRIBUTES, rolledAttributes)
-        itemMeta.lore = AttributeUtil.getAttributeLore(equipment, itemMeta, false)
     }
 }
