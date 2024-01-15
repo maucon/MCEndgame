@@ -102,6 +102,18 @@ enum class DungeonType(
             RandomOption(1, WendigoEntityType)
         ),
         listOf(RandomOption(1, MandragoraEntityType))
+    ),
+    VILLAGE(
+        listOf(
+            RandomOption(1, DungeonMapType.ICE_CAVE)
+        ),
+        listOf(
+            RandomOption(50, BuffVillagerEntityType),
+            RandomOption(20, BuffWitchEntityType),
+            RandomOption(3, BuffCowEntityType),
+            RandomOption(8, BuffAllayEntityType),
+        ),
+        listOf(RandomOption(1, MinotaurEntityType))
     );
 
     fun roll() = RolledDungeonType(

@@ -44,10 +44,6 @@ class DungeonLeaveService(
 
         val dungeonLeave = dungeonLeaveRepo.findById(world.name) ?: return
         event.respawnLocation = dungeonLeave.leaveLocation
-
-        if (player.gameMode == GameMode.ADVENTURE) {
-            player.gameMode = GameMode.SURVIVAL
-        }
     }
 
     @EventHandler

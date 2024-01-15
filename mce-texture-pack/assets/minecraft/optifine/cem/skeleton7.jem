@@ -1,0 +1,159 @@
+{
+	"credit": "Made with Blockbench",
+	"textureSize": [64, 32],
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "headwear",
+			"id": "headwear",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0],
+			"submodels": [
+				{
+					"id": "buffAllay",
+					"invertAxis": "xy",
+					"translate": [-3.5, 24, 0],
+					"submodels": [
+						{
+							"id": "allayBody",
+							"invertAxis": "xy",
+							"translate": [3.5, 0, 0],
+							"boxes": [
+								{"coordinates": [-3.5, -4, -2, 7, 4, 4], "textureOffset": [20, 11]},
+								{"coordinates": [-2.5, -7, -1.25, 5, 6, 3], "textureOffset": [23, 20]}
+							],
+							"submodels": [
+								{
+									"id": "allayArmLeft",
+									"invertAxis": "xy",
+									"translate": [-3.5, -0.5, 0.25],
+									"submodels": [
+										{
+											"id": "allayArmLeftUpper",
+											"invertAxis": "xy",
+											"translate": [3.5, 0.5, -0.25],
+											"boxes": [
+												{"coordinates": [-6.5, -4, -1.25, 3, 4, 3], "textureOffset": [43, 12]}
+											],
+											"submodels": [
+												{
+													"id": "allayArmLeftLower",
+													"invertAxis": "xy",
+													"translate": [0, 0, 0],
+													"boxes": [
+														{"coordinates": [-6.35, -7.75, -1.39, 3, 4, 3], "textureOffset": [43, 20], "sizeAdd": -0.25}
+													]
+												}
+											]
+										}
+									]
+								},
+								{
+									"id": "allayArmRight",
+									"invertAxis": "xy",
+									"translate": [3.5, -0.5, 0.25],
+									"submodels": [
+										{
+											"id": "allayArmRightUpper",
+											"invertAxis": "xy",
+											"translate": [-3.5, 0.5, -0.25],
+											"boxes": [
+												{"coordinates": [3.5, -4, -1.25, 3, 4, 3], "textureOffset": [7, 12]}
+											],
+											"submodels": [
+												{
+													"id": "allayArmRightLower",
+													"invertAxis": "xy",
+													"translate": [0, 0, 0],
+													"boxes": [
+														{"coordinates": [3.35, -7.75, -1.39, 3, 4, 3], "textureOffset": [7, 20], "sizeAdd": -0.25}
+													]
+												}
+											]
+										}
+									]
+								},
+								{
+									"id": "allayWingLeft",
+									"invertAxis": "xy",
+									"translate": [-0.5, -0.75, 2],
+									"boxes": [
+										{"coordinates": [0, -5, 0, 0, 5, 8], "textureOffset": [42, -3]}
+									]
+								},
+								{
+									"id": "allayWingRight",
+									"invertAxis": "xy",
+									"translate": [0.5, -0.75, 2],
+									"boxes": [
+										{"coordinates": [0, -5, 0, 0, 5, 8], "textureOffset": [4, -3]}
+									]
+								}
+							]
+						},
+						{
+							"id": "allayHead",
+							"invertAxis": "xy",
+							"translate": [3.5, 0, 0],
+							"boxes": [
+								{"coordinates": [-2.5, 0, -2.5, 5, 5, 5], "textureOffset": [21, 0]}
+							]
+						}
+					]
+				}
+			],
+			"animations": [
+				{
+					"allayBody.rx": "torad(head_pitch * 0.2) + torad(limb_speed * 45)",
+					"allayHead.rx": "torad(head_pitch * 0.7)",
+					"allayBody.ry": "torad(head_yaw * 0.2)",
+					"allayHead.ry": "torad(head_yaw * 0.7)",
+					"allayArmLeft.rz": "if(limb_speed < 0.01, torad(-9.5 + sin(age * 0.1) * 2), torad(-7.5))",
+					"allayArmRight.rz": "if(limb_speed < 0.01, torad(9.5 - sin(age * 0.1) * 2), torad(7.5))",
+					"allayWingLeft.ry": "torad(25 + sin(age * 0.25 + limb_swing * 0.5) * 22)",
+					"allayWingRight.ry": "torad(-25 - sin(age * 0.25 + limb_swing * 0.5) * 22)",
+					"var.swing_state": "max(swing_progress, var.swing_state - 0.05 * frame_time * 20)",
+					"allayArmLeft.rx": "sin(limb_swing * 0.2) * limb_speed * 0.2 - torad(var.swing_state * 65 * (1 + limb_speed))",
+					"allayArmRight.rx": "sin(limb_swing * 0.2) * limb_speed * 0.2 - torad(var.swing_state * 65 * (1 + limb_speed))"
+				}
+			]
+		},
+		{
+			"part": "left_arm",
+			"id": "left_arm",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [5, -22, 0]
+		},
+		{
+			"part": "right_arm",
+			"id": "right_arm",
+			"invertAxis": "xy",
+			"translate": [-5, -22, 0]
+		},
+		{
+			"part": "left_leg",
+			"id": "left_leg",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [2, -12, -0.1]
+		},
+		{
+			"part": "right_leg",
+			"id": "right_leg",
+			"invertAxis": "xy",
+			"translate": [-2, -12, -0.1]
+		}
+	]
+}

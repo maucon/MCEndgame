@@ -1,0 +1,170 @@
+{
+	"credit": "Made with Blockbench",
+	"textureSize": [64, 64],
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "headwear",
+			"id": "headwear",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0],
+			"submodels": [
+				{
+					"id": "buffVillager",
+					"invertAxis": "xy",
+					"translate": [0, 24, 0],
+					"submodels": [
+						{
+							"id": "buffBody",
+							"invertAxis": "xy",
+							"translate": [0, -11, 0],
+							"boxes": [
+								{"coordinates": [-4, -1, -2, 8, 5, 4], "textureOffset": [20, 55]}
+							],
+							"submodels": [
+								{
+									"id": "buffChest",
+									"invertAxis": "xy",
+									"translate": [0, 3.5, 0],
+									"boxes": [
+										{"coordinates": [-5, 0, -3.5, 10, 7, 6], "textureOffset": [16, 37]}
+									],
+									"submodels": [
+										{
+											"id": "buffHead",
+											"invertAxis": "xy",
+											"translate": [0, 7, -0.5],
+											"boxes": [
+												{"coordinates": [-4, 0, -4, 8, 10, 8], "textureOffset": [16, 0]},
+												{"coordinates": [-1, -1, -6, 2, 4, 2], "textureOffset": [28, 19]}
+											]
+										},
+										{
+											"id": "buffArmLeft",
+											"invertAxis": "xy",
+											"translate": [-4.5, 6.75, -0.5],
+											"submodels": [
+												{
+													"id": "buffArmLeftUpper",
+													"invertAxis": "xy",
+													"translate": [0, 0, 0.5],
+													"boxes": [
+														{"coordinates": [-5, -7, -3, 5, 7, 5], "textureOffset": [44, 18]}
+													],
+													"submodels": [
+														{
+															"id": "buffArmLeftLower",
+															"invertAxis": "xy",
+															"translate": [5, 0.75, 0],
+															"boxes": [
+																{"coordinates": [-9.25, -14.75, -2.25, 4, 7, 4], "textureOffset": [46, 31]}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"id": "buffArmRight",
+											"invertAxis": "xy",
+											"translate": [4.5, 6.75, -0.5],
+											"submodels": [
+												{
+													"id": "buffArmRightUpper",
+													"invertAxis": "xy",
+													"translate": [-5, 0.75, 0.5],
+													"boxes": [
+														{"coordinates": [5, -7.75, -3, 5, 7, 5], "textureOffset": [0, 18]}
+													],
+													"submodels": [
+														{
+															"id": "buffArmRightLower",
+															"invertAxis": "xy",
+															"translate": [0, 0, 0],
+															"boxes": [
+																{"coordinates": [5.25, -14.75, -2.25, 4, 7, 4], "textureOffset": [2, 31]}
+															]
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "buffLegLeft",
+							"invertAxis": "xy",
+							"translate": [-2, -12, 0],
+							"boxes": [
+								{"coordinates": [-2, -12, -2, 4, 12, 4], "textureOffset": [48, 48]}
+							]
+						},
+						{
+							"id": "buffLegRight",
+							"invertAxis": "xy",
+							"translate": [2, -12, 0],
+							"boxes": [
+								{"coordinates": [-2, -12, -2, 4, 12, 4], "textureOffset": [0, 48]}
+							]
+						}
+					]
+				}
+			],
+			"animations": [
+				{
+					"buffChest.rx": "torad(head_pitch * 0.25)",
+					"buffHead.rx": "torad(head_pitch * 0.35)",
+					"buffBody.ry": "torad(head_yaw * 0.1)",
+					"buffChest.ry": "torad(head_yaw * 0.25)",
+					"buffHead.ry": "torad(head_yaw * 0.45)",
+					"buffLegLeft.rx": "sin(limb_swing * 0.5) * limb_speed",
+					"buffLegRight.rx": "-sin(limb_swing * 0.5) * limb_speed",
+					"buffArmLeft.rz": "if(limb_speed < 0.01, torad(-6) + sin(age * 0.1) * 0.05, torad(-3))",
+					"buffArmRight.rz": "if(limb_speed < 0.01, torad(6) - sin(age * 0.1) * 0.05, torad(3))",
+					"var.swing_state": "max(swing_progress, var.swing_state - 0.035 * frame_time * 20)",
+					"buffArmLeft.rx": "-sin(limb_swing * 0.5) * limb_speed * 0.5 - torad(var.swing_state * 90)",
+					"buffArmRight.rx": "sin(limb_swing * 0.5) * limb_speed * 0.5 - torad(var.swing_state * 90)"
+				}
+			]
+		},
+		{
+			"part": "left_arm",
+			"id": "left_arm",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [5, -22, 0]
+		},
+		{
+			"part": "right_arm",
+			"id": "right_arm",
+			"invertAxis": "xy",
+			"translate": [-5, -22, 0]
+		},
+		{
+			"part": "left_leg",
+			"id": "left_leg",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [2, -12, -0.1]
+		},
+		{
+			"part": "right_leg",
+			"id": "right_leg",
+			"invertAxis": "xy",
+			"translate": [-2, -12, -0.1]
+		}
+	]
+}
