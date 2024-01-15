@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.domain.artifact
 
-import de.fuballer.mcendgame.component.dungeon.artifact.ArtifactSettings
+import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 
 enum class ArtifactType(
     val displayName: String,

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.artifact.db
+package de.fuballer.mcendgame.component.artifact.db
 
 import de.fuballer.mcendgame.framework.InMemoryMapRepository
 import de.fuballer.mcendgame.framework.annotation.Component

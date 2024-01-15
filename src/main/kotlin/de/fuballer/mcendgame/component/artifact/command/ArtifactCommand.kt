@@ -1,9 +1,9 @@
-package de.fuballer.mcendgame.component.dungeon.artifact.command
+package de.fuballer.mcendgame.component.artifact.command
 
-import de.fuballer.mcendgame.component.dungeon.artifact.ArtifactService
-import de.fuballer.mcendgame.component.dungeon.artifact.ArtifactSettings
-import de.fuballer.mcendgame.component.dungeon.artifact.db.ArtifactEntity
-import de.fuballer.mcendgame.component.dungeon.artifact.db.ArtifactRepository
+import de.fuballer.mcendgame.component.artifact.ArtifactService
+import de.fuballer.mcendgame.component.artifact.ArtifactSettings
+import de.fuballer.mcendgame.component.artifact.db.ArtifactEntity
+import de.fuballer.mcendgame.component.artifact.db.ArtifactRepository
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.util.PluginUtil

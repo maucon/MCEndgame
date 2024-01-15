@@ -41,7 +41,6 @@ class PlayerProjectileService : Listener {
         val mainHandItem = equipment.itemInMainHand
 
         val powerLevel = mainHandItem.getEnchantmentLevel(Enchantment.ARROW_DAMAGE)
-
         return PlayerProjectileSettings.getPowerDamageMulti(powerLevel)
     }
 }

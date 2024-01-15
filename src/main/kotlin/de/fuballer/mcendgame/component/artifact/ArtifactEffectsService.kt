@@ -1,7 +1,7 @@
-package de.fuballer.mcendgame.component.dungeon.artifact
+package de.fuballer.mcendgame.component.artifact
 
-import de.fuballer.mcendgame.component.dungeon.artifact.db.HealOnBlockArtifactEntity
-import de.fuballer.mcendgame.component.dungeon.artifact.db.HealOnBlockArtifactRepository
+import de.fuballer.mcendgame.component.artifact.db.HealOnBlockArtifactEntity
+import de.fuballer.mcendgame.component.artifact.db.HealOnBlockArtifactRepository
 import de.fuballer.mcendgame.domain.artifact.ArtifactType
 import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent

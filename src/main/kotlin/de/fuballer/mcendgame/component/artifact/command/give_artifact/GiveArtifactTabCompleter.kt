@@ -1,6 +1,6 @@
-package de.fuballer.mcendgame.component.dungeon.artifact.command.give_artifact
+package de.fuballer.mcendgame.component.artifact.command.give_artifact
 
-import de.fuballer.mcendgame.component.dungeon.artifact.ArtifactSettings
+import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 import de.fuballer.mcendgame.domain.artifact.ArtifactType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter

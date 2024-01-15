@@ -1,6 +1,6 @@
-package de.fuballer.mcendgame.component.dungeon.artifact.db
+package de.fuballer.mcendgame.component.artifact.db
 
-import de.fuballer.mcendgame.component.dungeon.artifact.data.Artifact
+import de.fuballer.mcendgame.component.artifact.data.Artifact
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import java.util.*
 

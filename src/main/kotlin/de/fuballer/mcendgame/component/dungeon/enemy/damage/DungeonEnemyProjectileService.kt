@@ -44,15 +44,15 @@ class DungeonEnemyProjectileService : Listener {
         return damage + getStrengthDamage(strengthEffect)
     }
 
-    private fun getStrengthDamage(strengthEffect: PotionEffect): Double {
-        return (strengthEffect.amplifier + 1) * DungeonEnemyDamageSettings.PROJECTILE_DAMAGE_PER_STRENGTH
-    }
-
     private fun getPowerDamageMulti(entity: LivingEntity): Double {
         val equipment = entity.equipment ?: return 1.0
         val mainHandItem = equipment.itemInMainHand
 
         val powerLevel = mainHandItem.getEnchantmentLevel(Enchantment.ARROW_DAMAGE)
         return DungeonEnemyDamageSettings.getPowerDamageMulti(powerLevel)
+    }
+
+    private fun getStrengthDamage(strengthEffect: PotionEffect): Double {
+        return (strengthEffect.amplifier + 1) * DungeonEnemyDamageSettings.PROJECTILE_DAMAGE_PER_STRENGTH
     }
 }

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.artifact
+package de.fuballer.mcendgame.component.artifact
 
 import de.fuballer.mcendgame.domain.artifact.ArtifactType
 import de.fuballer.mcendgame.util.random.RandomOption

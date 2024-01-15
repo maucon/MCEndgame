@@ -1,6 +1,6 @@
-package de.fuballer.mcendgame.component.dungeon.artifact.command
+package de.fuballer.mcendgame.component.artifact.command
 
-import de.fuballer.mcendgame.component.dungeon.artifact.ArtifactSettings
+import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import org.bukkit.command.Command
