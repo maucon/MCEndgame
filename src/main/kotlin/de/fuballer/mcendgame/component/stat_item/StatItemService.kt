@@ -223,7 +223,7 @@ class StatItemService : Listener {
 
             val vanillaAttributeType = rolledAttribute.type.vanillaAttributeType
 
-            ItemUtil.addItemModifier(
+            ItemUtil.addItemAttribute(
                 itemMeta,
                 vanillaAttributeType.attribute,
                 rolledAttribute.roll,

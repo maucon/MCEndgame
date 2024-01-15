@@ -21,13 +21,13 @@ object CorruptionSettings {
     val CORRUPTIONS = listOf(
         RandomOption(40, CorruptionChanceType.CORRUPT_ENCHANTS),
         RandomOption(40, CorruptionChanceType.CORRUPT_STATS),
-        RandomOption(10, CorruptionChanceType.CORRUPT_DESTROY),
+        RandomOption(10, CorruptionChanceType.DESTROY),
         RandomOption(10, CorruptionChanceType.DO_NOTHING)
     )
 
     val ALTERNATE_CORRUPTIONS = listOf(
         RandomOption(65, CorruptionChanceType.CORRUPT_ENCHANTS),
-        RandomOption(10, CorruptionChanceType.CORRUPT_DESTROY),
+        RandomOption(10, CorruptionChanceType.DESTROY),
         RandomOption(25, CorruptionChanceType.DO_NOTHING)
     )
 

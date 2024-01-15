@@ -6,6 +6,7 @@ import de.fuballer.mcendgame.component.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.component.stat_item.StatItemSettings
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.AttributeUtil
+import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -17,7 +18,10 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.inventory.*
+import org.bukkit.event.inventory.InventoryAction
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryType
+import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -39,13 +43,16 @@ class CorruptionService : Listener {
             && !corruption.isSimilar(CorruptionSettings.getDoubleCorruptionItem())
         ) return
 
-        event.result = addCorruptionTag(base.clone())
+        val result = base.clone()
+        ItemUtil.setCorrupted(result)
+
+        event.result = result
 
         PluginUtil.scheduleTask {
             event.inventory.repairCost = 1
 
-            for (viewer in event.inventory.viewers) {
-                (viewer as? Player)?.setWindowProperty(InventoryView.Property.REPAIR_COST, 1)
+            event.inventory.viewers.forEach {
+                it.setWindowProperty(InventoryView.Property.REPAIR_COST, 1)
             }
         }
     }
@@ -54,32 +61,6 @@ class CorruptionService : Listener {
     fun onInventoryClick(event: InventoryClickEvent) {
         inventoryClickCorruption(event)
         preventCorruptedItemModification(event)
-    }
-
-    @EventHandler
-    fun onCrafting(event: CraftItemEvent) {
-        val isAnyItemCorrupted = event.inventory.storageContents
-            .any { isCorrupted(it) }
-
-        if (isAnyItemCorrupted) {
-            event.isCancelled = true
-        }
-    }
-
-    @EventHandler
-    fun onInventoryDrag(event: InventoryDragEvent) {
-        val item = event.oldCursor
-        if (!isCorrupted(item)) return
-
-        val inventory = event.inventory
-        if (CorruptionSettings.isAllowedInventoryType(inventory.type)) return
-
-        val isAnySlotNotInInventory = event.rawSlots
-            .any { it < inventory.size }
-
-        if (isAnySlotNotInInventory) {
-            event.isCancelled = true
-        }
     }
 
     private fun inventoryClickCorruption(event: InventoryClickEvent) {
@@ -112,8 +93,10 @@ class CorruptionService : Listener {
             player.world.playSound(player.location, Sound.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1f, 1f)
         }
 
-        AttributeUtil.setAttributeLore(result, true)
         PersistentDataUtil.setValue(resultMeta, DataTypeKeys.CORRUPTED, true)
+        result.itemMeta = resultMeta
+
+        AttributeUtil.setAttributeLore(result, true)
 
         when (event.action) {
             InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_SOME ->
@@ -122,9 +105,7 @@ class CorruptionService : Listener {
             InventoryAction.MOVE_TO_OTHER_INVENTORY ->
                 player.inventory.addItem(result)
 
-            else -> {
-                return
-            }
+            else -> return
         }
 
         inventory.setItem(0, null)
@@ -137,21 +118,6 @@ class CorruptionService : Listener {
         event.isCancelled = true
     }
 
-    private fun addCorruptionTag(item: ItemStack): ItemStack {
-        val meta = item.itemMeta ?: return item
-        val lore = meta.lore
-
-        if (lore != null) {
-            if (lore.contains(CorruptionSettings.CORRUPTION_TAG_LORE[0])) return item
-            lore.addAll(CorruptionSettings.CORRUPTION_TAG_LORE)
-            meta.lore = lore
-        } else {
-            meta.lore = CorruptionSettings.CORRUPTION_TAG_LORE
-        }
-
-        return item.apply { itemMeta = meta }
-    }
-
     private fun corruptItem(item: ItemStack, player: Player) {
         item.itemMeta ?: return
 
@@ -162,7 +128,7 @@ class CorruptionService : Listener {
         when (RandomUtil.pick(corruptions).option) {
             CorruptionChanceType.CORRUPT_ENCHANTS -> corruptEnchant(item)
             CorruptionChanceType.CORRUPT_STATS -> corruptStats(item)
-            CorruptionChanceType.CORRUPT_DESTROY -> {
+            CorruptionChanceType.DESTROY -> {
                 item.type = Material.AIR
                 player.world.playSound(player.location, Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 1f, 1f)
             }
@@ -247,16 +213,9 @@ class CorruptionService : Listener {
         val (attribute, modifier) = possibleAttributesList[random.nextInt(possibleAttributesList.size)]
 
         meta.removeAttributeModifier(attribute, modifier)
-        meta.addAttributeModifier(
-            attribute,
-            AttributeModifier(
-                UUID.randomUUID(),
-                modifier.name,
-                modifier.amount * (0.5 + random.nextDouble()),
-                AttributeModifier.Operation.ADD_NUMBER,
-                modifier.slot
-            )
-        )
+
+        val newValue = modifier.amount * (0.5 + random.nextDouble())
+        ItemUtil.addItemAttribute(meta, attribute, newValue, AttributeModifier.Operation.ADD_NUMBER)
 
         item.itemMeta = meta
     }
@@ -284,13 +243,8 @@ class CorruptionService : Listener {
             }
         } ?: return
 
-        if (isCorrupted(item)) {
+        if (ItemUtil.isCorrupted(item)) {
             event.isCancelled = true
         }
-    }
-
-    private fun isCorrupted(item: ItemStack): Boolean {
-        val itemMeta = item.itemMeta ?: return true
-        return PersistentDataUtil.getBooleanValue(itemMeta, DataTypeKeys.CORRUPTED)
     }
 }
