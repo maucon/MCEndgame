@@ -1,6 +1,6 @@
-package de.fuballer.mcendgame.component.custom_entity.types.buff_cow
+package de.fuballer.mcendgame.domain.entity.buff_cow
 
-import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import org.bukkit.entity.EntityType
 
 object BuffCowEntityType : CustomEntityType {
@@ -10,9 +10,7 @@ object BuffCowEntityType : CustomEntityType {
     override val canHaveWeapons = true
     override val isRanged = false
     override val canHaveArmor = true
-    override val dropBaseLoot = false
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 25.0
     override val healthPerTier = 0.0
@@ -22,4 +20,5 @@ object BuffCowEntityType : CustomEntityType {
     override val speedPerTier = 0.0
 
     override val abilities = null
+    override val sounds = null
 }

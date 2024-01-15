@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.domain.entity.stalker
 
+import de.fuballer.mcendgame.domain.EntitySoundData
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import org.bukkit.entity.EntityType
 
@@ -11,7 +12,6 @@ object StalkerEntityType : CustomEntityType {
     override val isRanged = false
     override val canHaveArmor = true
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 10.0
     override val healthPerTier = 0.0
@@ -20,5 +20,6 @@ object StalkerEntityType : CustomEntityType {
     override val baseSpeed = 0.45
     override val speedPerTier = 0.0
 
+    override val sounds = EntitySoundData.create("stalker")
     override val abilities = null
 }

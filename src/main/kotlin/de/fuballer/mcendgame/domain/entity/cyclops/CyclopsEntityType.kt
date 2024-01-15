@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.domain.entity.cyclops
 
+import de.fuballer.mcendgame.domain.EntitySoundData
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import org.bukkit.entity.EntityType
 
@@ -11,7 +12,6 @@ object CyclopsEntityType : CustomEntityType {
     override val isRanged = false
     override val canHaveArmor = true
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 20.0
     override val healthPerTier = 0.0
@@ -20,5 +20,6 @@ object CyclopsEntityType : CustomEntityType {
     override val baseSpeed = 0.25
     override val speedPerTier = 0.0
 
+    override val sounds = EntitySoundData.create("cyclops")
     override val abilities = null
 }

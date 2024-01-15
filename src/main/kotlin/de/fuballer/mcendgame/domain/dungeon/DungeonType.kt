@@ -3,6 +3,10 @@ package de.fuballer.mcendgame.domain.dungeon
 import de.fuballer.mcendgame.component.dungeon.type.data.RolledDungeonType
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import de.fuballer.mcendgame.domain.entity.blaze.BlazeEntityType
+import de.fuballer.mcendgame.domain.entity.buff_allay.BuffAllayEntityType
+import de.fuballer.mcendgame.domain.entity.buff_cow.BuffCowEntityType
+import de.fuballer.mcendgame.domain.entity.buff_villager.BuffVillagerEntityType
+import de.fuballer.mcendgame.domain.entity.buff_witch.BuffWitchEntityType
 import de.fuballer.mcendgame.domain.entity.cerberus.CerberusEntityType
 import de.fuballer.mcendgame.domain.entity.cyclops.CyclopsEntityType
 import de.fuballer.mcendgame.domain.entity.demoic_golem.DemonicGolemEntityType

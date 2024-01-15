@@ -1,6 +1,6 @@
-package de.fuballer.mcendgame.component.custom_entity.types.buff_allay
+package de.fuballer.mcendgame.domain.entity.buff_allay
 
-import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import org.bukkit.entity.EntityType
 
 object BuffAllayEntityType : CustomEntityType {
@@ -10,9 +10,7 @@ object BuffAllayEntityType : CustomEntityType {
     override val canHaveWeapons = true
     override val isRanged = true
     override val canHaveArmor = true
-    override val dropBaseLoot = false
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 12.0
     override val healthPerTier = 0.0
@@ -21,5 +19,6 @@ object BuffAllayEntityType : CustomEntityType {
     override val baseSpeed = 0.25
     override val speedPerTier = 0.0
 
+    override val sounds = null
     override val abilities = null
 }

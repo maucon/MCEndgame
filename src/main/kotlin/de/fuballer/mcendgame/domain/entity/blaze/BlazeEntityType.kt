@@ -11,7 +11,6 @@ object BlazeEntityType : CustomEntityType {
     override val isRanged = false
     override val canHaveArmor = true
     override val hideEquipment = true
-    override val isSilent = false
 
     override val baseHealth = 10.0
     override val healthPerTier = 0.0
@@ -20,5 +19,6 @@ object BlazeEntityType : CustomEntityType {
     override val baseSpeed = 0.25
     override val speedPerTier = 0.0
 
+    override val sounds = null
     override val abilities = null
 }

@@ -11,7 +11,6 @@ object NecromancerEntityType : CustomEntityType {
     override val isRanged = false
     override val canHaveArmor = true
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 15.0
     override val healthPerTier = 0.0
@@ -20,5 +19,6 @@ object NecromancerEntityType : CustomEntityType {
     override val baseSpeed = 0.4
     override val speedPerTier = 0.0
 
+    override val sounds = null
     override val abilities = null
 }

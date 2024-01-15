@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.domain.entity.mandragora
 
+import de.fuballer.mcendgame.domain.EntitySoundData
 import de.fuballer.mcendgame.domain.ability.Ability
 import de.fuballer.mcendgame.domain.ability.PoisonCloudAbility
 import de.fuballer.mcendgame.domain.ability.SummonVinesAbility
@@ -15,7 +16,6 @@ object MandragoraEntityType : CustomEntityType {
     override val isRanged = false
     override val canHaveArmor = false
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 120.0
     override val healthPerTier = 6.0
@@ -24,6 +24,7 @@ object MandragoraEntityType : CustomEntityType {
     override val baseSpeed = 0.3
     override val speedPerTier = 0.0
 
+    override val sounds = EntitySoundData.create("mandragora")
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(30, PoisonCloudAbility),
         RandomOption(30, SummonVinesAbility),

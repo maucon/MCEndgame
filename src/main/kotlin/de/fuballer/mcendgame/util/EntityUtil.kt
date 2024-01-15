@@ -23,7 +23,7 @@ object EntityUtil {
         if (entity !is LivingEntity) return entity
         setAttributes(entity, entityType, mapTier)
         entity.removeWhenFarAway = false
-        entity.isSilent = entityType.isSilent
+        entity.isSilent = entityType.sounds != null
 
         setMiscellaneous(entity)
 

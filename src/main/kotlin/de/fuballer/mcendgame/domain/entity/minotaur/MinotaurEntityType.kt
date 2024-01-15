@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.domain.entity.minotaur
 
+import de.fuballer.mcendgame.domain.EntitySoundData
 import de.fuballer.mcendgame.domain.ability.Ability
 import de.fuballer.mcendgame.domain.ability.ApplySpeedAbility
 import de.fuballer.mcendgame.domain.ability.LeapAbility
@@ -15,7 +16,6 @@ object MinotaurEntityType : CustomEntityType {
     override val isRanged = false
     override val canHaveArmor = false
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 100.0
     override val healthPerTier = 5.0
@@ -24,6 +24,7 @@ object MinotaurEntityType : CustomEntityType {
     override val baseSpeed = 0.4
     override val speedPerTier = 0.0
 
+    override val sounds = EntitySoundData.create("minotaur")
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(20, ApplySpeedAbility),
         RandomOption(50, LeapAbility),

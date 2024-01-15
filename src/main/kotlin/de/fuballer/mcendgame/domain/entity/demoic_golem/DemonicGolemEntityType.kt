@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.domain.entity.demoic_golem
 
+import de.fuballer.mcendgame.domain.EntitySoundData
 import de.fuballer.mcendgame.domain.ability.Ability
 import de.fuballer.mcendgame.domain.ability.ApplyDarknessAbility
 import de.fuballer.mcendgame.domain.ability.FireCascadeAbility
@@ -16,7 +17,6 @@ object DemonicGolemEntityType : CustomEntityType {
     override val isRanged = false
     override val canHaveArmor = false
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 150.0
     override val healthPerTier = 8.0
@@ -25,6 +25,7 @@ object DemonicGolemEntityType : CustomEntityType {
     override val baseSpeed = 0.2
     override val speedPerTier = 0.0
 
+    override val sounds = EntitySoundData.create("demonic_golem")
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(50, FireCascadeAbility),
         RandomOption(40, SummonGravitationPillarAbility),

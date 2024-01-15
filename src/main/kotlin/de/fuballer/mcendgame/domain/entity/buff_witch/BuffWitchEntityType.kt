@@ -1,6 +1,6 @@
-package de.fuballer.mcendgame.component.custom_entity.types.buff_witch
+package de.fuballer.mcendgame.domain.entity.buff_witch
 
-import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import org.bukkit.entity.EntityType
 
 object BuffWitchEntityType : CustomEntityType {
@@ -10,9 +10,7 @@ object BuffWitchEntityType : CustomEntityType {
     override val canHaveWeapons = true
     override val isRanged = false
     override val canHaveArmor = true
-    override val dropBaseLoot = false
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 15.0
     override val healthPerTier = 0.0
@@ -21,5 +19,6 @@ object BuffWitchEntityType : CustomEntityType {
     override val baseSpeed = 0.3
     override val speedPerTier = 0.0
 
+    override val sounds = null
     override val abilities = null
 }

@@ -1,5 +1,6 @@
-package de.fuballer.mcendgame.component.custom_entity.sound
+package de.fuballer.mcendgame.component.custom_entity
 
+import de.fuballer.mcendgame.domain.EntitySoundData
 import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
@@ -31,8 +32,8 @@ class CustomEntitySoundService : Listener {
         entity.world.playSound(entity.location, sounds.death, SoundCategory.HOSTILE, 1.0f, 1.0f)
     }
 
-    private fun getSounds(entity: Entity): CustomEntitySoundData? {
+    private fun getSounds(entity: Entity): EntitySoundData? {
         val type = PersistentDataUtil.getValue(entity, DataTypeKeys.CUSTOM_ENTITY_TYPE) ?: return null
-        return CustomEntitySounds.getSounds(type)
+        return type.sounds
     }
 }

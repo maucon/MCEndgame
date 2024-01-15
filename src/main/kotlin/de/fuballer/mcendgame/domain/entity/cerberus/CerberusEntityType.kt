@@ -16,7 +16,6 @@ object CerberusEntityType : CustomEntityType {
     override val isRanged = false
     override val canHaveArmor = false
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 100.0
     override val healthPerTier = 5.0
@@ -25,6 +24,7 @@ object CerberusEntityType : CustomEntityType {
     override val baseSpeed = 0.35
     override val speedPerTier = 0.0
 
+    override val sounds = null
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(50, FireCascadeAbility),
         RandomOption(30, ShootFireArrowsAbility),

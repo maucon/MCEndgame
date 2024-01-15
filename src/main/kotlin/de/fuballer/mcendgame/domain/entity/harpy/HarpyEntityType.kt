@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.domain.entity.harpy
 
+import de.fuballer.mcendgame.domain.EntitySoundData
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import org.bukkit.entity.EntityType
 
@@ -11,7 +12,6 @@ object HarpyEntityType : CustomEntityType {
     override val isRanged = true
     override val canHaveArmor = true
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 14.0
     override val healthPerTier = 0.0
@@ -20,5 +20,6 @@ object HarpyEntityType : CustomEntityType {
     override val baseSpeed = 0.33
     override val speedPerTier = 0.0
 
+    override val sounds = EntitySoundData.create("harpy")
     override val abilities = null
 }

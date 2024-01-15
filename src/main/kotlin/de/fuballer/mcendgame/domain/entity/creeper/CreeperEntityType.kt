@@ -11,7 +11,6 @@ object CreeperEntityType : CustomEntityType {
     override val isRanged = false
     override val canHaveArmor = true
     override val hideEquipment = false
-    override val isSilent = false
 
     override val baseHealth = 5.0
     override val healthPerTier = 0.0
@@ -20,5 +19,6 @@ object CreeperEntityType : CustomEntityType {
     override val baseSpeed = 0.3
     override val speedPerTier = 0.01
 
+    override val sounds = null
     override val abilities = null
 }

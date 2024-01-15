@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.domain.entity.naga
 
+import de.fuballer.mcendgame.domain.EntitySoundData
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import org.bukkit.entity.EntityType
 
@@ -11,7 +12,6 @@ object NagaEntityType : CustomEntityType {
     override val isRanged = true
     override val canHaveArmor = true
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 10.0
     override val healthPerTier = 0.0
@@ -20,5 +20,6 @@ object NagaEntityType : CustomEntityType {
     override val baseSpeed = 0.35
     override val speedPerTier = 0.0
 
+    override val sounds = EntitySoundData.create("naga")
     override val abilities = null
 }

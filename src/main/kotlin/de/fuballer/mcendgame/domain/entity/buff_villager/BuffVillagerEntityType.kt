@@ -1,6 +1,6 @@
-package de.fuballer.mcendgame.component.custom_entity.types.buff_villager
+package de.fuballer.mcendgame.domain.entity.buff_villager
 
-import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import org.bukkit.entity.EntityType
 
 object BuffVillagerEntityType : CustomEntityType {
@@ -10,9 +10,7 @@ object BuffVillagerEntityType : CustomEntityType {
     override val canHaveWeapons = true
     override val isRanged = false
     override val canHaveArmor = true
-    override val dropBaseLoot = false
     override val hideEquipment = true
-    override val isSilent = true
 
     override val baseHealth = 20.0
     override val healthPerTier = 0.0
@@ -21,5 +19,6 @@ object BuffVillagerEntityType : CustomEntityType {
     override val baseSpeed = 0.26
     override val speedPerTier = 0.0
 
+    override val sounds = null
     override val abilities = null
 }
