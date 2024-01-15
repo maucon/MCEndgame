@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.stat_item
 
+import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
@@ -151,7 +152,7 @@ class StatItemService : Listener {
         val itemMeta = item.itemMeta ?: return item
 
         enchantItem(mapTier, itemMeta, equipment.rollableEnchants)
-        addItemStats(mapTier, equipment, itemMeta)
+        addItemAttributes(mapTier, equipment, itemMeta)
 
         item.itemMeta = itemMeta
         ItemUtil.updateAttributesAndLore(item)
@@ -173,26 +174,32 @@ class StatItemService : Listener {
         }
     }
 
-    private fun addItemStats(
+    private fun addItemAttributes(
         mapTier: Int,
         equipment: Equipment,
         itemMeta: ItemMeta
     ) {
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
 
-        val rollableAttributesCopy = equipment.rollableAttributes.toMutableList()
         val statAmount = RandomUtil.pick(StatItemSettings.STAT_AMOUNTS, mapTier).option
-        val rolledAttributes = mutableListOf<RolledAttribute>()
+        val rollableAttributesCopy = equipment.rollableAttributes.toMutableList()
 
+        val pickedAttributes = mutableListOf<RollableAttribute>()
         repeat(statAmount) {
-            val rollableAttributeOption = RandomUtil.pick(rollableAttributesCopy)
-            val rollableAttribute = rollableAttributeOption.option
-            val rolledAttribute = rollableAttribute.roll(mapTier)
+            val pickedAttribute = RandomUtil.pick(rollableAttributesCopy)
 
+            pickedAttributes.add(pickedAttribute.option)
+            rollableAttributesCopy.remove(pickedAttribute)
+        }
+
+        pickedAttributes.sortBy { it.type.ordinal }
+
+        val rolledAttributes = mutableListOf<RolledAttribute>()
+        pickedAttributes.forEach {
+            val rolledAttribute = it.roll(mapTier)
             rolledAttributes.add(rolledAttribute)
-            rollableAttributesCopy.remove(rollableAttributeOption)
 
-            val applicableAttributeType = rolledAttribute.type.applicableAttributeType ?: return
+            val applicableAttributeType = rolledAttribute.type.applicableAttributeType ?: return@forEach
 
             ItemUtil.addItemAttribute(
                 itemMeta,
