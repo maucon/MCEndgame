@@ -21,8 +21,6 @@ object StatItemSettings {
     const val STAT_ITEM_BOOK_AUTHOR = "MCEndgameTp"
     const val STAT_ITEM_BOOK_TITLE = "ItemStats"
 
-    val SLOT_LORE_COLOR = ChatColor.GRAY
-
     private const val ENCHANT_TRIES_PER_TIER = 0.5
     fun calculateEnchantTries(mapTier: Int) = 1 + (mapTier * ENCHANT_TRIES_PER_TIER).toInt()
 

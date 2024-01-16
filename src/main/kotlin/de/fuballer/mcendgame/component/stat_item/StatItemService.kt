@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.component.stat_item
 
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
-import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
 import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
@@ -20,7 +19,6 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
-import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import java.util.*
@@ -152,9 +150,9 @@ class StatItemService : Listener {
         val itemMeta = item.itemMeta ?: return item
 
         enchantItem(mapTier, itemMeta, equipment.rollableEnchants)
-        addItemAttributes(mapTier, equipment, itemMeta)
-
+        addCustomAttributes(mapTier, equipment, itemMeta)
         item.itemMeta = itemMeta
+
         ItemUtil.updateAttributesAndLore(item)
 
         return item
@@ -174,40 +172,25 @@ class StatItemService : Listener {
         }
     }
 
-    private fun addItemAttributes(
+    private fun addCustomAttributes(
         mapTier: Int,
         equipment: Equipment,
         itemMeta: ItemMeta
     ) {
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
-
         val statAmount = RandomUtil.pick(StatItemSettings.STAT_AMOUNTS, mapTier).option
         val rollableAttributesCopy = equipment.rollableAttributes.toMutableList()
 
         val pickedAttributes = mutableListOf<RollableAttribute>()
         repeat(statAmount) {
+            if (rollableAttributesCopy.isEmpty()) return@repeat
             val pickedAttribute = RandomUtil.pick(rollableAttributesCopy)
 
             pickedAttributes.add(pickedAttribute.option)
             rollableAttributesCopy.remove(pickedAttribute)
         }
 
-        pickedAttributes.sortBy { it.type.ordinal }
-
-        val rolledAttributes = mutableListOf<RolledAttribute>()
-        pickedAttributes.forEach {
-            val rolledAttribute = it.roll(mapTier)
-            rolledAttributes.add(rolledAttribute)
-
-            val applicableAttributeType = rolledAttribute.type.applicableAttributeType ?: return@forEach
-
-            ItemUtil.addItemAttribute(
-                itemMeta,
-                applicableAttributeType.attribute,
-                rolledAttribute.roll,
-                applicableAttributeType.scaleType
-            )
-        }
+        val rolledAttributes = pickedAttributes.sortedBy { it.type.ordinal }
+            .map { it.roll(mapTier) }
 
         PersistentDataUtil.setValue(itemMeta, DataTypeKeys.ATTRIBUTES, rolledAttributes)
     }

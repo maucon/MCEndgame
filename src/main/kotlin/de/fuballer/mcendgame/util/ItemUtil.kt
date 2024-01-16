@@ -10,27 +10,13 @@ import org.bukkit.ChatColor
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
+import java.util.*
 
 object ItemUtil {
-    fun addItemAttribute(
-        itemMeta: ItemMeta,
-        attribute: Attribute,
-        value: Double,
-        operation: AttributeModifier.Operation
-    ) {
-        itemMeta.addAttributeModifier(
-            attribute,
-            AttributeModifier(
-                attribute.key.key,
-                value,
-                operation
-            )
-        )
-    }
-
     fun isCorrupted(item: ItemStack): Boolean {
         val itemMeta = item.itemMeta ?: return false
 
@@ -60,30 +46,64 @@ object ItemUtil {
         val itemMeta = item.itemMeta ?: return
 
         val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
-        val slotLore = equipment.lore
         val baseAttributes = equipment.baseAttributes
         val extraAttributes = PersistentDataUtil.getValue(itemMeta, DataTypeKeys.ATTRIBUTES) ?: listOf()
+        val slotLore = Equipment.getLoreForSlot(equipment.slot)
 
-        val attributes = baseAttributes + extraAttributes
-        updateAttributes(itemMeta, attributes)
+        updateAttributes(itemMeta, baseAttributes, extraAttributes, equipment)
         updateLore(item, itemMeta, baseAttributes, extraAttributes, slotLore)
 
         item.itemMeta = itemMeta
     }
 
-    private fun updateAttributes(itemMeta: ItemMeta, attributes: List<RolledAttribute>) {
+    private fun updateAttributes(
+        itemMeta: ItemMeta,
+        baseAttributes: List<RolledAttribute>,
+        extraAttributes: List<RolledAttribute>,
+        equipment: Equipment
+    ) {
         val attributeModifiers = itemMeta.attributeModifiers ?: return
         attributeModifiers.forEach { attribute, _ -> itemMeta.removeAttributeModifier(attribute) }
 
+        addAllAttributes(itemMeta, baseAttributes, equipment.slot)
+        val extraAttributeSlot = if (equipment.extraAttributesInSlot) equipment.slot else null
+        addAllAttributes(itemMeta, extraAttributes, extraAttributeSlot)
+    }
+
+    private fun addAllAttributes(
+        itemMeta: ItemMeta,
+        attributes: List<RolledAttribute>,
+        slot: EquipmentSlot?
+    ) {
         attributes.filter { it.type.applicableAttributeType != null }
             .forEach {
-                addItemAttribute(
+                addAttribute(
                     itemMeta,
                     it.type.applicableAttributeType!!.attribute,
                     it.roll,
-                    it.type.applicableAttributeType.scaleType
+                    it.type.applicableAttributeType.scaleType,
+                    slot
                 )
             }
+    }
+
+    private fun addAttribute(
+        itemMeta: ItemMeta,
+        attribute: Attribute,
+        value: Double,
+        operation: AttributeModifier.Operation,
+        slot: EquipmentSlot?
+    ) {
+        itemMeta.addAttributeModifier(
+            attribute,
+            AttributeModifier(
+                UUID.randomUUID(),
+                attribute.key.key,
+                value,
+                operation,
+                slot
+            )
+        )
     }
 
     private fun updateLore(
@@ -105,10 +125,11 @@ object ItemUtil {
         if (extraAttributes.isNotEmpty()) {
             lore.add(Equipment.GENERIC_SLOT_LORE)
         }
-        extraAttributes.forEach {
-            val attributeLine = getAttributeLine(itemMeta, it, false)
-            lore.add(attributeLine)
-        }
+        extraAttributes.sortedBy { it.type.ordinal }
+            .forEach {
+                val attributeLine = getAttributeLine(itemMeta, it, false)
+                lore.add(attributeLine)
+            }
         if (isCorrupted(item)) {
             lore.add(CorruptionSettings.CORRUPTION_TAG_LORE)
         }

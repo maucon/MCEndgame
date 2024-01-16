@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Material
+import org.bukkit.inventory.EquipmentSlot
 
 enum class Chestplate(
     override val material: Material,
@@ -52,7 +53,8 @@ enum class Chestplate(
         )
     );
 
-    override val lore = Equipment.CHEST_SLOT_LORE
+    override val slot = EquipmentSlot.CHEST
+    override val extraAttributesInSlot = true
 
     override val rollableAttributes = listOf(
         RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.5)),

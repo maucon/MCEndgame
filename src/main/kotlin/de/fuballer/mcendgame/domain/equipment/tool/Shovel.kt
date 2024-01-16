@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Material
+import org.bukkit.inventory.EquipmentSlot
 
 enum class Shovel(
     override val material: Material,
@@ -55,7 +56,8 @@ enum class Shovel(
         )
     );
 
-    override val lore = Equipment.MAIN_HAND_SLOT_LORE
+    override val slot = EquipmentSlot.HAND
+    override val extraAttributesInSlot = false
 
     override val rollableAttributes = listOf(
         RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),

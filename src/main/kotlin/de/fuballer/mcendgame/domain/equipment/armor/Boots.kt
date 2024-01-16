@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Material
+import org.bukkit.inventory.EquipmentSlot
 
 enum class Boots(
     override val material: Material,
@@ -52,7 +53,8 @@ enum class Boots(
         )
     );
 
-    override val lore = Equipment.FEET_SLOT_LORE
+    override val slot = EquipmentSlot.FEET
+    override val extraAttributesInSlot = true
 
     override val rollableAttributes = listOf(
         RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.5)),
