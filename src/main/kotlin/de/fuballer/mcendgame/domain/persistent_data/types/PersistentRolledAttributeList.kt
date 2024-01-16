@@ -2,33 +2,31 @@ package de.fuballer.mcendgame.domain.persistent_data.types
 
 import de.fuballer.mcendgame.domain.attribute.AttributeType
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
+import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.persistence.PersistentDataAdapterContext
+import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 
-private const val LIST_DELIMITER = "; "
-private const val ATTRIBUTE_DELIMITER = ": "
-
 @Suppress("UNCHECKED_CAST")
-object PersistentRolledAttributeList : PersistentDataType<String, List<RolledAttribute>> {
-    override fun getPrimitiveType(): Class<String> = String::class.java
+object PersistentRolledAttributeList : PersistentDataType<PersistentDataContainer, List<RolledAttribute>> {
+    override fun getPrimitiveType() = PersistentDataContainer::class.java
 
-    override fun getComplexType(): Class<List<RolledAttribute>> = List::class.java as Class<List<RolledAttribute>>
+    override fun getComplexType() = List::class.java as Class<List<RolledAttribute>>
 
-    override fun toPrimitive(complex: List<RolledAttribute>, context: PersistentDataAdapterContext): String {
-        return complex.joinToString(LIST_DELIMITER) { "${it.type}$ATTRIBUTE_DELIMITER${it.roll}" }
+    override fun toPrimitive(complex: List<RolledAttribute>, context: PersistentDataAdapterContext): PersistentDataContainer {
+        val container = context.newPersistentDataContainer()
+        for (item in complex) {
+            val key = PluginUtil.createNamespacedKey(item.type.toString())
+            container.set(key, PersistentDataType.DOUBLE, item.roll)
+        }
+        return container
     }
 
-    override fun fromPrimitive(primitive: String, context: PersistentDataAdapterContext): List<RolledAttribute> {
-        if (primitive.isEmpty()) return emptyList()
+    override fun fromPrimitive(primitive: PersistentDataContainer, context: PersistentDataAdapterContext) =
+        primitive.keys.map {
+            val type = AttributeType.valueOf(it.key.uppercase())
+            val roll = primitive.get(it, PersistentDataType.DOUBLE)!!
 
-        return primitive.split(LIST_DELIMITER)
-            .map {
-                val split = it.split(ATTRIBUTE_DELIMITER)
-                val type = AttributeType.valueOf(split[0])
-                val roll = split[1].toDouble()
-
-                RolledAttribute(type, roll)
-            }
-            .toList()
-    }
+            RolledAttribute(type, roll)
+        }
 }

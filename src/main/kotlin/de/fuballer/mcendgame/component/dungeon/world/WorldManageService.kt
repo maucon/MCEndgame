@@ -63,6 +63,8 @@ class WorldManageService(
             setGameRule(GameRule.DO_TRADER_SPAWNING, false)
             setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false)
             setGameRule(GameRule.REDUCED_DEBUG_INFO, true)
+            setGameRule(GameRule.DISABLE_RAIDS, true)
+            setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false)
 
             difficulty = Difficulty.HARD
             time = 18000
