@@ -25,11 +25,12 @@ object StatItemSettings {
     fun calculateEnchantTries(mapTier: Int) = 1 + (mapTier * ENCHANT_TRIES_PER_TIER).toInt()
 
     val STAT_AMOUNTS = listOf(
-        SortableRandomOption(500, 0, 0),
-        SortableRandomOption(300, 1, 1),
-        SortableRandomOption(100, 2, 2),
-        SortableRandomOption(25, 3, 3),
-        SortableRandomOption(5, 4, 4),
+        SortableRandomOption(5000, 0, 0),
+        SortableRandomOption(3000, 1, 1),
+        SortableRandomOption(1000, 2, 2),
+        SortableRandomOption(250, 3, 3),
+        SortableRandomOption(50, 4, 4),
+        SortableRandomOption(1, 5, 5),
     )
 
     private const val EQUIPMENT_ROLL_TRIES_PER_TIER = 0.25

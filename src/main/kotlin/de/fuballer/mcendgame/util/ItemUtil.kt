@@ -62,8 +62,9 @@ object ItemUtil {
         extraAttributes: List<RolledAttribute>,
         equipment: Equipment
     ) {
-        val attributeModifiers = itemMeta.attributeModifiers ?: return
-        attributeModifiers.forEach { attribute, _ -> itemMeta.removeAttributeModifier(attribute) }
+        itemMeta.attributeModifiers?.let {
+            it.forEach { attribute, _ -> itemMeta.removeAttributeModifier(attribute) }
+        }
 
         addAllAttributes(itemMeta, baseAttributes, equipment.slot)
         val extraAttributeSlot = if (equipment.extraAttributesInSlot) equipment.slot else null
