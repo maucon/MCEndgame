@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.stat_item
+package de.fuballer.mcendgame.component.item_generation
 
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.armor.Boots
@@ -11,7 +11,7 @@ import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.ChatColor
 import org.bukkit.Material
 
-object StatItemSettings {
+object ItemGenerationSettings {
     const val COMMAND_NAME = "item-info"
     val STAT_ITEM_COMMAND_NO_ITEM = "${ChatColor.RED}No Item in Mainhand!"
     val STAT_ITEM_COMMAND_NO_ATTRIBUTES = "${ChatColor.RED}Item can't have attributes!"

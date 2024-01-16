@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.enemy.generation
 
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
-import de.fuballer.mcendgame.component.stat_item.StatItemService
+import de.fuballer.mcendgame.component.item_generation.ItemGenerationService
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
@@ -26,7 +26,7 @@ import java.util.*
 
 @Component
 class EnemyGenerationService(
-    private val statItemService: StatItemService
+    private val itemGenerationService: ItemGenerationService
 ) : Listener {
     private val random = Random()
 
@@ -84,7 +84,7 @@ class EnemyGenerationService(
                 mapTier
             ) as LivingEntity
 
-            statItemService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
+            itemGenerationService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)

@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.stat_item.StatItemSettings
+import de.fuballer.mcendgame.component.item_generation.ItemGenerationSettings
 import de.fuballer.mcendgame.domain.attribute.ApplicableAttributeType
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
@@ -45,7 +45,7 @@ object ItemUtil {
     fun updateAttributesAndLore(item: ItemStack) {
         val itemMeta = item.itemMeta ?: return
 
-        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
+        val equipment = ItemGenerationSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
         val baseAttributes = equipment.baseAttributes
         val extraAttributes = PersistentDataUtil.getValue(itemMeta, DataTypeKeys.ATTRIBUTES) ?: listOf()
         val slotLore = Equipment.getLoreForSlot(equipment.slot)

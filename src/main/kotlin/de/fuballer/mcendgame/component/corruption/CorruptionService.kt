@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.corruption
 
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
-import de.fuballer.mcendgame.component.stat_item.StatItemSettings
+import de.fuballer.mcendgame.component.item_generation.ItemGenerationSettings
 import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
@@ -36,7 +36,7 @@ class CorruptionService : Listener {
         val corruption = inventory.getItem(1) ?: return
         val corruptionMeta = corruption.itemMeta ?: return
 
-        if (!StatItemSettings.MATERIAL_TO_EQUIPMENT.containsKey(base.type)) return
+        if (!ItemGenerationSettings.MATERIAL_TO_EQUIPMENT.containsKey(base.type)) return
         PersistentDataUtil.getValue(corruptionMeta, DataTypeKeys.CORRUPTION_ROUNDS) ?: return
 
         val result = base.clone()
@@ -131,7 +131,7 @@ class CorruptionService : Listener {
     }
 
     private fun increaseEnchantLevel(item: ItemStack, meta: ItemMeta) {
-        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
+        val equipment = ItemGenerationSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
 
         val possibleEnchants = equipment.rollableEnchants
             .map { it.option.enchantment }

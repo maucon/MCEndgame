@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.stat_item.command
+package de.fuballer.mcendgame.component.item_generation.command
 
 //@Component
 //class StatItemCommand : CommandHandler {

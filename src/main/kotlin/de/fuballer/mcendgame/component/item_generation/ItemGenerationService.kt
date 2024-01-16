@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.stat_item
+package de.fuballer.mcendgame.component.item_generation
 
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
@@ -24,7 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta
 import java.util.*
 
 @Component
-class StatItemService : Listener {
+class ItemGenerationService : Listener {
     private val random = Random()
 
     @EventHandler
@@ -85,19 +85,19 @@ class StatItemService : Listener {
         }
 
         if (armor) {
-            getSortableEquipment(mapTier, StatItemSettings.HELMETS)?.also {
+            getSortableEquipment(mapTier, ItemGenerationSettings.HELMETS)?.also {
                 equipment.helmet = it
                 equipment.helmetDropChance = 0f
             }
-            getSortableEquipment(mapTier, StatItemSettings.CHESTPLATES)?.also {
+            getSortableEquipment(mapTier, ItemGenerationSettings.CHESTPLATES)?.also {
                 equipment.chestplate = it
                 equipment.chestplateDropChance = 0f
             }
-            getSortableEquipment(mapTier, StatItemSettings.LEGGINGS)?.also {
+            getSortableEquipment(mapTier, ItemGenerationSettings.LEGGINGS)?.also {
                 equipment.leggings = it
                 equipment.leggingsDropChance = 0f
             }
-            getSortableEquipment(mapTier, StatItemSettings.BOOTS)?.also {
+            getSortableEquipment(mapTier, ItemGenerationSettings.BOOTS)?.also {
                 equipment.boots = it
                 equipment.bootsDropChance = 0f
             }
@@ -107,21 +107,21 @@ class StatItemService : Listener {
     private fun createMainHandItem(mapTier: Int, ranged: Boolean): ItemStack? {
         if (ranged) return createRangedMainHandItem(mapTier)
 
-        val itemProbability = RandomUtil.pick(StatItemSettings.MAINHAND_PROBABILITIES).option ?: return null
+        val itemProbability = RandomUtil.pick(ItemGenerationSettings.MAINHAND_PROBABILITIES).option ?: return null
         return getSortableEquipment(mapTier, itemProbability)
     }
 
     private fun createRangedMainHandItem(mapTier: Int): ItemStack? {
-        val itemProbability = RandomUtil.pick(StatItemSettings.RANGED_MAINHAND_PROBABILITIES).option
+        val itemProbability = RandomUtil.pick(ItemGenerationSettings.RANGED_MAINHAND_PROBABILITIES).option
         return getSortableEquipment(mapTier, itemProbability)
     }
 
     private fun createOffHandItem(mapTier: Int): ItemStack? {
-        if (random.nextDouble() < StatItemSettings.OFFHAND_OTHER_OVER_MAINHAND_PROBABILITY) {
-            return getUnsortableEquipment(mapTier, StatItemSettings.OTHER_ITEMS)
+        if (random.nextDouble() < ItemGenerationSettings.OFFHAND_OTHER_OVER_MAINHAND_PROBABILITY) {
+            return getUnsortableEquipment(mapTier, ItemGenerationSettings.OTHER_ITEMS)
         }
 
-        val itemProbability = RandomUtil.pick(StatItemSettings.MAINHAND_PROBABILITIES).option ?: return null
+        val itemProbability = RandomUtil.pick(ItemGenerationSettings.MAINHAND_PROBABILITIES).option ?: return null
         return getSortableEquipment(mapTier, itemProbability)
     }
 
@@ -129,7 +129,7 @@ class StatItemService : Listener {
         mapTier: Int,
         equipmentProbabilities: List<SortableRandomOption<out Equipment?>>
     ): ItemStack? {
-        val rolls = StatItemSettings.calculateEquipmentRollTries(mapTier)
+        val rolls = ItemGenerationSettings.calculateEquipmentRollTries(mapTier)
         val equipment = RandomUtil.pick(equipmentProbabilities, rolls).option ?: return null
         return getEquipment(mapTier, equipment)
     }
@@ -163,7 +163,7 @@ class StatItemService : Listener {
         itemMeta: ItemMeta,
         enchants: List<RandomOption<ItemEnchantment>>
     ) {
-        repeat(StatItemSettings.calculateEnchantTries(mapTier)) {
+        repeat(ItemGenerationSettings.calculateEnchantTries(mapTier)) {
             val itemEnchantment = RandomUtil.pick(enchants).option
 
             if (itemMeta.getEnchantLevel(itemEnchantment.enchantment) < itemEnchantment.level) {
@@ -177,7 +177,7 @@ class StatItemService : Listener {
         equipment: Equipment,
         itemMeta: ItemMeta
     ) {
-        val statAmount = RandomUtil.pick(StatItemSettings.STAT_AMOUNTS, mapTier).option
+        val statAmount = RandomUtil.pick(ItemGenerationSettings.STAT_AMOUNTS, mapTier).option
         val rollableAttributesCopy = equipment.rollableAttributes.toMutableList()
 
         val pickedAttributes = mutableListOf<RollableAttribute>()
