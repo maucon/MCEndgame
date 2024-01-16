@@ -22,7 +22,7 @@ object ItemUtil {
         val item = ItemStack(itemType.equipment.material)
         val itemMeta = item.itemMeta!!
 
-        itemMeta.setDisplayName(itemType.customName)
+        itemMeta.setDisplayName("${ChatColor.GOLD}${itemType.customName}")
         val rolledAttributes = itemType.attributes.map { it.roll(1) }
 
         if (!itemType.usesEquipmentBaseStats) {
