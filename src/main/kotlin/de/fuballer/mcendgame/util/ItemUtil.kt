@@ -1,10 +1,11 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.item_generation.ItemGenerationSettings
 import de.fuballer.mcendgame.domain.attribute.ApplicableAttributeType
+import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
+import de.fuballer.mcendgame.domain.item.CustomItemType
 import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import org.bukkit.ChatColor
 import org.bukkit.attribute.Attribute
@@ -17,6 +18,38 @@ import org.bukkit.inventory.meta.ItemMeta
 import java.util.*
 
 object ItemUtil {
+    fun createCustomItem(itemType: CustomItemType): ItemStack {
+        val item = ItemStack(itemType.equipment.material)
+        val itemMeta = item.itemMeta!!
+
+        itemMeta.setDisplayName(itemType.customName)
+        val rolledAttributes = itemType.attributes.map { it.roll(1) }
+
+        if (!itemType.usesEquipmentBaseStats) {
+            itemMeta.attributeModifiers?.let {
+                it.forEach { attribute, _ -> itemMeta.removeAttributeModifier(attribute) }
+            }
+        }
+
+        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.CUSTOM_ITEM_TYPE, itemType)
+        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.ATTRIBUTES, rolledAttributes)
+
+        item.itemMeta = itemMeta
+        updateAttributesAndLore(item)
+
+        return item
+    }
+
+    fun getEquipmentAttributes(item: ItemStack): List<RollableAttribute> {
+        val itemType = item.type
+
+        val customItemAttributes = getCustomItemAttributes(item)
+        if (customItemAttributes != null) return customItemAttributes
+
+        val equipment = Equipment.fromMaterial(itemType) ?: return listOf()
+        return equipment.rollableAttributes.map { it.option }
+    }
+
     fun isCorrupted(item: ItemStack): Boolean {
         val itemMeta = item.itemMeta ?: return false
 
@@ -45,7 +78,7 @@ object ItemUtil {
     fun updateAttributesAndLore(item: ItemStack) {
         val itemMeta = item.itemMeta ?: return
 
-        val equipment = ItemGenerationSettings.MATERIAL_TO_EQUIPMENT[item.type] ?: return
+        val equipment = Equipment.fromMaterial(item.type) ?: return
         val baseAttributes = equipment.baseAttributes
         val extraAttributes = PersistentDataUtil.getValue(itemMeta, DataTypeKeys.ATTRIBUTES) ?: listOf()
         val slotLore = Equipment.getLoreForSlot(equipment.slot)
@@ -54,6 +87,13 @@ object ItemUtil {
         updateLore(item, itemMeta, baseAttributes, extraAttributes, slotLore)
 
         item.itemMeta = itemMeta
+    }
+
+    private fun getCustomItemAttributes(item: ItemStack): List<RollableAttribute>? {
+        val itemMeta = item.itemMeta ?: return null
+        val customItemType = PersistentDataUtil.getValue(itemMeta, DataTypeKeys.CUSTOM_ITEM_TYPE) ?: return null
+
+        return customItemType.attributes
     }
 
     private fun updateAttributes(

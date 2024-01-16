@@ -16,6 +16,10 @@ data class RollableAttribute(
         max: Double
     ) : this(type, 0.0, max)
 
+    init {
+        if (min > max) throw IllegalArgumentException("min cannot be greater than max")
+    }
+
     fun roll(mapTier: Int): RolledAttribute {
         val roll = calculateRoll(mapTier)
         val value = min + (max - min) * roll

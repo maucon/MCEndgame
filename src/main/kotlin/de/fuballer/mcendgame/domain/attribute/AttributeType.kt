@@ -68,6 +68,9 @@ enum class AttributeType(
 
     // custom
     HEALTH_SCALED_SIZE(
-        { "${DECIMAL_FORMAT.format(it)}}% increased size per 2 extra health" }
+        { "${DECIMAL_FORMAT.format(it)}% increased size per 2 extra health" }
+    ),
+    HEALTH_SCALED_SPEED(
+        { "${DECIMAL_FORMAT.format(it)}% increased speed per 2 extra health" }
     )
 }

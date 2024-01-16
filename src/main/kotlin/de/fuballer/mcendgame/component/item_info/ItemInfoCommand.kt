@@ -1,11 +1,12 @@
-package de.fuballer.mcendgame.component.item_generation.command
+package de.fuballer.mcendgame.component.item_info
 
-import de.fuballer.mcendgame.component.item_generation.ItemGenerationSettings
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
+import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
+import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -17,8 +18,8 @@ import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.java.JavaPlugin
 
 @Component
-class StatItemCommand : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ItemGenerationSettings.COMMAND_NAME)!!.setExecutor(this)
+class ItemInfoCommand : CommandHandler {
+    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ItemInfoSettings.COMMAND_NAME)!!.setExecutor(this)
 
     override fun onCommand(
         sender: CommandSender,
@@ -36,12 +37,12 @@ class StatItemCommand : CommandHandler {
         val itemType = item.type
 
         if (itemType == Material.AIR) {
-            player.sendMessage(ItemGenerationSettings.COMMAND_NO_ITEM)
+            player.sendMessage(ItemInfoSettings.NO_ITEM)
             return
         }
 
-        if (!ItemGenerationSettings.MATERIAL_TO_EQUIPMENT.containsKey(itemType)) {
-            player.sendMessage(ItemGenerationSettings.COMMAND_NO_ATTRIBUTES)
+        if (!Equipment.existsByMaterial(itemType)) {
+            player.sendMessage(ItemInfoSettings.NO_ATTRIBUTES)
             return
         }
 
@@ -56,8 +57,8 @@ class StatItemCommand : CommandHandler {
         val book = ItemStack(Material.WRITTEN_BOOK)
         val bookMeta = book.itemMeta as BookMeta
 
-        bookMeta.author = ItemGenerationSettings.STAT_ITEM_BOOK_AUTHOR
-        bookMeta.title = ItemGenerationSettings.STAT_ITEM_BOOK_TITLE
+        bookMeta.author = ItemInfoSettings.BOOK_AUTHOR
+        bookMeta.title = ItemInfoSettings.BOOK_TITLE
 
         getAttributePages(item, itemType)
             .forEach { bookMeta.addPage(it) }
@@ -66,14 +67,11 @@ class StatItemCommand : CommandHandler {
         return book
     }
 
-    private fun getAttributePages(
-        item: ItemStack,
-        itemType: Material
-    ): List<String> {
+    private fun getAttributePages(item: ItemStack, itemType: Material): List<String> {
         val itemDisplayName = getItemTypeDisplayName(itemType)
-        val header = "${ItemGenerationSettings.COMMAND_ITEM_TYPE_COLOR}$itemDisplayName${ChatColor.RESET}"
+        val header = "${ItemInfoSettings.ITEM_TYPE_COLOR}$itemDisplayName${ChatColor.RESET}"
 
-        val attributeBounds = getAttributesBounds(itemType)
+        val attributeBounds = ItemUtil.getEquipmentAttributes(item)
         val presentAttributes = getPresentAttributes(item)
 
         return attributeBounds.map {
@@ -94,11 +92,6 @@ class StatItemCommand : CommandHandler {
         return displayName.trim()
     }
 
-    private fun getAttributesBounds(type: Material): List<RollableAttribute> {
-        val equipment = ItemGenerationSettings.MATERIAL_TO_EQUIPMENT[type] ?: return listOf()
-        return equipment.rollableAttributes.map { it.option }
-    }
-
     private fun getPresentAttributes(item: ItemStack): List<RolledAttribute> {
         val itemMeta = item.itemMeta ?: return listOf()
 
@@ -111,10 +104,10 @@ class StatItemCommand : CommandHandler {
         presentAttributes: List<RolledAttribute>
     ): String {
         val attribute = presentAttributes.firstOrNull { it.type == attributeBound.type }
-        val attributeRollString = if (attribute == null) ItemGenerationSettings.COMMAND_ATTRIBUTE_NOT_PRESENT else getAttributeRollString(attributeBound, attribute.roll)
+        val attributeRollString = if (attribute == null) ItemInfoSettings.ATTRIBUTE_NOT_PRESENT else getAttributeRollString(attributeBound, attribute.roll)
 
-        return "${ItemGenerationSettings.COMMAND_ATTRIBUTE_COLOR}${attributeBound.type}:\n\n" +
-                "${ItemGenerationSettings.COMMAND_VALUE_COLOR}${attributeRollString}\n"
+        return "${ItemInfoSettings.ATTRIBUTE_COLOR}${attributeBound.type}\n\n" +
+                "${ItemInfoSettings.VALUE_COLOR}${attributeRollString}\n"
     }
 
     private fun getAttributeRollString(attributeBounds: RollableAttribute, roll: Double) =

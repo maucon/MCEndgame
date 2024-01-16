@@ -2,6 +2,11 @@ package de.fuballer.mcendgame.domain.equipment
 
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
+import de.fuballer.mcendgame.domain.equipment.armor.Boots
+import de.fuballer.mcendgame.domain.equipment.armor.Chestplate
+import de.fuballer.mcendgame.domain.equipment.armor.Helmet
+import de.fuballer.mcendgame.domain.equipment.armor.Leggings
+import de.fuballer.mcendgame.domain.equipment.tool.*
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -28,5 +33,23 @@ interface Equipment {
                 EquipmentSlot.CHEST -> "${SLOT_LORE_COLOR}When on Body:"
                 EquipmentSlot.HEAD -> "${SLOT_LORE_COLOR}When on Head:"
             }
+
+        private val materialToEquipment = mutableMapOf<Material, Equipment>()
+            .apply {
+                putAll(Boots.entries.associateBy { it.material })
+                putAll(Chestplate.entries.associateBy { it.material })
+                putAll(Helmet.entries.associateBy { it.material })
+                putAll(Leggings.entries.associateBy { it.material })
+                putAll(Axe.entries.associateBy { it.material })
+                putAll(Hoe.entries.associateBy { it.material })
+                putAll(Pickaxe.entries.associateBy { it.material })
+                putAll(Shovel.entries.associateBy { it.material })
+                putAll(Sword.entries.associateBy { it.material })
+                putAll(Tool.entries.associateBy { it.material })
+            }
+
+        fun fromMaterial(material: Material) = materialToEquipment[material]
+
+        fun existsByMaterial(material: Material) = materialToEquipment.containsKey(material)
     }
 }

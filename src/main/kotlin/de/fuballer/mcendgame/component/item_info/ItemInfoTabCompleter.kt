@@ -1,6 +1,5 @@
-package de.fuballer.mcendgame.component.item_generation.command
+package de.fuballer.mcendgame.component.item_info
 
-import de.fuballer.mcendgame.component.item_generation.ItemGenerationSettings
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import org.bukkit.command.Command
@@ -11,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin
 @Component
 class ItemInfoTabCompleter : CommandTabCompleter {
     override fun initialize(plugin: JavaPlugin) {
-        plugin.getCommand(ItemGenerationSettings.COMMAND_NAME)!!.tabCompleter = this
+        plugin.getCommand(ItemInfoSettings.COMMAND_NAME)!!.tabCompleter = this
     }
 
     override fun onTabComplete(

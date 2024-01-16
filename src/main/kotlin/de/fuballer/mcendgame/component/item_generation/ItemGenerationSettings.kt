@@ -8,20 +8,8 @@ import de.fuballer.mcendgame.domain.equipment.armor.Leggings
 import de.fuballer.mcendgame.domain.equipment.tool.*
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
-import org.bukkit.ChatColor
-import org.bukkit.Material
 
 object ItemGenerationSettings {
-    const val COMMAND_NAME = "item-info"
-    val COMMAND_NO_ITEM = "${ChatColor.RED}No Item in Mainhand!"
-    val COMMAND_NO_ATTRIBUTES = "${ChatColor.RED}Item can't have attributes!"
-    val COMMAND_ITEM_TYPE_COLOR = "${ChatColor.BLACK}${ChatColor.UNDERLINE}"
-    val COMMAND_ATTRIBUTE_COLOR = "${ChatColor.DARK_GREEN}"
-    val COMMAND_VALUE_COLOR = "${ChatColor.BLACK}"
-    const val COMMAND_ATTRIBUTE_NOT_PRESENT = "Not present"
-    const val STAT_ITEM_BOOK_AUTHOR = "MCEndgame"
-    const val STAT_ITEM_BOOK_TITLE = "ItemStats"
-
     private const val ENCHANT_TRIES_PER_TIER = 0.5
     fun calculateEnchantTries(mapTier: Int) = 1 + (mapTier * ENCHANT_TRIES_PER_TIER).toInt()
 
@@ -138,30 +126,4 @@ object ItemGenerationSettings {
     val RANGED_MAINHAND_PROBABILITIES = listOf<RandomOption<List<SortableRandomOption<out Equipment>>>>(
         RandomOption(100, BOWS),
     )
-
-    val SMITHING_MAP: Map<Material, Equipment> = mapOf(
-        Material.NETHERITE_SWORD to Sword.DIAMOND,
-        Material.NETHERITE_AXE to Axe.DIAMOND,
-        Material.NETHERITE_SHOVEL to Shovel.DIAMOND,
-        Material.NETHERITE_PICKAXE to Pickaxe.DIAMOND,
-        Material.NETHERITE_HOE to Hoe.DIAMOND,
-        Material.NETHERITE_HELMET to Helmet.DIAMOND,
-        Material.NETHERITE_CHESTPLATE to Chestplate.DIAMOND,
-        Material.NETHERITE_LEGGINGS to Leggings.DIAMOND,
-        Material.NETHERITE_BOOTS to Boots.DIAMOND
-    )
-
-    val MATERIAL_TO_EQUIPMENT = mutableMapOf<Material, Equipment>()
-        .apply {
-            putAll(Boots.entries.associateBy { it.material })
-            putAll(Chestplate.entries.associateBy { it.material })
-            putAll(Helmet.entries.associateBy { it.material })
-            putAll(Leggings.entries.associateBy { it.material })
-            putAll(Axe.entries.associateBy { it.material })
-            putAll(Hoe.entries.associateBy { it.material })
-            putAll(Pickaxe.entries.associateBy { it.material })
-            putAll(Shovel.entries.associateBy { it.material })
-            putAll(Sword.entries.associateBy { it.material })
-            putAll(Tool.entries.associateBy { it.material })
-        }
 }
