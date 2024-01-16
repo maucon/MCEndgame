@@ -1,170 +1,128 @@
 package de.fuballer.mcendgame.component.item_generation.command
 
-//@Component
-//class StatItemCommand : CommandHandler {
-//    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(StatItemSettings.COMMAND_NAME)!!.setExecutor(this)
-//
-//    override fun onCommand(
-//        sender: CommandSender,
-//        command: Command,
-//        label: String,
-//        args: Array<out String>
-//    ): Boolean {
-//        val commandExecutor = sender as? Player ?: return false
-//        openEquipmentStatBook(commandExecutor)
-//        return true
-//    }
-//
-//    private fun openEquipmentStatBook(player: Player) {
-//        val item = player.inventory.itemInMainHand
-//        val itemType = item.type
-//        if (itemType == Material.AIR) {
-//            player.sendMessage(StatItemSettings.STAT_ITEM_COMMAND_NO_ITEM)
-//            return
-//        }
-//        if (!StatItemSettings.MATERIAL_TO_EQUIPMENT.containsKey(itemType)) {
-//            player.sendMessage(StatItemSettings.STAT_ITEM_COMMAND_NO_ATTRIBUTES)
-//            return
-//        }
-//
-//        val book = getBook(item, itemType)
-//        player.openBook(book)
-//    }
-//
-//    private fun getBook(
-//        item: ItemStack,
-//        itemType: Material
-//    ): ItemStack {
-//        val book = ItemStack(Material.WRITTEN_BOOK)
-//        val bookMeta = book.itemMeta as BookMeta
-//
-//        bookMeta.author = StatItemSettings.STAT_ITEM_BOOK_AUTHOR
-//        bookMeta.title = StatItemSettings.STAT_ITEM_BOOK_TITLE
-//
-//        val text = getText(item, itemType)
-//        bookMeta.addPage(text)
-//
-//        book.itemMeta = bookMeta
-//
-//        return book
-//    }
-//
-//    private fun getText(
-//        item: ItemStack,
-//        itemType: Material
-//    ): String {
-//        val itemDisplayName = getItemTypeDisplayName(itemType)
-//        var text = "${StatItemSettings.STAT_ITEM_COMMAND_ITEM_TYPE_COLOR}$itemDisplayName\n\n"
-//
-//        val maxAttributes = getMaxAttributes(itemType)
-//
-//        val meta = item.itemMeta
-//        if (meta == null) {
-//            text = text.plus(getStatText(maxAttributes, mutableMapOf()))
-//            return text
-//        }
-//        val presentAttributes = meta.attributeModifiers
-//        if (presentAttributes == null || presentAttributes.isEmpty) {
-//            text = text.plus(getStatText(maxAttributes, mutableMapOf()))
-//            return text
-//        }
-//
-//        val presentAttributeValues = getPresentAttributeValues(item, maxAttributes, presentAttributes)
-//
-//        text = text.plus(getStatText(maxAttributes, presentAttributeValues))
-//        return text
-//    }
-//
-//    private fun getItemTypeDisplayName(itemType: Material): String {
-//        var displayName = ""
-//
-//        val words = itemType.name.split("_")
-//        for (word in words) {
-//            val lowerCaseWord = word.lowercase()
-//            val uppercaseWord = lowerCaseWord[0].uppercase() + lowerCaseWord.substring(1)
-//            displayName = displayName.plus("$uppercaseWord ")
-//        }
-//
-//        return displayName.trim()
-//    }
-//
-//    private fun getPresentAttributeValues(
-//        item: ItemStack,
-//        maxAttributes: List<ItemAttribute>,
-//        presentAttributes: Multimap<Attribute, AttributeModifier>
-//    ): Map<Attribute, Double> {
-//        val presentAttributeValues: MutableMap<Attribute, Double> = mutableMapOf()
-//
-//        val baseAttributes = StatItemSettings.MATERIAL_TO_EQUIPMENT[item.type]!!.baseAttributes
-//
-//        for ((attribute, _) in maxAttributes) {
-//            presentAttributeValues[attribute] = getPresentAttributeValue(attribute, baseAttributes, presentAttributes)
-//        }
-//
-//        return presentAttributeValues
-//    }
-//
-//    private fun getPresentAttributeValue(
-//        attribute: Attribute,
-//        baseAttributes: List<ItemAttribute>,
-//        presentAttributes: Multimap<Attribute, AttributeModifier>
-//    ): Double {
-//        val baseValue = baseAttributes
-//            .filter { it.attribute == attribute }
-//            .map { it.value }
-//            .firstOrNull()
-//            ?: Double.MAX_VALUE
-//
-//        var presentValue = 0.0
-//
-//        if (!presentAttributes.containsKey(attribute)) return presentValue
-//
-//        var sortedOut = false
-//        for (am in presentAttributes[attribute]) {
-//            val amValue = am.amount
-//            if (sortedOut) {
-//                presentValue = amValue
-//                break
-//            }
-//            if (amValue != AttributeUtil.getActualAttributeValue(attribute, baseValue)) {
-//                presentValue = amValue
-//                break
-//            }
-//            sortedOut = true
-//        }
-//
-//        return presentValue
-//    }
-//
-//    private fun getStatText(
-//        maxAttributes: List<ItemAttribute>,
-//        presentAttributeValues: Map<Attribute, Double>
-//    ): String {
-//        var text = ""
-//
-//        for ((attribute, value) in maxAttributes) {
-//            val attributeString = "${StatItemSettings.STAT_ITEM_COMMAND_ATTRIBUTE_COLOR}${AttributeUtil.getAttributeAsString(attribute)}:"
-//            text = text.plus("$attributeString\n")
-//
-//            val presentValue = presentAttributeValues[attribute] ?: 0.0
-//            text = text.plus(
-//                String.format(
-//                    "   %s%.2f / %s (%.2f%%)",
-//                    StatItemSettings.STAT_ITEM_COMMAND_VALUE_COLOR,
-//                    AttributeUtil.getDisplayedValue(attribute, presentValue),
-//                    AttributeUtil.getDisplayedValue(attribute, value),
-//                    presentValue / value * 100
-//                )
-//            )
-//            text = text.plus("\n")
-//        }
-//
-//        return text
-//    }
-//
-//    private fun getMaxAttributes(type: Material): List<ItemAttribute> {
-//        val equipment = StatItemSettings.MATERIAL_TO_EQUIPMENT[type] ?: return listOf()
-//        return listOf()
-////        return equipment.rollableAttributes.map { it.option } TODO
-//    }
-//}
+import de.fuballer.mcendgame.component.item_generation.ItemGenerationSettings
+import de.fuballer.mcendgame.domain.attribute.RollableAttribute
+import de.fuballer.mcendgame.domain.attribute.RolledAttribute
+import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.stereotype.CommandHandler
+import de.fuballer.mcendgame.util.PersistentDataUtil
+import org.bukkit.ChatColor
+import org.bukkit.Material
+import org.bukkit.command.Command
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.BookMeta
+import org.bukkit.plugin.java.JavaPlugin
+
+@Component
+class StatItemCommand : CommandHandler {
+    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ItemGenerationSettings.COMMAND_NAME)!!.setExecutor(this)
+
+    override fun onCommand(
+        sender: CommandSender,
+        command: Command,
+        label: String,
+        args: Array<out String>
+    ): Boolean {
+        val commandExecutor = sender as? Player ?: return false
+        openAttributesBook(commandExecutor)
+        return true
+    }
+
+    private fun openAttributesBook(player: Player) {
+        val item = player.inventory.itemInMainHand
+        val itemType = item.type
+
+        if (itemType == Material.AIR) {
+            player.sendMessage(ItemGenerationSettings.COMMAND_NO_ITEM)
+            return
+        }
+
+        if (!ItemGenerationSettings.MATERIAL_TO_EQUIPMENT.containsKey(itemType)) {
+            player.sendMessage(ItemGenerationSettings.COMMAND_NO_ATTRIBUTES)
+            return
+        }
+
+        val book = getAttributesBook(item, itemType)
+        player.openBook(book)
+    }
+
+    private fun getAttributesBook(
+        item: ItemStack,
+        itemType: Material
+    ): ItemStack {
+        val book = ItemStack(Material.WRITTEN_BOOK)
+        val bookMeta = book.itemMeta as BookMeta
+
+        bookMeta.author = ItemGenerationSettings.STAT_ITEM_BOOK_AUTHOR
+        bookMeta.title = ItemGenerationSettings.STAT_ITEM_BOOK_TITLE
+
+        getAttributePages(item, itemType)
+            .forEach { bookMeta.addPage(it) }
+
+        book.itemMeta = bookMeta
+        return book
+    }
+
+    private fun getAttributePages(
+        item: ItemStack,
+        itemType: Material
+    ): List<String> {
+        val itemDisplayName = getItemTypeDisplayName(itemType)
+        val header = "${ItemGenerationSettings.COMMAND_ITEM_TYPE_COLOR}$itemDisplayName${ChatColor.RESET}"
+
+        val attributeBounds = getAttributesBounds(itemType)
+        val presentAttributes = getPresentAttributes(item)
+
+        return attributeBounds.map {
+            "$header\n\n${getAttributeText(it, presentAttributes)}"
+        }
+    }
+
+    private fun getItemTypeDisplayName(itemType: Material): String {
+        var displayName = ""
+
+        val words = itemType.name.split("_")
+        for (word in words) {
+            val lowerCaseWord = word.lowercase()
+            val uppercaseWord = lowerCaseWord[0].uppercase() + lowerCaseWord.substring(1)
+            displayName = displayName.plus("$uppercaseWord ")
+        }
+
+        return displayName.trim()
+    }
+
+    private fun getAttributesBounds(type: Material): List<RollableAttribute> {
+        val equipment = ItemGenerationSettings.MATERIAL_TO_EQUIPMENT[type] ?: return listOf()
+        return equipment.rollableAttributes.map { it.option }
+    }
+
+    private fun getPresentAttributes(item: ItemStack): List<RolledAttribute> {
+        val itemMeta = item.itemMeta ?: return listOf()
+
+        return PersistentDataUtil.getValue(itemMeta, DataTypeKeys.ATTRIBUTES)
+            ?: return listOf()
+    }
+
+    private fun getAttributeText(
+        attributeBound: RollableAttribute,
+        presentAttributes: List<RolledAttribute>
+    ): String {
+        val attribute = presentAttributes.firstOrNull { it.type == attributeBound.type }
+        val attributeRollString = if (attribute == null) ItemGenerationSettings.COMMAND_ATTRIBUTE_NOT_PRESENT else getAttributeRollString(attributeBound, attribute.roll)
+
+        return "${ItemGenerationSettings.COMMAND_ATTRIBUTE_COLOR}${attributeBound.type}:\n\n" +
+                "${ItemGenerationSettings.COMMAND_VALUE_COLOR}${attributeRollString}\n"
+    }
+
+    private fun getAttributeRollString(attributeBounds: RollableAttribute, roll: Double) =
+        String.format(
+            "Min: %.2f\nMax: %.2f\nRoll: %.2f\nPercent Roll: %.1f%%",
+            attributeBounds.min,
+            attributeBounds.max,
+            roll,
+            (roll - attributeBounds.min) / (attributeBounds.max - attributeBounds.min) * 100
+        )
+}

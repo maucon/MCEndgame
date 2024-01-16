@@ -13,12 +13,13 @@ import org.bukkit.Material
 
 object ItemGenerationSettings {
     const val COMMAND_NAME = "item-info"
-    val STAT_ITEM_COMMAND_NO_ITEM = "${ChatColor.RED}No Item in Mainhand!"
-    val STAT_ITEM_COMMAND_NO_ATTRIBUTES = "${ChatColor.RED}Item can't have attributes!"
-    val STAT_ITEM_COMMAND_ITEM_TYPE_COLOR = "${ChatColor.BLACK}${ChatColor.UNDERLINE}"
-    val STAT_ITEM_COMMAND_ATTRIBUTE_COLOR = "${ChatColor.DARK_GREEN}"
-    val STAT_ITEM_COMMAND_VALUE_COLOR = "${ChatColor.BLACK}"
-    const val STAT_ITEM_BOOK_AUTHOR = "MCEndgameTp"
+    val COMMAND_NO_ITEM = "${ChatColor.RED}No Item in Mainhand!"
+    val COMMAND_NO_ATTRIBUTES = "${ChatColor.RED}Item can't have attributes!"
+    val COMMAND_ITEM_TYPE_COLOR = "${ChatColor.BLACK}${ChatColor.UNDERLINE}"
+    val COMMAND_ATTRIBUTE_COLOR = "${ChatColor.DARK_GREEN}"
+    val COMMAND_VALUE_COLOR = "${ChatColor.BLACK}"
+    const val COMMAND_ATTRIBUTE_NOT_PRESENT = "Not present"
+    const val STAT_ITEM_BOOK_AUTHOR = "MCEndgame"
     const val STAT_ITEM_BOOK_TITLE = "ItemStats"
 
     private const val ENCHANT_TRIES_PER_TIER = 0.5
