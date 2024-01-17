@@ -1,50 +1,66 @@
 name: MC-Endgame
 version: '${version}'
+description: "MC-Endgame is a Minecraft server plugin that enhances the endgame experience by introducing a new level of progression."
+website: https://github.com/maucon/MC-Endgame
+authors:
+  - maucon
+  - Moewe342
+
 main: de.fuballer.mcendgame.MCEndgame
 api-version: "1.20"
 prefix: MC-ENDGAME
 load: STARTUP
 depend: [ FastAsyncWorldEdit, ProtocolLib ]
 
+permissions:
+  mcendgame.manage:
+    description: "Allows the user to manage MC-Endgame settings and access administrative commands"
+    default: op
+
 commands:
   killer:
+    description: "Displays information about the last entity that killed the specified player"
     usage: "§CUsage /<command> [player]"
     aliases: [ killer, lastdeath, showkiller ]
 
   dungeon-remaining:
+    description: "Shows the number of remaining monsters in the current dungeon"
     usage: "§CUsage /<command>"
     aliases: [ remaining, monsters, monstercount ]
 
   dungeon-filter:
+    description: "Allows players to set filters for the types of loot they wish not to pick up in dungeons"
     usage: "§CUsage /<command>"
     aliases: [ filter, lootfilter, dungeonfilter ]
 
   dungeon-artifacts:
+    description: "Lists currently equipped artifacts"
     usage: "§CUsage /<command>"
     aliases: [ artifacts, artifact ]
 
   dungeon-artifact-give:
+    description: "Gives a specified tier of dungeon artifact to a player"
     usage: "§CUsage /<command> player artifact-type tier"
     aliases: [ giveartifact ]
-    permission: op
+    permission: mcendgame.manage
 
   item-info:
+    description: "Provides detailed information about the item the player is holding"
     usage: "§CUsage /<command>"
     aliases: [ statitem ]
 
   dungeon-statistics:
+    description: "Displays statistics for the player's dungeon runs"
     usage: "§CUsage /<command>"
     aliases: [ statistics, stats, dungeonstats ]
 
   dungeon-progress:
+    description: "View or set a player's tier and progress in the dungeon progression system"
     usage: "§CUsage /<command> (get [player] | set player tier [progress])"
     aliases: [ progress ]
-    permission: op
-
-  dungeon-equipment-calculation:
-    usage: "§CUsage /<command> damage.."
-    aliases: [ ehp, equipment-calculation, calcs, ec ]
+    permission: mcendgame.manage
 
   dungeon-type:
+    description: "View or set the type of dungeon a player will generate next"
     usage: "§CUsage /<command> (get [player] | set player dungeon-type)"
-    permission: op
+    permission: mcendgame.manage
