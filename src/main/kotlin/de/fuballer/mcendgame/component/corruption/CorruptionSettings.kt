@@ -9,7 +9,6 @@ import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
@@ -62,9 +61,4 @@ object CorruptionSettings {
 
     fun getCorruptionItem() = CORRUPTION_ITEM.clone()
     fun getDoubleCorruptionItem() = DOUBLE_CORRUPTION_ITEM.clone()
-
-    fun isAllowedInventoryType(inventoryType: InventoryType) = inventoryType != InventoryType.GRINDSTONE
-            && inventoryType != InventoryType.ANVIL
-            && inventoryType != InventoryType.ENCHANTING
-            && inventoryType != InventoryType.SMITHING
 }

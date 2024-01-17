@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.item_info
+package de.fuballer.mcendgame.component.item.item_info
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter

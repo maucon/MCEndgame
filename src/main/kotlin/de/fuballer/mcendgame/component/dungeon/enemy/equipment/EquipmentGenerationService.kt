@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.item_generation
+package de.fuballer.mcendgame.component.dungeon.enemy.equipment
 
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
@@ -10,59 +10,15 @@ import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import de.fuballer.mcendgame.util.random.SortableRandomOption
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.LivingEntity
-import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.enchantment.EnchantItemEvent
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryType
-import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.event.inventory.PrepareSmithingEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import java.util.*
 
 @Component
-class ItemGenerationService : Listener {
+class EquipmentGenerationService : Listener {
     private val random = Random()
-
-    @EventHandler
-    fun onEnchant(event: EnchantItemEvent) {
-        val item = event.item
-        val enchants = event.enchantsToAdd
-        val damageAllTier = enchants[Enchantment.DAMAGE_ALL] ?: return
-
-        item.addEnchantment(Enchantment.DAMAGE_ALL, damageAllTier)
-        ItemUtil.updateAttributesAndLore(item)
-    }
-
-    @EventHandler
-    fun onAnvilPrepare(event: PrepareAnvilEvent) {
-        val item = event.result ?: return
-        if (ItemUtil.isVanillaItem(item)) return
-
-        ItemUtil.updateAttributesAndLore(item)
-    }
-
-    @EventHandler
-    fun onSmithingPrepare(event: PrepareSmithingEvent) {
-        val item = event.result ?: return
-        if (ItemUtil.isVanillaItem(item)) return
-
-        ItemUtil.updateAttributesAndLore(item)
-    }
-
-    @EventHandler
-    fun onGrindstoneUse(event: InventoryClickEvent) {
-        val inventory = event.inventory
-        if (inventory.type != InventoryType.GRINDSTONE || event.rawSlot != 2) return
-
-        val item = inventory.getItem(2) ?: return
-        if (ItemUtil.isVanillaItem(item)) return
-
-        ItemUtil.updateAttributesAndLore(item)
-    }
 
     fun setCreatureEquipment(
         livingEntity: LivingEntity,
@@ -85,19 +41,19 @@ class ItemGenerationService : Listener {
         }
 
         if (armor) {
-            getSortableEquipment(mapTier, ItemGenerationSettings.HELMETS)?.also {
+            getSortableEquipment(mapTier, EquipmentGenerationSettings.HELMETS)?.also {
                 equipment.helmet = it
                 equipment.helmetDropChance = 0f
             }
-            getSortableEquipment(mapTier, ItemGenerationSettings.CHESTPLATES)?.also {
+            getSortableEquipment(mapTier, EquipmentGenerationSettings.CHESTPLATES)?.also {
                 equipment.chestplate = it
                 equipment.chestplateDropChance = 0f
             }
-            getSortableEquipment(mapTier, ItemGenerationSettings.LEGGINGS)?.also {
+            getSortableEquipment(mapTier, EquipmentGenerationSettings.LEGGINGS)?.also {
                 equipment.leggings = it
                 equipment.leggingsDropChance = 0f
             }
-            getSortableEquipment(mapTier, ItemGenerationSettings.BOOTS)?.also {
+            getSortableEquipment(mapTier, EquipmentGenerationSettings.BOOTS)?.also {
                 equipment.boots = it
                 equipment.bootsDropChance = 0f
             }
@@ -107,21 +63,21 @@ class ItemGenerationService : Listener {
     private fun createMainHandItem(mapTier: Int, ranged: Boolean): ItemStack? {
         if (ranged) return createRangedMainHandItem(mapTier)
 
-        val itemProbability = RandomUtil.pick(ItemGenerationSettings.MAINHAND_PROBABILITIES).option ?: return null
+        val itemProbability = RandomUtil.pick(EquipmentGenerationSettings.MAINHAND_PROBABILITIES).option ?: return null
         return getSortableEquipment(mapTier, itemProbability)
     }
 
     private fun createRangedMainHandItem(mapTier: Int): ItemStack? {
-        val itemProbability = RandomUtil.pick(ItemGenerationSettings.RANGED_MAINHAND_PROBABILITIES).option
+        val itemProbability = RandomUtil.pick(EquipmentGenerationSettings.RANGED_MAINHAND_PROBABILITIES).option
         return getSortableEquipment(mapTier, itemProbability)
     }
 
     private fun createOffHandItem(mapTier: Int): ItemStack? {
-        if (random.nextDouble() < ItemGenerationSettings.OFFHAND_OTHER_OVER_MAINHAND_PROBABILITY) {
-            return getUnsortableEquipment(mapTier, ItemGenerationSettings.OTHER_ITEMS)
+        if (random.nextDouble() < EquipmentGenerationSettings.OFFHAND_OTHER_OVER_MAINHAND_PROBABILITY) {
+            return getUnsortableEquipment(mapTier, EquipmentGenerationSettings.OTHER_ITEMS)
         }
 
-        val itemProbability = RandomUtil.pick(ItemGenerationSettings.MAINHAND_PROBABILITIES).option ?: return null
+        val itemProbability = RandomUtil.pick(EquipmentGenerationSettings.MAINHAND_PROBABILITIES).option ?: return null
         return getSortableEquipment(mapTier, itemProbability)
     }
 
@@ -129,7 +85,7 @@ class ItemGenerationService : Listener {
         mapTier: Int,
         equipmentProbabilities: List<SortableRandomOption<out Equipment?>>
     ): ItemStack? {
-        val rolls = ItemGenerationSettings.calculateEquipmentRollTries(mapTier)
+        val rolls = EquipmentGenerationSettings.calculateEquipmentRollTries(mapTier)
         val equipment = RandomUtil.pick(equipmentProbabilities, rolls).option ?: return null
         return getEquipment(mapTier, equipment)
     }
@@ -163,7 +119,7 @@ class ItemGenerationService : Listener {
         itemMeta: ItemMeta,
         enchants: List<RandomOption<ItemEnchantment>>
     ) {
-        repeat(ItemGenerationSettings.calculateEnchantTries(mapTier)) {
+        repeat(EquipmentGenerationSettings.calculateEnchantTries(mapTier)) {
             val itemEnchantment = RandomUtil.pick(enchants).option
 
             if (itemMeta.getEnchantLevel(itemEnchantment.enchantment) < itemEnchantment.level) {
@@ -177,7 +133,7 @@ class ItemGenerationService : Listener {
         equipment: Equipment,
         itemMeta: ItemMeta
     ) {
-        val statAmount = RandomUtil.pick(ItemGenerationSettings.STAT_AMOUNTS, mapTier).option
+        val statAmount = RandomUtil.pick(EquipmentGenerationSettings.STAT_AMOUNTS, mapTier).option
         val rollableAttributesCopy = equipment.rollableAttributes.toMutableList()
 
         val pickedAttributes = mutableListOf<RollableAttribute>()

@@ -165,12 +165,15 @@ object ItemUtil {
         }
         if (extraAttributes.isNotEmpty()) {
             lore.add(Equipment.GENERIC_SLOT_LORE)
-        }
-        extraAttributes.sortedBy { it.type.ordinal }
-            .forEach {
+
+            val isCustom = PersistentDataUtil.getValue(itemMeta, DataTypeKeys.CUSTOM_ITEM_TYPE) != null
+            val attributes = if (isCustom) extraAttributes else extraAttributes.sortedBy { it.type.ordinal } // don't sort attributes for custom items
+
+            attributes.forEach {
                 val attributeLine = getAttributeLine(itemMeta, it, false)
                 lore.add(attributeLine)
             }
+        }
         if (isCorrupted(item)) {
             lore.add(CorruptionSettings.CORRUPTION_TAG_LORE)
         }

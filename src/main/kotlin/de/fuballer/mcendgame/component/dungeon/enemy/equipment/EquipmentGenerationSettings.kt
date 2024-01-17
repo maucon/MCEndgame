@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.item_generation
+package de.fuballer.mcendgame.component.dungeon.enemy.equipment
 
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.armor.Boots
@@ -9,7 +9,7 @@ import de.fuballer.mcendgame.domain.equipment.tool.*
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 
-object ItemGenerationSettings {
+object EquipmentGenerationSettings {
     private const val ENCHANT_TRIES_PER_TIER = 0.5
     fun calculateEnchantTries(mapTier: Int) = 1 + (mapTier * ENCHANT_TRIES_PER_TIER).toInt()
 

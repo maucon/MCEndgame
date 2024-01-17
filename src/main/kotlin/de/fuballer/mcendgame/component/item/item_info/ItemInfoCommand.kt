@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.item_info
+package de.fuballer.mcendgame.component.item.item_info
 
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
