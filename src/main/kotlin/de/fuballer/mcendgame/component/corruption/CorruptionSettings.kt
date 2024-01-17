@@ -56,7 +56,7 @@ object CorruptionSettings {
         ItemFlag.HIDE_ENCHANTS
     ).also {
         val itemMeta = it.itemMeta!!
-        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.CORRUPTION_ROUNDS, 10)
+        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.CORRUPTION_ROUNDS, 2)
         PersistentDataUtil.setValue(itemMeta, DataTypeKeys.CORRUPTED, true)
         it.itemMeta = itemMeta
     }
