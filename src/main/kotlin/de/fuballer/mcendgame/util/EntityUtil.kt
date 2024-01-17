@@ -1,8 +1,9 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
-import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.domain.entity.CustomEntityType
+import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import org.bukkit.Location
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.*
 
 object EntityUtil {
@@ -23,7 +24,7 @@ object EntityUtil {
         if (entity !is LivingEntity) return entity
         setAttributes(entity, entityType, mapTier)
         entity.removeWhenFarAway = false
-        entity.isSilent = entityType.isSilent
+        entity.isSilent = entityType.sounds != null
 
         setMiscellaneous(entity)
 
@@ -31,7 +32,6 @@ object EntityUtil {
     }
 
     private fun setPersistentData(entity: Entity, entityType: CustomEntityType, mapTier: Int) {
-        PersistentDataUtil.setValue(entity, DataTypeKeys.DROP_BASE_LOOT, entityType.dropBaseLoot)
         PersistentDataUtil.setValue(entity, DataTypeKeys.MAP_TIER, mapTier)
         PersistentDataUtil.setValue(entity, DataTypeKeys.HIDE_EQUIPMENT, entityType.hideEquipment)
         PersistentDataUtil.setValue(entity, DataTypeKeys.CUSTOM_ENTITY_TYPE, entityType)
@@ -43,7 +43,20 @@ object EntityUtil {
         val newDamage = entityType.baseDamage + mapTier * entityType.damagePerTier
         val newSpeed = entityType.baseSpeed + mapTier * entityType.speedPerTier
 
-        DungeonUtil.setBasicAttributes(entity, newHealth, newDamage, newSpeed)
+        setEntityAttribute(entity, Attribute.GENERIC_MAX_HEALTH, newHealth)
+        entity.health = newHealth
+
+        setEntityAttribute(entity, Attribute.GENERIC_ATTACK_DAMAGE, newDamage)
+        setEntityAttribute(entity, Attribute.GENERIC_MOVEMENT_SPEED, newSpeed)
+    }
+
+    private fun setEntityAttribute(
+        entity: LivingEntity,
+        attribute: Attribute,
+        value: Double
+    ) {
+        val attributeInstance = entity.getAttribute(attribute) ?: return
+        attributeInstance.baseValue = value
     }
 
     private fun setMiscellaneous(entity: LivingEntity) {

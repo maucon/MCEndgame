@@ -8,7 +8,7 @@ object ItemCreatorUtil {
     fun create(
         itemStack: ItemStack,
         itemName: String?,
-        itemLore: List<String>
+        itemLore: List<String>?
     ): ItemStack {
         val meta = itemStack.itemMeta!!
         meta.setDisplayName(itemName)
@@ -20,7 +20,7 @@ object ItemCreatorUtil {
     fun create(
         itemStack: ItemStack,
         itemName: String,
-        itemLore: List<String>,
+        itemLore: List<String>?,
         enchantment: Enchantment,
         enchantmentLevel: Int,
         enchantmentIgnoreLevelRestriction: Boolean,

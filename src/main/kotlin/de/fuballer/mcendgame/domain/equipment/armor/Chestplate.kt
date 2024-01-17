@@ -1,66 +1,69 @@
 package de.fuballer.mcendgame.domain.equipment.armor
 
+import de.fuballer.mcendgame.domain.attribute.AttributeType
+import de.fuballer.mcendgame.domain.attribute.RollableAttribute
+import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
-import de.fuballer.mcendgame.domain.equipment.ItemAttribute
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Material
-import org.bukkit.attribute.Attribute
+import org.bukkit.inventory.EquipmentSlot
 
 enum class Chestplate(
     override val material: Material,
-    override val baseAttributes: List<ItemAttribute>
+    override val baseAttributes: List<RolledAttribute>
 ) : Equipment {
     LEATHER(
         Material.LEATHER_CHESTPLATE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ARMOR, 3.0)
+            RolledAttribute(AttributeType.ARMOR, 3.0)
         )
     ),
     GOLDEN(
         Material.GOLDEN_CHESTPLATE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ARMOR, 5.0)
+            RolledAttribute(AttributeType.ARMOR, 5.0)
         )
     ),
     CHAINMAIL(
         Material.CHAINMAIL_CHESTPLATE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ARMOR, 5.0)
+            RolledAttribute(AttributeType.ARMOR, 5.0)
         )
     ),
     IRON(
         Material.IRON_CHESTPLATE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ARMOR, 6.0)
+            RolledAttribute(AttributeType.ARMOR, 6.0)
         )
     ),
     DIAMOND(
         Material.DIAMOND_CHESTPLATE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ARMOR, 8.0),
-            ItemAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 2.0)
+            RolledAttribute(AttributeType.ARMOR, 8.0),
+            RolledAttribute(AttributeType.ARMOR_TOUGHNESS, 2.0)
         )
     ),
     NETHERITE(
         Material.NETHERITE_CHESTPLATE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ARMOR, 8.0),
-            ItemAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 3.0),
-            ItemAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE, 0.1)
+            RolledAttribute(AttributeType.ARMOR, 8.0),
+            RolledAttribute(AttributeType.ARMOR_TOUGHNESS, 3.0),
+            RolledAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1)
         )
     );
 
-    override val lore = Equipment.CHEST_SLOT_LORE
+    override val slot = EquipmentSlot.CHEST
+    override val extraAttributesInSlot = true
 
-    override val rolledAttributes = listOf(
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 2.5)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_ARMOR, 2.0)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 2.5)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE, 0.1))
+    override val rollableAttributes = listOf(
+        RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.5)),
+        RandomOption(10, RollableAttribute(AttributeType.ARMOR, 2.0)),
+        RandomOption(10, RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 2.5)),
+        RandomOption(10, RollableAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1))
     )
 
-    override val enchantOptions = listOf(
+    override val rollableEnchants = listOf(
         RandomOption(10, ItemEnchantment.MENDING),
         RandomOption(35, ItemEnchantment.UNBREAKING_1),
         RandomOption(22, ItemEnchantment.UNBREAKING_2),

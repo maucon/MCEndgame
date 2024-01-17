@@ -20,11 +20,11 @@ class PlayerProjectileService : Listener {
 
         if (shooter !is Player) return
 
-        val addedDamage = getAddedDamage(shooter, event.damage) ?: return
+        val addedDamage = getAddedDamage(shooter) ?: return
         event.damage += addedDamage
     }
 
-    private fun getAddedDamage(entity: LivingEntity, eventDamage: Double): Double? {
+    private fun getAddedDamage(entity: LivingEntity): Double? {
         val strengthEffect = entity.getPotionEffect(PotionEffectType.INCREASE_DAMAGE)
         val strengthEffectLevel = if (strengthEffect == null) 0 else strengthEffect.amplifier + 1
 
@@ -41,7 +41,6 @@ class PlayerProjectileService : Listener {
         val mainHandItem = equipment.itemInMainHand
 
         val powerLevel = mainHandItem.getEnchantmentLevel(Enchantment.ARROW_DAMAGE)
-
         return PlayerProjectileSettings.getPowerDamageMulti(powerLevel)
     }
 }

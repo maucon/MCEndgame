@@ -1,22 +1,55 @@
 package de.fuballer.mcendgame.domain.equipment
 
-import de.fuballer.mcendgame.component.stat_item.StatItemSettings
+import de.fuballer.mcendgame.domain.attribute.RollableAttribute
+import de.fuballer.mcendgame.domain.attribute.RolledAttribute
+import de.fuballer.mcendgame.domain.equipment.armor.Boots
+import de.fuballer.mcendgame.domain.equipment.armor.Chestplate
+import de.fuballer.mcendgame.domain.equipment.armor.Helmet
+import de.fuballer.mcendgame.domain.equipment.armor.Leggings
+import de.fuballer.mcendgame.domain.equipment.tool.*
 import de.fuballer.mcendgame.util.random.RandomOption
+import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.inventory.EquipmentSlot
 
 interface Equipment {
     val material: Material
-    val baseAttributes: List<ItemAttribute>
-    val lore: String
-    val rolledAttributes: List<RandomOption<ItemAttribute>>
-    val enchantOptions: List<RandomOption<ItemEnchantment>>
+    val baseAttributes: List<RolledAttribute>
+    val slot: EquipmentSlot
+    val extraAttributesInSlot: Boolean
+    val rollableAttributes: List<RandomOption<RollableAttribute>>
+    val rollableEnchants: List<RandomOption<ItemEnchantment>>
 
     companion object {
-        val HEAD_SLOT_LORE = "${StatItemSettings.SLOT_LORE_COLOR}When on Head:"
-        val CHEST_SLOT_LORE = "${StatItemSettings.SLOT_LORE_COLOR}When on Body:"
-        val LEGS_SLOT_LORE = "${StatItemSettings.SLOT_LORE_COLOR}When on Legs:"
-        val FEET_SLOT_LORE = "${StatItemSettings.SLOT_LORE_COLOR}When on Feet:"
-        val MAIN_HAND_SLOT_LORE = "${StatItemSettings.SLOT_LORE_COLOR}When in Main Hand:"
-        val OFF_HAND_SLOT_LORE = "${StatItemSettings.SLOT_LORE_COLOR}When in Off Hand:"
+        private val SLOT_LORE_COLOR = ChatColor.GRAY
+        val GENERIC_SLOT_LORE = "${SLOT_LORE_COLOR}When equipped:"
+
+        fun getLoreForSlot(slot: EquipmentSlot) =
+            when (slot) {
+                EquipmentSlot.HAND -> "${SLOT_LORE_COLOR}When in Main Hand:"
+                EquipmentSlot.OFF_HAND -> "${SLOT_LORE_COLOR}When in Off Hand:"
+                EquipmentSlot.FEET -> "${SLOT_LORE_COLOR}When on Feet:"
+                EquipmentSlot.LEGS -> "${SLOT_LORE_COLOR}When on Legs:"
+                EquipmentSlot.CHEST -> "${SLOT_LORE_COLOR}When on Body:"
+                EquipmentSlot.HEAD -> "${SLOT_LORE_COLOR}When on Head:"
+            }
+
+        private val materialToEquipment = mutableMapOf<Material, Equipment>()
+            .apply {
+                putAll(Boots.entries.associateBy { it.material })
+                putAll(Chestplate.entries.associateBy { it.material })
+                putAll(Helmet.entries.associateBy { it.material })
+                putAll(Leggings.entries.associateBy { it.material })
+                putAll(Axe.entries.associateBy { it.material })
+                putAll(Hoe.entries.associateBy { it.material })
+                putAll(Pickaxe.entries.associateBy { it.material })
+                putAll(Shovel.entries.associateBy { it.material })
+                putAll(Sword.entries.associateBy { it.material })
+                putAll(Tool.entries.associateBy { it.material })
+            }
+
+        fun fromMaterial(material: Material) = materialToEquipment[material]
+
+        fun existsByMaterial(material: Material) = materialToEquipment.containsKey(material)
     }
 }

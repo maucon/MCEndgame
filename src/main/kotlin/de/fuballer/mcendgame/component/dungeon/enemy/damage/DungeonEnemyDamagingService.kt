@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.damage
 
-import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil

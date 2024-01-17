@@ -1,70 +1,73 @@
 package de.fuballer.mcendgame.domain.equipment.tool
 
+import de.fuballer.mcendgame.domain.attribute.AttributeType
+import de.fuballer.mcendgame.domain.attribute.RollableAttribute
+import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
-import de.fuballer.mcendgame.domain.equipment.ItemAttribute
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Material
-import org.bukkit.attribute.Attribute
+import org.bukkit.inventory.EquipmentSlot
 
 enum class Axe(
     override val material: Material,
-    override val baseAttributes: List<ItemAttribute>
+    override val baseAttributes: List<RolledAttribute>
 ) : Equipment {
     WOODEN(
         Material.WOODEN_AXE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 7.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.8)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 7.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 0.8)
         )
     ),
     GOLDEN(
         Material.GOLDEN_AXE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 7.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 1.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 7.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 1.0)
         )
     ),
     STONE(
         Material.STONE_AXE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 9.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.8)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 9.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 0.8)
         )
     ),
     IRON(
         Material.IRON_AXE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 9.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.9)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 9.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 0.9)
         )
     ),
     DIAMOND(
         Material.DIAMOND_AXE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 9.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 1.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 9.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 1.0)
         )
     ),
     NETHERITE(
         Material.NETHERITE_AXE,
         listOf(
-            ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 10.0),
-            ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 1.0)
+            RolledAttribute(AttributeType.ATTACK_DAMAGE, 10.0),
+            RolledAttribute(AttributeType.ATTACK_SPEED, 1.0)
         )
     );
 
-    override val lore = Equipment.MAIN_HAND_SLOT_LORE
+    override val slot = EquipmentSlot.HAND
+    override val extraAttributesInSlot = false
 
-    override val rolledAttributes = listOf(
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1.5)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.4)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_ATTACK_KNOCKBACK, 0.5)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_MAX_HEALTH, 1.5)),
-        RandomOption(10, ItemAttribute(Attribute.GENERIC_LUCK, 2.5))
+    override val rollableAttributes = listOf(
+        RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+        RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
+        RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+        RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 1.5)),
+        RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
     )
 
-    override val enchantOptions = listOf(
+    override val rollableEnchants = listOf(
         RandomOption(10, ItemEnchantment.MENDING),
         RandomOption(20, ItemEnchantment.UNBREAKING_1),
         RandomOption(15, ItemEnchantment.UNBREAKING_2),

@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.component.custom_entity.summoner
 
-import de.fuballer.mcendgame.component.custom_entity.persistent_data.DataTypeKeys
-import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.component.dungeon.enemy.equipment.EquipmentGenerationService
 import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationService
-import de.fuballer.mcendgame.component.stat_item.StatItemService
+import de.fuballer.mcendgame.domain.entity.CustomEntityType
+import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -21,7 +21,7 @@ import java.util.*
 
 @Component
 class SummonerService(
-    private val statItemService: StatItemService,
+    private val equipmentGenerationService: EquipmentGenerationService,
     private val enemyGenerationService: EnemyGenerationService
 ) {
     @EventHandler
@@ -86,7 +86,7 @@ class SummonerService(
 
         if (mapTier < 0 || minion !is Creature) return minion
 
-        statItemService.setCreatureEquipment(minion, mapTier, weapons, ranged, armor)
+        equipmentGenerationService.setCreatureEquipment(minion, mapTier, weapons, ranged, armor)
         val canBeInvisible = !minionType.hideEquipment
         enemyGenerationService.addEffectsToEntity(minion, mapTier, canBeInvisible)
 
