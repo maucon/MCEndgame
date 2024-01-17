@@ -47,6 +47,7 @@ class WorldManageService(
         val worldCreator = WorldCreator(name)
             .type(WorldType.FLAT)
             .generateStructures(false)
+            .generatorSettings("{\"layers\": [], \"biome\":\"plains\"}")
 
         val world = PluginUtil.createWorld(worldCreator).apply {
             setGameRule(GameRule.KEEP_INVENTORY, true)
