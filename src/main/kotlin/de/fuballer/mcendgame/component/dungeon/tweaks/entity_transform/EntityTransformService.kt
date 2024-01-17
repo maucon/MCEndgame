@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.tweaks.entity_convert
+package de.fuballer.mcendgame.component.dungeon.tweaks.entity_transform
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil
