@@ -105,26 +105,35 @@ object ItemUtil {
             it.forEach { attribute, _ -> itemMeta.removeAttributeModifier(attribute) }
         }
 
-        addAllAttributes(itemMeta, baseAttributes, equipment.slot)
+        addAllAttributes(itemMeta, baseAttributes, equipment.slot, true)
         val extraAttributeSlot = if (equipment.extraAttributesInSlot) equipment.slot else null
-        addAllAttributes(itemMeta, extraAttributes, extraAttributeSlot)
+        addAllAttributes(itemMeta, extraAttributes, extraAttributeSlot, false)
     }
 
     private fun addAllAttributes(
         itemMeta: ItemMeta,
         attributes: List<RolledAttribute>,
-        slot: EquipmentSlot?
+        slot: EquipmentSlot?,
+        baseAttributes: Boolean
     ) {
         attributes.filter { it.type.applicableAttributeType != null }
             .forEach {
+                val attribute = it.type.applicableAttributeType!!.attribute
+                val realRoll = if (baseAttributes) getActualAttributeValue(attribute, it.roll) else it.roll
                 addAttribute(
                     itemMeta,
-                    it.type.applicableAttributeType!!.attribute,
-                    it.roll,
+                    attribute,
+                    realRoll,
                     it.type.applicableAttributeType.scaleType,
                     slot
                 )
             }
+    }
+
+    private fun getActualAttributeValue(attribute: Attribute, roll: Double): Double {
+        if (attribute == Attribute.GENERIC_ATTACK_DAMAGE) return roll - 1
+        if (attribute == Attribute.GENERIC_ATTACK_SPEED) return roll - 4
+        return roll
     }
 
     private fun addAttribute(

@@ -14,8 +14,7 @@ import org.bukkit.inventory.ItemStack
 
 object CorruptionSettings {
     private val BASE_ITEM = Material.STICK
-    private val ITEM_NAME = ChatColor.DARK_RED.toString() + "Heart of Corruption"
-    private val ITEM_NAME_DOUBLE = ChatColor.DARK_RED.toString() + "Heart of Corruption"
+    private val ITEM_NAME = ChatColor.DARK_RED.toString() + "Orb of Corruption"
     private val ITEM_LORE = listOf(ChatColor.WHITE.toString() + "Corrupts an item, modifying it unpredictably.")
     private val ITEM_LORE_DOUBLE = listOf(ChatColor.WHITE.toString() + "Corrupts an item, modifying it unpredictably. Twice!")
     val CORRUPTION_TAG_LORE = ChatColor.DARK_RED.toString() + "Corrupted"
@@ -48,7 +47,7 @@ object CorruptionSettings {
 
     private val DOUBLE_CORRUPTION_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),
-        ITEM_NAME_DOUBLE,
+        ITEM_NAME,
         ITEM_LORE_DOUBLE,
         Enchantment.ARROW_FIRE, 1, true,
         ItemFlag.HIDE_ENCHANTS
