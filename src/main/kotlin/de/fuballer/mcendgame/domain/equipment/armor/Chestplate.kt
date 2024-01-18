@@ -57,7 +57,7 @@ enum class Chestplate(
     override val extraAttributesInSlot = true
 
     override val rollableAttributes = listOf(
-        RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.5)),
+        RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.0)),
         RandomOption(10, RollableAttribute(AttributeType.ARMOR, 2.0)),
         RandomOption(10, RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 2.5)),
         RandomOption(10, RollableAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1))
