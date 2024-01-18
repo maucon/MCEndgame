@@ -7,12 +7,14 @@ import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
 import de.fuballer.mcendgame.domain.Portal
+import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.event.DiscoverRecipeAddEvent
 import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.*
 import org.bukkit.block.data.type.RespawnAnchor
@@ -32,7 +34,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
-import org.bukkit.metadata.FixedMetadataValue
+import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.plugin.java.JavaPlugin
 import kotlin.math.max
 
@@ -46,7 +48,7 @@ class MapDeviceService(
     private val server: Server
 ) : Listener, LifeCycleListener {
     override fun initialize(plugin: JavaPlugin) {
-        createRecipe(plugin)
+        createRecipe()
         clearBuggedArmorStands()
     }
 
@@ -59,11 +61,11 @@ class MapDeviceService(
     fun onBlockPlace(event: BlockPlaceEvent) {
         val placedItem = event.itemInHand
         val placedItemMeta = placedItem.itemMeta ?: return
-        val placedItemLore = placedItemMeta.lore ?: return
-        if (!placedItemLore.contains(MapDeviceSettings.ITEM_LORE_LINE)) return
+        if (!PersistentDataUtil.getBooleanValue(placedItemMeta, DataTypeKeys.MAP_DEVICE)) return
 
         val block = event.block
-        block.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, FixedMetadataValue(plugin, MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY))
+        val fixedMetadataValue = PluginUtil.createFixedMetadataValue(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY)
+        block.setMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY, fixedMetadataValue)
 
         val entity = MapDeviceEntity(block.location)
         mapDeviceRepo.save(entity)
@@ -90,9 +92,11 @@ class MapDeviceService(
         if (player.gameMode != GameMode.SURVIVAL) return
 
         useToolInMainhand(player)
+
         player.setStatistic(Statistic.MINE_BLOCK, block.type, player.getStatistic(Statistic.MINE_BLOCK, block.type) + 1)
         block.type = Material.AIR
-        block.world.dropItemNaturally(block.location, MapDeviceSettings.ITEM.clone())
+        block.world.dropItemNaturally(block.location, MapDeviceSettings.getMapDeviceItem())
+
         event.isCancelled = true
     }
 
@@ -108,30 +112,25 @@ class MapDeviceService(
         val location = block.location
 
         val entity = mapDeviceRepo.findByLocation(location)
-            ?: MapDeviceEntity(location)
-                .apply { mapDeviceRepo.save(this) }
+            ?: MapDeviceEntity(location).apply { mapDeviceRepo.save(this) }
 
         player.openInventory(getMapDeviceInventory(player))
 
-        entity.lastClicked.add(player.uniqueId)
-        mapDeviceRepo.save(entity)
+        PersistentDataUtil.setValue(player, DataTypeKeys.LAST_MAP_DEVICE, entity.id)
     }
 
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         if (!event.view.title.equals(MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE, ignoreCase = true)) return
-        val inventory = event.inventory
-        val firstSlot = inventory.getItem(0) ?: return
-        val firstSlotMeta = firstSlot.itemMeta ?: return
-        if (!firstSlotMeta.hasDisplayName()) return
-        if (!firstSlotMeta.displayName.contains(MapDeviceSettings.OPEN_PORTALS_ITEM_LINE)) return
-
-        val clickedSlot = event.rawSlot
         event.isCancelled = true
 
-        if (clickedSlot in 1..3) return
+        val inventory = event.inventory
+        val clickedSlot = event.rawSlot
+        if (clickedSlot >= inventory.size) return
+        val clickedItem = inventory.getItem(clickedSlot) ?: return
+        val clickedItemMeta = clickedItem.itemMeta ?: return
 
-        handleOnInventoryClick(clickedSlot, event.whoClicked as Player)
+        handleOnInventoryClick(clickedItemMeta, event.whoClicked as Player)
     }
 
     @EventHandler
@@ -159,21 +158,25 @@ class MapDeviceService(
     }
 
     private fun handleOnInventoryClick(
-        clickedSlot: Int,
+        clickedItemMeta: ItemMeta,
         player: Player
     ) {
-        val mapDevice = mapDeviceRepo.getByLastClickedContains(player.uniqueId)
-        mapDevice.lastClicked.remove(player.uniqueId)
-        mapDeviceRepo.save(mapDevice)
+        val lastMapDeviceId = PersistentDataUtil.getValue(player, DataTypeKeys.LAST_MAP_DEVICE) ?: return
+        val mapDevice = mapDeviceRepo.findById(lastMapDeviceId) ?: return
 
+        val action = PersistentDataUtil.getValue(clickedItemMeta, DataTypeKeys.MAP_DEVICE_ACTION) ?: return
         player.closeInventory()
 
-        if (clickedSlot == 4) {
-            closePortals(mapDevice)
-            return
+        when (action) {
+            MapDeviceAction.OPEN -> openDungeon(mapDevice, player)
+            MapDeviceAction.CLOSE -> closePortals(mapDevice)
         }
+    }
 
-        // slot == 0
+    private fun openDungeon(
+        mapDevice: MapDeviceEntity,
+        player: Player
+    ) {
         val mapDeviceLocation = mapDevice.location
         val mapTier = playerDungeonProgressService.getPlayerDungeonLevel(player.uniqueId).tier
         val leaveLocation = mapDeviceLocation.clone().add(0.5, 1.0, 0.5)
@@ -201,8 +204,8 @@ class MapDeviceService(
         }
     }
 
-    private fun createRecipe(plugin: JavaPlugin) {
-        val key = NamespacedKey(plugin, MapDeviceSettings.MAP_DEVICE_ITEM_KEY)
+    private fun createRecipe() {
+        val key = PluginUtil.createNamespacedKey(MapDeviceSettings.MAP_DEVICE_ITEM_KEY)
         val recipe = MapDeviceSettings.getMapDeviceCraftingRecipe(key)
 
         val discoverRecipeAddEvent = DiscoverRecipeAddEvent(key, recipe)

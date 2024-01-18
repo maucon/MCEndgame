@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory
 
 @Component
 class CorruptedItemIntegrityService : Listener {
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PrepareInventoryResultEvent) {
         val inventory = event.inventory
 
@@ -22,20 +22,25 @@ class CorruptedItemIntegrityService : Listener {
             && isCorruptionValid(inventory)
         ) return
 
-        val anyCorrupted = inventory.contents.filterNotNull()
-            .any { ItemUtil.isCorrupted(it) }
+        val anyUnmodifiable = inventory.contents.filterNotNull()
+            .any { ItemUtil.isUnmodifiable(it) }
 
-        if (anyCorrupted) {
+        if (anyUnmodifiable) {
             event.result = null
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: CraftItemEvent) {
-        val isAnyItemCorrupted = event.inventory.storageContents
-            .any { ItemUtil.isCorrupted(it) }
+        val inventory = event.inventory
+        val unmodifiableItemCount = inventory.storageContents
+            .count { ItemUtil.isUnmodifiable(it) }
 
-        if (isAnyItemCorrupted) {
+        val result = inventory.result ?: return
+        val unmodifiableItemThreshold = if (ItemUtil.isUnmodifiable(result)) 1 else 0
+
+        if (unmodifiableItemCount > unmodifiableItemThreshold) {
+            inventory.result = null
             event.isCancelled = true
         }
     }
@@ -45,7 +50,7 @@ class CorruptedItemIntegrityService : Listener {
         val corruption = inventory.getItem(1) ?: return false
         val corruptionMeta = corruption.itemMeta ?: return false
 
-        if (ItemUtil.isCorrupted(base)) return false
+        if (ItemUtil.isUnmodifiable(base)) return false
         return PersistentDataUtil.getValue(corruptionMeta, DataTypeKeys.CORRUPTION_ROUNDS) != null
     }
 }

@@ -8,6 +8,7 @@ import org.bukkit.WorldCreator
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryType
+import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.scheduler.BukkitRunnable
 
 object PluginUtil {
@@ -51,5 +52,7 @@ object PluginUtil {
 
     // region NameSpacedKey
     fun createNamespacedKey(key: String) = NamespacedKey(PluginConfiguration.plugin(), key)
+
+    fun createFixedMetadataValue(value: Any) = FixedMetadataValue(PluginConfiguration.plugin(), value)
     // endregion
 }

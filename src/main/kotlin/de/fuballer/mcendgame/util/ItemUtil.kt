@@ -50,17 +50,10 @@ object ItemUtil {
         return equipment.rollableAttributes.map { it.option }
     }
 
-    fun isCorrupted(item: ItemStack): Boolean {
+    fun isUnmodifiable(item: ItemStack): Boolean {
         val itemMeta = item.itemMeta ?: return false
 
-        return PersistentDataUtil.getBooleanValue(itemMeta, DataTypeKeys.CORRUPTED)
-    }
-
-    fun setCorrupted(item: ItemStack, corrupted: Boolean = true) {
-        val newItemMeta = item.itemMeta ?: return
-
-        PersistentDataUtil.setValue(newItemMeta, DataTypeKeys.CORRUPTED, corrupted)
-        item.itemMeta = newItemMeta
+        return PersistentDataUtil.getBooleanValue(itemMeta, DataTypeKeys.UNMODIFIABLE)
     }
 
     fun hasCustomAttributes(item: ItemStack): Boolean {
@@ -89,6 +82,12 @@ object ItemUtil {
         item.itemMeta = itemMeta
     }
 
+    fun <T : Any> setPersistentData(item: ItemStack, key: DataTypeKeys.TypeKey<T>, value: T) {
+        val meta = item.itemMeta ?: return
+        PersistentDataUtil.setValue(meta, key, value)
+        item.itemMeta = meta
+    }
+
     private fun getCustomItemAttributes(item: ItemStack): List<RollableAttribute>? {
         val itemMeta = item.itemMeta ?: return null
         val customItemType = PersistentDataUtil.getValue(itemMeta, DataTypeKeys.CUSTOM_ITEM_TYPE) ?: return null
@@ -106,26 +105,35 @@ object ItemUtil {
             it.forEach { attribute, _ -> itemMeta.removeAttributeModifier(attribute) }
         }
 
-        addAllAttributes(itemMeta, baseAttributes, equipment.slot)
+        addAllAttributes(itemMeta, baseAttributes, equipment.slot, true)
         val extraAttributeSlot = if (equipment.extraAttributesInSlot) equipment.slot else null
-        addAllAttributes(itemMeta, extraAttributes, extraAttributeSlot)
+        addAllAttributes(itemMeta, extraAttributes, extraAttributeSlot, false)
     }
 
     private fun addAllAttributes(
         itemMeta: ItemMeta,
         attributes: List<RolledAttribute>,
-        slot: EquipmentSlot?
+        slot: EquipmentSlot?,
+        baseAttributes: Boolean
     ) {
         attributes.filter { it.type.applicableAttributeType != null }
             .forEach {
+                val attribute = it.type.applicableAttributeType!!.attribute
+                val realRoll = if (baseAttributes) getActualAttributeValue(attribute, it.roll) else it.roll
                 addAttribute(
                     itemMeta,
-                    it.type.applicableAttributeType!!.attribute,
-                    it.roll,
+                    attribute,
+                    realRoll,
                     it.type.applicableAttributeType.scaleType,
                     slot
                 )
             }
+    }
+
+    private fun getActualAttributeValue(attribute: Attribute, roll: Double): Double {
+        if (attribute == Attribute.GENERIC_ATTACK_DAMAGE) return roll - 1
+        if (attribute == Attribute.GENERIC_ATTACK_SPEED) return roll - 4
+        return roll
     }
 
     private fun addAttribute(
@@ -174,7 +182,7 @@ object ItemUtil {
                 lore.add(attributeLine)
             }
         }
-        if (isCorrupted(item)) {
+        if (isUnmodifiable(item)) {
             lore.add(CorruptionSettings.CORRUPTION_TAG_LORE)
         }
         if (lore.isNotEmpty()) {
