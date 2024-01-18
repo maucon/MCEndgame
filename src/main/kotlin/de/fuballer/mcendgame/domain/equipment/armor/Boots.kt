@@ -57,11 +57,11 @@ enum class Boots(
     override val extraAttributesInSlot = true
 
     override val rollableAttributes = listOf(
-        RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.5)),
+        RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.0)),
         RandomOption(10, RollableAttribute(AttributeType.ARMOR, 1.5)),
         RandomOption(10, RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 2.0)),
         RandomOption(10, RollableAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1)),
-        RandomOption(10, RollableAttribute(AttributeType.MOVEMENT_SPEED, 0.03))
+        RandomOption(10, RollableAttribute(AttributeType.MOVEMENT_SPEED, 0.015))
     )
 
     override val rollableEnchants = listOf(

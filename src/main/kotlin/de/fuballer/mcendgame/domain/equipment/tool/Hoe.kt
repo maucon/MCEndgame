@@ -63,7 +63,6 @@ enum class Hoe(
         RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
         RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
         RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-        RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 1.5)),
         RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
     )
 
