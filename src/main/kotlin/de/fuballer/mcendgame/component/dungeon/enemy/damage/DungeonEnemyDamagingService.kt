@@ -14,7 +14,6 @@ import org.bukkit.event.entity.EntitySpawnEvent
 
 @Component
 class DungeonEnemyDamagingService : Listener {
-
     @EventHandler(priority = EventPriority.LOWEST)
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
         val damager = event.damager
