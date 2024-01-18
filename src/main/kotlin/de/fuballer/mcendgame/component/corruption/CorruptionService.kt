@@ -40,7 +40,7 @@ class CorruptionService : Listener {
         PersistentDataUtil.getValue(corruptionMeta, DataTypeKeys.CORRUPTION_ROUNDS) ?: return
 
         val result = base.clone()
-        ItemUtil.setCorrupted(result)
+        ItemUtil.setPersistentData(result, DataTypeKeys.UNMODIFIABLE, true)
         ItemUtil.updateAttributesAndLore(result)
 
         event.result = result
@@ -62,7 +62,7 @@ class CorruptionService : Listener {
 
         val result = inventory.getItem(2) ?: return
         if (result.itemMeta == null) return
-        if (!ItemUtil.isCorrupted(result)) return
+        if (!ItemUtil.isUnmodifiable(result)) return
 
         val player = event.whoClicked as Player
         if (player.gameMode != GameMode.CREATIVE && player.level < 1) return
@@ -84,7 +84,7 @@ class CorruptionService : Listener {
         val sound = if (result.type == Material.AIR) Sound.ENTITY_ITEM_BREAK else Sound.BLOCK_ANVIL_USE
         player.world.playSound(player.location, sound, SoundCategory.PLAYERS, 1f, 1f)
 
-        ItemUtil.setCorrupted(result)
+        ItemUtil.setPersistentData(result, DataTypeKeys.UNMODIFIABLE, true)
         ItemUtil.updateAttributesAndLore(result)
 
         when (event.action) {

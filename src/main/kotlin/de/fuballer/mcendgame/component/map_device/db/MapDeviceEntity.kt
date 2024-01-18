@@ -17,8 +17,6 @@ data class MapDeviceEntity(
     var location: Location,
     @Transient
     var portals: MutableList<Portal> = mutableListOf(),
-    @Transient
-    var lastClicked: MutableSet<UUID> = mutableSetOf()
 ) : Entity<UUID> {
     constructor(location: Location) : this(
         UUID.randomUUID(),

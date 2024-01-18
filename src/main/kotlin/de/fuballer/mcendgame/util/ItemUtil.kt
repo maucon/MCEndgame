@@ -50,17 +50,10 @@ object ItemUtil {
         return equipment.rollableAttributes.map { it.option }
     }
 
-    fun isCorrupted(item: ItemStack): Boolean {
+    fun isUnmodifiable(item: ItemStack): Boolean {
         val itemMeta = item.itemMeta ?: return false
 
-        return PersistentDataUtil.getBooleanValue(itemMeta, DataTypeKeys.CORRUPTED)
-    }
-
-    fun setCorrupted(item: ItemStack, corrupted: Boolean = true) {
-        val newItemMeta = item.itemMeta ?: return
-
-        PersistentDataUtil.setValue(newItemMeta, DataTypeKeys.CORRUPTED, corrupted)
-        item.itemMeta = newItemMeta
+        return PersistentDataUtil.getBooleanValue(itemMeta, DataTypeKeys.UNMODIFIABLE)
     }
 
     fun hasCustomAttributes(item: ItemStack): Boolean {
@@ -87,6 +80,12 @@ object ItemUtil {
         updateLore(item, itemMeta, baseAttributes, extraAttributes, slotLore)
 
         item.itemMeta = itemMeta
+    }
+
+    fun <T : Any> setPersistentData(item: ItemStack, key: DataTypeKeys.TypeKey<T>, value: T) {
+        val meta = item.itemMeta ?: return
+        PersistentDataUtil.setValue(meta, key, value)
+        item.itemMeta = meta
     }
 
     private fun getCustomItemAttributes(item: ItemStack): List<RollableAttribute>? {
@@ -174,7 +173,7 @@ object ItemUtil {
                 lore.add(attributeLine)
             }
         }
-        if (isCorrupted(item)) {
+        if (isUnmodifiable(item)) {
             lore.add(CorruptionSettings.CORRUPTION_TAG_LORE)
         }
         if (lore.isNotEmpty()) {

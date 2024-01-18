@@ -51,8 +51,6 @@ class MapDeviceRepository(
 
     fun findByMapDevicePortalByPortalsContaining(portal: Portal) = findAll().find { it.portals.contains(portal) }
 
-    fun getByLastClickedContains(uuid: UUID) = findAll().find { it.lastClicked.contains(uuid) }!!
-
     fun deleteByLocation(location: Location) {
         val entity = findByLocation(location) ?: return
         delete(entity.id)

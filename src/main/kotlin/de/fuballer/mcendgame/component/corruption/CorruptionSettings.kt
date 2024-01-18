@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.util.ItemCreatorUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -41,11 +41,9 @@ object CorruptionSettings {
         ItemStack(BASE_ITEM),
         ITEM_NAME,
         ITEM_LORE
-    ).also {
-        val itemMeta = it.itemMeta!!
-        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.CORRUPTION_ROUNDS, 1)
-        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.CORRUPTED, true)
-        it.itemMeta = itemMeta
+    ).apply {
+        ItemUtil.setPersistentData(this, DataTypeKeys.CORRUPTION_ROUNDS, 1)
+        ItemUtil.setPersistentData(this, DataTypeKeys.UNMODIFIABLE, true)
     }
 
     private val DOUBLE_CORRUPTION_ITEM = ItemCreatorUtil.create(
@@ -54,11 +52,9 @@ object CorruptionSettings {
         ITEM_LORE_DOUBLE,
         Enchantment.ARROW_FIRE, 1, true,
         ItemFlag.HIDE_ENCHANTS
-    ).also {
-        val itemMeta = it.itemMeta!!
-        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.CORRUPTION_ROUNDS, 2)
-        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.CORRUPTED, true)
-        it.itemMeta = itemMeta
+    ).apply {
+        ItemUtil.setPersistentData(this, DataTypeKeys.CORRUPTION_ROUNDS, 2)
+        ItemUtil.setPersistentData(this, DataTypeKeys.UNMODIFIABLE, true)
     }
 
     fun getCorruptionItem() = CORRUPTION_ITEM.clone()
