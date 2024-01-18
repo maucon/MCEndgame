@@ -13,12 +13,15 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
+import java.text.DecimalFormat
 import java.util.*
 
 class KillerEntity(
     override var id: UUID,
     entity: Entity
 ) : de.fuballer.mcendgame.framework.stereotype.Entity<UUID> {
+    private val DECIMAL_FORMAT = DecimalFormat("#.##")
+
     private var spawnEgg: ItemStack
     private var equipment: Array<ItemStack?>
     private var potions: List<ItemStack>
@@ -98,7 +101,8 @@ class KillerEntity(
         if (entity !is LivingEntity) return damage
         val attribute = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) ?: return damage
 
-        meta.setDisplayName(ChatColor.RED.toString() + attribute.baseValue.toInt() + " Damage")
+        val formattedValue = DECIMAL_FORMAT.format(attribute.baseValue)
+        meta.setDisplayName(ChatColor.RED.toString() + formattedValue + " Damage")
         damage.itemMeta = meta
         return damage
     }
@@ -113,7 +117,8 @@ class KillerEntity(
         if (entity !is LivingEntity) return health
         val attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) ?: return health
 
-        meta.setDisplayName(ChatColor.RED.toString() + attribute.baseValue.toInt() + " Health")
+        val formattedValue = DECIMAL_FORMAT.format(attribute.baseValue)
+        meta.setDisplayName(ChatColor.RED.toString() + formattedValue + " Health")
         health.itemMeta = meta
         return health
     }

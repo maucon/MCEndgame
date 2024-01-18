@@ -7,13 +7,14 @@ import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.EvokerFangs
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntitySpawnEvent
 
 @Component
 class DungeonEnemyDamagingService : Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
         val damager = event.damager
 

@@ -16,9 +16,12 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.java.JavaPlugin
+import java.text.DecimalFormat
 
 @Component
 class ItemInfoCommand : CommandHandler {
+    private val DECIMAL_FORMAT = DecimalFormat("#.##")
+
     override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ItemInfoSettings.COMMAND_NAME)!!.setExecutor(this)
 
     override fun onCommand(
@@ -112,10 +115,10 @@ class ItemInfoCommand : CommandHandler {
 
     private fun getAttributeRollString(attributeBounds: RollableAttribute, roll: Double) =
         String.format(
-            "Min: %.2f\nMax: %.2f\nRoll: %.2f\nPercent Roll: %.1f%%",
-            attributeBounds.min,
-            attributeBounds.max,
-            roll,
-            (roll - attributeBounds.min) / (attributeBounds.max - attributeBounds.min) * 100
+            "Min: %s\nMax: %s\nRoll: %s\nPercent Roll: %s%%",
+            DECIMAL_FORMAT.format(attributeBounds.min),
+            DECIMAL_FORMAT.format(attributeBounds.max),
+            DECIMAL_FORMAT.format(roll),
+            DECIMAL_FORMAT.format((roll - attributeBounds.min) / (attributeBounds.max - attributeBounds.min) * 100)
         )
 }

@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.domain.equipment.armor.Boots
 
 object GeistergaloschenItemType : CustomItemType {
     override val customName = "Geistergaloschen"
-    override val equipment = Boots.LEATHER
+    override val equipment = Boots.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
         RollableAttribute(AttributeType.HEALTH_SCALED_SIZE, 10.0, 20.0),

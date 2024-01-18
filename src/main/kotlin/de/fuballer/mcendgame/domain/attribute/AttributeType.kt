@@ -17,6 +17,12 @@ enum class AttributeType(
             Attribute.GENERIC_MAX_HEALTH, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
+    MAX_HEALTH_INCREASE(
+        { "+${DECIMAL_FORMAT.format(it * 100)}% Max Health" },
+        ApplicableAttributeType(
+            Attribute.GENERIC_MAX_HEALTH, AttributeModifier.Operation.ADD_SCALAR
+        )
+    ),
     KNOCKBACK_RESISTANCE(
         { "+${DECIMAL_FORMAT.format(it * 10)} Knockback Resistance" },
         ApplicableAttributeType(
@@ -65,6 +71,12 @@ enum class AttributeType(
             Attribute.GENERIC_LUCK, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
+    SIZE_INCREASE(
+        { "+${DECIMAL_FORMAT.format(it)}% Size" },
+        ApplicableAttributeType(
+            Attribute.GENERIC_LUCK, AttributeModifier.Operation.ADD_SCALAR //TODO
+        )
+    ),
 
     // custom
     HEALTH_SCALED_SIZE(
@@ -72,5 +84,14 @@ enum class AttributeType(
     ),
     HEALTH_SCALED_SPEED(
         { "${DECIMAL_FORMAT.format(it)}% increased speed per 2 extra health" }
+    ),
+    DISABLE_MELEE(
+        { "Cannot deal melee damage" }
+    ),
+    DODGE_CHANCE(
+        { "${DECIMAL_FORMAT.format(it * 100)}% chance to dodge hits" }
+    ),
+    TWINFIRE_DUAL_WIELD(
+        { "${DECIMAL_FORMAT.format(it * 100)}% more damage while dual wielded" }
     )
 }
