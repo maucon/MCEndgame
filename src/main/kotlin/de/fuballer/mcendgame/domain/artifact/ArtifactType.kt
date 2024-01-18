@@ -98,10 +98,10 @@ enum class ArtifactType(
         "You have %s more health",
         mutableMapOf(
             //TIER = HEALTH
-            0 to listOf(2.0),
-            1 to listOf(4.0),
-            2 to listOf(6.0),
-            3 to listOf(10.0),
+            0 to listOf(1.0),
+            1 to listOf(2.0),
+            2 to listOf(3.0),
+            3 to listOf(5.0),
         )
     ),
     ADDITIONAL_ARROWS(
