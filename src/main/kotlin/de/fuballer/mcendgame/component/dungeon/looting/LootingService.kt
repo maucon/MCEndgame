@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.looting
 
 import de.fuballer.mcendgame.component.dungeon.killstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
@@ -29,7 +29,7 @@ class LootingService(
         val world = entity.world
         if (WorldUtil.isNotDungeonWorld(world)) return
 
-        if (!PersistentDataUtil.getBooleanValue(entity, DataTypeKeys.DROP_EQUIPMENT, true)) return
+        if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.DROP_EQUIPMENT, true)) return
 
         val looting = getLootingLevel(entity.killer)
         for (item in getEquipment(entity.equipment)) {

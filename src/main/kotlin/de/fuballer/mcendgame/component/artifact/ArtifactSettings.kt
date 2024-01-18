@@ -18,7 +18,7 @@ object ArtifactSettings {
     val ARTIFACTS_WINDOW_TITLE = "${ChatColor.BLACK}Artifacts"
     val CANNOT_CHANGE_ARTIFACTS_MESSAGE = "${ChatColor.RED}You cannot change artifacts whilst inside a dungeon."
 
-    const val ARTIFACT_LORE_FIRST_LINE = "Effect:"
+    val LORE_COLOR = "${ChatColor.GRAY}${ChatColor.ITALIC}"
 
     val ARTIFACT_TIER_COLORS = mutableMapOf(
         0 to ChatColor.WHITE,

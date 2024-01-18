@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.map_device
 
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.ItemUtil
 import org.bukkit.ChatColor
@@ -11,15 +11,15 @@ import org.bukkit.inventory.ShapedRecipe
 
 object MapDeviceSettings {
     private val ITEM_NAME = "${ChatColor.DARK_PURPLE}Map Device"
-    private val ITEM_LORE = listOf("${ChatColor.WHITE}Opens portals to dungeons", "${ChatColor.WHITE}packed with monsters and treasures")
+    private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Opens portals to dungeons", "${ChatColor.GRAY}${ChatColor.ITALIC}packed with monsters and treasures")
 
     private val ITEM = ItemCreatorUtil.create(
         ItemStack(Material.RESPAWN_ANCHOR),
         ITEM_NAME,
         ITEM_LORE
     ).apply {
-        ItemUtil.setPersistentData(this, DataTypeKeys.MAP_DEVICE, true)
-        ItemUtil.setPersistentData(this, DataTypeKeys.UNMODIFIABLE, true)
+        ItemUtil.setPersistentData(this, TypeKeys.MAP_DEVICE, true)
+        ItemUtil.setPersistentData(this, TypeKeys.UNMODIFIABLE, true)
     }
 
     fun getMapDeviceItem() = ITEM.clone()
@@ -41,14 +41,14 @@ object MapDeviceSettings {
         ItemStack(Material.LIME_STAINED_GLASS_PANE),
         OPEN_PORTALS_ITEM_LINE,
         listOf()
-    ).apply { ItemUtil.setPersistentData(this, DataTypeKeys.MAP_DEVICE_ACTION, MapDeviceAction.OPEN) }
+    ).apply { ItemUtil.setPersistentData(this, TypeKeys.MAP_DEVICE_ACTION, MapDeviceAction.OPEN) }
 
     private val CLOSE_PORTALS_ITEM_LINE = ChatColor.RED.toString() + "Close portals"
     val CLOSE_PORTALS_ITEM = ItemCreatorUtil.create(
         ItemStack(Material.RED_STAINED_GLASS_PANE),
         CLOSE_PORTALS_ITEM_LINE,
         listOf()
-    ).apply { ItemUtil.setPersistentData(this, DataTypeKeys.MAP_DEVICE_ACTION, MapDeviceAction.CLOSE) }
+    ).apply { ItemUtil.setPersistentData(this, TypeKeys.MAP_DEVICE_ACTION, MapDeviceAction.CLOSE) }
 
     val FILLER_ITEM = ItemCreatorUtil.create(ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", listOf(" "))
 

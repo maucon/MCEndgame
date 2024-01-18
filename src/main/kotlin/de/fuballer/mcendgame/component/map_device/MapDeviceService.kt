@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
 import de.fuballer.mcendgame.domain.Portal
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.DiscoverRecipeAddEvent
 import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.EventGateway
@@ -61,7 +61,7 @@ class MapDeviceService(
     fun onBlockPlace(event: BlockPlaceEvent) {
         val placedItem = event.itemInHand
         val placedItemMeta = placedItem.itemMeta ?: return
-        if (!PersistentDataUtil.getBooleanValue(placedItemMeta, DataTypeKeys.MAP_DEVICE)) return
+        if (!PersistentDataUtil.getBooleanValue(placedItemMeta, TypeKeys.MAP_DEVICE)) return
 
         val block = event.block
         val fixedMetadataValue = PluginUtil.createFixedMetadataValue(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY)
@@ -116,7 +116,7 @@ class MapDeviceService(
 
         player.openInventory(getMapDeviceInventory(player))
 
-        PersistentDataUtil.setValue(player, DataTypeKeys.LAST_MAP_DEVICE, entity.id)
+        PersistentDataUtil.setValue(player, TypeKeys.LAST_MAP_DEVICE, entity.id)
     }
 
     @EventHandler
@@ -161,10 +161,10 @@ class MapDeviceService(
         clickedItemMeta: ItemMeta,
         player: Player
     ) {
-        val lastMapDeviceId = PersistentDataUtil.getValue(player, DataTypeKeys.LAST_MAP_DEVICE) ?: return
+        val lastMapDeviceId = PersistentDataUtil.getValue(player, TypeKeys.LAST_MAP_DEVICE) ?: return
         val mapDevice = mapDeviceRepo.findById(lastMapDeviceId) ?: return
 
-        val action = PersistentDataUtil.getValue(clickedItemMeta, DataTypeKeys.MAP_DEVICE_ACTION) ?: return
+        val action = PersistentDataUtil.getValue(clickedItemMeta, TypeKeys.MAP_DEVICE_ACTION) ?: return
         player.closeInventory()
 
         when (action) {

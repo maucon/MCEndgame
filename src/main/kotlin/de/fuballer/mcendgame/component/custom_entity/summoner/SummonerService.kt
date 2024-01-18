@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.custom_entity.summoner
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.EquipmentGenerationService
 import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationService
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -27,7 +27,7 @@ class SummonerService(
     @EventHandler
     fun onEntityTarget(event: EntityTargetEvent) {
         val summoner = event.entity as? Creature ?: return
-        val minions = PersistentDataUtil.getValue(summoner, DataTypeKeys.MINIONS) ?: return
+        val minions = PersistentDataUtil.getValue(summoner, TypeKeys.MINIONS) ?: return
 
         setMinionsTarget(summoner, minions)
     }
@@ -50,7 +50,7 @@ class SummonerService(
         health: Double,
         spawnOffset: Vector,
     ) {
-        val mapTier = PersistentDataUtil.getValue(summoner, DataTypeKeys.MAP_TIER) ?: -1
+        val mapTier = PersistentDataUtil.getValue(summoner, TypeKeys.MAP_TIER) ?: -1
 
         val minions = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
@@ -81,8 +81,8 @@ class SummonerService(
         val minion = EntityUtil.spawnCustomEntity(minionType, summoner.location.add(spawnOffset), mapTier) as LivingEntity
         setHealth(minion, health)
 
-        PersistentDataUtil.setValue(minion, DataTypeKeys.IS_MINION, true)
-        PersistentDataUtil.setValue(minion, DataTypeKeys.DROP_EQUIPMENT, false)
+        PersistentDataUtil.setValue(minion, TypeKeys.IS_MINION, true)
+        PersistentDataUtil.setValue(minion, TypeKeys.DROP_EQUIPMENT, false)
 
         if (mapTier < 0 || minion !is Creature) return minion
 

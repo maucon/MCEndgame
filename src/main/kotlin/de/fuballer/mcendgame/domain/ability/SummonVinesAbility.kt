@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.domain.ability
 
 import de.fuballer.mcendgame.domain.entity.vine.VineEntityType
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.EntityUtil
@@ -13,7 +13,7 @@ fun getSummonVineAmount(bossLevel: Int) = bossLevel / 5
 
 object SummonVinesAbility : Ability {
     override fun cast(caster: LivingEntity, target: LivingEntity) {
-        val mapTier = PersistentDataUtil.getValue(caster, DataTypeKeys.MAP_TIER) ?: 1
+        val mapTier = PersistentDataUtil.getValue(caster, TypeKeys.MAP_TIER) ?: 1
 
         val amount = getSummonVineAmount(mapTier)
 
@@ -21,7 +21,7 @@ object SummonVinesAbility : Ability {
         for (i in 0 until amount) {
             val vine = EntityUtil.spawnCustomEntity(VineEntityType, caster.location, mapTier) as LivingEntity
 
-            PersistentDataUtil.setValue(vine, DataTypeKeys.IS_MINION, true)
+            PersistentDataUtil.setValue(vine, TypeKeys.IS_MINION, true)
 
             vines.add(vine)
         }
