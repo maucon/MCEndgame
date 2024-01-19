@@ -174,8 +174,7 @@ object ItemUtil {
         if (extraAttributes.isNotEmpty()) {
             lore.add(Equipment.GENERIC_SLOT_LORE)
 
-            val isCustom = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE) != null
-            val attributes = if (isCustom) extraAttributes else extraAttributes.sortedBy { it.type.ordinal } // don't sort attributes for custom items
+            val attributes = getSortedAttributes(itemMeta, extraAttributes)
 
             attributes.forEach {
                 val attributeLine = getAttributeLine(itemMeta, it, false)
@@ -191,6 +190,17 @@ object ItemUtil {
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
         itemMeta.lore = lore
+    }
+
+    private fun getSortedAttributes(
+        itemMeta: ItemMeta,
+        extraAttributes: List<RolledAttribute>
+    ): List<RolledAttribute> {
+        val customType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE)
+            ?: return extraAttributes.sortedBy { it.type.ordinal }
+
+        val attributeTypeOrder = customType.attributes.map { it.type }
+        return extraAttributes.sortedWith(compareBy { attributeTypeOrder.indexOf(it.type) })
     }
 
     private fun getAttributeLine(itemMeta: ItemMeta, attribute: RolledAttribute, isBaseAttribute: Boolean): String {
