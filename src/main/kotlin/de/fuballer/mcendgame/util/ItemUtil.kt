@@ -87,6 +87,15 @@ object ItemUtil {
         item.itemMeta = meta
     }
 
+    fun getCorrectSignLore(attribute: RolledAttribute): String {
+        val lore = attribute.type.lore(attribute.roll)
+
+        if (attribute.roll >= 0) return lore
+        if (!lore.startsWith("+")) return lore
+
+        return lore.replaceFirstChar { "" }
+    }
+
     private fun getCustomItemAttributes(item: ItemStack): List<RollableAttribute>? {
         val itemMeta = item.itemMeta ?: return null
         val customItemType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE) ?: return null
@@ -227,15 +236,6 @@ object ItemUtil {
         }
         attributeLore = attributeLore.replaceFirstChar { " " }
         return "${ChatColor.DARK_GREEN}$attributeLore"
-    }
-
-    private fun getCorrectSignLore(attribute: RolledAttribute): String {
-        val lore = attribute.type.lore(attribute.roll)
-
-        if (attribute.roll >= 0) return lore
-        if (!lore.startsWith("+")) return lore
-
-        return lore.replaceFirstChar { "" }
     }
 
     private fun isNotPlayerBaseAttribute(applicableAttribute: ApplicableAttributeType) =

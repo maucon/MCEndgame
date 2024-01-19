@@ -18,10 +18,10 @@ import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.java.JavaPlugin
 import java.text.DecimalFormat
 
+private val DECIMAL_FORMAT = DecimalFormat("#.##")
+
 @Component
 class ItemInfoCommand : CommandHandler {
-    private val DECIMAL_FORMAT = DecimalFormat("#.##")
-
     override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ItemInfoSettings.COMMAND_NAME)!!.setExecutor(this)
 
     override fun onCommand(
@@ -44,7 +44,14 @@ class ItemInfoCommand : CommandHandler {
             return
         }
 
-        if (!Equipment.existsByMaterial(itemType)) {
+        val itemMeta = item.itemMeta
+        if (itemMeta == null) {
+            player.sendMessage(ItemInfoSettings.NO_ATTRIBUTES)
+            return
+        }
+
+        val attributes = PersistentDataUtil.getValue(itemMeta, TypeKeys.ATTRIBUTES)
+        if (!Equipment.existsByMaterial(itemType) || attributes.isNullOrEmpty()) {
             player.sendMessage(ItemInfoSettings.NO_ATTRIBUTES)
             return
         }
@@ -77,9 +84,9 @@ class ItemInfoCommand : CommandHandler {
         val attributeBounds = ItemUtil.getEquipmentAttributes(item)
         val presentAttributes = getPresentAttributes(item)
 
-        return attributeBounds.map {
-            "$header\n\n${getAttributeText(it, presentAttributes)}"
-        }
+        return attributeBounds
+            .mapNotNull { getAttributeTextIfPresent(it, presentAttributes) }
+            .map { "$header\n\n\n$it" }
     }
 
     private fun getItemTypeDisplayName(itemType: Material): String {
@@ -102,23 +109,33 @@ class ItemInfoCommand : CommandHandler {
             ?: return listOf()
     }
 
-    private fun getAttributeText(
+    private fun getAttributeTextIfPresent(
         attributeBound: RollableAttribute,
         presentAttributes: List<RolledAttribute>
-    ): String {
-        val attribute = presentAttributes.firstOrNull { it.type == attributeBound.type }
-        val attributeRollString = if (attribute == null) ItemInfoSettings.ATTRIBUTE_NOT_PRESENT else getAttributeRollString(attributeBound, attribute.roll)
+    ): String? {
+        val attribute = presentAttributes.firstOrNull { it.type == attributeBound.type } ?: return null
+        val attributeRollString = getAttributeRollString(attributeBound, attribute.roll)
 
-        return "${ItemInfoSettings.ATTRIBUTE_COLOR}${attributeBound.type}\n\n" +
+        var attributeLore = ItemUtil.getCorrectSignLore(attribute)
+        if (attributeLore.firstOrNull() != null && attributeLore.first() == ' ') {
+            attributeLore = attributeLore.replaceFirstChar { "" }
+        }
+
+        return "${ItemInfoSettings.ATTRIBUTE_COLOR}$attributeLore\n\n" +
                 "${ItemInfoSettings.VALUE_COLOR}${attributeRollString}\n"
     }
 
-    private fun getAttributeRollString(attributeBounds: RollableAttribute, roll: Double) =
-        String.format(
-            "Min: %s\nMax: %s\nRoll: %s\nPercent Roll: %s%%",
+    private fun getAttributeRollString(attributeBounds: RollableAttribute, roll: Double): String {
+        if (attributeBounds.min - attributeBounds.max == 0.0) {
+            return ItemInfoSettings.NOT_ROLLED_TEXT
+        }
+
+        return String.format(
+            "Min: %s\nMax: %s\nRoll: %s\n%%Roll: %s%%",
             DECIMAL_FORMAT.format(attributeBounds.min),
             DECIMAL_FORMAT.format(attributeBounds.max),
             DECIMAL_FORMAT.format(roll),
             DECIMAL_FORMAT.format((roll - attributeBounds.min) / (attributeBounds.max - attributeBounds.min) * 100)
         )
+    }
 }
