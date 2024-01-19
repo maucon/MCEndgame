@@ -30,7 +30,6 @@ class ArtifactCommand : CommandHandler {
     }
 
     private fun openArtifactsWindow(player: Player) {
-        val uuid = player.uniqueId
         val artifacts = PersistentDataUtil.getValue(player, TypeKeys.ARTIFACTS) ?: listOf()
 
         val itemsStacks = artifacts.map { ArtifactUtil.getItem(it) }
