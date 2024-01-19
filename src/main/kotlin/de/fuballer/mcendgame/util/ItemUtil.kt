@@ -52,7 +52,6 @@ object ItemUtil {
 
     fun isUnmodifiable(item: ItemStack): Boolean {
         val itemMeta = item.itemMeta ?: return false
-
         return PersistentDataUtil.getBooleanValue(itemMeta, TypeKeys.UNMODIFIABLE)
     }
 
@@ -105,7 +104,12 @@ object ItemUtil {
             it.forEach { attribute, _ -> itemMeta.removeAttributeModifier(attribute) }
         }
 
-        addAllAttributes(itemMeta, baseAttributes, equipment.slot, true)
+        val customItemType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE)
+        val hasBaseAttributes = customItemType?.usesEquipmentBaseStats != false
+
+        if (hasBaseAttributes) {
+            addAllAttributes(itemMeta, baseAttributes, equipment.slot, true)
+        }
         val extraAttributeSlot = if (equipment.extraAttributesInSlot) equipment.slot else null
         addAllAttributes(itemMeta, extraAttributes, extraAttributeSlot, false)
     }
@@ -163,13 +167,16 @@ object ItemUtil {
         slotLore: String
     ) {
         val lore = mutableListOf<String>()
+        val customItemType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE)
+        val hasBaseAttributes = customItemType?.usesEquipmentBaseStats != false
 
-        if (baseAttributes.isNotEmpty()) {
+        if (hasBaseAttributes && baseAttributes.isNotEmpty()) {
             lore.add(slotLore)
-        }
-        baseAttributes.forEach {
-            val attributeLine = getAttributeLine(itemMeta, it, true)
-            lore.add(attributeLine)
+
+            baseAttributes.forEach {
+                val attributeLine = getAttributeLine(itemMeta, it, true)
+                lore.add(attributeLine)
+            }
         }
         if (extraAttributes.isNotEmpty()) {
             lore.add(Equipment.GENERIC_SLOT_LORE)
