@@ -211,7 +211,7 @@ object ItemUtil {
     }
 
     private fun getAttributeLine(itemMeta: ItemMeta, attribute: RolledAttribute, isBaseAttribute: Boolean): String {
-        var attributeLore = attribute.type.lore(attribute.roll)
+        var attributeLore = getCorrectSignLore(attribute)
         if (!isBaseAttribute) return "${ChatColor.BLUE}$attributeLore"
 
         val applicableAttribute = attribute.type.applicableAttributeType
@@ -227,6 +227,15 @@ object ItemUtil {
         }
         attributeLore = attributeLore.replaceFirstChar { " " }
         return "${ChatColor.DARK_GREEN}$attributeLore"
+    }
+
+    private fun getCorrectSignLore(attribute: RolledAttribute): String {
+        val lore = attribute.type.lore(attribute.roll)
+
+        if (attribute.roll >= 0) return lore
+        if (!lore.startsWith("+")) return lore
+
+        return lore.replaceFirstChar { "" }
     }
 
     private fun isNotPlayerBaseAttribute(applicableAttribute: ApplicableAttributeType) =

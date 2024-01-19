@@ -4,7 +4,7 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import java.text.DecimalFormat
 
-private val DECIMAL_FORMAT = DecimalFormat("#.##")
+private val DECIMAL_FORMAT = DecimalFormat("#.#")
 
 enum class AttributeType(
     val lore: (roll: Double) -> String,
@@ -72,7 +72,7 @@ enum class AttributeType(
         )
     ),
     SIZE_INCREASE(
-        { "+${DECIMAL_FORMAT.format(it)}% Size" },
+        { "+${DECIMAL_FORMAT.format(it * 100)}% Size" },
         ApplicableAttributeType(
             Attribute.GENERIC_LUCK, AttributeModifier.Operation.ADD_SCALAR //TODO
         )
