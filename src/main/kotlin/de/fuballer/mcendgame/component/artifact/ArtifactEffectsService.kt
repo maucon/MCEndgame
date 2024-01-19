@@ -1,7 +1,5 @@
 package de.fuballer.mcendgame.component.artifact
 
-import de.fuballer.mcendgame.component.artifact.db.HealOnBlockArtifactEntity
-import de.fuballer.mcendgame.component.artifact.db.HealOnBlockArtifactRepository
 import de.fuballer.mcendgame.domain.artifact.ArtifactType
 import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
@@ -29,9 +27,7 @@ import kotlin.math.PI
 import kotlin.math.min
 
 @Component
-class ArtifactEffectsService(
-    private val healOnBlockArtifactRepo: HealOnBlockArtifactRepository
-) : Listener {
+class ArtifactEffectsService : Listener {
     private val random = Random()
 
     @EventHandler
@@ -220,7 +216,7 @@ class ArtifactEffectsService(
 
         if (isHealOnBlockOnCooldown(player, cooldown)) return
 
-        updateHealOnBlockActivation(player)
+        PersistentDataUtil.setValue(player, TypeKeys.HEAL_ON_BLOCK_ARTIFACT_ACTIVATION, System.currentTimeMillis())
 
         val loc = player.location
         val dustOptions = DustOptions(Color.fromRGB(50, 255, 50), 1.0f)
@@ -236,17 +232,9 @@ class ArtifactEffectsService(
     }
 
     private fun isHealOnBlockOnCooldown(entity: Entity, cooldown: Double): Boolean {
-        val cooldownEntity = healOnBlockArtifactRepo.findById(entity.uniqueId) ?: return false
+        val lastActivation = PersistentDataUtil.getValue(entity, TypeKeys.HEAL_ON_BLOCK_ARTIFACT_ACTIVATION) ?: return false
         val cdMS = (cooldown * 1000).toLong()
-        return cooldownEntity.lastActivationTime + cdMS > System.currentTimeMillis()
-    }
-
-    private fun updateHealOnBlockActivation(entity: Entity) {
-        val cooldownEntity = healOnBlockArtifactRepo.findById(entity.uniqueId)
-            ?: HealOnBlockArtifactEntity(entity.uniqueId)
-
-        cooldownEntity.lastActivationTime = System.currentTimeMillis()
-        healOnBlockArtifactRepo.save(cooldownEntity)
+        return lastActivation + cdMS > System.currentTimeMillis()
     }
 
     private fun testAdditionalArrowsFriendlyFire(event: EntityDamageByEntityEvent) {

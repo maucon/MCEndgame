@@ -21,6 +21,7 @@ object TypeKeys {
     // player
     val LAST_MAP_DEVICE = TypeKey(createNamespacedKey("last-map-device"), PersistentUuid)
     val ARTIFACTS = TypeKey(createNamespacedKey("artifacts"), PersistentArtifactList)
+    val HEAL_ON_BLOCK_ARTIFACT_ACTIVATION = TypeKey(createNamespacedKey("heal-on-block-artifact-activation"), PersistentDataType.LONG)
 
     // items
     val CUSTOM_ITEM_TYPE = TypeKey(createNamespacedKey("custom-entity-type"), PersistentObjectClass(CustomItemType::class.java))
