@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.corruption
 
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -15,8 +15,8 @@ import org.bukkit.inventory.ItemStack
 object CorruptionSettings {
     private val BASE_ITEM = Material.STICK
     private val ITEM_NAME = ChatColor.DARK_RED.toString() + "Orb of Corruption"
-    private val ITEM_LORE = listOf(ChatColor.WHITE.toString() + "Corrupts an item, modifying it unpredictably.")
-    private val ITEM_LORE_DOUBLE = listOf(ChatColor.WHITE.toString() + "Corrupts an item, modifying it unpredictably. Twice!")
+    private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Corrupts an item, modifying it unpredictably")
+    private val ITEM_LORE_DOUBLE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Corrupts an item, modifying it unpredictably. Twice!")
     val CORRUPTION_TAG_LORE = ChatColor.DARK_RED.toString() + "Corrupted"
 
     val CORRUPTIONS = listOf(
@@ -41,8 +41,8 @@ object CorruptionSettings {
         ITEM_NAME,
         ITEM_LORE
     ).apply {
-        ItemUtil.setPersistentData(this, DataTypeKeys.CORRUPTION_ROUNDS, 1)
-        ItemUtil.setPersistentData(this, DataTypeKeys.UNMODIFIABLE, true)
+        ItemUtil.setPersistentData(this, TypeKeys.CORRUPTION_ROUNDS, 1)
+        ItemUtil.setPersistentData(this, TypeKeys.UNMODIFIABLE, true)
     }
 
     private val DOUBLE_CORRUPTION_ITEM = ItemCreatorUtil.create(
@@ -52,8 +52,8 @@ object CorruptionSettings {
         Enchantment.ARROW_FIRE, 1, true,
         ItemFlag.HIDE_ENCHANTS
     ).apply {
-        ItemUtil.setPersistentData(this, DataTypeKeys.CORRUPTION_ROUNDS, 2)
-        ItemUtil.setPersistentData(this, DataTypeKeys.UNMODIFIABLE, true)
+        ItemUtil.setPersistentData(this, TypeKeys.CORRUPTION_ROUNDS, 2)
+        ItemUtil.setPersistentData(this, TypeKeys.UNMODIFIABLE, true)
     }
 
     fun getCorruptionItem() = CORRUPTION_ITEM.clone()

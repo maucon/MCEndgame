@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.item
 
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
@@ -51,6 +51,6 @@ class CorruptedItemIntegrityService : Listener {
         val corruptionMeta = corruption.itemMeta ?: return false
 
         if (ItemUtil.isUnmodifiable(base)) return false
-        return PersistentDataUtil.getValue(corruptionMeta, DataTypeKeys.CORRUPTION_ROUNDS) != null
+        return PersistentDataUtil.getValue(corruptionMeta, TypeKeys.CORRUPTION_ROUNDS) != null
     }
 }

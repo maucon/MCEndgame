@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.domain.ability
 
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import org.bukkit.Location
@@ -25,7 +25,7 @@ const val FIRE_CASCADE_FIRE_TICKS = 100
 
 object FireCascadeAbility : Ability {
     override fun cast(caster: LivingEntity, target: LivingEntity) {
-        val mapTier = PersistentDataUtil.getValue(caster, DataTypeKeys.MAP_TIER) ?: 1
+        val mapTier = PersistentDataUtil.getValue(caster, TypeKeys.MAP_TIER) ?: 1
 
         val vector = target.location.subtract(caster.location).toVector()
         val amount = vector.length().toInt() / FIRE_CASCADE_DISTANCE + FIRE_CASCADE_STEPS_AFTER_PLAYER

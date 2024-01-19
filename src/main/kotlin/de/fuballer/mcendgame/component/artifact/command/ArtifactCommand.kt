@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.component.artifact.command
 
-import de.fuballer.mcendgame.component.artifact.ArtifactService
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.component.artifact.db.ArtifactEntity
-import de.fuballer.mcendgame.component.artifact.db.ArtifactRepository
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
+import de.fuballer.mcendgame.util.ArtifactUtil
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -15,10 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.lang.Integer.min
 
 @Component
-class ArtifactCommand(
-    private val artifactRepo: ArtifactRepository,
-    private val artifactService: ArtifactService
-) : CommandHandler {
+class ArtifactCommand : CommandHandler {
     override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ArtifactSettings.COMMAND_NAME)!!.setExecutor(this)
 
     override fun onCommand(
@@ -34,10 +31,9 @@ class ArtifactCommand(
 
     private fun openArtifactsWindow(player: Player) {
         val uuid = player.uniqueId
-        val entity = artifactRepo.findById(uuid)
-            ?: artifactRepo.save(ArtifactEntity(uuid))
+        val artifacts = PersistentDataUtil.getValue(player, TypeKeys.ARTIFACTS) ?: listOf()
 
-        val itemsStacks = entity.artifacts.map { artifactService.getArtifactAsItem(it) }
+        val itemsStacks = artifacts.map { ArtifactUtil.getItem(it) }
         showArtifactsWindow(player, itemsStacks)
     }
 

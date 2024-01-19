@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.dungeon.killstreak
 
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakEntity
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.domain.TimerTask
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
@@ -33,13 +33,13 @@ class KillStreakService(
 ) : Listener {
     @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
-        if (!PersistentDataUtil.getBooleanValue(event.entity, DataTypeKeys.IS_ENEMY)) return
+        if (!PersistentDataUtil.getBooleanValue(event.entity, TypeKeys.IS_ENEMY)) return
 
         val entity = event.entity as? LivingEntity ?: return
         val world = entity.world
         if (WorldUtil.isNotDungeonWorld(world)) return
 
-        if (PersistentDataUtil.getBooleanValue(entity, DataTypeKeys.IS_MINION)) return
+        if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_MINION)) return
 
         val killStreak = killStreakRepo.findById(world.name) ?: return
         killStreak.streak++
@@ -57,7 +57,7 @@ class KillStreakService(
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
         if (event.damage < KillStreakSettings.MIN_DMG_FOR_EXTRA_TIME) return
 
-        if (!PersistentDataUtil.getBooleanValue(event.entity, DataTypeKeys.IS_ENEMY)) return
+        if (!PersistentDataUtil.getBooleanValue(event.entity, TypeKeys.IS_ENEMY)) return
 
         val entity = event.entity as? LivingEntity ?: return
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return

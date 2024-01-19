@@ -1,12 +1,11 @@
 package de.fuballer.mcendgame.component.artifact
 
-import de.fuballer.mcendgame.component.artifact.db.HealOnBlockArtifactEntity
-import de.fuballer.mcendgame.component.artifact.db.HealOnBlockArtifactRepository
 import de.fuballer.mcendgame.domain.artifact.ArtifactType
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color
@@ -28,10 +27,7 @@ import kotlin.math.PI
 import kotlin.math.min
 
 @Component
-class ArtifactEffectsService(
-    private val artifactService: ArtifactService,
-    private val healOnBlockArtifactRepo: HealOnBlockArtifactRepository
-) : Listener {
+class ArtifactEffectsService : Listener {
     private val random = Random()
 
     @EventHandler
@@ -64,7 +60,7 @@ class ArtifactEffectsService(
         val player = event.entity as? Player ?: return
         if (WorldUtil.isNotDungeonWorld(player.world)) return
 
-        val arrowsTier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.ADDITIONAL_ARROWS) ?: return
+        val arrowsTier = ArtifactUtil.getHighestTier(player, ArtifactType.ADDITIONAL_ARROWS) ?: return
 
         val additionalArrowsAmount = ArtifactType.ADDITIONAL_ARROWS.values[arrowsTier]!![0]
         val damagePercentage = ArtifactType.ADDITIONAL_ARROWS.values[arrowsTier]!![1] / 100.0
@@ -140,7 +136,7 @@ class ArtifactEffectsService(
 
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         if (entity !is Wolf) return
-        if (PersistentDataUtil.getBooleanValue(entity, DataTypeKeys.IS_ENEMY)) return
+        if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return
 
         if (event.target !is Player) return
 
@@ -161,7 +157,7 @@ class ArtifactEffectsService(
 
     private fun onEntityDamageByArrow(event: EntityDamageByEntityEvent) {
         val player = (event.damager as Arrow).shooter as Player
-        testAdditionalArrowsFriendlyFire(event, player)
+        testAdditionalArrowsFriendlyFire(event)
         testArrowDamage(event, player)
         testIncDmgPerMissingHealth(event, player)
         testIncDmgAgainstFullLife(event, player)
@@ -173,7 +169,7 @@ class ArtifactEffectsService(
     }
 
     private fun testEffectStealArtifact(event: EntityDeathEvent, player: Player) {
-        val tier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.EFFECT_STEAL) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.EFFECT_STEAL) ?: return
 
         val (chance, duration, maxAmplifier) = ArtifactType.EFFECT_STEAL.values[tier]!!
         if (random.nextDouble() > chance / 100.0) return
@@ -194,7 +190,8 @@ class ArtifactEffectsService(
     }
 
     private fun testSlowArtifact(event: EntityDamageByEntityEvent) {
-        val tier = artifactService.highestArtifactLevel(event.entity.uniqueId, ArtifactType.SLOW_WHEN_HIT) ?: return
+        val player = event.entity as? Player ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.SLOW_WHEN_HIT) ?: return
 
         val (amplifier, duration) = ArtifactType.SLOW_WHEN_HIT.values[tier]!!
         val realAmplifier = amplifier.toInt() - 1
@@ -210,61 +207,52 @@ class ArtifactEffectsService(
     private fun testShieldBlock(event: EntityDamageByEntityEvent) {
         if (event.getDamage(EntityDamageEvent.DamageModifier.BLOCKING) == 0.0) return
 
-        val entity = event.entity
-        val tier = artifactService.highestArtifactLevel(entity.uniqueId, ArtifactType.HEAL_ON_BLOCK) ?: return
+        val player = event.entity as? Player ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.HEAL_ON_BLOCK) ?: return
 
         val (blockChance, health, cooldown) = ArtifactType.HEAL_ON_BLOCK.values[tier]!!
         val realBlockChance = blockChance / 100.0
         if (random.nextDouble() > realBlockChance) return
 
-        if (isHealOnBlockOnCooldown(entity, cooldown)) return
+        if (isHealOnBlockOnCooldown(player, cooldown)) return
 
-        updateHealOnBlockActivation(entity)
+        PersistentDataUtil.setValue(player, TypeKeys.HEAL_ON_BLOCK_ARTIFACT_ACTIVATION, System.currentTimeMillis())
 
-        val loc = entity.location
+        val loc = player.location
         val dustOptions = DustOptions(Color.fromRGB(50, 255, 50), 1.0f)
-        entity.world.spawnParticle(
+        player.world.spawnParticle(
             Particle.REDSTONE,
             loc.x, loc.y + 1, loc.z,
             15, 0.2, 0.2, 0.2, 0.01, dustOptions
         )
 
-        val player = event.entity as Player
         val maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
         val newHealth = min(player.health + health, maxHealth)
         player.health = newHealth
     }
 
     private fun isHealOnBlockOnCooldown(entity: Entity, cooldown: Double): Boolean {
-        val cooldownEntity = healOnBlockArtifactRepo.findById(entity.uniqueId) ?: return false
+        val lastActivation = PersistentDataUtil.getValue(entity, TypeKeys.HEAL_ON_BLOCK_ARTIFACT_ACTIVATION) ?: return false
         val cdMS = (cooldown * 1000).toLong()
-        return cooldownEntity.lastActivationTime + cdMS > System.currentTimeMillis()
+        return lastActivation + cdMS > System.currentTimeMillis()
     }
 
-    private fun updateHealOnBlockActivation(entity: Entity) {
-        val cooldownEntity = healOnBlockArtifactRepo.findById(entity.uniqueId)
-            ?: HealOnBlockArtifactEntity(entity.uniqueId)
-
-        cooldownEntity.lastActivationTime = System.currentTimeMillis()
-        healOnBlockArtifactRepo.save(cooldownEntity)
-    }
-
-    private fun testAdditionalArrowsFriendlyFire(event: EntityDamageByEntityEvent, player: Player) {
-        if (event.entity !is Player) return
-        artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.ADDITIONAL_ARROWS) ?: return
+    private fun testAdditionalArrowsFriendlyFire(event: EntityDamageByEntityEvent) {
+        val player = event.entity as? Player ?: return
+        ArtifactUtil.getHighestTier(player, ArtifactType.ADDITIONAL_ARROWS) ?: return
 
         event.isCancelled = true
     }
 
     private fun testArrowDamage(event: EntityDamageByEntityEvent, player: Player) {
-        val tier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.BOW_DAMAGE) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.BOW_DAMAGE) ?: return
 
         val (incDmg) = ArtifactType.BOW_DAMAGE.values[tier]!!
         event.damage *= incDmg
     }
 
     private fun testIncDmgPerMissingHealth(event: EntityDamageByEntityEvent, player: Player) {
-        val tier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.INC_DMG_PER_MISSING_HEALTH) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.INC_DMG_PER_MISSING_HEALTH) ?: return
 
         val (incDmgPerHealth) = ArtifactType.INC_DMG_PER_MISSING_HEALTH.values[tier]!!
         val realIncDmgPerHealth = incDmgPerHealth / 100
@@ -277,7 +265,7 @@ class ArtifactEffectsService(
     }
 
     private fun testIncDmgAgainstFullLife(event: EntityDamageByEntityEvent, player: Player) {
-        val tier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.INC_DMG_AGAINST_FULL_LIFE) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.INC_DMG_AGAINST_FULL_LIFE) ?: return
 
         val entity = event.entity as? LivingEntity ?: return
         if (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value > entity.health + 0.1) return
@@ -297,7 +285,7 @@ class ArtifactEffectsService(
     }
 
     private fun testTaunt(event: EntityDamageByEntityEvent, player: Player) {
-        val tier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.TAUNT) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.TAUNT) ?: return
 
         val (tauntProbability) = ArtifactType.TAUNT.values[tier]!!
         if (random.nextDouble() * 100 > tauntProbability) return
@@ -307,7 +295,7 @@ class ArtifactEffectsService(
     }
 
     private fun testForMovementSpeedJoin(player: Player) {
-        val tier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.MOVEMENT_SPEED) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.MOVEMENT_SPEED) ?: return
 
         val (speedMultiplier) = ArtifactType.MOVEMENT_SPEED.values[tier]!!
         val realSpeedMultiplier = 1 + speedMultiplier / 100.0
@@ -320,7 +308,7 @@ class ArtifactEffectsService(
     }
 
     private fun testForAttackSpeedJoin(player: Player) {
-        val tier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.ATTACK_SPEED) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.ATTACK_SPEED) ?: return
 
         val (addedAttackSpeed) = ArtifactType.ATTACK_SPEED.values[tier]!!
         val realAttackSpeed = 4.0 + addedAttackSpeed
@@ -333,7 +321,7 @@ class ArtifactEffectsService(
     }
 
     private fun testForAttackDamageJoin(player: Player) {
-        val tier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.ATTACK_DAMAGE) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.ATTACK_DAMAGE) ?: return
 
         val (addedAttackDamage) = ArtifactType.ATTACK_DAMAGE.values[tier]!!
         val realAttackDamage = 1.0 + addedAttackDamage
@@ -346,7 +334,7 @@ class ArtifactEffectsService(
     }
 
     private fun testForMaxHealthJoin(player: Player) {
-        val tier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.MAX_HEALTH) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.MAX_HEALTH) ?: return
 
         val (addedHealth) = ArtifactType.MAX_HEALTH.values[tier]!!
         val realHealth = 20.0 + addedHealth
@@ -361,7 +349,7 @@ class ArtifactEffectsService(
 
     private fun testForWolfsJoin(event: PlayerDungeonJoinEvent) {
         val player = event.player
-        val tier = artifactService.highestArtifactLevel(player.uniqueId, ArtifactType.WOLF_COMPANION) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.WOLF_COMPANION) ?: return
 
         val (count, strength) = ArtifactType.WOLF_COMPANION.values[tier]!!
         val realStrength = strength - 1

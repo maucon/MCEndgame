@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.custom_entity.ability
 
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityEntity
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityRepository
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
 import de.fuballer.mcendgame.domain.TimerTask
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.PersistentDataUtil
@@ -31,7 +31,7 @@ class AbilityService(
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (event.target !is Player) return
 
-        val type = PersistentDataUtil.getValue(entity, DataTypeKeys.CUSTOM_ENTITY_TYPE) ?: return
+        val type = PersistentDataUtil.getValue(entity, TypeKeys.CUSTOM_ENTITY_TYPE) ?: return
         if (type.abilities == null) return
 
         val entityAbility = entityAbilityRepo.findById(entity.uniqueId)
@@ -71,7 +71,7 @@ class AbilityService(
         val abilityRunner = entityAbility.abilityRunner
         if (abilityRunner != null && !abilityRunner.isCancelled()) return
 
-        val mapTier = PersistentDataUtil.getValue(entity, DataTypeKeys.MAP_TIER) ?: return
+        val mapTier = PersistentDataUtil.getValue(entity, TypeKeys.MAP_TIER) ?: return
 
         val abilityCooldown = AbilitySettings.getAbilityCooldown(mapTier)
         val runner = EntityAbilityRunner(entity, entityAbility.entityType, abilityCooldown)

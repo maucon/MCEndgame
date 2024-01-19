@@ -1,14 +1,14 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.*
 
 object EntityUtil {
     fun isCustomEntityType(entity: Entity, entityType: CustomEntityType): Boolean {
-        val type = PersistentDataUtil.getValue(entity, DataTypeKeys.CUSTOM_ENTITY_TYPE) ?: return false
+        val type = PersistentDataUtil.getValue(entity, TypeKeys.CUSTOM_ENTITY_TYPE) ?: return false
         return type == entityType
     }
 
@@ -32,10 +32,10 @@ object EntityUtil {
     }
 
     private fun setPersistentData(entity: Entity, entityType: CustomEntityType, mapTier: Int) {
-        PersistentDataUtil.setValue(entity, DataTypeKeys.MAP_TIER, mapTier)
-        PersistentDataUtil.setValue(entity, DataTypeKeys.HIDE_EQUIPMENT, entityType.hideEquipment)
-        PersistentDataUtil.setValue(entity, DataTypeKeys.CUSTOM_ENTITY_TYPE, entityType)
-        PersistentDataUtil.setValue(entity, DataTypeKeys.IS_ENEMY, true)
+        PersistentDataUtil.setValue(entity, TypeKeys.MAP_TIER, mapTier)
+        PersistentDataUtil.setValue(entity, TypeKeys.HIDE_EQUIPMENT, entityType.hideEquipment)
+        PersistentDataUtil.setValue(entity, TypeKeys.CUSTOM_ENTITY_TYPE, entityType)
+        PersistentDataUtil.setValue(entity, TypeKeys.IS_ENEMY, true)
     }
 
     private fun setAttributes(entity: LivingEntity, entityType: CustomEntityType, mapTier: Int) {

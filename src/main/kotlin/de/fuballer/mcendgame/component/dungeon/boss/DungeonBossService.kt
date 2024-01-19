@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
@@ -68,7 +68,7 @@ class DungeonBossService(
 
         val boss = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as Creature
 
-        PersistentDataUtil.setValue(boss, DataTypeKeys.DROP_EQUIPMENT, false)
+        PersistentDataUtil.setValue(boss, TypeKeys.DROP_EQUIPMENT, false)
 
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
         boss.removeWhenFarAway = false

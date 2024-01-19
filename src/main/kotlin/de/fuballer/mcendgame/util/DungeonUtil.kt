@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import org.bukkit.GameMode
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -9,13 +9,13 @@ import org.bukkit.entity.Projectile
 
 object DungeonUtil {
     fun isEnemyOrEnemyProjectile(entity: Entity): Boolean {
-        if (PersistentDataUtil.getBooleanValue(entity, DataTypeKeys.IS_ENEMY)) return true
+        if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return true
         val proj = entity as? Projectile ?: return false
 
         val shooter = proj.shooter ?: return false
         val shooterEntity = shooter as? Entity ?: return false
 
-        return PersistentDataUtil.getBooleanValue(shooterEntity, DataTypeKeys.IS_ENEMY)
+        return PersistentDataUtil.getBooleanValue(shooterEntity, TypeKeys.IS_ENEMY)
     }
 
     fun isPlayerOrPlayerProjectile(entity: Entity): Boolean {

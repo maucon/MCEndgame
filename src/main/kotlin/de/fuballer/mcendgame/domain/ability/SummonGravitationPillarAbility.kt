@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.domain.ability
 
 import de.fuballer.mcendgame.domain.entity.stone_pillar.StonePillarEntityType
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.DungeonUtil
@@ -20,12 +20,12 @@ const val GRAVITATION_PILLAR_COOLDOWN = 40L // in ticks
 
 object SummonGravitationPillarAbility : Ability {
     override fun cast(caster: LivingEntity, target: LivingEntity) {
-        val mapTier = PersistentDataUtil.getValue(caster, DataTypeKeys.MAP_TIER) ?: 1
+        val mapTier = PersistentDataUtil.getValue(caster, TypeKeys.MAP_TIER) ?: 1
 
         val pillar = EntityUtil.spawnCustomEntity(StonePillarEntityType, caster.location, mapTier) as LivingEntity
         pillar.setAI(false)
 
-        PersistentDataUtil.setValue(pillar, DataTypeKeys.IS_MINION, true)
+        PersistentDataUtil.setValue(pillar, TypeKeys.IS_MINION, true)
         SummonerUtil.addMinions(caster, setOf(pillar))
 
         val event = DungeonEnemySpawnedEvent(caster.world, setOf(pillar))

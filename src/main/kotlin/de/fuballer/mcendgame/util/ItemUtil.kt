@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.item.CustomItemType
-import de.fuballer.mcendgame.domain.persistent_data.DataTypeKeys
+import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
 import org.bukkit.ChatColor
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
@@ -31,8 +31,8 @@ object ItemUtil {
             }
         }
 
-        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.CUSTOM_ITEM_TYPE, itemType)
-        PersistentDataUtil.setValue(itemMeta, DataTypeKeys.ATTRIBUTES, rolledAttributes)
+        PersistentDataUtil.setValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE, itemType)
+        PersistentDataUtil.setValue(itemMeta, TypeKeys.ATTRIBUTES, rolledAttributes)
 
         item.itemMeta = itemMeta
         updateAttributesAndLore(item)
@@ -52,14 +52,13 @@ object ItemUtil {
 
     fun isUnmodifiable(item: ItemStack): Boolean {
         val itemMeta = item.itemMeta ?: return false
-
-        return PersistentDataUtil.getBooleanValue(itemMeta, DataTypeKeys.UNMODIFIABLE)
+        return PersistentDataUtil.getBooleanValue(itemMeta, TypeKeys.UNMODIFIABLE)
     }
 
     fun hasCustomAttributes(item: ItemStack): Boolean {
         val itemMeta = item.itemMeta ?: return false
 
-        val attributes = PersistentDataUtil.getValue(itemMeta, DataTypeKeys.ATTRIBUTES) ?: return false
+        val attributes = PersistentDataUtil.getValue(itemMeta, TypeKeys.ATTRIBUTES) ?: return false
         return attributes.isNotEmpty()
     }
 
@@ -73,7 +72,7 @@ object ItemUtil {
 
         val equipment = Equipment.fromMaterial(item.type) ?: return
         val baseAttributes = equipment.baseAttributes
-        val extraAttributes = PersistentDataUtil.getValue(itemMeta, DataTypeKeys.ATTRIBUTES) ?: listOf()
+        val extraAttributes = PersistentDataUtil.getValue(itemMeta, TypeKeys.ATTRIBUTES) ?: listOf()
         val slotLore = Equipment.getLoreForSlot(equipment.slot)
 
         updateAttributes(itemMeta, baseAttributes, extraAttributes, equipment)
@@ -82,15 +81,24 @@ object ItemUtil {
         item.itemMeta = itemMeta
     }
 
-    fun <T : Any> setPersistentData(item: ItemStack, key: DataTypeKeys.TypeKey<T>, value: T) {
+    fun <T : Any> setPersistentData(item: ItemStack, key: TypeKeys.TypeKey<T>, value: T) {
         val meta = item.itemMeta ?: return
         PersistentDataUtil.setValue(meta, key, value)
         item.itemMeta = meta
     }
 
+    fun getCorrectSignLore(attribute: RolledAttribute): String {
+        val lore = attribute.type.lore(attribute.roll)
+
+        if (attribute.roll >= 0) return lore
+        if (!lore.startsWith("+")) return lore
+
+        return lore.replaceFirstChar { "" }
+    }
+
     private fun getCustomItemAttributes(item: ItemStack): List<RollableAttribute>? {
         val itemMeta = item.itemMeta ?: return null
-        val customItemType = PersistentDataUtil.getValue(itemMeta, DataTypeKeys.CUSTOM_ITEM_TYPE) ?: return null
+        val customItemType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE) ?: return null
 
         return customItemType.attributes
     }
@@ -105,7 +113,12 @@ object ItemUtil {
             it.forEach { attribute, _ -> itemMeta.removeAttributeModifier(attribute) }
         }
 
-        addAllAttributes(itemMeta, baseAttributes, equipment.slot, true)
+        val customItemType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE)
+        val hasBaseAttributes = customItemType?.usesEquipmentBaseStats != false
+
+        if (hasBaseAttributes) {
+            addAllAttributes(itemMeta, baseAttributes, equipment.slot, true)
+        }
         val extraAttributeSlot = if (equipment.extraAttributesInSlot) equipment.slot else null
         addAllAttributes(itemMeta, extraAttributes, extraAttributeSlot, false)
     }
@@ -163,19 +176,21 @@ object ItemUtil {
         slotLore: String
     ) {
         val lore = mutableListOf<String>()
+        val customItemType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE)
+        val hasBaseAttributes = customItemType?.usesEquipmentBaseStats != false
 
-        if (baseAttributes.isNotEmpty()) {
+        if (hasBaseAttributes && baseAttributes.isNotEmpty()) {
             lore.add(slotLore)
-        }
-        baseAttributes.forEach {
-            val attributeLine = getAttributeLine(itemMeta, it, true)
-            lore.add(attributeLine)
+
+            baseAttributes.forEach {
+                val attributeLine = getAttributeLine(itemMeta, it, true)
+                lore.add(attributeLine)
+            }
         }
         if (extraAttributes.isNotEmpty()) {
             lore.add(Equipment.GENERIC_SLOT_LORE)
 
-            val isCustom = PersistentDataUtil.getValue(itemMeta, DataTypeKeys.CUSTOM_ITEM_TYPE) != null
-            val attributes = if (isCustom) extraAttributes else extraAttributes.sortedBy { it.type.ordinal } // don't sort attributes for custom items
+            val attributes = getSortedAttributes(itemMeta, extraAttributes)
 
             attributes.forEach {
                 val attributeLine = getAttributeLine(itemMeta, it, false)
@@ -193,8 +208,19 @@ object ItemUtil {
         itemMeta.lore = lore
     }
 
+    private fun getSortedAttributes(
+        itemMeta: ItemMeta,
+        extraAttributes: List<RolledAttribute>
+    ): List<RolledAttribute> {
+        val customType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE)
+            ?: return extraAttributes.sortedBy { it.type.ordinal }
+
+        val attributeTypeOrder = customType.attributes.map { it.type }
+        return extraAttributes.sortedWith(compareBy { attributeTypeOrder.indexOf(it.type) })
+    }
+
     private fun getAttributeLine(itemMeta: ItemMeta, attribute: RolledAttribute, isBaseAttribute: Boolean): String {
-        var attributeLore = attribute.type.lore(attribute.roll)
+        var attributeLore = getCorrectSignLore(attribute)
         if (!isBaseAttribute) return "${ChatColor.BLUE}$attributeLore"
 
         val applicableAttribute = attribute.type.applicableAttributeType
