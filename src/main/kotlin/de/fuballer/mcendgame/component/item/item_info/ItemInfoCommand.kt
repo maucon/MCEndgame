@@ -46,13 +46,13 @@ class ItemInfoCommand : CommandHandler {
 
         val itemMeta = item.itemMeta
         if (itemMeta == null) {
-            player.sendMessage(ItemInfoSettings.NO_ATTRIBUTES)
+            player.sendMessage(ItemInfoSettings.INVALID_ITEM)
             return
         }
 
         val attributes = PersistentDataUtil.getValue(itemMeta, TypeKeys.ATTRIBUTES)
         if (!Equipment.existsByMaterial(itemType) || attributes.isNullOrEmpty()) {
-            player.sendMessage(ItemInfoSettings.NO_ATTRIBUTES)
+            player.sendMessage(ItemInfoSettings.INVALID_ITEM)
             return
         }
 
