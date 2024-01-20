@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.remaining
 
 import de.fuballer.mcendgame.component.dungeon.remaining.db.RemainingEntity
 import de.fuballer.mcendgame.component.dungeon.remaining.db.RemainingRepository
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent

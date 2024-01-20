@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.leave.db
 
-import de.fuballer.mcendgame.domain.Portal
+import de.fuballer.mcendgame.component.map_device.data.Portal
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import org.bukkit.Location
 

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.domain.entity.naga
 
-import de.fuballer.mcendgame.domain.EntitySoundData
+import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import org.bukkit.entity.EntityType
 

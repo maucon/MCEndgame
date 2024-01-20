@@ -41,7 +41,7 @@ commands:
   dungeon-artifact-give:
     description: "Gives a specified tier of dungeon artifact to a player"
     usage: "§CUsage /<command> player artifact-type tier"
-    aliases: [ giveartifact ]
+    aliases: [ give-artifact ]
     permission: mcendgame.manage
 
   item-info:
@@ -63,4 +63,10 @@ commands:
   dungeon-type:
     description: "View or set the type of dungeon a player will generate next"
     usage: "§CUsage /<command> (get [player] | set player dungeon-type)"
+    permission: mcendgame.manage
+
+  give-custom-item:
+    description: "Gives a custom item with the specified type to a player"
+    usage: "§CUsage /<command> player custom-item-type [%roll]"
+    aliases: [ custom-item ]
     permission: mcendgame.manage

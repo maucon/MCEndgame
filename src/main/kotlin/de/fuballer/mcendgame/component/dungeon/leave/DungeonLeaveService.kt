@@ -1,14 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.leave
 
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
-import de.fuballer.mcendgame.domain.Portal
+import de.fuballer.mcendgame.component.map_device.data.Portal
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil
-import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity

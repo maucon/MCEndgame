@@ -2,11 +2,11 @@ package de.fuballer.mcendgame.domain.item
 
 import de.fuballer.mcendgame.domain.attribute.AttributeType
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
-import de.fuballer.mcendgame.domain.equipment.armor.Boots
-import de.fuballer.mcendgame.domain.equipment.armor.Chestplate
 import de.fuballer.mcendgame.domain.equipment.armor.Leggings
+import de.fuballer.mcendgame.util.PluginUtil
 
 object ShrinkshadowItemType : CustomItemType {
+    override val key = PluginUtil.createNamespacedKey("shrinkshadow")
     override val customName = "Shrinkshadow"
     override val equipment = Leggings.NETHERITE
     override val usesEquipmentBaseStats = true

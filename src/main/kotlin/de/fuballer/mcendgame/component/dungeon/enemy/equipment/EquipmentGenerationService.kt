@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.dungeon.enemy.equipment
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil

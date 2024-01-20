@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.looting
 
 import de.fuballer.mcendgame.component.dungeon.killstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil

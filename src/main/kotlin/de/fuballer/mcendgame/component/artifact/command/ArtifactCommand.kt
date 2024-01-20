@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.artifact.command
 
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.util.ArtifactUtil

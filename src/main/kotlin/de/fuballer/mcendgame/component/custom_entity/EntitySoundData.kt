@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.domain
+package de.fuballer.mcendgame.component.custom_entity
 
 data class EntitySoundData(
     val hurt: String,

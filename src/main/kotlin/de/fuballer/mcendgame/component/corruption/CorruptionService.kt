@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.corruption
 
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.domain.equipment.Equipment
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil

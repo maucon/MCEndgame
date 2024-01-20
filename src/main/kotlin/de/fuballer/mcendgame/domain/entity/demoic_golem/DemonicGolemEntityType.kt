@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.domain.entity.demoic_golem
 
-import de.fuballer.mcendgame.domain.EntitySoundData
+import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.domain.ability.Ability
 import de.fuballer.mcendgame.domain.ability.ApplyDarknessAbility
 import de.fuballer.mcendgame.domain.ability.FireCascadeAbility

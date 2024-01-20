@@ -1,11 +1,8 @@
-package de.fuballer.mcendgame.domain
+package de.fuballer.mcendgame.component.map_device.data
 
-import de.fuballer.mcendgame.component.dungeon.world.WorldSettings
 import de.fuballer.mcendgame.component.map_device.MapDeviceSettings
 import de.fuballer.mcendgame.util.PluginUtil
-import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color
-import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.Particle.DustOptions

@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.component.dungeon.type.command
 
-import de.fuballer.mcendgame.domain.dungeon.DungeonType
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeSettings
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeEntity
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeRepository
-import de.fuballer.mcendgame.domain.CommandAction
+import de.fuballer.mcendgame.domain.dungeon.DungeonType
+import de.fuballer.mcendgame.domain.technical.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper

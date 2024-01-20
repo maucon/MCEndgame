@@ -31,6 +31,11 @@ data class RollableAttribute(
         return RolledAttribute(type, value)
     }
 
+    fun roll(roll: Double): RolledAttribute {
+        val value = min + (max - min) * roll
+        return RolledAttribute(type, value)
+    }
+
     private fun calculateRoll(mapTier: Int): Double {
         val random = Random.nextDouble()
         if (mapTier <= EXPONENT_TIER_OFFSET) return random

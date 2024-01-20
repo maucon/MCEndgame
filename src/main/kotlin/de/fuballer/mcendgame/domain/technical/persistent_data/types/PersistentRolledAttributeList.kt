@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.domain.persistent_data.types
+package de.fuballer.mcendgame.domain.technical.persistent_data.types
 
 import de.fuballer.mcendgame.domain.attribute.AttributeType
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
