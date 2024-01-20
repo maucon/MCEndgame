@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.domain.entity.buff_villager
 
+import de.fuballer.mcendgame.domain.EntitySoundData
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import org.bukkit.entity.EntityType
 
@@ -19,6 +20,6 @@ object BuffVillagerEntityType : CustomEntityType {
     override val baseSpeed = 0.26
     override val speedPerTier = 0.0
 
-    override val sounds = null
+    override val sounds = EntitySoundData.create("buff_villager")
     override val abilities = null
 }
