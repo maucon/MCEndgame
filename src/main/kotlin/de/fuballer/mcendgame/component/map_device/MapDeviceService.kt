@@ -151,7 +151,7 @@ class MapDeviceService(
             return
         }
 
-        val playerDungeonJoinEvent = PlayerDungeonJoinEvent(player, player.world, portal.teleportationTargetLocation)
+        val playerDungeonJoinEvent = PlayerDungeonJoinEvent(player, dungeonWorld, portal.teleportationTargetLocation)
         EventGateway.apply(playerDungeonJoinEvent)
 
         updateMapDeviceVisual(portal)

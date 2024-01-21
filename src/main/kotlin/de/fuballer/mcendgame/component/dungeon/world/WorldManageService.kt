@@ -10,7 +10,10 @@ import de.fuballer.mcendgame.framework.annotation.Qualifier
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.helper.FileHelper
 import de.fuballer.mcendgame.util.PluginUtil
-import org.bukkit.*
+import org.bukkit.Difficulty
+import org.bukkit.World
+import org.bukkit.WorldCreator
+import org.bukkit.WorldType
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
@@ -50,22 +53,7 @@ class WorldManageService(
             .generatorSettings("{\"layers\": [], \"biome\":\"plains\"}")
 
         val world = PluginUtil.createWorld(worldCreator).apply {
-            setGameRule(GameRule.KEEP_INVENTORY, true)
-            setGameRule(GameRule.MOB_GRIEFING, false)
-            setGameRule(GameRule.DO_MOB_SPAWNING, false)
-            setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
-            setGameRule(GameRule.DO_WEATHER_CYCLE, false)
-            setGameRule(GameRule.DO_FIRE_TICK, false)
-            setGameRule(GameRule.RANDOM_TICK_SPEED, 0)
-            setGameRule(GameRule.DO_TILE_DROPS, false)
-            setGameRule(GameRule.BLOCK_EXPLOSION_DROP_DECAY, false)
-            setGameRule(GameRule.DO_PATROL_SPAWNING, false)
-            setGameRule(GameRule.TNT_EXPLOSION_DROP_DECAY, false)
-            setGameRule(GameRule.DO_TRADER_SPAWNING, false)
-            setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false)
-            setGameRule(GameRule.REDUCED_DEBUG_INFO, true)
-            setGameRule(GameRule.DISABLE_RAIDS, true)
-            setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false)
+            WorldSettings.updateGameRules(this)
 
             difficulty = Difficulty.HARD
             time = 18000

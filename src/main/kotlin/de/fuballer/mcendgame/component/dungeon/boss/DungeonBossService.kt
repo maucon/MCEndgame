@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.corruption.CorruptionSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
+import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil
@@ -14,7 +15,6 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
@@ -24,7 +24,7 @@ class DungeonBossService(
     private val worldManageRepo: WorldManageRepository
 ) : Listener {
     @EventHandler
-    fun on(event: EntityDeathEvent) {
+    fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity
         val uuid = entity.uniqueId
 

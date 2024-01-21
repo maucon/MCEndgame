@@ -6,7 +6,6 @@ import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.EventUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.attribute.Attribute
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -18,10 +17,6 @@ class IncDamagePerMissingHealthEffectService : Listener {
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
         val player = EventUtil.getPlayerDamager(event) ?: return
-        process(player, event)
-    }
-
-    private fun process(player: Player, event: EntityDamageByEntityEvent) {
         val tier = ArtifactUtil.getHighestTier(player, ArtifactType.INC_DMG_PER_MISSING_HEALTH) ?: return
 
         val (incDmgPerHealth) = ArtifactType.INC_DMG_PER_MISSING_HEALTH.values[tier]!!

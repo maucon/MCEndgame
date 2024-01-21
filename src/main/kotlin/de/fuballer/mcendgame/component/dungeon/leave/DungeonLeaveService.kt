@@ -2,19 +2,14 @@ package de.fuballer.mcendgame.component.dungeon.leave
 
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
 import de.fuballer.mcendgame.component.map_device.data.Portal
-import de.fuballer.mcendgame.event.DungeonCompleteEvent
-import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
-import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
+import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 
@@ -46,9 +41,8 @@ class DungeonLeaveService(
     }
 
     @EventHandler
-    fun on(event: EntityDeathEvent) {
+    fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (entity !is Player) return
 
         val playerDungeonLeaveEvent = PlayerDungeonLeaveEvent(entity)

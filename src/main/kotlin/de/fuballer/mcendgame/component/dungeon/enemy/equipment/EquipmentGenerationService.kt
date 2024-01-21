@@ -13,12 +13,10 @@ import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
-import java.util.*
+import kotlin.random.Random
 
 @Component
 class EquipmentGenerationService {
-    private val random = Random()
-
     fun setCreatureEquipment(
         livingEntity: LivingEntity,
         mapTier: Int,
@@ -35,8 +33,13 @@ class EquipmentGenerationService {
 
         if (armor) {
             createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.HELMETS)?.also { equipment.helmet = it }
-            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.CHESTPLATES)?.also { equipment.chestplate = it }
-            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.LEGGINGS)?.also { equipment.leggings = it }
+            createRandomSortableEquipment(
+                mapTier,
+                EquipmentGenerationSettings.CHESTPLATES
+            )?.also { equipment.chestplate = it }
+            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.LEGGINGS)?.also {
+                equipment.leggings = it
+            }
             createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.BOOTS)?.also { equipment.boots = it }
         }
     }
@@ -54,7 +57,7 @@ class EquipmentGenerationService {
     }
 
     private fun createOffHandItem(mapTier: Int): ItemStack? {
-        if (random.nextDouble() < EquipmentGenerationSettings.OFFHAND_OTHER_OVER_MAINHAND_PROBABILITY) {
+        if (Random.nextDouble() < EquipmentGenerationSettings.OFFHAND_OTHER_OVER_MAINHAND_PROBABILITY) {
             return createRandomEquipment(mapTier, EquipmentGenerationSettings.OTHER_ITEMS)
         }
 

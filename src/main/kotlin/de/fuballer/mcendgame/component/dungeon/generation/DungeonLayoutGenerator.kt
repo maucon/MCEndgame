@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.dungeon.generation
 
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import java.awt.Point
-import java.util.*
 import kotlin.math.abs
+import kotlin.random.Random
 
 class DungeonLayoutGenerator {
     private var layoutTiles: Array<Array<LayoutTile>> = arrayOf()
@@ -11,8 +11,6 @@ class DungeonLayoutGenerator {
 
     private var bossRoomPosition = Point(0, 0)
     private var startRoomPosition = Point(0, 0)
-
-    private val random = Random()
 
     fun getLayout() = layoutTiles
     fun getBossRoomPos() = bossRoomPosition
@@ -31,8 +29,18 @@ class DungeonLayoutGenerator {
         bossRoomPosition = Point(DungeonGenerationSettings.DUNGEON_BOSS_ROOM_X_TILE, 0)
         connectEverythingToPoint(bossRoomPosition, layoutWidth * layoutHeight)
 
-        startRoomPosition = fixMaxAdjacentTilePathLengthDifference(bossRoomPosition, maxAdjacentTilePathLengthDifference, canConnectToStart = true, guaranteeDeadEnd = true)!!
-        fixMaxAdjacentTilePathLengthDifference(startRoomPosition, maxAdjacentTilePathLengthDifference, canConnectToStart = false, guaranteeDeadEnd = false)
+        startRoomPosition = fixMaxAdjacentTilePathLengthDifference(
+            bossRoomPosition,
+            maxAdjacentTilePathLengthDifference,
+            canConnectToStart = true,
+            guaranteeDeadEnd = true
+        )!!
+        fixMaxAdjacentTilePathLengthDifference(
+            startRoomPosition,
+            maxAdjacentTilePathLengthDifference,
+            canConnectToStart = false,
+            guaranteeDeadEnd = false
+        )
 
         layoutTiles[bossRoomPosition.x][bossRoomPosition.y].up = true
     }
@@ -41,7 +49,8 @@ class DungeonLayoutGenerator {
         layoutWidth: Int,
         layoutHeight: Int
     ) {
-        layoutTiles = Array(layoutWidth) { Array(layoutHeight) { LayoutTile(up = true, right = true, down = true, left = true) } }
+        layoutTiles =
+            Array(layoutWidth) { Array(layoutHeight) { LayoutTile(up = true, right = true, down = true, left = true) } }
 
         for (x in 0 until layoutWidth) {
             for (y in 0 until layoutHeight) {
@@ -57,7 +66,7 @@ class DungeonLayoutGenerator {
     }
 
     private fun chooseRandomTile(junctionProbability: Double) {
-        val chosenTilePos = unchosenTiles[random.nextInt(unchosenTiles.size)]
+        val chosenTilePos = unchosenTiles[Random.nextInt(unchosenTiles.size)]
         unchosenTiles.remove(chosenTilePos)
 
         updateChosenTile(chosenTilePos, junctionProbability)
@@ -72,21 +81,21 @@ class DungeonLayoutGenerator {
         val possibleWays = chosenTile.getWays()
         if (possibleWays.isEmpty()) return
 
-        val guaranteedWay = possibleWays[random.nextInt(possibleWays.size)]
+        val guaranteedWay = possibleWays[Random.nextInt(possibleWays.size)]
 
-        if (guaranteedWay != "up" && chosenTile.up && random.nextDouble() > junctionProbability) {
+        if (guaranteedWay != "up" && chosenTile.up && Random.nextDouble() > junctionProbability) {
             chosenTile.up = false
             layoutTiles[chosenTilePos.x][chosenTilePos.y - 1].down = false
         }
-        if (guaranteedWay != "right" && chosenTile.right && random.nextDouble() > junctionProbability) {
+        if (guaranteedWay != "right" && chosenTile.right && Random.nextDouble() > junctionProbability) {
             chosenTile.right = false
             layoutTiles[chosenTilePos.x + 1][chosenTilePos.y].left = false
         }
-        if (guaranteedWay != "down" && chosenTile.down && random.nextDouble() > junctionProbability) {
+        if (guaranteedWay != "down" && chosenTile.down && Random.nextDouble() > junctionProbability) {
             chosenTile.down = false
             layoutTiles[chosenTilePos.x][chosenTilePos.y + 1].up = false
         }
-        if (guaranteedWay != "left" && chosenTile.left && random.nextDouble() > junctionProbability) {
+        if (guaranteedWay != "left" && chosenTile.left && Random.nextDouble() > junctionProbability) {
             chosenTile.left = false
             layoutTiles[chosenTilePos.x - 1][chosenTilePos.y].right = false
         }
@@ -151,7 +160,7 @@ class DungeonLayoutGenerator {
         connectedTilesPos: List<Point>
     ): Point {
         while (true) {
-            val posToTest = possibleConnectionPoints[random.nextInt(possibleConnectionPoints.size)]
+            val posToTest = possibleConnectionPoints[Random.nextInt(possibleConnectionPoints.size)]
 
             val validNewConnectionDirections: MutableList<String> = mutableListOf()
 
@@ -171,7 +180,7 @@ class DungeonLayoutGenerator {
                     continue
             }
 
-            val chosenDirection = validNewConnectionDirections[random.nextInt(validNewConnectionDirections.size)]
+            val chosenDirection = validNewConnectionDirections[Random.nextInt(validNewConnectionDirections.size)]
             connect(posToTest, chosenDirection, false)
             return getAdjacentTilePosInDirection(posToTest, chosenDirection)
         }
@@ -255,7 +264,10 @@ class DungeonLayoutGenerator {
             if (highestDifference <= maxDifference) {
                 val furthestPoint = getFurthestPoint(pathLengthToTile, false)
 
-                return if (furthestPoint != null || !guaranteeDeadEnd) furthestPoint else getFurthestPoint(pathLengthToTile, true)
+                return if (furthestPoint != null || !guaranteeDeadEnd) furthestPoint else getFurthestPoint(
+                    pathLengthToTile,
+                    true
+                )
             }
 
             connect(chosenTilePos, chosenDirection, false)

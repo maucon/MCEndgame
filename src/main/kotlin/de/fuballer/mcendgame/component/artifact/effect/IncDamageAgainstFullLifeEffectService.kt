@@ -9,7 +9,6 @@ import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 
@@ -20,10 +19,6 @@ class IncDamageAgainstFullLifeEffectService {
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
         val player = EventUtil.getPlayerDamager(event) ?: return
-        process(player, event)
-    }
-
-    private fun process(player: Player, event: EntityDamageByEntityEvent) {
         val tier = ArtifactUtil.getHighestTier(player, ArtifactType.INC_DMG_AGAINST_FULL_LIFE) ?: return
 
         val entity = event.entity as? LivingEntity ?: return

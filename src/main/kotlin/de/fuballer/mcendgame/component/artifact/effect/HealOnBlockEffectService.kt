@@ -44,7 +44,8 @@ class HealOnBlockEffectService : Listener {
     }
 
     private fun isHealOnBlockOnCooldown(entity: Entity, cooldown: Double): Boolean {
-        val lastActivation = PersistentDataUtil.getValue(entity, TypeKeys.HEAL_ON_BLOCK_ARTIFACT_ACTIVATION) ?: return false
+        val lastActivation =
+            PersistentDataUtil.getValue(entity, TypeKeys.HEAL_ON_BLOCK_ARTIFACT_ACTIVATION) ?: return false
         val cdMS = (cooldown * 1000).toLong()
         return lastActivation + cdMS > System.currentTimeMillis()
     }
