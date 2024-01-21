@@ -16,7 +16,7 @@ class KillerService(
     private val killerRepo: KillerRepository
 ) : Listener {
     @EventHandler
-    fun onEntityDamageByEntityEvent(event: EntityDamageByEntityEvent) {
+    fun on(event: EntityDamageByEntityEvent) {
         val damaged = event.entity
         if (damaged !is Player) return
 
@@ -33,7 +33,7 @@ class KillerService(
     }
 
     @EventHandler
-    fun onInventoryClick(event: InventoryClickEvent) {
+    fun on(event: InventoryClickEvent) {
         if (!event.view.title.startsWith(KillerSettings.INVENTORY_TITLE, true)) return
 
         event.isCancelled = true

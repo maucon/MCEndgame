@@ -29,7 +29,7 @@ class CorruptionService : Listener {
     private val random = Random()
 
     @EventHandler
-    fun onAnvilPrepare(event: PrepareAnvilEvent) {
+    fun on(event: PrepareAnvilEvent) {
         val inventory = event.inventory
 
         val base = inventory.getItem(0) ?: return
@@ -55,7 +55,7 @@ class CorruptionService : Listener {
     }
 
     @EventHandler
-    fun onInventoryClick(event: InventoryClickEvent) {
+    fun on(event: InventoryClickEvent) {
         val inventory = event.inventory
         if (inventory.type != InventoryType.ANVIL) return
         if (event.slot != 2) return

@@ -32,13 +32,12 @@ class KillStreakService(
     private val server: Server
 ) : Listener {
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
-        if (!PersistentDataUtil.getBooleanValue(event.entity, TypeKeys.IS_ENEMY)) return
-
+    fun on(event: EntityDeathEvent) {
         val entity = event.entity as? LivingEntity ?: return
         val world = entity.world
         if (WorldUtil.isNotDungeonWorld(world)) return
 
+        if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return
         if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_MINION)) return
 
         val killStreak = killStreakRepo.findById(world.name) ?: return
@@ -54,7 +53,7 @@ class KillStreakService(
     }
 
     @EventHandler
-    fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
+    fun on(event: EntityDamageByEntityEvent) {
         if (event.damage < KillStreakSettings.MIN_DMG_FOR_EXTRA_TIME) return
 
         if (!PersistentDataUtil.getBooleanValue(event.entity, TypeKeys.IS_ENEMY)) return
@@ -76,7 +75,7 @@ class KillStreakService(
     }
 
     @EventHandler
-    fun onPlayerQuit(event: PlayerQuitEvent) {
+    fun on(event: PlayerQuitEvent) {
         val player = event.player
         val world = event.player.world
 
@@ -85,7 +84,7 @@ class KillStreakService(
     }
 
     @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) {
+    fun on(event: PlayerJoinEvent) {
         val player = event.player
         val world = event.player.world
         if (WorldUtil.isNotDungeonWorld(world)) return
@@ -94,7 +93,7 @@ class KillStreakService(
     }
 
     @EventHandler
-    fun onPlayerChangedWorld(event: PlayerChangedWorldEvent) {
+    fun on(event: PlayerChangedWorldEvent) {
         val player = event.player
         val world = event.player.world
 
@@ -106,7 +105,7 @@ class KillStreakService(
     }
 
     @EventHandler
-    fun onDungeonWorldDelete(event: DungeonWorldDeleteEvent) {
+    fun on(event: DungeonWorldDeleteEvent) {
         val worldName = event.world.name
 
         val killStreak = killStreakRepo.findById(worldName) ?: return
@@ -116,7 +115,7 @@ class KillStreakService(
     }
 
     @EventHandler
-    fun onDungeonOpen(event: DungeonOpenEvent) {
+    fun on(event: DungeonOpenEvent) {
         val name = event.dungeonWorld.name
         if (killStreakRepo.exists(name)) return
 

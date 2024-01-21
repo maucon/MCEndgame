@@ -23,7 +23,7 @@ class DungeonLeaveService(
     private val dungeonLeaveRepo: DungeonLeaveRepository
 ) : Listener {
     @EventHandler
-    fun onPlayerEntityInteract(event: PlayerInteractAtEntityEvent) {
+    fun on(event: PlayerInteractAtEntityEvent) {
         val entity = event.rightClicked as? ArmorStand ?: return
         if (!dungeonLeaveRepo.exists(entity.world.name)) return
 
@@ -37,7 +37,7 @@ class DungeonLeaveService(
     }
 
     @EventHandler
-    fun onPlayerRespawn(event: PlayerRespawnEvent) {
+    fun on(event: PlayerRespawnEvent) {
         val player = event.player
         val world = player.world
 
@@ -46,7 +46,7 @@ class DungeonLeaveService(
     }
 
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
+    fun on(event: EntityDeathEvent) {
         val entity = event.entity
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (entity !is Player) return
@@ -56,12 +56,12 @@ class DungeonLeaveService(
     }
 
     @EventHandler
-    fun onDungeonWorldDelete(event: DungeonWorldDeleteEvent) {
+    fun on(event: DungeonWorldDeleteEvent) {
         dungeonLeaveRepo.delete(event.world.name)
     }
 
     @EventHandler
-    fun onDungeonComplete(event: DungeonCompleteEvent) {
+    fun on(event: DungeonCompleteEvent) {
         val dungeonLeave = dungeonLeaveRepo.findById(event.world.name) ?: return
         dungeonLeave.portals.forEach { it.activate() }
     }

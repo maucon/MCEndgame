@@ -9,7 +9,7 @@ import org.bukkit.event.world.WorldInitEvent
 @Component
 class WorldGenerationService : Listener {
     @EventHandler
-    fun onWorldInit(event: WorldInitEvent) {
+    fun on(event: WorldInitEvent) {
         if (WorldUtil.isNotDungeonWorld(event.world)) return
 
         event.world.keepSpawnInMemory = false

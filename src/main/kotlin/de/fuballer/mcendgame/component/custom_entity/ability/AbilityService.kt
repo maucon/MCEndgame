@@ -26,7 +26,7 @@ class AbilityService(
     }
 
     @EventHandler
-    fun onEntityTarget(event: EntityTargetEvent) {
+    fun on(event: EntityTargetEvent) {
         val entity = event.entity as? Creature ?: return
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (event.target !is Player) return
@@ -41,7 +41,7 @@ class AbilityService(
     }
 
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
+    fun on(event: EntityDeathEvent) {
         val entity = event.entity
         val uuid = entity.uniqueId
 

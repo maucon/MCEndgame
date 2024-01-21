@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 @Component
 class AttackDamageEffectService : Listener {
     @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) {
+    fun on(event: PlayerJoinEvent) {
         if (WorldUtil.isDungeonWorld(event.player.world)) {
             processJoin(event.player)
         } else {
@@ -24,13 +24,13 @@ class AttackDamageEffectService : Listener {
     }
 
     @EventHandler
-    fun onPlayerDungeonJoin(event: PlayerDungeonJoinEvent) {
+    fun on(event: PlayerDungeonJoinEvent) {
         val player = event.player
         processJoin(player)
     }
 
     @EventHandler
-    fun onPlayerDungeonLeave(event: PlayerDungeonLeaveEvent) {
+    fun on(event: PlayerDungeonLeaveEvent) {
         val player = event.player
         processLeave(player)
     }

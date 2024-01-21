@@ -6,7 +6,6 @@ import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.EventUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.attribute.Attribute
-import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -33,13 +32,5 @@ class IncDamagePerMissingHealthEffectService : Listener {
         val incDamage = event.damage * dmgMultiplier
 
         event.damage = incDamage
-    }
-
-    fun s(event: EntityDamageByEntityEvent): Player? {
-        return if (event.damager is Player) {
-            event.damager as Player
-        } else if (event.damager is Arrow && (event.damager as Arrow).shooter is Player) {
-            (event.damager as Arrow).shooter as Player
-        } else null
     }
 }

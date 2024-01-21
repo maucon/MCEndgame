@@ -15,7 +15,7 @@ class RecipeService(
     private val server: Server
 ) : Listener {
     @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) {
+    fun on(event: PlayerJoinEvent) {
         val player = event.player
 
         val recipes = discoverRecipeRepo.findAll()
@@ -25,7 +25,7 @@ class RecipeService(
     }
 
     @EventHandler
-    fun onDiscoverRecipeAdd(event: DiscoverRecipeAddEvent) {
+    fun on(event: DiscoverRecipeAddEvent) {
         server.addRecipe(event.recipe)
 
         val entity = RecipeEntity(event.key)

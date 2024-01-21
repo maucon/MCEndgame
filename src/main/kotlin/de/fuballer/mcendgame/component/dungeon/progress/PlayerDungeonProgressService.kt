@@ -18,7 +18,7 @@ class PlayerDungeonProgressService(
     private val playerDungeonProgressRepo: PlayerDungeonProgressRepository
 ) : Listener {
     @EventHandler
-    fun onDungeonComplete(event: DungeonCompleteEvent) {
+    fun on(event: DungeonCompleteEvent) {
         for (player in event.world.players) {
             val completedTier = getPlayerDungeonLevel(player.uniqueId).tier
 
@@ -32,7 +32,7 @@ class PlayerDungeonProgressService(
     }
 
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
+    fun on(event: EntityDeathEvent) {
         val player = event.entity
         if (WorldUtil.isNotDungeonWorld(player.world)) return
         if (player !is Player) return
@@ -48,7 +48,7 @@ class PlayerDungeonProgressService(
     }
 
     @EventHandler
-    fun onPlayerRespawn(event: PlayerRespawnEvent) {
+    fun on(event: PlayerRespawnEvent) {
         val player = event.player
         if (WorldUtil.isNotDungeonWorld(player.world)) return
 

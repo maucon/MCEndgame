@@ -21,7 +21,7 @@ class StatisticsService(
     private val statisticsRepo: StatisticsRepository
 ) : Listener {
     @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) {
+    fun on(event: PlayerJoinEvent) {
         val player = event.player.uniqueId
         if (!statisticsRepo.exists(player)) {
             statisticsRepo.save(StatisticsEntity(player))
@@ -29,7 +29,7 @@ class StatisticsService(
     }
 
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
+    fun on(event: EntityDeathEvent) {
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
         if (event.entity is Player) {
@@ -50,7 +50,7 @@ class StatisticsService(
     }
 
     @EventHandler
-    fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
+    fun on(event: EntityDamageByEntityEvent) {
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
         var damager = event.damager
@@ -67,7 +67,7 @@ class StatisticsService(
     }
 
     @EventHandler
-    fun onDungeonComplete(event: DungeonCompleteEvent) {
+    fun on(event: DungeonCompleteEvent) {
         for (player in event.world.players) {
             val statistics = statisticsRepo.findById(player.uniqueId) ?: return
             statistics.dungeonsCompleted++
@@ -78,7 +78,7 @@ class StatisticsService(
     }
 
     @EventHandler
-    fun onDungeonOpen(event: DungeonOpenEvent) {
+    fun on(event: DungeonOpenEvent) {
         val statistics = statisticsRepo.findById(event.player.uniqueId) ?: return
         statistics.dungeonsOpened++
 
@@ -86,7 +86,7 @@ class StatisticsService(
     }
 
     @EventHandler
-    fun onKillStreakIncrease(event: KillStreakIncreaseEvent) {
+    fun on(event: KillStreakIncreaseEvent) {
         val killStreak = event.killstreak
 
         for (player in event.world.players) {
@@ -98,7 +98,7 @@ class StatisticsService(
     }
 
     @EventHandler
-    fun onPlayerDungeonLeave(event: PlayerDungeonLeaveEvent) {
+    fun on(event: PlayerDungeonLeaveEvent) {
         statisticsRepo.flush()
     }
 
