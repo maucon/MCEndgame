@@ -5,7 +5,7 @@ import com.sk89q.worldedit.extent.clipboard.Clipboard
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats
 import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.math.transform.AffineTransform
-import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossService
+import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossGenerationService
 import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationService
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.component.dungeon.leave.DungeonLeaveService
@@ -28,7 +28,7 @@ import java.util.logging.Logger
 class DungeonGenerationService(
     private val dungeonLeaveRepo: DungeonLeaveRepository,
     private val worldManageService: WorldManageService,
-    private val dungeonBossService: DungeonBossService,
+    private val dungeonBossGenerationService: DungeonBossGenerationService,
     private val dungeonLeaveService: DungeonLeaveService,
     private val enemyGenerationService: EnemyGenerationService,
     private val dungeonTypeService: DungeonTypeService,
@@ -146,7 +146,7 @@ class DungeonGenerationService(
         mapTier: Int, world: World
     ) {
         val bossLocation = Location(world, -bossRoomPos.x * 16.0 - 8, DungeonGenerationSettings.MOB_Y_POS - .2, -bossRoomPos.y * 16.0 + 24)
-        dungeonBossService.spawnNewMapBoss(entityType, bossLocation, mapTier)
+        dungeonBossGenerationService.spawnNewMapBoss(entityType, bossLocation, mapTier)
     }
 
     private fun getStartLocation(layoutTiles: Array<Array<LayoutTile>>, startRoomPos: Point, world: World): Location {
