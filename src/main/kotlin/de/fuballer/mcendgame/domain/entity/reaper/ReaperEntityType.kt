@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.domain.entity.reaper
 
+import de.fuballer.mcendgame.domain.EntitySoundData
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import org.bukkit.entity.EntityType
 
@@ -19,6 +20,6 @@ object ReaperEntityType : CustomEntityType {
     override val baseSpeed = 0.3
     override val speedPerTier = 0.0
 
-    override val sounds = null
+    override val sounds = EntitySoundData.create("reaper")
     override val abilities = null
 }
