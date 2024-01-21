@@ -68,7 +68,7 @@ class DungeonBossService(
 
         val boss = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as Creature
 
-        PersistentDataUtil.setValue(boss, TypeKeys.DROP_EQUIPMENT, false)
+        PersistentDataUtil.setValue(boss, TypeKeys.DISABLE_DROP_EQUIPMENT, true)
 
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
         boss.removeWhenFarAway = false

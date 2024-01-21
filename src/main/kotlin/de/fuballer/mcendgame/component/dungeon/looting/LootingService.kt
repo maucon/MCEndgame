@@ -27,8 +27,8 @@ class LootingService(
     fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity
 
+        if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.DISABLE_DROP_EQUIPMENT)) return
         if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return
-        if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.DROP_EQUIPMENT, true)) return
 
         dropEquipment(entity, entity.world)
 

@@ -31,6 +31,15 @@ object EntityUtil {
         return entity
     }
 
+    fun setAttribute(
+        entity: LivingEntity,
+        attribute: Attribute,
+        value: Double
+    ) {
+        val attributeInstance = entity.getAttribute(attribute) ?: return
+        attributeInstance.baseValue = value
+    }
+
     private fun setPersistentData(entity: Entity, entityType: CustomEntityType, mapTier: Int) {
         PersistentDataUtil.setValue(entity, TypeKeys.MAP_TIER, mapTier)
         PersistentDataUtil.setValue(entity, TypeKeys.HIDE_EQUIPMENT, entityType.hideEquipment)
@@ -43,20 +52,11 @@ object EntityUtil {
         val newDamage = entityType.baseDamage + mapTier * entityType.damagePerTier
         val newSpeed = entityType.baseSpeed + mapTier * entityType.speedPerTier
 
-        setEntityAttribute(entity, Attribute.GENERIC_MAX_HEALTH, newHealth)
+        setAttribute(entity, Attribute.GENERIC_MAX_HEALTH, newHealth)
         entity.health = newHealth
 
-        setEntityAttribute(entity, Attribute.GENERIC_ATTACK_DAMAGE, newDamage)
-        setEntityAttribute(entity, Attribute.GENERIC_MOVEMENT_SPEED, newSpeed)
-    }
-
-    private fun setEntityAttribute(
-        entity: LivingEntity,
-        attribute: Attribute,
-        value: Double
-    ) {
-        val attributeInstance = entity.getAttribute(attribute) ?: return
-        attributeInstance.baseValue = value
+        setAttribute(entity, Attribute.GENERIC_ATTACK_DAMAGE, newDamage)
+        setAttribute(entity, Attribute.GENERIC_MOVEMENT_SPEED, newSpeed)
     }
 
     private fun setMiscellaneous(entity: LivingEntity) {

@@ -31,7 +31,7 @@ class EnemyGenerationService(
     private val equipmentGenerationService: EquipmentGenerationService
 ) : Listener {
     @EventHandler
-    fun onEntityPotionEffect(event: EntityPotionEffectEvent) {
+    fun on(event: EntityPotionEffectEvent) {
         if (event.cause != EntityPotionEffectEvent.Cause.EXPIRATION) return
         val effect = event.oldEffect ?: return
         if (effect.type != PotionEffectType.LUCK) return
