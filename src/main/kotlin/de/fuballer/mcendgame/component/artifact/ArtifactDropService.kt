@@ -1,30 +1,25 @@
 package de.fuballer.mcendgame.component.artifact
 
-import de.fuballer.mcendgame.component.artifact.data.Artifact
 import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
-import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDeathEvent
-import java.util.*
+import kotlin.random.Random
 
 @Component
 class ArtifactDropService : Listener {
-    private val random = Random()
-
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
+    fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity
 
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return
         if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_MINION)) return
 
-        if (random.nextDouble() > ArtifactSettings.ARTIFACT_DROP_CHANCE) return
+        if (Random.nextDouble() > ArtifactSettings.ARTIFACT_DROP_CHANCE) return
 
         val mapTier = PersistentDataUtil.getValue(entity, TypeKeys.MAP_TIER) ?: 1
         val type = RandomUtil.pick(ArtifactSettings.ARTIFACT_TYPES).option
