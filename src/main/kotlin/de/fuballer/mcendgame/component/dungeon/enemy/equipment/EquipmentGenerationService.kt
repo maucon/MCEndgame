@@ -30,33 +30,15 @@ class EquipmentGenerationService : Listener {
         val equipment = livingEntity.equipment!!
 
         if (weapons) {
-            createMainHandItem(mapTier, ranged)?.also {
-                equipment.setItemInMainHand(it)
-                equipment.itemInMainHandDropChance = 0f
-            }
-            createOffHandItem(mapTier)?.also {
-                equipment.setItemInOffHand(it)
-                equipment.itemInOffHandDropChance = 0f
-            }
+            createMainHandItem(mapTier, ranged)?.also { equipment.setItemInMainHand(it) }
+            createOffHandItem(mapTier)?.also { equipment.setItemInOffHand(it) }
         }
 
         if (armor) {
-            getSortableEquipment(mapTier, EquipmentGenerationSettings.HELMETS)?.also {
-                equipment.helmet = it
-                equipment.helmetDropChance = 0f
-            }
-            getSortableEquipment(mapTier, EquipmentGenerationSettings.CHESTPLATES)?.also {
-                equipment.chestplate = it
-                equipment.chestplateDropChance = 0f
-            }
-            getSortableEquipment(mapTier, EquipmentGenerationSettings.LEGGINGS)?.also {
-                equipment.leggings = it
-                equipment.leggingsDropChance = 0f
-            }
-            getSortableEquipment(mapTier, EquipmentGenerationSettings.BOOTS)?.also {
-                equipment.boots = it
-                equipment.bootsDropChance = 0f
-            }
+            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.HELMETS)?.also { equipment.helmet = it }
+            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.CHESTPLATES)?.also { equipment.chestplate = it }
+            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.LEGGINGS)?.also { equipment.leggings = it }
+            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.BOOTS)?.also { equipment.boots = it }
         }
     }
 
@@ -64,48 +46,49 @@ class EquipmentGenerationService : Listener {
         if (ranged) return createRangedMainHandItem(mapTier)
 
         val itemProbability = RandomUtil.pick(EquipmentGenerationSettings.MAINHAND_PROBABILITIES).option ?: return null
-        return getSortableEquipment(mapTier, itemProbability)
+        return createRandomSortableEquipment(mapTier, itemProbability)
     }
 
     private fun createRangedMainHandItem(mapTier: Int): ItemStack? {
         val itemProbability = RandomUtil.pick(EquipmentGenerationSettings.RANGED_MAINHAND_PROBABILITIES).option
-        return getSortableEquipment(mapTier, itemProbability)
+        return createRandomSortableEquipment(mapTier, itemProbability)
     }
 
     private fun createOffHandItem(mapTier: Int): ItemStack? {
         if (random.nextDouble() < EquipmentGenerationSettings.OFFHAND_OTHER_OVER_MAINHAND_PROBABILITY) {
-            return getUnsortableEquipment(mapTier, EquipmentGenerationSettings.OTHER_ITEMS)
+            return createRandomEquipment(mapTier, EquipmentGenerationSettings.OTHER_ITEMS)
         }
 
         val itemProbability = RandomUtil.pick(EquipmentGenerationSettings.MAINHAND_PROBABILITIES).option ?: return null
-        return getSortableEquipment(mapTier, itemProbability)
+        return createRandomSortableEquipment(mapTier, itemProbability)
     }
 
-    private fun getSortableEquipment(
+    private fun createRandomSortableEquipment(
         mapTier: Int,
         equipmentProbabilities: List<SortableRandomOption<out Equipment?>>
     ): ItemStack? {
         val rolls = EquipmentGenerationSettings.calculateEquipmentRollTries(mapTier)
         val equipment = RandomUtil.pick(equipmentProbabilities, rolls).option ?: return null
-        return getEquipment(mapTier, equipment)
+
+        return createEquipment(equipment, mapTier)
     }
 
-    private fun getUnsortableEquipment(
+    private fun createRandomEquipment(
         mapTier: Int,
         equipmentProbabilities: List<RandomOption<out Equipment>>
     ): ItemStack {
         val equipment = RandomUtil.pick(equipmentProbabilities).option
-        return getEquipment(mapTier, equipment)
+        return createEquipment(equipment, mapTier)
     }
 
-    private fun getEquipment(
-        mapTier: Int,
-        equipment: Equipment
+    private fun createEquipment(
+        equipment: Equipment,
+        mapTier: Int
     ): ItemStack {
         val item = ItemStack(equipment.material)
         val itemMeta = item.itemMeta ?: return item
 
-        enchantItem(mapTier, itemMeta, equipment.rollableEnchants)
+        addEnchants(mapTier, itemMeta, equipment.rollableEnchants)
         addCustomAttributes(mapTier, equipment, itemMeta)
         item.itemMeta = itemMeta
 
@@ -114,7 +97,7 @@ class EquipmentGenerationService : Listener {
         return item
     }
 
-    private fun enchantItem(
+    private fun addEnchants(
         mapTier: Int,
         itemMeta: ItemMeta,
         enchants: List<RandomOption<ItemEnchantment>>
