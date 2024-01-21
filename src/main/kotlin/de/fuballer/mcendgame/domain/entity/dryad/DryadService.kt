@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 @Component
 class DryadService : Listener {
     @EventHandler
-    fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
+    fun on(event: EntityDamageByEntityEvent) {
         if (!EntityUtil.isCustomEntityType(event.damager, DryadEntityType)) return
 
         val damagedEntity = event.entity as? LivingEntity ?: return

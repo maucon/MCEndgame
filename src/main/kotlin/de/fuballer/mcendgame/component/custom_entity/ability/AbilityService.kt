@@ -7,7 +7,6 @@ import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.PersistentDataUtil
-import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Creature
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -26,9 +25,8 @@ class AbilityService(
     }
 
     @EventHandler
-    fun onEntityTarget(event: EntityTargetEvent) {
+    fun on(event: EntityTargetEvent) {
         val entity = event.entity as? Creature ?: return
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (event.target !is Player) return
 
         val type = PersistentDataUtil.getValue(entity, TypeKeys.CUSTOM_ENTITY_TYPE) ?: return
@@ -41,7 +39,7 @@ class AbilityService(
     }
 
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
+    fun on(event: EntityDeathEvent) {
         val entity = event.entity
         val uuid = entity.uniqueId
 

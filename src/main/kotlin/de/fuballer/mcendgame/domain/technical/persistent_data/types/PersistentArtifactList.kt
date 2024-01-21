@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.domain.technical.persistent_data.types
 
-import de.fuballer.mcendgame.component.artifact.data.Artifact
+import de.fuballer.mcendgame.component.artifact.Artifact
 import de.fuballer.mcendgame.domain.artifact.ArtifactType
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.persistence.PersistentDataAdapterContext

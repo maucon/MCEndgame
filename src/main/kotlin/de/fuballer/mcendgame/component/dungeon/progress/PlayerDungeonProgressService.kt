@@ -3,12 +3,12 @@ package de.fuballer.mcendgame.component.dungeon.progress
 import de.fuballer.mcendgame.component.dungeon.progress.db.PlayerDungeonProgressEntity
 import de.fuballer.mcendgame.component.dungeon.progress.db.PlayerDungeonProgressRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
+import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 import java.util.*
 import kotlin.math.max
@@ -18,7 +18,7 @@ class PlayerDungeonProgressService(
     private val playerDungeonProgressRepo: PlayerDungeonProgressRepository
 ) : Listener {
     @EventHandler
-    fun onDungeonComplete(event: DungeonCompleteEvent) {
+    fun on(event: DungeonCompleteEvent) {
         for (player in event.world.players) {
             val completedTier = getPlayerDungeonLevel(player.uniqueId).tier
 
@@ -32,9 +32,8 @@ class PlayerDungeonProgressService(
     }
 
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
+    fun on(event: DungeonEntityDeathEvent) {
         val player = event.entity
-        if (WorldUtil.isNotDungeonWorld(player.world)) return
         if (player !is Player) return
 
         val entity = playerDungeonProgressRepo.findById(player.uniqueId)
@@ -48,7 +47,7 @@ class PlayerDungeonProgressService(
     }
 
     @EventHandler
-    fun onPlayerRespawn(event: PlayerRespawnEvent) {
+    fun on(event: PlayerRespawnEvent) {
         val player = event.player
         if (WorldUtil.isNotDungeonWorld(player.world)) return
 

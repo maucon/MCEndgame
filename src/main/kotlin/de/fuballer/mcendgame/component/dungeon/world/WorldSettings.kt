@@ -1,9 +1,31 @@
 package de.fuballer.mcendgame.component.dungeon.world
 
+import org.bukkit.GameRule
+import org.bukkit.World
+
 object WorldSettings {
     const val WORLD_PREFIX = "World_MCEndgame_"
     val DEFAULT_WORLD_NAMES = listOf("world", "world_nether", "world_the_end")
 
     const val MAX_WORLD_EMPTY_TIME = 10
     const val WORLD_EMPTY_TEST_PERIOD = 60000L
+
+    fun updateGameRules(world: World) {
+        world.setGameRule(GameRule.KEEP_INVENTORY, true)
+        world.setGameRule(GameRule.MOB_GRIEFING, false)
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, false)
+        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
+        world.setGameRule(GameRule.DO_WEATHER_CYCLE, false)
+        world.setGameRule(GameRule.DO_FIRE_TICK, false)
+        world.setGameRule(GameRule.RANDOM_TICK_SPEED, 0)
+        world.setGameRule(GameRule.DO_TILE_DROPS, false)
+        world.setGameRule(GameRule.BLOCK_EXPLOSION_DROP_DECAY, false)
+        world.setGameRule(GameRule.DO_PATROL_SPAWNING, false)
+        world.setGameRule(GameRule.TNT_EXPLOSION_DROP_DECAY, false)
+        world.setGameRule(GameRule.DO_TRADER_SPAWNING, false)
+        world.setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false)
+        world.setGameRule(GameRule.REDUCED_DEBUG_INFO, true)
+        world.setGameRule(GameRule.DISABLE_RAIDS, true)
+        world.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false)
+    }
 }

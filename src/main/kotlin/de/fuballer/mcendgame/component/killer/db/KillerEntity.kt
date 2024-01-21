@@ -16,11 +16,12 @@ import org.bukkit.potion.PotionEffect
 import java.text.DecimalFormat
 import java.util.*
 
+private val DECIMAL_FORMAT = DecimalFormat("#.##")
+
 class KillerEntity(
     override var id: UUID,
     entity: Entity
 ) : de.fuballer.mcendgame.framework.stereotype.Entity<UUID> {
-    private val DECIMAL_FORMAT = DecimalFormat("#.##")
 
     private var spawnEgg: ItemStack
     private var equipment: Array<ItemStack?>

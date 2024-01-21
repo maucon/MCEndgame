@@ -14,12 +14,12 @@ class TeamService : Listener, LifeCycleListener {
     private var team: Team? = null
 
     @EventHandler
-    fun onDungeonOpened(event: WorldLoadEvent) {
+    fun on(event: WorldLoadEvent) {
         createTeam()
     }
 
     @EventHandler
-    fun onDungeonEnemySpawned(event: DungeonEnemySpawnedEvent) {
+    fun on(event: DungeonEnemySpawnedEvent) {
         event.entities.forEach { team!!.addEntry(it.uniqueId.toString()) }
     }
 

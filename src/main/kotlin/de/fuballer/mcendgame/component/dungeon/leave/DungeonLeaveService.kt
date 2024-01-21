@@ -2,19 +2,14 @@ package de.fuballer.mcendgame.component.dungeon.leave
 
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
 import de.fuballer.mcendgame.component.map_device.data.Portal
-import de.fuballer.mcendgame.event.DungeonCompleteEvent
-import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
-import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
+import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 
@@ -23,7 +18,7 @@ class DungeonLeaveService(
     private val dungeonLeaveRepo: DungeonLeaveRepository
 ) : Listener {
     @EventHandler
-    fun onPlayerEntityInteract(event: PlayerInteractAtEntityEvent) {
+    fun on(event: PlayerInteractAtEntityEvent) {
         val entity = event.rightClicked as? ArmorStand ?: return
         if (!dungeonLeaveRepo.exists(entity.world.name)) return
 
@@ -37,7 +32,7 @@ class DungeonLeaveService(
     }
 
     @EventHandler
-    fun onPlayerRespawn(event: PlayerRespawnEvent) {
+    fun on(event: PlayerRespawnEvent) {
         val player = event.player
         val world = player.world
 
@@ -46,9 +41,8 @@ class DungeonLeaveService(
     }
 
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
+    fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
         if (entity !is Player) return
 
         val playerDungeonLeaveEvent = PlayerDungeonLeaveEvent(entity)
@@ -56,12 +50,12 @@ class DungeonLeaveService(
     }
 
     @EventHandler
-    fun onDungeonWorldDelete(event: DungeonWorldDeleteEvent) {
+    fun on(event: DungeonWorldDeleteEvent) {
         dungeonLeaveRepo.delete(event.world.name)
     }
 
     @EventHandler
-    fun onDungeonComplete(event: DungeonCompleteEvent) {
+    fun on(event: DungeonCompleteEvent) {
         val dungeonLeave = dungeonLeaveRepo.findById(event.world.name) ?: return
         dungeonLeave.portals.forEach { it.activate() }
     }

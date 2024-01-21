@@ -14,7 +14,7 @@ import org.bukkit.event.entity.EntityDeathEvent
 @Component
 class CustomEntitySoundService : Listener {
     @EventHandler
-    fun onEntityDamage(event: EntityDamageEvent) {
+    fun on(event: EntityDamageEvent) {
         val entity = event.entity
         val sounds = getSounds(entity) ?: return
 
@@ -24,7 +24,7 @@ class CustomEntitySoundService : Listener {
     }
 
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
+    fun on(event: EntityDeathEvent) {
         val entity = event.entity
         val sounds = getSounds(entity) ?: return
 

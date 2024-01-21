@@ -22,14 +22,12 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
-import java.util.*
+import kotlin.random.Random
 
 @Component
 class CorruptionService : Listener {
-    private val random = Random()
-
     @EventHandler
-    fun onAnvilPrepare(event: PrepareAnvilEvent) {
+    fun on(event: PrepareAnvilEvent) {
         val inventory = event.inventory
 
         val base = inventory.getItem(0) ?: return
@@ -55,7 +53,7 @@ class CorruptionService : Listener {
     }
 
     @EventHandler
-    fun onInventoryClick(event: InventoryClickEvent) {
+    fun on(event: InventoryClickEvent) {
         val inventory = event.inventory
         if (inventory.type != InventoryType.ANVIL) return
         if (event.slot != 2) return
@@ -123,7 +121,7 @@ class CorruptionService : Listener {
     private fun corruptEnchant(item: ItemStack) {
         val meta = item.itemMeta ?: return
 
-        if (random.nextBoolean()) {
+        if (Random.nextBoolean()) {
             increaseEnchantLevel(item, meta)
         } else {
             decreaseEnchantLevel(item, meta)
@@ -142,7 +140,7 @@ class CorruptionService : Listener {
             possibleEnchants.addAll(meta.enchants.keys)
         }
 
-        val enchantment = possibleEnchants[random.nextInt(possibleEnchants.size)]
+        val enchantment = possibleEnchants[Random.nextInt(possibleEnchants.size)]
         meta.addEnchant(enchantment, meta.getEnchantLevel(enchantment) + 1, true)
 
         item.itemMeta = meta
@@ -152,7 +150,7 @@ class CorruptionService : Listener {
         val enchants = meta.enchants.keys.toMutableList()
         if (enchants.isEmpty()) return
 
-        val enchantment = enchants[random.nextInt(enchants.size)]
+        val enchantment = enchants[Random.nextInt(enchants.size)]
 
         val level = meta.getEnchantLevel(enchantment)
         if (level == 1) {
@@ -173,7 +171,8 @@ class CorruptionService : Listener {
 
         val attributeBounds = attributesBounds.firstOrNull { it.type == chosenAttribute.type } ?: return
 
-        chosenAttribute.roll = CorruptionSettings.corruptAttributeValue(attributeBounds, chosenAttribute.roll, random.nextDouble())
+        chosenAttribute.roll =
+            CorruptionSettings.corruptAttributeValue(attributeBounds, chosenAttribute.roll, Random.nextDouble())
         PersistentDataUtil.setValue(meta, TypeKeys.ATTRIBUTES, attributes)
 
         item.itemMeta = meta

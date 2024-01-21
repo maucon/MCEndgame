@@ -11,7 +11,7 @@ import org.bukkit.event.block.BlockPlaceEvent
 @Component
 class BlockInteractionService : Listener {
     @EventHandler
-    fun onBlockBreak(event: BlockBreakEvent) {
+    fun on(event: BlockBreakEvent) {
         if (WorldUtil.isNotDungeonWorld(event.player.world)) return
         if (event.player.gameMode == GameMode.CREATIVE) return
 
@@ -24,7 +24,7 @@ class BlockInteractionService : Listener {
     }
 
     @EventHandler
-    fun onBlockBreak(event: BlockPlaceEvent) {
+    fun on(event: BlockPlaceEvent) {
         if (WorldUtil.isNotDungeonWorld(event.player.world)) return
         if (event.player.gameMode == GameMode.CREATIVE) return
 

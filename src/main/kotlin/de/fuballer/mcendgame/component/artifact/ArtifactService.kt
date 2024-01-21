@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack
 @Component
 class ArtifactService : Listener {
     @EventHandler
-    fun onInventoryClick(event: InventoryClickEvent) {
+    fun on(event: InventoryClickEvent) {
         if (!event.view.title.contains(ArtifactSettings.ARTIFACTS_WINDOW_TITLE, true)) return
         event.isCancelled = true
 

@@ -1,16 +1,14 @@
 package de.fuballer.mcendgame.util.random
 
-import java.util.*
 import kotlin.math.max
+import kotlin.random.Random
 
 object RandomUtil {
-    private val random = Random()
-
     fun <T : RandomOption<*>> pick(
         options: List<T>
     ): T {
         val totalWeight = options.sumOf { it.weight }
-        val randomInt = random.nextInt(totalWeight)
+        val randomInt = Random.nextInt(totalWeight)
 
         return pickOption(options, randomInt)
     }
@@ -23,7 +21,7 @@ object RandomUtil {
 
         var randomInt = 0
         repeat(rolls) {
-            randomInt = max(randomInt, random.nextInt(totalWeight))
+            randomInt = max(randomInt, Random.nextInt(totalWeight))
         }
 
         val sortedOptions = options.sortedBy { it.tier }.toList()

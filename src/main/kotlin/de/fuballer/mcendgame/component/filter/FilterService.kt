@@ -16,7 +16,7 @@ class FilterService(
     private val filterRepo: FilterRepository
 ) : Listener {
     @EventHandler
-    fun onInventoryClick(event: InventoryClickEvent) {
+    fun on(event: InventoryClickEvent) {
         if (!event.view.title.equals(FilterSettings.FILTER_WINDOW_TITLE, ignoreCase = true)) return
         event.isCancelled = true
 
@@ -45,7 +45,7 @@ class FilterService(
     }
 
     @EventHandler
-    fun onEntityItemPickup(event: EntityPickupItemEvent) {
+    fun on(event: EntityPickupItemEvent) {
         val player = event.entity as? Player ?: return
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 

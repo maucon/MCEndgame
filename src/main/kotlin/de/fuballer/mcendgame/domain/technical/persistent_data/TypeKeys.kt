@@ -10,13 +10,13 @@ import org.bukkit.persistence.PersistentDataType
 
 object TypeKeys {
     // entities
-    val DROP_EQUIPMENT = TypeKey(createNamespacedKey("drop_equipment"), PersistentDataType.BOOLEAN)
+    val DISABLE_DROP_EQUIPMENT = TypeKey(createNamespacedKey("disable_drop_equipment"), PersistentDataType.BOOLEAN)
     val MAP_TIER = TypeKey(createNamespacedKey("map_tier"), PersistentDataType.INTEGER)
     val IS_MINION = TypeKey(createNamespacedKey("is_minion"), PersistentDataType.BOOLEAN)
     val HIDE_EQUIPMENT = TypeKey(createNamespacedKey("hide_equipment"), PersistentDataType.BOOLEAN)
     val CUSTOM_ENTITY_TYPE = TypeKey(createNamespacedKey("custom_entity_type"), PersistentObjectClass(CustomEntityType::class.java))
     val IS_ENEMY = TypeKey(createNamespacedKey("is_enemy"), PersistentDataType.BOOLEAN)
-    val MINIONS = TypeKey(createNamespacedKey("minions"), PersistentUuidSet)
+    val MINION_IDS = TypeKey(createNamespacedKey("minions"), PersistentUuidSet)
     val IS_SPECIAL = TypeKey(createNamespacedKey("is_special"), PersistentDataType.BOOLEAN)
 
     // player

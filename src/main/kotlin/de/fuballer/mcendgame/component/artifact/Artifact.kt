@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.artifact.data
+package de.fuballer.mcendgame.component.artifact
 
 import de.fuballer.mcendgame.domain.artifact.ArtifactType
 

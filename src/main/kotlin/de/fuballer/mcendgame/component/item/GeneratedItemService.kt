@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.PrepareSmithingEvent
 @Component
 class GeneratedItemService : Listener {
     @EventHandler
-    fun onEnchant(event: EnchantItemEvent) {
+    fun on(event: EnchantItemEvent) {
         val item = event.item
         val enchants = event.enchantsToAdd
         val damageAllTier = enchants[Enchantment.DAMAGE_ALL] ?: return
@@ -24,7 +24,7 @@ class GeneratedItemService : Listener {
     }
 
     @EventHandler
-    fun onAnvilPrepare(event: PrepareAnvilEvent) {
+    fun on(event: PrepareAnvilEvent) {
         val item = event.result ?: return
         if (ItemUtil.isVanillaItem(item)) return
 
@@ -32,7 +32,7 @@ class GeneratedItemService : Listener {
     }
 
     @EventHandler
-    fun onSmithingPrepare(event: PrepareSmithingEvent) {
+    fun on(event: PrepareSmithingEvent) {
         val item = event.result ?: return
         if (ItemUtil.isVanillaItem(item)) return
 
@@ -40,7 +40,7 @@ class GeneratedItemService : Listener {
     }
 
     @EventHandler
-    fun onGrindstoneUse(event: InventoryClickEvent) {
+    fun on(event: InventoryClickEvent) {
         val inventory = event.inventory
         if (inventory.type != InventoryType.GRINDSTONE || event.rawSlot != 2) return
 

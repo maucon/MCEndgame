@@ -15,7 +15,7 @@ import org.bukkit.event.entity.EntitySpawnEvent
 @Component
 class DungeonEnemyDamagingService : Listener {
     @EventHandler(priority = EventPriority.LOWEST)
-    fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
+    fun on(event: EntityDamageByEntityEvent) {
         val damager = event.damager
 
         if (WorldUtil.isNotDungeonWorld(damager.world)) return
@@ -31,7 +31,7 @@ class DungeonEnemyDamagingService : Listener {
     }
 
     @EventHandler
-    fun onEntitySpawn(event: EntitySpawnEvent) {
+    fun on(event: EntitySpawnEvent) {
         val entity = event.entity
         if (entity !is EvokerFangs) return
 

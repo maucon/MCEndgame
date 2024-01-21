@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityTargetEvent.TargetReason
 @Component
 class EnemyTargetingService : Listener {
     @EventHandler
-    fun onEntityTarget(event: EntityTargetEvent) {
+    fun on(event: EntityTargetEvent) {
         val entity = event.entity
 
         if (WorldUtil.isNotDungeonWorld(entity.world)) return

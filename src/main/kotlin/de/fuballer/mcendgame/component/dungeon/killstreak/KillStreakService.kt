@@ -4,10 +4,7 @@ import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakEntity
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
 import de.fuballer.mcendgame.domain.technical.TimerTask
 import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
-import de.fuballer.mcendgame.event.DungeonOpenEvent
-import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
-import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.event.KillStreakIncreaseEvent
+import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
@@ -19,10 +16,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerQuitEvent
 import java.util.*
 import kotlin.math.min
 
@@ -32,13 +26,11 @@ class KillStreakService(
     private val server: Server
 ) : Listener {
     @EventHandler
-    fun onEntityDeath(event: EntityDeathEvent) {
-        if (!PersistentDataUtil.getBooleanValue(event.entity, TypeKeys.IS_ENEMY)) return
-
+    fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity as? LivingEntity ?: return
         val world = entity.world
-        if (WorldUtil.isNotDungeonWorld(world)) return
 
+        if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return
         if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_MINION)) return
 
         val killStreak = killStreakRepo.findById(world.name) ?: return
@@ -54,14 +46,12 @@ class KillStreakService(
     }
 
     @EventHandler
-    fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
+    fun on(event: EntityDamageByEntityEvent) {
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         if (event.damage < KillStreakSettings.MIN_DMG_FOR_EXTRA_TIME) return
-
         if (!PersistentDataUtil.getBooleanValue(event.entity, TypeKeys.IS_ENEMY)) return
 
         val entity = event.entity as? LivingEntity ?: return
-        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
-
         val damager = event.damager
         if (!DungeonUtil.isPlayerOrPlayerProjectile(damager)) return
 
@@ -76,25 +66,23 @@ class KillStreakService(
     }
 
     @EventHandler
-    fun onPlayerQuit(event: PlayerQuitEvent) {
+    fun on(event: PlayerDungeonLeaveEvent) {
         val player = event.player
         val world = event.player.world
 
-        if (WorldUtil.isNotDungeonWorld(world)) return
         removePlayerFromBossBar(player, world)
     }
 
     @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) {
+    fun on(event: PlayerDungeonJoinEvent) {
         val player = event.player
-        val world = event.player.world
-        if (WorldUtil.isNotDungeonWorld(world)) return
+        val world = event.world
 
         addPlayerToBossBar(player, world)
     }
 
     @EventHandler
-    fun onPlayerChangedWorld(event: PlayerChangedWorldEvent) {
+    fun on(event: PlayerChangedWorldEvent) {
         val player = event.player
         val world = event.player.world
 
@@ -106,7 +94,7 @@ class KillStreakService(
     }
 
     @EventHandler
-    fun onDungeonWorldDelete(event: DungeonWorldDeleteEvent) {
+    fun on(event: DungeonWorldDeleteEvent) {
         val worldName = event.world.name
 
         val killStreak = killStreakRepo.findById(worldName) ?: return
@@ -116,7 +104,7 @@ class KillStreakService(
     }
 
     @EventHandler
-    fun onDungeonOpen(event: DungeonOpenEvent) {
+    fun on(event: DungeonOpenEvent) {
         val name = event.dungeonWorld.name
         if (killStreakRepo.exists(name)) return
 

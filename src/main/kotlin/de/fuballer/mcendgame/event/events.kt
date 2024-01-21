@@ -5,6 +5,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.World
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.Recipe
 
 /**
@@ -72,4 +73,12 @@ class DiscoverRecipeAddEvent(
 class DungeonEnemySpawnedEvent(
     val world: World,
     val entities: Set<LivingEntity>
+) : HandleableEvent()
+
+/**
+ * Thrown whenever an entity dies inside a dungeon
+ */
+class DungeonEntityDeathEvent(
+    val entity: LivingEntity,
+    val drops: MutableList<ItemStack>
 ) : HandleableEvent()

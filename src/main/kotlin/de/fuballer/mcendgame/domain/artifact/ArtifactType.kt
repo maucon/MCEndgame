@@ -106,7 +106,7 @@ enum class ArtifactType(
     ),
     ADDITIONAL_ARROWS(
         "Artifact of Barrage",
-        "You shoot %s additional arrows\\dealing %s%% of the damage.\\Your arrows don't damage other players",
+        "You shoot %s additional arrows\\dealing %s%% of the damage",
         mapOf(
             //TIER = ADDITIONAL ARROWS, dealing % of DAMAGE
             0 to listOf(2.0, 30.0),
