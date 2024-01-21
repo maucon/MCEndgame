@@ -27,20 +27,33 @@ class EquipmentGenerationService {
         val equipment = livingEntity.equipment!!
 
         if (weapons) {
-            createMainHandItem(mapTier, ranged)?.also { equipment.setItemInMainHand(it) }
-            createOffHandItem(mapTier)?.also { equipment.setItemInOffHand(it) }
+            createMainHandItem(mapTier, ranged)?.also {
+                equipment.setItemInMainHand(it)
+                equipment.itemInMainHandDropChance = 0f
+            }
+            createOffHandItem(mapTier)?.also {
+                equipment.setItemInOffHand(it)
+                equipment.itemInOffHandDropChance = 0f
+            }
         }
 
         if (armor) {
-            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.HELMETS)?.also { equipment.helmet = it }
-            createRandomSortableEquipment(
-                mapTier,
-                EquipmentGenerationSettings.CHESTPLATES
-            )?.also { equipment.chestplate = it }
+            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.HELMETS)?.also {
+                equipment.helmet = it
+                equipment.helmetDropChance = 0f
+            }
+            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.CHESTPLATES)?.also {
+                equipment.chestplate = it
+                equipment.chestplateDropChance = 0f
+            }
             createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.LEGGINGS)?.also {
                 equipment.leggings = it
+                equipment.leggingsDropChance = 0f
             }
-            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.BOOTS)?.also { equipment.boots = it }
+            createRandomSortableEquipment(mapTier, EquipmentGenerationSettings.BOOTS)?.also {
+                equipment.boots = it
+                equipment.bootsDropChance = 0f
+            }
         }
     }
 
