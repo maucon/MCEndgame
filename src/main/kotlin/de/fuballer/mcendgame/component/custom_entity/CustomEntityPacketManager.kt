@@ -3,8 +3,8 @@ package de.fuballer.mcendgame.component.custom_entity
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolManager
 import com.comphenix.protocol.events.PacketEvent
-import de.fuballer.mcendgame.domain.packet.SendingPacketAdapter
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.technical.packet.SendingPacketAdapter
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.PersistentDataUtil

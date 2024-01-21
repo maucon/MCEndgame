@@ -28,10 +28,10 @@ class GiveArtifactTabCompleter : CommandTabCompleter {
             1 -> PluginUtil.getOnlinePlayers().map { it.name }
             2 -> ArtifactType.entries
                 .map(Enum<*>::name)
-                .filter { it.startsWith(args[1], true) }
+                .filter { it.contains(args[1], true) }
 
             3 -> listOf("0", "1", "2", "3")
-                .filter { it.startsWith(args[2], true) }
+                .filter { it.contains(args[2], true) }
 
             else -> listOf()
         }

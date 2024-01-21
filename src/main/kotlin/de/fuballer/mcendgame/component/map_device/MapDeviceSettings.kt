@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.map_device
 
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.component.map_device.data.MapDeviceAction
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.ItemUtil
 import org.bukkit.ChatColor

@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.item.CustomItemType
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import org.bukkit.ChatColor
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
@@ -18,12 +18,18 @@ import org.bukkit.inventory.meta.ItemMeta
 import java.util.*
 
 object ItemUtil {
-    fun createCustomItem(itemType: CustomItemType): ItemStack {
+    fun createCustomItem(itemType: CustomItemType, roll: Double? = null): ItemStack {
         val item = ItemStack(itemType.equipment.material)
         val itemMeta = item.itemMeta!!
 
         itemMeta.setDisplayName("${ChatColor.GOLD}${itemType.customName}")
-        val rolledAttributes = itemType.attributes.map { it.roll(1) }
+        val rolledAttributes = itemType.attributes.map {
+            if (roll == null) {
+                it.roll(1)
+            } else {
+                it.roll(roll)
+            }
+        }
 
         if (!itemType.usesEquipmentBaseStats) {
             itemMeta.attributeModifiers?.let {

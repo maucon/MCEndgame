@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.progress.command
 
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSettings
-import de.fuballer.mcendgame.domain.CommandAction
+import de.fuballer.mcendgame.domain.technical.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import de.fuballer.mcendgame.util.PluginUtil
@@ -31,12 +31,14 @@ class DungeonProgressTabCompleter : CommandTabCompleter {
                 if (args[0] == CommandAction.GET.actionName) return listOf()
                 return (1..PlayerDungeonProgressSettings.MAX_DUNGEON_TIER)
                     .map { "$it" }
+                    .filter { it.contains(args[2], true) }
             }
 
             4 -> {
                 if (args[0] == CommandAction.GET.actionName) return listOf()
                 return (0 until PlayerDungeonProgressSettings.DUNGEON_LEVEL_INCREASE_THRESHOLD)
                     .map { "$it" }
+                    .filter { it.contains(args[2], true) }
             }
 
             else -> listOf()

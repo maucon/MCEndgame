@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.artifact
 
 import de.fuballer.mcendgame.domain.artifact.ArtifactType
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component

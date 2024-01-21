@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.dungeon.type.command
 
-import de.fuballer.mcendgame.domain.dungeon.DungeonType
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeSettings
-import de.fuballer.mcendgame.domain.CommandAction
+import de.fuballer.mcendgame.domain.dungeon.DungeonType
+import de.fuballer.mcendgame.domain.technical.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import de.fuballer.mcendgame.util.PluginUtil
@@ -32,7 +32,7 @@ class DungeonTypeTabCompleter : CommandTabCompleter {
                 if (args[0] == CommandAction.GET.actionName) return listOf()
                 return DungeonType.entries
                     .map { it.toString() }
-                    .filter { it.startsWith(args[2], true) }
+                    .filter { it.contains(args[2], true) }
             }
 
             else -> listOf()

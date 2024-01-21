@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.item.item_info
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.util.ItemUtil
@@ -46,13 +46,13 @@ class ItemInfoCommand : CommandHandler {
 
         val itemMeta = item.itemMeta
         if (itemMeta == null) {
-            player.sendMessage(ItemInfoSettings.NO_ATTRIBUTES)
+            player.sendMessage(ItemInfoSettings.INVALID_ITEM)
             return
         }
 
         val attributes = PersistentDataUtil.getValue(itemMeta, TypeKeys.ATTRIBUTES)
         if (!Equipment.existsByMaterial(itemType) || attributes.isNullOrEmpty()) {
-            player.sendMessage(ItemInfoSettings.NO_ATTRIBUTES)
+            player.sendMessage(ItemInfoSettings.INVALID_ITEM)
             return
         }
 

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.domain
+package de.fuballer.mcendgame.domain.technical
 
 enum class CommandAction(
     val actionName: String

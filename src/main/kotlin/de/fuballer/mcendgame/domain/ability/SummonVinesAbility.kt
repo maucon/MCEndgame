@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.domain.ability
 
 import de.fuballer.mcendgame.domain.entity.vine.VineEntityType
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.EntityUtil

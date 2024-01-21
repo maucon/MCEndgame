@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.domain.packet
+package de.fuballer.mcendgame.domain.technical.packet
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.events.ListenerPriority
@@ -6,7 +6,7 @@ import com.comphenix.protocol.events.PacketAdapter
 import com.comphenix.protocol.events.PacketEvent
 import de.fuballer.mcendgame.configuration.PluginConfiguration
 
-class SendingPacketAdapter(
+class ReceivingPacketAdapter(
     packetType: PacketType,
     listenerPriority: ListenerPriority = ListenerPriority.NORMAL,
     private val listener: (event: PacketEvent) -> Unit
@@ -15,7 +15,7 @@ class SendingPacketAdapter(
     listenerPriority,
     packetType
 ) {
-    override fun onPacketSending(event: PacketEvent) {
+    override fun onPacketReceiving(event: PacketEvent) {
         listener.invoke(event)
     }
 }

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.domain.entity
 
-import de.fuballer.mcendgame.domain.EntitySoundData
+import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.domain.ability.Ability
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.entity.EntityType

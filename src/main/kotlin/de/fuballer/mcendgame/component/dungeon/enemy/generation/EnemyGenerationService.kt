@@ -4,10 +4,12 @@ import de.fuballer.mcendgame.component.dungeon.enemy.equipment.EquipmentGenerati
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -44,22 +46,33 @@ class EnemyGenerationService(
 
     fun summonMonsters(
         randomEntityTypes: List<RandomOption<CustomEntityType>>,
+        specialEntityTypes: List<RandomOption<CustomEntityType>>,
         layoutTiles: Array<Array<LayoutTile>>,
         startPoint: Point,
         mapTier: Int,
         world: World
     ) {
-        for (x in layoutTiles.indices) {
-            for (y in layoutTiles[0].indices) {
-
-                if (startPoint.x == x && startPoint.y == y) continue
-
-                PluginUtil.scheduleTask {
-                    val mobCount = EnemyGenerationSettings.calculateMobCount(random)
-                    spawnMobs(randomEntityTypes, mobCount, -x * 16.0 - 8, -y * 16.0 - 8, mapTier, world)
+        val tileList = layoutTiles.indices
+            .flatMap { x ->
+                layoutTiles[0].indices.map { y ->
+                    Point(x, y)
                 }
             }
-        }
+            .filter { startPoint.x != it.x || startPoint.y != it.y }
+            .onEach {
+                PluginUtil.scheduleTask {
+                    val mobCount = EnemyGenerationSettings.calculateMobCount(random)
+                    spawnMobs(randomEntityTypes, mobCount, -it.x * 16.0 - 8, -it.y * 16.0 - 8, mapTier, world)
+                }
+            }
+
+        tileList.shuffled()
+            .take(EnemyGenerationSettings.SPECIAL_MOB_COUNT)
+            .forEach {
+                PluginUtil.scheduleTask {
+                    spawnMobs(specialEntityTypes, 1, -it.x * 16.0 - 8, -it.y * 16.0 - 8, mapTier, world, special = true)
+                }
+            }
     }
 
     private fun spawnMobs(
@@ -68,7 +81,8 @@ class EnemyGenerationService(
         x: Double,
         z: Double,
         mapTier: Int,
-        world: World
+        world: World,
+        special: Boolean = false
     ) {
         val entities = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
@@ -90,6 +104,8 @@ class EnemyGenerationService(
             addTemporarySlowfalling(entity)
             val canBeInvisible = !entityType.hideEquipment
             addEffectsToEntity(entity, mapTier, canBeInvisible)
+
+            if (special) PersistentDataUtil.setValue(entity, TypeKeys.IS_SPECIAL, true)
 
             entities.add(entity)
         }

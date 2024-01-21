@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.helper
 
-import de.fuballer.mcendgame.domain.CommandAction
+import de.fuballer.mcendgame.domain.technical.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.ChatColor

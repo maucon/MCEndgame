@@ -60,7 +60,7 @@ class DungeonGenerationService(
         }
 
         spawnBoss(rolledDungeonType.bossEntityType, bossRoomPos, mapTier, world)
-        enemyGenerationService.summonMonsters(rolledDungeonType.entityTypes, layoutTiles, startRoomPos, mapTier, world)
+        enemyGenerationService.summonMonsters(rolledDungeonType.entityTypes, rolledDungeonType.specialEntityTypes, layoutTiles, startRoomPos, mapTier, world)
 
         val entity = DungeonLeaveEntity(world.name, mutableListOf(), leaveLocation)
         dungeonLeaveRepo.save(entity)

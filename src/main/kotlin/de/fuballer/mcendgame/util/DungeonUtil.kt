@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.domain.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import org.bukkit.GameMode
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity

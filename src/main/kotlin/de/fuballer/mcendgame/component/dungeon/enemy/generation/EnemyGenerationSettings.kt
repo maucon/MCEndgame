@@ -8,6 +8,7 @@ object EnemyGenerationSettings {
     private const val MIN_MOBS_PER_TILE = 2
     private const val MAX_MOBS_PER_TILE = 5
     const val MOB_XZ_SPREAD = 1.5
+    const val SPECIAL_MOB_COUNT = 3
 
     fun calculateMobCount(random: Random): Int {
         val possibleAddedMobs = MAX_MOBS_PER_TILE - MIN_MOBS_PER_TILE
