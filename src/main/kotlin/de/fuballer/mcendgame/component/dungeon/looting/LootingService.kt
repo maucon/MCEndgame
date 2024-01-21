@@ -4,8 +4,10 @@ import de.fuballer.mcendgame.component.dungeon.killstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
 import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
@@ -29,6 +31,7 @@ class LootingService(
         val world = entity.world
         if (WorldUtil.isNotDungeonWorld(world)) return
 
+        if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return
         if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.DROP_EQUIPMENT, true)) return
 
         val looting = getLootingLevel(entity.killer)
@@ -45,6 +48,17 @@ class LootingService(
                 }
                 world.dropItemNaturally(entity.location, item)
             }
+        }
+
+        val mapTier = PersistentDataUtil.getValue(entity, TypeKeys.MAP_TIER) ?: return
+
+        if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_SPECIAL)) {
+            if (random.nextDouble() > LootingSettings.getCustomItemDropChance(mapTier)) return
+
+            val customItemType = RandomUtil.pick(LootingSettings.CUSTOM_ITEM_OPTIONS).option
+            val item = ItemUtil.createCustomItem(customItemType)
+
+            world.dropItemNaturally(entity.location, item)
         }
     }
 

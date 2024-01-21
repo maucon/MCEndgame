@@ -32,7 +32,7 @@ class DungeonTypeTabCompleter : CommandTabCompleter {
                 if (args[0] == CommandAction.GET.actionName) return listOf()
                 return DungeonType.entries
                     .map { it.toString() }
-                    .filter { it.startsWith(args[2], true) }
+                    .filter { it.contains(args[2], true) }
             }
 
             else -> listOf()

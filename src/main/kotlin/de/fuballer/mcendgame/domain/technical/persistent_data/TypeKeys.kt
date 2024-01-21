@@ -17,6 +17,7 @@ object TypeKeys {
     val CUSTOM_ENTITY_TYPE = TypeKey(createNamespacedKey("custom_entity_type"), PersistentObjectClass(CustomEntityType::class.java))
     val IS_ENEMY = TypeKey(createNamespacedKey("is_enemy"), PersistentDataType.BOOLEAN)
     val MINIONS = TypeKey(createNamespacedKey("minions"), PersistentUuidSet)
+    val IS_SPECIAL = TypeKey(createNamespacedKey("is_special"), PersistentDataType.BOOLEAN)
 
     // player
     val LAST_MAP_DEVICE = TypeKey(createNamespacedKey("last_map_device"), PersistentUuid)

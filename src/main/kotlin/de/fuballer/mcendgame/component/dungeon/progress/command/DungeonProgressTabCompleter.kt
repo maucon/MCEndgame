@@ -31,12 +31,14 @@ class DungeonProgressTabCompleter : CommandTabCompleter {
                 if (args[0] == CommandAction.GET.actionName) return listOf()
                 return (1..PlayerDungeonProgressSettings.MAX_DUNGEON_TIER)
                     .map { "$it" }
+                    .filter { it.contains(args[2], true) }
             }
 
             4 -> {
                 if (args[0] == CommandAction.GET.actionName) return listOf()
                 return (0 until PlayerDungeonProgressSettings.DUNGEON_LEVEL_INCREASE_THRESHOLD)
                     .map { "$it" }
+                    .filter { it.contains(args[2], true) }
             }
 
             else -> listOf()

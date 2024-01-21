@@ -40,6 +40,7 @@ import de.fuballer.mcendgame.util.random.RandomUtil
 enum class DungeonType(
     private val mapTypes: List<RandomOption<DungeonMapType>>,
     private val entityTypes: List<RandomOption<CustomEntityType>>,
+    private val specialEntityTypes: List<RandomOption<CustomEntityType>>,
     private val bossEntityTypes: List<RandomOption<CustomEntityType>>
 ) {
     HELL(
@@ -52,9 +53,11 @@ enum class DungeonType(
             RandomOption(90, SkeletonEntityType),
             RandomOption(20, MagmaCubeEntityType),
             RandomOption(20, BlazeEntityType),
-            RandomOption(3, SuccubusEntityType),
-            RandomOption(3, IncubusEntityType),
             RandomOption(15, ImpEntityType),
+        ),
+        listOf(
+            RandomOption(1, SuccubusEntityType),
+            RandomOption(1, IncubusEntityType),
         ),
         listOf(RandomOption(1, CerberusEntityType))
     ),
@@ -74,6 +77,9 @@ enum class DungeonType(
             RandomOption(20, MeleeSkeletonEntityType),
             RandomOption(30, StrayEntityType),
             RandomOption(12, NecromancerEntityType),
+
+            ),
+        listOf(
             RandomOption(3, ReaperEntityType)
         ),
         listOf(RandomOption(1, DemonicGolemEntityType))
@@ -91,6 +97,9 @@ enum class DungeonType(
             RandomOption(10, HarpyEntityType),
             RandomOption(10, NagaEntityType)
         ),
+        listOf(
+            RandomOption(1, ReaperEntityType)
+        ),
         listOf(RandomOption(1, MinotaurEntityType))
     ),
     FOREST(
@@ -102,7 +111,9 @@ enum class DungeonType(
             RandomOption(40, MeleeForestSkeletonEntityType),
             RandomOption(15, MushroomEntityType),
             RandomOption(8, StalkerEntityType),
-            RandomOption(4, DryadEntityType),
+            RandomOption(4, DryadEntityType)
+        ),
+        listOf(
             RandomOption(1, WendigoEntityType)
         ),
         listOf(RandomOption(1, MandragoraEntityType))
@@ -114,8 +125,10 @@ enum class DungeonType(
         listOf(
             RandomOption(50, BuffVillagerEntityType),
             RandomOption(20, BuffWitchEntityType),
-            RandomOption(3, BuffCowEntityType),
             RandomOption(8, BuffAllayEntityType),
+        ),
+        listOf(
+            RandomOption(1, BuffCowEntityType)
         ),
         listOf(RandomOption(1, MinotaurEntityType))
     );
@@ -123,6 +136,7 @@ enum class DungeonType(
     fun roll() = RolledDungeonType(
         RandomUtil.pick(mapTypes).option,
         entityTypes,
+        specialEntityTypes,
         RandomUtil.pick(bossEntityTypes).option
     )
 }
