@@ -11,13 +11,12 @@ import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.entity.LivingEntity
-import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import java.util.*
 
 @Component
-class EquipmentGenerationService : Listener {
+class EquipmentGenerationService {
     private val random = Random()
 
     fun setCreatureEquipment(

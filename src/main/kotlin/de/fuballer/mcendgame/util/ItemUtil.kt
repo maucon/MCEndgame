@@ -14,8 +14,10 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.ItemMeta
 import java.util.*
+import kotlin.random.Random
 
 object ItemUtil {
     fun createCustomItem(itemType: CustomItemType, roll: Double? = null): ItemStack {
@@ -100,6 +102,17 @@ object ItemUtil {
         if (!lore.startsWith("+")) return lore
 
         return lore.replaceFirstChar { "" }
+    }
+
+    fun setRandomDurability(item: ItemStack): ItemStack {
+        val itemMeta = item.itemMeta
+
+        if (itemMeta is Damageable) {
+            itemMeta.damage = (Random.nextDouble() * item.type.maxDurability).toInt()
+            item.itemMeta = itemMeta
+        }
+
+        return item
     }
 
     private fun getCustomItemAttributes(item: ItemStack): List<RollableAttribute>? {
