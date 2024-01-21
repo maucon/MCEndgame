@@ -46,5 +46,17 @@
   },
   "mcendgame_wendigo_death": {
     "sounds": ["mcendgame/entity/wendigo/death0"]
+  },
+  "mcendgame_buff_villager_hurt": {
+    "sounds": ["mcendgame/entity/buff_villager/hurt0", "mcendgame/entity/buff_villager/hurt1", "mcendgame/entity/buff_villager/hurt2"]
+  },
+  "mcendgame_buff_villager_death": {
+    "sounds": ["mcendgame/entity/buff_villager/death0", "mcendgame/entity/buff_villager/death1", "mcendgame/entity/buff_villager/death2", "mcendgame/entity/buff_villager/death3", "mcendgame/entity/buff_villager/death4"]
+  },
+  "mcendgame_reaper_hurt": {
+    "sounds": ["mcendgame/entity/reaper/hurt0", "mcendgame/entity/reaper/hurt1", "mcendgame/entity/reaper/hurt2", "mcendgame/entity/reaper/hurt3", "mcendgame/entity/reaper/hurt4"]
+  },
+  "mcendgame_reaper_death": {
+    "sounds": ["mcendgame/entity/reaper/death0", "mcendgame/entity/reaper/death1", "mcendgame/entity/reaper/death2", "mcendgame/entity/reaper/death3"]
   }
 }
