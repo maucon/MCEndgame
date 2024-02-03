@@ -10,9 +10,9 @@ object EnemyGenerationSettings {
     const val MOB_XZ_SPREAD = 1.5
     const val SPECIAL_MOB_COUNT = 3
 
-    fun generateMobCount(): Int {
+    fun generateMobCount(random: Random): Int {
         val possibleAddedMobs = MAX_MOBS_PER_TILE - MIN_MOBS_PER_TILE
-        return MIN_MOBS_PER_TILE + Random.nextInt(possibleAddedMobs + 1)
+        return MIN_MOBS_PER_TILE + random.nextInt(possibleAddedMobs + 1)
     }
 
     val STRENGTH_EFFECTS = listOf(

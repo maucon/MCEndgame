@@ -14,6 +14,7 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.util.Vector
+import kotlin.random.Random
 
 @Component
 class SummonerService(
@@ -33,7 +34,7 @@ class SummonerService(
         val mapTier = PersistentDataUtil.getValue(summoner, TypeKeys.MAP_TIER) ?: -1
 
         val minions = (0 until amount)
-            .map { summonMinion(summoner, mapTier, minionType, weapons, ranged, armor, health, spawnOffset) }
+            .map { summonMinion(Random, summoner, mapTier, minionType, weapons, ranged, armor, health, spawnOffset) }
             .toSet()
 
         SummonerUtil.addMinions(summoner, minions)
@@ -44,6 +45,7 @@ class SummonerService(
     }
 
     private fun summonMinion(
+        random: Random,
         summoner: LivingEntity,
         mapTier: Int,
         minionType: CustomEntityType,
@@ -63,10 +65,10 @@ class SummonerService(
 
         if (mapTier < 0 || minion !is Creature) return minion
 
-        equipmentGenerationService.setCreatureEquipment(minion, mapTier, weapons, ranged, armor)
+        equipmentGenerationService.setCreatureEquipment(random, minion, mapTier, weapons, ranged, armor)
 
         val canBeInvisible = !minionType.hideEquipment
-        enemyGenerationService.addEffectsToEntity(minion, mapTier, canBeInvisible)
+        enemyGenerationService.addEffectsToEntity(random, minion, mapTier, canBeInvisible)
 
         return minion
     }

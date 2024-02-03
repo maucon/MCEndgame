@@ -43,6 +43,7 @@ class EnemyGenerationService(
     }
 
     fun summonMonsters(
+        random: Random,
         randomEntityTypes: List<RandomOption<CustomEntityType>>,
         specialEntityTypes: List<RandomOption<CustomEntityType>>,
         layoutTiles: Array<Array<LayoutTile>>,
@@ -53,12 +54,12 @@ class EnemyGenerationService(
         val tileList = getSpawnableTiles(layoutTiles, startPoint)
             .onEach {
                 PluginUtil.scheduleTask {
-                    val mobCount = EnemyGenerationSettings.generateMobCount()
-                    spawnMobs(randomEntityTypes, mobCount, -it.x * 16.0 - 8, -it.y * 16.0 - 8, mapTier, world)
+                    val mobCount = EnemyGenerationSettings.generateMobCount(random)
+                    spawnMobs(random, randomEntityTypes, mobCount, -it.x * 16.0 - 8, -it.y * 16.0 - 8, mapTier, world)
                 }
             }
 
-        spawnSpecialMonster(tileList, specialEntityTypes, mapTier, world)
+        spawnSpecialMonster(random, tileList, specialEntityTypes, mapTier, world)
     }
 
     private fun getSpawnableTiles(
@@ -73,21 +74,23 @@ class EnemyGenerationService(
         .filter { startPoint.x != it.x || startPoint.y != it.y }
 
     private fun spawnSpecialMonster(
+        random: Random,
         tileList: List<Point>,
         specialEntityTypes: List<RandomOption<CustomEntityType>>,
         mapTier: Int,
         world: World
     ) {
-        tileList.shuffled()
+        tileList.shuffled(random)
             .take(EnemyGenerationSettings.SPECIAL_MOB_COUNT)
             .forEach {
                 PluginUtil.scheduleTask {
-                    spawnMobs(specialEntityTypes, 1, -it.x * 16.0 - 8, -it.y * 16.0 - 8, mapTier, world, special = true)
+                    spawnMobs(random, specialEntityTypes, 1, -it.x * 16.0 - 8, -it.y * 16.0 - 8, mapTier, world, special = true)
                 }
             }
     }
 
     private fun spawnMobs(
+        random: Random,
         randomEntityTypes: List<RandomOption<CustomEntityType>>,
         amount: Int,
         x: Double,
@@ -99,22 +102,22 @@ class EnemyGenerationService(
         val spawnedEntities = mutableSetOf<LivingEntity>()
 
         for (i in 0 until amount) {
-            val entityType = RandomUtil.pick(randomEntityTypes).option
+            val entityType = RandomUtil.pick(randomEntityTypes, random).option
             val spawnLocation = Location(
                 world,
-                x + EnemyGenerationSettings.MOB_XZ_SPREAD * (Random.nextDouble() * 2 - 1),
+                x + EnemyGenerationSettings.MOB_XZ_SPREAD * (random.nextDouble() * 2 - 1),
                 DungeonGenerationSettings.MOB_Y_POS,
-                z + EnemyGenerationSettings.MOB_XZ_SPREAD * (Random.nextDouble() * 2 - 1)
+                z + EnemyGenerationSettings.MOB_XZ_SPREAD * (random.nextDouble() * 2 - 1)
             )
 
             val entity = EntityUtil.spawnCustomEntity(entityType, spawnLocation, mapTier) as LivingEntity
-            equipmentGenerationService.setCreatureEquipment(entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
+            equipmentGenerationService.setCreatureEquipment(random, entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
 
             addEffectUntilLoad(entity)
             addTemporarySlowfalling(entity)
 
             val canBeInvisible = !entityType.hideEquipment
-            addEffectsToEntity(entity, mapTier, canBeInvisible)
+            addEffectsToEntity(random, entity, mapTier, canBeInvisible)
 
             if (special) PersistentDataUtil.setValue(entity, TypeKeys.IS_SPECIAL, true)
 
@@ -136,18 +139,19 @@ class EnemyGenerationService(
     }
 
     fun addEffectsToEntity(
+        random: Random,
         entity: LivingEntity,
         mapTier: Int,
         canBeInvisible: Boolean,
     ) {
         val effects = mutableListOf(
-            RandomUtil.pick(EnemyGenerationSettings.STRENGTH_EFFECTS, mapTier).option,
-            RandomUtil.pick(EnemyGenerationSettings.RESISTANCE_EFFECTS, mapTier).option,
-            RandomUtil.pick(EnemyGenerationSettings.SPEED_EFFECTS, mapTier).option,
-            RandomUtil.pick(EnemyGenerationSettings.FIRE_RESISTANCE_EFFECT, mapTier).option,
+            RandomUtil.pick(EnemyGenerationSettings.STRENGTH_EFFECTS, mapTier, random).option,
+            RandomUtil.pick(EnemyGenerationSettings.RESISTANCE_EFFECTS, mapTier, random).option,
+            RandomUtil.pick(EnemyGenerationSettings.SPEED_EFFECTS, mapTier, random).option,
+            RandomUtil.pick(EnemyGenerationSettings.FIRE_RESISTANCE_EFFECT, mapTier, random).option,
         )
         if (canBeInvisible) {
-            effects.add(RandomUtil.pick(EnemyGenerationSettings.INVISIBILITY_EFFECT).option)
+            effects.add(RandomUtil.pick(EnemyGenerationSettings.INVISIBILITY_EFFECT, random).option)
         }
 
         val potionEffects = effects.filterNotNull()

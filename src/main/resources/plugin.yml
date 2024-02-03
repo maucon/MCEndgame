@@ -70,3 +70,14 @@ commands:
     usage: "§CUsage /<command> player custom-item-type [%roll]"
     aliases: [ custom-item ]
     permission: mcendgame.manage
+
+  player-dungeon-seed:
+    description: "View or set the seed of the next dungeon a player will generate"
+    usage: "§CUsage /<command> (get [player] | set player seed)"
+    permission: mcendgame.manage
+
+  dungeon-seed:
+    description: "View the seed of the dungeon the player is currently in"
+    usage: "§CUsage /<command> [player]"
+    aliases: [ seed ]
+    permission: mcendgame.manage

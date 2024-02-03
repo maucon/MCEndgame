@@ -15,7 +15,9 @@ import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.domain.dungeon.DungeonMapType
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
+import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.PersistentDataUtil
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
@@ -23,6 +25,7 @@ import org.bukkit.World
 import org.bukkit.entity.Player
 import java.awt.Point
 import java.util.logging.Logger
+import kotlin.random.Random
 
 @Component
 class DungeonGenerationService(
@@ -40,11 +43,14 @@ class DungeonGenerationService(
         leaveLocation: Location
     ): Location {
         val world = worldManageService.createWorld(player, mapTier)
+        val seed = PersistentDataUtil.getValue(world, TypeKeys.SEED)!!
+        val random = Random(seed.hashCode())
         val dungeonType = dungeonTypeService.getRandomDungeonType(player)
-        val rolledDungeonType = dungeonType.roll()
+        val rolledDungeonType = dungeonType.roll(random)
 
         val dungeonLayoutGenerator = DungeonLayoutGenerator()
         dungeonLayoutGenerator.generateDungeon(
+            random,
             DungeonGenerationSettings.DUNGEON_WIDTH,
             DungeonGenerationSettings.DUNGEON_HEIGHT,
             DungeonGenerationSettings.DUNGEON_JUNCTION_PROBABILITY,
@@ -60,7 +66,7 @@ class DungeonGenerationService(
         }
 
         spawnBoss(rolledDungeonType.bossEntityType, bossRoomPos, mapTier, world)
-        enemyGenerationService.summonMonsters(rolledDungeonType.entityTypes, rolledDungeonType.specialEntityTypes, layoutTiles, startRoomPos, mapTier, world)
+        enemyGenerationService.summonMonsters(random, rolledDungeonType.entityTypes, rolledDungeonType.specialEntityTypes, layoutTiles, startRoomPos, mapTier, world)
 
         val entity = DungeonLeaveEntity(world.name, mutableListOf(), leaveLocation)
         dungeonLeaveRepo.save(entity)

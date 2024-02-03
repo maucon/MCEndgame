@@ -33,6 +33,9 @@ object TypeKeys {
     val MAP_DEVICE_ACTION = TypeKey(createNamespacedKey("map_device_action"), PersistentEnum(MapDeviceAction::class))
     val ARTIFACT = TypeKey(createNamespacedKey("artifact"), PersistentArtifact)
 
+    // world
+    val SEED = TypeKey(createNamespacedKey("seed"), PersistentDataType.STRING)
+
     class TypeKey<T>(
         val key: NamespacedKey,
         val dataType: PersistentDataType<*, T>
