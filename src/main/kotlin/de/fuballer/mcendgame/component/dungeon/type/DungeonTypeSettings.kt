@@ -15,9 +15,6 @@ object DungeonTypeSettings {
 
     val SUFFIX = "${ChatColor.AQUA}]"
 
-    fun getDungeonTypeMessage(playerName: String, dungeonType: DungeonType) =
-        "${ChatColor.AQUA}${playerName}'s next dungeon will be of type '${ChatColor.GREEN}$dungeonType${ChatColor.AQUA}'"
-
     val DUNGEON_TYPE_WEIGHTS = listOf(
         RandomOption(1, DungeonType.HELL),
         RandomOption(1, DungeonType.UNDEAD),
