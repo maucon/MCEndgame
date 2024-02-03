@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.seed.db
+package de.fuballer.mcendgame.component.dungeon.seed.player.db
 
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import java.util.*

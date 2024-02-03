@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.seed.command
+package de.fuballer.mcendgame.component.dungeon.seed.player.command
 
 import de.fuballer.mcendgame.component.dungeon.seed.DungeonSeedSettings
 import de.fuballer.mcendgame.domain.technical.CommandAction
@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin
 @Component
 class PlayerDungeonSeedTabCompleter : CommandTabCompleter {
     override fun initialize(plugin: JavaPlugin) {
-        plugin.getCommand(DungeonSeedSettings.COMMAND_NAME)!!.tabCompleter = this
+        plugin.getCommand(DungeonSeedSettings.PLAYER_SEED_COMMAND_NAME)!!.tabCompleter = this
     }
 
     override fun onTabComplete(
@@ -26,14 +26,8 @@ class PlayerDungeonSeedTabCompleter : CommandTabCompleter {
 
         return when (args.size) {
             1 -> CommandAction.allNames()
-            2 -> PluginUtil.getOfflinePlayers().mapNotNull { it.name }
-            3 -> {
-                if (args[0] == CommandAction.GET.actionName) return listOf()
-                return (1..64)
-                    .map { it.toString() }
-                    .filter { it.contains(args[2], true) }
-            }
-
+            2 -> PluginUtil.getOnlinePlayers().map { it.name }
+            3 -> listOf("<seed>")
             else -> listOf()
         }
     }

@@ -10,7 +10,7 @@ object DungeonTypeSettings {
     val INVALID_DUNGEON_TYPE = "${ChatColor.RED}Invalid dungeon type!"
 
     fun getDungeonTypeMessage(playerName: String, dungeonType: DungeonType) =
-        "${ChatColor.AQUA}${playerName}'s next dungeon will be of type '$dungeonType'"
+        "${ChatColor.AQUA}${playerName}'s next dungeon will be of type '${ChatColor.GREEN}$dungeonType${ChatColor.AQUA}'"
 
     val DUNGEON_TYPE_WEIGHTS = listOf(
         RandomOption(1, DungeonType.HELL),

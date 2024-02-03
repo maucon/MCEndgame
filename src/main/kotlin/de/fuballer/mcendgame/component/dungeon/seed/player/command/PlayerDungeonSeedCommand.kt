@@ -1,8 +1,8 @@
-package de.fuballer.mcendgame.component.dungeon.seed.command
+package de.fuballer.mcendgame.component.dungeon.seed.player.command
 
 import de.fuballer.mcendgame.component.dungeon.seed.DungeonSeedSettings
-import de.fuballer.mcendgame.component.dungeon.seed.db.PlayerDungeonSeedEntity
-import de.fuballer.mcendgame.component.dungeon.seed.db.PlayerDungeonSeedRepository
+import de.fuballer.mcendgame.component.dungeon.seed.player.db.PlayerDungeonSeedEntity
+import de.fuballer.mcendgame.component.dungeon.seed.player.db.PlayerDungeonSeedRepository
 import de.fuballer.mcendgame.domain.technical.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
@@ -17,7 +17,7 @@ class PlayerDungeonSeedCommand(
     private val playerDungeonSeedRepo: PlayerDungeonSeedRepository,
     private val commandHelper: CommandHelper
 ) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(DungeonSeedSettings.COMMAND_NAME)!!.setExecutor(this)
+    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(DungeonSeedSettings.PLAYER_SEED_COMMAND_NAME)!!.setExecutor(this)
 
     override fun onCommand(
         sender: CommandSender,

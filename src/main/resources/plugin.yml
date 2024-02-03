@@ -79,5 +79,4 @@ commands:
   dungeon-seed:
     description: "View the seed of the dungeon the player is currently in"
     usage: "§CUsage /<command> [player]"
-    aliases: [ seed ]
     permission: mcendgame.manage
