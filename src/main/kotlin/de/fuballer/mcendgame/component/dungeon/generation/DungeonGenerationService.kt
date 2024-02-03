@@ -15,9 +15,7 @@ import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.domain.dungeon.DungeonMapType
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
@@ -43,8 +41,7 @@ class DungeonGenerationService(
         leaveLocation: Location
     ): Location {
         val world = worldManageService.createWorld(player, mapTier)
-        val seed = PersistentDataUtil.getValue(world, TypeKeys.SEED)!!
-        val random = Random(seed.hashCode())
+        val random = Random(world.seed)
         val dungeonType = dungeonTypeService.getRandomDungeonType(player)
         val rolledDungeonType = dungeonType.roll(random)
 

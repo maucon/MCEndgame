@@ -48,8 +48,11 @@ class WorldManageService(
         player: Player,
         mapTier: Int
     ): World {
+        val seed = dungeonSeedService.getSeed(player)
+
         val name = "${WorldSettings.WORLD_PREFIX}${UUID.randomUUID()}"
         val worldCreator = WorldCreator(name)
+            .seed(seed)
             .type(WorldType.FLAT)
             .generateStructures(false)
             .generatorSettings(WorldSettings.GENERATOR_SETTINGS)
@@ -60,8 +63,6 @@ class WorldManageService(
             difficulty = Difficulty.HARD
             time = 18000
         }
-
-        dungeonSeedService.setSeed(player, world)
 
         val entity = ManagedWorldEntity(name, player, world, mapTier, 0)
         worldManageRepo.save(entity)

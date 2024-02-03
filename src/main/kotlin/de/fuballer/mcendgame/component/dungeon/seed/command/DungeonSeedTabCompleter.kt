@@ -26,7 +26,8 @@ class DungeonSeedTabCompleter : CommandTabCompleter {
 
         return when (args.size) {
             1 -> CommandAction.allNames()
-            2 -> PluginUtil.getOfflinePlayers().mapNotNull { it.name }
+            2 -> PluginUtil.getOnlinePlayers().map { it.name }
+            3 -> listOf("<seed>")
             else -> listOf()
         }
     }
