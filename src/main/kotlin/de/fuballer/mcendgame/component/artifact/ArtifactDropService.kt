@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.artifact
 
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isMinion
 import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
@@ -17,7 +18,7 @@ class ArtifactDropService : Listener {
         val entity = event.entity
 
         if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return
-        if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_MINION)) return
+        if (entity.isMinion()) return
 
         if (Random.nextDouble() > ArtifactSettings.ARTIFACT_DROP_CHANCE) return
 

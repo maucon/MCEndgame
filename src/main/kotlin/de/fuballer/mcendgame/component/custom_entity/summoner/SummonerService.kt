@@ -6,6 +6,7 @@ import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsMinion
 import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
@@ -60,7 +61,7 @@ class SummonerService(
         EntityUtil.setAttribute(minion, Attribute.GENERIC_MAX_HEALTH, health)
         minion.health = health
 
-        PersistentDataUtil.setValue(minion, TypeKeys.IS_MINION, true)
+        minion.setIsMinion()
         PersistentDataUtil.setValue(minion, TypeKeys.DISABLE_DROP_EQUIPMENT, true)
 
         if (mapTier < 0 || minion !is Creature) return minion

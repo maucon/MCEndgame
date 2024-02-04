@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.artifact.effect
+package de.fuballer.mcendgame.component.artifact.effects
 
 import de.fuballer.mcendgame.domain.ArtifactType
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.artifact.effect
+package de.fuballer.mcendgame.component.artifact.effects
 
 import de.fuballer.mcendgame.domain.ArtifactType
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
@@ -13,7 +13,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 
 @Component
-class AttackSpeedEffectService : Listener {
+class MovementSpeedEffectService : Listener {
     @EventHandler
     fun on(event: PlayerJoinEvent) {
         if (WorldUtil.isDungeonWorld(event.player.world)) {
@@ -36,15 +36,15 @@ class AttackSpeedEffectService : Listener {
     }
 
     private fun processJoin(player: Player) {
-        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.ATTACK_SPEED) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.MOVEMENT_SPEED) ?: return
 
-        val (addedAttackSpeed) = ArtifactType.ATTACK_SPEED.values[tier]!!
-        val realAttackSpeed = 4.0 + addedAttackSpeed
+        val (speedMultiplier) = ArtifactType.MOVEMENT_SPEED.values[tier]!!
+        val realSpeedMultiplier = 1 + speedMultiplier / 100.0
 
-        player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)?.baseValue = realAttackSpeed
+        player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)?.baseValue = 0.1 * realSpeedMultiplier
     }
 
     private fun processLeave(player: Player) {
-        player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)?.baseValue = 4.0
+        player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)?.baseValue = 0.1
     }
 }

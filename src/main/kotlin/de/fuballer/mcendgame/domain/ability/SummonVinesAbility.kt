@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.domain.ability
 import de.fuballer.mcendgame.domain.entity.vine.VineEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsMinion
 import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
@@ -20,8 +21,7 @@ object SummonVinesAbility : Ability {
         val vines = mutableSetOf<LivingEntity>()
         for (i in 0 until amount) {
             val vine = EntityUtil.spawnCustomEntity(VineEntityType, caster.location, mapTier) as LivingEntity
-
-            PersistentDataUtil.setValue(vine, TypeKeys.IS_MINION, true)
+            vine.setIsMinion()
 
             vines.add(vine)
         }

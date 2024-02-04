@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.technical
+package de.fuballer.mcendgame.technical.registry
 
 import de.fuballer.mcendgame.domain.CustomInventoryType
 import org.bukkit.inventory.Inventory

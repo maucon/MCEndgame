@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.artifact.effect
+package de.fuballer.mcendgame.component.artifact.effects
 
 import de.fuballer.mcendgame.domain.ArtifactType
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
@@ -13,7 +13,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 
 @Component
-class AttackDamageEffectService : Listener {
+class MaxHealthEffectService : Listener {
     @EventHandler
     fun on(event: PlayerJoinEvent) {
         if (WorldUtil.isDungeonWorld(event.player.world)) {
@@ -36,15 +36,16 @@ class AttackDamageEffectService : Listener {
     }
 
     private fun processJoin(player: Player) {
-        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.ATTACK_DAMAGE) ?: return
+        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.MAX_HEALTH) ?: return
 
-        val (addedAttackDamage) = ArtifactType.ATTACK_DAMAGE.values[tier]!!
-        val realAttackDamage = 1.0 + addedAttackDamage
+        val (addedHealth) = ArtifactType.MAX_HEALTH.values[tier]!!
+        val realHealth = 20.0 + addedHealth
 
-        player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.baseValue = realAttackDamage
+        player.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue = realHealth
+        player.health = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value!!
     }
 
     private fun processLeave(player: Player) {
-        player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.baseValue = 1.0
+        player.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue = 20.0
     }
 }

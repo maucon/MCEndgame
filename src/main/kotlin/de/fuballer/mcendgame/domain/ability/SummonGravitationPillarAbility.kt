@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.domain.ability
 import de.fuballer.mcendgame.domain.entity.stone_pillar.StonePillarEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsMinion
 import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.EntityUtil
@@ -24,8 +25,8 @@ object SummonGravitationPillarAbility : Ability {
 
         val pillar = EntityUtil.spawnCustomEntity(StonePillarEntityType, caster.location, mapTier) as LivingEntity
         pillar.setAI(false)
+        pillar.setIsMinion()
 
-        PersistentDataUtil.setValue(pillar, TypeKeys.IS_MINION, true)
         SummonerUtil.addMinions(caster, setOf(pillar))
 
         val event = DungeonEnemySpawnedEvent(caster.world, setOf(pillar))
