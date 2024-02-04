@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.world
 
+import de.fuballer.mcendgame.component.dungeon.seed.DungeonSeedService
 import de.fuballer.mcendgame.component.dungeon.world.db.ManagedWorldEntity
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.domain.technical.TimerTask
@@ -22,6 +23,7 @@ import java.util.*
 @Component
 class WorldManageService(
     private val worldManageRepo: WorldManageRepository,
+    private val dungeonSeedService: DungeonSeedService,
     private val fileHelper: FileHelper,
     @Qualifier("worldContainer")
     private val worldContainer: File
@@ -46,11 +48,14 @@ class WorldManageService(
         player: Player,
         mapTier: Int
     ): World {
+        val seed = dungeonSeedService.getSeed(player)
+
         val name = "${WorldSettings.WORLD_PREFIX}${UUID.randomUUID()}"
         val worldCreator = WorldCreator(name)
+            .seed(seed)
             .type(WorldType.FLAT)
             .generateStructures(false)
-            .generatorSettings("{\"layers\": [], \"biome\":\"plains\"}")
+            .generatorSettings(WorldSettings.GENERATOR_SETTINGS)
 
         val world = PluginUtil.createWorld(worldCreator).apply {
             WorldSettings.updateGameRules(this)

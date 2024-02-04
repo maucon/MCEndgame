@@ -4,8 +4,8 @@ import org.bukkit.GameRule
 import org.bukkit.World
 
 object WorldSettings {
-    const val WORLD_PREFIX = "World_MCEndgame_"
-    val DEFAULT_WORLD_NAMES = listOf("world", "world_nether", "world_the_end")
+    const val WORLD_PREFIX = "worlds_mcendgame/"
+    const val GENERATOR_SETTINGS = "{\"layers\": [], \"biome\":\"plains\"}"
 
     const val MAX_WORLD_EMPTY_TIME = 10
     const val WORLD_EMPTY_TEST_PERIOD = 60000L

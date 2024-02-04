@@ -36,6 +36,7 @@ import de.fuballer.mcendgame.domain.entity.wither_skeleton.WitherSkeletonEntityT
 import de.fuballer.mcendgame.domain.entity.zombie.ZombieEntityType
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
+import kotlin.random.Random
 
 enum class DungeonType(
     private val mapTypes: List<RandomOption<DungeonMapType>>,
@@ -133,10 +134,10 @@ enum class DungeonType(
         listOf(RandomOption(1, MinotaurEntityType))
     );
 
-    fun roll() = RolledDungeonType(
-        RandomUtil.pick(mapTypes).option,
+    fun roll(random: Random) = RolledDungeonType(
+        RandomUtil.pick(mapTypes, random).option,
         entityTypes,
         specialEntityTypes,
-        RandomUtil.pick(bossEntityTypes).option
+        RandomUtil.pick(bossEntityTypes, random).option
     )
 }

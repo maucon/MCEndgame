@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.domain.technical.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper
+import de.fuballer.mcendgame.util.ChatUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -54,9 +55,7 @@ class DungeonTypeCommand(
             return true
         }
 
-        val message = DungeonTypeSettings.getDungeonTypeMessage(targetPlayer.name!!, entity.dungeonType)
-        commandExecutor.sendMessage(message)
-
+        ChatUtil.sendCopyableText(commandExecutor, DungeonTypeSettings.getPrefix(commandExecutor), entity.dungeonType.toString(), DungeonTypeSettings.SUFFIX)
         return true
     }
 
@@ -77,11 +76,9 @@ class DungeonTypeCommand(
         }
 
         val entity = PlayerDungeonTypeEntity(targetPlayer.uniqueId, dungeonType)
-            .also { playerDungeonTypeRepo.save(it) }
+        playerDungeonTypeRepo.save(entity)
 
-        val message = DungeonTypeSettings.getDungeonTypeMessage(targetPlayer.name!!, entity.dungeonType)
-        commandExecutor.sendMessage(message)
-
+        ChatUtil.sendCopyableText(commandExecutor, DungeonTypeSettings.getPrefix(commandExecutor), dungeonType.toString(), DungeonTypeSettings.SUFFIX)
         return true
     }
 }

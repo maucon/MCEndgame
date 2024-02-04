@@ -23,6 +23,7 @@ import org.bukkit.World
 import org.bukkit.entity.Player
 import java.awt.Point
 import java.util.logging.Logger
+import kotlin.random.Random
 
 @Component
 class DungeonGenerationService(
@@ -40,11 +41,13 @@ class DungeonGenerationService(
         leaveLocation: Location
     ): Location {
         val world = worldManageService.createWorld(player, mapTier)
+        val random = Random(world.seed)
         val dungeonType = dungeonTypeService.getRandomDungeonType(player)
-        val rolledDungeonType = dungeonType.roll()
+        val rolledDungeonType = dungeonType.roll(random)
 
         val dungeonLayoutGenerator = DungeonLayoutGenerator()
         dungeonLayoutGenerator.generateDungeon(
+            random,
             DungeonGenerationSettings.DUNGEON_WIDTH,
             DungeonGenerationSettings.DUNGEON_HEIGHT,
             DungeonGenerationSettings.DUNGEON_JUNCTION_PROBABILITY,
@@ -60,7 +63,7 @@ class DungeonGenerationService(
         }
 
         spawnBoss(rolledDungeonType.bossEntityType, bossRoomPos, mapTier, world)
-        enemyGenerationService.summonMonsters(rolledDungeonType.entityTypes, rolledDungeonType.specialEntityTypes, layoutTiles, startRoomPos, mapTier, world)
+        enemyGenerationService.summonMonsters(random, rolledDungeonType.entityTypes, rolledDungeonType.specialEntityTypes, layoutTiles, startRoomPos, mapTier, world)
 
         val entity = DungeonLeaveEntity(world.name, mutableListOf(), leaveLocation)
         dungeonLeaveRepo.save(entity)

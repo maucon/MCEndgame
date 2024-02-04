@@ -5,23 +5,25 @@ import kotlin.random.Random
 
 object RandomUtil {
     fun <T : RandomOption<*>> pick(
-        options: List<T>
+        options: List<T>,
+        random: Random = Random
     ): T {
         val totalWeight = options.sumOf { it.weight }
-        val randomInt = Random.nextInt(totalWeight)
+        val randomInt = random.nextInt(totalWeight)
 
         return pickOption(options, randomInt)
     }
 
     fun <T : SortableRandomOption<*>> pick(
         options: List<T>,
-        rolls: Int
+        rolls: Int,
+        random: Random = Random
     ): T {
         val totalWeight = options.sumOf { it.weight }
 
         var randomInt = 0
         repeat(rolls) {
-            randomInt = max(randomInt, Random.nextInt(totalWeight))
+            randomInt = max(randomInt, random.nextInt(totalWeight))
         }
 
         val sortedOptions = options.sortedBy { it.tier }.toList()
