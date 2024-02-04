@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.PrepareInventoryResultEvent
 import org.bukkit.inventory.Inventory
 
 @Component
-class CorruptedItemIntegrityService : Listener {
+class UnmodifiableItemIntegrityService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: PrepareInventoryResultEvent) {
         val inventory = event.inventory

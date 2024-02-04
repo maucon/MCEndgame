@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 class WendigoService : Listener {
     @EventHandler
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
-        if (event.entity.getCustomEntityType() != WendigoEntityType) return
+        if (event.damager.getCustomEntityType() != WendigoEntityType) return
 
         val damagedEntity = event.entity as? LivingEntity ?: return
         damagedEntity.addPotionEffect(WendigoSettings.DARKNESS_EFFECT)
