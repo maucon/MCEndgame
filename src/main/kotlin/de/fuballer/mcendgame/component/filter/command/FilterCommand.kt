@@ -12,14 +12,11 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.java.JavaPlugin
 
 @Component
 class FilterCommand(
     private val filterRepo: FilterRepository
-) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(FilterSettings.COMMAND_NAME)!!.setExecutor(this)
-
+) : CommandHandler(FilterSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,

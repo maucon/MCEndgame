@@ -12,13 +12,10 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.java.JavaPlugin
 import java.lang.Integer.min
 
 @Component
-class ArtifactCommand : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ArtifactSettings.COMMAND_NAME)!!.setExecutor(this)
-
+class ArtifactCommand : CommandHandler(ArtifactSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,

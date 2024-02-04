@@ -15,15 +15,12 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
-import org.bukkit.plugin.java.JavaPlugin
 import java.text.DecimalFormat
 
 private val DECIMAL_FORMAT = DecimalFormat("#.##")
 
 @Component
-class ItemInfoCommand : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ItemInfoSettings.COMMAND_NAME)!!.setExecutor(this)
-
+class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,

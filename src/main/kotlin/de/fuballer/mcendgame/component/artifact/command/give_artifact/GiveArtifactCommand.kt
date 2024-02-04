@@ -10,14 +10,11 @@ import de.fuballer.mcendgame.util.ArtifactUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 
 @Component
 class GiveArtifactCommand(
     private val commandHelper: CommandHelper
-) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ArtifactSettings.GIVE_ARTIFACT_COMMAND_NAME)!!.setExecutor(this)
-
+) : CommandHandler(ArtifactSettings.GIVE_ARTIFACT_COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,

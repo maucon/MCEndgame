@@ -8,14 +8,11 @@ import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 
 @Component
 class RemainingCommand(
     private val remainingRepository: RemainingRepository
-) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(RemainingSettings.COMMAND_NAME)!!.setExecutor(this)
-
+) : CommandHandler(RemainingSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,
