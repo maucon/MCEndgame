@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.domain.artifact
+package de.fuballer.mcendgame.domain
 
 enum class ArtifactType(
     val displayName: String,

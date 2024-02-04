@@ -2,9 +2,9 @@ package de.fuballer.mcendgame.component.dungeon.type.command
 
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeSettings
 import de.fuballer.mcendgame.domain.dungeon.DungeonType
-import de.fuballer.mcendgame.domain.technical.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
+import de.fuballer.mcendgame.technical.CommandAction
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender

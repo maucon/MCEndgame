@@ -8,13 +8,16 @@ import de.fuballer.mcendgame.component.map_device.data.MapDeviceAction
 import de.fuballer.mcendgame.component.map_device.data.Portal
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.event.DiscoverRecipeAddEvent
 import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
+import de.fuballer.mcendgame.technical.extension.InventoryExtension.isCustomType
+import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.util.InventoryUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.*
@@ -122,7 +125,7 @@ class MapDeviceService(
 
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
-        if (!event.view.title.equals(MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE, ignoreCase = true)) return
+        if (!event.inventory.isCustomType(CustomInventoryType.MAP_DEVICE)) return
         event.isCancelled = true
 
         val inventory = event.inventory
@@ -214,9 +217,10 @@ class MapDeviceService(
     }
 
     private fun getMapDeviceInventory(player: Player): Inventory {
-        val inventory = PluginUtil.createInventory(
+        val inventory = InventoryUtil.createInventory(
             InventoryType.HOPPER,
-            MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE
+            MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE,
+            CustomInventoryType.MAP_DEVICE
         )
 
         inventory.setItem(0, MapDeviceSettings.OPEN_PORTALS_ITEM)

@@ -4,10 +4,10 @@ import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeSettings
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeEntity
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeRepository
 import de.fuballer.mcendgame.domain.dungeon.DungeonType
-import de.fuballer.mcendgame.domain.technical.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper
+import de.fuballer.mcendgame.technical.CommandAction
 import de.fuballer.mcendgame.util.ChatUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender

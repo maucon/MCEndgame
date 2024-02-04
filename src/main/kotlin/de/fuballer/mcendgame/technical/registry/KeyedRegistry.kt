@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.domain.technical.registry
+package de.fuballer.mcendgame.technical.registry
 
 class KeyedRegistry<T : Keyed> : HashMap<String, T>() {
     fun register(t: T) {

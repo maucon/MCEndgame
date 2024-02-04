@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.domain.technical.packet
+package de.fuballer.mcendgame.technical.packet
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.events.ListenerPriority

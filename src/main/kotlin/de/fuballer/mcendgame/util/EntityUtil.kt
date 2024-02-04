@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.*

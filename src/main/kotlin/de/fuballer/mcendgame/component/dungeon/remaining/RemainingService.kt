@@ -2,12 +2,12 @@ package de.fuballer.mcendgame.component.dungeon.remaining
 
 import de.fuballer.mcendgame.component.dungeon.remaining.db.RemainingEntity
 import de.fuballer.mcendgame.component.dungeon.remaining.db.RemainingRepository
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

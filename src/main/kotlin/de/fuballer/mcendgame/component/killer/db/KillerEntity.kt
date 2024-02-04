@@ -1,7 +1,8 @@
 package de.fuballer.mcendgame.component.killer.db
 
 import de.fuballer.mcendgame.component.killer.KillerSettings
-import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.domain.CustomInventoryType
+import de.fuballer.mcendgame.util.InventoryUtil
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
@@ -38,9 +39,10 @@ class KillerEntity(
     }
 
     fun createInventory(playerName: String): Inventory {
-        val inventory = PluginUtil.createInventory(
+        val inventory = InventoryUtil.createInventory(
             InventoryType.CHEST,
-            "${KillerSettings.INVENTORY_TITLE} - $playerName"
+            "${KillerSettings.INVENTORY_TITLE} - $playerName",
+            CustomInventoryType.KILLER
         )
 
         inventory.setItem(9, spawnEgg)

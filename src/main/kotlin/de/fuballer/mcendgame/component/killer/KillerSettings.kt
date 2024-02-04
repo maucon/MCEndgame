@@ -6,7 +6,7 @@ import org.bukkit.Material
 object KillerSettings {
     const val COMMAND_NAME = "killer"
 
-    val INVENTORY_TITLE = ChatColor.BLACK.toString() + "Killer"
+    const val INVENTORY_TITLE = "Killer"
     val NO_KILLER_FOUND_MESSAGE = ChatColor.RED.toString() + "No entity found."
 
     val POTION_EFFECT_ITEM_NAME = ChatColor.BLUE.toString() + "Effect"

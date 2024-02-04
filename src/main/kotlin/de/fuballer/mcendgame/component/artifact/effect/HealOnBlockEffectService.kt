@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.artifact.effect
 
-import de.fuballer.mcendgame.domain.artifact.ArtifactType
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.ArtifactType
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil

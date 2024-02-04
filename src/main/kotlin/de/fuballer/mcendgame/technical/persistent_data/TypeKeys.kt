@@ -1,9 +1,9 @@
-package de.fuballer.mcendgame.domain.technical.persistent_data
+package de.fuballer.mcendgame.technical.persistent_data
 
 import de.fuballer.mcendgame.component.map_device.data.MapDeviceAction
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import de.fuballer.mcendgame.domain.item.CustomItemType
-import de.fuballer.mcendgame.domain.technical.persistent_data.types.*
+import de.fuballer.mcendgame.technical.persistent_data.types.*
 import de.fuballer.mcendgame.util.PluginUtil.createNamespacedKey
 import org.bukkit.NamespacedKey
 import org.bukkit.persistence.PersistentDataType

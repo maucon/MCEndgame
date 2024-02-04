@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.domain.ability
 
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import org.bukkit.Location

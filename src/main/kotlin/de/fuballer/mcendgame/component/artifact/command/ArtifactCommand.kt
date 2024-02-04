@@ -1,12 +1,13 @@
 package de.fuballer.mcendgame.component.artifact.command
 
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
+import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.ArtifactUtil
+import de.fuballer.mcendgame.util.InventoryUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
-import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -37,9 +38,10 @@ class ArtifactCommand : CommandHandler {
     }
 
     private fun showArtifactsWindow(player: Player, artifacts: List<ItemStack>) {
-        val inventory = PluginUtil.createInventory(
+        val inventory = InventoryUtil.createInventory(
             ArtifactSettings.ARTIFACTS_WINDOW_TYPE,
-            ArtifactSettings.ARTIFACTS_WINDOW_TITLE
+            ArtifactSettings.ARTIFACTS_WINDOW_TITLE,
+            CustomInventoryType.ARTIFACT
         )
 
         for (i in 0 until min(artifacts.size, ArtifactSettings.ARTIFACTS_WINDOW_SIZE)) {

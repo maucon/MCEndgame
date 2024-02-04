@@ -2,10 +2,10 @@ package de.fuballer.mcendgame.component.custom_entity.ability
 
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityEntity
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityRepository
-import de.fuballer.mcendgame.domain.technical.TimerTask
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
+import de.fuballer.mcendgame.technical.TimerTask
+import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.entity.Creature
 import org.bukkit.entity.Player

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.domain.technical
+package de.fuballer.mcendgame.technical
 
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken

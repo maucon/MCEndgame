@@ -1,7 +1,9 @@
 package de.fuballer.mcendgame.component.artifact
 
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.InventoryExtension.isCustomType
+import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
@@ -17,7 +19,9 @@ import org.bukkit.inventory.ItemStack
 class ArtifactService : Listener {
     @EventHandler
     fun on(event: InventoryClickEvent) {
-        if (!event.view.title.contains(ArtifactSettings.ARTIFACTS_WINDOW_TITLE, true)) return
+        val artifactInventory = event.inventory
+        if (!artifactInventory.isCustomType(CustomInventoryType.ARTIFACT)) return
+
         event.isCancelled = true
 
         if (WorldUtil.isDungeonWorld(event.whoClicked.world)) {
@@ -32,7 +36,6 @@ class ArtifactService : Listener {
         val action = event.action
         if (action != InventoryAction.MOVE_TO_OTHER_INVENTORY && action != InventoryAction.PICKUP_ALL) return
 
-        val artifactInventory = event.inventory
         val player = event.whoClicked as Player
 
         if (event.rawSlot < ArtifactSettings.ARTIFACTS_WINDOW_SIZE) {

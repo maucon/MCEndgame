@@ -1,7 +1,9 @@
 package de.fuballer.mcendgame.component.filter
 
 import de.fuballer.mcendgame.component.filter.db.FilterRepository
+import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.InventoryExtension.isCustomType
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -17,7 +19,9 @@ class FilterService(
 ) : Listener {
     @EventHandler
     fun on(event: InventoryClickEvent) {
-        if (!event.view.title.equals(FilterSettings.FILTER_WINDOW_TITLE, ignoreCase = true)) return
+        val filterInventory = event.inventory
+        if (!filterInventory.isCustomType(CustomInventoryType.FILTER)) return
+
         event.isCancelled = true
 
         val action = event.action
@@ -25,7 +29,6 @@ class FilterService(
         val clickedInventory = event.clickedInventory ?: return
         val item = clickedInventory.getItem(event.slot) ?: return
 
-        val inventory = event.inventory
         val player = event.whoClicked as Player
         val material = item.type
         val slot = event.rawSlot
@@ -34,10 +37,10 @@ class FilterService(
 
         if (slot < FilterSettings.FILTER_SIZE) {
             if (!entity.filters.remove(material)) return
-            inventory.setItem(slot, null)
+            filterInventory.setItem(slot, null)
         } else {
             if (!entity.filters.add(material)) return
-            inventory.addItem(ItemStack(material))
+            filterInventory.addItem(ItemStack(material))
         }
 
         filterRepo.save(entity)

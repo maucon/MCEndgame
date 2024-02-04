@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.domain.technical.registry
+package de.fuballer.mcendgame.technical.registry
 
 import org.bukkit.NamespacedKey
 
