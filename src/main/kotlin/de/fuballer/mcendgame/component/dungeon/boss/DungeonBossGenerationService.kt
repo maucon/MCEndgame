@@ -6,9 +6,8 @@ import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setDisableDropEquipment
 import de.fuballer.mcendgame.util.EntityUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.Location
 import org.bukkit.entity.Creature
 
@@ -25,8 +24,7 @@ class DungeonBossGenerationService(
 
         val boss = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as Creature
 
-        PersistentDataUtil.setValue(boss, TypeKeys.DISABLE_DROP_EQUIPMENT, true)
-
+        boss.setDisableDropEquipment()
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
         boss.removeWhenFarAway = false
         boss.setAI(false)

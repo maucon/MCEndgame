@@ -5,8 +5,8 @@ import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityRep
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.technical.TimerTask
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
-import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getMapTier
 import org.bukkit.entity.Creature
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -29,7 +29,7 @@ class AbilityService(
         val entity = event.entity as? Creature ?: return
         if (event.target !is Player) return
 
-        val type = PersistentDataUtil.getValue(entity, TypeKeys.CUSTOM_ENTITY_TYPE) ?: return
+        val type = entity.getCustomEntityType() ?: return
         if (type.abilities == null) return
 
         val entityAbility = entityAbilityRepo.findById(entity.uniqueId)
@@ -69,7 +69,7 @@ class AbilityService(
         val abilityRunner = entityAbility.abilityRunner
         if (abilityRunner != null && !abilityRunner.isCancelled()) return
 
-        val mapTier = PersistentDataUtil.getValue(entity, TypeKeys.MAP_TIER) ?: return
+        val mapTier = entity.getMapTier() ?: return
 
         val abilityCooldown = AbilitySettings.getAbilityCooldown(mapTier)
         val runner = EntityAbilityRunner(entity, entityAbility.entityType, abilityCooldown)

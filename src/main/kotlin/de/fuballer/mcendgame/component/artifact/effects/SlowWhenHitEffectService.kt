@@ -2,9 +2,8 @@ package de.fuballer.mcendgame.component.artifact.effects
 
 import de.fuballer.mcendgame.domain.ArtifactType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.ArtifactUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -30,7 +29,7 @@ class SlowWhenHitEffectService : Listener {
         val slowEffect = PotionEffect(PotionEffectType.SLOW, realDuration, realAmplifier, true)
 
         event.entity.getNearbyEntities(4.0, 4.0, 4.0)
-            .filter { PersistentDataUtil.getValue(it, TypeKeys.IS_ENEMY) ?: false }
+            .filter { !it.isEnemy() }
             .filterIsInstance<LivingEntity>()
             .forEach { it.addPotionEffect(slowEffect) }
     }

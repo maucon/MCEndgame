@@ -7,8 +7,7 @@ import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
-import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
@@ -32,7 +31,7 @@ class RemainingService(
     @EventHandler
     fun onEntityDeath(event: DungeonEntityDeathEvent) {
         val entity = event.entity
-        if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return
+        if (!entity.isEnemy()) return
 
         val remainingEntity = remainingRepo.findById(entity.world.name) ?: return
         remainingEntity.remaining -= 1

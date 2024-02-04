@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.domain.ability
 
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
-import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import org.bukkit.Location
 import org.bukkit.Particle
@@ -25,7 +24,7 @@ const val FIRE_CASCADE_FIRE_TICKS = 100
 
 object FireCascadeAbility : Ability {
     override fun cast(caster: LivingEntity, target: LivingEntity) {
-        val mapTier = PersistentDataUtil.getValue(caster, TypeKeys.MAP_TIER) ?: 1
+        val mapTier = caster.getMapTier() ?: 1
 
         val vector = target.location.subtract(caster.location).toVector()
         val amount = vector.length().toInt() / FIRE_CASCADE_DISTANCE + FIRE_CASCADE_STEPS_AFTER_PLAYER
@@ -40,7 +39,13 @@ object FireCascadeAbility : Ability {
             CastFireCascadeRunnable(caster, 0.0, caster.location.add(offsetVector), true, sound)
                 .runTaskLater(stepDelay)
 
-            CastFireCascadeRunnable(caster, FIRE_CASCADE_DAMAGE + mapTier * FIRE_CASCADE_DAMAGE_PER_LEVEL, caster.location.add(offsetVector), false, sound)
+            CastFireCascadeRunnable(
+                caster,
+                FIRE_CASCADE_DAMAGE + mapTier * FIRE_CASCADE_DAMAGE_PER_LEVEL,
+                caster.location.add(offsetVector),
+                false,
+                sound
+            )
                 .runTaskLater(stepDelay + FIRE_CASCADE_ACTIVATION_DELAY)
 
             offsetVector.add(addVector)

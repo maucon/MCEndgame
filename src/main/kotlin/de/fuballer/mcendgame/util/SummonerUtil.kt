@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getMinionIds
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setMinionIds
 import org.bukkit.entity.Creature
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -8,7 +9,7 @@ import org.bukkit.entity.LivingEntity
 object SummonerUtil {
     fun getMinionEntities(summoner: Entity): Set<Creature> {
         val world = summoner.world
-        val minionIds = PersistentDataUtil.getValue(summoner, TypeKeys.MINION_IDS) ?: return setOf()
+        val minionIds = summoner.getMinionIds() ?: return setOf()
 
         val aliveMinions = WorldUtil.getFilteredEntities(world, minionIds, Creature::class)
             .filter { !it.isDead }
@@ -16,17 +17,17 @@ object SummonerUtil {
         val aliveMinionIds = aliveMinions.map { it.uniqueId }
             .toSet()
 
-        PersistentDataUtil.setValue(summoner, TypeKeys.MINION_IDS, aliveMinionIds)
+        summoner.setMinionIds(aliveMinionIds)
         return aliveMinions
     }
 
     fun addMinions(summoner: Entity, newMinions: Collection<Entity>) {
         val minionIds = newMinions.map { it.uniqueId }
             .toMutableSet()
-        val oldMinionsIds = PersistentDataUtil.getValue(summoner, TypeKeys.MINION_IDS) ?: listOf()
+        val oldMinionsIds = summoner.getMinionIds() ?: listOf()
 
         minionIds.addAll(oldMinionsIds)
-        PersistentDataUtil.setValue(summoner, TypeKeys.MINION_IDS, minionIds)
+        summoner.setMinionIds(minionIds)
     }
 
     fun setMinionsTarget(summoner: Creature, minions: Collection<LivingEntity>) {

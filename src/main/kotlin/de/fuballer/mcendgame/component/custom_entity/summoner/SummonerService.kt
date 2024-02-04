@@ -6,10 +6,10 @@ import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getMapTier
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setDisableDropEquipment
 import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsMinion
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.EntityUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.SummonerUtil
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
@@ -32,7 +32,7 @@ class SummonerService(
         health: Double,
         spawnOffset: Vector,
     ) {
-        val mapTier = PersistentDataUtil.getValue(summoner, TypeKeys.MAP_TIER) ?: -1
+        val mapTier = summoner.getMapTier() ?: -1
 
         val minions = (0 until amount)
             .map { summonMinion(Random, summoner, mapTier, minionType, weapons, ranged, armor, health, spawnOffset) }
@@ -62,7 +62,7 @@ class SummonerService(
         minion.health = health
 
         minion.setIsMinion()
-        PersistentDataUtil.setValue(minion, TypeKeys.DISABLE_DROP_EQUIPMENT, true)
+        minion.setDisableDropEquipment()
 
         if (mapTier < 0 || minion !is Creature) return minion
 

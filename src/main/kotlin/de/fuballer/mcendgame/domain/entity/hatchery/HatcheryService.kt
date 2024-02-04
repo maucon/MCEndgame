@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.domain.entity.hatchery
 import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerService
 import de.fuballer.mcendgame.domain.entity.leech.LeechEntityType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.SummonerUtil
 import org.bukkit.entity.Bee
 import org.bukkit.entity.Creature
@@ -19,7 +19,7 @@ class HatcheryService(
 ) : Listener {
     @EventHandler
     fun onEntityShootBow(event: EntityShootBowEvent) {
-        if (!EntityUtil.isCustomEntityType(event.entity, HatcheryEntityType)) return
+        if (event.entity.getCustomEntityType() != HatcheryEntityType) return
 
         event.isCancelled = true
         summonLeech(event)

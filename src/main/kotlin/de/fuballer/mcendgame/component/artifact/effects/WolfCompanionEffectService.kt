@@ -4,9 +4,8 @@ import de.fuballer.mcendgame.domain.ArtifactType
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.ArtifactUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.DyeColor
 import org.bukkit.entity.EntityType
@@ -55,7 +54,8 @@ class WolfCompanionEffectService : Listener {
         val entity = event.entity
 
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
-        if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return
+
+        if (entity.isEnemy()) return
         if (entity !is Wolf) return
 
         if (event.target !is Player) return

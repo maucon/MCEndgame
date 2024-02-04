@@ -7,9 +7,8 @@ import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsSpecial
 import de.fuballer.mcendgame.util.EntityUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -119,7 +118,7 @@ class EnemyGenerationService(
             val canBeInvisible = !entityType.hideEquipment
             addEffectsToEntity(random, entity, mapTier, canBeInvisible)
 
-            if (special) PersistentDataUtil.setValue(entity, TypeKeys.IS_SPECIAL, true)
+            if (special) entity.setIsSpecial()
 
             spawnedEntities.add(entity)
         }

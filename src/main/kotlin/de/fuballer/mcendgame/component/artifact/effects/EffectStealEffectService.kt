@@ -3,9 +3,8 @@ package de.fuballer.mcendgame.component.artifact.effects
 import de.fuballer.mcendgame.domain.ArtifactType
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.ArtifactUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -20,12 +19,13 @@ class EffectStealEffectService : Listener {
     @EventHandler
     fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity
+
         if (entity is Player) return
+        if (!entity.isEnemy()) return
+
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
-        if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return
 
         val player = entity.killer ?: return
-
         val tier = ArtifactUtil.getHighestTier(player, ArtifactType.EFFECT_STEAL) ?: return
 
         val (chance, duration, maxAmplifier) = ArtifactType.EFFECT_STEAL.values[tier]!!

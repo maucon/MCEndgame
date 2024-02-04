@@ -1,17 +1,15 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.domain.entity.CustomEntityType
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setCustomEntityType
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setHideEquipment
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsEnemy
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setMapTier
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.*
 
 object EntityUtil {
-    fun isCustomEntityType(entity: Entity, entityType: CustomEntityType): Boolean {
-        val type = PersistentDataUtil.getValue(entity, TypeKeys.CUSTOM_ENTITY_TYPE) ?: return false
-        return type == entityType
-    }
-
     fun spawnCustomEntity(entityType: CustomEntityType, loc: Location, mapTier: Int): Entity? {
         val world = loc.world ?: return null
 
@@ -19,7 +17,7 @@ object EntityUtil {
         entity.customName = entityType.customName
         entity.isCustomNameVisible = false
 
-        setPersistentData(entity, entityType, mapTier)
+        setCustomData(entity, entityType, mapTier)
 
         if (entity !is LivingEntity) return entity
         setAttributes(entity, entityType, mapTier)
@@ -40,11 +38,11 @@ object EntityUtil {
         attributeInstance.baseValue = value
     }
 
-    private fun setPersistentData(entity: Entity, entityType: CustomEntityType, mapTier: Int) {
-        PersistentDataUtil.setValue(entity, TypeKeys.MAP_TIER, mapTier)
-        PersistentDataUtil.setValue(entity, TypeKeys.HIDE_EQUIPMENT, entityType.hideEquipment)
-        PersistentDataUtil.setValue(entity, TypeKeys.CUSTOM_ENTITY_TYPE, entityType)
-        PersistentDataUtil.setValue(entity, TypeKeys.IS_ENEMY, true)
+    private fun setCustomData(entity: Entity, entityType: CustomEntityType, mapTier: Int) {
+        entity.setMapTier(mapTier)
+        entity.setHideEquipment(entityType.hideEquipment)
+        entity.setCustomEntityType(entityType)
+        entity.setIsEnemy()
     }
 
     private fun setAttributes(entity: LivingEntity, entityType: CustomEntityType, mapTier: Int) {
