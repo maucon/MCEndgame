@@ -50,8 +50,7 @@ class DungeonProgressCommand(
             return true
         }
 
-        val message =
-            PlayerDungeonProgressSettings.getDungeonProgressMessage(targetPlayer.name!!, entity.tier, entity.progress)
+        val message = PlayerDungeonProgressSettings.getDungeonProgressMessage(targetPlayer.name!!, entity.tier, entity.progress)
         commandExecutor.sendMessage(message)
 
         return true
