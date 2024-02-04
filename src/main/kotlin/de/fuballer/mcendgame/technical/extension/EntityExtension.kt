@@ -54,4 +54,10 @@ object EntityExtension {
     }
 
     fun Entity.isSpecial() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_SPECIAL)
+
+    fun Entity.setIsPortal(value: Boolean = true) {
+        PersistentDataUtil.setValue(this, TypeKeys.IS_PORTAL, value)
+    }
+
+    fun Entity.isPortal() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_PORTAL)
 }

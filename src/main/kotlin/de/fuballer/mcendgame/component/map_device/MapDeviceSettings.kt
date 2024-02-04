@@ -58,7 +58,6 @@ object MapDeviceSettings {
     val FILLER_ITEM = ItemCreatorUtil.create(ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", listOf(" "))
 
     const val MAP_DEVICE_BLOCK_METADATA_KEY = "MAP_DEVICE"
-    const val MAP_DEVICE_PORTAL_ENTITY_NAME = "mcEndgame_portal"
 
     val DUNGEON_INSTANCE_CLOSED = "${ChatColor.RED}Dungeon instance already closed!"
 }

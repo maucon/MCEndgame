@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.map_device.data
 
-import de.fuballer.mcendgame.component.map_device.MapDeviceSettings
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsPortal
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.Color
 import org.bukkit.Location
@@ -40,11 +40,13 @@ class Portal(
                 setGravity(false)
                 isVisible = false
                 setAI(false)
-                customName = MapDeviceSettings.MAP_DEVICE_PORTAL_ENTITY_NAME
+
                 addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.ADDING)
                 addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.ADDING)
                 addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.ADDING)
                 addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING)
+
+                setIsPortal()
             }
 
         portalEntityId = portalEntity!!.uniqueId

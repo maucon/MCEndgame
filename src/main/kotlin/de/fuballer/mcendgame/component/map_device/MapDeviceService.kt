@@ -15,6 +15,7 @@ import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isPortal
 import de.fuballer.mcendgame.technical.extension.InventoryExtension.getCustomType
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getMapDeviceAction
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isMapDevice
@@ -26,7 +27,6 @@ import org.bukkit.*
 import org.bukkit.block.data.type.RespawnAnchor
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -54,7 +54,7 @@ class MapDeviceService(
 ) : Listener, LifeCycleListener {
     override fun initialize(plugin: JavaPlugin) {
         createRecipe()
-        clearBuggedArmorStands()
+        clearObsoletePortals()
     }
 
     override fun terminate() {
@@ -191,21 +191,17 @@ class MapDeviceService(
         openPortals(mapDeviceLocation, teleportLocation)
     }
 
-    private fun clearBuggedArmorStands() {
+    private fun clearObsoletePortals() {
         for (world in server.worlds) {
-            clearBuggedArmorStands(world)
+            clearObsoletePortals(world)
         }
     }
 
-    private fun clearBuggedArmorStands(world: World) {
-        for (entity in world.entities) {
-            if (entity.type != EntityType.ARMOR_STAND) continue
-            if (entity.name != MapDeviceSettings.MAP_DEVICE_PORTAL_ENTITY_NAME) continue
-            if (mapDeviceRepo.existsMapDevicePortalByPortalEntity(entity)) continue
-
-            entity.remove()
-        }
-    }
+    private fun clearObsoletePortals(world: World) =
+        world.entities
+            .filter { it.isPortal() }
+            .filter { !mapDeviceRepo.existsMapDevicePortalByPortalEntity(it) }
+            .forEach { it.remove() }
 
     private fun createRecipe() {
         val key = PluginUtil.createNamespacedKey(MapDeviceSettings.MAP_DEVICE_ITEM_KEY)
@@ -258,7 +254,7 @@ class MapDeviceService(
         mapDeviceRepo.save(entity)
 
         val world = mapDeviceLocation.world!!
-        clearBuggedArmorStands(world)
+        clearObsoletePortals(world)
 
         updateMapDeviceVisual(mapDeviceLocation, 4)
     }
