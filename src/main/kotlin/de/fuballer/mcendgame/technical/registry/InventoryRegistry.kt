@@ -10,5 +10,7 @@ object InventoryRegistry {
         map[inventory] = type
     }
 
+    fun unregister(inventory: Inventory) = map.remove(inventory)
+
     fun getType(inventory: Inventory) = map[inventory]
 }
