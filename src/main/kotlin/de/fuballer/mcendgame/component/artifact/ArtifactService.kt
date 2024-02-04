@@ -2,10 +2,9 @@ package de.fuballer.mcendgame.component.artifact
 
 import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.InventoryExtension.isCustomType
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
-import de.fuballer.mcendgame.util.ArtifactUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.technical.extension.InventoryExtension.getCustomType
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getArtifact
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.setArtifacts
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -20,7 +19,7 @@ class ArtifactService : Listener {
     @EventHandler
     fun on(event: InventoryClickEvent) {
         val artifactInventory = event.inventory
-        if (!artifactInventory.isCustomType(CustomInventoryType.ARTIFACT)) return
+        if (artifactInventory.getCustomType() != CustomInventoryType.ARTIFACT) return
 
         event.isCancelled = true
 
@@ -31,7 +30,8 @@ class ArtifactService : Listener {
 
         val clickedInventory = event.clickedInventory ?: return
         val item = clickedInventory.getItem(event.slot) ?: return
-        if (!ArtifactUtil.isArtifact(item)) return
+        if (item.itemMeta == null) return
+        if (item.getArtifact() == null) return
 
         val action = event.action
         if (action != InventoryAction.MOVE_TO_OTHER_INVENTORY && action != InventoryAction.PICKUP_ALL) return
@@ -45,10 +45,9 @@ class ArtifactService : Listener {
         }
 
         val artifacts = artifactInventory.contents
-            .filterNotNull()
-            .mapNotNull { ArtifactUtil.fromItem(it) }
+            .mapNotNull { it?.getArtifact() }
 
-        PersistentDataUtil.setValue(player, TypeKeys.ARTIFACTS, artifacts)
+        player.setArtifacts(artifacts)
     }
 
     private fun removeArtifact(

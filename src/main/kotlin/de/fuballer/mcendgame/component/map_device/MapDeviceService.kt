@@ -15,10 +15,12 @@ import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
-import de.fuballer.mcendgame.technical.extension.InventoryExtension.isCustomType
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.InventoryExtension.getCustomType
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getMapDeviceAction
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isMapDevice
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getLastMapDevice
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.setLastMapDevice
 import de.fuballer.mcendgame.util.InventoryUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.*
 import org.bukkit.block.data.type.RespawnAnchor
@@ -38,7 +40,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
-import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.plugin.java.JavaPlugin
 import kotlin.math.max
 
@@ -64,8 +65,7 @@ class MapDeviceService(
     @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent) {
         val placedItem = event.itemInHand
-        val placedItemMeta = placedItem.itemMeta ?: return
-        if (!PersistentDataUtil.getBooleanValue(placedItemMeta, TypeKeys.MAP_DEVICE)) return
+        if (!placedItem.isMapDevice()) return
 
         val block = event.block
         val fixedMetadataValue = PluginUtil.createFixedMetadataValue(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY)
@@ -118,23 +118,22 @@ class MapDeviceService(
         val entity = mapDeviceRepo.findByLocation(location)
             ?: MapDeviceEntity(location).apply { mapDeviceRepo.save(this) }
 
-        player.openInventory(getMapDeviceInventory(player))
-
-        PersistentDataUtil.setValue(player, TypeKeys.LAST_MAP_DEVICE, entity.id)
+        val inventory = getMapDeviceInventory(player)
+        player.openInventory(inventory)
+        player.setLastMapDevice(entity.id)
     }
 
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
-        if (!event.inventory.isCustomType(CustomInventoryType.MAP_DEVICE)) return
+        if (event.inventory.getCustomType() != CustomInventoryType.MAP_DEVICE) return
         event.isCancelled = true
 
         val inventory = event.inventory
         val clickedSlot = event.rawSlot
         if (clickedSlot >= inventory.size) return
         val clickedItem = inventory.getItem(clickedSlot) ?: return
-        val clickedItemMeta = clickedItem.itemMeta ?: return
 
-        handleOnInventoryClick(clickedItemMeta, event.whoClicked as Player)
+        handleOnInventoryClick(clickedItem, event.whoClicked as Player)
     }
 
     @EventHandler
@@ -162,13 +161,13 @@ class MapDeviceService(
     }
 
     private fun handleOnInventoryClick(
-        clickedItemMeta: ItemMeta,
+        item: ItemStack,
         player: Player
     ) {
-        val lastMapDeviceId = PersistentDataUtil.getValue(player, TypeKeys.LAST_MAP_DEVICE) ?: return
+        val lastMapDeviceId = player.getLastMapDevice() ?: return
         val mapDevice = mapDeviceRepo.findById(lastMapDeviceId) ?: return
 
-        val action = PersistentDataUtil.getValue(clickedItemMeta, TypeKeys.MAP_DEVICE_ACTION) ?: return
+        val action = item.getMapDeviceAction() ?: return
         player.closeInventory()
 
         when (action) {

@@ -9,5 +9,5 @@ object InventoryExtension {
         InventoryRegistry.register(this, type)
     }
 
-    fun Inventory.isCustomType(type: CustomInventoryType) = InventoryRegistry.isType(this, type)
+    fun Inventory.getCustomType() = InventoryRegistry.getType(this)
 }

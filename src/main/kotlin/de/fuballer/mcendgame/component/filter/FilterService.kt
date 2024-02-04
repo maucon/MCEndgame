@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.filter
 import de.fuballer.mcendgame.component.filter.db.FilterRepository
 import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.InventoryExtension.isCustomType
+import de.fuballer.mcendgame.technical.extension.InventoryExtension.getCustomType
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -20,7 +20,7 @@ class FilterService(
     @EventHandler
     fun on(event: InventoryClickEvent) {
         val filterInventory = event.inventory
-        if (!filterInventory.isCustomType(CustomInventoryType.FILTER)) return
+        if (filterInventory.getCustomType() != CustomInventoryType.FILTER) return
 
         event.isCancelled = true
 

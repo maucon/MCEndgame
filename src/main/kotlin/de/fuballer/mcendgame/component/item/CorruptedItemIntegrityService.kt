@@ -1,9 +1,8 @@
 package de.fuballer.mcendgame.component.item
 
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
-import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCorruptionRounds
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isUnmodifiable
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -23,7 +22,7 @@ class CorruptedItemIntegrityService : Listener {
         ) return
 
         val anyUnmodifiable = inventory.contents.filterNotNull()
-            .any { ItemUtil.isUnmodifiable(it) }
+            .any { it.isUnmodifiable() }
 
         if (anyUnmodifiable) {
             event.result = null
@@ -34,10 +33,10 @@ class CorruptedItemIntegrityService : Listener {
     fun on(event: CraftItemEvent) {
         val inventory = event.inventory
         val unmodifiableItemCount = inventory.storageContents
-            .count { ItemUtil.isUnmodifiable(it) }
+            .count { it.isUnmodifiable() }
 
         val result = inventory.result ?: return
-        val unmodifiableItemThreshold = if (ItemUtil.isUnmodifiable(result)) 1 else 0
+        val unmodifiableItemThreshold = if (result.isUnmodifiable()) 1 else 0
 
         if (unmodifiableItemCount > unmodifiableItemThreshold) {
             inventory.result = null
@@ -48,9 +47,8 @@ class CorruptedItemIntegrityService : Listener {
     private fun isCorruptionValid(inventory: Inventory): Boolean {
         val base = inventory.getItem(0) ?: return false
         val corruption = inventory.getItem(1) ?: return false
-        val corruptionMeta = corruption.itemMeta ?: return false
 
-        if (ItemUtil.isUnmodifiable(base)) return false
-        return PersistentDataUtil.getValue(corruptionMeta, TypeKeys.CORRUPTION_ROUNDS) != null
+        if (base.isUnmodifiable()) return false
+        return corruption.getCorruptionRounds() != null
     }
 }

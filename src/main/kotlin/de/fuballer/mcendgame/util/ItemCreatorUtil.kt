@@ -8,7 +8,7 @@ object ItemCreatorUtil {
     fun create(
         itemStack: ItemStack,
         itemName: String?,
-        itemLore: List<String>?
+        itemLore: List<String>? = listOf()
     ): ItemStack {
         val meta = itemStack.itemMeta!!
         meta.setDisplayName(itemName)

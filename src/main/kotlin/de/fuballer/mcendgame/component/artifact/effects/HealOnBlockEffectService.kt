@@ -2,14 +2,13 @@ package de.fuballer.mcendgame.component.artifact.effects
 
 import de.fuballer.mcendgame.domain.ArtifactType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHealOnBlockArtifactActivation
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.setHealOnBlockArtifactActivation
 import de.fuballer.mcendgame.util.ArtifactUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.attribute.Attribute
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -34,7 +33,7 @@ class HealOnBlockEffectService : Listener {
         if (Random.nextDouble() > realBlockChance) return
 
         if (isHealOnBlockOnCooldown(player, cooldown)) return
-        PersistentDataUtil.setValue(player, TypeKeys.HEAL_ON_BLOCK_ARTIFACT_ACTIVATION, System.currentTimeMillis())
+        player.setHealOnBlockArtifactActivation(System.currentTimeMillis())
 
         spawnParticles(player)
 
@@ -43,9 +42,8 @@ class HealOnBlockEffectService : Listener {
         player.health = newHealth
     }
 
-    private fun isHealOnBlockOnCooldown(entity: Entity, cooldown: Double): Boolean {
-        val lastActivation =
-            PersistentDataUtil.getValue(entity, TypeKeys.HEAL_ON_BLOCK_ARTIFACT_ACTIVATION) ?: return false
+    private fun isHealOnBlockOnCooldown(player: Player, cooldown: Double): Boolean {
+        val lastActivation = player.getHealOnBlockArtifactActivation() ?: return false
         val cdMS = (cooldown * 1000).toLong()
         return lastActivation + cdMS > System.currentTimeMillis()
     }

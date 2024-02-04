@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.killer.db.KillerEntity
 import de.fuballer.mcendgame.component.killer.db.KillerRepository
 import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.InventoryExtension.isCustomType
+import de.fuballer.mcendgame.technical.extension.InventoryExtension.getCustomType
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
@@ -36,7 +36,7 @@ class KillerService(
 
     @EventHandler
     fun on(event: InventoryClickEvent) {
-        if (!event.inventory.isCustomType(CustomInventoryType.KILLER)) return
+        if (event.inventory.getCustomType() != CustomInventoryType.KILLER) return
 
         event.isCancelled = true
     }

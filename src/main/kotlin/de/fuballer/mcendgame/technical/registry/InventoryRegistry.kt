@@ -10,5 +10,5 @@ object InventoryRegistry {
         map[inventory] = type
     }
 
-    fun isType(inventory: Inventory, type: CustomInventoryType) = map[inventory] == type
+    fun getType(inventory: Inventory) = map[inventory]
 }

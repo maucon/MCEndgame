@@ -6,7 +6,11 @@ import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.item.CustomItemType
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCustomItemType
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isUnmodifiable
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setCustomItemType
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setRolledAttributes
 import org.bukkit.ChatColor
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
@@ -39,34 +43,27 @@ object ItemUtil {
             }
         }
 
-        PersistentDataUtil.setValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE, itemType)
-        PersistentDataUtil.setValue(itemMeta, TypeKeys.ATTRIBUTES, rolledAttributes)
-
         item.itemMeta = itemMeta
-        updateAttributesAndLore(item)
 
+        item.setCustomItemType(itemType)
+        item.setRolledAttributes(rolledAttributes)
+
+        updateAttributesAndLore(item)
         return item
     }
 
     fun getEquipmentAttributes(item: ItemStack): List<RollableAttribute> {
         val itemType = item.type
 
-        val customItemAttributes = getCustomItemAttributes(item)
+        val customItemAttributes = item.getCustomItemType()?.attributes
         if (customItemAttributes != null) return customItemAttributes
 
         val equipment = Equipment.fromMaterial(itemType) ?: return listOf()
         return equipment.rollableAttributes.map { it.option }
     }
 
-    fun isUnmodifiable(item: ItemStack): Boolean {
-        val itemMeta = item.itemMeta ?: return false
-        return PersistentDataUtil.getBooleanValue(itemMeta, TypeKeys.UNMODIFIABLE)
-    }
-
     fun hasCustomAttributes(item: ItemStack): Boolean {
-        val itemMeta = item.itemMeta ?: return false
-
-        val attributes = PersistentDataUtil.getValue(itemMeta, TypeKeys.ATTRIBUTES) ?: return false
+        val attributes = item.getRolledAttributes() ?: return false
         return attributes.isNotEmpty()
     }
 
@@ -80,19 +77,13 @@ object ItemUtil {
 
         val equipment = Equipment.fromMaterial(item.type) ?: return
         val baseAttributes = equipment.baseAttributes
-        val extraAttributes = PersistentDataUtil.getValue(itemMeta, TypeKeys.ATTRIBUTES) ?: listOf()
+        val extraAttributes = item.getRolledAttributes() ?: listOf()
         val slotLore = Equipment.getLoreForSlot(equipment.slot)
 
-        updateAttributes(itemMeta, baseAttributes, extraAttributes, equipment)
+        updateAttributes(item, itemMeta, baseAttributes, extraAttributes, equipment)
         updateLore(item, itemMeta, baseAttributes, extraAttributes, slotLore)
 
         item.itemMeta = itemMeta
-    }
-
-    fun <T : Any> setPersistentData(item: ItemStack, key: TypeKeys.TypeKey<T>, value: T) {
-        val meta = item.itemMeta ?: return
-        PersistentDataUtil.setValue(meta, key, value)
-        item.itemMeta = meta
     }
 
     fun getCorrectSignLore(attribute: RolledAttribute): String {
@@ -115,14 +106,8 @@ object ItemUtil {
         return item
     }
 
-    private fun getCustomItemAttributes(item: ItemStack): List<RollableAttribute>? {
-        val itemMeta = item.itemMeta ?: return null
-        val customItemType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE) ?: return null
-
-        return customItemType.attributes
-    }
-
     private fun updateAttributes(
+        item: ItemStack,
         itemMeta: ItemMeta,
         baseAttributes: List<RolledAttribute>,
         extraAttributes: List<RolledAttribute>,
@@ -132,7 +117,7 @@ object ItemUtil {
             it.forEach { attribute, _ -> itemMeta.removeAttributeModifier(attribute) }
         }
 
-        val customItemType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE)
+        val customItemType = item.getCustomItemType()
         val hasBaseAttributes = customItemType?.usesEquipmentBaseStats != false
 
         if (hasBaseAttributes) {
@@ -195,7 +180,7 @@ object ItemUtil {
         slotLore: String
     ) {
         val lore = mutableListOf<String>()
-        val customItemType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE)
+        val customItemType = item.getCustomItemType()
         val hasBaseAttributes = customItemType?.usesEquipmentBaseStats != false
 
         if (hasBaseAttributes && baseAttributes.isNotEmpty()) {
@@ -209,14 +194,14 @@ object ItemUtil {
         if (extraAttributes.isNotEmpty()) {
             lore.add(Equipment.GENERIC_SLOT_LORE)
 
-            val attributes = getSortedAttributes(itemMeta, extraAttributes)
+            val attributes = getSortedAttributes(item, extraAttributes)
 
             attributes.forEach {
                 val attributeLine = getAttributeLine(itemMeta, it, false)
                 lore.add(attributeLine)
             }
         }
-        if (isUnmodifiable(item)) {
+        if (item.isUnmodifiable()) {
             lore.add(CorruptionSettings.CORRUPTION_TAG_LORE)
         }
         if (lore.isNotEmpty()) {
@@ -228,10 +213,10 @@ object ItemUtil {
     }
 
     private fun getSortedAttributes(
-        itemMeta: ItemMeta,
+        item: ItemStack,
         extraAttributes: List<RolledAttribute>
     ): List<RolledAttribute> {
-        val customType = PersistentDataUtil.getValue(itemMeta, TypeKeys.CUSTOM_ITEM_TYPE)
+        val customType = item.getCustomItemType()
             ?: return extraAttributes.sortedBy { it.type.ordinal }
 
         val attributeTypeOrder = customType.attributes.map { it.type }

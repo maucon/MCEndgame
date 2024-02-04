@@ -3,7 +3,9 @@ package de.fuballer.mcendgame.util
 import de.fuballer.mcendgame.component.artifact.Artifact
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 import de.fuballer.mcendgame.domain.ArtifactType
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setArtifact
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setUnmodifiable
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getArtifacts
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.text.DecimalFormat
@@ -21,30 +23,19 @@ object ArtifactUtil {
         val artifactValues = artifact.type.values[artifact.tier] ?: return item
         meta.lore = getLoreWithValues(artifact.type.displayLore, artifactValues)
 
-        PersistentDataUtil.setValue(meta, TypeKeys.ARTIFACT, artifact)
-        PersistentDataUtil.setValue(meta, TypeKeys.UNMODIFIABLE, true)
-
         item.itemMeta = meta
+
+        item.setArtifact(artifact)
+        item.setUnmodifiable()
+
         return item
     }
 
-    fun isArtifact(item: ItemStack): Boolean {
-        val itemMeta = item.itemMeta ?: return false
-        return PersistentDataUtil.getValue(itemMeta, TypeKeys.ARTIFACT) != null
-    }
-
-    fun fromItem(item: ItemStack): Artifact? {
-        val itemMeta = item.itemMeta ?: return null
-        return PersistentDataUtil.getValue(itemMeta, TypeKeys.ARTIFACT)
-    }
-
-    fun getHighestTier(player: Player, artifactType: ArtifactType): Int? {
-        val artifacts = PersistentDataUtil.getValue(player, TypeKeys.ARTIFACTS) ?: return null
-
-        return artifacts
-            .filter { it.type == artifactType }
-            .maxByOrNull { it.tier }?.tier
-    }
+    fun getHighestTier(player: Player, artifactType: ArtifactType) =
+        player.getArtifacts()
+            ?.filter { it.type == artifactType }
+            ?.maxByOrNull { it.tier }
+            ?.tier
 
     private fun getLoreWithValues(loreFormat: String, values: List<Double>): List<String> {
         val formattedValues = values.map { format.format(it) }

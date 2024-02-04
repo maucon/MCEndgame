@@ -3,9 +3,12 @@ package de.fuballer.mcendgame.component.corruption
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCorruptionRounds
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isUnmodifiable
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setRolledAttributes
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.GameMode
@@ -32,13 +35,12 @@ class CorruptionService : Listener {
 
         val base = inventory.getItem(0) ?: return
         val corruption = inventory.getItem(1) ?: return
-        val corruptionMeta = corruption.itemMeta ?: return
 
         if (!Equipment.existsByMaterial(base.type)) return
-        PersistentDataUtil.getValue(corruptionMeta, TypeKeys.CORRUPTION_ROUNDS) ?: return
+        if (corruption.getCorruptionRounds() == null) return
 
         val result = base.clone()
-        ItemUtil.setPersistentData(result, TypeKeys.UNMODIFIABLE, true)
+        result.setUnmodifiable()
         ItemUtil.updateAttributesAndLore(result)
 
         event.result = result
@@ -59,20 +61,17 @@ class CorruptionService : Listener {
         if (event.slot != 2) return
 
         val result = inventory.getItem(2) ?: return
-        if (result.itemMeta == null) return
-        if (!ItemUtil.isUnmodifiable(result)) return
+        if (!result.isUnmodifiable()) return
 
         val player = event.whoClicked as Player
         if (player.gameMode != GameMode.CREATIVE && player.level < 1) return
-
-        val corruption = inventory.getItem(1) ?: return
-        val corruptionMeta = corruption.itemMeta ?: return
-
         if (player.gameMode != GameMode.CREATIVE) {
             player.level -= 1
         }
 
-        val corruptionRounds = PersistentDataUtil.getValue(corruptionMeta, TypeKeys.CORRUPTION_ROUNDS) ?: return
+        val corruption = inventory.getItem(1) ?: return
+        val corruptionRounds = corruption.getCorruptionRounds() ?: return
+
         repeat(corruptionRounds) {
             if (result.type == Material.AIR) return@repeat
 
@@ -82,7 +81,7 @@ class CorruptionService : Listener {
         val sound = if (result.type == Material.AIR) Sound.ENTITY_ITEM_BREAK else Sound.BLOCK_ANVIL_USE
         player.world.playSound(player.location, sound, SoundCategory.PLAYERS, 1f, 1f)
 
-        ItemUtil.setPersistentData(result, TypeKeys.UNMODIFIABLE, true)
+        result.setUnmodifiable()
         ItemUtil.updateAttributesAndLore(result)
 
         when (event.action) {
@@ -163,18 +162,13 @@ class CorruptionService : Listener {
     }
 
     private fun corruptAttributes(item: ItemStack) {
-        val meta = item.itemMeta ?: return
-
         val attributesBounds = ItemUtil.getEquipmentAttributes(item)
-        val attributes = PersistentDataUtil.getValue(meta, TypeKeys.ATTRIBUTES) ?: return
+        val attributes = item.getRolledAttributes() ?: return
         val chosenAttribute = attributes.randomOrNull() ?: return
 
         val attributeBounds = attributesBounds.firstOrNull { it.type == chosenAttribute.type } ?: return
+        chosenAttribute.roll = CorruptionSettings.corruptAttributeValue(attributeBounds, chosenAttribute.roll, Random.nextDouble())
 
-        chosenAttribute.roll =
-            CorruptionSettings.corruptAttributeValue(attributeBounds, chosenAttribute.roll, Random.nextDouble())
-        PersistentDataUtil.setValue(meta, TypeKeys.ATTRIBUTES, attributes)
-
-        item.itemMeta = meta
+        item.setRolledAttributes(attributes)
     }
 }

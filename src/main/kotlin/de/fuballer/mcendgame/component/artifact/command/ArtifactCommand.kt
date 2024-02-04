@@ -4,10 +4,9 @@ import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
-import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getArtifacts
 import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.InventoryUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -28,7 +27,7 @@ class ArtifactCommand : CommandHandler(ArtifactSettings.COMMAND_NAME) {
     }
 
     private fun openArtifactsWindow(player: Player) {
-        val artifacts = PersistentDataUtil.getValue(player, TypeKeys.ARTIFACTS) ?: listOf()
+        val artifacts = player.getArtifacts() ?: listOf()
 
         val itemsStacks = artifacts.map { ArtifactUtil.getItem(it) }
         showArtifactsWindow(player, itemsStacks)
