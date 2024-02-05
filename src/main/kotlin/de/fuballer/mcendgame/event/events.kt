@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.event
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.World
+import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -84,5 +85,11 @@ class DungeonEntityDeathEvent(
 ) : HandleableEvent()
 
 class DamageCalculationEvent(
-    val modifier: List<Int> = listOf()
+    val player: Player,
+    val damaged: LivingEntity,
+    val baseDamage: MutableList<Double> = mutableListOf(),
+    val increasedDamage: MutableList<Double> = mutableListOf(),
+    val moreDamage: MutableList<Double> = mutableListOf(),
+    var isCritical: Boolean = false,
+    var attackCooldown: Double = 1.0,
 ) : HandleableEvent()
