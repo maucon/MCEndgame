@@ -161,18 +161,5 @@ class DamageService : Listener {
         if (player.velocity.x > 0 || player.velocity.z > 0) return false
         if (player.attackCooldown < 0.9) return false
         return true
-
-        /*
-                The requirements for a melee critical hit are:
-                - A player must be falling.
-                - A player must not be on the ground.
-                - A player must not be on a ladder or any type of vine.
-                - A player must not be in water.
-                - A player must not be affected by Blindness.
-                - A player must not be affected by Slow Falling.
-                - A player must not be riding an entity.
-                - A player must not be faster than walking (like flying or sprinting. [Java Edition only]
-                - A base attack must not be reduced below 90% damage due to cooldown. [Java Edition only]
-                 */
     }
 }
