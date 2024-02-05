@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.damage
 
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsEnemy
 import de.fuballer.mcendgame.util.DungeonUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.EvokerFangs
 import org.bukkit.event.EventHandler
@@ -36,8 +36,8 @@ class DungeonEnemyDamagingService : Listener {
         if (entity !is EvokerFangs) return
 
         val owner = entity.owner ?: return
-        if (!PersistentDataUtil.getBooleanValue(owner, TypeKeys.IS_ENEMY)) return
+        if (!owner.isEnemy()) return
 
-        PersistentDataUtil.setValue(entity, TypeKeys.IS_ENEMY, true)
+        entity.setIsEnemy()
     }
 }

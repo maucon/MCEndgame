@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.artifact
 
-import de.fuballer.mcendgame.domain.artifact.ArtifactType
+import de.fuballer.mcendgame.domain.ArtifactType
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.ChatColor
@@ -15,7 +15,7 @@ object ArtifactSettings {
 
     val ARTIFACTS_WINDOW_TYPE = InventoryType.HOPPER
     val ARTIFACTS_WINDOW_SIZE = ARTIFACTS_WINDOW_TYPE.defaultSize
-    val ARTIFACTS_WINDOW_TITLE = "${ChatColor.BLACK}Artifacts"
+    const val ARTIFACTS_WINDOW_TITLE = "Artifacts"
     val CANNOT_CHANGE_ARTIFACTS_MESSAGE = "${ChatColor.RED}You cannot change artifacts whilst inside a dungeon."
 
     val LORE_COLOR = "${ChatColor.GRAY}${ChatColor.ITALIC}"

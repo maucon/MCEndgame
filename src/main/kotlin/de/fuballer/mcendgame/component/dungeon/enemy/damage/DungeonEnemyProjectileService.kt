@@ -1,8 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.damage
 
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
@@ -24,8 +23,7 @@ class DungeonEnemyProjectileService : Listener {
         val shooter = projectile.shooter ?: return
 
         if (shooter !is LivingEntity) return
-
-        if (!PersistentDataUtil.getBooleanValue(shooter, TypeKeys.IS_ENEMY)) return
+        if (!shooter.isEnemy()) return
 
         val damage = getDamage(shooter) ?: return
         event.damage = damage

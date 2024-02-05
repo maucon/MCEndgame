@@ -8,20 +8,25 @@ import de.fuballer.mcendgame.component.map_device.data.MapDeviceAction
 import de.fuballer.mcendgame.component.map_device.data.Portal
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
+import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.event.DiscoverRecipeAddEvent
 import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
-import de.fuballer.mcendgame.util.PersistentDataUtil
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isPortal
+import de.fuballer.mcendgame.technical.extension.InventoryExtension.getCustomType
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getMapDeviceAction
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isMapDevice
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getLastMapDevice
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.setLastMapDevice
+import de.fuballer.mcendgame.util.InventoryUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.*
 import org.bukkit.block.data.type.RespawnAnchor
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -35,7 +40,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
-import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.plugin.java.JavaPlugin
 import kotlin.math.max
 
@@ -50,7 +54,7 @@ class MapDeviceService(
 ) : Listener, LifeCycleListener {
     override fun initialize(plugin: JavaPlugin) {
         createRecipe()
-        clearBuggedArmorStands()
+        clearObsoletePortals()
     }
 
     override fun terminate() {
@@ -61,8 +65,7 @@ class MapDeviceService(
     @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent) {
         val placedItem = event.itemInHand
-        val placedItemMeta = placedItem.itemMeta ?: return
-        if (!PersistentDataUtil.getBooleanValue(placedItemMeta, TypeKeys.MAP_DEVICE)) return
+        if (!placedItem.isMapDevice()) return
 
         val block = event.block
         val fixedMetadataValue = PluginUtil.createFixedMetadataValue(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY)
@@ -115,23 +118,22 @@ class MapDeviceService(
         val entity = mapDeviceRepo.findByLocation(location)
             ?: MapDeviceEntity(location).apply { mapDeviceRepo.save(this) }
 
-        player.openInventory(getMapDeviceInventory(player))
-
-        PersistentDataUtil.setValue(player, TypeKeys.LAST_MAP_DEVICE, entity.id)
+        val inventory = getMapDeviceInventory(player)
+        player.openInventory(inventory)
+        player.setLastMapDevice(entity.id)
     }
 
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
-        if (!event.view.title.equals(MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE, ignoreCase = true)) return
+        if (event.inventory.getCustomType() != CustomInventoryType.MAP_DEVICE) return
         event.isCancelled = true
 
         val inventory = event.inventory
         val clickedSlot = event.rawSlot
         if (clickedSlot >= inventory.size) return
         val clickedItem = inventory.getItem(clickedSlot) ?: return
-        val clickedItemMeta = clickedItem.itemMeta ?: return
 
-        handleOnInventoryClick(clickedItemMeta, event.whoClicked as Player)
+        handleOnInventoryClick(clickedItem, event.whoClicked as Player)
     }
 
     @EventHandler
@@ -159,13 +161,13 @@ class MapDeviceService(
     }
 
     private fun handleOnInventoryClick(
-        clickedItemMeta: ItemMeta,
+        item: ItemStack,
         player: Player
     ) {
-        val lastMapDeviceId = PersistentDataUtil.getValue(player, TypeKeys.LAST_MAP_DEVICE) ?: return
+        val lastMapDeviceId = player.getLastMapDevice() ?: return
         val mapDevice = mapDeviceRepo.findById(lastMapDeviceId) ?: return
 
-        val action = PersistentDataUtil.getValue(clickedItemMeta, TypeKeys.MAP_DEVICE_ACTION) ?: return
+        val action = item.getMapDeviceAction() ?: return
         player.closeInventory()
 
         when (action) {
@@ -189,21 +191,17 @@ class MapDeviceService(
         openPortals(mapDeviceLocation, teleportLocation)
     }
 
-    private fun clearBuggedArmorStands() {
+    private fun clearObsoletePortals() {
         for (world in server.worlds) {
-            clearBuggedArmorStands(world)
+            clearObsoletePortals(world)
         }
     }
 
-    private fun clearBuggedArmorStands(world: World) {
-        for (entity in world.entities) {
-            if (entity.type != EntityType.ARMOR_STAND) continue
-            if (entity.name != MapDeviceSettings.MAP_DEVICE_PORTAL_ENTITY_NAME) continue
-            if (mapDeviceRepo.existsMapDevicePortalByPortalEntity(entity)) continue
-
-            entity.remove()
-        }
-    }
+    private fun clearObsoletePortals(world: World) =
+        world.entities
+            .filter { it.isPortal() }
+            .filter { !mapDeviceRepo.existsMapDevicePortalByPortalEntity(it) }
+            .forEach { it.remove() }
 
     private fun createRecipe() {
         val key = PluginUtil.createNamespacedKey(MapDeviceSettings.MAP_DEVICE_ITEM_KEY)
@@ -214,9 +212,10 @@ class MapDeviceService(
     }
 
     private fun getMapDeviceInventory(player: Player): Inventory {
-        val inventory = PluginUtil.createInventory(
+        val inventory = InventoryUtil.createInventory(
             InventoryType.HOPPER,
-            MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE
+            MapDeviceSettings.MAP_DEVICE_INVENTORY_TITLE,
+            CustomInventoryType.MAP_DEVICE
         )
 
         inventory.setItem(0, MapDeviceSettings.OPEN_PORTALS_ITEM)
@@ -255,7 +254,7 @@ class MapDeviceService(
         mapDeviceRepo.save(entity)
 
         val world = mapDeviceLocation.world!!
-        clearBuggedArmorStands(world)
+        clearObsoletePortals(world)
 
         updateMapDeviceVisual(mapDeviceLocation, 4)
     }

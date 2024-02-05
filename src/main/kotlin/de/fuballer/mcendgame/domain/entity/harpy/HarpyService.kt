@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.domain.entity.harpy
 
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.EntityType
@@ -15,11 +15,11 @@ class HarpyService : Listener {
     @EventHandler
     fun onEntityShootBow(event: EntityShootBowEvent) {
         val entity = event.entity
-        if (!EntityUtil.isCustomEntityType(entity, HarpyEntityType)) return
+        if (entity.getCustomEntityType() != HarpyEntityType) return
 
         val snowball = entity.world.spawnEntity(event.projectile.location, EntityType.SNOWBALL, false) as Snowball
-        snowball.velocity = event.projectile.velocity
 
+        snowball.velocity = event.projectile.velocity
         snowball.shooter = entity
 
         entity.world.playSound(entity.location, Sound.ENTITY_SNOWBALL_THROW, SoundCategory.HOSTILE, 1f, 1f)

@@ -11,14 +11,14 @@ import org.bukkit.event.player.PlayerJoinEvent
 
 @Component
 class RecipeService(
-    private val discoverRecipeRepo: RecipeRepository,
+    private val recipeRepo: RecipeRepository,
     private val server: Server
 ) : Listener {
     @EventHandler
     fun on(event: PlayerJoinEvent) {
         val player = event.player
 
-        val recipes = discoverRecipeRepo.findAll()
+        val recipes = recipeRepo.findAll()
             .map { it.id }
 
         player.discoverRecipes(recipes)
@@ -29,6 +29,6 @@ class RecipeService(
         server.addRecipe(event.recipe)
 
         val entity = RecipeEntity(event.key)
-        discoverRecipeRepo.save(entity)
+        recipeRepo.save(entity)
     }
 }

@@ -2,11 +2,13 @@ package de.fuballer.mcendgame.component.dungeon.looting
 
 import de.fuballer.mcendgame.component.dungeon.killstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getMapTier
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isDropEquipmentDisabled
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.technical.extension.EntityExtension.isSpecial
 import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Material
 import org.bukkit.World
@@ -27,12 +29,12 @@ class LootingService(
     fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity
 
-        if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.DISABLE_DROP_EQUIPMENT)) return
-        if (!PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_ENEMY)) return
+        if (entity.isDropEquipmentDisabled()) return
+        if (!entity.isEnemy()) return
 
         dropEquipment(entity, entity.world)
 
-        if (PersistentDataUtil.getBooleanValue(entity, TypeKeys.IS_SPECIAL)) {
+        if (entity.isSpecial()) {
             dropCustomItems(entity, entity.world)
         }
     }
@@ -52,7 +54,7 @@ class LootingService(
     }
 
     private fun dropCustomItems(entity: LivingEntity, world: World) {
-        val mapTier = PersistentDataUtil.getValue(entity, TypeKeys.MAP_TIER) ?: return
+        val mapTier = entity.getMapTier() ?: return
         if (Random.nextDouble() > LootingSettings.getCustomItemDropChance(mapTier)) return
 
         val customItemType = RandomUtil.pick(LootingSettings.CUSTOM_ITEM_OPTIONS).option

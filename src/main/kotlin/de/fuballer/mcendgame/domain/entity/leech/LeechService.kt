@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.domain.entity.leech
 
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import org.bukkit.entity.Bee
 import org.bukkit.entity.LivingEntity
@@ -15,7 +15,7 @@ class LeechService(
 ) : Listener {
     @EventHandler
     fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
-        if (!EntityUtil.isCustomEntityType(event.damager, LeechEntityType)) return
+        if (event.damager.getCustomEntityType() != LeechEntityType) return
         val target = event.entity as? LivingEntity ?: return
 
         val leech = event.damager as Bee

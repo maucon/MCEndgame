@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.domain.entity.imp
 
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Creature
@@ -16,7 +16,7 @@ class ImpService : Listener {
     @EventHandler
     fun onEntityShootBow(event: EntityShootBowEvent) {
         val entity = event.entity
-        if (!EntityUtil.isCustomEntityType(entity, ImpEntityType)) return
+        if (entity.getCustomEntityType() != ImpEntityType) return
 
         val fireball = entity.world.spawnEntity(event.projectile.location, EntityType.SMALL_FIREBALL, false) as SmallFireball
         fireball.shooter = entity

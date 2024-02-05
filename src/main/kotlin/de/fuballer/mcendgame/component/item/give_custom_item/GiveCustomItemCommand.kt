@@ -8,14 +8,11 @@ import de.fuballer.mcendgame.util.ItemUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 
 @Component
 class GiveCustomItemCommand(
     private val commandHelper: CommandHelper
-) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(GiveCustomItemSettings.COMMAND_NAME)!!.setExecutor(this)
-
+) : CommandHandler(GiveCustomItemSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,

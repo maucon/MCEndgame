@@ -4,23 +4,20 @@ import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeSettings
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeEntity
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeRepository
 import de.fuballer.mcendgame.domain.dungeon.DungeonType
-import de.fuballer.mcendgame.domain.technical.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper
+import de.fuballer.mcendgame.technical.CommandAction
 import de.fuballer.mcendgame.util.ChatUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 
 @Component
 class DungeonTypeCommand(
     private val playerDungeonTypeRepo: PlayerDungeonTypeRepository,
     private val commandHelper: CommandHelper
-) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(DungeonTypeSettings.COMMAND_NAME)!!.setExecutor(this)
-
+) : CommandHandler(DungeonTypeSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,
@@ -55,7 +52,12 @@ class DungeonTypeCommand(
             return true
         }
 
-        ChatUtil.sendCopyableText(commandExecutor, DungeonTypeSettings.getPrefix(commandExecutor), entity.dungeonType.toString(), DungeonTypeSettings.SUFFIX)
+        ChatUtil.sendCopyableText(
+            commandExecutor,
+            DungeonTypeSettings.getPrefix(commandExecutor),
+            entity.dungeonType.toString(),
+            DungeonTypeSettings.SUFFIX
+        )
         return true
     }
 
@@ -78,7 +80,12 @@ class DungeonTypeCommand(
         val entity = PlayerDungeonTypeEntity(targetPlayer.uniqueId, dungeonType)
         playerDungeonTypeRepo.save(entity)
 
-        ChatUtil.sendCopyableText(commandExecutor, DungeonTypeSettings.getPrefix(commandExecutor), dungeonType.toString(), DungeonTypeSettings.SUFFIX)
+        ChatUtil.sendCopyableText(
+            commandExecutor,
+            DungeonTypeSettings.getPrefix(commandExecutor),
+            dungeonType.toString(),
+            DungeonTypeSettings.SUFFIX
+        )
         return true
     }
 }

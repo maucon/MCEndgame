@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.domain.item
 
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
-import de.fuballer.mcendgame.domain.technical.registry.Keyed
-import de.fuballer.mcendgame.domain.technical.registry.KeyedRegistry
+import de.fuballer.mcendgame.technical.registry.Keyed
+import de.fuballer.mcendgame.technical.registry.KeyedRegistry
 
 interface CustomItemType : Keyed {
     val customName: String

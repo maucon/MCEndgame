@@ -3,23 +3,20 @@ package de.fuballer.mcendgame.component.dungeon.seed.command
 import de.fuballer.mcendgame.component.dungeon.seed.DungeonSeedSettings
 import de.fuballer.mcendgame.component.dungeon.seed.db.DungeonSeedEntity
 import de.fuballer.mcendgame.component.dungeon.seed.db.DungeonSeedRepository
-import de.fuballer.mcendgame.domain.technical.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper
+import de.fuballer.mcendgame.technical.CommandAction
 import de.fuballer.mcendgame.util.ChatUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 
 @Component
 class DungeonSeedCommand(
     private val playerDungeonSeedRepo: DungeonSeedRepository,
     private val commandHelper: CommandHelper
-) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(DungeonSeedSettings.COMMAND_NAME)!!.setExecutor(this)
-
+) : CommandHandler(DungeonSeedSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,
@@ -54,7 +51,12 @@ class DungeonSeedCommand(
             return true
         }
 
-        ChatUtil.sendCopyableText(commandExecutor, DungeonSeedSettings.getPrefix(commandExecutor), entity.seed, DungeonSeedSettings.SUFFIX)
+        ChatUtil.sendCopyableText(
+            commandExecutor,
+            DungeonSeedSettings.getPrefix(commandExecutor),
+            entity.seed,
+            DungeonSeedSettings.SUFFIX
+        )
         return true
     }
 
@@ -75,7 +77,12 @@ class DungeonSeedCommand(
         val entity = DungeonSeedEntity(targetPlayer.uniqueId, args[2])
         playerDungeonSeedRepo.save(entity)
 
-        ChatUtil.sendCopyableText(commandExecutor, DungeonSeedSettings.getPrefix(commandExecutor), seed, DungeonSeedSettings.SUFFIX)
+        ChatUtil.sendCopyableText(
+            commandExecutor,
+            DungeonSeedSettings.getPrefix(commandExecutor),
+            seed,
+            DungeonSeedSettings.SUFFIX
+        )
         return true
     }
 }

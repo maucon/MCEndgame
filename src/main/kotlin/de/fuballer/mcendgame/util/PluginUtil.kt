@@ -7,7 +7,6 @@ import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
-import org.bukkit.event.inventory.InventoryType
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -30,12 +29,6 @@ object PluginUtil {
     fun getOnlinePlayers(): Collection<Player> = PluginConfiguration.server().onlinePlayers
 
     fun getOfflinePlayers(): Array<OfflinePlayer> = PluginConfiguration.server().offlinePlayers
-    // endregion
-
-    // region inventory
-    fun createInventory(type: InventoryType, title: String) = PluginConfiguration.server().createInventory(null, type, title)
-
-    fun createInventory(size: Int, title: String) = PluginConfiguration.server().createInventory(null, size, title)
     // endregion
 
     // region world

@@ -8,16 +8,13 @@ import de.fuballer.mcendgame.helper.CommandHelper
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
 @Component
 class StatisticsCommand(
     private val statisticsRepo: StatisticsRepository,
     private val commandHelper: CommandHelper
-) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(StatisticsSettings.COMMAND_NAME)!!.setExecutor(this)
-
+) : CommandHandler(StatisticsSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,

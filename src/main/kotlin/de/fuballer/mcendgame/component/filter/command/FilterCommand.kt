@@ -3,22 +3,20 @@ package de.fuballer.mcendgame.component.filter.command
 import de.fuballer.mcendgame.component.filter.FilterSettings
 import de.fuballer.mcendgame.component.filter.db.FilterEntity
 import de.fuballer.mcendgame.component.filter.db.FilterRepository
+import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
-import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.InventoryUtil
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.java.JavaPlugin
 
 @Component
 class FilterCommand(
     private val filterRepo: FilterRepository
-) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(FilterSettings.COMMAND_NAME)!!.setExecutor(this)
-
+) : CommandHandler(FilterSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,
@@ -44,9 +42,10 @@ class FilterCommand(
         player: Player,
         filter: Set<Material>
     ) {
-        val inventory = PluginUtil.createInventory(
+        val inventory = InventoryUtil.createInventory(
             FilterSettings.FILTER_SIZE,
-            FilterSettings.FILTER_WINDOW_TITLE
+            FilterSettings.FILTER_WINDOW_TITLE,
+            CustomInventoryType.FILTER
         )
         val filterSize = filter.size.coerceAtMost(FilterSettings.FILTER_SIZE)
 

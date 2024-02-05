@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.domain.entity.necromancer
 import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerService
 import de.fuballer.mcendgame.domain.entity.chupacabra.ChupacabraEntityType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.SummonerUtil
 import org.bukkit.entity.Spellcaster
 import org.bukkit.event.EventHandler
@@ -18,10 +18,11 @@ class NecromancerService(
 ) : Listener {
     @EventHandler
     fun onEntitySpellCast(event: EntitySpellCastEvent) {
-        if (!EntityUtil.isCustomEntityType(event.entity, NecromancerEntityType)) return
+        if (event.entity.getCustomEntityType() != NecromancerEntityType) return
 
-        if (event.spell == Spellcaster.Spell.SUMMON_VEX)
+        if (event.spell == Spellcaster.Spell.SUMMON_VEX) {
             summonVexSpell(event)
+        }
     }
 
     private fun summonVexSpell(event: EntitySpellCastEvent) {

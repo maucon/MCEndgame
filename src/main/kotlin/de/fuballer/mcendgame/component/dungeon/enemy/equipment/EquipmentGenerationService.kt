@@ -3,10 +3,9 @@ package de.fuballer.mcendgame.component.dungeon.enemy.equipment
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
 import de.fuballer.mcendgame.domain.equipment.ItemEnchantment
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setRolledAttributes
 import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import de.fuballer.mcendgame.util.random.SortableRandomOption
@@ -118,9 +117,9 @@ class EquipmentGenerationService {
         val itemMeta = item.itemMeta ?: return item
 
         addEnchants(random, mapTier, itemMeta, equipment.rollableEnchants)
-        addCustomAttributes(random, mapTier, equipment, itemMeta)
         item.itemMeta = itemMeta
 
+        addCustomAttributes(item, random, mapTier, equipment)
         ItemUtil.updateAttributesAndLore(item)
 
         return item
@@ -142,10 +141,10 @@ class EquipmentGenerationService {
     }
 
     private fun addCustomAttributes(
+        item: ItemStack,
         random: Random,
         mapTier: Int,
-        equipment: Equipment,
-        itemMeta: ItemMeta
+        equipment: Equipment
     ) {
         val statAmount = RandomUtil.pick(EquipmentGenerationSettings.STAT_AMOUNTS, mapTier, random).option
         val rollableAttributesCopy = equipment.rollableAttributes.toMutableList()
@@ -162,6 +161,6 @@ class EquipmentGenerationService {
         val rolledAttributes = pickedAttributes.sortedBy { it.type.ordinal }
             .map { it.roll(mapTier) }
 
-        PersistentDataUtil.setValue(itemMeta, TypeKeys.ATTRIBUTES, rolledAttributes)
+        item.setRolledAttributes(rolledAttributes)
     }
 }

@@ -9,15 +9,12 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 
 @Component
 class KillerCommand(
     private val killerRepo: KillerRepository,
     private val commandHelper: CommandHelper
-) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(KillerSettings.COMMAND_NAME)!!.setExecutor(this)
-
+) : CommandHandler(KillerSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,

@@ -3,11 +3,10 @@ package de.fuballer.mcendgame.component.item.item_info
 import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.domain.equipment.Equipment
-import de.fuballer.mcendgame.domain.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
 import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.command.Command
@@ -15,15 +14,12 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
-import org.bukkit.plugin.java.JavaPlugin
 import java.text.DecimalFormat
 
 private val DECIMAL_FORMAT = DecimalFormat("#.##")
 
 @Component
-class ItemInfoCommand : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ItemInfoSettings.COMMAND_NAME)!!.setExecutor(this)
-
+class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,
@@ -43,14 +39,12 @@ class ItemInfoCommand : CommandHandler {
             player.sendMessage(ItemInfoSettings.NO_ITEM)
             return
         }
-
-        val itemMeta = item.itemMeta
-        if (itemMeta == null) {
+        if (item.itemMeta == null) {
             player.sendMessage(ItemInfoSettings.INVALID_ITEM)
             return
         }
 
-        val attributes = PersistentDataUtil.getValue(itemMeta, TypeKeys.ATTRIBUTES)
+        val attributes = item.getRolledAttributes()
         if (!Equipment.existsByMaterial(itemType) || attributes.isNullOrEmpty()) {
             player.sendMessage(ItemInfoSettings.INVALID_ITEM)
             return
@@ -82,7 +76,7 @@ class ItemInfoCommand : CommandHandler {
         val header = "${ItemInfoSettings.ITEM_TYPE_COLOR}$itemDisplayName${ChatColor.RESET}"
 
         val attributeBounds = ItemUtil.getEquipmentAttributes(item)
-        val presentAttributes = getPresentAttributes(item)
+        val presentAttributes = item.getRolledAttributes() ?: listOf()
 
         return attributeBounds
             .mapNotNull { getAttributeTextIfPresent(it, presentAttributes) }
@@ -100,13 +94,6 @@ class ItemInfoCommand : CommandHandler {
         }
 
         return displayName.trim()
-    }
-
-    private fun getPresentAttributes(item: ItemStack): List<RolledAttribute> {
-        val itemMeta = item.itemMeta ?: return listOf()
-
-        return PersistentDataUtil.getValue(itemMeta, TypeKeys.ATTRIBUTES)
-            ?: return listOf()
     }
 
     private fun getAttributeTextIfPresent(

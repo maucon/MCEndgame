@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.artifact.command.give_artifact
 
 import de.fuballer.mcendgame.component.artifact.Artifact
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.domain.artifact.ArtifactType
+import de.fuballer.mcendgame.domain.ArtifactType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper
@@ -10,14 +10,11 @@ import de.fuballer.mcendgame.util.ArtifactUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 
 @Component
 class GiveArtifactCommand(
     private val commandHelper: CommandHelper
-) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(ArtifactSettings.GIVE_ARTIFACT_COMMAND_NAME)!!.setExecutor(this)
-
+) : CommandHandler(ArtifactSettings.GIVE_ARTIFACT_COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,

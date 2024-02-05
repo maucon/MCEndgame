@@ -2,23 +2,20 @@ package de.fuballer.mcendgame.component.dungeon.progress.command
 
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSettings
 import de.fuballer.mcendgame.component.dungeon.progress.db.PlayerDungeonProgressRepository
-import de.fuballer.mcendgame.domain.technical.CommandAction
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper
+import de.fuballer.mcendgame.technical.CommandAction
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
 @Component
 class DungeonProgressCommand(
     private val dungeonProgressRepo: PlayerDungeonProgressRepository,
     private val commandHelper: CommandHelper
-) : CommandHandler {
-    override fun initialize(plugin: JavaPlugin) = plugin.getCommand(PlayerDungeonProgressSettings.COMMAND_NAME)!!.setExecutor(this)
-
+) : CommandHandler(PlayerDungeonProgressSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
         command: Command,
@@ -80,7 +77,11 @@ class DungeonProgressCommand(
             return true
         }
 
-        val message = PlayerDungeonProgressSettings.getNewDungeonProgressMessage(targetPlayer.name!!, entity.tier, entity.progress)
+        val message = PlayerDungeonProgressSettings.getNewDungeonProgressMessage(
+            targetPlayer.name!!,
+            entity.tier,
+            entity.progress
+        )
         commandExecutor.sendMessage(message)
 
         return true
