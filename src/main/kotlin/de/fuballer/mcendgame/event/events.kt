@@ -90,6 +90,7 @@ class DamageCalculationEvent(
     val baseDamage: MutableList<Double> = mutableListOf(),
     val increasedDamage: MutableList<Double> = mutableListOf(),
     val moreDamage: MutableList<Double> = mutableListOf(),
+    var isProjectile: Boolean = false,
     var isCritical: Boolean = false,
     var attackCooldown: Double = 1.0,
 ) : HandleableEvent()
