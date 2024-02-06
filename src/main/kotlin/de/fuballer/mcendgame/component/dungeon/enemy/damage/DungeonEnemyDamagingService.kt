@@ -14,6 +14,8 @@ import org.bukkit.event.entity.EntitySpawnEvent
 
 @Component
 class DungeonEnemyDamagingService : Listener {
+
+    //TODO change when dmg update
     @EventHandler(priority = EventPriority.LOWEST)
     fun on(event: EntityDamageByEntityEvent) {
         val damager = event.damager
