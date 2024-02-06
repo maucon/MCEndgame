@@ -13,6 +13,5 @@ object GeistergaloschenItemType : CustomItemType {
     override val attributes = listOf(
         RollableAttribute(AttributeType.HEALTH_SCALED_SIZE, 10.0, 20.0),
         RollableAttribute(AttributeType.MAX_HEALTH, 2.0, 4.0),
-        RollableAttribute(AttributeType.HEALTH_SCALED_SPEED, 10.0, 20.0)
     )
 }

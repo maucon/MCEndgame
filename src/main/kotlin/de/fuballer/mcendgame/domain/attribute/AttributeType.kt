@@ -82,9 +82,6 @@ enum class AttributeType(
     HEALTH_SCALED_SIZE(
         { " ${DECIMAL_FORMAT.format(it)}% increased size per 2 extra health" }
     ),
-    HEALTH_SCALED_SPEED(
-        { " ${DECIMAL_FORMAT.format(it)}% increased speed per 2 extra health" }
-    ),
     DISABLE_MELEE(
         { " Cannot deal melee damage" }
     ),
@@ -92,6 +89,6 @@ enum class AttributeType(
         { " ${DECIMAL_FORMAT.format(it * 100)}% chance to dodge hits" }
     ),
     TWINFIRE_DUAL_WIELD(
-        { " ${DECIMAL_FORMAT.format(it * 100)}% more damage while dual wielded" }
+        { " ${DECIMAL_FORMAT.format(it * 100)}% more damage while dual wielding Twinfire" }
     )
 }

@@ -11,6 +11,6 @@ object TwinfireItemType : CustomItemType {
     override val equipment = Sword.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.TWINFIRE_DUAL_WIELD, 0.2, 0.3),
+        RollableAttribute(AttributeType.TWINFIRE_DUAL_WIELD, 0.15, 0.25),
     )
 }

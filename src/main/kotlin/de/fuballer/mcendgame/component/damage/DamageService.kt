@@ -1,8 +1,12 @@
 package de.fuballer.mcendgame.component.damage
 
+import de.fuballer.mcendgame.domain.attribute.AttributeType
+import de.fuballer.mcendgame.domain.attribute.RolledAttribute
 import de.fuballer.mcendgame.event.DamageCalculationEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCustomItemType
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
 import de.fuballer.mcendgame.util.EventUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.attribute.Attribute
@@ -32,7 +36,8 @@ class DamageService : Listener {
         val baseDamage = if (isProjectile) event.damage else getMeleeBaseDamage(player)
         val isCritical = isCritical(isProjectile, event.damager, player)
 
-        val damageEvent = DamageCalculationEvent(player, damagedEntity)
+        val customPlayerAttributes = getCustomPlayerAttributes(player)
+        val damageEvent = DamageCalculationEvent(player, customPlayerAttributes, damagedEntity)
         damageEvent.baseDamage.add(baseDamage)
         damageEvent.isProjectile = isProjectile
         damageEvent.isCritical = isCritical
@@ -49,6 +54,37 @@ class DamageService : Listener {
 
         event.setDamage(EntityDamageEvent.DamageModifier.ABSORPTION, absorbedDamage)
         event.setDamage(EntityDamageEvent.DamageModifier.BASE, reducedDamage - absorbedDamage)
+    }
+
+    private fun getCustomPlayerAttributes(player: Player): Map<AttributeType, List<Double>> {
+        val attributes: MutableList<RolledAttribute> = mutableListOf()
+
+        val equipment = player.equipment ?: return mapOf()
+
+        equipment.helmet?.getRolledAttributes()?.let { attributes.addAll(it) }
+        equipment.chestplate?.getRolledAttributes()?.let { attributes.addAll(it) }
+        equipment.leggings?.getRolledAttributes()?.let { attributes.addAll(it) }
+        equipment.boots?.getRolledAttributes()?.let { attributes.addAll(it) }
+
+        var customItem = equipment.itemInMainHand.getCustomItemType()
+        if (customItem != null) {
+            val customItemEquipment = customItem.equipment
+            if (customItemEquipment.slot == EquipmentSlot.HAND || !customItemEquipment.extraAttributesInSlot) {
+                equipment.itemInMainHand.getRolledAttributes()?.let { attributes.addAll(it) }
+            }
+        }
+
+        customItem = equipment.itemInOffHand.getCustomItemType()
+        if (customItem != null) {
+            val customItemEquipment = customItem.equipment
+            if (customItemEquipment.slot == EquipmentSlot.OFF_HAND || !customItemEquipment.extraAttributesInSlot) {
+                equipment.itemInOffHand.getRolledAttributes()?.let { attributes.addAll(it) }
+            }
+        }
+
+        return attributes.filter { it.type.applicableAttributeType == null }
+            .groupBy { it.type }
+            .mapValues { (_, values) -> values.map { it.roll } }
     }
 
     private fun getAbsorbedDamage(player: Player, damage: Double) = max(player.absorptionAmount, damage)
@@ -110,6 +146,8 @@ class DamageService : Listener {
     }
 
     private fun calculateRawDamage(event: DamageCalculationEvent): Double {
+        if (event.nullifyDamage) return 0.0
+
         var calculatedDamage = event.baseDamage.sum()
         calculatedDamage *= 1 + event.increasedDamage.sum()
         event.moreDamage.forEach { calculatedDamage *= 1 + it }
