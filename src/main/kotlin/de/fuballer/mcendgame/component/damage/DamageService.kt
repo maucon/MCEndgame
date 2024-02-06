@@ -51,28 +51,7 @@ class DamageService : Listener {
         event.setDamage(EntityDamageEvent.DamageModifier.BASE, reducedDamage - absorbedDamage)
     }
 
-    private fun isCritical(isProjectile: Boolean, damager: Entity, player: Player): Boolean {
-        if (isProjectile) {
-            if (damager !is Arrow) return false
-            return damager.isCritical
-        }
-        return isMeleeCritical(player)
-    }
-
     private fun getAbsorbedDamage(player: Player, damage: Double) = max(player.absorptionAmount, damage)
-
-    private fun calculateRawDamage(event: DamageCalculationEvent): Double {
-        var calculatedDamage = event.baseDamage.sum()
-        calculatedDamage *= event.increasedDamage.sum()
-        event.moreDamage.forEach { calculatedDamage *= it }
-
-        calculatedDamage += getStrengthDamage(event.player)
-
-        if (event.isCritical) calculatedDamage *= 1.5
-        calculatedDamage *= event.attackCooldown
-
-        return calculatedDamage
-    }
 
     private fun calculateReducedDamage(target: LivingEntity, damage: Double, isProjectileDamage: Boolean): Double {
         var reducedDamage = damage
@@ -130,6 +109,19 @@ class DamageService : Listener {
         return baseDamage
     }
 
+    private fun calculateRawDamage(event: DamageCalculationEvent): Double {
+        var calculatedDamage = event.baseDamage.sum()
+        calculatedDamage *= 1 + event.increasedDamage.sum()
+        event.moreDamage.forEach { calculatedDamage *= 1 + it }
+
+        calculatedDamage += getStrengthDamage(event.player)
+
+        if (event.isCritical) calculatedDamage *= 1.5
+        calculatedDamage *= event.attackCooldown
+
+        return calculatedDamage
+    }
+
     private fun getStrengthDamage(player: Player): Double {
         val strengthLevel = player.getPotionEffect(PotionEffectType.INCREASE_DAMAGE)?.amplifier ?: -1
         return (strengthLevel + 1) * 3.0
@@ -148,6 +140,14 @@ class DamageService : Listener {
         combinedLevel += item.getEnchantmentLevel(Enchantment.IMPALING)
 
         return combinedLevel
+    }
+
+    private fun isCritical(isProjectile: Boolean, damager: Entity, player: Player): Boolean {
+        if (isProjectile) {
+            if (damager !is Arrow) return false
+            return damager.isCritical
+        }
+        return isMeleeCritical(player)
     }
 
     private fun isMeleeCritical(player: Player): Boolean {

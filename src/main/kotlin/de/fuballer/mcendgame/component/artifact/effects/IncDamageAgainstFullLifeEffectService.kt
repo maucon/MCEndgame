@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.artifact.effects
 
 import de.fuballer.mcendgame.domain.ArtifactType
+import de.fuballer.mcendgame.event.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.EventUtil
@@ -15,21 +16,19 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 @Component
 class IncDamageAgainstFullLifeEffectService {
     @EventHandler
-    fun on(event: EntityDamageByEntityEvent) {
-        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
+    fun on(event: DamageCalculationEvent) {
+        if (WorldUtil.isNotDungeonWorld(event.player.world)) return
 
-        val player = EventUtil.getPlayerDamager(event) ?: return
-        val tier = ArtifactUtil.getHighestTier(player, ArtifactType.INC_DMG_AGAINST_FULL_LIFE) ?: return
+        val tier = ArtifactUtil.getHighestTier(event.player, ArtifactType.INC_DMG_AGAINST_FULL_LIFE) ?: return
 
-        val entity = event.entity as? LivingEntity ?: return
-        if (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value > entity.health + 0.1) return
+        if (event.damaged.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value > event.damaged.health + 0.1) return
 
-        spawnParticles(entity)
+        spawnParticles(event.damaged)
 
         val (increasedDamage) = ArtifactType.INC_DMG_AGAINST_FULL_LIFE.values[tier]!!
-        val dmgMultiplier = 1 + increasedDamage / 100
+        val moreDamage = increasedDamage / 100
 
-        event.damage *= dmgMultiplier
+        event.moreDamage.add(moreDamage)
     }
 
     private fun spawnParticles(entity: LivingEntity) {
