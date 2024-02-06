@@ -20,6 +20,9 @@ object TypeKeys {
     val IS_SPECIAL = TypeKey(createNamespacedKey("is_special"), PersistentDataType.BOOLEAN)
     val IS_PORTAL = TypeKey(createNamespacedKey("is_portal"), PersistentDataType.BOOLEAN)
 
+    // projectile
+    val PROJECTILE_BASE_DAMAGE = TypeKey(createNamespacedKey("projectile_base_damage"), PersistentDataType.DOUBLE)
+
     // player
     val LAST_MAP_DEVICE = TypeKey(createNamespacedKey("last_map_device"), PersistentUuid)
     val ARTIFACTS = TypeKey(createNamespacedKey("artifacts"), PersistentArtifactList)

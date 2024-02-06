@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
+import de.fuballer.mcendgame.technical.extension.ProjectileExtension.getBaseDamage
 import de.fuballer.mcendgame.util.EventUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.attribute.Attribute
@@ -33,7 +34,7 @@ class DamageService : Listener {
 
         val isProjectile = event.damager is Projectile
 
-        val baseDamage = if (isProjectile) event.damage else getMeleeBaseDamage(player)
+        val baseDamage = if (isProjectile) getProjectileBaseDamage(event.damager as Projectile, event) else getMeleeBaseDamage(player)
         val isCritical = isCritical(isProjectile, event.damager, player)
 
         val customPlayerAttributes = getCustomPlayerAttributes(player)
@@ -132,6 +133,11 @@ class DamageService : Listener {
         }
 
         return min(0.8, damageReduction)
+    }
+
+    private fun getProjectileBaseDamage(projectile: Projectile, event: EntityDamageByEntityEvent): Double {
+        val baseDamage = projectile.getBaseDamage() ?: return event.damage
+        return baseDamage * projectile.velocity.length()
     }
 
     private fun getMeleeBaseDamage(player: Player): Double {
