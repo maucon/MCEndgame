@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.dungeon.type
 
-import de.fuballer.mcendgame.domain.dungeon.DungeonType
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.component.technical.extension.EntityExtension.isEnemy
 import org.bukkit.GameMode
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity

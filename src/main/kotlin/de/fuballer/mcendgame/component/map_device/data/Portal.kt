@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.map_device.data
 
-import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsPortal
+import de.fuballer.mcendgame.component.technical.extension.EntityExtension.setIsPortal
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.Color
 import org.bukkit.Location

@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.component.killer
 
+import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.component.killer.db.KillerEntity
 import de.fuballer.mcendgame.component.killer.db.KillerRepository
-import de.fuballer.mcendgame.domain.CustomInventoryType
+import de.fuballer.mcendgame.component.technical.extension.InventoryExtension.getCustomType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.InventoryExtension.getCustomType
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile

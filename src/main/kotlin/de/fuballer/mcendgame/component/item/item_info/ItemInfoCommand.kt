@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.component.item.item_info
 
-import de.fuballer.mcendgame.domain.attribute.RollableAttribute
-import de.fuballer.mcendgame.domain.attribute.RolledAttribute
-import de.fuballer.mcendgame.domain.equipment.Equipment
+import de.fuballer.mcendgame.component.attribute.RollableAttribute
+import de.fuballer.mcendgame.component.attribute.RolledAttribute
+import de.fuballer.mcendgame.component.item.equipment.Equipment
+import de.fuballer.mcendgame.component.technical.CommandHandler
+import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.getRolledAttributes
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.framework.stereotype.CommandHandler
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
 import de.fuballer.mcendgame.util.ItemUtil
 import org.bukkit.ChatColor
 import org.bukkit.Material

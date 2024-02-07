@@ -1,13 +1,13 @@
 package de.fuballer.mcendgame.component.corruption
 
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
-import de.fuballer.mcendgame.domain.equipment.Equipment
+import de.fuballer.mcendgame.component.item.equipment.Equipment
+import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.getCorruptionRounds
+import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.getRolledAttributes
+import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.isUnmodifiable
+import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.setRolledAttributes
+import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCorruptionRounds
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isUnmodifiable
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setRolledAttributes
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.random.RandomUtil

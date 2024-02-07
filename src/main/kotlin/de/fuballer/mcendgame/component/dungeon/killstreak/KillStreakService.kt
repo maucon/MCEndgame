@@ -2,11 +2,11 @@ package de.fuballer.mcendgame.component.dungeon.killstreak
 
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakEntity
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
+import de.fuballer.mcendgame.component.technical.TimerTask
+import de.fuballer.mcendgame.component.technical.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.component.technical.extension.EntityExtension.isMinion
 import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.TimerTask
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isMinion
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Server

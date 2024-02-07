@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.component.dungeon.type
 
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeEntity
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeRepository
-import de.fuballer.mcendgame.domain.dungeon.DungeonType
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.random.RandomUtil

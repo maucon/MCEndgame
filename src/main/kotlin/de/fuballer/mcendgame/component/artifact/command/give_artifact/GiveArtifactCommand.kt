@@ -2,9 +2,9 @@ package de.fuballer.mcendgame.component.artifact.command.give_artifact
 
 import de.fuballer.mcendgame.component.artifact.Artifact
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.domain.ArtifactType
+import de.fuballer.mcendgame.component.artifact.ArtifactType
+import de.fuballer.mcendgame.component.technical.CommandHandler
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper
 import de.fuballer.mcendgame.util.ArtifactUtil
 import org.bukkit.command.Command

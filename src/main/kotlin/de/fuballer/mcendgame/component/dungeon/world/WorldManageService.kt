@@ -3,13 +3,13 @@ package de.fuballer.mcendgame.component.dungeon.world
 import de.fuballer.mcendgame.component.dungeon.seed.DungeonSeedService
 import de.fuballer.mcendgame.component.dungeon.world.db.ManagedWorldEntity
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
+import de.fuballer.mcendgame.component.technical.TimerTask
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.annotation.Qualifier
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.helper.FileHelper
-import de.fuballer.mcendgame.technical.TimerTask
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.Difficulty
 import org.bukkit.World

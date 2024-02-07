@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.event
 
-import de.fuballer.mcendgame.domain.attribute.AttributeType
+import de.fuballer.mcendgame.component.attribute.AttributeType
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.World

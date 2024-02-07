@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.looting
 
-import de.fuballer.mcendgame.domain.item.*
+import de.fuballer.mcendgame.component.item.custom_item.types.*
 import de.fuballer.mcendgame.util.random.RandomOption
 
 object LootingSettings {

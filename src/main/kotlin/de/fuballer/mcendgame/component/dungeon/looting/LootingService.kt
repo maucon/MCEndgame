@@ -2,12 +2,12 @@ package de.fuballer.mcendgame.component.dungeon.looting
 
 import de.fuballer.mcendgame.component.dungeon.killstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
+import de.fuballer.mcendgame.component.technical.extension.EntityExtension.getMapTier
+import de.fuballer.mcendgame.component.technical.extension.EntityExtension.isDropEquipmentDisabled
+import de.fuballer.mcendgame.component.technical.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.component.technical.extension.EntityExtension.isSpecial
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.EntityExtension.getMapTier
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isDropEquipmentDisabled
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isSpecial
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Material

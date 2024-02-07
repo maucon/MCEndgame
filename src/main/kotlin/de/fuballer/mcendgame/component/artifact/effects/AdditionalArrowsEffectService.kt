@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.artifact.effects
 
-import de.fuballer.mcendgame.domain.ArtifactType
+import de.fuballer.mcendgame.component.artifact.ArtifactType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.WorldUtil

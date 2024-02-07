@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.technical.extension.EntityExtension.getMinionIds
-import de.fuballer.mcendgame.technical.extension.EntityExtension.setMinionIds
+import de.fuballer.mcendgame.component.technical.extension.EntityExtension.getMinionIds
+import de.fuballer.mcendgame.component.technical.extension.EntityExtension.setMinionIds
 import org.bukkit.entity.Creature
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity

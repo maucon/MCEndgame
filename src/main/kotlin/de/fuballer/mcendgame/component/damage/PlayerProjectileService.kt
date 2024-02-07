@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.damage
 
+import de.fuballer.mcendgame.component.technical.extension.ProjectileExtension.setBaseDamage
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.ProjectileExtension.setBaseDamage
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.Player

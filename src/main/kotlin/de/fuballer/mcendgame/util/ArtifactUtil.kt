@@ -2,10 +2,10 @@ package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.artifact.Artifact
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.domain.ArtifactType
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setArtifact
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setUnmodifiable
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.getArtifacts
+import de.fuballer.mcendgame.component.artifact.ArtifactType
+import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.setArtifact
+import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.setUnmodifiable
+import de.fuballer.mcendgame.component.technical.extension.PlayerExtension.getArtifacts
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.text.DecimalFormat

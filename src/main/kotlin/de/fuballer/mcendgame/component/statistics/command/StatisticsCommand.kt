@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.statistics.command
 
 import de.fuballer.mcendgame.component.statistics.StatisticsSettings
 import de.fuballer.mcendgame.component.statistics.db.StatisticsRepository
+import de.fuballer.mcendgame.component.technical.CommandHandler
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender

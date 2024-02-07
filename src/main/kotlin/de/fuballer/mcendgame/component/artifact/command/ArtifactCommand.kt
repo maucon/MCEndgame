@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.component.artifact.command
 
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.domain.CustomInventoryType
+import de.fuballer.mcendgame.component.inventory.CustomInventoryType
+import de.fuballer.mcendgame.component.technical.CommandHandler
+import de.fuballer.mcendgame.component.technical.extension.PlayerExtension.getArtifacts
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.framework.stereotype.CommandHandler
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.getArtifacts
 import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.InventoryUtil
 import org.bukkit.command.Command
