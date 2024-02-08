@@ -18,10 +18,9 @@ class IncDamagePerMissingHealthEffectService : Listener {
         val tier = player.getHighestArtifactTier(IncDamagePerMissingHealthArtifactType) ?: return
 
         val (incDmgPerHealth) = IncDamagePerMissingHealthArtifactType.getValues(tier)
-        val realIncDmgPerHealth = incDmgPerHealth / 100
 
         val missingHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value - player.health
-        val increasedDamage = realIncDmgPerHealth * (missingHealth / 2).toInt()
+        val increasedDamage = incDmgPerHealth * (missingHealth / 2).toInt()
 
         event.increasedDamage.add(increasedDamage)
     }

@@ -22,9 +22,7 @@ class IncDamageAgainstFullLifeEffectService {
 
         spawnParticles(event.damaged)
 
-        val (increasedDamage) = IncDamageAgainstFullLifeArtifactType.getValues(tier)
-        val moreDamage = increasedDamage / 100
-
+        val (moreDamage) = IncDamageAgainstFullLifeArtifactType.getValues(tier)
         event.moreDamage.add(moreDamage)
     }
 

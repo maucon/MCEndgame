@@ -4,9 +4,6 @@ import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setArtifact
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setUnmodifiable
 import org.bukkit.inventory.ItemStack
-import java.text.DecimalFormat
-
-private val format = DecimalFormat("0.#")
 
 data class Artifact(
     var type: ArtifactType,
@@ -17,9 +14,7 @@ data class Artifact(
         val itemMeta = item.itemMeta!!
 
         itemMeta.setDisplayName("${tier.color}${type.displayName}")
-
-        val artifactValues = type.getValues(tier)
-        itemMeta.lore = getLoreWithValues(type.displayLoreFormat, artifactValues)
+        itemMeta.lore = type.getLore(tier)
 
         item.itemMeta = itemMeta
 
@@ -27,13 +22,5 @@ data class Artifact(
         item.setUnmodifiable()
 
         return item
-    }
-
-    private fun getLoreWithValues(loreFormat: String, values: List<Double>): List<String> {
-        val formattedValues = values.map { format.format(it) }
-        val lore = String.format(loreFormat, *formattedValues.toTypedArray())
-
-        return lore.split("\\")
-            .map { "${ArtifactSettings.LORE_COLOR}$it" }
     }
 }

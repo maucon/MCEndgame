@@ -28,7 +28,7 @@ class EffectStealEffectService : Listener {
         val tier = player.getHighestArtifactTier(EffectStealArtifactType) ?: return
 
         val (chance, duration, maxAmplifier) = EffectStealArtifactType.getValues(tier)
-        if (Random.nextDouble() > chance / 100.0) return
+        if (Random.nextDouble() > chance) return
 
         val activeEffects = entity.activePotionEffects
         if (activeEffects.isEmpty()) return

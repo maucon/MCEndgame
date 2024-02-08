@@ -38,7 +38,7 @@ class MovementSpeedEffectService : Listener {
         val tier = player.getHighestArtifactTier(MovementSpeedArtifactType) ?: return
 
         val (speedMultiplier) = MovementSpeedArtifactType.getValues(tier)
-        val realSpeedMultiplier = 1 + speedMultiplier / 100.0
+        val realSpeedMultiplier = 1 + speedMultiplier
 
         player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)?.baseValue = 0.1 * realSpeedMultiplier
     }
