@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.artifact.artifacts.inc_damage_against_fu
 
 import de.fuballer.mcendgame.event.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.ArtifactUtil
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color
 import org.bukkit.Particle
@@ -16,7 +16,7 @@ class IncDamageAgainstFullLifeEffectService {
     fun on(event: DamageCalculationEvent) {
         if (WorldUtil.isNotDungeonWorld(event.player.world)) return
 
-        val tier = ArtifactUtil.getHighestTier(event.player, IncDamageAgainstFullLifeArtifactType) ?: return
+        val tier = event.player.getHighestArtifactTier(IncDamageAgainstFullLifeArtifactType) ?: return
 
         if (event.damaged.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value > event.damaged.health + 0.1) return
 

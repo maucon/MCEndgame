@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.artifact.artifacts.attack_damage
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.ArtifactUtil
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
@@ -35,7 +35,7 @@ class AttackDamageEffectService : Listener {
     }
 
     private fun processJoin(player: Player) {
-        val tier = ArtifactUtil.getHighestTier(player, AttackDamageArtifactType) ?: return
+        val tier = player.getHighestArtifactTier(AttackDamageArtifactType) ?: return
 
         val (addedAttackDamage) = AttackDamageArtifactType.getValues(tier)
         val realAttackDamage = 1.0 + addedAttackDamage

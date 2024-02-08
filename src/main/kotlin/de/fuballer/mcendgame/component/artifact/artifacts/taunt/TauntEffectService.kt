@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.artifact.artifacts.taunt
 
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.ArtifactUtil
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.util.EventUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Monster
@@ -17,7 +17,7 @@ class TauntEffectService : Listener {
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
         val player = EventUtil.getPlayerDamager(event) ?: return
-        val tier = ArtifactUtil.getHighestTier(player, TauntArtifactType) ?: return
+        val tier = player.getHighestArtifactTier(TauntArtifactType) ?: return
 
         val (tauntProbability) = TauntArtifactType.getValues(tier)
         if (Random.nextDouble() * 100 > tauntProbability) return

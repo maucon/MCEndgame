@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.artifact.artifacts.heal_on_block
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHealOnBlockArtifactActivation
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.technical.extension.PlayerExtension.setHealOnBlockArtifactActivation
-import de.fuballer.mcendgame.util.ArtifactUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color
 import org.bukkit.Particle
@@ -25,7 +25,7 @@ class HealOnBlockEffectService : Listener {
         val player = event.entity as? Player ?: return
         if (event.getDamage(EntityDamageEvent.DamageModifier.BLOCKING) == 0.0) return
 
-        val tier = ArtifactUtil.getHighestTier(player, HealOnBlockArtifactType) ?: return
+        val tier = player.getHighestArtifactTier(HealOnBlockArtifactType) ?: return
 
         val (blockChance, health, cooldown) = HealOnBlockArtifactType.getValues(tier)
         val realBlockChance = blockChance / 100.0

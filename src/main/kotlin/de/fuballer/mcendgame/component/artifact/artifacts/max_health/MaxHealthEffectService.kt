@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.artifact.artifacts.max_health
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.ArtifactUtil
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
@@ -35,7 +35,7 @@ class MaxHealthEffectService : Listener {
     }
 
     private fun processJoin(player: Player) {
-        val tier = ArtifactUtil.getHighestTier(player, MaxHealthArtifactType) ?: return
+        val tier = player.getHighestArtifactTier(MaxHealthArtifactType) ?: return
 
         val (addedHealth) = MaxHealthArtifactType.getValues(tier)
         val realHealth = 20.0 + addedHealth

@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.artifact.artifacts.slow_when_hit
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.util.ArtifactUtil
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -19,7 +19,7 @@ class SlowWhenHitEffectService : Listener {
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 
         val player = event.entity as? Player ?: return
-        val tier = ArtifactUtil.getHighestTier(player, SlowWhenHitArtifactType) ?: return
+        val tier = player.getHighestArtifactTier(SlowWhenHitArtifactType) ?: return
 
         val (amplifier, duration) = SlowWhenHitArtifactType.getValues(tier)
         val realAmplifier = amplifier.toInt() - 1

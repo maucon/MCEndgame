@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.artifact.artifacts.effect_steal
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.util.ArtifactUtil
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -25,7 +25,7 @@ class EffectStealEffectService : Listener {
         if (WorldUtil.isNotDungeonWorld(entity.world)) return
 
         val player = entity.killer ?: return
-        val tier = ArtifactUtil.getHighestTier(player, EffectStealArtifactType) ?: return
+        val tier = player.getHighestArtifactTier(EffectStealArtifactType) ?: return
 
         val (chance, duration, maxAmplifier) = EffectStealArtifactType.getValues(tier)
         if (Random.nextDouble() > chance / 100.0) return

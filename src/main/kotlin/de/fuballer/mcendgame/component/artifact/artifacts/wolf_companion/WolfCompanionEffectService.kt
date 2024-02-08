@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.util.ArtifactUtil
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.DyeColor
 import org.bukkit.entity.EntityType
@@ -21,7 +21,7 @@ class WolfCompanionEffectService : Listener {
     @EventHandler
     fun on(event: PlayerDungeonJoinEvent) {
         val player = event.player
-        val tier = ArtifactUtil.getHighestTier(player, WolfCompanionArtifactType) ?: return
+        val tier = player.getHighestArtifactTier(WolfCompanionArtifactType) ?: return
 
         val (count, strength) = WolfCompanionArtifactType.getValues(tier)
         val realStrength = strength - 1

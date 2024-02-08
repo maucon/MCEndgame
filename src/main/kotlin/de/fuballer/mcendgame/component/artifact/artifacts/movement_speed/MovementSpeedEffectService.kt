@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.artifact.artifacts.movement_speed
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.ArtifactUtil
+import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
@@ -35,7 +35,7 @@ class MovementSpeedEffectService : Listener {
     }
 
     private fun processJoin(player: Player) {
-        val tier = ArtifactUtil.getHighestTier(player, MovementSpeedArtifactType) ?: return
+        val tier = player.getHighestArtifactTier(MovementSpeedArtifactType) ?: return
 
         val (speedMultiplier) = MovementSpeedArtifactType.getValues(tier)
         val realSpeedMultiplier = 1 + speedMultiplier / 100.0
