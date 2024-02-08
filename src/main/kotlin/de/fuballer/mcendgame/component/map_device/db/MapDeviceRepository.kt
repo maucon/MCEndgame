@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.map_device.db
 
 import de.fuballer.mcendgame.component.map_device.MapDeviceSettings
 import de.fuballer.mcendgame.component.map_device.data.Portal
-import de.fuballer.mcendgame.component.technical.PersistentMapRepository
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.PersistentMapRepository
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.Location
 import org.bukkit.Material

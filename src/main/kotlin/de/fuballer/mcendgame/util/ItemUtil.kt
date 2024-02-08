@@ -6,11 +6,11 @@ import de.fuballer.mcendgame.component.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.getCustomItemType
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.getRolledAttributes
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.isUnmodifiable
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.setCustomItemType
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.setRolledAttributes
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCustomItemType
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isUnmodifiable
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setCustomItemType
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setRolledAttributes
 import org.bukkit.ChatColor
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier

@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.custom_entity.types.mandragora
 
-import de.fuballer.mcendgame.component.technical.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.SummonerUtil
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler

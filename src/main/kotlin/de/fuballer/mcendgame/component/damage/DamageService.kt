@@ -2,12 +2,12 @@ package de.fuballer.mcendgame.component.damage
 
 import de.fuballer.mcendgame.component.attribute.AttributeType
 import de.fuballer.mcendgame.component.attribute.RolledAttribute
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.getCustomItemType
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.getRolledAttributes
-import de.fuballer.mcendgame.component.technical.extension.ProjectileExtension.getBaseDamage
 import de.fuballer.mcendgame.event.DamageCalculationEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCustomItemType
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
+import de.fuballer.mcendgame.technical.extension.ProjectileExtension.getBaseDamage
 import de.fuballer.mcendgame.util.EventUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.attribute.Attribute

@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.custom_entity.types.hatchery
 
 import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerService
 import de.fuballer.mcendgame.component.custom_entity.types.leech.LeechEntityType
-import de.fuballer.mcendgame.component.technical.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.SummonerUtil
 import org.bukkit.entity.Bee
 import org.bukkit.entity.Creature
@@ -44,7 +44,7 @@ class HatcheryService(
         setLeechAnger(minions)
     }
 
-    private fun setLeechAnger(minions: Set<Creature>) {
+    private fun setLeechAnger(minions: List<Creature>) {
         minions.filterIsInstance<Bee>()
             .forEach { it.anger = Int.MAX_VALUE }
     }

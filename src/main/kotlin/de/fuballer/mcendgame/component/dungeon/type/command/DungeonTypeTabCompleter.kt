@@ -31,7 +31,7 @@ class DungeonTypeTabCompleter : CommandTabCompleter {
             3 -> {
                 if (args[0] == CommandAction.GET.actionName) return listOf()
                 return DungeonType.entries
-                    .map { it.toString() }
+                    .map { it.name }
                     .filter { it.contains(args[2], true) }
             }
 

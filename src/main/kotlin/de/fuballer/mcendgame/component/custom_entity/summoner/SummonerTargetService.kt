@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.custom_entity.summoner
 
-import de.fuballer.mcendgame.component.technical.extension.EntityExtension.getMinionIds
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getMinionIds
 import de.fuballer.mcendgame.util.SummonerUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.Creature

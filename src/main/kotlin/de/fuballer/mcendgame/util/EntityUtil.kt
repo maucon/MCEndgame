@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
-import de.fuballer.mcendgame.component.technical.extension.EntityExtension.setCustomEntityType
-import de.fuballer.mcendgame.component.technical.extension.EntityExtension.setHideEquipment
-import de.fuballer.mcendgame.component.technical.extension.EntityExtension.setIsEnemy
-import de.fuballer.mcendgame.component.technical.extension.EntityExtension.setMapTier
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setCustomEntityType
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setHideEquipment
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsEnemy
+import de.fuballer.mcendgame.technical.extension.EntityExtension.setMapTier
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.*

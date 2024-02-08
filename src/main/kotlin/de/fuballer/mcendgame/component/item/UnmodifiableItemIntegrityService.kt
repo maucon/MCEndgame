@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.item
 
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.getCorruptionRounds
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.isUnmodifiable
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCorruptionRounds
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isUnmodifiable
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener

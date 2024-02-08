@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.custom_entity.types.naga
 
 import de.fuballer.mcendgame.component.custom_entity.types.poison_spit.PoisonSpitEntityType
-import de.fuballer.mcendgame.component.technical.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.EntityType

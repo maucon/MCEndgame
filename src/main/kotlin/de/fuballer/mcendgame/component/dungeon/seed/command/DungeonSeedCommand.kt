@@ -3,10 +3,10 @@ package de.fuballer.mcendgame.component.dungeon.seed.command
 import de.fuballer.mcendgame.component.dungeon.seed.DungeonSeedSettings
 import de.fuballer.mcendgame.component.dungeon.seed.db.DungeonSeedEntity
 import de.fuballer.mcendgame.component.dungeon.seed.db.DungeonSeedRepository
-import de.fuballer.mcendgame.component.technical.CommandHandler
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.helper.CommandAction
 import de.fuballer.mcendgame.helper.CommandHelper
+import de.fuballer.mcendgame.technical.CommandHandler
 import de.fuballer.mcendgame.util.ChatUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender

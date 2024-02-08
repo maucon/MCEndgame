@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.dungeon.remaining.command
 
 import de.fuballer.mcendgame.component.dungeon.remaining.RemainingSettings
 import de.fuballer.mcendgame.component.dungeon.remaining.db.RemainingRepository
-import de.fuballer.mcendgame.component.technical.CommandHandler
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.technical.CommandHandler
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender

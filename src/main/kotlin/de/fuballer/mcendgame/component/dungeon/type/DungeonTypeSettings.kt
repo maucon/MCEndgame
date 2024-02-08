@@ -7,7 +7,6 @@ import org.bukkit.entity.Player
 object DungeonTypeSettings {
     const val COMMAND_NAME = "dungeon-type"
     val PLAYER_NO_DUNGEON_TYPE = "${ChatColor.RED}Player has no dungeon type!"
-    val INVALID_DUNGEON_TYPE = "${ChatColor.RED}Invalid dungeon type!"
 
     fun getPrefix(player: Player) =
         "${ChatColor.AQUA}${ChatColor.ITALIC}${player.name}${ChatColor.RESET}${ChatColor.AQUA}'s next dungeon type: ["

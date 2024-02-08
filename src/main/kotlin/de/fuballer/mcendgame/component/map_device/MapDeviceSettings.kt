@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.component.map_device
 
 import de.fuballer.mcendgame.component.map_device.data.MapDeviceAction
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.setMapDevice
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.setMapDeviceAction
-import de.fuballer.mcendgame.component.technical.extension.ItemStackExtension.setUnmodifiable
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setMapDevice
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setMapDeviceAction
+import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import org.bukkit.ChatColor
 import org.bukkit.Material
