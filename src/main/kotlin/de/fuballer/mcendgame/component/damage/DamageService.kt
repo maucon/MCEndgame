@@ -18,36 +18,48 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffectType
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.random.Random
 
 @Component
 class DamageService : Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {
-        if (WorldUtil.isNotDungeonWorld(event.damager.world)) return
+        println("" + event.damage + " / " + event.cause)
+
+        val isDungeonWorld = WorldUtil.isDungeonWorld(event.damager.world)
+
         val player = EventUtil.getPlayerDamager(event) ?: return
         val damagedEntity = event.entity as? LivingEntity ?: return
 
-        val isProjectile = event.damager is Projectile
+        val isProjectile = event.cause == DamageCause.PROJECTILE
 
-        val baseDamage = if (isProjectile) getProjectileBaseDamage(event.damager as Projectile, event) else getMeleeBaseDamage(player)
         val isCritical = isCritical(isProjectile, event.damager, player)
+        val baseDamage = if (isProjectile) getProjectileBaseDamage(event.damager as Projectile, event) else getMeleeBaseDamage(player)
+        val enchantDamage = if (isProjectile) 0.0 else getMeleeEnchantDamage(player, damagedEntity, isDungeonWorld)
 
         val customPlayerAttributes = getCustomPlayerAttributes(player)
-        val damageEvent = DamageCalculationEvent(player, customPlayerAttributes, damagedEntity)
+        val damageEvent = DamageCalculationEvent(player = player, customPlayerAttributes = customPlayerAttributes, damaged = damagedEntity, cause = event.cause)
         damageEvent.baseDamage.add(baseDamage)
-        damageEvent.isProjectile = isProjectile
+        damageEvent.enchantDamage = enchantDamage
         damageEvent.isCritical = isCritical
         damageEvent.attackCooldown = player.attackCooldown.toDouble()
+
+        if (event.cause == DamageCause.ENTITY_SWEEP_ATTACK) {
+            val mainHandItem = player.equipment!!.getItem(EquipmentSlot.HAND)
+            damageEvent.sweepingEdgeMultiplier = getSweepingEdgeMultiplier(mainHandItem)
+        }
+
         EventGateway.apply(damageEvent)
 
         val rawDamage = calculateRawDamage(damageEvent)
-        val reducedDamage = calculateReducedDamage(damagedEntity, rawDamage, damageEvent.isProjectile)
-        val absorbedDamage = getAbsorbedDamage(player, reducedDamage)
+        val reducedDamage = calculateReducedDamage(damagedEntity, rawDamage, damageEvent.cause == DamageCause.PROJECTILE)
+        val absorbedDamage = getAbsorbedDamage(damagedEntity, reducedDamage)
 
         EntityDamageEvent.DamageModifier.entries.toTypedArray()
             .filter { event.isApplicable(it) }
@@ -88,7 +100,7 @@ class DamageService : Listener {
             .mapValues { (_, values) -> values.map { it.roll } }
     }
 
-    private fun getAbsorbedDamage(player: Player, damage: Double) = max(player.absorptionAmount, damage)
+    private fun getAbsorbedDamage(damagedEntity: LivingEntity, damage: Double) = max(damagedEntity.absorptionAmount, damage)
 
     private fun calculateReducedDamage(target: LivingEntity, damage: Double, isProjectileDamage: Boolean): Double {
         var reducedDamage = damage
@@ -141,14 +153,16 @@ class DamageService : Listener {
     }
 
     private fun getMeleeBaseDamage(player: Player): Double {
-        var baseDamage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)!!.value
+        val baseDamage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)!!.value
+        return baseDamage - getStrengthDamage(player)
+    }
 
-        baseDamage -= getStrengthDamage(player)
-
+    private fun getMeleeEnchantDamage(player: Player, damagedEntity: LivingEntity, isDungeonWorld: Boolean): Double {
         val mainHandItem = player.equipment!!.getItem(EquipmentSlot.HAND)
-        baseDamage += getCombinedSharpnessDamage(mainHandItem)
 
-        return baseDamage
+        if (isDungeonWorld) return getCombinedSharpnessDamage(mainHandItem)
+
+        return getTypeBasedEnchantmentDamage(mainHandItem, damagedEntity)
     }
 
     private fun calculateRawDamage(event: DamageCalculationEvent): Double {
@@ -160,7 +174,19 @@ class DamageService : Listener {
 
         calculatedDamage += getStrengthDamage(event.player)
 
-        if (event.isCritical) calculatedDamage *= 1.5
+        if (event.isCritical) {
+            if (event.cause != DamageCause.PROJECTILE) {
+                calculatedDamage *= 1.5
+            } else {
+                calculatedDamage += Random.nextDouble() * (calculatedDamage * 1.5 + 2 - calculatedDamage)
+            }
+        }
+
+        calculatedDamage += event.enchantDamage
+
+        if (event.cause == DamageCause.ENTITY_SWEEP_ATTACK)
+            calculatedDamage = 1 + calculatedDamage * event.sweepingEdgeMultiplier
+
         calculatedDamage *= event.attackCooldown
 
         return calculatedDamage
@@ -169,6 +195,11 @@ class DamageService : Listener {
     private fun getStrengthDamage(player: Player): Double {
         val strengthLevel = player.getPotionEffect(PotionEffectType.INCREASE_DAMAGE)?.amplifier ?: -1
         return (strengthLevel + 1) * 3.0
+    }
+
+    private fun getSweepingEdgeMultiplier(item: ItemStack): Double {
+        val sweepingLevel = item.getEnchantmentLevel(Enchantment.SWEEPING_EDGE)
+        return sweepingLevel / (sweepingLevel + 1.0)
     }
 
     private fun getCombinedSharpnessDamage(item: ItemStack): Double {
@@ -184,6 +215,32 @@ class DamageService : Listener {
         combinedLevel += item.getEnchantmentLevel(Enchantment.IMPALING)
 
         return combinedLevel
+    }
+
+    private fun getTypeBasedEnchantmentDamage(item: ItemStack, damagedEntity: LivingEntity): Double {
+        var damage = 0.0
+
+        val sharpnessLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_ALL)
+        if (sharpnessLevel > 0)
+            damage += sharpnessLevel * 0.5 + 0.5
+
+        if (damagedEntity.category == EntityCategory.UNDEAD) {
+            val smiteLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_UNDEAD)
+            if (smiteLevel > 0)
+                return damage + smiteLevel * 2.5
+        }
+        if (damagedEntity.category == EntityCategory.ARTHROPOD) {
+            val baneLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_ARTHROPODS)
+            if (baneLevel > 0)
+                return damage + baneLevel * 2.5
+        }
+        if (damagedEntity.category == EntityCategory.WATER) {
+            val impalingLevel = item.getEnchantmentLevel(Enchantment.IMPALING)
+            if (impalingLevel > 0)
+                return damage + impalingLevel * 2.5
+        }
+
+        return damage
     }
 
     private fun isCritical(isProjectile: Boolean, damager: Entity, player: Player): Boolean {

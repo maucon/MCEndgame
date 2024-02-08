@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.World
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.Recipe
 
@@ -88,11 +89,13 @@ class DamageCalculationEvent(
     val player: Player,
     val customPlayerAttributes: Map<AttributeType, List<Double>>,
     val damaged: LivingEntity,
+    var cause: DamageCause,
     val baseDamage: MutableList<Double> = mutableListOf(),
     val increasedDamage: MutableList<Double> = mutableListOf(),
     val moreDamage: MutableList<Double> = mutableListOf(),
-    var isProjectile: Boolean = false,
+    var enchantDamage: Double = 0.0,
     var isCritical: Boolean = false,
+    var sweepingEdgeMultiplier: Double = 0.0,
     var attackCooldown: Double = 1.0,
     var nullifyDamage: Boolean = false
 ) : HandleableEvent()

@@ -31,7 +31,7 @@ object ItemStackExtension {
     }
 
     private fun <T : Any> getPersistentData(item: ItemStack, key: TypeKeys.TypeKey<T>): T? {
-        val itemMeta = item.itemMeta!!
+        val itemMeta = item.itemMeta ?: return null
         return PersistentDataUtil.getValue(itemMeta, key)
     }
 
