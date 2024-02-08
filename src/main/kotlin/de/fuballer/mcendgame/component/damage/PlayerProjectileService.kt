@@ -19,8 +19,6 @@ class PlayerProjectileService : Listener {
 
         val addedDamage = getAddedDamage(player)
 
-        println(projectile.damage)
-
         projectile.setBaseDamage(projectile.damage + addedDamage)
     }
 

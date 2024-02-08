@@ -30,12 +30,14 @@ import kotlin.random.Random
 class DamageService : Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {
-        println("" + event.damage + " / " + event.cause)
+        println("" + event.damage + " / " + event.finalDamage)
 
         val isDungeonWorld = WorldUtil.isDungeonWorld(event.damager.world)
 
         val player = EventUtil.getPlayerDamager(event) ?: return
         val damagedEntity = event.entity as? LivingEntity ?: return
+
+        println(player.velocity)
 
         val isProjectile = event.cause == DamageCause.PROJECTILE
 
@@ -59,6 +61,9 @@ class DamageService : Listener {
 
         val rawDamage = calculateRawDamage(damageEvent)
         val reducedDamage = calculateReducedDamage(damagedEntity, rawDamage, damageEvent.cause == DamageCause.PROJECTILE)
+
+        println("$rawDamage / $reducedDamage")
+
         val absorbedDamage = getAbsorbedDamage(damagedEntity, reducedDamage)
 
         EntityDamageEvent.DamageModifier.entries.toTypedArray()
@@ -259,7 +264,7 @@ class DamageService : Listener {
         if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) return false
         if (player.hasPotionEffect(PotionEffectType.SLOW_FALLING)) return false
         if (player.isInsideVehicle) return false
-        if (player.velocity.x > 0 || player.velocity.z > 0) return false
+        if (player.isSprinting) return false
         if (player.attackCooldown < 0.9) return false
         return true
     }
