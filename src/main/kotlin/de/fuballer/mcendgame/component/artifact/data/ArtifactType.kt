@@ -18,9 +18,8 @@ import de.fuballer.mcendgame.technical.registry.KeyedRegistry
 
 interface ArtifactType : Keyed {
     val displayName: String
-    val displayLoreFormat: String
-
     fun getValues(tier: ArtifactTier): List<Double>
+    fun getLore(tier: ArtifactTier): List<String>
 
     companion object {
         val REGISTRY = KeyedRegistry<ArtifactType>().also {

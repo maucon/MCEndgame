@@ -18,9 +18,7 @@ class AdditionalArrowsEffectService {
         if (WorldUtil.isNotDungeonWorld(player.world)) return
 
         val tier = player.getHighestArtifactTier(AdditionalArrowsArtifactType) ?: return
-
-        val additionalArrowsAmount = AdditionalArrowsArtifactType.getValues(tier)[0]
-        val damagePercentage = AdditionalArrowsArtifactType.getValues(tier)[1] / 100.0
+        val (additionalArrowsAmount, damagePercentage) = AdditionalArrowsArtifactType.getValues(tier)
 
         val arrow = event.projectile as Arrow
 

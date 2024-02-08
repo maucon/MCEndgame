@@ -27,9 +27,8 @@ class HealOnBlockEffectService : Listener {
 
         val tier = player.getHighestArtifactTier(HealOnBlockArtifactType) ?: return
 
-        val (blockChance, health, cooldown) = HealOnBlockArtifactType.getValues(tier)
-        val realBlockChance = blockChance / 100.0
-        if (Random.nextDouble() > realBlockChance) return
+        val (chance, health, cooldown) = HealOnBlockArtifactType.getValues(tier)
+        if (Random.nextDouble() > chance) return
 
         if (isHealOnBlockOnCooldown(player, cooldown)) return
         player.setHealOnBlockArtifactActivation(System.currentTimeMillis())

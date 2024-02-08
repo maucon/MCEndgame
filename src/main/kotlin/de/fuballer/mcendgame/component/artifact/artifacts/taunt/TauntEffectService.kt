@@ -19,8 +19,8 @@ class TauntEffectService : Listener {
         val player = EventUtil.getPlayerDamager(event) ?: return
         val tier = player.getHighestArtifactTier(TauntArtifactType) ?: return
 
-        val (tauntProbability) = TauntArtifactType.getValues(tier)
-        if (Random.nextDouble() * 100 > tauntProbability) return
+        val (chance) = TauntArtifactType.getValues(tier)
+        if (Random.nextDouble() > chance) return
 
         val entity = event.entity as? Monster ?: return
         entity.target = player
