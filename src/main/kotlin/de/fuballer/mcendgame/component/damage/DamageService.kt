@@ -22,22 +22,21 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffectType
-import kotlin.math.max
-import kotlin.math.min
+import kotlin.math.*
 import kotlin.random.Random
 
 @Component
 class DamageService : Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {
-        println("" + event.damage + " / " + event.finalDamage)
+        println("_____________\n" + event.damage + " / " + event.finalDamage)
 
         val isDungeonWorld = WorldUtil.isDungeonWorld(event.damager.world)
 
         val player = EventUtil.getPlayerDamager(event) ?: return
         val damagedEntity = event.entity as? LivingEntity ?: return
 
-        println(player.velocity)
+        println(damagedEntity.noDamageTicks)
 
         val isProjectile = event.cause == DamageCause.PROJECTILE
 
@@ -59,7 +58,8 @@ class DamageService : Listener {
 
         EventGateway.apply(damageEvent)
 
-        val rawDamage = calculateRawDamage(damageEvent)
+        var rawDamage = calculateRawDamage(damageEvent)
+        rawDamage = calculateInvulnerabilityDamage(rawDamage, damagedEntity)
         val reducedDamage = calculateReducedDamage(damagedEntity, rawDamage, damageEvent.cause == DamageCause.PROJECTILE)
 
         println("$rawDamage / $reducedDamage")
@@ -72,6 +72,11 @@ class DamageService : Listener {
 
         event.setDamage(EntityDamageEvent.DamageModifier.ABSORPTION, absorbedDamage)
         event.setDamage(EntityDamageEvent.DamageModifier.BASE, reducedDamage - absorbedDamage)
+    }
+
+    private fun calculateInvulnerabilityDamage(damage: Double, target: LivingEntity): Double {
+        if (target.noDamageTicks <= 10) return damage
+        return damage - target.lastDamage
     }
 
     private fun getCustomPlayerAttributes(player: Player): Map<AttributeType, List<Double>> {
@@ -120,7 +125,8 @@ class DamageService : Listener {
     }
 
     private fun getArmorDamageReduction(target: LivingEntity, damage: Double): Double {
-        val armor = target.getAttribute(Attribute.GENERIC_ARMOR)?.value ?: 0.0
+        var armor = target.getAttribute(Attribute.GENERIC_ARMOR)?.value ?: 0.0
+        armor = floor(armor)
         val armorToughness = target.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS)?.value ?: 0.0
 
         val minEffectiveArmor = armor / 5
@@ -187,15 +193,27 @@ class DamageService : Listener {
             }
         }
 
-        calculatedDamage += event.enchantDamage
+        if (event.cause == DamageCause.PROJECTILE) return ceil(calculatedDamage)
 
-        if (event.cause == DamageCause.ENTITY_SWEEP_ATTACK)
+        var enchantDamage = event.enchantDamage
+
+        if (event.cause != DamageCause.ENTITY_SWEEP_ATTACK) {
+            calculatedDamage *= getAttackCooldownMultiplier(event.player)
+            enchantDamage *= getEnchantAttackCooldownMultiplier(event.player)
+        }
+
+        calculatedDamage += enchantDamage
+
+        if (event.cause == DamageCause.ENTITY_SWEEP_ATTACK) {
             calculatedDamage = 1 + calculatedDamage * event.sweepingEdgeMultiplier
-
-        calculatedDamage *= event.attackCooldown
+        }
 
         return calculatedDamage
     }
+
+    private fun getAttackCooldownMultiplier(player: Player) = 0.2 + player.attackCooldown.pow(2) * 0.8
+
+    private fun getEnchantAttackCooldownMultiplier(player: Player) = player.attackCooldown.toDouble()
 
     private fun getStrengthDamage(player: Player): Double {
         val strengthLevel = player.getPotionEffect(PotionEffectType.INCREASE_DAMAGE)?.amplifier ?: -1
