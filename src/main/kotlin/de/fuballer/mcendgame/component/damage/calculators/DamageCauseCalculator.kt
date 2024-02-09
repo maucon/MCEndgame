@@ -17,8 +17,9 @@ interface DamageCauseCalculator {
         val customPlayerAttributes = DamageUtil.getCustomPlayerAttributes(player)
         val cause = event.cause
         val isDungeonWorld = WorldUtil.isDungeonWorld(event.damager.world)
+        val damageBlocked = event.getDamage(EntityDamageEvent.DamageModifier.BLOCKING) < 0
 
-        return DamageCalculationEvent(player, customPlayerAttributes, damagedEntity, cause, isDungeonWorld)
+        return DamageCalculationEvent(player, customPlayerAttributes, damagedEntity, cause, isDungeonWorld, damageBlocked)
     }
 
     fun getBaseDamage(event: DamageCalculationEvent) = DamageUtil.getRawBaseDamage(event) ?: 0.0
@@ -37,7 +38,11 @@ interface DamageCauseCalculator {
         }
 
     fun getHardHatDamageReduction(event: DamageCalculationEvent, damage: Double) = 0.0 // TODO
-    fun getBlockingDamageReduction(event: DamageCalculationEvent, damage: Double) = 0.0 // TODO
+
+    fun getBlockingDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
+        val reduction = if (event.damageBlocked) 1.0 else 0.0
+        return damage * reduction
+    }
 
     fun getArmorDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
         val reduction = DamageUtil.getArmorDamageReduction(event.damaged, damage)

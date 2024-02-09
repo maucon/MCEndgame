@@ -91,6 +91,7 @@ class DamageCalculationEvent(
     val damaged: LivingEntity,
     val cause: DamageCause,
     val isDungeonWorld: Boolean,
+    val damageBlocked: Boolean,
 
     val baseDamage: MutableList<Double> = mutableListOf(),
     val increasedDamage: MutableList<Double> = mutableListOf(),
