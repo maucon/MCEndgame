@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.component.damage
 
-import de.fuballer.mcendgame.component.damage.dmg.DefaultDamageCalculator
-import de.fuballer.mcendgame.component.damage.dmg.EntityAttackDamageCalculator
-import de.fuballer.mcendgame.component.damage.dmg.EntitySweepDamageCalculator
-import de.fuballer.mcendgame.component.damage.dmg.ProjectileDamageCalculator
-import de.fuballer.mcendgame.event.DamageCalculationEvent
+import de.fuballer.mcendgame.component.damage.calculators.DefaultDamageCalculator
+import de.fuballer.mcendgame.component.damage.calculators.EntityAttackDamageCalculator
+import de.fuballer.mcendgame.component.damage.calculators.EntitySweepDamageCalculator
+import de.fuballer.mcendgame.component.damage.calculators.ProjectileDamageCalculator
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.DamageUtil
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
@@ -16,14 +16,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
 import kotlin.math.abs
 
+private val DAMAGE_TYPE_CALCULATORS = listOf(
+    EntityAttackDamageCalculator,
+    EntitySweepDamageCalculator,
+    ProjectileDamageCalculator
+).associateBy { it.damageType }
+
 @Component
 class DamageService : Listener {
-    private val damageTypeCalculators = listOf(
-        EntityAttackDamageCalculator,
-        EntitySweepDamageCalculator,
-        ProjectileDamageCalculator
-    ).associateBy { it.damageType }
-
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {
         // debug start
@@ -35,10 +35,26 @@ class DamageService : Listener {
             }
         // debug end
 
-        val damageEvent = DamageEventMapper.map(event) ?: return
+        val damageTypeCalculator = DAMAGE_TYPE_CALCULATORS[event.cause] ?: DefaultDamageCalculator
+        val damageEvent = damageTypeCalculator.buildDamageEvent(event) ?: return
+
         EventGateway.apply(damageEvent)
 
-        rebuildOriginalEvent(damageEvent, event)
+        val baseDamage = damageTypeCalculator.getBaseDamage(damageEvent)
+            .let { DamageUtil.invulnerabilityDamage(damageEvent.damaged, it) }
+        var leftDamage = baseDamage
+
+        event.setDamage(DamageModifier.BASE, baseDamage)
+
+        DamageModifier.entries
+            .filter { it != DamageModifier.BASE }
+            .filter { event.isApplicable(it) }
+            .forEach {
+                val reduction = damageTypeCalculator.getDamageReduction(damageEvent, leftDamage, it)
+                event.setDamage(it, -reduction)
+
+                leftDamage -= reduction
+            }
 
         // debug start
         DamageModifier.entries
@@ -54,25 +70,5 @@ class DamageService : Listener {
                 Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, modifier, oldDamage, newDamage, damageDiff))
             }
         // debug end
-    }
-
-    private fun rebuildOriginalEvent(damageEvent: DamageCalculationEvent, event: EntityDamageByEntityEvent) {
-        val damageTypeCalculator = damageTypeCalculators[event.cause] ?: DefaultDamageCalculator
-
-        val baseDamage = damageTypeCalculator.getBaseDamage(damageEvent)
-            .let { DamageCalculation.invulnerabilityDamage(damageEvent.damaged, it) }
-        var leftDamage = baseDamage
-
-        event.setDamage(DamageModifier.BASE, baseDamage)
-
-        DamageModifier.entries
-            .filter { it != DamageModifier.BASE }
-            .filter { event.isApplicable(it) }
-            .forEach {
-                val reduction = damageTypeCalculator.getDamageReduction(damageEvent, leftDamage, it)
-                event.setDamage(it, -reduction)
-
-                leftDamage -= reduction
-            }
     }
 }

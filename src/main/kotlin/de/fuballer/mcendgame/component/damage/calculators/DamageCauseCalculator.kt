@@ -1,11 +1,25 @@
-package de.fuballer.mcendgame.component.damage.dmg
+package de.fuballer.mcendgame.component.damage.calculators
 
-import de.fuballer.mcendgame.component.damage.DamageCalculation
 import de.fuballer.mcendgame.event.DamageCalculationEvent
+import de.fuballer.mcendgame.util.DamageUtil
+import de.fuballer.mcendgame.util.EventUtil
+import de.fuballer.mcendgame.util.WorldUtil
+import org.bukkit.entity.LivingEntity
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 
-interface DamageTypeCalculator {
+interface DamageCauseCalculator {
     val damageType: EntityDamageEvent.DamageCause
+
+    fun buildDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
+        val player = EventUtil.getPlayerDamager(event) ?: return null // TODO any entity
+        val damagedEntity = event.entity as? LivingEntity ?: return null // TODO any entity
+        val customPlayerAttributes = DamageUtil.customPlayerAttributes(player)
+        val cause = event.cause
+        val isDungeonWorld = WorldUtil.isDungeonWorld(event.damager.world)
+
+        return DamageCalculationEvent(player, customPlayerAttributes, damagedEntity, cause, isDungeonWorld)
+    }
 
     fun getBaseDamage(event: DamageCalculationEvent) = 0.0 // TODO
 
@@ -24,20 +38,20 @@ interface DamageTypeCalculator {
     fun getBlockingDamageReduction(event: DamageCalculationEvent, damage: Double) = 0.0 // TODO
 
     fun getArmorDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
-        val reduction = DamageCalculation.armorDamageReduction(event.damaged, damage)
+        val reduction = DamageUtil.armorDamageReduction(event.damaged, damage)
         return damage * reduction
     }
 
     fun getResistanceDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
-        val reduction = DamageCalculation.resistancePotionEffectReduction(event.damaged)
+        val reduction = DamageUtil.resistancePotionEffectReduction(event.damaged)
         return damage * reduction
     }
 
     /** armor enchants and potion resistance */
     fun getMagicDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
-        val reduction = DamageCalculation.protectionDamageReduction(event.damaged)
+        val reduction = DamageUtil.protectionDamageReduction(event.damaged)
         return damage * reduction
     }
 
-    fun getAbsorptionDamageReduction(event: DamageCalculationEvent, damage: Double) = DamageCalculation.absorbedDamage(event.damaged, damage)
+    fun getAbsorptionDamageReduction(event: DamageCalculationEvent, damage: Double) = DamageUtil.absorbedDamage(event.damaged, damage)
 }

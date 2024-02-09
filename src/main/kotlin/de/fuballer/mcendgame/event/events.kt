@@ -89,15 +89,15 @@ class DamageCalculationEvent(
     val player: Player,
     val customPlayerAttributes: Map<AttributeType, List<Double>>,
     val damaged: LivingEntity,
-    var cause: DamageCause,
+    val cause: DamageCause,
+    val isDungeonWorld: Boolean,
 
     val baseDamage: MutableList<Double> = mutableListOf(),
     val increasedDamage: MutableList<Double> = mutableListOf(),
     val moreDamage: MutableList<Double> = mutableListOf(),
     var enchantDamage: Double = 0.0,
     var nullifyDamage: Boolean = false,
-
     var isCritical: Boolean = false,
+    var criticalRoll: Double = 0.0,
     var sweepingEdgeMultiplier: Double = 0.0,
-    var attackCooldown: Double = 1.0,
 ) : HandleableEvent()
