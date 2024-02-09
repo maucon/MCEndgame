@@ -12,21 +12,21 @@ object EntitySweepDamageCalculator : DamageCauseCalculator {
     override fun buildDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
         val damageEvent = super.buildDamageEvent(event) ?: return null
 
-        val baseDamage = DamageUtil.meleeBaseDamage(damageEvent.player)
-        val enchantDamage = DamageUtil.meleeEnchantDamage(damageEvent.player, damageEvent.damaged, damageEvent.isDungeonWorld)
+        val baseDamage = DamageUtil.getMeleeBaseDamage(damageEvent.player)
+        val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.player, damageEvent.damaged, damageEvent.isDungeonWorld)
         val mainHandItem = damageEvent.player.equipment!!.getItem(EquipmentSlot.HAND)
 
         damageEvent.baseDamage.add(baseDamage)
         damageEvent.enchantDamage = enchantDamage
-        damageEvent.sweepingEdgeMultiplier = DamageUtil.sweepingEdgeMultiplier(mainHandItem)
+        damageEvent.sweepingEdgeMultiplier = DamageUtil.getSweepingEdgeMultiplier(mainHandItem)
 
         return damageEvent
     }
 
     override fun getBaseDamage(event: DamageCalculationEvent): Double {
-        var damage = DamageUtil.rawBaseDamage(event) ?: return 0.0
+        var damage = DamageUtil.getRawBaseDamage(event) ?: return 0.0
 
-        damage += DamageUtil.strengthDamage(event.player)
+        damage += DamageUtil.getStrengthDamage(event.player)
 
         if (event.isCritical) {
             damage *= 1.5

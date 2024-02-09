@@ -18,7 +18,7 @@ import kotlin.math.pow
 
 object DamageUtil {
     /** flat, increase, more */
-    fun rawBaseDamage(event: DamageCalculationEvent): Double? {
+    fun getRawBaseDamage(event: DamageCalculationEvent): Double? {
         if (event.nullifyDamage) return null
 
         var damage = event.baseDamage.sum() // flat
@@ -28,16 +28,16 @@ object DamageUtil {
         return damage
     }
 
-    fun strengthDamage(entity: LivingEntity): Double {
+    fun getStrengthDamage(entity: LivingEntity): Double {
         val strengthLevel = entity.getPotionEffect(PotionEffectType.INCREASE_DAMAGE)?.amplifier ?: return 0.0
         return (strengthLevel + 1) * 3.0
     }
 
-    fun attackCooldownMultiplier(player: Player) = 0.2 + player.attackCooldown.pow(2) * 0.8
+    fun getAttackCooldownMultiplier(player: Player) = 0.2 + player.attackCooldown.pow(2) * 0.8
 
-    fun enchantAttackCooldownMultiplier(player: Player) = player.attackCooldown.toDouble()
+    fun getEnchantAttackCooldownMultiplier(player: Player) = player.attackCooldown.toDouble()
 
-    fun armorDamageReduction(entity: LivingEntity, damage: Double): Double {
+    fun getArmorDamageReduction(entity: LivingEntity, damage: Double): Double {
         var armor = entity.getAttribute(Attribute.GENERIC_ARMOR)?.value ?: 0.0
         val armorToughness = entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS)?.value ?: 0.0
         armor = floor(armor)
@@ -49,33 +49,35 @@ object DamageUtil {
         return min(20.0, effectiveArmor) / 25
     }
 
-    fun protectionDamageReduction(entity: LivingEntity): Double {
-        val protectionLevel = totalEquipmentEnchantmentLevel(entity, Enchantment.PROTECTION_ENVIRONMENTAL)
+    fun getProtectionDamageReduction(entity: LivingEntity): Double {
+        val protectionLevel = getTotalEquipmentEnchantmentLevel(entity, Enchantment.PROTECTION_ENVIRONMENTAL)
         val damageReduction = protectionLevel * 0.04
         return min(0.8, damageReduction)
     }
 
-    fun specialEnchantDamageReduction(entity: LivingEntity, enchantment: Enchantment): Double {
-        val protectionReduction = protectionDamageReduction(entity)
-        val specialEnchantLevel = totalEquipmentEnchantmentLevel(entity, enchantment)
+    fun getSpecialEnchantDamageReduction(entity: LivingEntity, enchantment: Enchantment): Double {
+        val protectionReduction = getProtectionDamageReduction(entity)
+        val specialEnchantLevel = getTotalEquipmentEnchantmentLevel(entity, enchantment)
         val specialEnchantReduction = specialEnchantLevel * 0.08
 
         return min(0.8, protectionReduction + specialEnchantReduction)
     }
 
-    fun resistancePotionEffectReduction(entity: LivingEntity): Double {
+    fun getResistancePotionEffectReduction(entity: LivingEntity): Double {
         val amplifier = entity.getPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)?.amplifier ?: return 0.0
         return min(1.0, (amplifier + 1) * 0.2)
     }
 
-    fun invulnerabilityDamage(entity: LivingEntity, damage: Double): Double {
+    // FIXME works most of the time 🤨
+    fun getInvulnerabilityDamage(entity: LivingEntity, damage: Double): Double {
         if (entity.noDamageTicks <= 10) return damage
-        return damage - entity.lastDamage
+        if (damage > entity.lastDamage) return damage - entity.lastDamage
+        return damage
     }
 
-    fun absorbedDamage(entity: LivingEntity, damage: Double) = max(0.0, min(entity.absorptionAmount, damage))
+    fun getAbsorbedDamage(entity: LivingEntity, damage: Double) = max(0.0, min(entity.absorptionAmount, damage))
 
-    fun customPlayerAttributes(player: Player): Map<AttributeType, List<Double>> {
+    fun getCustomPlayerAttributes(player: Player): Map<AttributeType, List<Double>> {
         val attributes: MutableList<RolledAttribute> = mutableListOf()
 
         val equipment = player.equipment ?: return mapOf()
@@ -106,25 +108,25 @@ object DamageUtil {
             .mapValues { (_, values) -> values.map { it.roll } }
     }
 
-    fun projectileBaseDamage(projectile: Projectile): Double {
+    fun getProjectileBaseDamage(projectile: Projectile): Double {
         val arrow = projectile as? AbstractArrow ?: return 0.0
         return arrow.damage
     }
 
-    fun meleeBaseDamage(player: Player): Double {
+    fun getMeleeBaseDamage(player: Player): Double {
         val baseDamage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)!!.value
-        return baseDamage - strengthDamage(player)
+        return baseDamage - getStrengthDamage(player)
     }
 
-    fun meleeEnchantDamage(player: Player, damagedEntity: LivingEntity, isDungeonWorld: Boolean): Double {
+    fun getMeleeEnchantDamage(player: Player, damagedEntity: LivingEntity, isDungeonWorld: Boolean): Double {
         val mainHandItem = player.equipment!!.getItem(EquipmentSlot.HAND)
 
-        if (isDungeonWorld) return combinedSharpnessDamage(mainHandItem)
+        if (isDungeonWorld) return getCombinedSharpnessDamage(mainHandItem)
 
-        return typeBasedEnchantmentDamage(mainHandItem, damagedEntity)
+        return getTypeBasedEnchantmentDamage(mainHandItem, damagedEntity)
     }
 
-    fun sweepingEdgeMultiplier(item: ItemStack): Double {
+    fun getSweepingEdgeMultiplier(item: ItemStack): Double {
         val sweepingLevel = item.getEnchantmentLevel(Enchantment.SWEEPING_EDGE)
         return sweepingLevel / (sweepingLevel + 1.0)
     }
@@ -147,13 +149,13 @@ object DamageUtil {
         return true
     }
 
-    private fun combinedSharpnessDamage(item: ItemStack): Double {
-        val combinedLevel = combinedSharpnessLevel(item)
+    private fun getCombinedSharpnessDamage(item: ItemStack): Double {
+        val combinedLevel = getCombinedSharpnessLevel(item)
         if (combinedLevel == 0) return 0.0
         return combinedLevel * 0.5 + 0.5
     }
 
-    private fun combinedSharpnessLevel(item: ItemStack): Int {
+    private fun getCombinedSharpnessLevel(item: ItemStack): Int {
         var combinedLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_ALL)
         combinedLevel += item.getEnchantmentLevel(Enchantment.DAMAGE_ARTHROPODS)
         combinedLevel += item.getEnchantmentLevel(Enchantment.DAMAGE_UNDEAD)
@@ -162,7 +164,7 @@ object DamageUtil {
         return combinedLevel
     }
 
-    private fun typeBasedEnchantmentDamage(item: ItemStack, damagedEntity: LivingEntity): Double {
+    private fun getTypeBasedEnchantmentDamage(item: ItemStack, damagedEntity: LivingEntity): Double {
         var damage = 0.0
 
         val sharpnessLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_ALL)
@@ -188,7 +190,7 @@ object DamageUtil {
         return damage
     }
 
-    private fun totalEquipmentEnchantmentLevel(entity: LivingEntity, enchantment: Enchantment): Int {
+    private fun getTotalEquipmentEnchantmentLevel(entity: LivingEntity, enchantment: Enchantment): Int {
         val equipment = entity.equipment ?: return 0
 
         var level = equipment.helmet?.getEnchantmentLevel(enchantment) ?: 0

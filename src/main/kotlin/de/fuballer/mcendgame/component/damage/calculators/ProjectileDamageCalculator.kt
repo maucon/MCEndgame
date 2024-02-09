@@ -17,7 +17,7 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
         val damageEvent = super.buildDamageEvent(event) ?: return null
 
         val projectile = event.damager as Projectile
-        val baseDamage = DamageUtil.projectileBaseDamage(projectile)
+        val baseDamage = DamageUtil.getProjectileBaseDamage(projectile)
         val addedDamage = projectile.getAddedBaseDamage() ?: 0.0
         val projectileVelocity = projectile.velocity.length()
         val cumulativeBaseDamage = (baseDamage + addedDamage) * projectileVelocity
@@ -34,7 +34,7 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
     }
 
     override fun getBaseDamage(event: DamageCalculationEvent): Double {
-        var damage = DamageUtil.rawBaseDamage(event) ?: return 0.0
+        var damage = DamageUtil.getRawBaseDamage(event) ?: return 0.0
 
         if (event.isCritical) {
             damage *= 1 + event.criticalRoll
@@ -44,7 +44,7 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
     }
 
     override fun getMagicDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
-        val reduction = DamageUtil.specialEnchantDamageReduction(event.damaged, Enchantment.PROTECTION_PROJECTILE)
+        val reduction = DamageUtil.getSpecialEnchantDamageReduction(event.damaged, Enchantment.PROTECTION_PROJECTILE)
         return damage * reduction
     }
 }

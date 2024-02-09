@@ -27,7 +27,7 @@ class PlayerProjectileService : Listener {
         val totalDamage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.value ?: return 0.0
         val addedDamage = totalDamage - baseDamage
 
-        val strengthDamage = DamageUtil.strengthDamage(player)
+        val strengthDamage = DamageUtil.getStrengthDamage(player)
         return addedDamage - strengthDamage
     }
 }
