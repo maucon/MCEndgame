@@ -32,7 +32,8 @@ class DamageService : Listener {
             .filter { event.isApplicable(it) }
             .map {
                 Pair(it.name.padEnd(10), event.getDamage(it))
-            }
+            }.toMutableList()
+        oldDamageValues.add(Pair("FINAL_DMG ", event.finalDamage))
         // debug end
 
         val damageTypeCalculator = DAMAGE_TYPE_CALCULATORS[event.cause] ?: DefaultDamageCalculator
@@ -66,9 +67,16 @@ class DamageService : Listener {
                 val damageDiff = abs(oldDamage - newDamage)
                 val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
 
-                val format = "%s%s: %.3f -> %.3f | %.3f"
+                val format = "%s%s : %.3f -> %.3f | %.3f"
                 Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, modifier, oldDamage, newDamage, damageDiff))
             }
+        val (modifier, oldDamage) = oldDamageValues.last()
+        val newDamage = event.finalDamage
+        val damageDiff = abs(oldDamage - newDamage)
+        val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
+
+        val format = "%s%s : %.3f -> %.3f | %.3f"
+        Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, modifier, oldDamage, newDamage, damageDiff))
         // debug end
     }
 }

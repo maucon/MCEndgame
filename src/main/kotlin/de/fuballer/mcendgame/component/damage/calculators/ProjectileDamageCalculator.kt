@@ -1,11 +1,13 @@
 package de.fuballer.mcendgame.component.damage.calculators
 
 import de.fuballer.mcendgame.event.DamageCalculationEvent
+import de.fuballer.mcendgame.technical.extension.ProjectileExtension.getAddedBaseDamage
 import de.fuballer.mcendgame.util.DamageUtil
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Projectile
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
 import kotlin.math.ceil
 
 object ProjectileDamageCalculator : DamageCauseCalculator {
@@ -15,11 +17,18 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
         val damageEvent = super.buildDamageEvent(event) ?: return null
 
         val projectile = event.damager as Projectile
-        val baseDamage = DamageUtil.projectileBaseDamage(projectile, event)
+        val baseDamage = DamageUtil.projectileBaseDamage(projectile)
+        val addedDamage = projectile.getAddedBaseDamage() ?: 0.0
+        val projectileVelocity = projectile.velocity.length()
+        val cumulativeBaseDamage = (baseDamage + addedDamage) * projectileVelocity
 
-        damageEvent.baseDamage.add(baseDamage)
+        damageEvent.baseDamage.add(cumulativeBaseDamage)
         damageEvent.isCritical = DamageUtil.isProjectileCritical(projectile)
-        damageEvent.criticalRoll = 0.2
+
+        if (damageEvent.isCritical) {
+            val eventBaseDamage = event.getDamage(DamageModifier.BASE)
+            damageEvent.criticalRoll = eventBaseDamage / (baseDamage * projectileVelocity) - 1
+        }
 
         return damageEvent
     }
@@ -31,7 +40,7 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
             damage *= 1 + event.criticalRoll
         }
 
-        return ceil(damage)
+        return ceil(damage - 0.0001) // 🤓🤓🤓
     }
 
     override fun getMagicDamageReduction(event: DamageCalculationEvent, damage: Double): Double {

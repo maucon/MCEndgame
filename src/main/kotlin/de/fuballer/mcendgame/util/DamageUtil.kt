@@ -5,11 +5,9 @@ import de.fuballer.mcendgame.component.attribute.RolledAttribute
 import de.fuballer.mcendgame.event.DamageCalculationEvent
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
-import de.fuballer.mcendgame.technical.extension.ProjectileExtension.getBaseDamage
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
-import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffectType
@@ -30,8 +28,8 @@ object DamageUtil {
         return damage
     }
 
-    fun strengthDamage(player: Player): Double {
-        val strengthLevel = player.getPotionEffect(PotionEffectType.INCREASE_DAMAGE)?.amplifier ?: return 0.0
+    fun strengthDamage(entity: LivingEntity): Double {
+        val strengthLevel = entity.getPotionEffect(PotionEffectType.INCREASE_DAMAGE)?.amplifier ?: return 0.0
         return (strengthLevel + 1) * 3.0
     }
 
@@ -108,9 +106,9 @@ object DamageUtil {
             .mapValues { (_, values) -> values.map { it.roll } }
     }
 
-    fun projectileBaseDamage(projectile: Projectile, event: EntityDamageByEntityEvent): Double {
-        val baseDamage = projectile.getBaseDamage() ?: return event.damage
-        return baseDamage * projectile.velocity.length()
+    fun projectileBaseDamage(projectile: Projectile): Double {
+        val arrow = projectile as? AbstractArrow ?: return 0.0
+        return arrow.damage
     }
 
     fun meleeBaseDamage(player: Player): Double {

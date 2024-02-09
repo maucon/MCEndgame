@@ -9,9 +9,10 @@ import org.bukkit.Particle
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 
 @Component
-class IncDamageAgainstFullLifeEffectService {
+class IncDamageAgainstFullLifeEffectService : Listener {
     @EventHandler
     fun on(event: DamageCalculationEvent) {
         if (WorldUtil.isNotDungeonWorld(event.player.world)) return

@@ -21,7 +21,9 @@ interface DamageCauseCalculator {
         return DamageCalculationEvent(player, customPlayerAttributes, damagedEntity, cause, isDungeonWorld)
     }
 
-    fun getBaseDamage(event: DamageCalculationEvent) = 0.0 // TODO
+    fun getBaseDamage(event: DamageCalculationEvent): Double {
+        return 0.0 // TODO
+    }
 
     fun getDamageReduction(event: DamageCalculationEvent, damage: Double, modifier: EntityDamageEvent.DamageModifier) =
         when (modifier) {
