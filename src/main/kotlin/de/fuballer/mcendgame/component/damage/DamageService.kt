@@ -66,16 +66,19 @@ class DamageService(
                 val newDamage = event.getDamage(damageModifier)
                 val damageDiff = abs(oldDamage - newDamage)
                 val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
-
                 val format = "%s%s : %.3f -> %.3f | %.3f"
-                Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, modifier, oldDamage, newDamage, damageDiff))
+                if (damageDiff > 0.001) {
+                    Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, modifier, oldDamage, newDamage, damageDiff))
+                }
             }
         val newDamage = event.finalDamage
         val damageDiff = abs(oldFinalValue.second - newDamage)
         val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
 
         val format = "%s%s : %.3f -> %.3f | %.3f"
-        Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, oldFinalValue.first, oldFinalValue.second, newDamage, damageDiff))
+        if (damageDiff > 0.001) {
+            Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, oldFinalValue.first, oldFinalValue.second, newDamage, damageDiff))
+        }
         // debug end
     }
 

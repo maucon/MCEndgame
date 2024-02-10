@@ -80,10 +80,7 @@ object DamageUtil {
         println("Invulnerability: ${entity.noDamageTicks} | ${entity.lastDamageCause?.cause}")
 
         entity.lastDamageCause?.let {
-            if (it.cause == EntityDamageEvent.DamageCause.MAGIC
-                || it.cause == EntityDamageEvent.DamageCause.POISON
-            )
-                return damage
+            if (it.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return damage
         }
 
         if (damage > entity.lastDamage) return damage - entity.lastDamage
