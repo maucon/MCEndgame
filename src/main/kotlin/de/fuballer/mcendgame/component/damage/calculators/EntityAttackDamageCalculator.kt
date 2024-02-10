@@ -9,7 +9,7 @@ object EntityAttackDamageCalculator : DamageCauseCalculator {
     override val damageType = EntityDamageEvent.DamageCause.ENTITY_ATTACK
 
     override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildDamageEventForPlayer(event) ?: return null
+        val damageEvent = super.buildBaseDamageEvent(event) ?: return null
 
         val baseDamage = DamageUtil.getMeleeBaseDamage(damageEvent.damager)
         val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged)
@@ -26,7 +26,7 @@ object EntityAttackDamageCalculator : DamageCauseCalculator {
     }
 
     override fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildDamageEventForNonPlayer(event) ?: return null
+        val damageEvent = super.buildBaseDamageEvent(event) ?: return null
 
         val rawDamage = DamageUtil.reverseDifficultyDamage(damageEvent.difficulty, event.damage)
         val strengthDamage = DamageUtil.getStrengthDamage(damageEvent.damager)

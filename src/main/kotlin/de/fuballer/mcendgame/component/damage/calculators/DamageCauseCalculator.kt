@@ -18,15 +18,21 @@ interface DamageCauseCalculator {
         if (event.damager is Player) buildDamageEventForPlayer(event)
         else buildDamageEventForNonPlayer(event)
 
-    fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent) = buildBaseDamageEvent(event)
+    fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
+        val damageEvent = buildBaseDamageEvent(event) ?: return null
+        damageEvent.baseDamage.add(event.damage)
+        return damageEvent
+    }
 
-    fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent) = buildBaseDamageEvent(event)
+    fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
+        val damageEvent = buildBaseDamageEvent(event) ?: return null
+        damageEvent.baseDamage.add(event.damage)
+        return damageEvent
+    }
 
     fun getBaseDamage(event: DamageCalculationEvent) =
         if (event.damager is Player) getBaseDamageForPlayer(event)
         else getBaseDamageForNonPlayer(event)
-
-    fun getNormalBaseDamage(event: DamageCalculationEvent) = DamageUtil.getRawBaseDamage(event)
 
     fun getBaseDamageForPlayer(event: DamageCalculationEvent): Double {
         val normalBaseDamage = getNormalBaseDamage(event)
@@ -39,42 +45,44 @@ interface DamageCauseCalculator {
         return scaleInvulnerabilityDamage(event.damaged, baseDamage)
     }
 
+    fun getNormalBaseDamage(event: DamageCalculationEvent) = DamageUtil.getRawBaseDamage(event)
+
     fun scaleInvulnerabilityDamage(entity: LivingEntity, damage: Double) = DamageUtil.scaleInvulnerabilityDamage(entity, damage)
 
     fun scaleDifficultyDamage(difficulty: Difficulty, damage: Double) = DamageUtil.scaleDifficultyDamage(difficulty, damage)
 
-    fun getDamageReduction(event: DamageCalculationEvent, damage: Double, modifier: DamageModifier) =
+    fun getFlatDamageReduction(event: DamageCalculationEvent, damage: Double, modifier: DamageModifier) =
         when (modifier) {
             DamageModifier.BASE -> throw IllegalArgumentException("$modifier is not a damage reduction")
             DamageModifier.HARD_HAT -> throw IllegalArgumentException("$modifier is not valid") // should not happen
-            DamageModifier.BLOCKING -> getBlockingDamageReduction(event, damage)
-            DamageModifier.ARMOR -> getArmorDamageReduction(event, damage)
-            DamageModifier.RESISTANCE -> getResistanceDamageReduction(event, damage)
-            DamageModifier.MAGIC -> getMagicDamageReduction(event, damage)
-            DamageModifier.ABSORPTION -> getAbsorptionDamageReduction(event, damage)
+            DamageModifier.BLOCKING -> getFlatBlockingDamageReduction(event, damage)
+            DamageModifier.ARMOR -> getFlatArmorDamageReduction(event, damage)
+            DamageModifier.RESISTANCE -> getFlatResistanceDamageReduction(event, damage)
+            DamageModifier.MAGIC -> getFlatMagicDamageReduction(event, damage)
+            DamageModifier.ABSORPTION -> getFlatAbsorptionDamageReduction(event, damage)
         }
 
-    fun getBlockingDamageReduction(event: DamageCalculationEvent, damage: Double) = if (event.damageBlocked) damage else 0.0
+    fun getFlatBlockingDamageReduction(event: DamageCalculationEvent, damage: Double) = if (event.damageBlocked) damage else 0.0
 
-    fun getArmorDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
-        val reduction = DamageUtil.getArmorDamageReduction(event.damaged, damage)
+    fun getFlatArmorDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
+        val reduction = DamageUtil.getReducedDamageByArmor(event.damaged, damage)
         return damage * reduction
     }
 
-    fun getResistanceDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
+    fun getFlatResistanceDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
         val reduction = DamageUtil.getResistancePotionEffectReduction(event.damaged)
         return damage * reduction
     }
 
     /** armor enchants and potion resistance */
-    fun getMagicDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
+    fun getFlatMagicDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
         val reduction = DamageUtil.getProtectionDamageReduction(event.damaged)
         return damage * reduction
     }
 
-    fun getAbsorptionDamageReduction(event: DamageCalculationEvent, damage: Double) = DamageUtil.getAbsorbedDamage(event.damaged, damage)
+    fun getFlatAbsorptionDamageReduction(event: DamageCalculationEvent, damage: Double) = DamageUtil.getAbsorbedDamage(event.damaged, damage)
 
-    private fun buildBaseDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
+    fun buildBaseDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
         val damager = EventUtil.getLivingEntityDamager(event.damager) ?: return null
         val customAttributes = DamageUtil.getEntityCustomAttributes(damager)
         val damagedEntity = event.entity as? LivingEntity ?: return null

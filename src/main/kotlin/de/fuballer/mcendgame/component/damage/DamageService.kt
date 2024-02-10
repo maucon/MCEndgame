@@ -10,21 +10,25 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
+import java.util.logging.Logger
 import kotlin.math.abs
 
 private val DAMAGE_TYPE_CALCULATORS = listOf(
     EntityAttackDamageCalculator,
     EntitySweepDamageCalculator,
     ProjectileDamageCalculator,
-    ThornsDamageCalculator
+    ThornsDamageCalculator,
+    MagicDamageCalculator
 ).associateBy { it.damageType }
 
 @Component
-class DamageService : Listener {
+class DamageService(
+    private val logger: Logger
+) : Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {
         // debug start
-        println("---------- ${event.cause} ----------")
+        println("----- ${event.cause} to ${event.entity.type} -----")
         val oldDamageValues = DamageModifier.entries
             .filter { event.isApplicable(it) }
             .map {
@@ -34,7 +38,14 @@ class DamageService : Listener {
         // debug end
 
         val damageTypeCalculator = DAMAGE_TYPE_CALCULATORS[event.cause] ?: DefaultDamageCalculator
-        val damageEvent = damageTypeCalculator.buildDamageEvent(event) ?: return
+        val damageEvent = damageTypeCalculator.buildDamageEvent(event)
+        if (damageEvent == null) {
+            logger.severe("could not map event")
+            logger.severe("= event.damager ${event.damager}")
+            logger.severe("= event.entity ${event.entity}")
+            logger.severe("= event.cause ${event.cause}")
+            return
+        }
 
         EventGateway.apply(damageEvent)
 
@@ -81,7 +92,7 @@ class DamageService : Listener {
             .filter { it != DamageModifier.BASE }
             .filter { event.isApplicable(it) }
             .forEach {
-                val reduction = damageTypeCalculator.getDamageReduction(damageEvent, leftDamage, it)
+                val reduction = damageTypeCalculator.getFlatDamageReduction(damageEvent, leftDamage, it)
                 event.setDamage(it, -reduction)
 
                 leftDamage -= reduction

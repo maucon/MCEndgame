@@ -10,7 +10,7 @@ object EntitySweepDamageCalculator : DamageCauseCalculator {
     override val damageType = EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK
 
     override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildDamageEventForPlayer(event) ?: return null
+        val damageEvent = super.buildBaseDamageEvent(event) ?: return null
 
         val baseDamage = DamageUtil.getMeleeBaseDamage(damageEvent.damager)
         val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged)

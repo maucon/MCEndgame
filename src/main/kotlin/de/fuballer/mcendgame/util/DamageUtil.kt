@@ -9,6 +9,7 @@ import org.bukkit.Difficulty
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffectType
@@ -42,7 +43,7 @@ object DamageUtil {
         return player.attackCooldown.toDouble()
     }
 
-    fun getArmorDamageReduction(entity: LivingEntity, damage: Double): Double {
+    fun getReducedDamageByArmor(entity: LivingEntity, damage: Double): Double {
         var armor = entity.getAttribute(Attribute.GENERIC_ARMOR)?.value ?: 0.0
         val armorToughness = entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS)?.value ?: 0.0
         armor = floor(armor)
@@ -76,6 +77,15 @@ object DamageUtil {
     // FIXME works most of the time 🤨
     fun scaleInvulnerabilityDamage(entity: LivingEntity, damage: Double): Double {
         if (entity.noDamageTicks <= 10) return damage
+        println("Invulnerability: ${entity.noDamageTicks} | ${entity.lastDamageCause?.cause}")
+
+        entity.lastDamageCause?.let {
+            if (it.cause == EntityDamageEvent.DamageCause.MAGIC
+                || it.cause == EntityDamageEvent.DamageCause.POISON
+            )
+                return damage
+        }
+
         if (damage > entity.lastDamage) return damage - entity.lastDamage
         return damage
     }
@@ -173,6 +183,8 @@ object DamageUtil {
 
         return combinedLevel * 0.5 + 0.5
     }
+
+    fun getWitchMagicDamageReduction() = 0.85
 
     private fun getCombinedMeleeEnchantLevel(item: ItemStack): Int {
         var combinedLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_ALL)

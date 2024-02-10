@@ -10,7 +10,7 @@ object ThornsDamageCalculator : DamageCauseCalculator {
     override val damageType = EntityDamageEvent.DamageCause.THORNS
 
     override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildDamageEventForPlayer(event) ?: return null
+        val damageEvent = super.buildBaseDamageEvent(event) ?: return null
         damageEvent.baseDamage.add(event.damage)
         return damageEvent
     }

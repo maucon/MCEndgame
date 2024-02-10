@@ -14,7 +14,7 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
     override val damageType = EntityDamageEvent.DamageCause.PROJECTILE
 
     override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildDamageEventForPlayer(event) ?: return null
+        val damageEvent = super.buildBaseDamageEvent(event) ?: return null
 
         val projectile = event.damager as Projectile
         val baseDamage = DamageUtil.getProjectileBaseDamage(projectile)
@@ -34,7 +34,7 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
     }
 
     override fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildDamageEventForNonPlayer(event) ?: return null
+        val damageEvent = super.buildBaseDamageEvent(event) ?: return null
 
         val rawDamage = DamageUtil.reverseDifficultyDamage(damageEvent.difficulty, event.damage)
         damageEvent.baseDamage.add(rawDamage)
@@ -52,7 +52,7 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
         return ceil(damage - 0.0001) // 🤓🤓🤓
     }
 
-    override fun getMagicDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
+    override fun getFlatMagicDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
         val reduction = DamageUtil.getSpecialEnchantDamageReduction(event.damaged, Enchantment.PROTECTION_PROJECTILE)
         return damage * reduction
     }
