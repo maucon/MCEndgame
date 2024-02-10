@@ -102,7 +102,6 @@ object DamageUtil {
 
     fun getEntityCustomAttributes(entity: LivingEntity): Map<AttributeType, List<Double>> {
         val attributes: MutableList<RolledAttribute> = mutableListOf()
-
         val equipment = entity.equipment ?: return mapOf()
 
         equipment.helmet?.getRolledAttributes()?.let { attributes.addAll(it) }
@@ -110,17 +109,15 @@ object DamageUtil {
         equipment.leggings?.getRolledAttributes()?.let { attributes.addAll(it) }
         equipment.boots?.getRolledAttributes()?.let { attributes.addAll(it) }
 
-        var customItem = equipment.itemInMainHand.getCustomItemType()
-        if (customItem != null) {
-            val customItemEquipment = customItem.equipment
+        equipment.itemInMainHand.getCustomItemType()?.also { customItemType ->
+            val customItemEquipment = customItemType.equipment
             if (customItemEquipment.slot == EquipmentSlot.HAND || !customItemEquipment.extraAttributesInSlot) {
                 equipment.itemInMainHand.getRolledAttributes()?.let { attributes.addAll(it) }
             }
         }
 
-        customItem = equipment.itemInOffHand.getCustomItemType()
-        if (customItem != null) {
-            val customItemEquipment = customItem.equipment
+        equipment.itemInOffHand.getCustomItemType()?.also { customItemType ->
+            val customItemEquipment = customItemType.equipment
             if (customItemEquipment.slot == EquipmentSlot.OFF_HAND || !customItemEquipment.extraAttributesInSlot) {
                 equipment.itemInOffHand.getRolledAttributes()?.let { attributes.addAll(it) }
             }
@@ -192,26 +189,29 @@ object DamageUtil {
         var damage = 0.0
 
         val sharpnessLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_ALL)
-        if (sharpnessLevel > 0)
+        if (sharpnessLevel > 0) {
             damage += sharpnessLevel * 0.5 + 0.5
-
-        if (damagedEntity.category == EntityCategory.UNDEAD) {
-            val smiteLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_UNDEAD)
-            if (smiteLevel > 0)
-                return damage + smiteLevel * 2.5
-        }
-        if (damagedEntity.category == EntityCategory.ARTHROPOD) {
-            val baneLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_ARTHROPODS)
-            if (baneLevel > 0)
-                return damage + baneLevel * 2.5
-        }
-        if (damagedEntity.category == EntityCategory.WATER) {
-            val impalingLevel = item.getEnchantmentLevel(Enchantment.IMPALING)
-            if (impalingLevel > 0)
-                return damage + impalingLevel * 2.5
         }
 
-        return damage
+        return when (damagedEntity.category) {
+            EntityCategory.NONE -> damage
+            EntityCategory.ILLAGER -> damage
+
+            EntityCategory.UNDEAD -> {
+                val smiteLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_UNDEAD)
+                damage + smiteLevel * 2.5
+            }
+
+            EntityCategory.ARTHROPOD -> {
+                val baneLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_ARTHROPODS)
+                damage + baneLevel * 2.5
+            }
+
+            EntityCategory.WATER -> {
+                val impalingLevel = item.getEnchantmentLevel(Enchantment.IMPALING)
+                damage + impalingLevel * 2.5
+            }
+        }
     }
 
     private fun getTotalEquipmentEnchantmentLevel(entity: LivingEntity, enchantment: Enchantment): Int {
