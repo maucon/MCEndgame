@@ -39,7 +39,7 @@ class DamageService : Listener {
         EventGateway.apply(damageEvent)
 
         val baseDamage = damageTypeCalculator.getBaseDamage(damageEvent)
-            .let { damageTypeCalculator.getInvulnerabilityDamage(damageEvent.damaged, it) }
+
         var leftDamage = baseDamage
 
         event.setDamage(DamageModifier.BASE, baseDamage)

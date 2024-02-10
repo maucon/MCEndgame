@@ -8,6 +8,7 @@ import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
@@ -15,9 +16,10 @@ import org.bukkit.event.Listener
 class IncDamageAgainstFullLifeEffectService : Listener {
     @EventHandler
     fun on(event: DamageCalculationEvent) {
-        if (WorldUtil.isNotDungeonWorld(event.player.world)) return
+        val player = event.damager as? Player ?: return
+        if (WorldUtil.isNotDungeonWorld(player.world)) return
 
-        val tier = event.player.getHighestArtifactTier(IncDamageAgainstFullLifeArtifactType) ?: return
+        val tier = player.getHighestArtifactTier(IncDamageAgainstFullLifeArtifactType) ?: return
 
         if (event.damaged.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value > event.damaged.health + 0.1) return
 

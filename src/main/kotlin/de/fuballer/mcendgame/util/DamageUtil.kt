@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.component.attribute.RolledAttribute
 import de.fuballer.mcendgame.event.DamageCalculationEvent
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
+import org.bukkit.Difficulty
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.*
@@ -33,9 +34,15 @@ object DamageUtil {
         return (strengthLevel + 1) * 3.0
     }
 
-    fun getAttackCooldownMultiplier(player: Player) = 0.2 + player.attackCooldown.pow(2) * 0.8
+    fun getAttackCooldownMultiplier(entity: LivingEntity): Double {
+        val player = entity as? Player ?: return 1.0
+        return 0.2 + player.attackCooldown.pow(2) * 0.8
+    }
 
-    fun getEnchantAttackCooldownMultiplier(player: Player) = player.attackCooldown.toDouble()
+    fun getEnchantAttackCooldownMultiplier(entity: LivingEntity): Double {
+        val player = entity as? Player ?: return 1.0
+        return player.attackCooldown.toDouble()
+    }
 
     fun getArmorDamageReduction(entity: LivingEntity, damage: Double): Double {
         var armor = entity.getAttribute(Attribute.GENERIC_ARMOR)?.value ?: 0.0
@@ -69,18 +76,34 @@ object DamageUtil {
     }
 
     // FIXME works most of the time 🤨
-    fun getInvulnerabilityDamage(entity: LivingEntity, damage: Double): Double {
+    fun scaleInvulnerabilityDamage(entity: LivingEntity, damage: Double): Double {
         if (entity.noDamageTicks <= 10) return damage
         if (damage > entity.lastDamage) return damage - entity.lastDamage
         return damage
     }
 
+    fun scaleDifficultyDamage(difficulty: Difficulty, damage: Double) = // TODO
+        when (difficulty) {
+            Difficulty.PEACEFUL -> 0.0
+            Difficulty.EASY -> min(damage / 2 + 1, damage)
+            Difficulty.NORMAL -> damage
+            Difficulty.HARD -> damage * 1.5
+        }
+
+    fun reverseDifficultyDamage(difficulty: Difficulty, damage: Double) = // TODO
+        when (difficulty) {
+            Difficulty.PEACEFUL -> 0.0
+            Difficulty.EASY -> if (damage <= 2) damage else (damage - 1) * 2
+            Difficulty.NORMAL -> damage
+            Difficulty.HARD -> damage / 1.5
+        }
+
     fun getAbsorbedDamage(entity: LivingEntity, damage: Double) = max(0.0, min(entity.absorptionAmount, damage))
 
-    fun getCustomPlayerAttributes(player: Player): Map<AttributeType, List<Double>> {
+    fun getEntityCustomAttributes(entity: LivingEntity): Map<AttributeType, List<Double>> {
         val attributes: MutableList<RolledAttribute> = mutableListOf()
 
-        val equipment = player.equipment ?: return mapOf()
+        val equipment = entity.equipment ?: return mapOf()
 
         equipment.helmet?.getRolledAttributes()?.let { attributes.addAll(it) }
         equipment.chestplate?.getRolledAttributes()?.let { attributes.addAll(it) }
@@ -113,13 +136,13 @@ object DamageUtil {
         return arrow.damage
     }
 
-    fun getMeleeBaseDamage(player: Player): Double {
-        val baseDamage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)!!.value
-        return baseDamage - getStrengthDamage(player)
+    fun getMeleeBaseDamage(entity: LivingEntity): Double {
+        val baseDamage = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)!!.value
+        return baseDamage - getStrengthDamage(entity)
     }
 
-    fun getMeleeEnchantDamage(player: Player, damagedEntity: LivingEntity, isDungeonWorld: Boolean): Double {
-        val mainHandItem = player.equipment!!.getItem(EquipmentSlot.HAND)
+    fun getMeleeEnchantDamage(entity: LivingEntity, damagedEntity: LivingEntity, isDungeonWorld: Boolean): Double {
+        val mainHandItem = entity.equipment!!.getItem(EquipmentSlot.HAND)
 
         if (isDungeonWorld) return getCombinedSharpnessDamage(mainHandItem)
 
@@ -136,7 +159,9 @@ object DamageUtil {
         return arrow.isCritical
     }
 
-    fun isMeleeCritical(player: Player): Boolean {
+    fun isMeleeCritical(entity: LivingEntity): Boolean {
+        val player = entity as? Player ?: return false
+
         if (player.fallDistance <= 0) return false
         if (player.isOnGround) return false
         if (player.isClimbing) return false

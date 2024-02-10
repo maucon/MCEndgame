@@ -12,7 +12,7 @@ class DisableMeleeEffectService {
     fun on(event: DamageCalculationEvent) {
         if (event.cause == EntityDamageEvent.DamageCause.PROJECTILE) return
 
-        if (!event.customPlayerAttributes.containsKey(AttributeType.DISABLE_MELEE)) return
+        if (!event.customDamagerAttributes.containsKey(AttributeType.DISABLE_MELEE)) return
 
         event.nullifyDamage = true
     }

@@ -9,12 +9,12 @@ import org.bukkit.inventory.EquipmentSlot
 object EntitySweepDamageCalculator : DamageCauseCalculator {
     override val damageType = EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK
 
-    override fun buildDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildDamageEvent(event) ?: return null
+    override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
+        val damageEvent = super.buildDamageEventForPlayer(event) ?: return null
 
-        val baseDamage = DamageUtil.getMeleeBaseDamage(damageEvent.player)
-        val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.player, damageEvent.damaged, damageEvent.isDungeonWorld)
-        val mainHandItem = damageEvent.player.equipment!!.getItem(EquipmentSlot.HAND)
+        val baseDamage = DamageUtil.getMeleeBaseDamage(damageEvent.damager)
+        val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged, damageEvent.isDungeonWorld)
+        val mainHandItem = damageEvent.damager.equipment!!.getItem(EquipmentSlot.HAND)
 
         damageEvent.baseDamage.add(baseDamage)
         damageEvent.enchantDamage = enchantDamage
@@ -23,10 +23,10 @@ object EntitySweepDamageCalculator : DamageCauseCalculator {
         return damageEvent
     }
 
-    override fun getBaseDamage(event: DamageCalculationEvent): Double {
+    override fun getNormalBaseDamage(event: DamageCalculationEvent): Double {
         var damage = DamageUtil.getRawBaseDamage(event) ?: return 0.0
 
-        damage += DamageUtil.getStrengthDamage(event.player)
+        damage += DamageUtil.getStrengthDamage(event.damager)
 
         if (event.isCritical) {
             damage *= 1.5
