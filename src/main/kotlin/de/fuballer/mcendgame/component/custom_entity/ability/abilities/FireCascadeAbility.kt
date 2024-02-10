@@ -12,16 +12,16 @@ import org.bukkit.scheduler.BukkitRunnable
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-const val FIRE_CASCADE_DISTANCE = 1
-const val FIRE_CASCADE_STEPS_AFTER_PLAYER = 15
-const val FIRE_CASCADE_ACTIVATION_DELAY = 10L // in ticks
+private const val FIRE_CASCADE_DISTANCE = 1
+private const val FIRE_CASCADE_STEPS_AFTER_PLAYER = 15
+private const val FIRE_CASCADE_ACTIVATION_DELAY = 10L // in ticks
 
-const val FIRE_CASCADE_STEP_DELAY = 0.7 // in ticks
+private const val FIRE_CASCADE_STEP_DELAY = 0.7 // in ticks
 
-const val FIRE_CASCADE_STEPS_PER_SOUND = 5
-const val FIRE_CASCADE_DAMAGE = 5.0
-const val FIRE_CASCADE_DAMAGE_PER_LEVEL = 3.0
-const val FIRE_CASCADE_FIRE_TICKS = 100
+private const val FIRE_CASCADE_STEPS_PER_SOUND = 5
+private const val FIRE_CASCADE_DAMAGE = 5.0
+private const val FIRE_CASCADE_DAMAGE_PER_LEVEL = 3.0
+private const val FIRE_CASCADE_FIRE_TICKS = 100
 
 object FireCascadeAbility : Ability {
     override fun cast(caster: LivingEntity, target: LivingEntity) {
@@ -76,7 +76,7 @@ object FireCascadeAbility : Ability {
                     15, 0.2, 0.1, 0.2, 0.0001
                 )
                 if (sound)
-                    world.playSound(location, Sound.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 0.4f, 0.5f)
+                    world.playSound(location, Sound.ITEM_FIRECHARGE_USE, SoundCategory.AMBIENT, 0.4f, 0.5f)
             } else {
                 world.spawnParticle(
                     Particle.FLAME,
@@ -84,7 +84,7 @@ object FireCascadeAbility : Ability {
                     50, 0.2, 0.8, 0.2, 0.0001
                 )
                 if (sound)
-                    world.playSound(location, Sound.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 0.7f, 1f)
+                    world.playSound(location, Sound.ITEM_FIRECHARGE_USE, SoundCategory.AMBIENT, 0.7f, 1f)
                 dealDamage()
             }
             this.cancel()

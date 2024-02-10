@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.custom_entity.types.cerberus
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplyDarknessAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.FireCascadeAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.FlameBlastAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ShootFireArrowsAbility
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -26,8 +27,9 @@ object CerberusEntityType : CustomEntityType {
 
     override val sounds = null
     override val abilities: List<RandomOption<Ability>> = listOf(
-        RandomOption(50, FireCascadeAbility),
+        RandomOption(35, FireCascadeAbility),
         RandomOption(30, ShootFireArrowsAbility),
         RandomOption(25, ApplyDarknessAbility),
+        RandomOption(35, FlameBlastAbility),
     )
 }

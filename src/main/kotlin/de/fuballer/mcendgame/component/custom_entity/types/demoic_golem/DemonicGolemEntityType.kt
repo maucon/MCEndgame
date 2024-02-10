@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplyDarknessAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.FireCascadeAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.FlameBlastAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.SummonGravitationPillarAbility
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -27,8 +28,9 @@ object DemonicGolemEntityType : CustomEntityType {
 
     override val sounds = EntitySoundData.create("demonic_golem")
     override val abilities: List<RandomOption<Ability>> = listOf(
-        RandomOption(50, FireCascadeAbility),
+        RandomOption(40, FireCascadeAbility),
         RandomOption(40, SummonGravitationPillarAbility),
         RandomOption(30, ApplyDarknessAbility),
+        RandomOption(20, FlameBlastAbility),
     )
 }
