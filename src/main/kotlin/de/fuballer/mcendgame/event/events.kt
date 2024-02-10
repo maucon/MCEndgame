@@ -1,13 +1,10 @@
 package de.fuballer.mcendgame.event
 
-import de.fuballer.mcendgame.component.attribute.AttributeType
-import org.bukkit.Difficulty
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.World
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.Recipe
 
@@ -84,23 +81,4 @@ class DungeonEnemySpawnedEvent(
 class DungeonEntityDeathEvent(
     val entity: LivingEntity,
     val drops: MutableList<ItemStack>
-) : HandleableEvent()
-
-class DamageCalculationEvent(
-    val damager: LivingEntity,
-    val customDamagerAttributes: Map<AttributeType, List<Double>>,
-    val damaged: LivingEntity,
-    val cause: DamageCause,
-    val isDungeonWorld: Boolean,
-    val damageBlocked: Boolean,
-    val difficulty: Difficulty,
-
-    val baseDamage: MutableList<Double> = mutableListOf(),
-    val increasedDamage: MutableList<Double> = mutableListOf(),
-    val moreDamage: MutableList<Double> = mutableListOf(),
-    var enchantDamage: Double = 0.0,
-    var nullifyDamage: Boolean = false,
-    var isCritical: Boolean = false,
-    var criticalRoll: Double = 0.0,
-    var sweepingEdgeMultiplier: Double = 0.0,
 ) : HandleableEvent()

@@ -21,7 +21,7 @@ private val DAMAGE_TYPE_CALCULATORS = listOf(
 
 @Component
 class DamageService : Listener {
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {
         // debug start
         println("---------- ${event.cause} ----------")
@@ -38,21 +38,13 @@ class DamageService : Listener {
 
         EventGateway.apply(damageEvent)
 
+        if (damageEvent.isCancelled) {
+            event.isCancelled = true
+            return
+        }
+
         val baseDamage = damageTypeCalculator.getBaseDamage(damageEvent)
-
-        var leftDamage = baseDamage
-
-        event.setDamage(DamageModifier.BASE, baseDamage)
-
-        DamageModifier.entries
-            .filter { it != DamageModifier.BASE }
-            .filter { event.isApplicable(it) }
-            .forEach {
-                val reduction = damageTypeCalculator.getDamageReduction(damageEvent, leftDamage, it)
-                event.setDamage(it, -reduction)
-
-                leftDamage -= reduction
-            }
+        applyEvent(event, baseDamage, damageTypeCalculator, damageEvent)
 
         // debug start
         DamageModifier.entries
@@ -74,5 +66,29 @@ class DamageService : Listener {
         val format = "%s%s : %.3f -> %.3f | %.3f"
         Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, oldFinalValue.first, oldFinalValue.second, newDamage, damageDiff))
         // debug end
+    }
+
+    private fun applyEvent(
+        event: EntityDamageByEntityEvent,
+        baseDamage: Double,
+        damageTypeCalculator: DamageCauseCalculator,
+        damageEvent: DamageCalculationEvent
+    ) {
+        var leftDamage = baseDamage
+
+        event.setDamage(DamageModifier.BASE, baseDamage)
+        DamageModifier.entries
+            .filter { it != DamageModifier.BASE }
+            .filter { event.isApplicable(it) }
+            .forEach {
+                val reduction = damageTypeCalculator.getDamageReduction(damageEvent, leftDamage, it)
+                event.setDamage(it, -reduction)
+
+                leftDamage -= reduction
+            }
+
+        damageEvent.onHitPotionEffects.forEach {
+            damageEvent.damaged.addPotionEffect(it)
+        }
     }
 }

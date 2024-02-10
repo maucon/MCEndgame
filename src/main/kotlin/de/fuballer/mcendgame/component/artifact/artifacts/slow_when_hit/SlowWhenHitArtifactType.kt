@@ -7,8 +7,8 @@ import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
 object SlowWhenHitArtifactType : ArtifactType {
-    private const val LORE_FORMAT = "Slows nearby enemies with slowness %s\\for %s seconds when you're hit"
-    override val key: NamespacedKey = PluginUtil.createNamespacedKey("slow_when_hit")
+    private const val LORE_FORMAT = "Affect nearby enemies with slowness %s\\for %s seconds on hit"
+    override val key: NamespacedKey = PluginUtil.createNamespacedKey("slow_on_hit")
     override val displayName = "Artifact of Hinder"
 
     override fun getValues(tier: ArtifactTier) = when (tier) {

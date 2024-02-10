@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.damage.calculators
 
-import de.fuballer.mcendgame.event.DamageCalculationEvent
+import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.technical.extension.ProjectileExtension.getAddedBaseDamage
 import de.fuballer.mcendgame.util.DamageUtil
 import org.bukkit.enchantments.Enchantment
@@ -43,7 +43,7 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
     }
 
     override fun getNormalBaseDamage(event: DamageCalculationEvent): Double {
-        var damage = DamageUtil.getRawBaseDamage(event) ?: return 0.0
+        var damage = DamageUtil.getRawBaseDamage(event)
 
         if (event.isCritical) {
             damage *= 1 + event.criticalRoll

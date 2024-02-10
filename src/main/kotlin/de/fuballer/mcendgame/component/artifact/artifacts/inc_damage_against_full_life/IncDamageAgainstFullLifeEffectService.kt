@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.artifact.artifacts.inc_damage_against_full_life
 
-import de.fuballer.mcendgame.event.DamageCalculationEvent
+import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.util.WorldUtil
@@ -14,7 +14,7 @@ import org.bukkit.event.Listener
 
 @Component
 class IncDamageAgainstFullLifeEffectService : Listener {
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
         val player = event.damager as? Player ?: return
         if (WorldUtil.isNotDungeonWorld(player.world)) return

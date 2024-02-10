@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.damage.calculators
 
-import de.fuballer.mcendgame.event.DamageCalculationEvent
+import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.util.DamageUtil
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
@@ -24,7 +24,7 @@ object EntitySweepDamageCalculator : DamageCauseCalculator {
     }
 
     override fun getNormalBaseDamage(event: DamageCalculationEvent): Double {
-        var damage = DamageUtil.getRawBaseDamage(event) ?: return 0.0
+        var damage = DamageUtil.getRawBaseDamage(event)
 
         damage += DamageUtil.getStrengthDamage(event.damager)
 

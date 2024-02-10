@@ -1,29 +1,27 @@
 package de.fuballer.mcendgame.component.artifact.artifacts.heal_on_block
 
+import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHealOnBlockArtifactActivation
 import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.technical.extension.PlayerExtension.setHealOnBlockArtifactActivation
-import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDamageEvent
 import kotlin.math.min
 import kotlin.random.Random
 
 @Component
 class HealOnBlockEffectService : Listener {
-    @EventHandler
-    fun on(event: EntityDamageByEntityEvent) {
-        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: DamageCalculationEvent) {
+        if (!event.isDungeonWorld) return
 
-        val player = event.entity as? Player ?: return
-        if (event.getDamage(EntityDamageEvent.DamageModifier.BLOCKING) == 0.0) return
+        val player = event.damaged as? Player ?: return
+        if (!event.damageBlocked) return
 
         val tier = player.getHighestArtifactTier(HealOnBlockArtifactType) ?: return
 

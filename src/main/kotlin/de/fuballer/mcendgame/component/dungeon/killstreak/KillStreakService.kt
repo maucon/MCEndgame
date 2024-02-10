@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.killstreak
 
+import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakEntity
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
 import de.fuballer.mcendgame.event.*
@@ -7,15 +8,15 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.TimerTask
 import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.technical.extension.EntityExtension.isMinion
-import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Server
 import org.bukkit.World
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import java.util.*
 import kotlin.math.min
@@ -45,18 +46,19 @@ class KillStreakService(
         EventGateway.apply(killStreakIncreaseEvent)
     }
 
-    @EventHandler
-    fun on(event: EntityDamageByEntityEvent) {
-        val entity = event.entity as? LivingEntity ?: return
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    fun on(event: DamageCalculationEvent) {
+        val player = event.damager as? Player ?: return
+        if (WorldUtil.isNotDungeonWorld(player.world)) return
 
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
-        if (event.damage < KillStreakSettings.MIN_DMG_FOR_EXTRA_TIME) return
-        if (!entity.isEnemy()) return
+        if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK
+            && player.attackCooldown < KillStreakSettings.MIN_ATTACK_COOLDOWN_FOR_EXTRA_TIME
+        ) return
 
-        val damager = event.damager
-        if (!DungeonUtil.isPlayerOrPlayerProjectile(damager)) return
+        val damaged = event.damaged
+        if (!damaged.isEnemy()) return
 
-        val killStreak = killStreakRepo.findById(entity.world.name) ?: return
+        val killStreak = killStreakRepo.findById(damaged.world.name) ?: return
         killStreak.timer = min(
             KillStreakSettings.TIMER_MS.toLong(),
             killStreak.timer + KillStreakSettings.TIME_PER_HIT

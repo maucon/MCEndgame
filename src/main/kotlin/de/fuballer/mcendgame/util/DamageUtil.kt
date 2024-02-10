@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.attribute.AttributeType
 import de.fuballer.mcendgame.component.attribute.RolledAttribute
-import de.fuballer.mcendgame.event.DamageCalculationEvent
+import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
 import org.bukkit.Difficulty
@@ -19,9 +19,7 @@ import kotlin.math.pow
 
 object DamageUtil {
     /** flat, increase, more */
-    fun getRawBaseDamage(event: DamageCalculationEvent): Double? {
-        if (event.nullifyDamage) return null
-
+    fun getRawBaseDamage(event: DamageCalculationEvent): Double {
         var damage = event.baseDamage.sum() // flat
         damage *= 1 + event.increasedDamage.sum() // increase
         event.moreDamage.forEach { damage *= 1 + it } // more
@@ -168,15 +166,15 @@ object DamageUtil {
         return true
     }
 
-    fun getCombinedMeleeDamage(entity: LivingEntity): Double {
+    fun getCombinedMeleeEnchantDamage(entity: LivingEntity): Double {
         val item = entity.equipment!!.getItem(EquipmentSlot.HAND)
-        val combinedLevel = getCombinedMeleeLevel(item)
+        val combinedLevel = getCombinedMeleeEnchantLevel(item)
         if (combinedLevel == 0) return 0.0
 
         return combinedLevel * 0.5 + 0.5
     }
 
-    private fun getCombinedMeleeLevel(item: ItemStack): Int {
+    private fun getCombinedMeleeEnchantLevel(item: ItemStack): Int {
         var combinedLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_ALL)
         combinedLevel += item.getEnchantmentLevel(Enchantment.DAMAGE_ARTHROPODS)
         combinedLevel += item.getEnchantmentLevel(Enchantment.DAMAGE_UNDEAD)

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.damage.calculators
 
-import de.fuballer.mcendgame.event.DamageCalculationEvent
+import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import org.bukkit.Difficulty
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.EntityDamageByEntityEvent

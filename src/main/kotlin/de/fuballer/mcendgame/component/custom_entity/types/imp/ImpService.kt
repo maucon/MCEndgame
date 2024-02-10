@@ -2,34 +2,33 @@ package de.fuballer.mcendgame.component.custom_entity.types.imp
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
+import de.fuballer.mcendgame.util.EnemyUtil
 import org.bukkit.Sound
-import org.bukkit.SoundCategory
+import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.Creature
 import org.bukkit.entity.EntityType
-import org.bukkit.entity.SmallFireball
+import org.bukkit.entity.Fireball
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 
 @Component
 class ImpService : Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     fun onEntityShootBow(event: EntityShootBowEvent) {
         val entity = event.entity
         if (entity.getCustomEntityType() != ImpEntityType) return
+        val projectile = event.projectile as? AbstractArrow ?: return
 
-        val fireball = entity.world.spawnEntity(event.projectile.location, EntityType.SMALL_FIREBALL, false) as SmallFireball
-        fireball.shooter = entity
-
-        entity.world.playSound(entity.location, Sound.ITEM_FIRECHARGE_USE, SoundCategory.HOSTILE, 1f, 1f)
+        val fireball = EnemyUtil.shootCustomProjectile(entity, projectile, EntityType.SMALL_FIREBALL, Sound.ITEM_FIRECHARGE_USE) as Fireball
 
         event.isCancelled = true
 
         val creature = entity as? Creature ?: return
         val target = creature.target ?: return
 
-        val vector = target.location.subtract(creature.location).toVector().normalize()
-        fireball.velocity = vector
+        fireball.velocity = target.location.subtract(creature.location).toVector().normalize()
         fireball.direction = fireball.velocity
     }
 }

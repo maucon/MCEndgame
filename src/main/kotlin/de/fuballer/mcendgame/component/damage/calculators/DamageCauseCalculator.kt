@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.damage.calculators
 
-import de.fuballer.mcendgame.event.DamageCalculationEvent
+import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.util.DamageUtil
 import de.fuballer.mcendgame.util.EventUtil
 import de.fuballer.mcendgame.util.WorldUtil
@@ -26,7 +26,7 @@ interface DamageCauseCalculator {
         if (event.damager is Player) getBaseDamageForPlayer(event)
         else getBaseDamageForNonPlayer(event)
 
-    fun getNormalBaseDamage(event: DamageCalculationEvent) = DamageUtil.getRawBaseDamage(event) ?: 0.0
+    fun getNormalBaseDamage(event: DamageCalculationEvent) = DamageUtil.getRawBaseDamage(event)
 
     fun getBaseDamageForPlayer(event: DamageCalculationEvent): Double {
         val normalBaseDamage = getNormalBaseDamage(event)
@@ -75,7 +75,7 @@ interface DamageCauseCalculator {
     fun getAbsorptionDamageReduction(event: DamageCalculationEvent, damage: Double) = DamageUtil.getAbsorbedDamage(event.damaged, damage)
 
     private fun buildBaseDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damager = EventUtil.getLivingEntityDamager(event) ?: return null
+        val damager = EventUtil.getLivingEntityDamager(event.damager) ?: return null
         val customAttributes = DamageUtil.getEntityCustomAttributes(damager)
         val damagedEntity = event.entity as? LivingEntity ?: return null
         val cause = event.cause

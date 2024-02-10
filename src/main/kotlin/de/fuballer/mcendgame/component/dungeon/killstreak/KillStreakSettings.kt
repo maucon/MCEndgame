@@ -8,7 +8,7 @@ object KillStreakSettings {
 
     const val TIMER_MS = 8000
     const val TIME_PER_HIT = 500
-    const val MIN_DMG_FOR_EXTRA_TIME = 4
+    const val MIN_ATTACK_COOLDOWN_FOR_EXTRA_TIME = 0.8
     const val TIMER_PERIOD = 100L
 
     val BAR_COLOR = BarColor.RED

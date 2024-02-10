@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.types.leech
 
+import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
@@ -7,19 +8,17 @@ import org.bukkit.entity.Bee
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.scheduler.BukkitRunnable
 
 @Component
 class LeechService(
 ) : Listener {
-    @EventHandler
-    fun onEntityDamageByEntity(event: EntityDamageByEntityEvent) {
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: DamageCalculationEvent) {
         if (event.damager.getCustomEntityType() != LeechEntityType) return
-        val target = event.entity as? LivingEntity ?: return
 
         val leech = event.damager as Bee
-        ResetStingRunnable(leech, target).runTaskLater(40) // fires after vanilla event
+        ResetStingRunnable(leech, event.damaged).runTaskLater(40) // fires after vanilla event
     }
 
     private class ResetStingRunnable(
