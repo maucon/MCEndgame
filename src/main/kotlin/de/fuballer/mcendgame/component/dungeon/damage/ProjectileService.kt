@@ -1,10 +1,12 @@
-package de.fuballer.mcendgame.component.damage
+package de.fuballer.mcendgame.component.dungeon.damage
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.ProjectileExtension.setAddedBaseDamage
 import de.fuballer.mcendgame.util.DamageUtil
+import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.AbstractArrow
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -12,22 +14,24 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 
 @Component
-class PlayerProjectileService : Listener {
+class ProjectileService : Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     fun on(event: EntityShootBowEvent) {
+        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
         val projectile = event.projectile as? AbstractArrow ?: return
-        val player = event.entity as? Player ?: return
 
-        val addedDamage = getAddedDamage(player)
+        val addedDamage = getAddedDamage(event.entity)
         projectile.setAddedBaseDamage(addedDamage)
     }
 
-    private fun getAddedDamage(player: Player): Double {
-        val baseDamage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.baseValue ?: return 0.0
-        val totalDamage = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.value ?: return 0.0
-        val addedDamage = totalDamage - baseDamage
+    private fun getAddedDamage(entity: LivingEntity): Double {
+        var damage = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.value ?: return 0.0
 
-        val strengthDamage = DamageUtil.getStrengthDamage(player)
-        return addedDamage - strengthDamage
+        if (entity is Player) {
+            damage -= entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.baseValue ?: 0.0
+            damage -= DamageUtil.getStrengthDamage(entity)
+        }
+
+        return damage
     }
 }

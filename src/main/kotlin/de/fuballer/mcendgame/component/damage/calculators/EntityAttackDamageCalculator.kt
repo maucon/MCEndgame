@@ -12,7 +12,7 @@ object EntityAttackDamageCalculator : DamageCauseCalculator {
         val damageEvent = super.buildDamageEventForPlayer(event) ?: return null
 
         val baseDamage = DamageUtil.getMeleeBaseDamage(damageEvent.damager)
-        val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged, damageEvent.isDungeonWorld)
+        val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged)
 
         damageEvent.baseDamage.add(baseDamage)
         damageEvent.enchantDamage = enchantDamage
@@ -30,11 +30,11 @@ object EntityAttackDamageCalculator : DamageCauseCalculator {
 
         val rawDamage = DamageUtil.reverseDifficultyDamage(damageEvent.difficulty, event.damage)
         val strengthDamage = DamageUtil.getStrengthDamage(damageEvent.damager)
-        val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged, false)
+        val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged)
         val baseDamage = rawDamage - strengthDamage - enchantDamage
 
         damageEvent.baseDamage.add(baseDamage)
-        damageEvent.enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged, false)
+        damageEvent.enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged)
 
         return damageEvent
     }

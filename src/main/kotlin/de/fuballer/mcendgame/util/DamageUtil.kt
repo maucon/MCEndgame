@@ -141,11 +141,8 @@ object DamageUtil {
         return baseDamage - getStrengthDamage(entity)
     }
 
-    fun getMeleeEnchantDamage(entity: LivingEntity, damagedEntity: LivingEntity, isDungeonWorld: Boolean): Double {
+    fun getMeleeEnchantDamage(entity: LivingEntity, damagedEntity: LivingEntity): Double {
         val mainHandItem = entity.equipment!!.getItem(EquipmentSlot.HAND)
-
-        if (isDungeonWorld) return getCombinedSharpnessDamage(mainHandItem)
-
         return getTypeBasedEnchantmentDamage(mainHandItem, damagedEntity)
     }
 
@@ -174,13 +171,15 @@ object DamageUtil {
         return true
     }
 
-    private fun getCombinedSharpnessDamage(item: ItemStack): Double {
-        val combinedLevel = getCombinedSharpnessLevel(item)
+    fun getCombinedMeleeDamage(entity: LivingEntity): Double {
+        val item = entity.equipment!!.getItem(EquipmentSlot.HAND)
+        val combinedLevel = getCombinedMeleeLevel(item)
         if (combinedLevel == 0) return 0.0
+
         return combinedLevel * 0.5 + 0.5
     }
 
-    private fun getCombinedSharpnessLevel(item: ItemStack): Int {
+    private fun getCombinedMeleeLevel(item: ItemStack): Int {
         var combinedLevel = item.getEnchantmentLevel(Enchantment.DAMAGE_ALL)
         combinedLevel += item.getEnchantmentLevel(Enchantment.DAMAGE_ARTHROPODS)
         combinedLevel += item.getEnchantmentLevel(Enchantment.DAMAGE_UNDEAD)

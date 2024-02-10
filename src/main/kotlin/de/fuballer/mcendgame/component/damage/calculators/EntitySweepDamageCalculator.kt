@@ -13,7 +13,7 @@ object EntitySweepDamageCalculator : DamageCauseCalculator {
         val damageEvent = super.buildDamageEventForPlayer(event) ?: return null
 
         val baseDamage = DamageUtil.getMeleeBaseDamage(damageEvent.damager)
-        val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged, damageEvent.isDungeonWorld)
+        val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged)
         val mainHandItem = damageEvent.damager.equipment!!.getItem(EquipmentSlot.HAND)
 
         damageEvent.baseDamage.add(baseDamage)

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.base_loot
+package de.fuballer.mcendgame.component.dungeon.enemy
 
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component

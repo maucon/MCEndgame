@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.damage
+package de.fuballer.mcendgame.component.dungeon.enemy
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
@@ -9,7 +9,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntitySpawnEvent
 
 @Component
-class DungeonEnemyDamagingService : Listener {
+class EnemyDamagingService : Listener {
     @EventHandler
     fun on(event: EntitySpawnEvent) {
         val entity = event.entity

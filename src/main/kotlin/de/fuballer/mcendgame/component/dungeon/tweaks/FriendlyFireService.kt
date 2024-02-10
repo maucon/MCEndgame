@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.tweaks.friendly_fire
+package de.fuballer.mcendgame.component.dungeon.tweaks
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil

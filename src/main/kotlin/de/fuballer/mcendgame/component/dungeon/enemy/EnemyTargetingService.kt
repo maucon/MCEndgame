@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.enemy.targeting
+package de.fuballer.mcendgame.component.dungeon.enemy
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.DungeonUtil
