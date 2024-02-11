@@ -2,16 +2,16 @@ package de.fuballer.mcendgame.component.map_device.data
 
 import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsPortal
 import de.fuballer.mcendgame.util.PluginUtil
-import org.bukkit.Color
 import org.bukkit.Location
 import org.bukkit.Particle
-import org.bukkit.Particle.DustOptions
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
 import java.util.*
+import kotlin.math.cos
+import kotlin.math.sin
 
 class Portal(
     private val portalLocation: Location,
@@ -74,14 +74,29 @@ class Portal(
         PluginUtil.cancelTask(particleTaskId)
     }
 
+    // TODO fix portal orientation
+    // TODO add infra to change portal skins
+    // TODO also add open and close animations for portals
     private fun startParticleTask() =
-        PluginUtil.scheduleSyncRepeatingTask(0, 1)
-        {
-            portalLocationWorld.spawnParticle(
-                Particle.REDSTONE,
-                portalLocation.x, portalLocation.y + 1, portalLocation.z,
-                2, 0.2, 0.35, 0.2, 0.0001,
-                DustOptions(Color.PURPLE, 1f)
-            )
+        PluginUtil.scheduleSyncRepeatingTask(0, 1) {
+            val width = 0.75 / 2
+            val height = 1.25 / 2
+            val particles = 12
+            val increment = (2 * Math.PI) / particles
+
+            for (i in 0 until particles) {
+                val angle = i * increment
+                val x = portalLocation.x + width * cos(angle)
+                val y = portalLocation.y + height * sin(angle) + 0.75
+                val z = portalLocation.z
+
+                portalLocationWorld.spawnParticle(
+                    Particle.PORTAL,
+                    x, y, z,
+                    1,
+                    0.0, 0.1, 0.0,
+                    0.1
+                )
+            }
         }
 }
