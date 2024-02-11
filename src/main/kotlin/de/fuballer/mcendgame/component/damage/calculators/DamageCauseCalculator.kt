@@ -15,20 +15,18 @@ interface DamageCauseCalculator {
     val damageType: DamageCause
 
     fun buildDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damager = EntityUtil.getLivingEntityDamager(event.damager) ?: return null
+        val damageEvent = buildBaseDamageEvent(event) ?: return null
 
-        if (damager is Player) return buildDamageEventForPlayer(event)
-        return buildDamageEventForNonPlayer(event)
+        if (event.damager is Player) return buildDamageEventForPlayer(event, damageEvent)
+        return buildDamageEventForNonPlayer(event, damageEvent)
     }
 
-    fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = buildBaseDamageEvent(event) ?: return null
+    fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         damageEvent.baseDamage.add(event.damage)
         return damageEvent
     }
 
-    fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = buildBaseDamageEvent(event) ?: return null
+    fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         damageEvent.baseDamage.add(event.damage)
         return damageEvent
     }
@@ -85,7 +83,7 @@ interface DamageCauseCalculator {
 
     fun getFlatAbsorptionDamageReduction(event: DamageCalculationEvent, damage: Double) = DamageUtil.getAbsorbedDamage(event.damaged, damage)
 
-    fun buildBaseDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
+    private fun buildBaseDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
         val damager = EntityUtil.getLivingEntityDamager(event.damager) ?: return null
         val customAttributes = DamageUtil.getEntityCustomAttributes(damager)
         val damagedEntity = event.entity as? LivingEntity ?: return null

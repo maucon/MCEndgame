@@ -9,9 +9,7 @@ import org.bukkit.inventory.EquipmentSlot
 object EntitySweepDamageCalculator : DamageCauseCalculator {
     override val damageType = EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK
 
-    override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildBaseDamageEvent(event) ?: return null
-
+    override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         val baseDamage = DamageUtil.getMeleeBaseDamage(damageEvent.damager)
         val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged)
         val mainHandItem = damageEvent.damager.equipment!!.getItem(EquipmentSlot.HAND)

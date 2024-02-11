@@ -13,9 +13,7 @@ import kotlin.math.ceil
 object ProjectileDamageCalculator : DamageCauseCalculator {
     override val damageType = EntityDamageEvent.DamageCause.PROJECTILE
 
-    override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildBaseDamageEvent(event) ?: return null
-
+    override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         val projectile = event.damager as Projectile
         val baseDamage = DamageUtil.getProjectileBaseDamage(projectile)
         val addedDamage = projectile.getAddedBaseDamage() ?: 0.0
@@ -33,9 +31,7 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
         return damageEvent
     }
 
-    override fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildBaseDamageEvent(event) ?: return null
-
+    override fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         val rawDamage = DamageUtil.reverseDifficultyDamage(damageEvent.difficulty, event.damage)
         damageEvent.baseDamage.add(rawDamage)
 

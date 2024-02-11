@@ -8,9 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 object EntityAttackDamageCalculator : DamageCauseCalculator {
     override val damageType = EntityDamageEvent.DamageCause.ENTITY_ATTACK
 
-    override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildBaseDamageEvent(event) ?: return null
-
+    override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         val baseDamage = DamageUtil.getMeleeBaseDamage(damageEvent.damager)
         val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged)
 
@@ -25,9 +23,7 @@ object EntityAttackDamageCalculator : DamageCauseCalculator {
         return damageEvent
     }
 
-    override fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damageEvent = super.buildBaseDamageEvent(event) ?: return null
-
+    override fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         val rawDamage = DamageUtil.reverseDifficultyDamage(damageEvent.difficulty, event.damage)
         val strengthDamage = DamageUtil.getStrengthDamage(damageEvent.damager)
         val enchantDamage = DamageUtil.getMeleeEnchantDamage(damageEvent.damager, damageEvent.damaged)

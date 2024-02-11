@@ -77,10 +77,12 @@ object DamageUtil {
     // FIXME works most of the time 🤨
     fun scaleInvulnerabilityDamage(entity: LivingEntity, damage: Double): Double {
         if (entity.noDamageTicks <= 10) return damage
-        println("Invulnerability: ${entity.noDamageTicks} | ${entity.lastDamageCause?.cause}")
+        println("Invulnerability: ${entity.noDamageTicks} | ${entity.lastDamageCause?.cause} | ${entity.lastDamage}")
 
         entity.lastDamageCause?.let {
-            if (it.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return damage
+            if (it.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK
+                && it.cause != EntityDamageEvent.DamageCause.PROJECTILE
+            ) return damage
         }
 
         if (damage > entity.lastDamage) return damage - entity.lastDamage
