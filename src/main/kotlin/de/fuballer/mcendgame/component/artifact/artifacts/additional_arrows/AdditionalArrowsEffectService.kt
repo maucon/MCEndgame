@@ -25,7 +25,8 @@ class AdditionalArrowsEffectService : Listener {
         val (additionalArrowsAmount, damagePercentage) = AdditionalArrowsArtifactType.getValues(tier)
 
         val arrow = event.projectile as Arrow
-        val newAddedBaseDamage = damagePercentage * arrow.getAddedBaseDamage()!!
+        val addedBaseDamage = arrow.getAddedBaseDamage() ?: 0.0
+        val newAddedBaseDamage = damagePercentage * addedBaseDamage
         val newDamage = damagePercentage * arrow.damage
 
         (1..(additionalArrowsAmount.toInt() / 2))

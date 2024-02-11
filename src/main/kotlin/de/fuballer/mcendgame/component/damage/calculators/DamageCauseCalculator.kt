@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.damage.calculators
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.util.DamageUtil
-import de.fuballer.mcendgame.util.EventUtil
+import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.Difficulty
 import org.bukkit.entity.LivingEntity
@@ -14,9 +14,12 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
 interface DamageCauseCalculator {
     val damageType: DamageCause
 
-    fun buildDamageEvent(event: EntityDamageByEntityEvent) =
-        if (event.damager is Player) buildDamageEventForPlayer(event)
-        else buildDamageEventForNonPlayer(event)
+    fun buildDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
+        val damager = EntityUtil.getLivingEntityDamager(event.damager) ?: return null
+
+        if (damager is Player) return buildDamageEventForPlayer(event)
+        return buildDamageEventForNonPlayer(event)
+    }
 
     fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
         val damageEvent = buildBaseDamageEvent(event) ?: return null
@@ -83,7 +86,7 @@ interface DamageCauseCalculator {
     fun getFlatAbsorptionDamageReduction(event: DamageCalculationEvent, damage: Double) = DamageUtil.getAbsorbedDamage(event.damaged, damage)
 
     fun buildBaseDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
-        val damager = EventUtil.getLivingEntityDamager(event.damager) ?: return null
+        val damager = EntityUtil.getLivingEntityDamager(event.damager) ?: return null
         val customAttributes = DamageUtil.getEntityCustomAttributes(damager)
         val damagedEntity = event.entity as? LivingEntity ?: return null
         val cause = event.cause
