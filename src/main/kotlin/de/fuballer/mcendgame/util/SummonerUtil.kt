@@ -7,15 +7,13 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 
 object SummonerUtil {
-    fun getMinionEntities(summoner: Entity): Set<Creature> {
+    fun getMinionEntities(summoner: Entity): List<Creature> {
         val world = summoner.world
-        val minionIds = summoner.getMinionIds() ?: return setOf()
+        val minionIds = summoner.getMinionIds() ?: return listOf()
 
         val aliveMinions = WorldUtil.getFilteredEntities(world, minionIds, Creature::class)
             .filter { !it.isDead }
-            .toSet()
         val aliveMinionIds = aliveMinions.map { it.uniqueId }
-            .toSet()
 
         summoner.setMinionIds(aliveMinionIds)
         return aliveMinions
@@ -23,7 +21,7 @@ object SummonerUtil {
 
     fun addMinions(summoner: Entity, newMinions: Collection<Entity>) {
         val minionIds = newMinions.map { it.uniqueId }
-            .toMutableSet()
+            .toMutableList()
         val oldMinionsIds = summoner.getMinionIds() ?: listOf()
 
         minionIds.addAll(oldMinionsIds)

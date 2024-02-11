@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.technical.extension
 
-import de.fuballer.mcendgame.component.artifact.Artifact
+import de.fuballer.mcendgame.component.artifact.data.Artifact
+import de.fuballer.mcendgame.component.attribute.RolledAttribute
+import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.map_device.data.MapDeviceAction
-import de.fuballer.mcendgame.domain.attribute.RolledAttribute
-import de.fuballer.mcendgame.domain.item.CustomItemType
 import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.inventory.ItemStack
@@ -31,7 +31,7 @@ object ItemStackExtension {
     }
 
     private fun <T : Any> getPersistentData(item: ItemStack, key: TypeKeys.TypeKey<T>): T? {
-        val itemMeta = item.itemMeta!!
+        val itemMeta = item.itemMeta ?: return null
         return PersistentDataUtil.getValue(itemMeta, key)
     }
 

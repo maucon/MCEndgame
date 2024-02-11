@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.generation
 
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.EquipmentGenerationService
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
-import de.fuballer.mcendgame.domain.entity.CustomEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component

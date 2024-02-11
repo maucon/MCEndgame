@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.equipment
 
-import de.fuballer.mcendgame.domain.equipment.Equipment
-import de.fuballer.mcendgame.domain.equipment.armor.Boots
-import de.fuballer.mcendgame.domain.equipment.armor.Chestplate
-import de.fuballer.mcendgame.domain.equipment.armor.Helmet
-import de.fuballer.mcendgame.domain.equipment.armor.Leggings
-import de.fuballer.mcendgame.domain.equipment.tool.*
+import de.fuballer.mcendgame.component.item.equipment.Equipment
+import de.fuballer.mcendgame.component.item.equipment.armor.Boots
+import de.fuballer.mcendgame.component.item.equipment.armor.Chestplate
+import de.fuballer.mcendgame.component.item.equipment.armor.Helmet
+import de.fuballer.mcendgame.component.item.equipment.armor.Leggings
+import de.fuballer.mcendgame.component.item.equipment.tool.*
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 

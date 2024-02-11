@@ -1,63 +1,108 @@
 package de.fuballer.mcendgame.component.damage
 
+import de.fuballer.mcendgame.component.damage.calculators.*
+import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
-import org.bukkit.entity.Player
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
+import java.util.logging.Logger
+import kotlin.math.abs
+
+private val DAMAGE_TYPE_CALCULATORS = listOf(
+    EntityAttackDamageCalculator,
+    EntitySweepDamageCalculator,
+    ProjectileDamageCalculator,
+    ThornsDamageCalculator,
+    MagicDamageCalculator
+).associateBy { it.damageType }
 
 @Component
-class DamageService : Listener {
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+class DamageService(
+    private val logger: Logger
+) : Listener {
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {
-        val player: Player
-//        val damager = event.damager as LivingEntity
-//        val mainHandItem = damager.equipment!!.getItem(EquipmentSlot.HAND)
-//        mainHandItem.getCustomItemType()!!.attributes
+        // debug start
+        println("----- ${event.cause} to ${event.entity.type} -----")
+        val oldDamageValues = DamageModifier.entries
+            .filter { event.isApplicable(it) }
+            .map {
+                Pair(it.name.padEnd(10), event.getDamage(it))
+            }
+        val oldFinalValue = Pair("FINAL_DMG ", event.finalDamage)
+        // debug end
 
-        // MELEE CRIT: if (player.getFallDistance() > 0 && !player.isOnGround()) event.setDamage(event.getDamage() * 1.5F);
-        // before strength in Java Edition
-        /*
-        The requirements for a melee critical hit are:
-        - A player must be falling.
-        - A player must not be on the ground.
-        - A player must not be on a ladder or any type of vine.
-        - A player must not be in water.
-        - A player must not be affected by Blindness.
-        - A player must not be affected by Slow Falling.
-        - A player must not be riding an entity.
-        - A player must not be faster than walking (like flying or sprinting. [Java Edition only]
-        - A base attack must not be reduced below 90% damage due to cooldown. [Java Edition only]
-         */
-        // BOW CRIT: arrow.isCritical
+        val damageTypeCalculator = DAMAGE_TYPE_CALCULATORS[event.cause] ?: DefaultDamageCalculator
+        val damageEvent = damageTypeCalculator.buildDamageEvent(event)
+        if (damageEvent == null) {
+            logger.severe("could not map event")
+            logger.severe("= event.damager ${event.damager}")
+            logger.severe("= event.entity ${event.entity}")
+            logger.severe("= event.cause ${event.cause}")
+            return
+        }
 
-        // damager = projectile -> source -> shooter (projectile)
-        // minion -> minion
+        EventGateway.apply(damageEvent)
 
-        // enchants (smite, ...)
-        // crit
-        // projectile speed
-        // wither skull?
-        // player.absorptionAmount
+        if (damageEvent.isCancelled) {
+            event.isCancelled = true
+            return
+        }
 
-        /*
-        damageType (MELEE, PROJECTILE, MAGIC)
-        damager (entity -> potionsEffects)
-        damaged (entity -> potionsEffects)
-        flatDamage
-        increaseDamage
-        moreDamage
-        armor
-         */
+        val baseDamage = damageTypeCalculator.getBaseDamage(damageEvent)
+        applyEvent(event, baseDamage, damageTypeCalculator, damageEvent)
 
-//        val damageEvent = DamageCalculationEvent()
-//        EventGateway.apply(damageEvent)
-//
-//        DamageModifier.entries.toTypedArray()
-//            .filter { event.isApplicable(it) }
-//            .forEach { event.setDamage(it, 0.0) }
-//
-//        event.setDamage(DamageModifier.BASE, 1.0)
+        // debug start
+        DamageModifier.entries
+            .filter { event.isApplicable(it) }
+            .withIndex()
+            .forEach { (index, damageModifier) ->
+                val (modifier, oldDamage) = oldDamageValues[index]
+                val newDamage = event.getDamage(damageModifier)
+                val damageDiff = abs(oldDamage - newDamage)
+                val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
+                val format = "%s%s : %.3f -> %.3f | %.3f"
+                if (damageDiff > 0.001) {
+                    Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, modifier, oldDamage, newDamage, damageDiff))
+                }
+            }
+        val newDamage = event.finalDamage
+        val damageDiff = abs(oldFinalValue.second - newDamage)
+        val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
+
+        val format = "%s%s : %.3f -> %.3f | %.3f"
+        if (damageDiff > 0.001) {
+            Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, oldFinalValue.first, oldFinalValue.second, newDamage, damageDiff))
+        }
+        // debug end
+    }
+
+    private fun applyEvent(
+        event: EntityDamageByEntityEvent,
+        baseDamage: Double,
+        damageTypeCalculator: DamageCauseCalculator,
+        damageEvent: DamageCalculationEvent
+    ) {
+        var leftDamage = baseDamage
+
+        event.setDamage(DamageModifier.BASE, baseDamage)
+        DamageModifier.entries
+            .filter { it != DamageModifier.BASE }
+            .filter { event.isApplicable(it) }
+            .forEach {
+                val reduction = damageTypeCalculator.getFlatDamageReduction(damageEvent, leftDamage, it)
+                event.setDamage(it, -reduction)
+
+                leftDamage -= reduction
+            }
+
+        damageEvent.onHitPotionEffects.forEach {
+            damageEvent.damaged.addPotionEffect(it)
+        }
     }
 }

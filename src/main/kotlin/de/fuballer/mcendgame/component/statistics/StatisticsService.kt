@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.WorldUtil
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -43,7 +44,7 @@ class StatisticsService(
         onMonsterKilledByPlayer(player)
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {
         if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
 

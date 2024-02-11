@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.artifact
 
-import de.fuballer.mcendgame.domain.CustomInventoryType
+import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.extension.InventoryExtension.getCustomType
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getArtifact

@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.killer.db
 
+import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.component.killer.KillerSettings
-import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.util.InventoryUtil
 import org.bukkit.ChatColor
 import org.bukkit.Material

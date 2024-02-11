@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.component.artifact.command.give_artifact
 
-import de.fuballer.mcendgame.component.artifact.Artifact
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.domain.ArtifactType
+import de.fuballer.mcendgame.component.artifact.data.Artifact
+import de.fuballer.mcendgame.component.artifact.data.ArtifactTier
+import de.fuballer.mcendgame.component.artifact.data.ArtifactType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import de.fuballer.mcendgame.helper.CommandHelper
-import de.fuballer.mcendgame.util.ArtifactUtil
+import de.fuballer.mcendgame.technical.CommandHandler
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -22,15 +22,16 @@ class GiveArtifactCommand(
         args: Array<out String>
     ): Boolean {
         if (sender !is Player) return false
-        if (args.size < 3 || !ArtifactType.entries.map { it.name }.contains(args[1].uppercase())) return false
+        if (args.size < 3) return false
 
         val targetPlayer = commandHelper.getOnlinePlayer(sender, args[0]) ?: return true
+        val type = ArtifactType.REGISTRY[args[1]] ?: return false
 
-        val type = ArtifactType.valueOf(args[1].uppercase())
-        val tier = args[2].toIntOrNull() ?: return false
+        if (!ArtifactTier.entries.map { it.name }.contains(args[2].uppercase())) return false
+        val tier = ArtifactTier.valueOf(args[2].uppercase())
 
         val artifact = Artifact(type, tier)
-        val artifactItem = ArtifactUtil.getItem(artifact)
+        val artifactItem = artifact.toItem()
         targetPlayer.inventory.addItem(artifactItem)
 
         return true

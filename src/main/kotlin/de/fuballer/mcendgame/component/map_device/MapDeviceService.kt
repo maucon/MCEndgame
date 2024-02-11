@@ -4,11 +4,11 @@ import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationServi
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressService
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSettings
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
+import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.component.map_device.data.MapDeviceAction
 import de.fuballer.mcendgame.component.map_device.data.Portal
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
-import de.fuballer.mcendgame.domain.CustomInventoryType
 import de.fuballer.mcendgame.event.DiscoverRecipeAddEvent
 import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.EventGateway

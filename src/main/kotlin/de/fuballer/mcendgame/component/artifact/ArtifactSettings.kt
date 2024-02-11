@@ -1,11 +1,13 @@
 package de.fuballer.mcendgame.component.artifact
 
-import de.fuballer.mcendgame.domain.ArtifactType
+import de.fuballer.mcendgame.component.artifact.data.ArtifactTier
+import de.fuballer.mcendgame.component.artifact.data.ArtifactType
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryType
+import java.text.DecimalFormat
 
 object ArtifactSettings {
     const val COMMAND_NAME = "dungeon-artifacts"
@@ -18,36 +20,26 @@ object ArtifactSettings {
     const val ARTIFACTS_WINDOW_TITLE = "Artifacts"
     val CANNOT_CHANGE_ARTIFACTS_MESSAGE = "${ChatColor.RED}You cannot change artifacts whilst inside a dungeon."
 
-    val LORE_COLOR = "${ChatColor.GRAY}${ChatColor.ITALIC}"
-
-    val ARTIFACT_TIER_COLORS = mutableMapOf(
-        0 to ChatColor.WHITE,
-        1 to ChatColor.GREEN,
-        2 to ChatColor.BLUE,
-        3 to ChatColor.GOLD,
-    )
+    private val LORE_NUMBER_FORMAT = DecimalFormat("0.#")
+    private val LORE_COLOR = "${ChatColor.GRAY}${ChatColor.ITALIC}"
 
     const val ARTIFACT_DROP_CHANCE = 0.00133
 
     val ARTIFACT_TIERS = listOf(
-        SortableRandomOption(1000, 0, 0),
-        SortableRandomOption(200, 1, 1),
-        SortableRandomOption(25, 2, 2),
-        SortableRandomOption(3, 3, 3)
+        SortableRandomOption(1000, 0, ArtifactTier.COMMON),
+        SortableRandomOption(200, 1, ArtifactTier.UNCOMMON),
+        SortableRandomOption(25, 2, ArtifactTier.RARE),
+        SortableRandomOption(3, 3, ArtifactTier.LEGENDARY)
     )
 
-    val ARTIFACT_TYPES = listOf(
-        RandomOption(10, ArtifactType.SLOW_WHEN_HIT),
-        RandomOption(10, ArtifactType.HEAL_ON_BLOCK),
-        RandomOption(10, ArtifactType.WOLF_COMPANION),
-        RandomOption(10, ArtifactType.INC_DMG_PER_MISSING_HEALTH),
-        RandomOption(10, ArtifactType.INC_DMG_AGAINST_FULL_LIFE),
-        RandomOption(10, ArtifactType.MOVEMENT_SPEED),
-        RandomOption(10, ArtifactType.ATTACK_SPEED),
-        RandomOption(10, ArtifactType.ATTACK_DAMAGE),
-        RandomOption(10, ArtifactType.MAX_HEALTH),
-        RandomOption(10, ArtifactType.ADDITIONAL_ARROWS),
-        RandomOption(10, ArtifactType.EFFECT_STEAL),
-        RandomOption(10, ArtifactType.TAUNT)
-    )
+    val ARTIFACT_TYPES = ArtifactType.REGISTRY
+        .map { RandomOption(1, it.value) }
+
+    fun formatLore(loreFormat: String, values: List<Double>): List<String> {
+        val formattedValues = values.map { LORE_NUMBER_FORMAT.format(it) }
+        val lore = String.format(loreFormat, *formattedValues.toTypedArray())
+
+        return lore.split("\\")
+            .map { "$LORE_COLOR$it" }
+    }
 }

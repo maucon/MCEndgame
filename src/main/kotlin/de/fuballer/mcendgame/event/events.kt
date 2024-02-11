@@ -82,7 +82,3 @@ class DungeonEntityDeathEvent(
     val entity: LivingEntity,
     val drops: MutableList<ItemStack>
 ) : HandleableEvent()
-
-class DamageCalculationEvent(
-    val modifier: List<Int> = listOf()
-) : HandleableEvent()

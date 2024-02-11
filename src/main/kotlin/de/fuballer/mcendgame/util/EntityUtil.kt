@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.domain.entity.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.technical.extension.EntityExtension.setCustomEntityType
 import de.fuballer.mcendgame.technical.extension.EntityExtension.setHideEquipment
 import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsEnemy
@@ -36,6 +36,26 @@ object EntityUtil {
     ) {
         val attributeInstance = entity.getAttribute(attribute) ?: return
         attributeInstance.baseValue = value
+    }
+
+    fun getPlayerDamager(entity: LivingEntity): Player? {
+        if (entity is Player) {
+            return entity
+        }
+        if (entity is Projectile && (entity as Projectile).shooter is Player) {
+            return (entity as Projectile).shooter as Player
+        }
+        return null
+    }
+
+    fun getLivingEntityDamager(entity: Entity): LivingEntity? {
+        if (entity is LivingEntity) {
+            return entity
+        }
+        if (entity is Projectile && entity.shooter is LivingEntity) {
+            return entity.shooter as LivingEntity
+        }
+        return null
     }
 
     private fun setCustomData(entity: Entity, entityType: CustomEntityType, mapTier: Int) {

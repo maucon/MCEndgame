@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.util
 
+import de.fuballer.mcendgame.component.attribute.ApplicableAttributeType
+import de.fuballer.mcendgame.component.attribute.RollableAttribute
+import de.fuballer.mcendgame.component.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
-import de.fuballer.mcendgame.domain.attribute.ApplicableAttributeType
-import de.fuballer.mcendgame.domain.attribute.RollableAttribute
-import de.fuballer.mcendgame.domain.attribute.RolledAttribute
-import de.fuballer.mcendgame.domain.equipment.Equipment
-import de.fuballer.mcendgame.domain.item.CustomItemType
+import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
+import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isUnmodifiable

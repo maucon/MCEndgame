@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.technical.extension
 
-import de.fuballer.mcendgame.domain.CustomInventoryType
-import de.fuballer.mcendgame.technical.registry.InventoryRegistry
+import de.fuballer.mcendgame.component.inventory.CustomInventoryType
+import de.fuballer.mcendgame.component.inventory.InventoryRegistry
 import org.bukkit.inventory.Inventory
 
 object InventoryExtension {

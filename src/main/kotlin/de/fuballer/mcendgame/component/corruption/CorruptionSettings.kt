@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.corruption
 
+import de.fuballer.mcendgame.component.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
-import de.fuballer.mcendgame.domain.attribute.RollableAttribute
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setCorruptionRounds
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.ItemCreatorUtil

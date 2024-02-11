@@ -1,13 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.type.command
 
+import de.fuballer.mcendgame.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeSettings
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeEntity
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeRepository
-import de.fuballer.mcendgame.domain.dungeon.DungeonType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.framework.stereotype.CommandHandler
+import de.fuballer.mcendgame.helper.CommandAction
 import de.fuballer.mcendgame.helper.CommandHelper
-import de.fuballer.mcendgame.technical.CommandAction
+import de.fuballer.mcendgame.technical.CommandHandler
 import de.fuballer.mcendgame.util.ChatUtil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -69,13 +69,8 @@ class DungeonTypeCommand(
 
         val targetPlayer = commandHelper.getPlayer(commandExecutor, args[1]) ?: return false
 
-        val dungeonType: DungeonType
-        try {
-            dungeonType = DungeonType.valueOf(args[2])
-        } catch (_: IllegalArgumentException) {
-            commandExecutor.sendMessage(DungeonTypeSettings.INVALID_DUNGEON_TYPE)
-            return true
-        }
+        if (!DungeonType.entries.map { it.name }.contains(args[2].uppercase())) return false
+        val dungeonType = DungeonType.valueOf(args[2])
 
         val entity = PlayerDungeonTypeEntity(targetPlayer.uniqueId, dungeonType)
         playerDungeonTypeRepo.save(entity)

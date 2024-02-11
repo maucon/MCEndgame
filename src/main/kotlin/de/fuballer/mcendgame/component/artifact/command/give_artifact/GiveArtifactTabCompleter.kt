@@ -1,7 +1,8 @@
 package de.fuballer.mcendgame.component.artifact.command.give_artifact
 
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.domain.ArtifactType
+import de.fuballer.mcendgame.component.artifact.data.ArtifactTier
+import de.fuballer.mcendgame.component.artifact.data.ArtifactType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import de.fuballer.mcendgame.util.PluginUtil
@@ -26,11 +27,11 @@ class GiveArtifactTabCompleter : CommandTabCompleter {
 
         return when (args.size) {
             1 -> PluginUtil.getOnlinePlayers().map { it.name }
-            2 -> ArtifactType.entries
-                .map(Enum<*>::name)
+            2 -> ArtifactType.REGISTRY.keys
                 .filter { it.contains(args[1], true) }
 
-            3 -> listOf("0", "1", "2", "3")
+            3 -> ArtifactTier.entries
+                .map { it.name }
                 .filter { it.contains(args[2], true) }
 
             else -> listOf()

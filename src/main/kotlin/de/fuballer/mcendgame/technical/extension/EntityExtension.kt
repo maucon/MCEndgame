@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.technical.extension
 
-import de.fuballer.mcendgame.domain.entity.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.entity.Entity
@@ -43,7 +43,7 @@ object EntityExtension {
 
     fun Entity.isEnemy() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_ENEMY)
 
-    fun Entity.setMinionIds(value: Set<UUID>) {
+    fun Entity.setMinionIds(value: List<UUID>) {
         PersistentDataUtil.setValue(this, TypeKeys.MINION_IDS, value)
     }
 
