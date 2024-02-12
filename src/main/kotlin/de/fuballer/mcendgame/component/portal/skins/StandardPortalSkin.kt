@@ -1,0 +1,52 @@
+package de.fuballer.mcendgame.component.portal.skins
+
+import de.fuballer.mcendgame.util.PluginUtil
+import org.bukkit.Location
+import org.bukkit.Particle
+import org.bukkit.World
+import org.bukkit.util.Vector
+import kotlin.math.cos
+import kotlin.math.sin
+
+class StandardPortalSkin : PortalSkin {
+    private var taskId = -1
+    private lateinit var particleCoordinates: List<Vector>
+    private lateinit var world: World
+
+    override fun prepare(location: Location) {
+        world = location.world!!
+
+        val width = 0.75 / 2
+        val height = 1.25 / 2
+        val particles = 12
+        val increment = (2 * Math.PI) / particles
+
+        particleCoordinates = (0 until particles)
+            .map {
+                val angle = it * increment
+                val x = location.x + width * cos(angle)
+                val y = location.y + height * sin(angle) + 0.75
+                val z = location.z
+
+                Vector(x, y, z)
+            }
+    }
+
+    override fun play() {
+        taskId = PluginUtil.scheduleSyncRepeatingTask(0, 1) {
+            particleCoordinates.forEach {
+                world.spawnParticle(
+                    Particle.PORTAL,
+                    it.x, it.y, it.z,
+                    1,
+                    0.0, 0.1, 0.0,
+                    0.1
+                )
+            }
+        }
+    }
+
+    override fun cancel() {
+        PluginUtil.cancelTask(taskId)
+    }
+}

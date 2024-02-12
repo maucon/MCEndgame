@@ -1,16 +1,14 @@
 package de.fuballer.mcendgame.component.dungeon.leave
 
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
-import de.fuballer.mcendgame.component.map_device.data.Portal
+import de.fuballer.mcendgame.component.portal.db.Portal
 import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.Location
-import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerInteractAtEntityEvent
+import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 
 @Component
@@ -18,17 +16,11 @@ class DungeonLeaveService(
     private val dungeonLeaveRepo: DungeonLeaveRepository
 ) : Listener {
     @EventHandler
-    fun on(event: PlayerInteractAtEntityEvent) {
-        val entity = event.rightClicked as? ArmorStand ?: return
-        if (!dungeonLeaveRepo.exists(entity.world.name)) return
+    fun on(event: PlayerChangedWorldEvent) {
+        if (!dungeonLeaveRepo.exists(event.from.name)) return // replace?
 
-        val portal = getPortal(entity) ?: return
-        val player = event.player
-
-        val playerDungeonLeaveEvent = PlayerDungeonLeaveEvent(player)
+        val playerDungeonLeaveEvent = PlayerDungeonLeaveEvent(event.player)
         EventGateway.apply(playerDungeonLeaveEvent)
-
-        portal.teleportPlayer(player, false)
     }
 
     @EventHandler
@@ -57,7 +49,7 @@ class DungeonLeaveService(
     @EventHandler
     fun on(event: DungeonCompleteEvent) {
         val dungeonLeave = dungeonLeaveRepo.findById(event.world.name) ?: return
-        dungeonLeave.portals.forEach { it.activate() }
+        dungeonLeave.portals.forEach { it.open() }
     }
 
     fun createPortal(
@@ -67,14 +59,10 @@ class DungeonLeaveService(
     ) {
         val dungeonLeave = dungeonLeaveRepo.getById(worldName)
 
-        val portal = Portal(portalLocation, dungeonLeave.leaveLocation, active)
-        dungeonLeave.portals.add(portal)
+        val facing = portalLocation.toVector()
+        val portal = Portal(portalLocation, dungeonLeave.leaveLocation, facing, isInitiallyActive = active)
 
+        dungeonLeave.portals.add(portal)
         dungeonLeaveRepo.save(dungeonLeave)
     }
-
-    private fun getPortal(entity: Entity) =
-        dungeonLeaveRepo.findById(entity.world.name)
-            ?.portals
-            ?.find { it.portalEntityId == entity.uniqueId }
 }

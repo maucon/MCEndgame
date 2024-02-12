@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.event
 
+import de.fuballer.mcendgame.component.portal.db.Portal
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.World
@@ -81,4 +82,27 @@ class DungeonEnemySpawnedEvent(
 class DungeonEntityDeathEvent(
     val entity: LivingEntity,
     val drops: MutableList<ItemStack>
+) : HandleableEvent()
+
+/**
+ * Thrown whenever a portal gets created
+ */
+class PortalCreatedEvent(
+    val portal: Portal
+) : HandleableEvent()
+
+/**
+ * Thrown whenever a player uses a portal
+ */
+class PortalUsedEvent(
+    val portal: Portal,
+    val player: Player
+) : HandleableEvent()
+
+/**
+ * Thrown whenever a portal fails to teleport a player
+ */
+class PortalFailedEvent(
+    val portal: Portal,
+    val player: Player
 ) : HandleableEvent()

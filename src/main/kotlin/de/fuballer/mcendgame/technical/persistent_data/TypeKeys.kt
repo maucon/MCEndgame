@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.technical.persistent_data
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
-import de.fuballer.mcendgame.component.map_device.data.MapDeviceAction
+import de.fuballer.mcendgame.component.map_device.MapDeviceAction
 import de.fuballer.mcendgame.technical.persistent_data.types.PersistentArtifact
 import de.fuballer.mcendgame.technical.persistent_data.types.PersistentRolledAttribute
 import de.fuballer.mcendgame.technical.persistent_data.types.PersistentUUID

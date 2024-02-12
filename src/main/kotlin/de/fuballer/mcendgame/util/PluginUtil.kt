@@ -20,6 +20,8 @@ object PluginUtil {
 
     fun scheduleSyncDelayedTask(task: Runnable) = PluginConfiguration.scheduler().scheduleSyncDelayedTask(PluginConfiguration.plugin(), task)
 
+    fun scheduleSyncDelayedTask(task: Runnable, delay: Long) = PluginConfiguration.scheduler().scheduleSyncDelayedTask(PluginConfiguration.plugin(), task, delay)
+
     fun scheduleSyncRepeatingTask(delay: Long, period: Long, task: Runnable) = PluginConfiguration.scheduler().scheduleSyncRepeatingTask(PluginConfiguration.plugin(), task, delay, period)
 
     fun cancelTask(taskId: Int) = PluginConfiguration.scheduler().cancelTask(taskId)
