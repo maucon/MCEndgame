@@ -24,11 +24,11 @@ class StandardPortalSkin : PortalSkin {
         particleCoordinates = (0 until particles)
             .map {
                 val angle = it * increment
-                val x = location.x + width * cos(angle)
-                val y = location.y + height * sin(angle) + 0.75
-                val z = location.z
 
-                Vector(x, y, z)
+                val offset = Vector(width * cos(angle), height * sin(angle) + 0.75, 0.0)
+                offset.rotateAroundY(-Math.toRadians(location.yaw.toDouble()) )
+
+                Vector(location.x + offset.x, location.y + offset.y, location.z + offset.z)
             }
     }
 
