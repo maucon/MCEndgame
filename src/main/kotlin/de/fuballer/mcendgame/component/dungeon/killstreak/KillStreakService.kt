@@ -49,7 +49,7 @@ class KillStreakService(
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
         val player = event.damager as? Player ?: return
-        if (player.world.isDungeonWorld()) return
+        if (!player.world.isDungeonWorld()) return
 
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK
             && player.attackCooldown < KillStreakSettings.MIN_ATTACK_COOLDOWN_FOR_EXTRA_TIME

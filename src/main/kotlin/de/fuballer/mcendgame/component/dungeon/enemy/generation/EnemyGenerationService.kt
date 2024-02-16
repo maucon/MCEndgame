@@ -36,7 +36,7 @@ class EnemyGenerationService(
         if (effect.type != PotionEffectType.LUCK) return
 
         val entity = event.entity as? LivingEntity ?: return
-        if (entity.world.isDungeonWorld()) return
+        if (!entity.world.isDungeonWorld()) return
 
         entity.health = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
     }

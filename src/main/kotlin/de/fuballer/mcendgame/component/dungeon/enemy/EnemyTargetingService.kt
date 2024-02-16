@@ -14,7 +14,7 @@ class EnemyTargetingService : Listener {
     fun on(event: EntityTargetEvent) {
         val entity = event.entity
 
-        if (entity.world.isDungeonWorld()) return
+        if (!entity.world.isDungeonWorld()) return
         if (!DungeonUtil.isEnemyOrEnemyProjectile(entity)) return
 
         if (event.reason == TargetReason.TARGET_ATTACKED_NEARBY_ENTITY) {
