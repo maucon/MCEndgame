@@ -24,8 +24,8 @@ class StandardPortalSkin : PortalSkin {
         particleCoordinates = (0 until particles)
             .map {
                 val angle = it * increment
-
                 val offset = Vector(width * cos(angle), height * sin(angle) + 0.75, 0.0)
+
                 offset.rotateAroundY(-Math.toRadians(location.yaw.toDouble()) )
 
                 Vector(location.x + offset.x, location.y + offset.y, location.z + offset.z)
