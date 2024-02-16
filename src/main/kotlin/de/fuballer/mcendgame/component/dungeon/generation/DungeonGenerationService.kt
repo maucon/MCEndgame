@@ -15,6 +15,7 @@ import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.MathUtil
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
@@ -66,9 +67,6 @@ class DungeonGenerationService(
 
         val entity = DungeonLeaveEntity(world.name, mutableListOf(), leaveLocation)
         dungeonLeaveRepo.save(entity)
-
-        val startPortalLocation = Location(world, (-16 * startRoomPos.x - 8).toDouble(), DungeonGenerationSettings.MOB_Y_POS, (-16 * startRoomPos.y - 8).toDouble())
-        dungeonLeaveService.createPortal(world.name, startPortalLocation, true)
 
         createLeavePortals(layoutTiles, startRoomPos, bossRoomPos, world)
 
@@ -187,17 +185,39 @@ class DungeonGenerationService(
     ) {
         for (x in layoutTiles.indices) {
             for (y in layoutTiles[0].indices) {
-                if (startPoint.x == x && startPoint.y == y) continue
-                if (layoutTiles[x][y].getWaysAmount() != 1) continue
+                val layoutTile = layoutTiles[x][y]
+                if (layoutTile.getWaysAmount() != 1) continue
+
+                val isStartLocation = startPoint.x == x && startPoint.y == y
+
+                val portalLocation = Location(world, (-x * 16.0 - 8), DungeonGenerationSettings.PORTAL_Y_POS, (-y * 16.0 - 8))
+                val facing = if (layoutTile.up) {
+                    Location(null, portalLocation.x, portalLocation.y, portalLocation.z + 1)
+                } else if (layoutTile.right) {
+                    Location(null, portalLocation.x - 1, portalLocation.y, portalLocation.z)
+                } else if (layoutTile.down) {
+                    Location(null, portalLocation.x, portalLocation.y, portalLocation.z - 1)
+                } else {
+                    Location(null, portalLocation.x + 1, portalLocation.y, portalLocation.z)
+                }
+                portalLocation.yaw = MathUtil.calculateYawToFacingLocation(portalLocation, facing)
 
                 dungeonLeaveService.createPortal(
                     world.name,
-                    Location(world, (-x * 16.0 - 8), DungeonGenerationSettings.PORTAL_Y_POS, (-y * 16.0 - 8)),
-                    false
+                    portalLocation,
+                    isStartLocation
                 )
             }
         }
 
-        dungeonLeaveService.createPortal(world.name, Location(world, -bossPoint.x * 16.0 - 8, DungeonGenerationSettings.PORTAL_Y_POS, -bossPoint.y * 16.0 + 24), false)
+        val bossPortalLocation = Location(world, -bossPoint.x * 16.0 - 8, DungeonGenerationSettings.PORTAL_Y_POS, -bossPoint.y * 16.0 + 24)
+        val facing = Location(null, -bossPoint.x * 16.0 - 8, 0.0, -bossPoint.y * 16.0 + 24 - 1)
+        bossPortalLocation.yaw = MathUtil.calculateYawToFacingLocation(bossPortalLocation, facing)
+
+        dungeonLeaveService.createPortal(
+            world.name,
+            bossPortalLocation,
+            false
+        )
     }
 }

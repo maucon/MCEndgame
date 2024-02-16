@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.map_device
 
-import de.fuballer.mcendgame.component.map_device.data.MapDeviceAction
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setMapDevice
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setMapDeviceAction
 import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setUnmodifiable
@@ -10,6 +9,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
+import org.bukkit.util.Vector
 
 object MapDeviceSettings {
     private val ITEM_NAME = "${ChatColor.DARK_PURPLE}Map Device"
@@ -59,5 +59,12 @@ object MapDeviceSettings {
 
     const val MAP_DEVICE_BLOCK_METADATA_KEY = "MAP_DEVICE"
 
-    val DUNGEON_INSTANCE_CLOSED = "${ChatColor.RED}Dungeon instance already closed!"
+    val PORTAL_OFFSETS = listOf(
+        Vector(-1.0, 0.0, 1.732),
+        Vector(1.0, 0.0, 1.732),
+        Vector(-1.0, 0.0, -1.732),
+        Vector(1.0, 0.0, -1.732),
+        Vector(2.0, 0.0, 0.0),
+        Vector(-2.0, 0.0, 0.0),
+    )
 }

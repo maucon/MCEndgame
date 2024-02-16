@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.map_device.db
 
-import de.fuballer.mcendgame.component.map_device.data.Portal
+import de.fuballer.mcendgame.component.portal.db.Portal
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import org.bukkit.Location
 import java.util.*
