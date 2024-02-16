@@ -18,7 +18,7 @@ class DungeonTypeService(
         playerDungeonTypeRepo.delete(event.player.uniqueId)
     }
 
-    fun getRandomDungeonType(player: Player): DungeonType {
+    fun getNextDungeonType(player: Player): DungeonType {
         val playerId = player.uniqueId
 
         if (playerDungeonTypeRepo.exists(playerId)) {

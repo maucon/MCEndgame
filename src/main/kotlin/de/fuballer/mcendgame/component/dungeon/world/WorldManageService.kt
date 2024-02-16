@@ -11,7 +11,6 @@ import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.helper.FileHelper
 import de.fuballer.mcendgame.technical.TimerTask
 import de.fuballer.mcendgame.util.PluginUtil
-import org.bukkit.Difficulty
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.WorldType
@@ -28,20 +27,22 @@ class WorldManageService(
     @Qualifier("worldContainer")
     private val worldContainer: File
 ) : LifeCycleListener {
+
     override fun initialize(plugin: JavaPlugin) {
-        startWorldCleaningTimer()
-    }
-
-    override fun terminate() {
-        deleteAllWorldFiles()
-    }
-
-    private fun startWorldCleaningTimer() {
-        Timer().schedule(
+        Timer(false).schedule(
             TimerTask { checkWorldTimers() },
             WorldSettings.WORLD_EMPTY_TEST_PERIOD,
             WorldSettings.WORLD_EMPTY_TEST_PERIOD
         )
+    }
+
+    override fun terminate() {
+        worldManageRepo.findAll().forEach {
+            PluginUtil.unloadWorld(it.world)
+
+            val toDelete = File("$worldContainer/${it.world.name}")
+            fileHelper.deleteFile(toDelete)
+        }
     }
 
     fun createWorld(
@@ -60,23 +61,14 @@ class WorldManageService(
         val world = PluginUtil.createWorld(worldCreator).apply {
             WorldSettings.updateGameRules(this)
 
-            difficulty = Difficulty.HARD
-            time = 18000
+            difficulty = WorldSettings.DIFFICULTY
+            time = WorldSettings.WORLD_TIME
         }
 
         val entity = ManagedWorldEntity(name, player, world, mapTier, 0)
         worldManageRepo.save(entity)
 
         return world
-    }
-
-    private fun deleteAllWorldFiles() {
-        worldManageRepo.findAll().forEach {
-            PluginUtil.unloadWorld(it.world)
-
-            val toDelete = File("$worldContainer/${it.world.name}")
-            fileHelper.deleteFile(toDelete)
-        }
     }
 
     private fun checkWorldTimers() {

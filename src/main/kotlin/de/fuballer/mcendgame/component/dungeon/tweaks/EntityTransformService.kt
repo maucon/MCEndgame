@@ -9,7 +9,7 @@ import org.bukkit.event.entity.EntityTransformEvent
 @Component
 class EntityTransformService : Listener {
     @EventHandler
-    fun onEntityTransform(event: EntityTransformEvent) {
+    fun on(event: EntityTransformEvent) {
         if (!event.entity.world.isDungeonWorld()) return
         event.isCancelled = true
     }

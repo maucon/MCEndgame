@@ -7,7 +7,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.world.WorldInitEvent
 
 @Component
-class WorldGenerationService : Listener {
+class WorldConfigurationService : Listener {
     @EventHandler
     fun on(event: WorldInitEvent) {
         if (!event.world.isDungeonWorld()) return

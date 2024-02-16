@@ -11,7 +11,7 @@ import org.bukkit.event.entity.ExplosionPrimeEvent
 @Component
 class CreeperExplodeService : Listener {
     @EventHandler
-    fun onEntityPrimed(event: ExplosionPrimeEvent) {
+    fun on(event: ExplosionPrimeEvent) {
         val entity = event.entity
 
         if (entity.type != EntityType.CREEPER) return

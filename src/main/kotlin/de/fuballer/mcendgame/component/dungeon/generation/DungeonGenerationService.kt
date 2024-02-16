@@ -42,7 +42,7 @@ class DungeonGenerationService(
     ): Location {
         val world = worldManageService.createWorld(player, mapTier)
         val random = Random(world.seed)
-        val dungeonType = dungeonTypeService.getRandomDungeonType(player)
+        val dungeonType = dungeonTypeService.getNextDungeonType(player)
         val rolledDungeonType = dungeonType.roll(random)
 
         val dungeonLayoutGenerator = DungeonLayoutGenerator()
