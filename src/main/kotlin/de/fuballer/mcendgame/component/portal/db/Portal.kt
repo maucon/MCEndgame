@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.portal.db
 
+import de.fuballer.mcendgame.component.portal.skins.DefaultPortalSkin
 import de.fuballer.mcendgame.component.portal.skins.PortalSkin
-import de.fuballer.mcendgame.component.portal.skins.StandardPortalSkin
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PortalCreatedEvent
 import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsPortal
@@ -21,7 +21,7 @@ class Portal(
     facing: Vector,
     isInitiallyActive: Boolean = false,
     val isSingleUse: Boolean = false,
-    private val skin: PortalSkin = StandardPortalSkin()
+    private val skin: PortalSkin = DefaultPortalSkin()
 ) : de.fuballer.mcendgame.framework.stereotype.Entity<UUID> {
     override var id: UUID
 

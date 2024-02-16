@@ -8,7 +8,7 @@ import org.bukkit.util.Vector
 import kotlin.math.cos
 import kotlin.math.sin
 
-class StandardPortalSkin : PortalSkin {
+class DefaultPortalSkin : PortalSkin {
     private var taskId = -1
     private lateinit var particleCoordinates: List<Vector>
     private lateinit var world: World
