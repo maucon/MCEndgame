@@ -10,7 +10,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerRespawnEvent
-import org.bukkit.util.Vector
 
 @Component
 class DungeonLeaveService(
@@ -56,11 +55,10 @@ class DungeonLeaveService(
     fun createPortal(
         worldName: String,
         portalLocation: Location,
-        active: Boolean,
-        facing: Vector
+        active: Boolean
     ) {
         val dungeonLeave = dungeonLeaveRepo.getById(worldName)
-        val portal = Portal(portalLocation, dungeonLeave.leaveLocation, facing, isInitiallyActive = active)
+        val portal = Portal(portalLocation, dungeonLeave.leaveLocation, isInitiallyActive = active)
 
         dungeonLeave.portals.add(portal)
         dungeonLeaveRepo.save(dungeonLeave)

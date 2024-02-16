@@ -5,20 +5,17 @@ import de.fuballer.mcendgame.component.portal.skins.PortalSkin
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PortalCreatedEvent
 import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsPortal
-import de.fuballer.mcendgame.util.MathUtil
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.EquipmentSlot
-import org.bukkit.util.Vector
 import java.util.*
 
 class Portal(
     private var location: Location,
     val target: Location,
-    facing: Vector,
     isInitiallyActive: Boolean = false,
     val isSingleUse: Boolean = false,
     private val skin: PortalSkin = DefaultPortalSkin()
@@ -55,7 +52,6 @@ class Portal(
                 id = it.uniqueId
             }
 
-        location.yaw = MathUtil.calculateYawToFacingLocation(location, facing)
         skin.prepare(location)
 
         val event = PortalCreatedEvent(this)

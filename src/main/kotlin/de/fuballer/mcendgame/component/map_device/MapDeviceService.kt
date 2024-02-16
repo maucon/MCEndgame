@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.component.portal.db.Portal
 import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
+import de.fuballer.mcendgame.util.MathUtil
 import org.bukkit.Location
 import org.bukkit.block.data.type.RespawnAnchor
 import org.bukkit.entity.Player
@@ -74,12 +75,12 @@ class MapDeviceService(
     }
 
     private fun openPortals(mapDevice: MapDeviceEntity, target: Location) {
-        val deviceLocation = mapDevice.location
-        val facing = deviceLocation.clone().add(0.5, 0.0, 0.5).toVector()
+        val deviceCenter = mapDevice.location.clone().add(0.5, 0.0, 0.5)
 
         mapDevice.portals = MapDeviceSettings.PORTAL_OFFSETS
-            .map { deviceLocation.clone().add(it) }
-            .map { Portal(it, target, facing, isInitiallyActive = true, isSingleUse = true) }
+            .map { deviceCenter.clone().add(it) }
+            .onEach { it.yaw = MathUtil.calculateYawToFacingLocation(it, deviceCenter) + 180 }
+            .map { Portal(it, target, isInitiallyActive = true, isSingleUse = true) }
             .toMutableList()
 
         mapDeviceRepo.save(mapDevice)

@@ -60,11 +60,11 @@ object MapDeviceSettings {
     const val MAP_DEVICE_BLOCK_METADATA_KEY = "MAP_DEVICE"
 
     val PORTAL_OFFSETS = listOf(
-        Vector(-0.5, 0.0, 2.232),
-        Vector(1.5, 0.0, 2.232),
-        Vector(-0.5, 0.0, -1.232),
-        Vector(1.5, 0.0, -1.232),
-        Vector(2.5, 0.0, 0.5),
-        Vector(-1.5, 0.0, 0.5),
+        Vector(-1.0, 0.0, 1.732),
+        Vector(1.0, 0.0, 1.732),
+        Vector(-1.0, 0.0, -1.732),
+        Vector(1.0, 0.0, -1.732),
+        Vector(2.0, 0.0, 0.0),
+        Vector(-2.0, 0.0, 0.0),
     )
 }

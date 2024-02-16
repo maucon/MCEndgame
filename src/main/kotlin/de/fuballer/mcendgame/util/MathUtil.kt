@@ -1,11 +1,10 @@
 package de.fuballer.mcendgame.util
 
 import org.bukkit.Location
-import org.bukkit.util.Vector
 import kotlin.math.atan2
 
 object MathUtil {
-    fun calculateYawToFacingLocation(location: Location, facing: Vector): Float {
+    fun calculateYawToFacingLocation(location: Location, facing: Location): Float {
         val dx = facing.x - location.x
         val dz = facing.z - location.z
 
