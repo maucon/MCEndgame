@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
-import de.fuballer.mcendgame.technical.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
+import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.Sound

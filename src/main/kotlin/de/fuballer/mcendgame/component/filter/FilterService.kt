@@ -3,8 +3,8 @@ package de.fuballer.mcendgame.component.filter
 import de.fuballer.mcendgame.component.filter.db.FilterRepository
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.InventoryExtension.getCustomType
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.InventoryExtension.getCustomType
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -50,7 +50,7 @@ class FilterService(
     @EventHandler
     fun on(event: EntityPickupItemEvent) {
         val player = event.entity as? Player ?: return
-        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
+        if (!event.entity.world.isDungeonWorld()) return
 
         val item = event.item.itemStack.type
         val uuid = player.uniqueId

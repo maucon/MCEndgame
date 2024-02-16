@@ -4,8 +4,8 @@ import de.fuballer.mcendgame.component.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setRolledAttributes
 import de.fuballer.mcendgame.util.ItemUtil
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.setRolledAttributes
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import de.fuballer.mcendgame.util.random.SortableRandomOption

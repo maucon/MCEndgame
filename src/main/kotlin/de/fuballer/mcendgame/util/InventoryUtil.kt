@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.configuration.PluginConfiguration
-import de.fuballer.mcendgame.technical.extension.InventoryExtension.setCustomType
+import de.fuballer.mcendgame.util.extension.InventoryExtension.setCustomType
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 

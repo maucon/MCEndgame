@@ -7,8 +7,8 @@ import de.fuballer.mcendgame.event.PortalFailedEvent
 import de.fuballer.mcendgame.event.PortalUsedEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isPortal
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.isPortal
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Server
 import org.bukkit.entity.ArmorStand
 import org.bukkit.event.EventHandler
@@ -23,7 +23,7 @@ class PortalService(
 ) : Listener, LifeCycleListener {
     override fun initialize(plugin: JavaPlugin) {
         server.worlds
-            .filter { WorldUtil.isNotDungeonWorld(it) }
+            .filter { !it.isDungeonWorld() }
             .flatMap { it.entities }
             .filter { it.isPortal() }
             .forEach { it.remove() }

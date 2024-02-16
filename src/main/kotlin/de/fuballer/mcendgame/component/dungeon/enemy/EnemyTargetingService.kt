@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.enemy
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.DungeonUtil
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityTargetEvent
@@ -14,7 +14,7 @@ class EnemyTargetingService : Listener {
     fun on(event: EntityTargetEvent) {
         val entity = event.entity
 
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
+        if (entity.world.isDungeonWorld()) return
         if (!DungeonUtil.isEnemyOrEnemyProjectile(entity)) return
 
         if (event.reason == TargetReason.TARGET_ATTACKED_NEARBY_ENTITY) {

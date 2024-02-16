@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.dungeon.remaining.RemainingSettings
 import de.fuballer.mcendgame.component.dungeon.remaining.db.RemainingRepository
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.CommandHandler
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -22,7 +22,7 @@ class RemainingCommand(
         val commandExecutor = sender as? Player ?: return false
 
         val world = commandExecutor.world
-        if (WorldUtil.isNotDungeonWorld(world)) {
+        if (!world.isDungeonWorld()) {
             commandExecutor.sendMessage(RemainingSettings.NOT_IN_DUNGEON_ERROR)
             return true
         }

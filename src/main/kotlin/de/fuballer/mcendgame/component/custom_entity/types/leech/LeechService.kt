@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.custom_entity.types.leech
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
+import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
 import org.bukkit.entity.Bee
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler

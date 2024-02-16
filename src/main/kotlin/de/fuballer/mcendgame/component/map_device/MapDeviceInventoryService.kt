@@ -6,11 +6,11 @@ import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.InventoryExtension.getCustomType
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getMapDeviceAction
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.getLastMapDevice
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.setLastMapDevice
 import de.fuballer.mcendgame.util.InventoryUtil
+import de.fuballer.mcendgame.util.extension.InventoryExtension.getCustomType
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getMapDeviceAction
+import de.fuballer.mcendgame.util.extension.PlayerExtension.getLastMapDevice
+import de.fuballer.mcendgame.util.extension.PlayerExtension.setLastMapDevice
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player

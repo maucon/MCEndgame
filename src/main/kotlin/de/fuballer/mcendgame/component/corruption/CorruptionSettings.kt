@@ -2,9 +2,9 @@ package de.fuballer.mcendgame.component.corruption
 
 import de.fuballer.mcendgame.component.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setCorruptionRounds
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.ItemCreatorUtil
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCorruptionRounds
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.ChatColor
 import org.bukkit.Material

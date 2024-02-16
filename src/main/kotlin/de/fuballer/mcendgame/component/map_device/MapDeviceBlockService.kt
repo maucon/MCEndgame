@@ -3,8 +3,8 @@ package de.fuballer.mcendgame.component.map_device
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isMapDevice
 import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.isMapDevice
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player

@@ -3,9 +3,9 @@ package de.fuballer.mcendgame.component.artifact
 import de.fuballer.mcendgame.component.artifact.data.Artifact
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.EntityExtension.getMapTier
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isMinion
+import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
+import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

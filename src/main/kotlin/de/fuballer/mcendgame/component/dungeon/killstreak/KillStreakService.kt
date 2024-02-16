@@ -6,9 +6,9 @@ import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepositor
 import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.TimerTask
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isMinion
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Server
 import org.bukkit.World
 import org.bukkit.entity.LivingEntity
@@ -49,7 +49,7 @@ class KillStreakService(
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
         val player = event.damager as? Player ?: return
-        if (WorldUtil.isNotDungeonWorld(player.world)) return
+        if (player.world.isDungeonWorld()) return
 
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK
             && player.attackCooldown < KillStreakSettings.MIN_ATTACK_COOLDOWN_FOR_EXTRA_TIME
@@ -89,7 +89,7 @@ class KillStreakService(
         val player = event.player
         val world = event.player.world
 
-        if (WorldUtil.isDungeonWorld(world)) {
+        if (world.isDungeonWorld()) {
             addPlayerToBossBar(player, world)
         } else {
             removePlayerFromBossBar(player, event.from)

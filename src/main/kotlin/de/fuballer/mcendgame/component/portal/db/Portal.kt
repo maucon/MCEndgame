@@ -4,8 +4,8 @@ import de.fuballer.mcendgame.component.portal.skins.DefaultPortalSkin
 import de.fuballer.mcendgame.component.portal.skins.PortalSkin
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PortalCreatedEvent
-import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsPortal
 import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.setIsPortal
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity

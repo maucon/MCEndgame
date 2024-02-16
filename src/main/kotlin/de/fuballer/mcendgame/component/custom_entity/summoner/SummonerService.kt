@@ -6,11 +6,11 @@ import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationS
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.EntityExtension.getMapTier
-import de.fuballer.mcendgame.technical.extension.EntityExtension.setDisableDropEquipment
-import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsMinion
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.SummonerUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
+import de.fuballer.mcendgame.util.extension.EntityExtension.setDisableDropEquipment
+import de.fuballer.mcendgame.util.extension.EntityExtension.setIsMinion
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity

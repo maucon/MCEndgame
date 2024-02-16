@@ -5,8 +5,8 @@ import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityRep
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.technical.TimerTask
-import de.fuballer.mcendgame.technical.extension.EntityExtension.getCustomEntityType
-import de.fuballer.mcendgame.technical.extension.EntityExtension.getMapTier
+import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
+import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import org.bukkit.entity.Creature
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler

@@ -5,8 +5,8 @@ import de.fuballer.mcendgame.component.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.CommandHandler
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
 import de.fuballer.mcendgame.util.ItemUtil
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.command.Command

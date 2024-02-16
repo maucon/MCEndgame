@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
 import de.fuballer.mcendgame.component.portal.db.Portal
 import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -17,7 +18,7 @@ class DungeonLeaveService(
 ) : Listener {
     @EventHandler
     fun on(event: PlayerChangedWorldEvent) {
-        if (!dungeonLeaveRepo.exists(event.from.name)) return // replace?
+        if (!event.from.isDungeonWorld()) return
 
         val playerDungeonLeaveEvent = PlayerDungeonLeaveEvent(event.player)
         EventGateway.apply(playerDungeonLeaveEvent)
