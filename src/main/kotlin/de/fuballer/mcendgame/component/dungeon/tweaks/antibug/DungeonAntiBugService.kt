@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent
 class DungeonAntiBugService : Listener {
     @EventHandler
     fun on(event: PlayerItemConsumeEvent) {
-        if !event.player.world.isDungeonWorld()) return
+        if (!event.player.world.isDungeonWorld()) return
         if (event.item.type == Material.CHORUS_FRUIT) {
             event.isCancelled = true
         }
