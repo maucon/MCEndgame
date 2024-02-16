@@ -20,6 +20,7 @@ import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Player
+import org.bukkit.util.Vector
 import java.awt.Point
 import java.util.logging.Logger
 import kotlin.random.Random
@@ -66,9 +67,6 @@ class DungeonGenerationService(
 
         val entity = DungeonLeaveEntity(world.name, mutableListOf(), leaveLocation)
         dungeonLeaveRepo.save(entity)
-
-        val startPortalLocation = Location(world, (-16 * startRoomPos.x - 8).toDouble(), DungeonGenerationSettings.MOB_Y_POS, (-16 * startRoomPos.y - 8).toDouble())
-        dungeonLeaveService.createPortal(world.name, startPortalLocation, true)
 
         createLeavePortals(layoutTiles, startRoomPos, bossRoomPos, world)
 
@@ -187,17 +185,36 @@ class DungeonGenerationService(
     ) {
         for (x in layoutTiles.indices) {
             for (y in layoutTiles[0].indices) {
-                if (startPoint.x == x && startPoint.y == y) continue
-                if (layoutTiles[x][y].getWaysAmount() != 1) continue
+                val layoutTile = layoutTiles[x][y]
+                if (layoutTile.getWaysAmount() != 1) continue
+
+                val isStartLocation = startPoint.x == x && startPoint.y == y
+
+                val portalLocation = Location(world, (-x * 16.0 - 8), DungeonGenerationSettings.PORTAL_Y_POS, (-y * 16.0 - 8))
+                val facing = if (layoutTile.up) {
+                    Vector(portalLocation.x, portalLocation.y, portalLocation.z + 1)
+                } else if (layoutTile.right) {
+                    Vector(portalLocation.x - 1, portalLocation.y, portalLocation.z)
+                } else if (layoutTile.down) {
+                    Vector(portalLocation.x, portalLocation.y, portalLocation.z - 1)
+                } else {
+                    Vector(portalLocation.x + 1, portalLocation.y, portalLocation.z)
+                }
 
                 dungeonLeaveService.createPortal(
                     world.name,
-                    Location(world, (-x * 16.0 - 8), DungeonGenerationSettings.PORTAL_Y_POS, (-y * 16.0 - 8)),
-                    false
+                    portalLocation,
+                    isStartLocation,
+                    facing
                 )
             }
         }
 
-        dungeonLeaveService.createPortal(world.name, Location(world, -bossPoint.x * 16.0 - 8, DungeonGenerationSettings.PORTAL_Y_POS, -bossPoint.y * 16.0 + 24), false)
+        dungeonLeaveService.createPortal(
+            world.name,
+            Location(world, -bossPoint.x * 16.0 - 8, DungeonGenerationSettings.PORTAL_Y_POS, -bossPoint.y * 16.0 + 24),
+            false,
+            Vector(-bossPoint.x * 16.0 - 8, 0.0, -bossPoint.y * 16.0 + 24 - 1)
+        )
     }
 }

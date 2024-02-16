@@ -36,7 +36,7 @@ class Portal(
         }
 
         val offsetLocation = location.clone()
-        offsetLocation.y = -128.0
+        offsetLocation.y = -66.0
 
         entity = (location.world!!.spawnEntity(offsetLocation, EntityType.ARMOR_STAND, false) as ArmorStand)
             .apply {
