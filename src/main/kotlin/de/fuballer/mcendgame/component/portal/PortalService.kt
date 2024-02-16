@@ -1,14 +1,17 @@
 package de.fuballer.mcendgame.component.portal
 
+import de.fuballer.mcendgame.component.portal.db.Portal
 import de.fuballer.mcendgame.component.portal.db.PortalRepository
+import de.fuballer.mcendgame.component.portal.skins.DefaultPortalSkin
+import de.fuballer.mcendgame.component.portal.skins.PortalSkin
 import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.event.PortalCreatedEvent
 import de.fuballer.mcendgame.event.PortalFailedEvent
 import de.fuballer.mcendgame.event.PortalUsedEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.extension.EntityExtension.isPortal
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
+import org.bukkit.Location
 import org.bukkit.Server
 import org.bukkit.entity.ArmorStand
 import org.bukkit.event.EventHandler
@@ -27,11 +30,6 @@ class PortalService(
             .flatMap { it.entities }
             .filter { it.isPortal() }
             .forEach { it.remove() }
-    }
-
-    @EventHandler
-    fun on(event: PortalCreatedEvent) {
-        portalRepo.save(event.portal)
     }
 
     @EventHandler
@@ -59,5 +57,24 @@ class PortalService(
         if (portal.isSingleUse) {
             portal.close()
         }
+    }
+
+    fun createPortal(
+        location: Location,
+        target: Location,
+        isInitiallyActive: Boolean = false,
+        isSingleUse: Boolean = false,
+        skin: PortalSkin = DefaultPortalSkin()
+    ): Portal {
+        if (location.world == null
+            || target.world == null
+        ) {
+            throw IllegalArgumentException("world of locations cannot be null")
+        }
+
+        val portal = Portal(location, target, isInitiallyActive, isSingleUse, skin)
+        portalRepo.save(portal)
+
+        return portal
     }
 }

@@ -2,8 +2,6 @@ package de.fuballer.mcendgame.component.portal.db
 
 import de.fuballer.mcendgame.component.portal.skins.DefaultPortalSkin
 import de.fuballer.mcendgame.component.portal.skins.PortalSkin
-import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.event.PortalCreatedEvent
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.setIsPortal
 import org.bukkit.Location
@@ -26,11 +24,7 @@ class Portal(
     var entity: Entity
 
     init {
-        if (location.world == null
-            || target.world == null
-        ) {
-            throw IllegalArgumentException("world of locations cannot be null")
-        }
+        skin.prepare(location)
 
         val offsetLocation = location.clone()
         offsetLocation.y = -66.0
@@ -51,11 +45,6 @@ class Portal(
             }.also {
                 id = it.uniqueId
             }
-
-        skin.prepare(location)
-
-        val event = PortalCreatedEvent(this)
-        EventGateway.apply(event)
 
         if (isInitiallyActive) open()
     }

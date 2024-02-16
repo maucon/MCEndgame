@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.leave
 
 import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
-import de.fuballer.mcendgame.component.portal.db.Portal
+import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
@@ -14,7 +14,8 @@ import org.bukkit.event.player.PlayerRespawnEvent
 
 @Component
 class DungeonLeaveService(
-    private val dungeonLeaveRepo: DungeonLeaveRepository
+    private val dungeonLeaveRepo: DungeonLeaveRepository,
+    private val portalService: PortalService
 ) : Listener {
     @EventHandler
     fun on(event: PlayerChangedWorldEvent) {
@@ -56,10 +57,10 @@ class DungeonLeaveService(
     fun createPortal(
         worldName: String,
         portalLocation: Location,
-        active: Boolean
+        isInitiallyActive: Boolean
     ) {
         val dungeonLeave = dungeonLeaveRepo.getById(worldName)
-        val portal = Portal(portalLocation, dungeonLeave.leaveLocation, isInitiallyActive = active)
+        val portal = portalService.createPortal(portalLocation, dungeonLeave.leaveLocation, isInitiallyActive)
 
         dungeonLeave.portals.add(portal)
         dungeonLeaveRepo.save(dungeonLeave)
