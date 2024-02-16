@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.SchedulingUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCorruptionRounds
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
@@ -45,7 +45,7 @@ class CorruptionService : Listener {
 
         event.result = result
 
-        PluginUtil.scheduleTask {
+        SchedulingUtil.runTask {
             event.inventory.repairCost = 1
 
             event.inventory.viewers.forEach {

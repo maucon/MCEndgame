@@ -9,8 +9,8 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.annotation.Qualifier
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.helper.FileHelper
-import de.fuballer.mcendgame.technical.TimerTask
 import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.SchedulingUtil
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.WorldType
@@ -29,11 +29,9 @@ class WorldManageService(
 ) : LifeCycleListener {
 
     override fun initialize(plugin: JavaPlugin) {
-        Timer(false).schedule(
-            TimerTask { checkWorldTimers() },
-            WorldSettings.WORLD_EMPTY_TEST_PERIOD,
-            WorldSettings.WORLD_EMPTY_TEST_PERIOD
-        )
+        SchedulingUtil.runTaskTimer(WorldSettings.WORLD_EMPTY_TEST_PERIOD) {
+            checkWorldTimers()
+        }
     }
 
     override fun terminate() {
@@ -89,7 +87,7 @@ class WorldManageService(
     private fun deleteWorld(world: World) {
         val name = world.name
 
-        PluginUtil.scheduleTask {
+        SchedulingUtil.runTask {
             val dungeonWorldDeleteEvent = DungeonWorldDeleteEvent(world)
             EventGateway.apply(dungeonWorldDeleteEvent)
 

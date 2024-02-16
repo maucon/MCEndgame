@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.portal.db
 import de.fuballer.mcendgame.component.portal.skins.DefaultPortalSkin
 import de.fuballer.mcendgame.component.portal.skins.PortalSkin
 import de.fuballer.mcendgame.framework.stereotype.Entity
-import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.SchedulingUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.setIsPortal
 import org.bukkit.Location
@@ -56,10 +56,10 @@ class Portal(
 
         val entity = WorldUtil.getEntity(location.world!!, id)
 
-        PluginUtil.scheduleSyncDelayedTask({
+        SchedulingUtil.scheduleSyncDelayedTask {
             entity?.teleport(location)
             skin.play()
-        }, 0)
+        }
     }
 
     fun close() {

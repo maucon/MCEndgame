@@ -9,7 +9,7 @@ object WorldSettings {
     const val GENERATOR_SETTINGS = "{\"layers\": [], \"biome\":\"plains\"}"
 
     const val MAX_WORLD_EMPTY_TIME = 10
-    const val WORLD_EMPTY_TEST_PERIOD = 60000L
+    const val WORLD_EMPTY_TEST_PERIOD = 60 * 20L // in ticks
 
     val DIFFICULTY = Difficulty.HARD
     const val WORLD_TIME = 18000L

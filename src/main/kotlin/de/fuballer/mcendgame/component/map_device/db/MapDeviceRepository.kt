@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.map_device.MapDeviceSettings
 import de.fuballer.mcendgame.component.portal.db.Portal
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.PersistentMapRepository
-import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.SchedulingUtil
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Server
@@ -19,7 +19,7 @@ class MapDeviceRepository(
     override fun initialize(plugin: JavaPlugin) {
         super.initialize(plugin)
 
-        PluginUtil.scheduleSyncDelayedTask {
+        SchedulingUtil.scheduleSyncDelayedTask {
             this.map = findAll()
                 .map {
                     val world = server.getWorld(it.worldName) ?: return@map null

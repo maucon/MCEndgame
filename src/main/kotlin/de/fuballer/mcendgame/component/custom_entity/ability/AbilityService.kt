@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityEnt
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityRepository
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
-import de.fuballer.mcendgame.technical.TimerTask
+import de.fuballer.mcendgame.util.SchedulingUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import org.bukkit.entity.Creature
@@ -14,14 +14,15 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityTargetEvent
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.*
 
 @Component
 class AbilityService(
     private val entityAbilityRepo: EntityAbilityRepository
 ) : Listener, LifeCycleListener {
     override fun initialize(plugin: JavaPlugin) {
-        startInactiveCheckTimer()
+        SchedulingUtil.runTaskTimer(AbilitySettings.INACTIVE_CHECK_PERIOD) {
+            removeInactive()
+        }
     }
 
     @EventHandler
@@ -47,14 +48,6 @@ class AbilityService(
         entityAbility.abilityRunner?.cancel()
 
         entityAbilityRepo.delete(uuid)
-    }
-
-    private fun startInactiveCheckTimer() {
-        Timer().schedule(
-            TimerTask { removeInactive() },
-            AbilitySettings.INACTIVE_CHECK_PERIOD,
-            AbilitySettings.INACTIVE_CHECK_PERIOD
-        )
     }
 
     private fun removeInactive() {
