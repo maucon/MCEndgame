@@ -31,7 +31,7 @@ class MapDeviceService(
     @EventHandler
     fun on(event: PortalUsedEvent) {
         val portal = event.portal
-        val mapDevice = mapDeviceRepo.findByPortalEntity(portal.entity) ?: return
+        val mapDevice = mapDeviceRepo.findByPortal(portal) ?: return
 
         val playerDungeonJoinEvent = PlayerDungeonJoinEvent(event.player, portal.target.world!!, portal.target)
         EventGateway.apply(playerDungeonJoinEvent)
@@ -46,7 +46,7 @@ class MapDeviceService(
 
     @EventHandler
     fun on(event: PortalFailedEvent) {
-        val mapDevice = mapDeviceRepo.findByPortalEntity(event.portal.entity) ?: return
+        val mapDevice = mapDeviceRepo.findByPortal(event.portal) ?: return
 
         closeDungeon(mapDevice)
     }
