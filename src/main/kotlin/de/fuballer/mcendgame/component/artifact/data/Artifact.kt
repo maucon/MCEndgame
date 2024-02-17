@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.artifact.data
 
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setArtifact
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setUnmodifiable
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.setArtifact
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
 import org.bukkit.inventory.ItemStack
 
 data class Artifact(

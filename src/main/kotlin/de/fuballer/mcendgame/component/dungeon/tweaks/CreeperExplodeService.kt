@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.tweaks
 
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
@@ -11,11 +11,11 @@ import org.bukkit.event.entity.ExplosionPrimeEvent
 @Component
 class CreeperExplodeService : Listener {
     @EventHandler
-    fun onEntityPrimed(event: ExplosionPrimeEvent) {
+    fun on(event: ExplosionPrimeEvent) {
         val entity = event.entity
 
         if (entity.type != EntityType.CREEPER) return
-        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
+        if (!event.entity.world.isDungeonWorld()) return
 
         val creeper = entity as LivingEntity
         creeper.activePotionEffects.forEach { potionEffect ->

@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 

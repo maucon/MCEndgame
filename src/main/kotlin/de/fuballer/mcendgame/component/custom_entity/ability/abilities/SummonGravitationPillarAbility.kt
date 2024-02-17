@@ -4,12 +4,12 @@ import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.types.stone_pillar.StonePillarEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.technical.extension.EntityExtension.getMapTier
-import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsMinion
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import de.fuballer.mcendgame.util.SummonerUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
+import de.fuballer.mcendgame.util.extension.EntityExtension.setIsMinion
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.LivingEntity

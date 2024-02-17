@@ -9,9 +9,8 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.annotation.Qualifier
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.helper.FileHelper
-import de.fuballer.mcendgame.technical.TimerTask
 import de.fuballer.mcendgame.util.PluginUtil
-import org.bukkit.Difficulty
+import de.fuballer.mcendgame.util.SchedulingUtil
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.WorldType
@@ -28,20 +27,20 @@ class WorldManageService(
     @Qualifier("worldContainer")
     private val worldContainer: File
 ) : LifeCycleListener {
+
     override fun initialize(plugin: JavaPlugin) {
-        startWorldCleaningTimer()
+        SchedulingUtil.runTaskTimer(WorldSettings.WORLD_EMPTY_TEST_PERIOD) {
+            checkWorldTimers()
+        }
     }
 
     override fun terminate() {
-        deleteAllWorldFiles()
-    }
+        worldManageRepo.findAll().forEach {
+            PluginUtil.unloadWorld(it.world)
 
-    private fun startWorldCleaningTimer() {
-        Timer().schedule(
-            TimerTask { checkWorldTimers() },
-            WorldSettings.WORLD_EMPTY_TEST_PERIOD,
-            WorldSettings.WORLD_EMPTY_TEST_PERIOD
-        )
+            val toDelete = File("$worldContainer/${it.world.name}")
+            fileHelper.deleteFile(toDelete)
+        }
     }
 
     fun createWorld(
@@ -60,23 +59,14 @@ class WorldManageService(
         val world = PluginUtil.createWorld(worldCreator).apply {
             WorldSettings.updateGameRules(this)
 
-            difficulty = Difficulty.HARD
-            time = 18000
+            difficulty = WorldSettings.DIFFICULTY
+            time = WorldSettings.WORLD_TIME
         }
 
         val entity = ManagedWorldEntity(name, player, world, mapTier, 0)
         worldManageRepo.save(entity)
 
         return world
-    }
-
-    private fun deleteAllWorldFiles() {
-        worldManageRepo.findAll().forEach {
-            PluginUtil.unloadWorld(it.world)
-
-            val toDelete = File("$worldContainer/${it.world.name}")
-            fileHelper.deleteFile(toDelete)
-        }
     }
 
     private fun checkWorldTimers() {
@@ -97,7 +87,7 @@ class WorldManageService(
     private fun deleteWorld(world: World) {
         val name = world.name
 
-        PluginUtil.scheduleTask {
+        SchedulingUtil.runTask {
             val dungeonWorldDeleteEvent = DungeonWorldDeleteEvent(world)
             EventGateway.apply(dungeonWorldDeleteEvent)
 

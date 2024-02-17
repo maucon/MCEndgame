@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.damage.calculators
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.util.DamageUtil
 import de.fuballer.mcendgame.util.EntityUtil
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Difficulty
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -88,7 +88,7 @@ interface DamageCauseCalculator {
         val customAttributes = DamageUtil.getEntityCustomAttributes(damager)
         val damagedEntity = event.entity as? LivingEntity ?: return null
         val cause = event.cause
-        val isDungeonWorld = WorldUtil.isDungeonWorld(event.damager.world)
+        val isDungeonWorld = event.damager.world.isDungeonWorld()
         val damageBlocked = event.getDamage(DamageModifier.BLOCKING) < 0
         val difficulty = damager.world.difficulty
 

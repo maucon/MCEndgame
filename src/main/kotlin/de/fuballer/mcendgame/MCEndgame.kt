@@ -17,6 +17,7 @@ class MCEndgame : JavaPlugin() {
 
         PluginConfiguration.INSTANCE = this
         PluginConfiguration.PROTOCOL_MANAGER = ProtocolLibrary.getProtocolManager()
+        dataFolder.mkdir()
 
         val injectedObjects = DependencyInjector.instantiateClasses(this::class.java)
 

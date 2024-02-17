@@ -2,10 +2,10 @@ package de.fuballer.mcendgame.component.artifact
 
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.InventoryExtension.getCustomType
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getArtifact
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.setArtifacts
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.InventoryExtension.getCustomType
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getArtifact
+import de.fuballer.mcendgame.util.extension.PlayerExtension.setArtifacts
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -23,7 +23,7 @@ class ArtifactService : Listener {
 
         event.isCancelled = true
 
-        if (WorldUtil.isDungeonWorld(event.whoClicked.world)) {
+        if (event.whoClicked.world.isDungeonWorld()) {
             event.whoClicked.sendMessage(ArtifactSettings.CANNOT_CHANGE_ARTIFACTS_MESSAGE)
             return
         }

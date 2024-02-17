@@ -2,9 +2,9 @@ package de.fuballer.mcendgame.component.artifact.artifacts.heal_on_block
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHealOnBlockArtifactActivation
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.setHealOnBlockArtifactActivation
+import de.fuballer.mcendgame.util.extension.PlayerExtension.getHealOnBlockArtifactActivation
+import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestArtifactTier
+import de.fuballer.mcendgame.util.extension.PlayerExtension.setHealOnBlockArtifactActivation
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.attribute.Attribute

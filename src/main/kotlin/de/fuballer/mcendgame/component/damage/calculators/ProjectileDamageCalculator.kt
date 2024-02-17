@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.damage.calculators
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
-import de.fuballer.mcendgame.technical.extension.ProjectileExtension.getAddedBaseDamage
 import de.fuballer.mcendgame.util.DamageUtil
+import de.fuballer.mcendgame.util.extension.ProjectileExtension.getAddedBaseDamage
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Projectile
 import org.bukkit.event.entity.EntityDamageByEntityEvent

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.portal.skins
 
-import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.SchedulingUtil
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.World
@@ -33,7 +33,7 @@ class DefaultPortalSkin : PortalSkin {
     }
 
     override fun play() {
-        taskId = PluginUtil.scheduleSyncRepeatingTask(0, 1) {
+        taskId = SchedulingUtil.scheduleSyncRepeatingTask(0, 1) {
             particleCoordinates.forEach {
                 world.spawnParticle(
                     Particle.PORTAL,
@@ -47,6 +47,6 @@ class DefaultPortalSkin : PortalSkin {
     }
 
     override fun cancel() {
-        PluginUtil.cancelTask(taskId)
+        SchedulingUtil.cancelTask(taskId)
     }
 }

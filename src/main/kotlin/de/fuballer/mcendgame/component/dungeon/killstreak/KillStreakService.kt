@@ -5,10 +5,10 @@ import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakEntity
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
 import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.TimerTask
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isMinion
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.SchedulingUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Server
 import org.bukkit.World
 import org.bukkit.entity.LivingEntity
@@ -18,7 +18,6 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
-import java.util.*
 import kotlin.math.min
 
 @Component
@@ -36,7 +35,7 @@ class KillStreakService(
 
         val killStreak = killStreakRepo.findById(world.name) ?: return
         killStreak.streak++
-        killStreak.timer = KillStreakSettings.TIMER_MS.toLong()
+        killStreak.timer = KillStreakSettings.MAX_TIMER
         killStreak.bossBar.setTitle("${killStreak.streak}")
         killStreak.bossBar.progress = 1.0
 
@@ -49,7 +48,7 @@ class KillStreakService(
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
         val player = event.damager as? Player ?: return
-        if (WorldUtil.isNotDungeonWorld(player.world)) return
+        if (!player.world.isDungeonWorld()) return
 
         if (event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK
             && player.attackCooldown < KillStreakSettings.MIN_ATTACK_COOLDOWN_FOR_EXTRA_TIME
@@ -60,10 +59,10 @@ class KillStreakService(
 
         val killStreak = killStreakRepo.findById(damaged.world.name) ?: return
         killStreak.timer = min(
-            KillStreakSettings.TIMER_MS.toLong(),
+            KillStreakSettings.MAX_TIMER,
             killStreak.timer + KillStreakSettings.TIME_PER_HIT
         )
-        killStreak.bossBar.progress = killStreak.timer.toDouble() / KillStreakSettings.TIMER_MS
+        killStreak.bossBar.progress = killStreak.timer.toDouble() / KillStreakSettings.MAX_TIMER
 
         killStreakRepo.save(killStreak)
     }
@@ -89,7 +88,7 @@ class KillStreakService(
         val player = event.player
         val world = event.player.world
 
-        if (WorldUtil.isDungeonWorld(world)) {
+        if (world.isDungeonWorld()) {
             addPlayerToBossBar(player, world)
         } else {
             removePlayerFromBossBar(player, event.from)
@@ -115,16 +114,11 @@ class KillStreakService(
             .apply { progress = 0.0 }
         val killStreak = KillStreakEntity(name, bossBar)
 
-        val updateTask = TimerTask { updateKillStreak(killStreak) }
-        killStreak.updateTask = updateTask
+        killStreak.updateTask = SchedulingUtil.runTaskTimer(KillStreakSettings.TIMER_PERIOD) {
+            updateKillStreak(killStreak)
+        }
 
         killStreakRepo.save(killStreak)
-
-        Timer().schedule(
-            updateTask,
-            KillStreakSettings.TIMER_PERIOD,
-            KillStreakSettings.TIMER_PERIOD
-        )
     }
 
     private fun addPlayerToBossBar(player: Player, world: World) {
@@ -146,7 +140,7 @@ class KillStreakService(
         killStreak.timer -= KillStreakSettings.TIMER_PERIOD
 
         if (killStreak.timer > 0) {
-            killStreak.bossBar.progress = killStreak.timer.toDouble() / KillStreakSettings.TIMER_MS
+            killStreak.bossBar.progress = killStreak.timer.toDouble() / KillStreakSettings.MAX_TIMER
 
             killStreakRepo.save(killStreak)
             return

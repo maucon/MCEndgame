@@ -85,13 +85,6 @@ class DungeonEntityDeathEvent(
 ) : HandleableEvent()
 
 /**
- * Thrown whenever a portal gets created
- */
-class PortalCreatedEvent(
-    val portal: Portal
-) : HandleableEvent()
-
-/**
  * Thrown whenever a player uses a portal
  */
 class PortalUsedEvent(

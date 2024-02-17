@@ -7,10 +7,10 @@ import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.EntityExtension.setIsSpecial
 import de.fuballer.mcendgame.util.EntityUtil
-import de.fuballer.mcendgame.util.PluginUtil
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.SchedulingUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.setIsSpecial
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Location
@@ -36,7 +36,7 @@ class EnemyGenerationService(
         if (effect.type != PotionEffectType.LUCK) return
 
         val entity = event.entity as? LivingEntity ?: return
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
+        if (!entity.world.isDungeonWorld()) return
 
         entity.health = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
     }
@@ -52,7 +52,7 @@ class EnemyGenerationService(
     ) {
         val tileList = getSpawnableTiles(layoutTiles, startPoint)
             .onEach {
-                PluginUtil.scheduleTask {
+                SchedulingUtil.runTask {
                     val mobCount = EnemyGenerationSettings.generateMobCount(random)
                     spawnMobs(random, randomEntityTypes, mobCount, -it.x * 16.0 - 8, -it.y * 16.0 - 8, mapTier, world)
                 }
@@ -82,7 +82,7 @@ class EnemyGenerationService(
         tileList.shuffled(random)
             .take(EnemyGenerationSettings.SPECIAL_MOB_COUNT)
             .forEach {
-                PluginUtil.scheduleTask {
+                SchedulingUtil.runTask {
                     spawnMobs(random, specialEntityTypes, 1, -it.x * 16.0 - 8, -it.y * 16.0 - 8, mapTier, world, special = true)
                 }
             }

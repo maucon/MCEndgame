@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.statistics.db.StatisticsEntity
 import de.fuballer.mcendgame.component.statistics.db.StatisticsRepository
 import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -46,7 +46,7 @@ class StatisticsService(
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {
-        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
+        if (!event.entity.world.isDungeonWorld()) return
 
         var damager = event.damager
         damager = testIfDamagerIsArrow(damager)

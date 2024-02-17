@@ -1,15 +1,14 @@
 package de.fuballer.mcendgame.component.corruption
 
-import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCorruptionRounds
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.isUnmodifiable
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setRolledAttributes
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.SchedulingUtil
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCorruptionRounds
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.setRolledAttributes
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.GameMode
 import org.bukkit.Material
@@ -45,7 +44,7 @@ class CorruptionService : Listener {
 
         event.result = result
 
-        PluginUtil.scheduleTask {
+        SchedulingUtil.runTask {
             event.inventory.repairCost = 1
 
             event.inventory.viewers.forEach {
@@ -110,10 +109,10 @@ class CorruptionService : Listener {
             else CorruptionSettings.ALTERNATE_CORRUPTIONS
 
         when (RandomUtil.pick(corruptions).option) {
-            CorruptionChanceType.CORRUPT_ENCHANTS -> corruptEnchant(item)
-            CorruptionChanceType.CORRUPT_ATTRIBUTES -> corruptAttributes(item)
-            CorruptionChanceType.DESTROY -> item.type = Material.AIR
-            CorruptionChanceType.DO_NOTHING -> {}
+            CorruptionModification.CORRUPT_ENCHANTS -> corruptEnchant(item)
+            CorruptionModification.CORRUPT_ATTRIBUTES -> corruptAttributes(item)
+            CorruptionModification.DESTROY -> item.type = Material.AIR
+            CorruptionModification.DO_NOTHING -> {}
         }
     }
 

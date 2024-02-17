@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationServi
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressService
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
-import de.fuballer.mcendgame.component.portal.db.Portal
+import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
@@ -20,7 +20,8 @@ import kotlin.math.min
 class MapDeviceService(
     private val mapDeviceRepo: MapDeviceRepository,
     private val dungeonGenerationService: DungeonGenerationService,
-    private val playerDungeonProgressService: PlayerDungeonProgressService
+    private val playerDungeonProgressService: PlayerDungeonProgressService,
+    private val portalService: PortalService
 ) : Listener, LifeCycleListener {
     override fun terminate() {
         mapDeviceRepo.findAll()
@@ -30,7 +31,7 @@ class MapDeviceService(
     @EventHandler
     fun on(event: PortalUsedEvent) {
         val portal = event.portal
-        val mapDevice = mapDeviceRepo.findByPortalEntity(portal.entity) ?: return
+        val mapDevice = mapDeviceRepo.findByPortal(portal) ?: return
 
         val playerDungeonJoinEvent = PlayerDungeonJoinEvent(event.player, portal.target.world!!, portal.target)
         EventGateway.apply(playerDungeonJoinEvent)
@@ -45,7 +46,7 @@ class MapDeviceService(
 
     @EventHandler
     fun on(event: PortalFailedEvent) {
-        val mapDevice = mapDeviceRepo.findByPortalEntity(event.portal.entity) ?: return
+        val mapDevice = mapDeviceRepo.findByPortal(event.portal) ?: return
 
         closeDungeon(mapDevice)
     }
@@ -80,7 +81,7 @@ class MapDeviceService(
         mapDevice.portals = MapDeviceSettings.PORTAL_OFFSETS
             .map { deviceCenter.clone().add(it) }
             .onEach { it.yaw = MathUtil.calculateYawToFacingLocation(it, deviceCenter) + 180 }
-            .map { Portal(it, target, isInitiallyActive = true, isSingleUse = true) }
+            .map { portalService.createPortal(it, target, isInitiallyActive = true, isSingleUse = true) }
             .toMutableList()
 
         mapDeviceRepo.save(mapDevice)

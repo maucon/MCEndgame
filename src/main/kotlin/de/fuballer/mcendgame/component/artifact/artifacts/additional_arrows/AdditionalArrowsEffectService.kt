@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.component.artifact.artifacts.additional_arrows
 
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
-import de.fuballer.mcendgame.technical.extension.ProjectileExtension.getAddedBaseDamage
-import de.fuballer.mcendgame.technical.extension.ProjectileExtension.setAddedBaseDamage
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestArtifactTier
+import de.fuballer.mcendgame.util.extension.ProjectileExtension.getAddedBaseDamage
+import de.fuballer.mcendgame.util.extension.ProjectileExtension.setAddedBaseDamage
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
@@ -19,7 +19,7 @@ class AdditionalArrowsEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: EntityShootBowEvent) {
         val player = event.entity as? Player ?: return
-        if (WorldUtil.isNotDungeonWorld(player.world)) return
+        if (!player.world.isDungeonWorld()) return
 
         val tier = player.getHighestArtifactTier(AdditionalArrowsArtifactType) ?: return
         val (additionalArrowsAmount, damagePercentage) = AdditionalArrowsArtifactType.getValues(tier)

@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.component.damage
 
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.ProjectileExtension.setAddedBaseDamage
 import de.fuballer.mcendgame.util.DamageUtil
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.ProjectileExtension.setAddedBaseDamage
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.LivingEntity
@@ -16,7 +16,7 @@ import org.bukkit.event.entity.EntityShootBowEvent
 class ProjectileService : Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     fun on(event: EntityShootBowEvent) {
-        if (WorldUtil.isDungeonWorld(event.entity.world)) return // only for vanilla worlds
+        if (event.entity.world.isDungeonWorld()) return // only for vanilla worlds
         val projectile = event.projectile as? AbstractArrow ?: return
 
         val addedDamage = getAddedDamage(event.entity)

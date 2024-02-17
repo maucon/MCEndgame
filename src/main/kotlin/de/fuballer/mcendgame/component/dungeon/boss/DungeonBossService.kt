@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Entity
@@ -44,7 +44,7 @@ class DungeonBossService(
     @EventHandler
     fun on(event: EntityDamageEvent) {
         val entity = event.entity
-        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
+        if (!event.entity.world.isDungeonWorld()) return
 
         if (dungeonBossRepo.exists(entity.uniqueId)) (entity as LivingEntity).setAI(true)
     }

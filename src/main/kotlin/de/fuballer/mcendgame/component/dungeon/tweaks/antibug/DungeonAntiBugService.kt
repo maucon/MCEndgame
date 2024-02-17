@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.tweaks.antibug
 
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Material
 import org.bukkit.entity.Animals
 import org.bukkit.entity.EntityType
@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent
 class DungeonAntiBugService : Listener {
     @EventHandler
     fun on(event: PlayerItemConsumeEvent) {
-        if (WorldUtil.isNotDungeonWorld(event.player.world)) return
+        if (!event.player.world.isDungeonWorld()) return
         if (event.item.type == Material.CHORUS_FRUIT) {
             event.isCancelled = true
         }
@@ -25,7 +25,7 @@ class DungeonAntiBugService : Listener {
 
     @EventHandler
     fun on(event: ProjectileLaunchEvent) {
-        if (WorldUtil.isNotDungeonWorld(event.entity.world)) return
+        if (!event.entity.world.isDungeonWorld()) return
         if (event.entity.type == EntityType.ENDER_PEARL) {
             event.isCancelled = true
         }
@@ -33,7 +33,7 @@ class DungeonAntiBugService : Listener {
 
     @EventHandler
     fun on(event: PlayerInteractEvent) {
-        if (WorldUtil.isNotDungeonWorld(event.player.world)) return
+        if (!event.player.world.isDungeonWorld()) return
 
         if (event.action != Action.RIGHT_CLICK_BLOCK) return
 
@@ -49,7 +49,7 @@ class DungeonAntiBugService : Listener {
 
     @EventHandler
     fun on(event: PlayerInteractEntityEvent) {
-        if (WorldUtil.isNotDungeonWorld(event.rightClicked.world)) return
+        if (!event.rightClicked.world.isDungeonWorld()) return
         if (event.rightClicked !is Animals) return
 
         event.isCancelled = true

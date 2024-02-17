@@ -3,8 +3,8 @@ package de.fuballer.mcendgame.util
 import de.fuballer.mcendgame.component.attribute.AttributeType
 import de.fuballer.mcendgame.component.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getCustomItemType
-import de.fuballer.mcendgame.technical.extension.ItemStackExtension.getRolledAttributes
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
 import org.bukkit.Difficulty
 import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment

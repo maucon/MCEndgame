@@ -3,9 +3,9 @@ package de.fuballer.mcendgame.component.artifact.artifacts.wolf_companion
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestArtifactTier
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.DyeColor
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -52,7 +52,7 @@ class WolfCompanionEffectService : Listener {
     fun on(event: EntityTargetEvent) {
         val entity = event.entity
 
-        if (WorldUtil.isNotDungeonWorld(entity.world)) return
+        if (!entity.world.isDungeonWorld()) return
 
         if (entity.isEnemy()) return
         if (entity !is Wolf) return

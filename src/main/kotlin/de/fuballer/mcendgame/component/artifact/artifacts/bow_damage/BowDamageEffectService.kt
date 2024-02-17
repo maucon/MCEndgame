@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.artifact.artifacts.bow_damage
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestArtifactTier
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 

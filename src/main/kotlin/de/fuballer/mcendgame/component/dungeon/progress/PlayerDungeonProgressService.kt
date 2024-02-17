@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.component.dungeon.progress.db.PlayerDungeonProgress
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -49,7 +49,7 @@ class PlayerDungeonProgressService(
     @EventHandler
     fun on(event: PlayerRespawnEvent) {
         val player = event.player
-        if (WorldUtil.isNotDungeonWorld(player.world)) return
+        if (!player.world.isDungeonWorld()) return
 
         val (_, tier, progress) = getPlayerDungeonLevel(player.uniqueId)
         player.sendMessage(PlayerDungeonProgressSettings.getRegressMessage(tier, progress))

@@ -1,4 +1,4 @@
-name: MC-Endgame
+name: MCEndgame
 version: '${version}'
 description: "MC-Endgame is a Minecraft server plugin that enhances the endgame experience by introducing a new level of progression."
 website: https://github.com/maucon/MC-Endgame

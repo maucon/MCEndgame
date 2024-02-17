@@ -1,16 +1,16 @@
 package de.fuballer.mcendgame.component.dungeon.world
 
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.WorldUtil
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.world.WorldInitEvent
 
 @Component
-class WorldGenerationService : Listener {
+class WorldConfigurationService : Listener {
     @EventHandler
     fun on(event: WorldInitEvent) {
-        if (WorldUtil.isNotDungeonWorld(event.world)) return
+        if (!event.world.isDungeonWorld()) return
 
         event.world.keepSpawnInMemory = false
     }

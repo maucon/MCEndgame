@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.technical.extension
+package de.fuballer.mcendgame.util.extension
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.technical.persistent_data.TypeKeys

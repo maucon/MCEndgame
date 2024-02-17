@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.technical.extension.ProjectileExtension.getAddedBaseDamage
-import de.fuballer.mcendgame.technical.extension.ProjectileExtension.setAddedBaseDamage
+import de.fuballer.mcendgame.util.extension.ProjectileExtension.getAddedBaseDamage
+import de.fuballer.mcendgame.util.extension.ProjectileExtension.setAddedBaseDamage
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.AbstractArrow

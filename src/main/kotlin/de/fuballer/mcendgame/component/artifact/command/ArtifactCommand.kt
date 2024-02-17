@@ -4,8 +4,8 @@ import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.CommandHandler
-import de.fuballer.mcendgame.technical.extension.PlayerExtension.getArtifacts
 import de.fuballer.mcendgame.util.InventoryUtil
+import de.fuballer.mcendgame.util.extension.PlayerExtension.getArtifacts
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player

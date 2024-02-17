@@ -1,13 +1,13 @@
 package de.fuballer.mcendgame.component.map_device.db
 
 import de.fuballer.mcendgame.component.map_device.MapDeviceSettings
+import de.fuballer.mcendgame.component.portal.db.Portal
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.PersistentMapRepository
-import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.SchedulingUtil
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Server
-import org.bukkit.entity.Entity
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
@@ -19,7 +19,7 @@ class MapDeviceRepository(
     override fun initialize(plugin: JavaPlugin) {
         super.initialize(plugin)
 
-        PluginUtil.scheduleSyncDelayedTask {
+        SchedulingUtil.scheduleSyncDelayedTask {
             this.map = findAll()
                 .map {
                     val world = server.getWorld(it.worldName) ?: return@map null
@@ -40,8 +40,8 @@ class MapDeviceRepository(
 
     fun findByLocation(location: Location) = findAll().find { it.location == location }
 
-    fun findByPortalEntity(entity: Entity) = findAll().find { mapDevice ->
-        mapDevice.portals.any { it.id == entity.uniqueId }
+    fun findByPortal(portal: Portal) = findAll().find { mapDevice ->
+        mapDevice.portals.any { it.id == portal.id }
     }
 
     fun deleteByLocation(location: Location) {

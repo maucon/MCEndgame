@@ -6,8 +6,8 @@ import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.extension.EntityExtension.setDisableDropEquipment
 import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.setDisableDropEquipment
 import org.bukkit.Location
 import org.bukkit.entity.Creature
 

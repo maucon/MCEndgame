@@ -1,4 +1,4 @@
-# MC-Endgame
+# MCEndgame
 
 ## About the Project
 
@@ -23,8 +23,9 @@ MC-Endgame is a Minecraft server plugin that enhances the endgame experience by 
 * `/item-info`: Presents details about the stat rolls of the item currently held in the main hand
 * `/dungeon-statistics`: Exhibits dungeon statistics, including the count of monsters slain
 * `/dungeon-progress`: Indicates or modifies the current progress of a player within the dungeon
-* `/dungeon-equipment-calculation`:  [WIP] Provides damage calculations related to your current equipment setup
-* `/dungeon-type`:  Indicates or modifies the next generated dungeon-type of a player
+* `/dungeon-type`: Indicates or modifies the next generated dungeon-type of a player
+* `/give-custom-item`: Gives a custom item with the specified type to a player
+* `/dungeon-seed`: View or set the seed of the next dungeon a player will generate
 
 For more info about the commands see `plugin.yml`
 

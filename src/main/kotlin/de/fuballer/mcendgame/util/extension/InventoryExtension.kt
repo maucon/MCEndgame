@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.technical.extension
+package de.fuballer.mcendgame.util.extension
 
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.component.inventory.InventoryRegistry
