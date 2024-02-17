@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.corruption
 
-import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
@@ -110,10 +109,10 @@ class CorruptionService : Listener {
             else CorruptionSettings.ALTERNATE_CORRUPTIONS
 
         when (RandomUtil.pick(corruptions).option) {
-            CorruptionChanceType.CORRUPT_ENCHANTS -> corruptEnchant(item)
-            CorruptionChanceType.CORRUPT_ATTRIBUTES -> corruptAttributes(item)
-            CorruptionChanceType.DESTROY -> item.type = Material.AIR
-            CorruptionChanceType.DO_NOTHING -> {}
+            CorruptionModification.CORRUPT_ENCHANTS -> corruptEnchant(item)
+            CorruptionModification.CORRUPT_ATTRIBUTES -> corruptAttributes(item)
+            CorruptionModification.DESTROY -> item.type = Material.AIR
+            CorruptionModification.DO_NOTHING -> {}
         }
     }
 

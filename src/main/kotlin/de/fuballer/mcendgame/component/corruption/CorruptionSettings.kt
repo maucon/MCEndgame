@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.component.corruption
 
 import de.fuballer.mcendgame.component.attribute.RollableAttribute
-import de.fuballer.mcendgame.component.corruption.data.CorruptionChanceType
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCorruptionRounds
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
@@ -20,16 +19,16 @@ object CorruptionSettings {
     val CORRUPTION_TAG_LORE = ChatColor.DARK_RED.toString() + "Corrupted"
 
     val CORRUPTIONS = listOf(
-        RandomOption(40, CorruptionChanceType.CORRUPT_ENCHANTS),
-        RandomOption(40, CorruptionChanceType.CORRUPT_ATTRIBUTES),
-        RandomOption(10, CorruptionChanceType.DESTROY),
-        RandomOption(10, CorruptionChanceType.DO_NOTHING)
+        RandomOption(40, CorruptionModification.CORRUPT_ENCHANTS),
+        RandomOption(40, CorruptionModification.CORRUPT_ATTRIBUTES),
+        RandomOption(10, CorruptionModification.DESTROY),
+        RandomOption(10, CorruptionModification.DO_NOTHING)
     )
 
     val ALTERNATE_CORRUPTIONS = listOf(
-        RandomOption(65, CorruptionChanceType.CORRUPT_ENCHANTS),
-        RandomOption(10, CorruptionChanceType.DESTROY),
-        RandomOption(25, CorruptionChanceType.DO_NOTHING)
+        RandomOption(65, CorruptionModification.CORRUPT_ENCHANTS),
+        RandomOption(10, CorruptionModification.DESTROY),
+        RandomOption(25, CorruptionModification.DO_NOTHING)
     )
 
     const val PRESENT_ENCHANT_WEIGHT_MULTIPLIER = 3
