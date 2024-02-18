@@ -90,5 +90,8 @@ enum class AttributeType(
     ),
     TWINFIRE_DUAL_WIELD(
         { " ${DECIMAL_FORMAT.format(it * 100)}% more damage while dual wielding Twinfire" }
+    ),
+    ABSORPTION_ON_HIGH_DAMAGE_TAKEN(
+        { " If you take at least 7 damage in one hit gain Absorption II for ${DECIMAL_FORMAT.format(it)} seconds" }
     )
 }
