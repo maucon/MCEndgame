@@ -93,6 +93,6 @@ interface DamageCauseCalculator {
         val damageBlocked = event.getDamage(DamageModifier.BLOCKING) < 0
         val difficulty = damager.world.difficulty
 
-        return DamageCalculationEvent(damager, damagerCustomAttributes, damagedEntity, damagedCustomAttributes, cause, isDungeonWorld, damageBlocked, difficulty)
+        return DamageCalculationEvent(event, this, damager, damagerCustomAttributes, damagedEntity, damagedCustomAttributes, cause, isDungeonWorld, damageBlocked, difficulty)
     }
 }

@@ -54,16 +54,19 @@ class DamageService(
             return
         }
 
-        val baseDamage = damageTypeCalculator.getBaseDamage(damageEvent)
-        applyEvent(event, baseDamage, damageTypeCalculator, damageEvent)
+        val mappedEvent = damageEvent.toBaseEvent()
+
+        damageEvent.onHitPotionEffects.forEach {
+            damageEvent.damaged.addPotionEffect(it)
+        }
 
         // debug start
         DamageModifier.entries
-            .filter { event.isApplicable(it) }
+            .filter { mappedEvent.isApplicable(it) }
             .withIndex()
             .forEach { (index, damageModifier) ->
                 val (modifier, oldDamage) = oldDamageValues[index]
-                val newDamage = event.getDamage(damageModifier)
+                val newDamage = mappedEvent.getDamage(damageModifier)
                 val damageDiff = abs(oldDamage - newDamage)
                 val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
                 val format = "%s%s : %.3f -> %.3f | %.3f"
@@ -71,7 +74,7 @@ class DamageService(
                     Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, modifier, oldDamage, newDamage, damageDiff))
                 }
             }
-        val newDamage = event.finalDamage
+        val newDamage = mappedEvent.finalDamage
         val damageDiff = abs(oldFinalValue.second - newDamage)
         val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
 
@@ -80,29 +83,5 @@ class DamageService(
             Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, oldFinalValue.first, oldFinalValue.second, newDamage, damageDiff))
         }
         // debug end
-    }
-
-    private fun applyEvent(
-        event: EntityDamageByEntityEvent,
-        baseDamage: Double,
-        damageTypeCalculator: DamageCauseCalculator,
-        damageEvent: DamageCalculationEvent
-    ) {
-        var leftDamage = baseDamage
-
-        event.setDamage(DamageModifier.BASE, baseDamage)
-        DamageModifier.entries
-            .filter { it != DamageModifier.BASE }
-            .filter { event.isApplicable(it) }
-            .forEach {
-                val reduction = damageTypeCalculator.getFlatDamageReduction(damageEvent, leftDamage, it)
-                event.setDamage(it, -reduction)
-
-                leftDamage -= reduction
-            }
-
-        damageEvent.onHitPotionEffects.forEach {
-            damageEvent.damaged.addPotionEffect(it)
-        }
     }
 }

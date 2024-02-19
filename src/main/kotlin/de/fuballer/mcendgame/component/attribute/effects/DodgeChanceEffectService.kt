@@ -5,8 +5,6 @@ import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
 import kotlin.random.Random
 
 @Component
