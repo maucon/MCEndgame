@@ -116,5 +116,11 @@ enum class AttributeType(
     ),
     TAUNT(
         { "+${DECIMAL_FORMAT.format(it * 100)}% chance to taunt an enemy on hit" }
-    )
+    ),
+    STEALTH(
+        { " Wearer cant be targeted by enemies facing away" }
+    ),
+    BACKSTAB(
+        { " ${DECIMAL_FORMAT.format(it * 100)}% more damage with attacks into enemies backs" }
+    ),
 }
