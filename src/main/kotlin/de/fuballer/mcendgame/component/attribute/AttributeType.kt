@@ -93,5 +93,28 @@ enum class AttributeType(
     ),
     ABSORPTION_ON_HIGH_DAMAGE_TAKEN(
         { " When taking at least ${DECIMAL_FORMAT.format(it)} damage, gain Absorption II" }
+    ),
+
+    // TODO no custom item yet
+    ADDITIONAL_ARROWS(
+        { " Shoot 2 additional arrows dealing ${DECIMAL_FORMAT.format(it)}% damage" }
+    ),
+    EFFECT_GAIN(
+        { " ${DECIMAL_FORMAT.format(it * 100)}% chance to gain a random effect on kill" }
+    ),
+    HEAL_ON_BLOCK(
+        { " Heal ${DECIMAL_FORMAT.format(it)} health on block, with a cooldown of 7 seconds" }
+    ),
+    MORE_DAMAGE_AGAINST_FULL_LIFE(
+        { " ${DECIMAL_FORMAT.format(it * 100)}% more damage against full life enemies" }
+    ),
+    INC_DAMAGE_PER_MISSING_HEALTH(
+        { " ${DECIMAL_FORMAT.format(it * 100)}% increased damage per missing heart" }
+    ),
+    SLOW_ON_HIT(
+        { " Affect nearby enemies with Slowness II for ${DECIMAL_FORMAT.format(it)} seconds on hit" }
+    ),
+    TAUNT(
+        { "+${DECIMAL_FORMAT.format(it * 100)}% chance to taunt an enemy on hit" }
     )
 }

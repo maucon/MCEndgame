@@ -1,47 +1,45 @@
-package de.fuballer.mcendgame.component.artifact.artifacts.heal_on_block
+package de.fuballer.mcendgame.component.attribute.effects
 
+import de.fuballer.mcendgame.component.attribute.AttributeType
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHealOnBlockArtifactActivation
-import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestArtifactTier
 import de.fuballer.mcendgame.util.extension.PlayerExtension.setHealOnBlockArtifactActivation
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import kotlin.math.min
-import kotlin.random.Random
 
 @Component
 class HealOnBlockEffectService : Listener {
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        if (!event.isDungeonWorld) return
-
         val player = event.damaged as? Player ?: return
         if (!event.damageBlocked) return
 
-        val tier = player.getHighestArtifactTier(HealOnBlockArtifactType) ?: return
+        val damagedCustomAttributes = event.damaged.getCustomAttributes()
+        val healOnBlockAttributes = damagedCustomAttributes[AttributeType.HEAL_ON_BLOCK] ?: return
 
-        val (chance, health, cooldown) = HealOnBlockArtifactType.getValues(tier)
-        if (Random.nextDouble() > chance) return
+        val healOnBlockAttribute = healOnBlockAttributes.sum()
 
-        if (isHealOnBlockOnCooldown(player, cooldown)) return
+        if (isHealOnBlockOnCooldown(player)) return
         player.setHealOnBlockArtifactActivation(System.currentTimeMillis())
 
         spawnParticles(player)
 
         val maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
-        val newHealth = min(player.health + health, maxHealth)
+        val newHealth = min(player.health + healOnBlockAttribute, maxHealth)
         player.health = newHealth
     }
 
-    private fun isHealOnBlockOnCooldown(player: Player, cooldown: Double): Boolean {
+    private fun isHealOnBlockOnCooldown(player: Player): Boolean {
         val lastActivation = player.getHealOnBlockArtifactActivation() ?: return false
-        val cdMS = (cooldown * 1000).toLong()
-        return lastActivation + cdMS > System.currentTimeMillis()
+        return lastActivation + 7000 > System.currentTimeMillis()
     }
 
     private fun spawnParticles(player: Player) {

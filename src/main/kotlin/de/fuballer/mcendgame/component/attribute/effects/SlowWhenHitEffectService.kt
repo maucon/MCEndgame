@@ -1,11 +1,11 @@
-package de.fuballer.mcendgame.component.artifact.artifacts.slow_when_hit
+package de.fuballer.mcendgame.component.attribute.effects
 
+import de.fuballer.mcendgame.component.attribute.AttributeType
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestArtifactTier
+import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.potion.PotionEffect
@@ -15,16 +15,12 @@ import org.bukkit.potion.PotionEffectType
 class SlowWhenHitEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        if (!event.isDungeonWorld) return
+        val damagerCustomAttributes = event.damager.getCustomAttributes()
+        val slowOnHitAttributes = damagerCustomAttributes[AttributeType.SLOW_ON_HIT] ?: return
+        val slowOnHitAttribute = slowOnHitAttributes.max()
 
-        val player = event.damager as? Player ?: return
-        val tier = player.getHighestArtifactTier(SlowWhenHitArtifactType) ?: return
-
-        val (amplifier, duration) = SlowWhenHitArtifactType.getValues(tier)
-        val realAmplifier = amplifier.toInt() - 1
-        val realDuration = (duration * 20).toInt()
-
-        val slowEffect = PotionEffect(PotionEffectType.SLOW, realDuration, realAmplifier, true)
+        val duration = (slowOnHitAttribute * 20).toInt()
+        val slowEffect = PotionEffect(PotionEffectType.SLOW, duration, 1, true)
 
         event.damaged.getNearbyEntities(4.0, 4.0, 4.0)
             .filter { !it.isEnemy() }

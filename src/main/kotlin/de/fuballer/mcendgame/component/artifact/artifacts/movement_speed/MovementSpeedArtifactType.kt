@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.component.artifact.artifacts.movement_speed
 
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
-import de.fuballer.mcendgame.component.artifact.artifacts.additional_arrows.AdditionalArrowsArtifactType
 import de.fuballer.mcendgame.component.artifact.data.ArtifactTier
 import de.fuballer.mcendgame.component.artifact.data.ArtifactType
 import de.fuballer.mcendgame.util.PluginUtil
@@ -20,7 +19,7 @@ object MovementSpeedArtifactType : ArtifactType {
     }
 
     override fun getLore(tier: ArtifactTier): List<String> {
-        val (increasedSpeed) = AdditionalArrowsArtifactType.getValues(tier)
+        val (increasedSpeed) = getValues(tier)
         val values = listOf(increasedSpeed * 100)
 
         return ArtifactSettings.formatLore(LORE_FORMAT, values)

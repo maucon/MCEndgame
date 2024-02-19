@@ -4,18 +4,23 @@ import de.fuballer.mcendgame.component.attribute.AttributeType
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
+import org.bukkit.entity.Monster
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import kotlin.random.Random
 
 @Component
-class TwinfireDualWieldEffectService : Listener{
+class TauntEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
         val damagerCustomAttributes = event.damager.getCustomAttributes()
-        val values = damagerCustomAttributes[AttributeType.TWINFIRE_DUAL_WIELD] ?: return
+        val tauntAttributes = damagerCustomAttributes[AttributeType.TAUNT] ?: return
 
-        if (values.size < 2) return
+        val damaged = event.damaged as? Monster ?: return
+        val tauntChance = tauntAttributes.sum()
 
-        event.moreDamage.addAll(values)
+        if (Random.nextDouble() > tauntChance) return
+
+        damaged.target = event.damager
     }
 }

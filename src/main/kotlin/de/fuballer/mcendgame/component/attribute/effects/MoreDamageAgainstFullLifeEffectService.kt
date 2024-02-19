@@ -1,32 +1,31 @@
-package de.fuballer.mcendgame.component.artifact.artifacts.inc_damage_against_full_life
+package de.fuballer.mcendgame.component.attribute.effects
 
+import de.fuballer.mcendgame.component.attribute.AttributeType
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestArtifactTier
-import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
+import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
 @Component
-class IncDamageAgainstFullLifeEffectService : Listener {
-    @EventHandler(ignoreCancelled = true)
+class MoreDamageAgainstFullLifeEffectService : Listener {
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        val player = event.damager as? Player ?: return
-        if (!player.world.isDungeonWorld()) return
-
-        val tier = player.getHighestArtifactTier(IncDamageAgainstFullLifeArtifactType) ?: return
+        val damagerCustomAttributes = event.damager.getCustomAttributes()
+        val moreDamageAttributes = damagerCustomAttributes[AttributeType.MORE_DAMAGE_AGAINST_FULL_LIFE] ?: return
 
         if (event.damaged.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value > event.damaged.health + 0.1) return
 
         spawnParticles(event.damaged)
 
-        val (moreDamage) = IncDamageAgainstFullLifeArtifactType.getValues(tier)
-        event.moreDamage.add(moreDamage)
+        moreDamageAttributes.forEach {
+            event.moreDamage.add(it)
+        }
     }
 
     private fun spawnParticles(entity: LivingEntity) {
