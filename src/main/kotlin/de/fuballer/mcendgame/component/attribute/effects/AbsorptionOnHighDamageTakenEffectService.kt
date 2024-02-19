@@ -14,13 +14,11 @@ import kotlin.math.max
 class AbsorptionOnHighDamageTakenEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-
-        //TODO if big (life only) hit
-
         val absorptionAttributes = event.customDamagedAttributes[AttributeType.ABSORPTION_ON_HIGH_DAMAGE_TAKEN] ?: return
-        val timeInSec = absorptionAttributes.max()
-        val timeInTicks = max((timeInSec * 20).toInt(), 1)
+        val minDamage = absorptionAttributes.min()
 
-        event.onHitPotionEffects.add(PotionEffect(PotionEffectType.ABSORPTION, timeInTicks, 1, false, false, false))
+        if (event.getFinalDamage() < minDamage) return
+
+        event.onHitPotionEffects.add(PotionEffect(PotionEffectType.ABSORPTION, 100, 1, false, false, false))
     }
 }

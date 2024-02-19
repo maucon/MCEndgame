@@ -19,6 +19,7 @@ interface CustomItemType : Keyed {
             it.register(ShrinkshadowItemType)
             it.register(TitansEmbraceItemType)
             it.register(TwinfireItemType)
+            it.register(VitalitySurgeItemType)
         }
     }
 }
