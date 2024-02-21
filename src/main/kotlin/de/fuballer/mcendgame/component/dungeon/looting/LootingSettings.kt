@@ -17,7 +17,12 @@ object LootingSettings {
 
     val CUSTOM_ITEM_OPTIONS = listOf(
         RandomOption(1, ArcheryAnnexItemType),
+        RandomOption(1, ArrowfallItemType),
+        RandomOption(1, BitterfrostItemType),
+        RandomOption(1, FatesplitterItemType),
         RandomOption(1, GeistergaloschenItemType),
+        RandomOption(1, HeadhuntersHaremType),
+        RandomOption(1, LifewardAegisItemType),
         RandomOption(1, ShrinkshadowItemType),
         RandomOption(1, TitansEmbraceItemType),
         RandomOption(1, TwinfireItemType),

@@ -14,7 +14,7 @@ class IncDamagePerMissingHealthEffectService : Listener {
     fun on(event: DamageCalculationEvent) {
         val damager = event.damager
         val damagerCustomAttributes = damager.getCustomAttributes()
-        val incDamageAttributes = damagerCustomAttributes[AttributeType.INC_DAMAGE_PER_MISSING_HEALTH] ?: return
+        val incDamageAttributes = damagerCustomAttributes[AttributeType.INC_DAMAGE_PER_MISSING_HEART] ?: return
 
         val missingHealth = damager.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value - damager.health
 

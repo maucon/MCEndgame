@@ -23,7 +23,8 @@ class SlowWhenHitEffectService : Listener {
         val slowEffect = PotionEffect(PotionEffectType.SLOW, duration, 1, true)
 
         event.damaged.getNearbyEntities(4.0, 4.0, 4.0)
-            .filter { !it.isEnemy() }
+            .filter { it != event.damager }
+            .filter { !event.isDungeonWorld || event.damaged.isEnemy() }
             .filterIsInstance<LivingEntity>()
             .forEach { it.addPotionEffect(slowEffect) }
     }

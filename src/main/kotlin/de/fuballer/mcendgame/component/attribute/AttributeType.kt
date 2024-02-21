@@ -94,21 +94,25 @@ enum class AttributeType(
     ABSORPTION_ON_HIGH_DAMAGE_TAKEN(
         { " When taking at least ${DECIMAL_FORMAT.format(it)} damage, gain Absorption II" }
     ),
-
-    // TODO no custom item yet
+    STEALTH(
+        { " Cannot be targeted by enemies facing away" }
+    ),
+    BACKSTAB(
+        { " ${DECIMAL_FORMAT.format(it * 100)}% more damage with attacks from behind" }
+    ),
     ADDITIONAL_ARROWS(
         { " Shoot 2 additional arrows dealing ${DECIMAL_FORMAT.format(it)}% damage" }
     ),
     EFFECT_GAIN(
-        { " ${DECIMAL_FORMAT.format(it * 100)}% chance to gain a random effect on kill" }
-    ),
-    HEAL_ON_BLOCK(
-        { " Heal ${DECIMAL_FORMAT.format(it)} health on block, with a cooldown of 7 seconds" }
+        { " ${DECIMAL_FORMAT.format(it * 100)}% chance to gain a random positive effect on kill" }
     ),
     MORE_DAMAGE_AGAINST_FULL_LIFE(
         { " ${DECIMAL_FORMAT.format(it * 100)}% more damage against full life enemies" }
     ),
-    INC_DAMAGE_PER_MISSING_HEALTH(
+    HEAL_ON_BLOCK(
+        { " Heal ${DECIMAL_FORMAT.format(it)} health on block, with a cooldown of 7 seconds" }
+    ),
+    INC_DAMAGE_PER_MISSING_HEART(
         { " ${DECIMAL_FORMAT.format(it * 100)}% increased damage per missing heart" }
     ),
     SLOW_ON_HIT(
@@ -116,11 +120,5 @@ enum class AttributeType(
     ),
     TAUNT(
         { "+${DECIMAL_FORMAT.format(it * 100)}% chance to taunt an enemy on hit" }
-    ),
-    STEALTH(
-        { " Wearer cant be targeted by enemies facing away" }
-    ),
-    BACKSTAB(
-        { " ${DECIMAL_FORMAT.format(it * 100)}% more damage with attacks into enemies backs" }
     ),
 }
