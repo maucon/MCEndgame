@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
 object MovementSpeedArtifactType : ArtifactType {
-    private const val LORE_FORMAT = "You have %s%% increased base movement speed"
+    private const val LORE_FORMAT = "You have %s%% increased movement speed"
     override val key: NamespacedKey = PluginUtil.createNamespacedKey("movement_speed")
     override val displayName = "Artifact of Swiftness"
 
