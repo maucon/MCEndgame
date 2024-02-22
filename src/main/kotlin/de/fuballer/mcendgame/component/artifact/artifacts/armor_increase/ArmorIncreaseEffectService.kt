@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.artifact.artifacts.attack_damage
+package de.fuballer.mcendgame.component.artifact.artifacts.armor_increase
 
 import de.fuballer.mcendgame.component.artifact.artifacts.armor_toughness.ArmorToughnessArtifactType
 import de.fuballer.mcendgame.component.artifact.data.AttributeEffectServiceBase
@@ -7,8 +7,8 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 
 @Component
-class AttackDamageEffectService : AttributeEffectServiceBase(
+class ArmorIncreaseEffectService : AttributeEffectServiceBase(
     ArmorToughnessArtifactType,
-    Attribute.GENERIC_ATTACK_DAMAGE,
-    AttributeModifier.Operation.ADD_NUMBER
+    Attribute.GENERIC_ARMOR,
+    AttributeModifier.Operation.ADD_SCALAR
 )
