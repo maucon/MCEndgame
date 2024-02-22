@@ -1,6 +1,9 @@
 package de.fuballer.mcendgame.component.artifact.data
 
+import de.fuballer.mcendgame.component.artifact.artifacts.armor.ArmorArtifactType
+import de.fuballer.mcendgame.component.artifact.artifacts.armor_increase.ArmorIncreaseArtifactType
 import de.fuballer.mcendgame.component.artifact.artifacts.armor_toughness.ArmorToughnessArtifactType
+import de.fuballer.mcendgame.component.artifact.artifacts.attack_damage.AttackDamageArtifactType
 import de.fuballer.mcendgame.component.artifact.artifacts.attack_speed.AttackSpeedArtifactType
 import de.fuballer.mcendgame.component.artifact.artifacts.bow_damage.BowDamageArtifactType
 import de.fuballer.mcendgame.component.artifact.artifacts.max_health.MaxHealthArtifactType
@@ -16,7 +19,10 @@ interface ArtifactType : Keyed {
 
     companion object {
         val REGISTRY = KeyedRegistry<ArtifactType>().also {
+            it.register(ArmorArtifactType)
+            it.register(ArmorIncreaseArtifactType)
             it.register(ArmorToughnessArtifactType)
+            it.register(AttackDamageArtifactType)
             it.register(AttackSpeedArtifactType)
             it.register(BowDamageArtifactType)
             it.register(MaxHealthArtifactType)
