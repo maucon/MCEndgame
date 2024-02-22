@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.artifact.artifacts.bow_damage
+package de.fuballer.mcendgame.component.artifact.artifacts.projectile_damage
 
 import de.fuballer.mcendgame.component.artifact.ArtifactSettings
 import de.fuballer.mcendgame.component.artifact.data.ArtifactTier
@@ -6,9 +6,9 @@ import de.fuballer.mcendgame.component.artifact.data.ArtifactType
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
-object BowDamageArtifactType : ArtifactType {
-    private const val LORE_FORMAT = "Your arrows deal %s%% increased damage."
-    override val key: NamespacedKey = PluginUtil.createNamespacedKey("bow_damage")
+object ProjectileDamageArtifactType : ArtifactType {
+    private const val LORE_FORMAT = "Your projectiles deal %s%% increased damage."
+    override val key: NamespacedKey = PluginUtil.createNamespacedKey("projectile_damage")
     override val displayName = "Artifact of Impact"
 
     override fun getValues(tier: ArtifactTier) = when (tier) {
