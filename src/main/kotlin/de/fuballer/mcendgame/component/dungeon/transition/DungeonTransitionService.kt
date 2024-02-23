@@ -31,7 +31,7 @@ class DungeonTransitionService(
         if (player.world.isDungeonWorld()) {
             val playerDungeonJoinEvent = PlayerDungeonJoinEvent(player, player.world, player.location)
             EventGateway.apply(playerDungeonJoinEvent)
-        } else if (!event.from.isDungeonWorld()) {
+        } else if (event.from.isDungeonWorld()) {
             val playerDungeonLeaveEvent = PlayerDungeonLeaveEvent(player)
             EventGateway.apply(playerDungeonLeaveEvent)
         }
