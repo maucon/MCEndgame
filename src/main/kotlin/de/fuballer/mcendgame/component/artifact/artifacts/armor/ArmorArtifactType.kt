@@ -13,9 +13,9 @@ object ArmorArtifactType : ArtifactType {
 
     override fun getValues(tier: ArtifactTier) = when (tier) {
         ArtifactTier.COMMON -> listOf(3.0)
-        ArtifactTier.UNCOMMON -> listOf(5.0)
-        ArtifactTier.RARE -> listOf(7.0)
-        ArtifactTier.LEGENDARY -> listOf(10.0)
+        ArtifactTier.UNCOMMON -> listOf(4.5)
+        ArtifactTier.RARE -> listOf(6.0)
+        ArtifactTier.LEGENDARY -> listOf(8.0)
     }
 
     override fun getLore(tier: ArtifactTier): List<String> {

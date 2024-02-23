@@ -12,10 +12,10 @@ object ArmorIncreaseArtifactType : ArtifactType {
     override val displayName = "Artifact of Fortress"
 
     override fun getValues(tier: ArtifactTier) = when (tier) {
-        ArtifactTier.COMMON -> listOf(0.05)
-        ArtifactTier.UNCOMMON -> listOf(0.075)
-        ArtifactTier.RARE -> listOf(0.1)
-        ArtifactTier.LEGENDARY -> listOf(0.15)
+        ArtifactTier.COMMON -> listOf(0.10)
+        ArtifactTier.UNCOMMON -> listOf(0.15)
+        ArtifactTier.RARE -> listOf(0.2)
+        ArtifactTier.LEGENDARY -> listOf(0.30)
     }
 
     override fun getLore(tier: ArtifactTier): List<String> {
