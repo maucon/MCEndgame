@@ -57,6 +57,21 @@ class EquipmentGenerationService {
         }
     }
 
+    fun enchantItem(
+        random: Random,
+        mapTier: Int,
+        itemMeta: ItemMeta,
+        enchants: List<RandomOption<ItemEnchantment>>
+    ) {
+        repeat(EquipmentGenerationSettings.calculateEnchantTries(mapTier)) {
+            val itemEnchantment = RandomUtil.pick(enchants, random).option
+
+            if (itemMeta.getEnchantLevel(itemEnchantment.enchantment) < itemEnchantment.level) {
+                itemMeta.addEnchant(itemEnchantment.enchantment, itemEnchantment.level, true)
+            }
+        }
+    }
+
     private fun createMainHandItem(
         random: Random,
         mapTier: Int,
@@ -116,28 +131,13 @@ class EquipmentGenerationService {
         val item = ItemStack(equipment.material)
         val itemMeta = item.itemMeta ?: return item
 
-        addEnchants(random, mapTier, itemMeta, equipment.rollableEnchants)
+        enchantItem(random, mapTier, itemMeta, equipment.rollableEnchants)
         item.itemMeta = itemMeta
 
         addCustomAttributes(item, random, mapTier, equipment)
         ItemUtil.updateAttributesAndLore(item)
 
         return item
-    }
-
-    private fun addEnchants(
-        random: Random,
-        mapTier: Int,
-        itemMeta: ItemMeta,
-        enchants: List<RandomOption<ItemEnchantment>>
-    ) {
-        repeat(EquipmentGenerationSettings.calculateEnchantTries(mapTier)) {
-            val itemEnchantment = RandomUtil.pick(enchants, random).option
-
-            if (itemMeta.getEnchantLevel(itemEnchantment.enchantment) < itemEnchantment.level) {
-                itemMeta.addEnchant(itemEnchantment.enchantment, itemEnchantment.level, true)
-            }
-        }
     }
 
     private fun addCustomAttributes(

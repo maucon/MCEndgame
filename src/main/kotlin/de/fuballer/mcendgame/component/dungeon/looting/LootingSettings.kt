@@ -12,7 +12,7 @@ object LootingSettings {
     const val ITEMS_DROP_CHANCE_NETHERITE_PER_LOOTING = 0.0015f
 
     private const val CUSTOM_ITEM_BASE_CHANCE = 0.01
-    private const val CUSTOM_ITEM_CHANCE_INCREASE = 0.001
+    private const val CUSTOM_ITEM_CHANCE_INCREASE = 0.002
     fun getCustomItemDropChance(mapTier: Int) = CUSTOM_ITEM_BASE_CHANCE + CUSTOM_ITEM_CHANCE_INCREASE * mapTier
 
     val CUSTOM_ITEM_OPTIONS = listOf(
