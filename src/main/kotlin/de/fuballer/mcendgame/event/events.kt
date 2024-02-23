@@ -99,3 +99,12 @@ class PortalFailedEvent(
     val portal: Portal,
     val player: Player
 ) : HandleableEvent()
+
+/**
+ * Thrown whenever a dungeon gets generated
+ */
+class DungeonGeneratedEvent(
+    val world: World,
+    val leavePortals: List<Portal>,
+    val leaveLocation: Location
+) : HandleableEvent()

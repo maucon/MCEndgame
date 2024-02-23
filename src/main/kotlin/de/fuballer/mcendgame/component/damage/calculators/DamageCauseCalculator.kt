@@ -85,13 +85,12 @@ interface DamageCauseCalculator {
 
     private fun buildBaseDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
         val damager = EntityUtil.getLivingEntityDamager(event.damager) ?: return null
-        val customAttributes = DamageUtil.getEntityCustomAttributes(damager)
         val damagedEntity = event.entity as? LivingEntity ?: return null
         val cause = event.cause
         val isDungeonWorld = event.damager.world.isDungeonWorld()
         val damageBlocked = event.getDamage(DamageModifier.BLOCKING) < 0
         val difficulty = damager.world.difficulty
 
-        return DamageCalculationEvent(damager, customAttributes, damagedEntity, cause, isDungeonWorld, damageBlocked, difficulty)
+        return DamageCalculationEvent(event, this, damager, damagedEntity, cause, isDungeonWorld, damageBlocked, difficulty)
     }
 }

@@ -77,20 +77,22 @@ class CorruptionService : Listener {
             corruptItem(result)
         }
 
-        val sound = if (result.type == Material.AIR) Sound.ENTITY_ITEM_BREAK else Sound.BLOCK_ANVIL_USE
-        player.world.playSound(player.location, sound, SoundCategory.PLAYERS, 1f, 1f)
+        if (result.type == Material.AIR) {
+            player.world.playSound(player.location, Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 1f, 1f)
+        } else {
+            player.world.playSound(player.location, Sound.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1f, 1f)
+            result.setUnmodifiable()
+            ItemUtil.updateAttributesAndLore(result)
 
-        result.setUnmodifiable()
-        ItemUtil.updateAttributesAndLore(result)
+            when (event.action) {
+                InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_SOME ->
+                    player.setItemOnCursor(result)
 
-        when (event.action) {
-            InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_SOME ->
-                player.setItemOnCursor(result)
+                InventoryAction.MOVE_TO_OTHER_INVENTORY ->
+                    player.inventory.addItem(result)
 
-            InventoryAction.MOVE_TO_OTHER_INVENTORY ->
-                player.inventory.addItem(result)
-
-            else -> return
+                else -> return
+            }
         }
 
         inventory.setItem(0, null)

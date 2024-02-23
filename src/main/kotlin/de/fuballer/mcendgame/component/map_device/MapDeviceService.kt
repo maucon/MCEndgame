@@ -5,7 +5,10 @@ import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSer
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
 import de.fuballer.mcendgame.component.portal.PortalService
-import de.fuballer.mcendgame.event.*
+import de.fuballer.mcendgame.event.DungeonOpenEvent
+import de.fuballer.mcendgame.event.EventGateway
+import de.fuballer.mcendgame.event.PortalFailedEvent
+import de.fuballer.mcendgame.event.PortalUsedEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.MathUtil
@@ -32,11 +35,6 @@ class MapDeviceService(
     fun on(event: PortalUsedEvent) {
         val portal = event.portal
         val mapDevice = mapDeviceRepo.findByPortal(portal) ?: return
-
-        val playerDungeonJoinEvent = PlayerDungeonJoinEvent(event.player, portal.target.world!!, portal.target)
-        EventGateway.apply(playerDungeonJoinEvent)
-
-        if (!event.portal.isSingleUse) return
 
         mapDevice.portals.remove(portal)
         mapDeviceRepo.save(mapDevice)

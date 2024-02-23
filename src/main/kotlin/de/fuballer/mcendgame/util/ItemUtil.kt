@@ -164,7 +164,7 @@ object ItemUtil {
             attribute,
             AttributeModifier(
                 UUID.randomUUID(),
-                attribute.key.key,
+                attribute.key.toString(),
                 value,
                 operation,
                 slot

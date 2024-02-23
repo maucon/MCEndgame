@@ -9,11 +9,12 @@ import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossGenerationService
 import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationService
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
-import de.fuballer.mcendgame.component.dungeon.leave.DungeonLeaveService
-import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveEntity
-import de.fuballer.mcendgame.component.dungeon.leave.db.DungeonLeaveRepository
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
+import de.fuballer.mcendgame.component.portal.PortalService
+import de.fuballer.mcendgame.component.portal.db.Portal
+import de.fuballer.mcendgame.event.DungeonGeneratedEvent
+import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.MathUtil
 import kotlinx.coroutines.launch
@@ -27,12 +28,11 @@ import kotlin.random.Random
 
 @Component
 class DungeonGenerationService(
-    private val dungeonLeaveRepo: DungeonLeaveRepository,
     private val worldManageService: WorldManageService,
     private val dungeonBossGenerationService: DungeonBossGenerationService,
-    private val dungeonLeaveService: DungeonLeaveService,
     private val enemyGenerationService: EnemyGenerationService,
     private val dungeonTypeService: DungeonTypeService,
+    private val portalService: PortalService,
     private val logger: Logger
 ) {
     fun generateDungeon(
@@ -65,10 +65,9 @@ class DungeonGenerationService(
         spawnBoss(rolledDungeonType.bossEntityType, bossRoomPos, mapTier, world)
         enemyGenerationService.summonMonsters(random, rolledDungeonType.entityTypes, rolledDungeonType.specialEntityTypes, layoutTiles, startRoomPos, mapTier, world)
 
-        val entity = DungeonLeaveEntity(world.name, mutableListOf(), leaveLocation)
-        dungeonLeaveRepo.save(entity)
-
-        createLeavePortals(layoutTiles, startRoomPos, bossRoomPos, world)
+        val leavePortals = generateLeavePortals(layoutTiles, startRoomPos, bossRoomPos, world, leaveLocation)
+        val event = DungeonGeneratedEvent(world, leavePortals, leaveLocation)
+        EventGateway.apply(event)
 
         return getStartLocation(layoutTiles, startRoomPos, world)
     }
@@ -177,12 +176,15 @@ class DungeonGenerationService(
         return startLocation
     }
 
-    private fun createLeavePortals(
+    private fun generateLeavePortals(
         layoutTiles: Array<Array<LayoutTile>>,
         startPoint: Point,
         bossPoint: Point,
-        world: World
-    ) {
+        world: World,
+        leaveLocation: Location
+    ): List<Portal> {
+        val portals = mutableListOf<Portal>()
+
         for (x in layoutTiles.indices) {
             for (y in layoutTiles[0].indices) {
                 val layoutTile = layoutTiles[x][y]
@@ -202,11 +204,8 @@ class DungeonGenerationService(
                 }
                 portalLocation.yaw = MathUtil.calculateYawToFacingLocation(portalLocation, facing)
 
-                dungeonLeaveService.createPortal(
-                    world.name,
-                    portalLocation,
-                    isStartLocation
-                )
+                val portal = portalService.createPortal(portalLocation, leaveLocation, isInitiallyActive = isStartLocation)
+                portals.add(portal)
             }
         }
 
@@ -214,10 +213,9 @@ class DungeonGenerationService(
         val facing = Location(null, -bossPoint.x * 16.0 - 8, 0.0, -bossPoint.y * 16.0 + 24 - 1)
         bossPortalLocation.yaw = MathUtil.calculateYawToFacingLocation(bossPortalLocation, facing)
 
-        dungeonLeaveService.createPortal(
-            world.name,
-            bossPortalLocation,
-            false
-        )
+        val portal = portalService.createPortal(bossPortalLocation, leaveLocation, isInitiallyActive = false)
+        portals.add(portal)
+
+        return portals
     }
 }
