@@ -93,7 +93,7 @@ enum class AttributeType(
 
     BACKSTAB({ " ${DECIMAL_FORMAT.format(it * 100)}% more damage with attacks from behind" }),
 
-    ADDITIONAL_ARROWS({ " Shoot 2 additional arrows dealing ${DECIMAL_FORMAT.format(it)}% damage" }),
+    ADDITIONAL_ARROWS({ " Shoot 2 additional arrows dealing ${DECIMAL_FORMAT.format(it * 100)}% damage" }),
 
     EFFECT_GAIN({ " ${DECIMAL_FORMAT.format(it * 100)}% chance to gain a random positive effect on kill" }),
 
