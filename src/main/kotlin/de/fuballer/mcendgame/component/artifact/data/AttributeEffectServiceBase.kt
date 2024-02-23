@@ -19,13 +19,12 @@ open class AttributeEffectServiceBase(
 
     @EventHandler
     fun on(event: PlayerDungeonJoinEvent) {
-        val player = event.player
-        val tier = player.getHighestArtifactTier(artifactType) ?: return
+        val tier = event.player.getHighestArtifactTier(artifactType) ?: return
 
         val (value) = artifactType.getValues(tier)
-
         val modifier = AttributeModifier(modifierName, value, attributeModifierOperation)
-        val attribute = player.getAttribute(attributeType) ?: return
+
+        val attribute = event.player.getAttribute(attributeType) ?: return
         if (attribute.findModifierByName(modifierName) != null) return
 
         attribute.addModifier(modifier)
@@ -33,9 +32,7 @@ open class AttributeEffectServiceBase(
 
     @EventHandler
     fun on(event: PlayerDungeonLeaveEvent) {
-        val player = event.player
-
-        val attribute = player.getAttribute(attributeType) ?: return
+        val attribute = event.player.getAttribute(attributeType) ?: return
         val modifier = attribute.findModifierByName(modifierName) ?: return
 
         attribute.removeModifier(modifier)
