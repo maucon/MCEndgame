@@ -55,7 +55,8 @@ class MapDeviceInventoryService(
 
         val inventory = event.inventory
         val clickedSlot = event.rawSlot
-        if (clickedSlot >= inventory.size) return
+        if (clickedSlot !in 0 until inventory.size) return
+
         val clickedItem = inventory.getItem(clickedSlot) ?: return
 
         val player = event.whoClicked as Player
