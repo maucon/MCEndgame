@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
 object WolfCompanionArtifactType : ArtifactType {
-    private const val LORE_FORMAT = "You are accompanied by %s invincible wolfs.\\Your wolfs gains permanent strength %s"
+    private const val LORE_FORMAT = "You are accompanied by %s invincible wolfs.\\Your wolfs gains permanent Strength %s"
     override val key: NamespacedKey = PluginUtil.createNamespacedKey("wolf_companion")
     override val displayName = "Artifact of Company"
 

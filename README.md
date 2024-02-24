@@ -1,24 +1,54 @@
 # MCEndgame
 
-## About the Project
+MCEndgame is a Minecraft server plugin that enhances the endgame experience by introducing a new level of progression.
 
-MC-Endgame is a Minecraft server plugin that enhances the endgame experience by introducing a new level of progression.
+![Active Map Device](/img/map_device.png)
 
-![dungeon with enemies](https://media.discordapp.net/attachments/807226379049238539/1128666363033038868/2023-07-12_13.27.29.png?width=961&height=270)
+## Features
 
-![the dungeon boss](https://media.discordapp.net/attachments/807226379049238539/1128666362525524029/2023-07-12_13.28.32.png?width=961&height=270)
+### Dungeons
 
-<p>
-<img src="https://media.discordapp.net/attachments/807226379049238539/1128666361871212635/Screenshot_2023-07-12_133411.png" width="212" height="300"  alt="dropped item"/>
-<img src="https://media.discordapp.net/attachments/807226379049238539/1128666361548259398/Screenshot_2023-07-12_133249.png" width="200" height="300"  alt="corrupted item"/>
-</p>
+Dungeons can be accessed through a map device, offering a variety of dungeon types and maps, each filled with monsters.
+To complete a dungeon, players must defeat the boss at the end.
+Monsters and bosses drop special loot, adding a dungeon-crawling experience to Minecraft.
 
-### Commands
+![Dungeon Boss "Demonic Golem"](/img/demonic_golem.png)
+
+### Custom Monster
+
+MCEndgame introduces new monsters equipped with custom attacks, including bosses that cast special abilities,
+adding a layer of challenge and uniqueness to encounters.
+
+![Custom Monster "Reaper"](/img/reaper.png)
+
+### Custom Items
+
+Monsters inside a dungeon drop items with an expanded array of attributes, alongside entirely custom items boasting unique attributes.
+These enhancements enrich the player experience both inside and outside of dungeons.
+
+![Custom Item "Geistergaloschen"](/img/geistergaloschen.jpg)
+
+### Artifacts
+
+Artifacts, which drop rarely from monsters within dungeons, can boost the players stats inside a dungeons.
+This, combined with custom items, offers a wealth of build choices for players.
+
+![Artifact of Impact](/img/artifact.jpg)
+
+### Corruption
+
+Orbs of Corruption, dropped by dungeon bosses, offer a high-risk, high-reward mechanic for item modification.
+These orbs can unpredictably enhance items, potentially degrading them or even causing their destruction,
+allowing players to min-max their gear with a gamble.
+
+![Corrupted Bow](/img/corrupted_bow.jpg)
+
+## Commands
 
 * `/killer`: Provides information about the last mob that eliminated you
 * `/dungeon-remaining`: Displays details on the number of mobs still alive within the dungeon
 * `/dungeon-filter`: Opens the filter page, allowing you to manage item blacklisting
-* `/dungeon-artifacts`: Opens the artifact page, showcasing equipped artifacts
+* `/dungeon-artifacts`: Opens the artifact page, showcasing and changing equipped artifacts
 * `/dungeon-artifact-give`: Generates a new artifact for the player
 * `/item-info`: Presents details about the stat rolls of the item currently held in the main hand
 * `/dungeon-statistics`: Exhibits dungeon statistics, including the count of monsters slain
@@ -45,8 +75,9 @@ You can download a pre-built Jar via the `Releases` section or build it yourself
 2. Download [FastAsyncWorldEdit](https://www.spigotmc.org/resources/fastasyncworldedit.13932/) (Bukkit Version)
 3. Download [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
 4. Place the downloaded libraries into the plugins folder
-5. Place the `MC-Endgame` Jar into the plugins folder
+5. Place the `MCEndgame` Jar into the plugins folder
 6. Start the server
+7. Activate the [Texture Pack](/mce-texture-pack) (Optional)
 
 ## Contributing
 
@@ -70,7 +101,10 @@ Should you have any questions or encounter any difficulties, please don't hesita
 
 ## Acknowledgments
 
+* [SpigotMC](https://hub.spigotmc.org/)
 * [FastAsyncWorldEdit](https://github.com/IntellectualSites/FastAsyncWorldEdit)
 * [ProtocolLib](https://github.com/aadnk/ProtocolLib)
-* [README-Template](https://github.com/othneildrew/Best-README-Template)
+
+
 * [Choose an Open Source License](https://choosealicense.com/)
+* [README-Template](https://github.com/othneildrew/Best-README-Template)
