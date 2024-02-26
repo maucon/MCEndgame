@@ -30,7 +30,7 @@ These enhancements enrich the player experience both inside and outside of dunge
 
 ### Artifacts
 
-Artifacts, which drop rarely from monsters within dungeons, can boost the players stats inside a dungeons.
+Artifacts, which drop rarely from monsters within dungeons, can boost the players stats inside a dungeon.
 This, combined with custom items, offers a wealth of build choices for players.
 
 ![Artifact of Impact](/img/artifact.jpg)
