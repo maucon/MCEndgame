@@ -4,8 +4,8 @@ import de.fuballer.mcendgame.component.attribute.AttributeType
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
-import de.fuballer.mcendgame.util.extension.PlayerExtension.getHealOnBlockArtifactActivation
-import de.fuballer.mcendgame.util.extension.PlayerExtension.setHealOnBlockArtifactActivation
+import de.fuballer.mcendgame.util.extension.PlayerExtension.getHealOnBlockActivation
+import de.fuballer.mcendgame.util.extension.PlayerExtension.setHealOnBlockActivation
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.attribute.Attribute
@@ -28,7 +28,7 @@ class HealOnBlockEffectService : Listener {
         val healOnBlockAttribute = healOnBlockAttributes.sum()
 
         if (isHealOnBlockOnCooldown(player)) return
-        player.setHealOnBlockArtifactActivation(System.currentTimeMillis())
+        player.setHealOnBlockActivation(System.currentTimeMillis())
 
         spawnParticles(player)
 
@@ -38,7 +38,7 @@ class HealOnBlockEffectService : Listener {
     }
 
     private fun isHealOnBlockOnCooldown(player: Player): Boolean {
-        val lastActivation = player.getHealOnBlockArtifactActivation() ?: return false
+        val lastActivation = player.getHealOnBlockActivation() ?: return false
         return lastActivation + 7000 > System.currentTimeMillis()
     }
 
