@@ -33,10 +33,10 @@ commands:
     usage: "§CUsage /<command>"
     aliases: [ filter, lootfilter, dungeonfilter ]
 
-  dungeon-totem:
+  dungeon-totems:
     description: "Lists currently equipped totems"
     usage: "§CUsage /<command>"
-    aliases: [ totem, totems ]
+    aliases: [ totems ]
 
   dungeon-totem-give:
     description: "Gives a specified tier of dungeon totem to a player"
