@@ -28,12 +28,12 @@ These enhancements enrich the player experience both inside and outside of dunge
 
 ![Custom Item "Geistergaloschen"](/img/geistergaloschen.jpg)
 
-### Artifacts
+### Totems
 
-Artifacts, which drop rarely from monsters within dungeons, can boost the players stats inside a dungeons.
+Totems, which drop rarely from monsters within dungeons, can boost the players stats inside a dungeon.
 This, combined with custom items, offers a wealth of build choices for players.
 
-![Artifact of Impact](/img/artifact.jpg)
+![Totem of Impact](/img/totem.jpg)
 
 ### Corruption
 
@@ -48,8 +48,8 @@ allowing players to min-max their gear with a gamble.
 * `/killer`: Provides information about the last mob that eliminated you
 * `/dungeon-remaining`: Displays details on the number of mobs still alive within the dungeon
 * `/dungeon-filter`: Opens the filter page, allowing you to manage item blacklisting
-* `/dungeon-artifacts`: Opens the artifact page, showcasing and changing equipped artifacts
-* `/dungeon-artifact-give`: Generates a new artifact for the player
+* `/dungeon-totem`: Opens the totem page, showcasing and changing equipped totems
+* `/dungeon-totem-give`: Generates a new totem for the player
 * `/item-info`: Presents details about the stat rolls of the item currently held in the main hand
 * `/dungeon-statistics`: Exhibits dungeon statistics, including the count of monsters slain
 * `/dungeon-progress`: Indicates or modifies the current progress of a player within the dungeon

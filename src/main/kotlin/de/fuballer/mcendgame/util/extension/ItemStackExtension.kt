@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.util.extension
 
-import de.fuballer.mcendgame.component.artifact.data.Artifact
 import de.fuballer.mcendgame.component.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.map_device.MapDeviceAction
+import de.fuballer.mcendgame.component.totem.data.Totem
 import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.inventory.ItemStack
@@ -21,8 +21,8 @@ object ItemStackExtension {
     fun ItemStack.isMapDevice() = getPersistentDataBoolean(this, TypeKeys.MAP_DEVICE)
     fun ItemStack.setMapDeviceAction(value: MapDeviceAction) = setPersistentData(this, TypeKeys.MAP_DEVICE_ACTION, value)
     fun ItemStack.getMapDeviceAction() = getPersistentData(this, TypeKeys.MAP_DEVICE_ACTION)
-    fun ItemStack.setArtifact(value: Artifact) = setPersistentData(this, TypeKeys.ARTIFACT, value)
-    fun ItemStack.getArtifact() = getPersistentData(this, TypeKeys.ARTIFACT)
+    fun ItemStack.setTotem(value: Totem) = setPersistentData(this, TypeKeys.TOTEM, value)
+    fun ItemStack.getTotem() = getPersistentData(this, TypeKeys.TOTEM)
 
     private fun <T : Any> setPersistentData(item: ItemStack, key: TypeKeys.TypeKey<T>, value: T) {
         val itemMeta = item.itemMeta!!

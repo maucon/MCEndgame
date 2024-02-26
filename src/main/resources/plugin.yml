@@ -33,15 +33,15 @@ commands:
     usage: "§CUsage /<command>"
     aliases: [ filter, lootfilter, dungeonfilter ]
 
-  dungeon-artifacts:
-    description: "Lists currently equipped artifacts"
+  dungeon-totems:
+    description: "Lists currently equipped totems"
     usage: "§CUsage /<command>"
-    aliases: [ artifacts, artifact ]
+    aliases: [ totems ]
 
-  dungeon-artifact-give:
-    description: "Gives a specified tier of dungeon artifact to a player"
-    usage: "§CUsage /<command> player artifact-type tier"
-    aliases: [ give-artifact ]
+  dungeon-totem-give:
+    description: "Gives a specified tier of dungeon totem to a player"
+    usage: "§CUsage /<command> player totem-type tier"
+    aliases: [ give-totem ]
     permission: mcendgame.manage
 
   item-info:

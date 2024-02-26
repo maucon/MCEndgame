@@ -3,8 +3,8 @@ package de.fuballer.mcendgame.technical.persistent_data
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.map_device.MapDeviceAction
-import de.fuballer.mcendgame.technical.persistent_data.types.PersistentArtifact
 import de.fuballer.mcendgame.technical.persistent_data.types.PersistentRolledAttribute
+import de.fuballer.mcendgame.technical.persistent_data.types.PersistentTotem
 import de.fuballer.mcendgame.technical.persistent_data.types.PersistentUUID
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentEnum
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentList
@@ -30,8 +30,8 @@ object TypeKeys {
 
     // player
     val LAST_MAP_DEVICE = TypeKey(createNamespacedKey("last_map_device"), PersistentUUID)
-    val ARTIFACTS = TypeKey(createNamespacedKey("artifacts"), PersistentList(PersistentArtifact))
-    val HEAL_ON_BLOCK_ARTIFACT_ACTIVATION = TypeKey(createNamespacedKey("heal_on_block_artifact_activation"), PersistentDataType.LONG)
+    val TOTEMS = TypeKey(createNamespacedKey("totems"), PersistentList(PersistentTotem))
+    val HEAL_ON_BLOCK_ACTIVATION = TypeKey(createNamespacedKey("heal_on_block_activation"), PersistentDataType.LONG)
 
     // items
     val CUSTOM_ITEM_TYPE = TypeKey(createNamespacedKey("custom_entity_type"), PersistentObjectClass(CustomItemType::class))
@@ -40,7 +40,7 @@ object TypeKeys {
     val CORRUPTION_ROUNDS = TypeKey(createNamespacedKey("corruption_rounds"), PersistentDataType.INTEGER)
     val MAP_DEVICE = TypeKey(createNamespacedKey("map_device"), PersistentDataType.BOOLEAN)
     val MAP_DEVICE_ACTION = TypeKey(createNamespacedKey("map_device_action"), PersistentEnum(MapDeviceAction::class))
-    val ARTIFACT = TypeKey(createNamespacedKey("artifact"), PersistentArtifact)
+    val TOTEM = TypeKey(createNamespacedKey("totem"), PersistentTotem)
 
     class TypeKey<T>(
         val key: NamespacedKey,
