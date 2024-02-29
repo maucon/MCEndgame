@@ -130,7 +130,8 @@ object DamageUtil {
             }
         }
 
-        return attributes.filter { it.type.applicableAttributeType == null }
+        return attributes
+            .filter { !it.type.isVanillaAttributeType }
             .groupBy { it.type }
             .mapValues { (_, values) -> values.map { it.roll } }
     }

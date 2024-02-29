@@ -8,73 +8,74 @@ private val DECIMAL_FORMAT = DecimalFormat("#.#")
 
 enum class AttributeType(
     val lore: (roll: Double) -> String,
-    val applicableAttributeType: ApplicableAttributeType? = null
+    val vanillaAttributeType: VanillaAttributeType? = null,
+    val isVanillaAttributeType: Boolean = vanillaAttributeType != null
 ) {
     // vanilla
     MAX_HEALTH(
         { "+${DECIMAL_FORMAT.format(it)} Max Health" },
-        ApplicableAttributeType(
+        VanillaAttributeType(
             Attribute.GENERIC_MAX_HEALTH, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     MAX_HEALTH_INCREASE(
         { "+${DECIMAL_FORMAT.format(it * 100)}% Max Health" },
-        ApplicableAttributeType(
+        VanillaAttributeType(
             Attribute.GENERIC_MAX_HEALTH, AttributeModifier.Operation.ADD_SCALAR
         )
     ),
     KNOCKBACK_RESISTANCE(
         { "+${DECIMAL_FORMAT.format(it * 10)} Knockback Resistance" },
-        ApplicableAttributeType(
+        VanillaAttributeType(
             Attribute.GENERIC_KNOCKBACK_RESISTANCE, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     MOVEMENT_SPEED(
         { "+${DECIMAL_FORMAT.format(it * 100)} Movement Speed" },
-        ApplicableAttributeType(
+        VanillaAttributeType(
             Attribute.GENERIC_MOVEMENT_SPEED, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     ATTACK_DAMAGE(
         { "+${DECIMAL_FORMAT.format(it)} Attack Damage" },
-        ApplicableAttributeType(
+        VanillaAttributeType(
             Attribute.GENERIC_ATTACK_DAMAGE, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     ATTACK_KNOCKBACK(
         { "+${DECIMAL_FORMAT.format(it)} Attack Knockback" },
-        ApplicableAttributeType(
+        VanillaAttributeType(
             Attribute.GENERIC_ATTACK_KNOCKBACK, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     ATTACK_SPEED(
         { "+${DECIMAL_FORMAT.format(it)} Attack Speed" },
-        ApplicableAttributeType(
+        VanillaAttributeType(
             Attribute.GENERIC_ATTACK_SPEED, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     ARMOR(
         { "+${DECIMAL_FORMAT.format(it)} Armor" },
-        ApplicableAttributeType(
+        VanillaAttributeType(
             Attribute.GENERIC_ARMOR, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     ARMOR_TOUGHNESS(
         { "+${DECIMAL_FORMAT.format(it)} Armor Toughness" },
-        ApplicableAttributeType(
+        VanillaAttributeType(
             Attribute.GENERIC_ARMOR_TOUGHNESS, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     LUCK(
         { "+${DECIMAL_FORMAT.format(it)} Luck" },
-        ApplicableAttributeType(
+        VanillaAttributeType(
             Attribute.GENERIC_LUCK, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     SIZE_INCREASE(
         { "+${DECIMAL_FORMAT.format(it * 100)}% Size" },
-        ApplicableAttributeType(
-            Attribute.GENERIC_LUCK, AttributeModifier.Operation.ADD_SCALAR //TODO
+        VanillaAttributeType(
+            Attribute.GENERIC_LUCK, AttributeModifier.Operation.ADD_SCALAR // FIXME when size attribute gets implemented
         )
     ),
 
