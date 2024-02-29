@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.equipment
 
 import de.fuballer.mcendgame.component.attribute.RollableAttribute
+import de.fuballer.mcendgame.component.dungeon.enemy.equipment.enchantment.EquipmentEnchantmentService
 import de.fuballer.mcendgame.component.item.equipment.Equipment
-import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setRolledAttributes
@@ -11,11 +11,12 @@ import de.fuballer.mcendgame.util.random.RandomUtil
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ItemMeta
 import kotlin.random.Random
 
 @Component
-class EquipmentGenerationService {
+class EquipmentGenerationService(
+    private val equipmentEnchantmentService: EquipmentEnchantmentService
+) {
     fun setCreatureEquipment(
         random: Random,
         livingEntity: LivingEntity,
@@ -53,21 +54,6 @@ class EquipmentGenerationService {
             createRandomSortableEquipment(random, mapTier, EquipmentGenerationSettings.BOOTS)?.also {
                 equipment.boots = it
                 equipment.bootsDropChance = 0f
-            }
-        }
-    }
-
-    fun enchantItem(
-        random: Random,
-        mapTier: Int,
-        itemMeta: ItemMeta,
-        enchants: List<RandomOption<ItemEnchantment>>
-    ) {
-        repeat(EquipmentGenerationSettings.calculateEnchantTries(mapTier)) {
-            val itemEnchantment = RandomUtil.pick(enchants, random).option
-
-            if (itemMeta.getEnchantLevel(itemEnchantment.enchantment) < itemEnchantment.level) {
-                itemMeta.addEnchant(itemEnchantment.enchantment, itemEnchantment.level, true)
             }
         }
     }
@@ -131,7 +117,7 @@ class EquipmentGenerationService {
         val item = ItemStack(equipment.material)
         val itemMeta = item.itemMeta ?: return item
 
-        enchantItem(random, mapTier, itemMeta, equipment.rollableEnchants)
+        equipmentEnchantmentService.enchantItem(random, mapTier, itemMeta, equipment.rollableEnchants)
         item.itemMeta = itemMeta
 
         addCustomAttributes(item, random, mapTier, equipment)
