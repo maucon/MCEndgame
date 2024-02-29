@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.looting
 
-import de.fuballer.mcendgame.component.dungeon.enemy.equipment.EquipmentGenerationService
+import de.fuballer.mcendgame.component.dungeon.enemy.equipment.enchantment.EquipmentEnchantmentService
 import de.fuballer.mcendgame.component.dungeon.killstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
@@ -25,7 +25,7 @@ import kotlin.random.Random
 @Component
 class LootingService(
     private val killStreakRepo: KillStreakRepository,
-    private val equipmentGenerationService: EquipmentGenerationService
+    private val equipmentEnchantmentService: EquipmentEnchantmentService
 ) : Listener {
     @EventHandler
     fun on(event: DungeonEntityDeathEvent) {
@@ -63,7 +63,7 @@ class LootingService(
         val item = ItemUtil.createCustomItem(customItemType)
 
         val itemMeta = item.itemMeta!!
-        equipmentGenerationService.enchantItem(Random, mapTier, itemMeta, customItemType.equipment.rollableEnchants)
+        equipmentEnchantmentService.enchantItem(Random, mapTier, itemMeta, customItemType.equipment.rollableEnchants)
         item.itemMeta = itemMeta
 
         world.dropItemNaturally(entity.location, item)

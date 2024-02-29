@@ -10,9 +10,6 @@ import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 
 object EquipmentGenerationSettings {
-    private const val ENCHANT_TRIES_PER_TIER = 0.5
-    fun calculateEnchantTries(mapTier: Int) = 1 + (mapTier * ENCHANT_TRIES_PER_TIER).toInt()
-
     val STAT_AMOUNTS = listOf(
         SortableRandomOption(5000, 0, 0),
         SortableRandomOption(3000, 1, 1),

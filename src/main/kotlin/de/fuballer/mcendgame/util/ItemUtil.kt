@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.component.attribute.ApplicableAttributeType
 import de.fuballer.mcendgame.component.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.attribute.RolledAttribute
+import de.fuballer.mcendgame.component.attribute.VanillaAttributeType
 import de.fuballer.mcendgame.component.corruption.CorruptionSettings
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
@@ -133,15 +133,16 @@ object ItemUtil {
         slot: EquipmentSlot?,
         baseAttributes: Boolean
     ) {
-        attributes.filter { it.type.applicableAttributeType != null }
+        attributes
+            .filter { it.type.isVanillaAttributeType }
             .forEach {
-                val attribute = it.type.applicableAttributeType!!.attribute
+                val attribute = it.type.vanillaAttributeType!!.attribute
                 val realRoll = if (baseAttributes) getActualAttributeValue(attribute, it.roll) else it.roll
                 addAttribute(
                     itemMeta,
                     attribute,
                     realRoll,
-                    it.type.applicableAttributeType.scaleType,
+                    it.type.vanillaAttributeType.scaleType,
                     slot
                 )
             }
@@ -227,12 +228,12 @@ object ItemUtil {
         var attributeLore = getCorrectSignLore(attribute)
         if (!isBaseAttribute) return "${ChatColor.BLUE}$attributeLore"
 
-        val applicableAttribute = attribute.type.applicableAttributeType
+        val vanillaAttributeType = attribute.type.vanillaAttributeType
             ?: return "${ChatColor.BLUE}$attributeLore"
 
-        if (isNotPlayerBaseAttribute(applicableAttribute)) return "${ChatColor.BLUE}$attributeLore"
+        if (isNotPlayerBaseAttribute(vanillaAttributeType)) return "${ChatColor.BLUE}$attributeLore"
 
-        if (applicableAttribute.attribute == Attribute.GENERIC_ATTACK_DAMAGE
+        if (vanillaAttributeType.attribute == Attribute.GENERIC_ATTACK_DAMAGE
             && itemMeta.hasEnchant(Enchantment.DAMAGE_ALL)
         ) {
             val damageIncrease = 0.5 + 0.5 * itemMeta.getEnchantLevel(Enchantment.DAMAGE_ALL)
@@ -242,7 +243,7 @@ object ItemUtil {
         return "${ChatColor.DARK_GREEN}$attributeLore"
     }
 
-    private fun isNotPlayerBaseAttribute(applicableAttribute: ApplicableAttributeType) =
-        applicableAttribute.attribute != Attribute.GENERIC_ATTACK_DAMAGE
-                && applicableAttribute.attribute != Attribute.GENERIC_ATTACK_SPEED
+    private fun isNotPlayerBaseAttribute(vanillaAttributeType: VanillaAttributeType) =
+        vanillaAttributeType.attribute != Attribute.GENERIC_ATTACK_DAMAGE
+                && vanillaAttributeType.attribute != Attribute.GENERIC_ATTACK_SPEED
 }
