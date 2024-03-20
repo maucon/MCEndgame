@@ -33,7 +33,11 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
 
     override fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         val rawDamage = DamageUtil.reverseDifficultyDamage(damageEvent.difficulty, event.damage)
-        damageEvent.baseDamage.add(rawDamage)
+        val projectile = event.damager as Projectile
+        val addedDamage = projectile.getAddedBaseDamage() ?: 0.0
+        val cumulativeBaseDamage = (rawDamage + addedDamage)
+
+        damageEvent.baseDamage.add(cumulativeBaseDamage)
 
         return damageEvent
     }

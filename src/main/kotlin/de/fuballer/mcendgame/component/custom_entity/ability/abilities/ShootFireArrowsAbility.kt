@@ -4,12 +4,16 @@ import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.AbilitySettings
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
+import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
+import de.fuballer.mcendgame.util.extension.ProjectileExtension.setAddedBaseDamage
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
 const val ARROWS_COUNT = 5
 const val ARROWS_TIME_DIFFERENCE = 4L // in ticks
+
+fun getArrowAddedDamage(bossLevel: Int) = 6.0 + bossLevel * 2.0
 
 object ShootFireArrowsAbility : Ability {
     override fun cast(caster: LivingEntity) {
@@ -34,6 +38,9 @@ object ShootFireArrowsAbility : Ability {
             arrow.fireTicks = 100
             arrow.knockbackStrength = 2
             arrow.shooter = caster
+
+            val addedDamage = getArrowAddedDamage(caster.getMapTier() ?: 1)
+            arrow.setAddedBaseDamage(addedDamage)
         }
     }
 }
