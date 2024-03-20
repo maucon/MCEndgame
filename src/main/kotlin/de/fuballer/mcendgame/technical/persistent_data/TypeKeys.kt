@@ -38,6 +38,7 @@ object TypeKeys {
     val ATTRIBUTES = TypeKey(createNamespacedKey("attributes"), PersistentList(PersistentRolledAttribute))
     val UNMODIFIABLE = TypeKey(createNamespacedKey("unmodifiable"), PersistentDataType.BOOLEAN)
     val CORRUPTION_ROUNDS = TypeKey(createNamespacedKey("corruption_rounds"), PersistentDataType.INTEGER)
+    val REFINEMENT = TypeKey(createNamespacedKey("refinement"), PersistentDataType.BOOLEAN)
     val MAP_DEVICE = TypeKey(createNamespacedKey("map_device"), PersistentDataType.BOOLEAN)
     val MAP_DEVICE_ACTION = TypeKey(createNamespacedKey("map_device_action"), PersistentEnum(MapDeviceAction::class))
     val TOTEM = TypeKey(createNamespacedKey("totem"), PersistentTotem)

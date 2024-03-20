@@ -57,7 +57,10 @@ class CorruptionService : Listener {
     fun on(event: InventoryClickEvent) {
         val inventory = event.inventory
         if (inventory.type != InventoryType.ANVIL) return
-        if (event.slot != 2) return
+        if (event.rawSlot != 2) return
+
+        val corruption = inventory.getItem(1) ?: return
+        val corruptionRounds = corruption.getCorruptionRounds() ?: return
 
         val result = inventory.getItem(2) ?: return
         if (!result.isUnmodifiable()) return
@@ -67,9 +70,6 @@ class CorruptionService : Listener {
         if (player.gameMode != GameMode.CREATIVE) {
             player.level -= 1
         }
-
-        val corruption = inventory.getItem(1) ?: return
-        val corruptionRounds = corruption.getCorruptionRounds() ?: return
 
         repeat(corruptionRounds) {
             if (result.type == Material.AIR) return@repeat
