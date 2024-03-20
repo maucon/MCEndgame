@@ -11,7 +11,7 @@ const val DARKNESS_EFFECT_RADIUS = 30
 val DARKNESS_EFFECT = PotionEffect(PotionEffectType.DARKNESS, 160, 1, true)
 
 object ApplyDarknessAbility : Ability {
-    override fun cast(caster: LivingEntity, target: LivingEntity) {
+    override fun cast(caster: LivingEntity) {
         val bLoc = caster.location
         for (player in caster.world.players) {
             val pLoc = player.location

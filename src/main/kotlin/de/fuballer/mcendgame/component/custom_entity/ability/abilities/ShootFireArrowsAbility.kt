@@ -1,6 +1,8 @@
 package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
+import de.fuballer.mcendgame.component.custom_entity.ability.AbilitySettings
+import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
@@ -10,10 +12,14 @@ const val ARROWS_COUNT = 5
 const val ARROWS_TIME_DIFFERENCE = 4L // in ticks
 
 object ShootFireArrowsAbility : Ability {
-    override fun cast(caster: LivingEntity, target: LivingEntity) {
-        for (i in 1..ARROWS_COUNT)
-            ShootArrowRunnable(caster, target)
-                .runTaskLater(i * ARROWS_TIME_DIFFERENCE)
+    override fun cast(caster: LivingEntity) {
+        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
+
+        for (target in targets) {
+            for (i in 1..ARROWS_COUNT)
+                ShootArrowRunnable(caster, target)
+                    .runTaskLater(i * ARROWS_TIME_DIFFERENCE)
+        }
     }
 
     private class ShootArrowRunnable(

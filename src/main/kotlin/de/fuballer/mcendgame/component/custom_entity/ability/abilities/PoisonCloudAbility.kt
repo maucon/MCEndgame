@@ -18,7 +18,7 @@ val POISON_CLOUD_EFFECT = PotionEffect(PotionEffectType.HARM, 0, 1, true)
 const val POISON_CLOUD_REAPPLICATION_DELAY = 10 //in Ticks
 
 object PoisonCloudAbility : Ability {
-    override fun cast(caster: LivingEntity, target: LivingEntity) {
+    override fun cast(caster: LivingEntity) {
         DungeonUtil.getNearbyPlayers(caster, POISON_CLOUD_RANGE)
             .forEach {
                 val spawnLoc = Location(it.location.world, it.location.x, it.location.blockY.toDouble(), it.location.z)

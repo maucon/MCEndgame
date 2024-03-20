@@ -1,6 +1,8 @@
 package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
+import de.fuballer.mcendgame.component.custom_entity.ability.AbilitySettings
+import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import org.bukkit.Location
@@ -29,7 +31,15 @@ private const val PARTICLE_LOCATIONS_PER_RING = 10
 private const val PARTICLE_LOCATION_RADIUS_MULTIPLIER = 1
 
 object FlameBlastAbility : Ability {
-    override fun cast(caster: LivingEntity, target: LivingEntity) {
+    override fun cast(caster: LivingEntity) {
+        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
+
+        for (target in targets) {
+            castOnTarget(caster, target)
+        }
+    }
+
+    private fun castOnTarget(caster: LivingEntity, target: LivingEntity) {
         for (i in 1..RADIUS_INCREASE_STEPS) {
             CastFlameBlastBuildUpRunnable(target.location, i * RADIUS_PER_STEP, i % 5 == 0)
                 .runTaskLater((i * STEP_DELAY).toLong())

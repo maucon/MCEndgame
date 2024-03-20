@@ -53,11 +53,9 @@ class EntityAbilityRunner(
         }
 
         private fun castAbility(): Boolean {
-            val target = entity.target ?: return false
-
             val abilities = customEntityType.abilities!! // checked when starting the EntityAbilityRunner
             val pickedAbility = RandomUtil.pick(abilities).option
-            pickedAbility.cast(entity, target)
+            pickedAbility.cast(entity)
 
             return true
         }

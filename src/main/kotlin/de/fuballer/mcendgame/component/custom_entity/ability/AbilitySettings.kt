@@ -6,5 +6,7 @@ object AbilitySettings {
 
     const val INACTIVE_CHECK_PERIOD = 60 * 20L // in ticks
 
+    const val DEFAULT_TARGET_RANGE = 30.0
+
     fun getAbilityCooldown(mapTier: Int) = 30 + 120 / (1 + mapTier / 5)
 }

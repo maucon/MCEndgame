@@ -20,7 +20,7 @@ const val GRAVITATION_PILLAR_RANGE = 20.0
 const val GRAVITATION_PILLAR_COOLDOWN = 40L // in ticks
 
 object SummonGravitationPillarAbility : Ability {
-    override fun cast(caster: LivingEntity, target: LivingEntity) {
+    override fun cast(caster: LivingEntity) {
         val mapTier = caster.getMapTier() ?: 1
 
         val pillar = EntityUtil.spawnCustomEntity(StonePillarEntityType, caster.location, mapTier) as LivingEntity
