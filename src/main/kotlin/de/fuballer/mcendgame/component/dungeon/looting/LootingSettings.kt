@@ -25,6 +25,7 @@ object LootingSettings {
         RandomOption(1, HeadhuntersHaremType),
         RandomOption(1, LifewardAegisItemType),
         RandomOption(1, ShrinkshadowItemType),
+        RandomOption(1, StormfeatherItemType),
         RandomOption(1, TitansEmbraceItemType),
         RandomOption(1, TwinfireItemType),
         RandomOption(1, VitalitySurgeItemType),
