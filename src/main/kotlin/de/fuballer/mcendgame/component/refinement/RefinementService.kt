@@ -15,7 +15,6 @@ import org.bukkit.SoundCategory
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
@@ -25,11 +24,6 @@ import org.bukkit.inventory.ItemStack
 
 @Component
 class RefinementService : Listener {
-    @EventHandler
-    fun on(event: EntityDeathEvent) {
-        event.entity.world.dropItemNaturally(event.entity.location, RefinementSettings.getRefinementItem())
-    }
-
     @EventHandler
     fun on(event: PrepareAnvilEvent) {
         val inventory = event.inventory
