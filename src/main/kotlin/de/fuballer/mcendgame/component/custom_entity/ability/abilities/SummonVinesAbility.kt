@@ -14,7 +14,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.util.Vector
 import kotlin.random.Random
 
-fun getSummonVineAmount(bossLevel: Int, targets: Int) = (2 + bossLevel / 5) * targets
+fun getSummonVineAmount(bossLevel: Int, targets: Int) = (3 + bossLevel / 5) * targets
 
 object SummonVinesAbility : Ability {
     override fun cast(caster: LivingEntity) {
