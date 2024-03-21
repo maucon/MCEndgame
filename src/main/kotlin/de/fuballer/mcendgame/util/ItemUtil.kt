@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.util
 import de.fuballer.mcendgame.component.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.attribute.VanillaAttributeType
-import de.fuballer.mcendgame.component.corruption.CorruptionSettings
+import de.fuballer.mcendgame.component.crafting.corruption.CorruptionSettings
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType

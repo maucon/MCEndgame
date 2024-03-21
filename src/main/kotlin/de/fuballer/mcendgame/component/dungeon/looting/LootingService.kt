@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.component.dungeon.looting
 
+import de.fuballer.mcendgame.component.crafting.refinement.RefinementSettings
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.enchantment.EquipmentEnchantmentService
 import de.fuballer.mcendgame.component.dungeon.killstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
-import de.fuballer.mcendgame.component.refinement.RefinementSettings
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil

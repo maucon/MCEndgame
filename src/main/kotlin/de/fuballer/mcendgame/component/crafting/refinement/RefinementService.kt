@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.refinement
+package de.fuballer.mcendgame.component.crafting.refinement
 
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.corruption
+package de.fuballer.mcendgame.component.crafting.corruption
 
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component

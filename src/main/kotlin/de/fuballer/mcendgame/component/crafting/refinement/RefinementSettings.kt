@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.refinement
+package de.fuballer.mcendgame.component.crafting.refinement
 
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setRefinement
