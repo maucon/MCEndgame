@@ -1,104 +1,32 @@
 package de.fuballer.mcendgame.component.crafting.refinement
 
+import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.SchedulingUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isRefinement
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setRolledAttributes
-import org.bukkit.GameMode
-import org.bukkit.Sound
-import org.bukkit.SoundCategory
-import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.inventory.InventoryAction
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryType
-import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 
 @Component
-class RefinementService : Listener {
-    @EventHandler
-    fun on(event: PrepareAnvilEvent) {
-        val inventory = event.inventory
+class RefinementService : AnvilCraftingBaseService() {
+    override val repairCost = 2
 
-        val base = inventory.getItem(0) ?: return
-        if (base.isUnmodifiable()) return
-        if (base.getCustomItemType() != null) return
-        if (!hasMultipleAttributes(base)) return
+    override fun isBaseValid(base: ItemStack) =
+        Equipment.existsByMaterial(base.type)
+                && base.getCustomItemType() == null
+                && hasMultipleAttributes(base)
 
-        val refinement = inventory.getItem(1) ?: return
+    override fun isCraftingItemValid(craftingItem: ItemStack) =
+        craftingItem.isRefinement()
 
-        if (!Equipment.existsByMaterial(base.type)) return
-        if (!refinement.isRefinement()) return
+    override fun getResultPreview(base: ItemStack) = base
 
-        event.result = base.clone()
-
-        SchedulingUtil.runTask {
-            event.inventory.repairCost = 1
-
-            event.inventory.viewers.forEach {
-                it.setWindowProperty(InventoryView.Property.REPAIR_COST, 1)
-            }
-        }
-    }
-
-    @EventHandler
-    fun on(event: InventoryClickEvent) {
-        val inventory = event.inventory
-        if (inventory.type != InventoryType.ANVIL) return
-        if (event.rawSlot != 2) return
-
-        val refinementOrb = inventory.getItem(1) ?: return
-        if (!refinementOrb.isRefinement()) return
-
-        val result = inventory.getItem(2) ?: return
-
-        val player = event.whoClicked as Player
-        if (player.gameMode != GameMode.CREATIVE && player.level < 1) return
-        if (player.gameMode != GameMode.CREATIVE) {
-            player.level -= 1
-        }
-
-        refineItem(result)
-        ItemUtil.updateAttributesAndLore(result)
-
-        player.world.playSound(player.location, Sound.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1f, 1f)
-
-        when (event.action) {
-            InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_SOME ->
-                player.setItemOnCursor(result)
-
-            InventoryAction.MOVE_TO_OTHER_INVENTORY ->
-                player.inventory.addItem(result)
-
-            else -> return
-        }
-
-        inventory.setItem(0, null)
-        inventory.setItem(2, null)
-
-        val refinementStack = inventory.getItem(1) ?: return
-        refinementStack.amount -= 1
-        inventory.setItem(1, refinementStack)
-
-        event.isCancelled = true
-    }
-
-    private fun hasMultipleAttributes(item: ItemStack): Boolean {
-        val attributes = item.getRolledAttributes() ?: return false
-        return attributes.size >= 2
-    }
-
-    private fun refineItem(item: ItemStack) {
-        val attributes = item.getRolledAttributes()?.toMutableList() ?: return
-        val attributesBounds = ItemUtil.getEquipmentAttributes(item)
+    override fun updateResult(result: ItemStack, craftingItem: ItemStack) {
+        val attributes = result.getRolledAttributes()?.toMutableList() ?: return
+        val attributesBounds = ItemUtil.getEquipmentAttributes(result)
 
         val sacrificedAttribute = attributes.random()
         attributes.remove(sacrificedAttribute)
@@ -112,6 +40,11 @@ class RefinementService : Listener {
 
         enhancedAttribute.roll += RefinementSettings.refineAttributeValue(enhancedAttributeRange, sacrificedAttributePercentage)
 
-        item.setRolledAttributes(attributes)
+        result.setRolledAttributes(attributes)
+    }
+
+    private fun hasMultipleAttributes(item: ItemStack): Boolean {
+        val attributes = item.getRolledAttributes() ?: return false
+        return attributes.size >= 2
     }
 }
