@@ -1,8 +1,9 @@
-package de.fuballer.mcendgame.component.corruption
+package de.fuballer.mcendgame.component.crafting.corruption
 
 import de.fuballer.mcendgame.component.attribute.RollableAttribute
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCorruptionRounds
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCraftingItem
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.ChatColor
@@ -14,7 +15,7 @@ import org.bukkit.inventory.ItemStack
 object CorruptionSettings {
     private val BASE_ITEM = Material.STICK
     private val ITEM_NAME = ChatColor.DARK_RED.toString() + "Orb of Corruption"
-    private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Corrupts an item, modifying it unpredictably")
+    private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Corrupts an item, modifying it unpredictably.")
     private val ITEM_LORE_DOUBLE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Corrupts an item, modifying it unpredictably. Twice!")
     val CORRUPTION_TAG_LORE = ChatColor.DARK_RED.toString() + "Corrupted"
 
@@ -41,6 +42,7 @@ object CorruptionSettings {
         ITEM_LORE
     ).apply {
         setCorruptionRounds(1)
+        setCraftingItem()
         setUnmodifiable()
     }
 
@@ -52,6 +54,7 @@ object CorruptionSettings {
         ItemFlag.HIDE_ENCHANTS
     ).apply {
         setCorruptionRounds(2)
+        setCraftingItem()
         setUnmodifiable()
     }
 

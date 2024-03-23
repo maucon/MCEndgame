@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.looting
 
 import de.fuballer.mcendgame.component.item.custom_item.types.*
 import de.fuballer.mcendgame.util.random.RandomOption
+import kotlin.math.pow
 
 object LootingSettings {
     const val ITEMS_DROP_CHANCE = 0.015f
@@ -24,8 +25,11 @@ object LootingSettings {
         RandomOption(1, HeadhuntersHaremType),
         RandomOption(1, LifewardAegisItemType),
         RandomOption(1, ShrinkshadowItemType),
+        RandomOption(1, StormfeatherItemType),
         RandomOption(1, TitansEmbraceItemType),
         RandomOption(1, TwinfireItemType),
         RandomOption(1, VitalitySurgeItemType),
     )
+
+    fun getOrbOfRefinementDropChance(mapTier: Int) = 1 - 0.92.pow(mapTier)
 }

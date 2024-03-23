@@ -1,108 +1,41 @@
-package de.fuballer.mcendgame.component.corruption
+package de.fuballer.mcendgame.component.crafting.corruption
 
+import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.SchedulingUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCorruptionRounds
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setRolledAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.random.RandomUtil
-import org.bukkit.GameMode
 import org.bukkit.Material
-import org.bukkit.Sound
-import org.bukkit.SoundCategory
-import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.inventory.InventoryAction
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryType
-import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import kotlin.random.Random
 
 @Component
-class CorruptionService : Listener {
-    @EventHandler
-    fun on(event: PrepareAnvilEvent) {
-        val inventory = event.inventory
+class CorruptionService : AnvilCraftingBaseService() {
+    override val repairCost = 6
 
-        val base = inventory.getItem(0) ?: return
-        val corruption = inventory.getItem(1) ?: return
+    override fun isBaseValid(base: ItemStack) =
+        Equipment.existsByMaterial(base.type)
 
-        if (!Equipment.existsByMaterial(base.type)) return
-        if (corruption.getCorruptionRounds() == null) return
+    override fun isCraftingItemValid(craftingItem: ItemStack) =
+        craftingItem.getCorruptionRounds() != null
 
-        val result = base.clone()
+    override fun getResultPreview(base: ItemStack): ItemStack =
+        base.also { it.setUnmodifiable() }
+
+    override fun updateResult(result: ItemStack, craftingItem: ItemStack) {
         result.setUnmodifiable()
-        ItemUtil.updateAttributesAndLore(result)
 
-        event.result = result
-
-        SchedulingUtil.runTask {
-            event.inventory.repairCost = 1
-
-            event.inventory.viewers.forEach {
-                it.setWindowProperty(InventoryView.Property.REPAIR_COST, 1)
-            }
-        }
-    }
-
-    @EventHandler
-    fun on(event: InventoryClickEvent) {
-        val inventory = event.inventory
-        if (inventory.type != InventoryType.ANVIL) return
-        if (event.slot != 2) return
-
-        val result = inventory.getItem(2) ?: return
-        if (!result.isUnmodifiable()) return
-
-        val player = event.whoClicked as Player
-        if (player.gameMode != GameMode.CREATIVE && player.level < 1) return
-        if (player.gameMode != GameMode.CREATIVE) {
-            player.level -= 1
-        }
-
-        val corruption = inventory.getItem(1) ?: return
-        val corruptionRounds = corruption.getCorruptionRounds() ?: return
-
+        val corruptionRounds = craftingItem.getCorruptionRounds()!!
         repeat(corruptionRounds) {
             if (result.type == Material.AIR) return@repeat
 
             corruptItem(result)
         }
-
-        if (result.type == Material.AIR) {
-            player.world.playSound(player.location, Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 1f, 1f)
-        } else {
-            player.world.playSound(player.location, Sound.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1f, 1f)
-            result.setUnmodifiable()
-            ItemUtil.updateAttributesAndLore(result)
-
-            when (event.action) {
-                InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_SOME ->
-                    player.setItemOnCursor(result)
-
-                InventoryAction.MOVE_TO_OTHER_INVENTORY ->
-                    player.inventory.addItem(result)
-
-                else -> return
-            }
-        }
-
-        inventory.setItem(0, null)
-        inventory.setItem(2, null)
-
-        val corruptionStack = inventory.getItem(1) ?: return
-        corruptionStack.amount -= 1
-        inventory.setItem(1, corruptionStack)
-
-        event.isCancelled = true
     }
 
     private fun corruptItem(item: ItemStack) {

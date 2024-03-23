@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.custom_entity.types.mandragora
 
 import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ChangeTargetAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.PoisonCloudAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.SummonVinesAbility
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
@@ -28,5 +29,6 @@ object MandragoraEntityType : CustomEntityType {
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(30, PoisonCloudAbility),
         RandomOption(30, SummonVinesAbility),
+        RandomOption(20, ChangeTargetAbility),
     )
 }

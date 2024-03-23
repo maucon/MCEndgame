@@ -47,7 +47,7 @@ commands:
   item-info:
     description: "Provides detailed information about the item the player is holding"
     usage: "§CUsage /<command>"
-    aliases: [ statitem ]
+    aliases: [ iteminfo, statitem ]
 
   dungeon-statistics:
     description: "Displays statistics for the player's dungeon runs"

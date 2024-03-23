@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.looting
 
+import de.fuballer.mcendgame.component.crafting.refinement.RefinementSettings
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.enchantment.EquipmentEnchantmentService
 import de.fuballer.mcendgame.component.dungeon.killstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
@@ -38,6 +39,7 @@ class LootingService(
 
         if (entity.isSpecial()) {
             dropCustomItems(entity, entity.world)
+            dropOrbOfRefinement(entity, entity.world)
         }
     }
 
@@ -67,6 +69,13 @@ class LootingService(
         item.itemMeta = itemMeta
 
         world.dropItemNaturally(entity.location, item)
+    }
+
+    private fun dropOrbOfRefinement(entity: LivingEntity, world: World) {
+        val mapTier = entity.getMapTier() ?: return
+        if (Random.nextDouble() > LootingSettings.getOrbOfRefinementDropChance(mapTier)) return
+
+        world.dropItemNaturally(entity.location, RefinementSettings.getRefinementItem())
     }
 
     private fun getLootingLevel(player: Player?): Int {

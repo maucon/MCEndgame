@@ -1,6 +1,8 @@
 package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
+import de.fuballer.mcendgame.component.custom_entity.ability.AbilitySettings
+import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import org.bukkit.Location
@@ -24,9 +26,16 @@ private const val FIRE_CASCADE_DAMAGE_PER_LEVEL = 3.0
 private const val FIRE_CASCADE_FIRE_TICKS = 100
 
 object FireCascadeAbility : Ability {
-    override fun cast(caster: LivingEntity, target: LivingEntity) {
+    override fun cast(caster: LivingEntity) {
         val mapTier = caster.getMapTier() ?: 1
+        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
 
+        for (target in targets) {
+            castOnTarget(mapTier, caster, target)
+        }
+    }
+
+    private fun castOnTarget(mapTier: Int, caster: LivingEntity, target: LivingEntity) {
         val vector = target.location.subtract(caster.location).toVector()
         val amount = vector.length().toInt() / FIRE_CASCADE_DISTANCE + FIRE_CASCADE_STEPS_AFTER_PLAYER
         val addVector = vector.normalize().multiply(FIRE_CASCADE_DISTANCE)

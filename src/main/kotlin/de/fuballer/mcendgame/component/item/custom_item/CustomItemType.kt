@@ -22,6 +22,7 @@ interface CustomItemType : Keyed {
             it.register(HeadhuntersHaremType)
             it.register(LifewardAegisItemType)
             it.register(ShrinkshadowItemType)
+            it.register(StormfeatherItemType)
             it.register(TitansEmbraceItemType)
             it.register(TwinfireItemType)
             it.register(VitalitySurgeItemType)

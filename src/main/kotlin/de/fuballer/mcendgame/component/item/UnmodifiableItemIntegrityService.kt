@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.item
 
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCorruptionRounds
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCraftingItem
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -18,7 +18,7 @@ class UnmodifiableItemIntegrityService : Listener {
         val inventory = event.inventory
 
         if (event.eventName == PrepareAnvilEvent::class.simpleName
-            && isCorruptionValid(inventory)
+            && isValidAnvilCrafting(inventory)
         ) return
 
         val anyUnmodifiable = inventory.contents.filterNotNull()
@@ -44,11 +44,11 @@ class UnmodifiableItemIntegrityService : Listener {
         }
     }
 
-    private fun isCorruptionValid(inventory: Inventory): Boolean {
+    private fun isValidAnvilCrafting(inventory: Inventory): Boolean {
         val base = inventory.getItem(0) ?: return false
-        val corruption = inventory.getItem(1) ?: return false
+        val potentialCraftingItem = inventory.getItem(1) ?: return false
 
         if (base.isUnmodifiable()) return false
-        return corruption.getCorruptionRounds() != null
+        return potentialCraftingItem.isCraftingItem()
     }
 }

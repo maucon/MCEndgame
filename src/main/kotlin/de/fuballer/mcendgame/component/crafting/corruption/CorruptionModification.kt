@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.corruption
+package de.fuballer.mcendgame.component.crafting.corruption
 
 enum class CorruptionModification {
     CORRUPT_ENCHANTS,
