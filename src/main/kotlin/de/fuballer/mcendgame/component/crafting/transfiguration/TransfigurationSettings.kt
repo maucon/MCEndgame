@@ -1,29 +1,29 @@
-package de.fuballer.mcendgame.component.crafting.reshaping
+package de.fuballer.mcendgame.component.crafting.transfiguration
 
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCraftingItem
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.setReshaping
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.setTransfiguration
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-object ReshapingSettings {
+object TransfigurationSettings {
     private val BASE_ITEM = Material.STICK
-    private val ITEM_NAME = ChatColor.LIGHT_PURPLE.toString() + "Orb of Reshaping"
-    private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Forge a new custom item from another")
+    private val ITEM_NAME = ChatColor.DARK_GREEN.toString() + "Orb of Transfiguration"
+    private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Shuffle the item's attribute rolls")
 
-    private val RESHAPING_ITEM = ItemCreatorUtil.create(
+    private val TRANSFIGURATION_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),
         ITEM_NAME,
         ITEM_LORE
     ).apply {
-        setReshaping()
+        setTransfiguration()
         setCraftingItem()
         setUnmodifiable()
     }
 
-    fun getReshapingItem() = RESHAPING_ITEM.clone()
+    fun getTransfigurationItem() = TRANSFIGURATION_ITEM.clone()
 
     fun getPreviewItem() = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),

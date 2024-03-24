@@ -41,6 +41,7 @@ object TypeKeys {
     val CORRUPTION_ROUNDS = TypeKey(createNamespacedKey("corruption_rounds"), PersistentDataType.INTEGER)
     val REFINEMENT = TypeKey(createNamespacedKey("refinement"), PersistentDataType.BOOLEAN)
     val RESHAPING = TypeKey(createNamespacedKey("reshaping"), PersistentDataType.BOOLEAN)
+    val TRANSFIGURATION = TypeKey(createNamespacedKey("transfiguration"), PersistentDataType.BOOLEAN)
     val MAP_DEVICE = TypeKey(createNamespacedKey("map_device"), PersistentDataType.BOOLEAN)
     val MAP_DEVICE_ACTION = TypeKey(createNamespacedKey("map_device_action"), PersistentEnum(MapDeviceAction::class))
     val TOTEM = TypeKey(createNamespacedKey("totem"), PersistentTotem)
