@@ -24,23 +24,24 @@ class RefinementService : AnvilCraftingBaseService() {
 
     override fun getResultPreview(base: ItemStack) = base
 
-    override fun updateResult(result: ItemStack, craftingItem: ItemStack) {
-        val attributes = result.getRolledAttributes()?.toMutableList() ?: return
-        val attributesBounds = ItemUtil.getEquipmentAttributes(result)
+    override fun getResult(base: ItemStack, craftingItem: ItemStack): ItemStack {
+        val attributes = base.getRolledAttributes()?.toMutableList() ?: return base
+        val attributesBounds = ItemUtil.getEquipmentAttributes(base)
 
         val sacrificedAttribute = attributes.random()
         attributes.remove(sacrificedAttribute)
 
-        val sacrificedAttributeBounds = attributesBounds.firstOrNull { it.type == sacrificedAttribute.type } ?: return
+        val sacrificedAttributeBounds = attributesBounds.firstOrNull { it.type == sacrificedAttribute.type } ?: return base
         val sacrificedAttributePercentage = (sacrificedAttribute.roll - sacrificedAttributeBounds.min) / (sacrificedAttributeBounds.max - sacrificedAttributeBounds.min)
 
         val enhancedAttribute = attributes.random()
-        val enhancedAttributeBounds = attributesBounds.firstOrNull { it.type == enhancedAttribute.type } ?: return
+        val enhancedAttributeBounds = attributesBounds.firstOrNull { it.type == enhancedAttribute.type } ?: return base
         val enhancedAttributeRange = enhancedAttributeBounds.max - enhancedAttributeBounds.min
 
         enhancedAttribute.roll += RefinementSettings.refineAttributeValue(enhancedAttributeRange, sacrificedAttributePercentage)
 
-        result.setRolledAttributes(attributes)
+        base.setRolledAttributes(attributes)
+        return base
     }
 
     private fun hasMultipleAttributes(item: ItemStack): Boolean {

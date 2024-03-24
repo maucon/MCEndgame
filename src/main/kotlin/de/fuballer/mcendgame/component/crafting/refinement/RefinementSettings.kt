@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 object RefinementSettings {
     private val BASE_ITEM = Material.STICK
     private val ITEM_NAME = ChatColor.DARK_AQUA.toString() + "Orb of Refinement"
-    private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Enhances an item's attribute, sacrificing another.")
+    private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Enhances an item's attribute, sacrificing another")
 
     fun refineAttributeValue(enhanceRollRange: Double, sacrificedRollPercentage: Double) = enhanceRollRange * 0.25 * sacrificedRollPercentage
 

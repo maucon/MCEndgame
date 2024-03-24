@@ -22,7 +22,7 @@ abstract class AnvilCraftingBaseService : Listener {
     abstract fun isBaseValid(base: ItemStack): Boolean
     abstract fun isCraftingItemValid(craftingItem: ItemStack): Boolean
     abstract fun getResultPreview(base: ItemStack): ItemStack
-    abstract fun updateResult(result: ItemStack, craftingItem: ItemStack)
+    abstract fun getResult(base: ItemStack, craftingItem: ItemStack): ItemStack
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: PrepareAnvilEvent) {
@@ -66,8 +66,7 @@ abstract class AnvilCraftingBaseService : Listener {
             player.level -= 1
         }
 
-        val result = inventory.getItem(2) ?: return
-        updateResult(result, craftingItem)
+        val result = getResult(base.clone(), craftingItem)
         ItemUtil.updateAttributesAndLore(result)
 
         val sound = if (result.type == Material.AIR) Sound.ENTITY_ITEM_BREAK else Sound.BLOCK_ANVIL_USE
