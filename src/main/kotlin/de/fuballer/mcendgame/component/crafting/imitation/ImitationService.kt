@@ -10,7 +10,6 @@ import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
@@ -19,11 +18,6 @@ import org.bukkit.inventory.ItemStack
 @Component
 class ImitationService : AnvilCraftingBaseService() {
     override val repairCost = 64
-
-    @EventHandler(ignoreCancelled = true)
-    fun on(event: EntityDeathEvent) {
-        event.entity.world.dropItemNaturally(event.entity.location, ImitationSettings.getImitationItem())
-    }
 
     override fun isBaseValid(base: ItemStack) = true
 
