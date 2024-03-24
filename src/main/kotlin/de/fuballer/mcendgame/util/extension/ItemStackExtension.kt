@@ -23,6 +23,8 @@ object ItemStackExtension {
     fun ItemStack.isReshaping() = getPersistentDataBoolean(this, TypeKeys.RESHAPING)
     fun ItemStack.setTransfiguration(value: Boolean = true) = setPersistentData(this, TypeKeys.TRANSFIGURATION, value)
     fun ItemStack.isTransfiguration() = getPersistentDataBoolean(this, TypeKeys.TRANSFIGURATION)
+    fun ItemStack.setImitation(value: Boolean = true) = setPersistentData(this, TypeKeys.IMITATION, value)
+    fun ItemStack.isImitation() = getPersistentDataBoolean(this, TypeKeys.IMITATION)
     fun ItemStack.setCraftingItem(value: Boolean = true) = setPersistentData(this, TypeKeys.CRAFTING_ITEM, value)
     fun ItemStack.isCraftingItem() = getPersistentDataBoolean(this, TypeKeys.CRAFTING_ITEM)
     fun ItemStack.setMapDevice(value: Boolean = true) = setPersistentData(this, TypeKeys.MAP_DEVICE, value)

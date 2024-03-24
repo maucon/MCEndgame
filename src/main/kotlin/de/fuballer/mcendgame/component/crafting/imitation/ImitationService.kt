@@ -1,54 +1,40 @@
-package de.fuballer.mcendgame.component.crafting
+package de.fuballer.mcendgame.component.crafting.imitation
 
+import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
+import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.SchedulingUtil
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.isImitation
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
-import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 
-abstract class AnvilCraftingBaseService : Listener {
-    protected open val repairCost = 1
-
-    abstract fun isBaseValid(base: ItemStack): Boolean
-    abstract fun isCraftingItemValid(craftingItem: ItemStack): Boolean
-    abstract fun getResultPreview(base: ItemStack): ItemStack
-    abstract fun getResult(base: ItemStack, craftingItem: ItemStack): ItemStack
+@Component
+class ImitationService : AnvilCraftingBaseService() {
+    override val repairCost = 64
 
     @EventHandler(ignoreCancelled = true)
-    fun on(event: PrepareAnvilEvent) {
-        val inventory = event.inventory
-
-        val base = inventory.getItem(0) ?: return
-        if (!isBaseValid(base)) return
-
-        val craftingItem = inventory.getItem(1) ?: return
-        if (!isCraftingItemValid(craftingItem)) return
-
-        val resultPreview = getResultPreview(base.clone())
-        ItemUtil.updateAttributesAndLore(resultPreview)
-        event.result = resultPreview
-
-        SchedulingUtil.runTask {
-            event.inventory.repairCost = repairCost
-
-            event.inventory.viewers.forEach {
-                it.setWindowProperty(InventoryView.Property.REPAIR_COST, repairCost)
-            }
-        }
+    fun on(event: EntityDeathEvent) {
+        event.entity.world.dropItemNaturally(event.entity.location, ImitationSettings.getImitationItem())
     }
 
+    override fun isBaseValid(base: ItemStack) = true
+
+    override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isImitation()
+
+    override fun getResultPreview(base: ItemStack) = base
+
+    override fun getResult(base: ItemStack, craftingItem: ItemStack) = base
+
     @EventHandler(ignoreCancelled = true)
-    open fun on(event: InventoryClickEvent) {
+    override fun on(event: InventoryClickEvent) {
         val inventory = event.inventory
         if (inventory.type != InventoryType.ANVIL) return
         if (event.rawSlot != 2) return
@@ -82,7 +68,6 @@ abstract class AnvilCraftingBaseService : Listener {
             else -> return
         }
 
-        inventory.setItem(0, null)
         inventory.setItem(2, null)
 
         val craftingItemStack = inventory.getItem(1) ?: return
