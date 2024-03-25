@@ -27,15 +27,16 @@ class CorruptionService : AnvilCraftingBaseService() {
     override fun getResultPreview(base: ItemStack): ItemStack =
         base.also { it.setUnmodifiable() }
 
-    override fun updateResult(result: ItemStack, craftingItem: ItemStack) {
-        result.setUnmodifiable()
+    override fun getResult(base: ItemStack, craftingItem: ItemStack): ItemStack {
+        base.setUnmodifiable()
 
         val corruptionRounds = craftingItem.getCorruptionRounds()!!
         repeat(corruptionRounds) {
-            if (result.type == Material.AIR) return@repeat
+            if (base.type == Material.AIR) return@repeat
 
-            corruptItem(result)
+            corruptItem(base)
         }
+        return base
     }
 
     private fun corruptItem(item: ItemStack) {

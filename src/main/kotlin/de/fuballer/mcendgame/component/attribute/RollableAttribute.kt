@@ -16,10 +16,6 @@ data class RollableAttribute(
         max: Double
     ) : this(type, 0.0, max)
 
-    constructor(
-        type: AttributeType
-    ) : this(type, 0.0, 0.0)
-
     init {
         if (min > max) throw IllegalArgumentException("min cannot be greater than max")
     }

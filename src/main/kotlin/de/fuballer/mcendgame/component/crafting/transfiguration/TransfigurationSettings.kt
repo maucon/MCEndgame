@@ -1,31 +1,29 @@
-package de.fuballer.mcendgame.component.crafting.refinement
+package de.fuballer.mcendgame.component.crafting.transfiguration
 
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCraftingItem
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.setRefinement
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.setTransfiguration
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-object RefinementSettings {
+object TransfigurationSettings {
     private val BASE_ITEM = Material.STICK
-    private val ITEM_NAME = ChatColor.DARK_AQUA.toString() + "Orb of Refinement"
-    private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Enhance an item's attribute by sacrificing another")
+    private val ITEM_NAME = ChatColor.DARK_GREEN.toString() + "Orb of Transfiguration"
+    private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Shuffle an item's attribute rolls")
 
-    fun refineAttributeValue(enhanceRollRange: Double, sacrificedRollPercentage: Double) = enhanceRollRange * 0.25 * sacrificedRollPercentage
-
-    private val REFINEMENT_ITEM = ItemCreatorUtil.create(
+    private val TRANSFIGURATION_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),
         ITEM_NAME,
         ITEM_LORE
     ).apply {
-        setRefinement()
+        setTransfiguration()
         setCraftingItem()
         setUnmodifiable()
     }
 
-    fun getRefinementItem() = REFINEMENT_ITEM.clone()
+    fun getTransfigurationItem() = TRANSFIGURATION_ITEM.clone()
 
     fun getPreviewItem() = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),
