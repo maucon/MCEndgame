@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.component.dungeon.enemy.generation
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.EquipmentGenerationService
-import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.LayoutTile
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
@@ -105,7 +104,7 @@ class EnemyGenerationService(
             val spawnLocation = Location(
                 world,
                 x + EnemyGenerationSettings.MOB_XZ_SPREAD * (random.nextDouble() * 2 - 1),
-                DungeonGenerationSettings.MOB_Y_POS,
+                0.0,
                 z + EnemyGenerationSettings.MOB_XZ_SPREAD * (random.nextDouble() * 2 - 1)
             )
 
