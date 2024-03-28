@@ -129,8 +129,8 @@ abstract class DamageCauseCalculator {
     open fun getBaseDamageForNonPlayer(event: DamageCalculationEvent): Double {
         val normalBaseDamage = getNormalBaseDamage(event)
         val baseDamage =
-            if (scaledByDifficulty) scaleDifficultyDamage(event.difficulty, normalBaseDamage)
-            else normalBaseDamage
+            if (event.isDungeonWorld) normalBaseDamage // do not scale damage in dungeon worlds
+            else scaleDifficultyDamage(event.difficulty, normalBaseDamage)
 
         return scaleInvulnerabilityDamage(event.damaged, baseDamage)
     }

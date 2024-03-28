@@ -19,16 +19,18 @@ class ProjectileService : Listener {
         if (event.entity.world.isDungeonWorld()) return // only for non dungeon worlds
 
         val projectile = event.entity as? AbstractArrow ?: return
-        val shooter = projectile as? LivingEntity ?: return
+        val shooter = projectile.shooter as? LivingEntity ?: return
 
         val addedDamage = getAddedDamage(shooter)
         projectile.setAddedBaseDamage(addedDamage)
     }
 
-    private fun getAddedDamage(entity: LivingEntity): Double {
-        var damage = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.value ?: return 0.0
-        damage -= entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.baseValue ?: 0.0
-        damage -= DamageUtil.getStrengthDamage(entity)
+    private fun getAddedDamage(shooter: LivingEntity): Double {
+        val attribute = shooter.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) ?: return 0.0
+
+        var damage = attribute.value
+        damage -= attribute.baseValue
+        damage -= DamageUtil.getStrengthDamage(shooter)
 
         return damage
     }
