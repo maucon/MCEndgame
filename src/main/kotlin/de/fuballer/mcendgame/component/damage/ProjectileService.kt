@@ -10,16 +10,18 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityShootBowEvent
+import org.bukkit.event.entity.ProjectileLaunchEvent
 
 @Component
 class ProjectileService : Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    fun on(event: EntityShootBowEvent) {
-        if (event.entity.world.isDungeonWorld()) return // only for vanilla worlds
-        val projectile = event.projectile as? AbstractArrow ?: return
+    fun on(event: ProjectileLaunchEvent) {
+        if (event.entity.world.isDungeonWorld()) return // only for non dungeon worlds
 
-        val addedDamage = getAddedDamage(event.entity)
+        val projectile = event.entity as? AbstractArrow ?: return
+        val shooter = projectile as? LivingEntity ?: return
+
+        val addedDamage = getAddedDamage(shooter)
         projectile.setAddedBaseDamage(addedDamage)
     }
 

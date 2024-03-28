@@ -6,21 +6,22 @@ import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
 import org.bukkit.Sound
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Snowball
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityShootBowEvent
+import org.bukkit.event.entity.ProjectileLaunchEvent
 
 @Component
 class HarpyService : Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    fun onEntityShootBow(event: EntityShootBowEvent) {
-        val entity = event.entity
-        if (entity.getCustomEntityType() != HarpyEntityType) return
-        val projectile = event.projectile as? AbstractArrow ?: return
+    fun on(event: ProjectileLaunchEvent) {
+        val projectile = event.entity as? AbstractArrow ?: return
+        val shooter = projectile.shooter as? LivingEntity ?: return
 
-        EnemyUtil.shootCustomProjectile(entity, projectile, EntityType.SNOWBALL, Sound.ENTITY_SNOWBALL_THROW) as Snowball
+        if (shooter.getCustomEntityType() != HarpyEntityType) return
+        EnemyUtil.shootCustomProjectile(shooter, projectile, EntityType.SNOWBALL, Sound.ENTITY_SNOWBALL_THROW) as Snowball
 
         event.isCancelled = true
     }

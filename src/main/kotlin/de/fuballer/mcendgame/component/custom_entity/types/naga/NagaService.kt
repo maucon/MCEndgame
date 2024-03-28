@@ -7,21 +7,23 @@ import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
 import org.bukkit.Sound
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.LlamaSpit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityShootBowEvent
+import org.bukkit.event.entity.ProjectileLaunchEvent
 
 @Component
 class NagaService : Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    fun onEntityShootBow(event: EntityShootBowEvent) {
-        val entity = event.entity
-        if (entity.getCustomEntityType() != NagaEntityType) return
-        val projectile = event.projectile as? AbstractArrow ?: return
+    fun on(event: ProjectileLaunchEvent) {
+        val projectile = event.entity as? AbstractArrow ?: return
+        val shooter = projectile.shooter as? LivingEntity ?: return
 
-        val spit = EnemyUtil.shootCustomProjectile(entity, projectile, EntityType.LLAMA_SPIT, Sound.ENTITY_LLAMA_SPIT) as LlamaSpit
+        if (shooter.getCustomEntityType() != NagaEntityType) return
+
+        val spit = EnemyUtil.shootCustomProjectile(shooter, projectile, EntityType.LLAMA_SPIT, Sound.ENTITY_LLAMA_SPIT) as LlamaSpit
         spit.customName = PoisonSpitEntityType.customName
 
         event.isCancelled = true
