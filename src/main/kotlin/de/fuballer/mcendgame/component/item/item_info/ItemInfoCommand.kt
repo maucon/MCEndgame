@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.item.item_info
 
-import de.fuballer.mcendgame.component.attribute.RollableAttribute
-import de.fuballer.mcendgame.component.attribute.RolledAttribute
+import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.CommandHandler

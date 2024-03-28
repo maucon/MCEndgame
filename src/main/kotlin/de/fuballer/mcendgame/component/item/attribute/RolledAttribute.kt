@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.attribute
+package de.fuballer.mcendgame.component.item.attribute
 
 data class RolledAttribute(
     val type: AttributeType,

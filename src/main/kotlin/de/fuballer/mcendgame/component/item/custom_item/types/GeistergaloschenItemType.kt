@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.item.custom_item.types
 
-import de.fuballer.mcendgame.component.attribute.AttributeType
-import de.fuballer.mcendgame.component.attribute.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.armor.Boots
 import de.fuballer.mcendgame.util.PluginUtil

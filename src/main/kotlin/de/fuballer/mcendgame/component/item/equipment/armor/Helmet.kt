@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.item.equipment.armor
 
-import de.fuballer.mcendgame.component.attribute.AttributeType
-import de.fuballer.mcendgame.component.attribute.RollableAttribute
-import de.fuballer.mcendgame.component.attribute.RolledAttribute
+import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption

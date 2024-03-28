@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.equipment
 
-import de.fuballer.mcendgame.component.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.enchantment.EquipmentEnchantmentService
+import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil

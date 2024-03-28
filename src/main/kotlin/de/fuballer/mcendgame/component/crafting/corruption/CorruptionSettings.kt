@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.crafting.corruption
 
-import de.fuballer.mcendgame.component.attribute.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCorruptionRounds
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCraftingItem

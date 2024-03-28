@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.item.equipment
 
-import de.fuballer.mcendgame.component.attribute.RollableAttribute
-import de.fuballer.mcendgame.component.attribute.RolledAttribute
+import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.item.equipment.armor.Boots
 import de.fuballer.mcendgame.component.item.equipment.armor.Chestplate
 import de.fuballer.mcendgame.component.item.equipment.armor.Helmet

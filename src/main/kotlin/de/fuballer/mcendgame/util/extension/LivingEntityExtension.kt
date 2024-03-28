@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.util.extension
 
-import de.fuballer.mcendgame.component.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.util.DamageUtil
 import org.bukkit.entity.LivingEntity
 

@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.component.attribute.AttributeType
-import de.fuballer.mcendgame.component.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
+import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
 import org.bukkit.Difficulty
@@ -138,6 +138,8 @@ object DamageUtil {
 
     fun getProjectileBaseDamage(projectile: Projectile): Double {
         val arrow = projectile as? AbstractArrow ?: return 0.0
+        if (arrow is Trident) return 8.0
+
         return arrow.damage
     }
 

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.attribute
+package de.fuballer.mcendgame.component.item.attribute
 
 import kotlin.math.pow
 import kotlin.random.Random
