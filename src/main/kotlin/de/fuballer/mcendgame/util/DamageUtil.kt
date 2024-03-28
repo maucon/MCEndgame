@@ -43,7 +43,7 @@ object DamageUtil {
         return player.attackCooldown.toDouble()
     }
 
-    fun getReducedDamageByArmor(entity: LivingEntity, damage: Double): Double {
+    fun getArmorDamageReduction(entity: LivingEntity, damage: Double): Double {
         var armor = entity.getAttribute(Attribute.GENERIC_ARMOR)?.value ?: 0.0
         val armorToughness = entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS)?.value ?: 0.0
         armor = floor(armor)
@@ -69,7 +69,7 @@ object DamageUtil {
         return min(0.8, protectionReduction + specialEnchantReduction)
     }
 
-    fun getResistancePotionEffectReduction(entity: LivingEntity): Double {
+    fun getResistancePotionEffectDamageReduction(entity: LivingEntity): Double {
         val amplifier = entity.getPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)?.amplifier ?: return 0.0
         return min(1.0, (amplifier + 1) * 0.2)
     }

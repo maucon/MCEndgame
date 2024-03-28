@@ -6,8 +6,15 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.inventory.EquipmentSlot
 
-object EntitySweepDamageCalculator : DamageCauseCalculator {
+object EntitySweepDamageCalculator : DamageCauseCalculator() {
+    private const val CRITICAL_MULTIPLIER = 1.5
+
     override val damageType = EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK
+    override val canBeBlocked = true
+    override val affectedByInvulnerability = true
+    override val affectedByArmor = true
+    override val scaledByDifficulty = true
+    override val affectedByArmorProtection = true
 
     override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         val baseDamage = DamageUtil.getMeleeBaseDamage(damageEvent.damager)
@@ -21,13 +28,17 @@ object EntitySweepDamageCalculator : DamageCauseCalculator {
         return damageEvent
     }
 
+    override fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
+        throw IllegalStateException("non player entities shouldn't be able to do sweep attacks")
+    }
+
     override fun getNormalBaseDamage(event: DamageCalculationEvent): Double {
         var damage = DamageUtil.getRawBaseDamage(event)
 
         damage += DamageUtil.getStrengthDamage(event.damager)
 
         if (event.isCritical) {
-            damage *= 1.5
+            damage *= CRITICAL_MULTIPLIER
         }
 
         damage += event.enchantDamage

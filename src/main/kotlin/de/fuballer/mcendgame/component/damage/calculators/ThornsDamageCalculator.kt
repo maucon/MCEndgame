@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.component.damage.calculators
 
-import org.bukkit.Difficulty
-import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 
-object ThornsDamageCalculator : DamageCauseCalculator {
+object ThornsDamageCalculator : DamageCauseCalculator() {
     override val damageType = DamageCause.THORNS
-
-    override fun scaleInvulnerabilityDamage(entity: LivingEntity, damage: Double) = damage
-    override fun scaleDifficultyDamage(difficulty: Difficulty, damage: Double) = damage
+    override val canBeBlocked = false
+    override val affectedByInvulnerability = false
+    override val affectedByArmor = true
+    override val scaledByDifficulty = false
+    override val affectedByArmorProtection = true
 }

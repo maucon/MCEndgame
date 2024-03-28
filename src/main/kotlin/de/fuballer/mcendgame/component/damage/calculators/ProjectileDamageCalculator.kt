@@ -5,27 +5,36 @@ import de.fuballer.mcendgame.util.DamageUtil
 import de.fuballer.mcendgame.util.extension.ProjectileExtension.getAddedBaseDamage
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Projectile
+import org.bukkit.entity.Trident
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
 import kotlin.math.ceil
 
-object ProjectileDamageCalculator : DamageCauseCalculator {
+object ProjectileDamageCalculator : DamageCauseCalculator() {
     override val damageType = EntityDamageEvent.DamageCause.PROJECTILE
+    override val canBeBlocked = true
+    override val affectedByInvulnerability = true
+    override val affectedByArmor = true
+    override val scaledByDifficulty = true
+    override val affectedByArmorProtection = true
+    override val specialEnchantDamageReduction: Enchantment = Enchantment.PROTECTION_PROJECTILE
 
     override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         val projectile = event.damager as Projectile
-        val baseDamage = DamageUtil.getProjectileBaseDamage(projectile)
+        val projectileDamage = DamageUtil.getProjectileBaseDamage(projectile)
         val addedDamage = projectile.getAddedBaseDamage() ?: 0.0
+
         val projectileVelocity = projectile.velocity.length()
-        val cumulativeBaseDamage = (baseDamage + addedDamage) * projectileVelocity
+        val baseDamage = projectileDamage * projectileVelocity
+        val cumulativeBaseDamage = if (projectile is Trident) 8.0 else baseDamage + addedDamage * projectileVelocity
 
         damageEvent.baseDamage.add(cumulativeBaseDamage)
         damageEvent.isCritical = DamageUtil.isProjectileCritical(projectile)
 
         if (damageEvent.isCritical) {
             val eventBaseDamage = event.getDamage(DamageModifier.BASE)
-            damageEvent.criticalRoll = eventBaseDamage / (baseDamage * projectileVelocity) - 1
+            damageEvent.criticalRoll = eventBaseDamage / baseDamage - 1
         }
 
         return damageEvent
@@ -50,10 +59,5 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
         }
 
         return ceil(damage - 0.0001) // 🤓🤓🤓
-    }
-
-    override fun getFlatMagicDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
-        val reduction = DamageUtil.getSpecialEnchantDamageReduction(event.damaged, Enchantment.PROTECTION_PROJECTILE)
-        return damage * reduction
     }
 }

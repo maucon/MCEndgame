@@ -5,8 +5,14 @@ import de.fuballer.mcendgame.util.DamageUtil
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 
-object EntityAttackDamageCalculator : DamageCauseCalculator {
+object EntityAttackDamageCalculator : DamageCauseCalculator() {
     override val damageType = EntityDamageEvent.DamageCause.ENTITY_ATTACK
+    override val canBeBlocked = true
+    override val affectedByInvulnerability = false
+    override val affectedByArmor = true
+    override val scaledByDifficulty = true
+    override val affectedByArmorProtection = true
+    override val specialEnchantDamageReduction = null
 
     override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         val baseDamage = DamageUtil.getMeleeBaseDamage(damageEvent.damager)

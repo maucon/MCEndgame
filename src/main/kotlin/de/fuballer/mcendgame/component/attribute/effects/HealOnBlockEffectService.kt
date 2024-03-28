@@ -20,7 +20,7 @@ class HealOnBlockEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
         val player = event.damaged as? Player ?: return
-        if (!event.damageBlocked) return
+        if (!event.isDamageBlocked) return
 
         val damagedCustomAttributes = event.damaged.getCustomAttributes()
         val healOnBlockAttributes = damagedCustomAttributes[AttributeType.HEAL_ON_BLOCK] ?: return
