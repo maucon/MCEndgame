@@ -28,10 +28,6 @@ object EntitySweepDamageCalculator : DamageCauseCalculator() {
         return damageEvent
     }
 
-    override fun buildDamageEventForNonPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
-        throw IllegalStateException("non player entities shouldn't be able to do sweep attacks")
-    }
-
     override fun getNormalBaseDamage(event: DamageCalculationEvent): Double {
         var damage = DamageUtil.getRawBaseDamage(event)
 
