@@ -10,8 +10,14 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
 import kotlin.math.ceil
 
-object ProjectileDamageCalculator : DamageCauseCalculator {
+object ProjectileDamageCalculator : DamageCauseCalculator() {
     override val damageType = EntityDamageEvent.DamageCause.PROJECTILE
+    override val canBeBlocked = true
+    override val affectedByInvulnerability = true
+    override val affectedByArmor = true
+    override val scaledByDifficulty = true
+    override val affectedByArmorProtection = true
+    override val specialEnchantDamageReduction: Enchantment = Enchantment.PROTECTION_PROJECTILE
 
     override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         val projectile = event.damager as Projectile
@@ -50,10 +56,5 @@ object ProjectileDamageCalculator : DamageCauseCalculator {
         }
 
         return ceil(damage - 0.0001) // 🤓🤓🤓
-    }
-
-    override fun getFlatMagicDamageReduction(event: DamageCalculationEvent, damage: Double): Double {
-        val reduction = DamageUtil.getSpecialEnchantDamageReduction(event.damaged, Enchantment.PROTECTION_PROJECTILE)
-        return damage * reduction
     }
 }
