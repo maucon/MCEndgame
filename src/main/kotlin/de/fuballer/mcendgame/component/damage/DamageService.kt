@@ -18,7 +18,9 @@ private val DAMAGE_TYPE_CALCULATORS = listOf(
     EntitySweepDamageCalculator,
     ProjectileDamageCalculator,
     ThornsDamageCalculator,
-    MagicDamageCalculator
+    MagicDamageCalculator,
+    EntityExplosionDamageCalculator,
+    SonicBoomDamageCalculator
 ).associateBy { it.damageType }
 
 @Component
