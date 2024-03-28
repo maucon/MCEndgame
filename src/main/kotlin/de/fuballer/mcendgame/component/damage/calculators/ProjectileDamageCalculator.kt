@@ -24,7 +24,7 @@ object ProjectileDamageCalculator : DamageCauseCalculator() {
 
     override fun buildDamageEventForPlayer(event: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent): DamageCalculationEvent {
         val projectile = event.damager as Projectile
-        val projectileDamage = DamageUtil.getProjectileBaseDamage(projectile)
+        val projectileDamage = DamageUtil.getPlayerProjectileBaseDamage(projectile, damageEvent.damaged)
         val addedDamage = projectile.getAddedBaseDamage() ?: 0.0
 
         println("$projectileDamage $addedDamage")

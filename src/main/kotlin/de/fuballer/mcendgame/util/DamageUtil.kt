@@ -136,7 +136,8 @@ object DamageUtil {
             .mapValues { (_, values) -> values.map { it.roll } }
     }
 
-    fun getProjectileBaseDamage(projectile: Projectile): Double {
+    fun getPlayerProjectileBaseDamage(projectile: Projectile, damaged: LivingEntity): Double {
+        if (projectile is Snowball && damaged is Blaze) return 3.0
         val arrow = projectile as? AbstractArrow ?: return 0.0
         if (arrow is Trident) return 8.0
 
