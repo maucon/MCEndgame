@@ -13,12 +13,16 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
 import java.util.logging.Logger
 import kotlin.math.abs
 
+private const val ALWAYS_SHOW_DEBUG = false
+
 private val DAMAGE_TYPE_CALCULATORS = listOf(
     EntityAttackDamageCalculator,
     EntitySweepDamageCalculator,
     ProjectileDamageCalculator,
     ThornsDamageCalculator,
-    MagicDamageCalculator
+    MagicDamageCalculator,
+    EntityExplosionDamageCalculator,
+    SonicBoomDamageCalculator
 ).associateBy { it.damageType }
 
 @Component
@@ -37,8 +41,8 @@ class DamageService(
         val oldFinalValue = Pair("FINAL_DMG ", event.finalDamage)
         // debug end
 
-        val damageTypeCalculator = DAMAGE_TYPE_CALCULATORS[event.cause] ?: DefaultDamageCalculator
-        val damageEvent = damageTypeCalculator.buildDamageEvent(event)
+        val damageTypeCalculator = DAMAGE_TYPE_CALCULATORS[event.cause]
+        val damageEvent = damageTypeCalculator?.buildDamageEvent(event)
         if (damageEvent == null) {
             logger.severe("could not map event")
             logger.severe("= event.damager ${event.damager}")
@@ -70,7 +74,7 @@ class DamageService(
                 val damageDiff = abs(oldDamage - newDamage)
                 val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
                 val format = "%s%s : %.3f -> %.3f | %.3f"
-                if (damageDiff > 0.001) {
+                if (damageDiff > 0.001 || ALWAYS_SHOW_DEBUG) {
                     Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, modifier, oldDamage, newDamage, damageDiff))
                 }
             }
@@ -79,7 +83,7 @@ class DamageService(
         val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
 
         val format = "%s%s : %.3f -> %.3f | %.3f"
-        if (damageDiff > 0.001) {
+        if (damageDiff > 0.001 || ALWAYS_SHOW_DEBUG) {
             Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, oldFinalValue.first, oldFinalValue.second, newDamage, damageDiff))
         }
         // debug end

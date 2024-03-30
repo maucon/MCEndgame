@@ -25,9 +25,7 @@ class TeamService : Listener, LifeCycleListener {
 
     private fun createTeam() {
         val board = PluginConfiguration.scoreboardManager().mainScoreboard
-        team = board.getTeam(TeamSettings.TEAM_NAME)
-            ?: board.registerNewTeam(TeamSettings.TEAM_NAME)
-
-        team!!.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER)
+        team = (board.getTeam(TeamSettings.TEAM_NAME) ?: board.registerNewTeam(TeamSettings.TEAM_NAME))
+            .also { it.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER) }
     }
 }

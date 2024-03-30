@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.item.custom_item
 
-import de.fuballer.mcendgame.component.attribute.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.item.custom_item.types.*
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.technical.registry.Keyed

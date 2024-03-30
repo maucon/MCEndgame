@@ -1,7 +1,7 @@
-package de.fuballer.mcendgame.component.attribute.effects
+package de.fuballer.mcendgame.component.item.attribute.effects
 
-import de.fuballer.mcendgame.component.attribute.AttributeType
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
+import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHealOnBlockActivation
@@ -20,7 +20,7 @@ class HealOnBlockEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
         val player = event.damaged as? Player ?: return
-        if (!event.damageBlocked) return
+        if (!event.isDamageBlocked) return
 
         val damagedCustomAttributes = event.damaged.getCustomAttributes()
         val healOnBlockAttributes = damagedCustomAttributes[AttributeType.HEAL_ON_BLOCK] ?: return

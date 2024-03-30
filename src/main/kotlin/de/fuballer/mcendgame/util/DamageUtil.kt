@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.component.attribute.AttributeType
-import de.fuballer.mcendgame.component.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
+import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
 import org.bukkit.Difficulty
@@ -43,7 +43,7 @@ object DamageUtil {
         return player.attackCooldown.toDouble()
     }
 
-    fun getReducedDamageByArmor(entity: LivingEntity, damage: Double): Double {
+    fun getArmorDamageReduction(entity: LivingEntity, damage: Double): Double {
         var armor = entity.getAttribute(Attribute.GENERIC_ARMOR)?.value ?: 0.0
         val armorToughness = entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS)?.value ?: 0.0
         armor = floor(armor)
@@ -69,7 +69,7 @@ object DamageUtil {
         return min(0.8, protectionReduction + specialEnchantReduction)
     }
 
-    fun getResistancePotionEffectReduction(entity: LivingEntity): Double {
+    fun getResistancePotionEffectDamageReduction(entity: LivingEntity): Double {
         val amplifier = entity.getPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)?.amplifier ?: return 0.0
         return min(1.0, (amplifier + 1) * 0.2)
     }
@@ -136,8 +136,11 @@ object DamageUtil {
             .mapValues { (_, values) -> values.map { it.roll } }
     }
 
-    fun getProjectileBaseDamage(projectile: Projectile): Double {
+    fun getPlayerProjectileBaseDamage(projectile: Projectile, damaged: LivingEntity): Double {
+        if (projectile is Snowball && damaged is Blaze) return 3.0
         val arrow = projectile as? AbstractArrow ?: return 0.0
+        if (arrow is Trident) return 8.0
+
         return arrow.damage
     }
 
