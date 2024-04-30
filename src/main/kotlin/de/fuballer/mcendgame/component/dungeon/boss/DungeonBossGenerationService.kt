@@ -15,7 +15,7 @@ import org.bukkit.entity.Creature
 class DungeonBossGenerationService(
     private val dungeonBossRepo: DungeonBossRepository,
 ) {
-    fun spawnNewMapBoss(
+    fun generate(
         entityType: CustomEntityType,
         location: Location,
         mapTier: Int

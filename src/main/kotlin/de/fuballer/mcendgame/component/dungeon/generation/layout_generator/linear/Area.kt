@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.generation.data
+package de.fuballer.mcendgame.component.dungeon.generation.layout_generator.linear
 
 import org.bukkit.util.Vector
 

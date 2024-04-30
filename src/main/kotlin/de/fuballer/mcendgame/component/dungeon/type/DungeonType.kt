@@ -47,7 +47,7 @@ enum class DungeonType(
 ) {
     HELL(
         listOf(
-            RandomOption(1, DungeonMapType.MINE),
+            RandomOption(1, DungeonMapType.STRONGHOLD),
         ),
         listOf(
             RandomOption(10, WitherSkeletonEntityType),
@@ -65,11 +65,7 @@ enum class DungeonType(
     ),
     UNDEAD(
         listOf(
-            RandomOption(5, DungeonMapType.MINE),
-            RandomOption(3, DungeonMapType.CATACOMBS),
-            RandomOption(1, DungeonMapType.CATACOMBS_ALTERNATIVE),
-            RandomOption(1, DungeonMapType.ICE_CAVE),
-            RandomOption(1, DungeonMapType.LUSH_CAVE)
+            RandomOption(1, DungeonMapType.STRONGHOLD),
         ),
         listOf(
             RandomOption(10, WitherSkeletonEntityType),
@@ -79,8 +75,7 @@ enum class DungeonType(
             RandomOption(20, MeleeSkeletonEntityType),
             RandomOption(30, StrayEntityType),
             RandomOption(12, NecromancerEntityType),
-
-            ),
+        ),
         listOf(
             RandomOption(3, ReaperEntityType)
         ),
@@ -88,8 +83,7 @@ enum class DungeonType(
     ),
     MYTHICAL(
         listOf(
-            RandomOption(1, DungeonMapType.ICE_CAVE),
-            RandomOption(1, DungeonMapType.LUSH_CAVE)
+            RandomOption(1, DungeonMapType.STRONGHOLD),
         ),
         listOf(
             RandomOption(60, PiglinBruteEntityType),
@@ -106,7 +100,7 @@ enum class DungeonType(
     ),
     FOREST(
         listOf(
-            RandomOption(1, DungeonMapType.LUSH_CAVE)
+            RandomOption(1, DungeonMapType.STRONGHOLD)
         ),
         listOf(
             RandomOption(50, ForestSkeletonEntityType),
@@ -122,7 +116,7 @@ enum class DungeonType(
     ),
     VILLAGE(
         listOf(
-            RandomOption(1, DungeonMapType.ICE_CAVE)
+            RandomOption(1, DungeonMapType.STRONGHOLD)
         ),
         listOf(
             RandomOption(50, BuffVillagerEntityType),

@@ -1,61 +1,53 @@
-package de.fuballer.mcendgame.component.dungeon.generation
+package de.fuballer.mcendgame.component.dungeon.generation.layout_generator.linear
 
-import de.fuballer.mcendgame.component.dungeon.generation.data.Area
-import de.fuballer.mcendgame.component.dungeon.generation.data.Door
-import de.fuballer.mcendgame.component.dungeon.generation.data.PlaceableRoom
-import de.fuballer.mcendgame.component.dungeon.generation.data.RoomType
+import de.fuballer.mcendgame.component.dungeon.generation.data.Layout
+import de.fuballer.mcendgame.component.dungeon.generation.data.PlaceableTile
+import de.fuballer.mcendgame.component.dungeon.generation.data.VectorUtil
+import de.fuballer.mcendgame.component.dungeon.generation.layout_generator.LayoutGenerator
 import org.bukkit.util.Vector
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-class NewDungeonLayoutGenerator {
-    private var layoutRooms: MutableList<PlaceableRoom> = mutableListOf()
+private fun calculateComplexityLimit(mapTier: Int) = 100 + mapTier
 
-    fun getLayout() = layoutRooms
+class LinearLayoutGenerator(
+    private val startRoom: RoomType,
+    private val rooms: List<RoomType>
+) : LayoutGenerator {
+    private lateinit var random: Random
 
-    private var startRoom = RoomType(
-        "start_room", Vector(13, 7, 14), 0,
-        listOf(Door(Vector(13, 0, 7), Vector(1, 0, 0)))
-    )
+    private val tiles = mutableListOf<PlaceableTile>()
+    private val spawnLocations = mutableListOf<Vector>()
 
-    private var rooms = listOf(
-        RoomType(
-            "short_connection", Vector(3, 7, 8), 1,
-            listOf(Door(Vector(0, 0, 4), Vector(-1, 0, 0)), Door(Vector(3, 0, 4), Vector(1, 0, 0)))
-        ),
-        RoomType(
-            "staircase", Vector(14, 19, 16), 6,
-            listOf(Door(Vector(0, 11, 5), Vector(-1, 0, 0)), Door(Vector(9, 0, 16), Vector(0, 0, 1)), Door(Vector(14, 11, 12), Vector(1, 0, 0)))
-        ),
-        RoomType(
-            "arena", Vector(22, 11, 24), 10,
-            listOf(Door(Vector(0, 3, 12), Vector(-1, 0, 0)), Door(Vector(22, 3, 12), Vector(1, 0, 0)))
-        )
-    )
-
-    fun generateDungeon(
+    override fun generateDungeon(
         random: Random,
-        roomComplexitySumLimit: Int
-    ) {
-        layoutRooms.add(PlaceableRoom(startRoom.name, Vector(0, 0, 0), 0.0))
+        mapTier: Int
+    ): Layout {
+        this.random = random
+
+        val startTile = PlaceableTile(startRoom.name, Vector(0, 0, 0), 0.0)
+        tiles.add(startTile)
 
         val blockedArea = mutableListOf<Area>()
         blockedArea.add(Area(Vector(0, 0, 0), startRoom.size))
 
-        if (!generateNextRoom(random, startRoom.doors[0], startRoom.complexity, roomComplexitySumLimit, blockedArea))
-            println("No valid layout could be generated.")
+        val complexityLimit = calculateComplexityLimit(mapTier)
+        if (!generateNextRoom(startRoom.doors[0], startRoom.complexity, complexityLimit, blockedArea)) {
+            throw IllegalStateException("No valid layout could be generated")
+        }
+
+        return Layout(tiles, spawnLocations)
     }
 
     private fun generateNextRoom(
-        random: Random,
         currentDoor: Door,
         roomComplexitySum: Int,
-        roomComplexitySumLimit: Int,
+        complexityLimit: Int,
         blockedArea: MutableList<Area>
     ): Boolean {
-        if (roomComplexitySum >= roomComplexitySumLimit) return true
+        if (roomComplexitySum >= complexityLimit) return true
 
         val doorAdjacentCoordinates = currentDoor.getAdjacentPosition()
 
@@ -88,9 +80,17 @@ class NewDungeonLayoutGenerator {
                 val nextDoor = remainingDoors[0].getRotated(neededRotationRadians)
                 nextDoor.position.add(offsetRoomOrigin)
 
-                if (!generateNextRoom(random, nextDoor, roomComplexitySum + chosenRoom.complexity, roomComplexitySumLimit, updatedBlockedArea)) continue
+                if (!generateNextRoom(nextDoor, roomComplexitySum + chosenRoom.complexity, complexityLimit, updatedBlockedArea)) continue
 
-                layoutRooms.add(PlaceableRoom(chosenRoom.name, offsetRoomOrigin, neededRotation))
+                val tile = PlaceableTile(chosenRoom.name, offsetRoomOrigin, neededRotation)
+                tiles.add(tile)
+
+                val absoluteSpawnLocations = chosenRoom.spawnLocations.toMutableList()
+                    .map { it.clone() }
+                    .map { it.rotateAroundY(Math.toRadians(neededRotation)) }
+                    .map { it.add(offsetRoomOrigin) }
+
+                spawnLocations.addAll(absoluteSpawnLocations)
 
                 return true
             }

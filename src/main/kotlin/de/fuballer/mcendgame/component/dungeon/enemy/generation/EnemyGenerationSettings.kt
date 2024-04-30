@@ -2,18 +2,11 @@ package de.fuballer.mcendgame.component.dungeon.enemy.generation
 
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
-import kotlin.random.Random
+import org.bukkit.potion.PotionEffectType
 
 object EnemyGenerationSettings {
-    private const val MIN_MOBS_PER_TILE = 2
-    private const val MAX_MOBS_PER_TILE = 5
-    const val MOB_XZ_SPREAD = 1.5
     const val SPECIAL_MOB_COUNT = 3
-
-    fun generateMobCount(random: Random): Int {
-        val possibleAddedMobs = MAX_MOBS_PER_TILE - MIN_MOBS_PER_TILE
-        return MIN_MOBS_PER_TILE + random.nextInt(possibleAddedMobs + 1)
-    }
+    val INIT_POTION_EFFECT_TYPE: PotionEffectType = PotionEffectType.LUCK
 
     val STRENGTH_EFFECTS = listOf(
         SortableRandomOption(250, 0, null),

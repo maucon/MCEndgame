@@ -1,25 +1,25 @@
 package de.fuballer.mcendgame.component.dungeon.generation
 
-import com.sk89q.worldedit.bukkit.BukkitWorld
-import com.sk89q.worldedit.extent.clipboard.Clipboard
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats
-import com.sk89q.worldedit.math.BlockVector3
-import com.sk89q.worldedit.math.transform.AffineTransform
-import de.fuballer.mcendgame.component.dungeon.generation.data.PlaceableRoom
+import de.fuballer.mcendgame.component.dungeon.boss.DungeonBossGenerationService
+import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationService
+import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemySpawnLocations
+import de.fuballer.mcendgame.component.dungeon.generation.data.VectorUtil
+import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
+import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.framework.annotation.Component
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
-import org.bukkit.World
 import org.bukkit.entity.Player
-import java.util.logging.Logger
 import kotlin.random.Random
 
 @Component
 class DungeonGenerationService(
     private val worldManageService: WorldManageService,
-    private val logger: Logger
+    private val dungeonBuilderService: DungeonBuilderService,
+    private val dungeonTypeService: DungeonTypeService,
+    private val enemyGenerationService: EnemyGenerationService,
+    private val bossGenerationService: DungeonBossGenerationService,
+    private val portalService: PortalService
 ) {
     fun generateDungeon(
         player: Player,
@@ -28,63 +28,30 @@ class DungeonGenerationService(
     ): Location {
         val world = worldManageService.createWorld(player, mapTier)
         val random = Random(world.seed)
+        val dungeonType = dungeonTypeService.getNextDungeonType(player)
+        val (mapType, entityTypes, specialEntityTypes, bossEntityType) = dungeonType.roll(random)
 
-        val dungeonLayoutGenerator = NewDungeonLayoutGenerator()
-        dungeonLayoutGenerator.generateDungeon(
-            random,
-            100
-        )
-        val layoutRooms = dungeonLayoutGenerator.getLayout()
+        val layoutGenerator = mapType.layoutGenerator
+        val layout = layoutGenerator.generateDungeon(random, mapTier)
 
-        runBlocking {
-            launch { loadLayoutTiles(layoutRooms, world) }
-        }
+        dungeonBuilderService.build(mapType.schematicFolder, layout.tiles, world)
 
-        return Location(world, 5.0, 1.5, 5.0)
-    }
+        val normalEnemyLocations = layout.spawnLocations.toMutableList()
+            .map { VectorUtil.toLocation(world, it) }
 
-    private fun loadLayoutTiles(
-        layoutRooms: List<PlaceableRoom>,
-        world: World
-    ) {
-        for (room in layoutRooms) {
-            val location = Location(world, room.position.x, room.position.y, room.position.z)
-            loadSchematic(room.name, location, room.rotation, world)
-        }
-    }
+        val possibleSpecialEnemyLocations = listOf<Location>()
+        val enemyLocations = EnemySpawnLocations(world, normalEnemyLocations, possibleSpecialEnemyLocations)
 
-    private fun loadSchematic(
-        schematicName: String,
-        location: Location,
-        rotation: Double,
-        world: World
-    ) {
-        val schematicPath = DungeonGenerationSettings.getSchematicPath(schematicName)
-        val inputStream = javaClass.getResourceAsStream(schematicPath)!!
+        // TODO get boss location
 
-        val format = ClipboardFormats.findByAlias("schem")
-        if (format == null) {
-            logger.severe("Couldn't find schematic: $schematicPath")
-            return
-        }
+        enemyGenerationService.generate(random, entityTypes, specialEntityTypes, enemyLocations, mapTier)
+//        bossGenerationService.generate(bossEntityType, bossLocation, mapTier)
 
-        val clipboard = format.load(inputStream)
+        val startLocation = Location(world, 5.0, 1.5, 5.0)
+        portalService.createPortal(startLocation, leaveLocation, isInitiallyActive = true)
 
-        val transform = AffineTransform().rotateY(rotation)
+        // TODO spawn inactive portals in bossroom etc
 
-        pasteSchematic(clipboard, location, transform, world)
-    }
-
-    private fun pasteSchematic(
-        clipboard: Clipboard,
-        location: Location,
-        transform: AffineTransform?,
-        world: World
-    ) {
-        val bukkitWorld = BukkitWorld(world)
-        val vector = BlockVector3.at(location.x, location.y, location.z)
-
-        clipboard.paste(bukkitWorld, vector, false, false, transform)
-            .close()
+        return startLocation
     }
 }

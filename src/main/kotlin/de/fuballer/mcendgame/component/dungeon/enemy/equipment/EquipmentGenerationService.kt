@@ -17,7 +17,7 @@ import kotlin.random.Random
 class EquipmentGenerationService(
     private val equipmentEnchantmentService: EquipmentEnchantmentService
 ) {
-    fun setCreatureEquipment(
+    fun generate(
         random: Random,
         livingEntity: LivingEntity,
         mapTier: Int,
