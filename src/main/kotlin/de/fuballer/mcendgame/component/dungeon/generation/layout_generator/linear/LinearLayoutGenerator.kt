@@ -11,6 +11,7 @@ import kotlin.math.min
 import kotlin.random.Random
 
 private fun calculateComplexityLimit(mapTier: Int) = 100 + mapTier
+private fun calculateSidePathComplexityLimit(mapTier: Int) = 15 + mapTier
 
 class LinearLayoutGenerator(
     private val startRoom: RoomType,
@@ -34,7 +35,8 @@ class LinearLayoutGenerator(
         blockedArea.add(Area(Vector(0, 0, 0), startRoom.size))
 
         val complexityLimit = calculateComplexityLimit(mapTier)
-        if (!generateNextRoom(startRoom.doors[0], startRoom.complexity, complexityLimit, blockedArea)) {
+        val sidePathComplexityLimit = calculateSidePathComplexityLimit(mapTier)
+        if (!generateNextRoom(startRoom.doors[0], blockedArea, startRoom.complexity, complexityLimit, sidePathComplexityLimit, true)) {
             throw IllegalStateException("No valid layout could be generated")
         }
 
@@ -43,15 +45,20 @@ class LinearLayoutGenerator(
 
     private fun generateNextRoom(
         currentDoor: Door,
+        blockedArea: MutableList<Area>,
         roomComplexitySum: Int,
         complexityLimit: Int,
-        blockedArea: MutableList<Area>
+        sidePathComplexityLimit: Int,
+        isMainPath: Boolean
     ): Boolean {
-        if (roomComplexitySum >= complexityLimit) return true
+        if (isMainPath && roomComplexitySum >= complexityLimit) return true
+        if (!isMainPath && roomComplexitySum >= sidePathComplexityLimit) return true
 
         val doorAdjacentCoordinates = currentDoor.getAdjacentPosition()
 
-        val possibleRooms = rooms.toMutableList().shuffled(random)
+        var possibleRooms = rooms.toMutableList().shuffled(random)
+        if (!isMainPath)
+            possibleRooms = possibleRooms.filter { it.doors.size <= 2 }
         for (chosenRoom in possibleRooms) {
 
             val possibleDoors = chosenRoom.doors.toMutableList().shuffled(random)
@@ -77,10 +84,20 @@ class LinearLayoutGenerator(
 
                 val remainingDoors = possibleDoors.toMutableList()
                 remainingDoors.remove(chosenDoor)
-                val nextDoor = remainingDoors[0].getRotated(neededRotationRadians)
-                nextDoor.position.add(offsetRoomOrigin)
 
-                if (!generateNextRoom(nextDoor, roomComplexitySum + chosenRoom.complexity, complexityLimit, updatedBlockedArea)) continue
+                var canGenerateAllPaths = true
+                for (d in 0..<remainingDoors.size) {
+                    val nextDoor = remainingDoors[d].getRotated(neededRotationRadians)
+                    nextDoor.position.add(offsetRoomOrigin)
+
+                    val nextIsMainPath = isMainPath && d == remainingDoors.size - 1
+                    val nextRoomComplexitySum = if (nextIsMainPath != isMainPath) 0 else (roomComplexitySum + chosenRoom.complexity)
+                    if (!generateNextRoom(nextDoor, updatedBlockedArea, nextRoomComplexitySum, complexityLimit, sidePathComplexityLimit, nextIsMainPath)) {
+                        canGenerateAllPaths = false
+                        break
+                    }
+                }
+                if (!canGenerateAllPaths) continue
 
                 val tile = PlaceableTile(chosenRoom.name, offsetRoomOrigin, neededRotation)
                 tiles.add(tile)
@@ -107,6 +124,8 @@ class LinearLayoutGenerator(
     }
 
     private fun areaIsBlocked(area: Area, blockedArea: MutableList<Area>): Boolean {
+        if (area.pos1.y < -64 || area.pos2.y > 320) return true
+
         for (blocked in blockedArea) {
             if (area.pos1.x > blocked.pos2.x) continue
             if (area.pos1.y > blocked.pos2.y) continue
