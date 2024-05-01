@@ -11,62 +11,48 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
 import org.bukkit.World
-import java.util.logging.Logger
 
 @Component
-class DungeonBuilderService(
-    private val log: Logger
-) {
+class DungeonBuilderService {
     fun build(
-        schematicFolder: String,
-        layout: List<PlaceableTile>,
-        world: World
+        world: World,
+        tiles: List<PlaceableTile>
     ) {
         runBlocking {
-            launch { loadLayoutTiles(schematicFolder, layout, world) }
+            for (tile in tiles) {
+                launch { placeTile(world, tile) }
+            }
         }
     }
 
-    private fun loadLayoutTiles(
-        schematicFolder: String,
-        layout: List<PlaceableTile>,
-        world: World
+    private fun placeTile(
+        world: World,
+        tile: PlaceableTile
     ) {
-        for (tile in layout) {
-            val (schematicName, position, rotation) = tile
-            val location = Location(world, position.x, position.y, position.z)
-            val schematicPath = "$schematicFolder/$schematicName"
+        val (tileData, position, rotation) = tile
+        val location = Location(world, position.x, position.y, position.z)
 
-            loadSchematic(schematicPath, location, rotation, world)
-        }
+        placeTile(tileData, world, location, rotation)
     }
 
-    private fun loadSchematic( // TODO load schematics once
-        schematicPath: String,
+    private fun placeTile(
+        tileData: ByteArray,
+        world: World,
         location: Location,
-        rotation: Double,
-        world: World
+        rotation: Double
     ) {
-        val fullSchematicPath = DungeonGenerationSettings.getFullSchematicPath(schematicPath)
-        val inputStream = javaClass.getResourceAsStream(fullSchematicPath)!!
-
-        val format = ClipboardFormats.findByAlias("schem")
-        if (format == null) {
-            log.severe("Couldn't find schematic: $fullSchematicPath")
-            return
-        }
-
-        val clipboard = format.load(inputStream)
+        val format = ClipboardFormats.findByAlias("schem")!!
+        val clipboard = format.load(tileData.inputStream())
         val transform = AffineTransform().rotateY(rotation)
 
-        pasteSchematic(clipboard, location, transform, world)
+        pasteClipboard(world, location, clipboard, transform)
     }
 
-    private fun pasteSchematic(
-        clipboard: Clipboard,
+    private fun pasteClipboard(
+        world: World,
         location: Location,
-        transform: AffineTransform?,
-        world: World
+        clipboard: Clipboard,
+        transform: AffineTransform?
     ) {
         val bukkitWorld = BukkitWorld(world)
         val vector = BlockVector3.at(location.x, location.y, location.z)

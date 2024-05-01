@@ -2,16 +2,17 @@ package de.fuballer.mcendgame.component.dungeon.generation.layout_generator.line
 
 import de.fuballer.mcendgame.component.dungeon.generation.data.Layout
 import de.fuballer.mcendgame.component.dungeon.generation.data.PlaceableTile
-import de.fuballer.mcendgame.component.dungeon.generation.data.VectorUtil
+import de.fuballer.mcendgame.component.dungeon.generation.data.SpawnLocation
 import de.fuballer.mcendgame.component.dungeon.generation.layout_generator.LayoutGenerator
+import de.fuballer.mcendgame.util.VectorUtil
 import org.bukkit.util.Vector
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-private fun calculateComplexityLimit(mapTier: Int) = 100 + mapTier
-private fun calculateSidePathComplexityLimit(mapTier: Int) = 15 + mapTier
+private fun calculateComplexityLimit(mapTier: Int) = 100 + 10 * mapTier
+private fun calculateSidePathComplexityLimit(mapTier: Int) = 15 + 3 * mapTier
 
 class LinearLayoutGenerator(
     private val startRoom: RoomType,
@@ -20,7 +21,7 @@ class LinearLayoutGenerator(
     private lateinit var random: Random
 
     private val tiles = mutableListOf<PlaceableTile>()
-    private val spawnLocations = mutableListOf<Vector>()
+    private val spawnLocations = mutableListOf<SpawnLocation>()
     private val blockedArea = mutableListOf<Area>()
 
     override fun generateDungeon(
@@ -29,7 +30,7 @@ class LinearLayoutGenerator(
     ): Layout {
         this.random = random
 
-        val startTile = PlaceableTile(startRoom.name, Vector(0, 0, 0), 0.0)
+        val startTile = PlaceableTile(startRoom.schematicData, Vector(0, 0, 0), 0.0)
         tiles.add(startTile)
 
         blockedArea.add(Area(Vector(0, 0, 0), startRoom.size))
@@ -53,14 +54,15 @@ class LinearLayoutGenerator(
         if (isMainPath && roomComplexitySum >= complexityLimit) return true
         if (!isMainPath && roomComplexitySum >= sidePathComplexityLimit) return true
 
-        val doorAdjacentCoordinates = currentDoor.getAdjacentPosition()
-
-        var possibleRooms = rooms.toMutableList().shuffled(random)
-        if (!isMainPath)
+        var possibleRooms = rooms.shuffled(random)
+        if (!isMainPath) {
             possibleRooms = possibleRooms.filter { it.doors.size <= 2 }
-        for (chosenRoom in possibleRooms) {
+        }
 
-            val possibleDoors = chosenRoom.doors.toMutableList().shuffled(random)
+        val doorAdjacentCoordinates = currentDoor.getAdjacentPosition()
+        for (chosenRoom in possibleRooms) {
+            val possibleDoors = chosenRoom.doors.shuffled(random)
+
             for (chosenDoor in possibleDoors) {
                 val rotationHelp = chosenDoor.direction.clone()
                 var neededRotation = 0.0
@@ -100,15 +102,11 @@ class LinearLayoutGenerator(
                     continue
                 }
 
-                val tile = PlaceableTile(chosenRoom.name, offsetRoomOrigin, neededRotation)
+                val tile = PlaceableTile(chosenRoom.schematicData, offsetRoomOrigin, neededRotation)
                 tiles.add(tile)
 
-                val absoluteSpawnLocations = chosenRoom.spawnLocations.toMutableList()
-                    .map { it.clone() }
-                    .map { it.rotateAroundY(Math.toRadians(neededRotation)) }
-                    .map { it.add(offsetRoomOrigin) }
-
-                spawnLocations.addAll(absoluteSpawnLocations)
+                val tileSpawnLocations = adjustSpawnLocations(chosenRoom, neededRotation, offsetRoomOrigin)
+                spawnLocations.addAll(tileSpawnLocations)
 
                 return true
             }
@@ -139,5 +137,21 @@ class LinearLayoutGenerator(
         }
 
         return false
+    }
+
+    private fun adjustSpawnLocations(
+        chosenRoom: RoomType,
+        neededRotation: Double,
+        offsetRoomOrigin: Vector
+    ): List<SpawnLocation> {
+        val absoluteSpawnLocations = chosenRoom.spawnLocations.toMutableList()
+            .map {
+                val newLocation = it.location.clone()
+                newLocation.rotateAroundY(Math.toRadians(neededRotation))
+                newLocation.add(offsetRoomOrigin)
+
+                SpawnLocation(newLocation, it.type)
+            }
+        return absoluteSpawnLocations
     }
 }

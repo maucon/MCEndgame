@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.generation.layout_generator.linear
 
-import de.fuballer.mcendgame.component.dungeon.generation.data.VectorUtil
+import de.fuballer.mcendgame.util.VectorUtil
 import org.bukkit.util.Vector
 
 data class Door(

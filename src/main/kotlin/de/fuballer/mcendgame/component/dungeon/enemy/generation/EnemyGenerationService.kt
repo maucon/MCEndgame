@@ -12,6 +12,7 @@ import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Location
+import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
@@ -38,20 +39,22 @@ class EnemyGenerationService(
 
     fun generate(
         random: Random,
-        randomEntityTypes: List<RandomOption<CustomEntityType>>,
+        mapTier: Int,
+        world: World,
+        normalEntityTypes: List<RandomOption<CustomEntityType>>,
+        normalEnemySpawnLocations: List<Location>,
         specialEntityTypes: List<RandomOption<CustomEntityType>>,
-        enemySpawnLocations: EnemySpawnLocations,
-        mapTier: Int
+        specialEnemySpawnLocations: List<Location>
     ) {
         SchedulingUtil.runTask {
-            val entities = enemySpawnLocations.normalEnemyLocations
-                .map { spawnEntity(random, randomEntityTypes, it, mapTier, special = false) }
+            val entities = normalEnemySpawnLocations
+                .map { spawnEntity(random, mapTier, normalEntityTypes, it, special = false) }
                 .toMutableSet()
 
-            val specialEntities = spawnSpecialEntities(random, enemySpawnLocations.possibleSpecialEnemyLocations, specialEntityTypes, mapTier)
+            val specialEntities = spawnSpecialEntities(random, mapTier, specialEntityTypes, specialEnemySpawnLocations)
             entities.addAll(specialEntities)
 
-            val event = DungeonEnemySpawnedEvent(enemySpawnLocations.world, entities)
+            val event = DungeonEnemySpawnedEvent(world, entities)
             EventGateway.apply(event)
         }
     }
@@ -80,22 +83,22 @@ class EnemyGenerationService(
 
     private fun spawnSpecialEntities(
         random: Random,
-        possibleLocations: List<Location>,
+        mapTier: Int,
         specialEntityTypes: List<RandomOption<CustomEntityType>>,
-        mapTier: Int
+        possibleLocations: List<Location>
     ): List<LivingEntity> {
         return possibleLocations.shuffled(random)
             .take(EnemyGenerationSettings.SPECIAL_MOB_COUNT)
             .map {
-                spawnEntity(random, specialEntityTypes, it, mapTier, special = true)
+                spawnEntity(random, mapTier, specialEntityTypes, it, special = true)
             }
     }
 
     private fun spawnEntity(
         random: Random,
+        mapTier: Int,
         randomEntityTypes: List<RandomOption<CustomEntityType>>,
         location: Location,
-        mapTier: Int,
         special: Boolean = false
     ): LivingEntity {
         val entityType = RandomUtil.pick(randomEntityTypes, random).option
@@ -103,7 +106,6 @@ class EnemyGenerationService(
         equipmentGenerationService.generate(random, entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
 
         addEffectUntilLoad(entity)
-        entity.setAI(false)
 
         val canBeInvisible = !entityType.hideEquipment
         addEffectsToEnemy(random, entity, mapTier, canBeInvisible)

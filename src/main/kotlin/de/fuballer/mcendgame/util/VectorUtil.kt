@@ -1,5 +1,6 @@
-package de.fuballer.mcendgame.component.dungeon.generation.data
+package de.fuballer.mcendgame.util
 
+import com.sk89q.worldedit.math.BlockVector3
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.util.Vector
@@ -11,4 +12,7 @@ object VectorUtil {
 
     fun toLocation(world: World, vector: Vector) =
         Location(world, vector.x, vector.y, vector.z)
+
+    fun fromBlockVector3(blockVector: BlockVector3) =
+        Vector(blockVector.x, blockVector.y, blockVector.z)
 }
