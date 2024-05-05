@@ -11,18 +11,24 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-private fun calculateComplexityLimit(mapTier: Int) = 100 + 10 * mapTier
-private fun calculateSidePathComplexityLimit(mapTier: Int) = 15 + 3 * mapTier
+private fun calculateComplexityLimit(mapTier: Int) = 150 + 0 * mapTier
+private fun calculateBranchComplexityLimit(mapTier: Int) = 15 + 0 * mapTier
+
+private val branchingPoints = listOf(0.33, 0.66)
+private var complexityLimit = 0
+private var branchComplexityLimit = 0
 
 class LinearLayoutGenerator(
-    private val startRoom: RoomType,
-    private val rooms: List<RoomType>
+    private val startRoomType: RoomType,
+    private val bossRoomType: RoomType,
+    private val roomTypes: List<RoomType>,
 ) : LayoutGenerator {
     private lateinit var random: Random
 
     private val tiles = mutableListOf<PlaceableTile>()
     private val spawnLocations = mutableListOf<SpawnLocation>()
     private val blockedArea = mutableListOf<Area>()
+    private var bossRoomsGenerated = 0
 
     override fun generateDungeon(
         random: Random,
@@ -30,14 +36,15 @@ class LinearLayoutGenerator(
     ): Layout {
         this.random = random
 
-        val startTile = PlaceableTile(startRoom.schematicData, Vector(0, 0, 0), 0.0)
+        complexityLimit = calculateComplexityLimit(mapTier)
+        branchComplexityLimit = calculateBranchComplexityLimit(mapTier)
+
+        val startTile = PlaceableTile(startRoomType.schematicData, Vector(0, 0, 0), 0.0)
         tiles.add(startTile)
 
-        blockedArea.add(Area(Vector(0, 0, 0), startRoom.size))
+        blockedArea.add(Area(Vector(0, 0, 0), startRoomType.size))
 
-        val complexityLimit = calculateComplexityLimit(mapTier)
-        val sidePathComplexityLimit = calculateSidePathComplexityLimit(mapTier)
-        if (!generateNextRoom(startRoom.doors[0], startRoom.complexity, complexityLimit, sidePathComplexityLimit, true)) {
+        if (!generateNextRoom(startRoomType.doors[0], 0, true)) {
             throw IllegalStateException("No valid layout could be generated")
         }
 
@@ -47,72 +54,132 @@ class LinearLayoutGenerator(
     private fun generateNextRoom(
         currentDoor: Door,
         roomComplexitySum: Int,
-        complexityLimit: Int,
-        sidePathComplexityLimit: Int,
-        isMainPath: Boolean
+        isMainPath: Boolean,
     ): Boolean {
-        if (isMainPath && roomComplexitySum >= complexityLimit) return true
-        if (!isMainPath && roomComplexitySum >= sidePathComplexityLimit) return true
+        if ((isMainPath && roomComplexitySum >= complexityLimit) ||
+            (!isMainPath && roomComplexitySum >= branchComplexityLimit)
+        ) return generateBossRoom(currentDoor)
 
-        var possibleRooms = rooms.shuffled(random)
-        if (!isMainPath) {
-            possibleRooms = possibleRooms.filter { it.doors.size <= 2 }
-        }
+        val possibleRoomTypes = getPossibleNextRooms(roomComplexitySum, isMainPath)
 
-        val doorAdjacentCoordinates = currentDoor.getAdjacentPosition()
-        for (chosenRoom in possibleRooms) {
-            val possibleDoors = chosenRoom.doors.shuffled(random)
-
-            for (chosenDoor in possibleDoors) {
-                val rotationHelp = chosenDoor.direction.clone()
-                var neededRotation = 0.0
-                while (abs(Math.toDegrees(rotationHelp.angle(currentDoor.direction).toDouble()) - 180) > 1) { // 1 degree inaccuracy (number doesn't really matter)
-                    rotationHelp.rotateAroundY(Math.toRadians(90.0))
-                    neededRotation += 90
-                }
-                val neededRotationRadians = Math.toRadians(neededRotation)
-
-                val rotatedChosenDoor = chosenDoor.getRotated(neededRotationRadians)
-                val rotatedChosenDoorOffset = rotatedChosenDoor.position
-
-                val offsetRoomOrigin = doorAdjacentCoordinates.clone().subtract(rotatedChosenDoorOffset)
-
-                val area = rotatedRoomToArea(offsetRoomOrigin, VectorUtil.getRoundedVector(chosenRoom.size.clone().rotateAroundY(neededRotationRadians)))
-                if (areaIsBlocked(area)) continue
-
-                blockedArea.add(area)
-
-                val remainingDoors = possibleDoors.toMutableList()
-                remainingDoors.remove(chosenDoor)
-
-                var canGenerateAllPaths = true
-                for (d in 0..<remainingDoors.size) {
-                    val nextDoor = remainingDoors[d].getRotated(neededRotationRadians)
-                    nextDoor.position.add(offsetRoomOrigin)
-
-                    val nextIsMainPath = isMainPath && d == remainingDoors.size - 1
-                    val nextRoomComplexitySum = if (nextIsMainPath != isMainPath) 0 else (roomComplexitySum + chosenRoom.complexity)
-                    if (!generateNextRoom(nextDoor, nextRoomComplexitySum, complexityLimit, sidePathComplexityLimit, nextIsMainPath)) {
-                        canGenerateAllPaths = false
-                        break
-                    }
-                }
-                if (!canGenerateAllPaths) {
-                    blockedArea.remove(area)
-                    continue
-                }
-
-                val tile = PlaceableTile(chosenRoom.schematicData, offsetRoomOrigin, neededRotation)
-                tiles.add(tile)
-
-                val tileSpawnLocations = adjustSpawnLocations(chosenRoom, neededRotation, offsetRoomOrigin)
-                spawnLocations.addAll(tileSpawnLocations)
-
-                return true
-            }
+        for (chosenRoomType in possibleRoomTypes) {
+            if (generateRoomIfValid(currentDoor, roomComplexitySum, isMainPath, chosenRoomType)) return true
         }
 
         return false
+    }
+
+    private fun generateBossRoom(
+        currentDoor: Door
+    ): Boolean {
+        if (!generateBossRoomIfValid(currentDoor, bossRoomType)) return false
+
+        bossRoomsGenerated++
+        return true
+    }
+
+    private fun generateBossRoomIfValid(
+        currentDoor: Door,
+        bossRoomType: RoomType,
+    ) = generateRoomIfValid(currentDoor, 0, true, bossRoomType)
+
+    private fun generateRoomIfValid(
+        currentDoor: Door,
+        roomComplexitySum: Int,
+        isMainPath: Boolean,
+        chosenRoomType: RoomType,
+    ): Boolean {
+        val possibleDoors = chosenRoomType.doors.shuffled(random)
+        for (chosenDoor in possibleDoors) {
+
+            val rotation = calculateRotation(currentDoor, chosenDoor)
+            val rotationRad = Math.toRadians(rotation)
+
+            val offsetRoomOrigin = calculateRoomOffsetAfterRotation(currentDoor, chosenDoor, rotationRad)
+
+            val area = rotatedRoomToArea(offsetRoomOrigin, VectorUtil.getRoundedVector(chosenRoomType.size.clone().rotateAroundY(rotationRad)))
+            if (areaIsBlocked(area)) continue
+
+            blockedArea.add(area)
+
+            val remainingDoors = possibleDoors.toMutableList()
+            remainingDoors.remove(chosenDoor)
+            if (!generateRemainingDoors(remainingDoors, chosenRoomType, isMainPath, roomComplexitySum, offsetRoomOrigin, rotationRad)) {
+                blockedArea.remove(area)
+                continue
+            }
+
+            val tile = PlaceableTile(chosenRoomType.schematicData, offsetRoomOrigin, rotation)
+            tiles.add(tile)
+
+            val tileSpawnLocations = adjustSpawnLocations(chosenRoomType, rotation, offsetRoomOrigin)
+            spawnLocations.addAll(tileSpawnLocations)
+
+            return true
+        }
+
+        return false
+    }
+
+    private fun getPossibleNextRooms(
+        roomComplexitySum: Int,
+        isMainPath: Boolean,
+    ): List<RoomType> {
+        val possibleRooms = roomTypes.shuffled(random)
+
+        if (isMainPath
+            && bossRoomsGenerated < branchingPoints.size
+            && roomComplexitySum.toDouble() / complexityLimit > branchingPoints[bossRoomsGenerated]
+        ) return possibleRooms.filter { !it.isLinear() }
+
+        return possibleRooms.filter { it.isLinear() }
+    }
+
+    private fun generateRemainingDoors(
+        remainingDoors: List<Door>,
+        chosenRoomType: RoomType,
+        isMainPath: Boolean,
+        roomComplexitySum: Int,
+        offsetRoomOrigin: Vector,
+        rotationRad: Double,
+    ): Boolean {
+        for (d in remainingDoors.indices) {
+            val nextDoor = remainingDoors[d].getRotated(rotationRad)
+            nextDoor.position.add(offsetRoomOrigin)
+
+            val nextIsMainPath = isMainPath && d == remainingDoors.size - 1
+            val nextRoomComplexitySum = if (nextIsMainPath != isMainPath) 0 else (roomComplexitySum + chosenRoomType.complexity)
+
+            if (!generateNextRoom(nextDoor, nextRoomComplexitySum, nextIsMainPath)) return false
+        }
+
+        return true
+    }
+
+    private fun calculateRoomOffsetAfterRotation(
+        currentDoor: Door,
+        nextDoor: Door,
+        rotationRad: Double,
+    ): Vector {
+        val rotatedChosenDoor = nextDoor.getRotated(rotationRad)
+        val rotatedChosenDoorOffset = rotatedChosenDoor.position
+
+        val currentDoorAdjacent = currentDoor.getAdjacentPosition()
+        return currentDoorAdjacent.clone().subtract(rotatedChosenDoorOffset)
+    }
+
+    private fun calculateRotation(
+        currentDoor: Door,
+        nextDoor: Door
+    ): Double {
+        val rotationHelp = nextDoor.direction.clone()
+        var rotation = 0.0
+        while (abs(Math.toDegrees(rotationHelp.angle(currentDoor.direction).toDouble()) - 180) > 1) { // 1 degree inaccuracy (number doesn't really matter)
+            rotationHelp.rotateAroundY(Math.toRadians(90.0))
+            rotation += 90
+        }
+
+        return rotation
     }
 
     private fun rotatedRoomToArea(origin: Vector, size: Vector): Area {
@@ -143,15 +210,13 @@ class LinearLayoutGenerator(
         chosenRoom: RoomType,
         neededRotation: Double,
         offsetRoomOrigin: Vector
-    ): List<SpawnLocation> {
-        val absoluteSpawnLocations = chosenRoom.spawnLocations.toMutableList()
-            .map {
-                val newLocation = it.location.clone()
-                newLocation.rotateAroundY(Math.toRadians(neededRotation))
-                newLocation.add(offsetRoomOrigin)
+    ) = chosenRoom.spawnLocations.toMutableList()
+        .map {
+            val newLocation = it.location.clone()
+            newLocation.rotateAroundY(Math.toRadians(neededRotation))
+            newLocation.add(offsetRoomOrigin)
 
-                SpawnLocation(newLocation, it.type)
-            }
-        return absoluteSpawnLocations
-    }
+            SpawnLocation(newLocation, it.type)
+        }
+
 }

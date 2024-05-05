@@ -27,4 +27,6 @@ data class RoomType(
         result = 31 * result + complexity
         return result
     }
+
+    fun isLinear() = doors.size == 2
 }

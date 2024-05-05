@@ -5,6 +5,8 @@ import de.fuballer.mcendgame.component.dungeon.generation.layout_generator.linea
 import de.fuballer.mcendgame.component.dungeon.generation.layout_generator.linear.RoomTypeLoader
 
 private val startRoom = RoomTypeLoader.load("stronghold/stronghold_start_1000_0", 0)
+private val bossRoom = RoomTypeLoader.load("stronghold/stronghold_boss_0010_0", 0)
+
 private val rooms = listOf(
     RoomTypeLoader.load("stronghold/stronghold_large_0011_0", 10),
     RoomTypeLoader.load("stronghold/stronghold_large_1010_0", 10),
@@ -21,5 +23,5 @@ private val rooms = listOf(
 enum class DungeonMapType(
     val layoutGeneratorProvider: () -> LayoutGenerator
 ) {
-    STRONGHOLD({ LinearLayoutGenerator(startRoom, rooms) })
+    STRONGHOLD({ LinearLayoutGenerator(startRoom, bossRoom, rooms) })
 }
