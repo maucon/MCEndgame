@@ -12,7 +12,7 @@ import kotlin.math.min
 import kotlin.random.Random
 
 private fun calculateComplexityLimit(mapTier: Int) = 150 + 0 * mapTier
-private fun calculateBranchComplexityLimit(mapTier: Int) = 15 + 0 * mapTier
+private fun calculateBranchComplexityLimit(mapTier: Int) = 20 + 0 * mapTier
 
 private val branchingPoints = listOf(0.33, 0.66)
 private var complexityLimit = 0
@@ -25,10 +25,8 @@ class LinearLayoutGenerator(
 ) : LayoutGenerator {
     private lateinit var random: Random
 
-    private val tiles = mutableListOf<PlaceableTile>()
     private val spawnLocations = mutableListOf<SpawnLocation>()
     private val blockedArea = mutableListOf<Area>()
-    private var bossRoomsGenerated = 0
 
     override fun generateDungeon(
         random: Random,
@@ -40,11 +38,11 @@ class LinearLayoutGenerator(
         branchComplexityLimit = calculateBranchComplexityLimit(mapTier)
 
         val startTile = PlaceableTile(startRoomType.schematicData, Vector(0, 0, 0), 0.0)
-        tiles.add(startTile)
+        val tiles = mutableListOf(startTile)
 
         blockedArea.add(Area(Vector(0, 0, 0), startRoomType.size))
 
-        if (!generateNextRoom(startRoomType.doors[0], 0, true)) {
+        if (!generateNextRoom(tiles, startRoomType.doors[0], 0, true, 0)) {
             throw IllegalStateException("No valid layout could be generated")
         }
 
@@ -52,41 +50,36 @@ class LinearLayoutGenerator(
     }
 
     private fun generateNextRoom(
+        tiles: MutableList<PlaceableTile>,
         currentDoor: Door,
         roomComplexitySum: Int,
         isMainPath: Boolean,
+        existingBranches: Int,
     ): Boolean {
         if ((isMainPath && roomComplexitySum >= complexityLimit) ||
             (!isMainPath && roomComplexitySum >= branchComplexityLimit)
-        ) return generateBossRoom(currentDoor)
+        ) return generateBossRoom(tiles, currentDoor)
 
-        val possibleRoomTypes = getPossibleNextRooms(roomComplexitySum, isMainPath)
+        val possibleRoomTypes = getPossibleNextRooms(roomComplexitySum, isMainPath, existingBranches)
 
         for (chosenRoomType in possibleRoomTypes) {
-            if (generateRoomIfValid(currentDoor, roomComplexitySum, isMainPath, chosenRoomType)) return true
+            if (generateRoomIfValid(tiles, currentDoor, roomComplexitySum, isMainPath, existingBranches, chosenRoomType)) return true
         }
 
         return false
     }
 
     private fun generateBossRoom(
-        currentDoor: Door
-    ): Boolean {
-        if (!generateBossRoomIfValid(currentDoor, bossRoomType)) return false
-
-        bossRoomsGenerated++
-        return true
-    }
-
-    private fun generateBossRoomIfValid(
+        tiles: MutableList<PlaceableTile>,
         currentDoor: Door,
-        bossRoomType: RoomType,
-    ) = generateRoomIfValid(currentDoor, 0, true, bossRoomType)
+    ) = generateRoomIfValid(tiles, currentDoor, 0, true, 0, bossRoomType)
 
     private fun generateRoomIfValid(
+        tiles: MutableList<PlaceableTile>,
         currentDoor: Door,
         roomComplexitySum: Int,
         isMainPath: Boolean,
+        existingBranches: Int,
         chosenRoomType: RoomType,
     ): Boolean {
         val possibleDoors = chosenRoomType.doors.shuffled(random)
@@ -97,14 +90,15 @@ class LinearLayoutGenerator(
 
             val offsetRoomOrigin = calculateRoomOffsetAfterRotation(currentDoor, chosenDoor, rotationRad)
 
-            val area = rotatedRoomToArea(offsetRoomOrigin, VectorUtil.getRoundedVector(chosenRoomType.size.clone().rotateAroundY(rotationRad)))
+            val rotatedSize = VectorUtil.getRoundedVector(chosenRoomType.size.clone().rotateAroundY(rotationRad))
+            val area = rotatedRoomToArea(offsetRoomOrigin, rotatedSize)
             if (areaIsBlocked(area)) continue
 
             blockedArea.add(area)
 
             val remainingDoors = possibleDoors.toMutableList()
             remainingDoors.remove(chosenDoor)
-            if (!generateRemainingDoors(remainingDoors, chosenRoomType, isMainPath, roomComplexitySum, offsetRoomOrigin, rotationRad)) {
+            if (!generateRemainingDoors(tiles, remainingDoors, chosenRoomType, isMainPath, existingBranches, roomComplexitySum, offsetRoomOrigin, rotationRad)) {
                 blockedArea.remove(area)
                 continue
             }
@@ -124,25 +118,32 @@ class LinearLayoutGenerator(
     private fun getPossibleNextRooms(
         roomComplexitySum: Int,
         isMainPath: Boolean,
+        existingBranches: Int,
     ): List<RoomType> {
         val possibleRooms = roomTypes.shuffled(random)
 
         if (isMainPath
-            && bossRoomsGenerated < branchingPoints.size
-            && roomComplexitySum.toDouble() / complexityLimit > branchingPoints[bossRoomsGenerated]
+            && existingBranches < branchingPoints.size
+            && roomComplexitySum.toDouble() / complexityLimit > branchingPoints[existingBranches]
         ) return possibleRooms.filter { !it.isLinear() }
 
         return possibleRooms.filter { it.isLinear() }
     }
 
     private fun generateRemainingDoors(
+        tiles: MutableList<PlaceableTile>,
         remainingDoors: List<Door>,
         chosenRoomType: RoomType,
         isMainPath: Boolean,
+        existingBranches: Int,
         roomComplexitySum: Int,
         offsetRoomOrigin: Vector,
         rotationRad: Double,
     ): Boolean {
+        val branchTiles = mutableListOf<PlaceableTile>()
+
+        val updatedExistingBranches = if (remainingDoors.size > 1) existingBranches + 1 else existingBranches
+
         for (d in remainingDoors.indices) {
             val nextDoor = remainingDoors[d].getRotated(rotationRad)
             nextDoor.position.add(offsetRoomOrigin)
@@ -150,10 +151,22 @@ class LinearLayoutGenerator(
             val nextIsMainPath = isMainPath && d == remainingDoors.size - 1
             val nextRoomComplexitySum = if (nextIsMainPath != isMainPath) 0 else (roomComplexitySum + chosenRoomType.complexity)
 
-            if (!generateNextRoom(nextDoor, nextRoomComplexitySum, nextIsMainPath)) return false
+
+            if (!generateNextRoom(if (nextIsMainPath) tiles else branchTiles, nextDoor, nextRoomComplexitySum, nextIsMainPath, updatedExistingBranches)) {
+                unblockTilesByOrigin(branchTiles)
+                return false
+            }
         }
 
+        tiles.addAll(branchTiles)
         return true
+    }
+
+    private fun unblockTilesByOrigin(
+        tiles: MutableList<PlaceableTile>,
+    ) {
+        for (tile in tiles)
+            blockedArea.removeAll { it.contains(tile.position) }
     }
 
     private fun calculateRoomOffsetAfterRotation(
