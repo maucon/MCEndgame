@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream
 private val DOOR_MARKER_BLOCK = BlockTypes.BLACK_WOOL!!.id
 private val NORMAL_MONSTER_MARKER_BLOCK = BlockTypes.WHITE_WOOL!!.id
 private val SPECIAL_MONSTER_MARKER_BLOCK = BlockTypes.YELLOW_WOOL!!.id
-private val BOSS_SPAWN_LOCATION_MARKER_BLOCK = BlockTypes.RED_WOOL!!.id
+private val BOSS_SPAWN_LOCATION_MARKER_BLOCK = BlockTypes.DRAGON_HEAD!!.id
 
 object RoomTypeLoader {
     fun load(schematicPath: String, complexity: Int): RoomType {
@@ -62,6 +62,14 @@ object RoomTypeLoader {
                     }
 
                     val spawnLocationType = getSpawnLocation(block) ?: continue
+
+                    if (block == "minecraft:dragon_head") {
+                        val rotation = clipboard.getFullBlock(position).toBlockState().states.entries
+                            .find { (property, _) -> property.name == "rotation" }?.value as Int
+
+                        println(rotation)
+                    }
+
                     val centeredBlockPosition = Vector(x + 0.5, y + 0.0, z + 0.5)
                     val spawnLocation = SpawnLocation(centeredBlockPosition, spawnLocationType)
                     spawnLocations.add(spawnLocation)
