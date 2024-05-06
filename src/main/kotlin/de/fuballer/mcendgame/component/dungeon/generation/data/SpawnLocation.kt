@@ -4,11 +4,5 @@ import org.bukkit.util.Vector
 
 data class SpawnLocation(
     val location: Vector,
-    val type: SpawnLocationType
+    val rotation: Double = 0.0
 )
-
-enum class SpawnLocationType {
-    NORMAL,
-    SPECIAL,
-    BOSS
-}

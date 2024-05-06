@@ -4,5 +4,6 @@ import de.fuballer.mcendgame.component.dungeon.generation.data.SpawnLocation
 
 data class TileLocations(
     val doors: List<Door>,
-    val spawnLocations: List<SpawnLocation>
+    val spawnLocations: List<SpawnLocation>,
+    val bossSpawnLocations: List<SpawnLocation>
 )

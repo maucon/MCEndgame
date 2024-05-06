@@ -26,6 +26,7 @@ class LinearLayoutGenerator(
     private lateinit var random: Random
 
     private val spawnLocations = mutableListOf<SpawnLocation>()
+    private val bossSpawnLocations = mutableListOf<SpawnLocation>()
     private val blockedArea = mutableListOf<Area>()
 
     override fun generateDungeon(
@@ -46,7 +47,7 @@ class LinearLayoutGenerator(
             throw IllegalStateException("No valid layout could be generated")
         }
 
-        return Layout(tiles, spawnLocations)
+        return Layout(tiles, spawnLocations, bossSpawnLocations)
     }
 
     private fun generateNextRoom(
@@ -106,8 +107,7 @@ class LinearLayoutGenerator(
             val tile = PlaceableTile(chosenRoomType.schematicData, offsetRoomOrigin, rotation)
             tiles.add(tile)
 
-            val tileSpawnLocations = adjustSpawnLocations(chosenRoomType, rotation, offsetRoomOrigin)
-            spawnLocations.addAll(tileSpawnLocations)
+            addAdjustSpawnLocations(chosenRoomType, offsetRoomOrigin, rotationRad, spawnLocations, bossSpawnLocations)
 
             return true
         }
@@ -219,17 +219,29 @@ class LinearLayoutGenerator(
         return false
     }
 
-    private fun adjustSpawnLocations(
+    private fun addAdjustSpawnLocations(
         chosenRoom: RoomType,
+        offsetRoomOrigin: Vector,
         neededRotation: Double,
-        offsetRoomOrigin: Vector
-    ) = chosenRoom.spawnLocations.toMutableList()
-        .map {
+        spawnLocations: MutableList<SpawnLocation>,
+        bossSpawnLocations: MutableList<SpawnLocation>
+    ) {
+        chosenRoom.spawnLocations.onEach {
             val newLocation = it.location.clone()
-            newLocation.rotateAroundY(Math.toRadians(neededRotation))
+            newLocation.rotateAroundY(neededRotation)
             newLocation.add(offsetRoomOrigin)
 
-            SpawnLocation(newLocation, it.type)
+            spawnLocations.add(SpawnLocation(newLocation))
         }
 
+        chosenRoom.bossSpawnLocations.onEach {
+            val newLocation = it.location.clone()
+            newLocation.rotateAroundY(neededRotation)
+            newLocation.add(offsetRoomOrigin)
+
+            val newRotation = it.rotation + neededRotation
+
+            bossSpawnLocations.add(SpawnLocation(newLocation, newRotation))
+        }
+    }
 }

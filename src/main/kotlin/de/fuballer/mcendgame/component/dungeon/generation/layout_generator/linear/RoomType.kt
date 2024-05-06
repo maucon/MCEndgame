@@ -8,7 +8,8 @@ data class RoomType(
     val size: Vector, // 8 blocks (inclusive) -> 7 size
     val complexity: Int,
     val doors: List<Door>,
-    val spawnLocations: List<SpawnLocation>
+    val spawnLocations: List<SpawnLocation>,
+    val bossSpawnLocations: List<SpawnLocation>
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

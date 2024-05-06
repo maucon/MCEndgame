@@ -6,15 +6,13 @@ import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.world.block.BlockTypes
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.generation.data.SpawnLocation
-import de.fuballer.mcendgame.component.dungeon.generation.data.SpawnLocationType
 import de.fuballer.mcendgame.util.VectorUtil
 import org.bukkit.util.Vector
 import java.io.ByteArrayOutputStream
 
 private val DOOR_MARKER_BLOCK = BlockTypes.BLACK_WOOL!!.id
-private val NORMAL_MONSTER_MARKER_BLOCK = BlockTypes.WHITE_WOOL!!.id
-private val SPECIAL_MONSTER_MARKER_BLOCK = BlockTypes.YELLOW_WOOL!!.id
-private val BOSS_SPAWN_LOCATION_MARKER_BLOCK = BlockTypes.DRAGON_HEAD!!.id
+private val MONSTER_MARKER_BLOCK = BlockTypes.WHITE_WOOL!!.id
+private val BOSS_MARKER_BLOCK = BlockTypes.DRAGON_HEAD!!.id
 
 object RoomTypeLoader {
     fun load(schematicPath: String, complexity: Int): RoomType {
@@ -38,48 +36,55 @@ object RoomTypeLoader {
             VectorUtil.fromBlockVector3(size),
             complexity,
             locations.doors,
-            locations.spawnLocations
+            locations.spawnLocations,
+            locations.bossSpawnLocations
         )
     }
 
     private fun findMarkedLocations(clipboard: Clipboard, size: BlockVector3): TileLocations {
         val doors = mutableListOf<Door>()
         val spawnLocations = mutableListOf<SpawnLocation>()
+        val bossSpawnLocations = mutableListOf<SpawnLocation>()
 
         for (x in 0..size.x) {
             for (y in 0..size.y) {
                 for (z in 0..size.z) {
 
                     val position = clipboard.origin.add(x, y, z)
-                    val block = clipboard.getFullBlock(position).blockType.id
+                    val block = clipboard.getFullBlock(position)
 
-                    if (block == DOOR_MARKER_BLOCK) {
-                        val door = getDoor(x, y, z, size)
-                        doors.add(door)
+                    when (block.blockType.id) {
+                        DOOR_MARKER_BLOCK -> {
+                            val door = getDoor(x, y, z, size)
+                            doors.add(door)
 
-                        replaceBlockWithAir(position, clipboard)
-                        continue
+                            replaceBlockWithAir(position, clipboard)
+                        }
+
+                        MONSTER_MARKER_BLOCK -> {
+                            val centeredBlockPosition = Vector(x + 0.5, y + 0.0, z + 0.5)
+                            val spawnLocation = SpawnLocation(centeredBlockPosition)
+                            spawnLocations.add(spawnLocation)
+
+//                            replaceBlockWithAir(position, clipboard)
+                        }
+
+                        BOSS_MARKER_BLOCK -> {
+                            val rotation = block.toBlockState().states.entries
+                                .find { (property, _) -> property.name == "rotation" }?.value as Int
+
+                            val centeredBlockPosition = Vector(x + 0.5, y + 0.0, z + 0.5)
+                            val spawnLocation = SpawnLocation(centeredBlockPosition, rotation.toDouble())
+                            bossSpawnLocations.add(spawnLocation)
+
+//                            replaceBlockWithAir(position, clipboard)
+                        }
                     }
-
-                    val spawnLocationType = getSpawnLocation(block) ?: continue
-
-                    if (block == "minecraft:dragon_head") {
-                        val rotation = clipboard.getFullBlock(position).toBlockState().states.entries
-                            .find { (property, _) -> property.name == "rotation" }?.value as Int
-
-                        println(rotation)
-                    }
-
-                    val centeredBlockPosition = Vector(x + 0.5, y + 0.0, z + 0.5)
-                    val spawnLocation = SpawnLocation(centeredBlockPosition, spawnLocationType)
-                    spawnLocations.add(spawnLocation)
-
-                    replaceBlockWithAir(position, clipboard)
                 }
             }
         }
 
-        return TileLocations(doors, spawnLocations)
+        return TileLocations(doors, spawnLocations, bossSpawnLocations)
     }
 
     private fun getDoor(x: Int, y: Int, z: Int, size: BlockVector3) =
@@ -97,14 +102,6 @@ object RoomTypeLoader {
             Vector(1, 0, 0)
         } else {
             Vector(0, 0, 1)
-        }
-
-    private fun getSpawnLocation(block: String) =
-        when (block) {
-            NORMAL_MONSTER_MARKER_BLOCK -> SpawnLocationType.NORMAL
-            SPECIAL_MONSTER_MARKER_BLOCK -> SpawnLocationType.SPECIAL
-            BOSS_SPAWN_LOCATION_MARKER_BLOCK -> SpawnLocationType.BOSS
-            else -> null
         }
 
     private fun replaceBlockWithAir(position: BlockVector3, clipboard: Clipboard) {

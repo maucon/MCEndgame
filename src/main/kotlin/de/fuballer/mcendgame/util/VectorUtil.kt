@@ -13,6 +13,9 @@ object VectorUtil {
     fun toLocation(world: World, vector: Vector) =
         Location(world, vector.x, vector.y, vector.z)
 
+    fun toLocation(world: World, vector: Vector, rotation: Double) =
+        Location(world, vector.x, vector.y, vector.z, rotation.toFloat(), 0F)
+
     fun fromBlockVector3(blockVector: BlockVector3) =
         Vector(blockVector.x, blockVector.y, blockVector.z)
 }
