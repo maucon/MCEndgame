@@ -8,11 +8,11 @@ import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.VectorUtil
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import kotlin.random.Random
@@ -34,13 +34,13 @@ class DungeonGenerationService(
         val world = worldManageService.createWorld(player, mapTier)
         val random = Random(world.seed)
         val dungeonType = dungeonTypeService.getNextDungeonType(player)
-        val (mapType, entityTypes, _, bossEntityType) = dungeonType.roll(random)
+        val (mapType, entityTypes, bossEntityTypes) = dungeonType.roll(random)
 
         val layoutGenerator = mapType.layoutGeneratorProvider()
         val layout = layoutGenerator.generateDungeon(random, mapTier)
 
         dungeonBuilderService.build(world, layout.tiles)
-        generateEnemies(layout, random, world, mapTier, entityTypes)
+        generateEnemies(layout, random, world, mapTier, entityTypes, bossEntityTypes)
 
         val startLocation = Location(world, 5.0, 1.5, 5.0)
         portalService.createPortal(startLocation, leaveLocation, isInitiallyActive = true)
@@ -53,19 +53,22 @@ class DungeonGenerationService(
         random: Random,
         world: World,
         mapTier: Int,
-        entityTypes: List<RandomOption<CustomEntityType>>
+        entityTypes: List<RandomOption<CustomEntityType>>,
+        bossEntityTypes: List<CustomEntityType>
     ) {
         val enemySpawnLocations = layout.spawnLocations
             .map { VectorUtil.toLocation(world, it.location) }
 
-        val bossSpawnLocations = layout.bossSpawnLocations
+        // FIXME multi boss logic
+        layout.bossSpawnLocations
             .map { VectorUtil.toLocation(world, it.location, it.rotation) }
-            .onEach {
-                val entity = world.spawnEntity(it, EntityType.TRADER_LLAMA) as LivingEntity
+            .zip(bossEntityTypes)
+            .onEach { (location, entityType) ->
+                val entity = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as LivingEntity
                 entity.setAI(false)
             }
 
         enemyGenerationService.generate(random, mapTier, world, entityTypes, enemySpawnLocations)
-        // bossGenerationService.generate(bossEntityType, bossLocation, mapTier)
+//        bossGenerationService.generate(bossEntityType, bossLocation, mapTier)
     }
 }

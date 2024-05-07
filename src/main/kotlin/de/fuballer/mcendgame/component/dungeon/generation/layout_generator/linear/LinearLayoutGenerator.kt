@@ -24,9 +24,6 @@ class LinearLayoutGenerator(
     private val roomTypes: List<RoomType>,
 ) : LayoutGenerator {
     private lateinit var random: Random
-
-    private val spawnLocations = mutableListOf<SpawnLocation>()
-    private val bossSpawnLocations = mutableListOf<SpawnLocation>()
     private val blockedArea = mutableListOf<Area>()
 
     override fun generateDungeon(
@@ -41,9 +38,12 @@ class LinearLayoutGenerator(
         val startTile = PlaceableTile(startRoomType.schematicData, Vector(0, 0, 0), 0.0)
         val tiles = mutableListOf(startTile)
 
+        val spawnLocations = mutableListOf<SpawnLocation>()
+        val bossSpawnLocations = mutableListOf<SpawnLocation>()
+
         blockedArea.add(Area(Vector(0, 0, 0), startRoomType.size))
 
-        if (!generateNextRoom(tiles, startRoomType.doors[0], 0, true, 0)) {
+        if (!generateNextRoom(tiles, startRoomType.doors[0], 0, true, 0, spawnLocations, bossSpawnLocations)) {
             throw IllegalStateException("No valid layout could be generated")
         }
 
@@ -56,15 +56,17 @@ class LinearLayoutGenerator(
         roomComplexitySum: Int,
         isMainPath: Boolean,
         existingBranches: Int,
+        spawnLocations: MutableList<SpawnLocation>,
+        bossSpawnLocations: MutableList<SpawnLocation>
     ): Boolean {
         if ((isMainPath && roomComplexitySum >= complexityLimit) ||
             (!isMainPath && roomComplexitySum >= branchComplexityLimit)
-        ) return generateBossRoom(tiles, currentDoor)
+        ) return generateBossRoom(tiles, currentDoor, spawnLocations, bossSpawnLocations)
 
         val possibleRoomTypes = getPossibleNextRooms(roomComplexitySum, isMainPath, existingBranches)
 
         for (chosenRoomType in possibleRoomTypes) {
-            if (generateRoomIfValid(tiles, currentDoor, roomComplexitySum, isMainPath, existingBranches, chosenRoomType)) return true
+            if (generateRoomIfValid(tiles, currentDoor, roomComplexitySum, isMainPath, existingBranches, chosenRoomType, spawnLocations, bossSpawnLocations)) return true
         }
 
         return false
@@ -73,7 +75,9 @@ class LinearLayoutGenerator(
     private fun generateBossRoom(
         tiles: MutableList<PlaceableTile>,
         currentDoor: Door,
-    ) = generateRoomIfValid(tiles, currentDoor, 0, true, 0, bossRoomType)
+        spawnLocations: MutableList<SpawnLocation>,
+        bossSpawnLocations: MutableList<SpawnLocation>
+    ) = generateRoomIfValid(tiles, currentDoor, 0, true, 0, bossRoomType, spawnLocations, bossSpawnLocations)
 
     private fun generateRoomIfValid(
         tiles: MutableList<PlaceableTile>,
@@ -82,6 +86,8 @@ class LinearLayoutGenerator(
         isMainPath: Boolean,
         existingBranches: Int,
         chosenRoomType: RoomType,
+        spawnLocations: MutableList<SpawnLocation>,
+        bossSpawnLocations: MutableList<SpawnLocation>
     ): Boolean {
         val possibleDoors = chosenRoomType.doors.shuffled(random)
         for (chosenDoor in possibleDoors) {
@@ -99,7 +105,7 @@ class LinearLayoutGenerator(
 
             val remainingDoors = possibleDoors.toMutableList()
             remainingDoors.remove(chosenDoor)
-            if (!generateRemainingDoors(tiles, remainingDoors, chosenRoomType, isMainPath, existingBranches, roomComplexitySum, offsetRoomOrigin, rotationRad)) {
+            if (!generateRemainingDoors(tiles, remainingDoors, chosenRoomType, isMainPath, existingBranches, roomComplexitySum, offsetRoomOrigin, rotationRad, spawnLocations, bossSpawnLocations)) {
                 blockedArea.remove(area)
                 continue
             }
@@ -138,7 +144,9 @@ class LinearLayoutGenerator(
         existingBranches: Int,
         roomComplexitySum: Int,
         offsetRoomOrigin: Vector,
-        rotationRad: Double
+        rotationRad: Double,
+        spawnLocations: MutableList<SpawnLocation>,
+        bossSpawnLocations: MutableList<SpawnLocation>
     ): Boolean {
         val branchTiles = mutableListOf<PlaceableTile>()
 
@@ -151,7 +159,7 @@ class LinearLayoutGenerator(
             val nextIsMainPath = isMainPath && d == remainingDoors.size - 1
             val nextRoomComplexitySum = if (nextIsMainPath != isMainPath) 0 else (roomComplexitySum + chosenRoomType.complexity)
 
-            if (!generateNextRoom(if (nextIsMainPath) tiles else branchTiles, nextDoor, nextRoomComplexitySum, nextIsMainPath, updatedExistingBranches)) {
+            if (!generateNextRoom(if (nextIsMainPath) tiles else branchTiles, nextDoor, nextRoomComplexitySum, nextIsMainPath, updatedExistingBranches, spawnLocations, bossSpawnLocations)) {
                 unblockTilesByOrigin(branchTiles)
                 return false
             }
