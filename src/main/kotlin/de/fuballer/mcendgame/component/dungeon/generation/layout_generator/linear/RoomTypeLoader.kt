@@ -66,18 +66,20 @@ object RoomTypeLoader {
                             val spawnLocation = SpawnLocation(centeredBlockPosition)
                             spawnLocations.add(spawnLocation)
 
-//                            replaceBlockWithAir(position, clipboard)
+                            replaceBlockWithAir(position, clipboard)
                         }
 
                         BOSS_MARKER_BLOCK -> {
-                            val rotation = block.toBlockState().states.entries
+                            val rotationSteps = block.toBlockState().states.entries
                                 .find { (property, _) -> property.name == "rotation" }?.value as Int
 
+                            val rotation = rotationSteps * 22.5
+
                             val centeredBlockPosition = Vector(x + 0.5, y + 0.0, z + 0.5)
-                            val spawnLocation = SpawnLocation(centeredBlockPosition, rotation.toDouble())
+                            val spawnLocation = SpawnLocation(centeredBlockPosition, rotation)
                             bossSpawnLocations.add(spawnLocation)
 
-//                            replaceBlockWithAir(position, clipboard)
+                            replaceBlockWithAir(position, clipboard)
                         }
                     }
                 }

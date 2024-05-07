@@ -59,7 +59,7 @@ class DungeonGenerationService(
             .map { VectorUtil.toLocation(world, it.location) }
 
         val bossSpawnLocations = layout.bossSpawnLocations
-            .map { VectorUtil.toLocation(world, it.location) } // fixme add rotation
+            .map { VectorUtil.toLocation(world, it.location, it.rotation) }
             .onEach {
                 val entity = world.spawnEntity(it, EntityType.TRADER_LLAMA) as LivingEntity
                 entity.setAI(false)

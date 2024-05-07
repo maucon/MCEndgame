@@ -107,7 +107,7 @@ class LinearLayoutGenerator(
             val tile = PlaceableTile(chosenRoomType.schematicData, offsetRoomOrigin, rotation)
             tiles.add(tile)
 
-            addAdjustSpawnLocations(chosenRoomType, offsetRoomOrigin, rotationRad, spawnLocations, bossSpawnLocations)
+            addAdjustSpawnLocations(chosenRoomType, offsetRoomOrigin, rotation, spawnLocations, bossSpawnLocations)
 
             return true
         }
@@ -138,7 +138,7 @@ class LinearLayoutGenerator(
         existingBranches: Int,
         roomComplexitySum: Int,
         offsetRoomOrigin: Vector,
-        rotationRad: Double,
+        rotationRad: Double
     ): Boolean {
         val branchTiles = mutableListOf<PlaceableTile>()
 
@@ -150,7 +150,6 @@ class LinearLayoutGenerator(
 
             val nextIsMainPath = isMainPath && d == remainingDoors.size - 1
             val nextRoomComplexitySum = if (nextIsMainPath != isMainPath) 0 else (roomComplexitySum + chosenRoomType.complexity)
-
 
             if (!generateNextRoom(if (nextIsMainPath) tiles else branchTiles, nextDoor, nextRoomComplexitySum, nextIsMainPath, updatedExistingBranches)) {
                 unblockTilesByOrigin(branchTiles)
@@ -172,7 +171,7 @@ class LinearLayoutGenerator(
     private fun calculateRoomOffsetAfterRotation(
         currentDoor: Door,
         nextDoor: Door,
-        rotationRad: Double,
+        rotationRad: Double
     ): Vector {
         val rotatedChosenDoor = nextDoor.getRotated(rotationRad)
         val rotatedChosenDoorOffset = rotatedChosenDoor.position
@@ -222,26 +221,42 @@ class LinearLayoutGenerator(
     private fun addAdjustSpawnLocations(
         chosenRoom: RoomType,
         offsetRoomOrigin: Vector,
-        neededRotation: Double,
+        rotation: Double,
         spawnLocations: MutableList<SpawnLocation>,
-        bossSpawnLocations: MutableList<SpawnLocation>
+        bossSpawnLocations: MutableList<SpawnLocation>,
     ) {
+        val quarterRotations = (rotation / 90).toInt()
+        val rotationRad = Math.toRadians(rotation)
+
         chosenRoom.spawnLocations.onEach {
-            val newLocation = it.location.clone()
-            newLocation.rotateAroundY(neededRotation)
-            newLocation.add(offsetRoomOrigin)
+            val newLocation = rotateSpawnLocation(it, rotationRad, offsetRoomOrigin, quarterRotations)
 
             spawnLocations.add(SpawnLocation(newLocation))
         }
 
         chosenRoom.bossSpawnLocations.onEach {
-            val newLocation = it.location.clone()
-            newLocation.rotateAroundY(neededRotation)
-            newLocation.add(offsetRoomOrigin)
-
-            val newRotation = it.rotation + neededRotation
+            val newLocation = rotateSpawnLocation(it, rotationRad, offsetRoomOrigin, quarterRotations)
+            val newRotation = ((it.rotation + rotation) % 360) * -1
 
             bossSpawnLocations.add(SpawnLocation(newLocation, newRotation))
         }
+    }
+
+    private fun rotateSpawnLocation(
+        spawnLocation: SpawnLocation,
+        rotationRad: Double,
+        offsetRoomOrigin: Vector,
+        quarterRotations: Int
+    ): Vector {
+        val newLocation = spawnLocation.location.clone()
+        newLocation.rotateAroundY(rotationRad)
+        newLocation.add(offsetRoomOrigin)
+
+        when (quarterRotations) {
+            1 -> newLocation.add(Vector(0, 0, 1))
+            2 -> newLocation.add(Vector(1, 0, 1))
+            3 -> newLocation.add(Vector(1, 0, 0))
+        }
+        return newLocation
     }
 }
