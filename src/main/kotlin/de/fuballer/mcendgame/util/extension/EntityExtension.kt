@@ -49,10 +49,7 @@ object EntityExtension {
 
     fun Entity.getMinionIds() = PersistentDataUtil.getValue(this, TypeKeys.MINION_IDS)
 
-    fun Entity.setIsSpecial(value: Boolean = true) {
-        PersistentDataUtil.setValue(this, TypeKeys.IS_SPECIAL, value)
-    }
-
+    @Deprecated("remove")
     fun Entity.isSpecial() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_SPECIAL)
 
     fun Entity.setIsPortal(value: Boolean = true) {
@@ -60,4 +57,10 @@ object EntityExtension {
     }
 
     fun Entity.isPortal() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_PORTAL)
+
+    fun Entity.setIsBoss(value: Boolean = true) {
+        PersistentDataUtil.setValue(this, TypeKeys.IS_BOSS, value)
+    }
+
+    fun Entity.isBoss() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_BOSS)
 }

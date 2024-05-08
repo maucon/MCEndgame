@@ -44,6 +44,6 @@ enum class DungeonType(
         RolledDungeonType(
             RandomUtil.pick(mapTypes, random).option,
             entityTypes,
-            bossEntityTypes.shuffled()
+            bossEntityTypes.shuffled(random)
         )
 }

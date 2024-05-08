@@ -8,12 +8,10 @@ import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.VectorUtil
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import kotlin.random.Random
 
@@ -42,6 +40,7 @@ class DungeonGenerationService(
         dungeonBuilderService.build(world, layout.tiles)
         generateEnemies(layout, random, world, mapTier, entityTypes, bossEntityTypes)
 
+        // FIXME start location should be given by layout (marker on startRoom)
         val startLocation = Location(world, 5.0, 1.5, 5.0)
         portalService.createPortal(startLocation, leaveLocation, isInitiallyActive = true)
 
@@ -59,16 +58,10 @@ class DungeonGenerationService(
         val enemySpawnLocations = layout.spawnLocations
             .map { VectorUtil.toLocation(world, it.location) }
 
-        // FIXME multi boss logic
-        layout.bossSpawnLocations
+        val bossSpawnLocations = layout.bossSpawnLocations
             .map { VectorUtil.toLocation(world, it.location, it.rotation) }
-            .zip(bossEntityTypes)
-            .onEach { (location, entityType) ->
-                val entity = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as LivingEntity
-                entity.setAI(false)
-            }
 
         enemyGenerationService.generate(random, mapTier, world, entityTypes, enemySpawnLocations)
-//        bossGenerationService.generate(bossEntityType, bossLocation, mapTier)
+        bossGenerationService.generate(mapTier, bossEntityTypes, world, bossSpawnLocations)
     }
 }
