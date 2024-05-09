@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.util.extension
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.PersistentDataUtil
+import org.bukkit.Location
 import org.bukkit.entity.Entity
 import java.util.*
 
@@ -63,4 +64,10 @@ object EntityExtension {
     }
 
     fun Entity.isBoss() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_BOSS)
+
+    fun Entity.setPortalLocation(value: Location) {
+        PersistentDataUtil.setValue(this, TypeKeys.PORTAL_LOCATION, value)
+    }
+
+    fun Entity.getPortalLocation() = PersistentDataUtil.getValue(this, TypeKeys.PORTAL_LOCATION)
 }

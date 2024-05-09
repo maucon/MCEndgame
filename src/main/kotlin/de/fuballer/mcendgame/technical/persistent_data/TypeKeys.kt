@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.technical.persistent_data
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.map_device.MapDeviceAction
+import de.fuballer.mcendgame.technical.persistent_data.types.PersistentLocation
 import de.fuballer.mcendgame.technical.persistent_data.types.PersistentRolledAttribute
 import de.fuballer.mcendgame.technical.persistent_data.types.PersistentTotem
 import de.fuballer.mcendgame.technical.persistent_data.types.PersistentUUID
@@ -25,6 +26,7 @@ object TypeKeys {
     val IS_SPECIAL = TypeKey(createNamespacedKey("is_special"), PersistentDataType.BOOLEAN)
     val IS_PORTAL = TypeKey(createNamespacedKey("is_portal"), PersistentDataType.BOOLEAN)
     val IS_BOSS = TypeKey(createNamespacedKey("is_boss"), PersistentDataType.BOOLEAN)
+    val PORTAL_LOCATION = TypeKey(createNamespacedKey("portal_location"), PersistentLocation)
 
     // projectile
     val PROJECTILE_ADDED_BASE_DAMAGE = TypeKey(createNamespacedKey("projectile_added_base_damage"), PersistentDataType.DOUBLE)

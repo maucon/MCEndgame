@@ -9,6 +9,7 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.setDisableDropEquipment
 import de.fuballer.mcendgame.util.extension.EntityExtension.setIsBoss
+import de.fuballer.mcendgame.util.extension.EntityExtension.setPortalLocation
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Creature
@@ -44,10 +45,12 @@ class DungeonBossGenerationService(
         val boss = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as Creature
 
         boss.setIsBoss()
+        boss.setPortalLocation(location)
+
         boss.setDisableDropEquipment()
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
         boss.removeWhenFarAway = false
-        boss.setAI(false) // FIXME boss should unfreeze when targeting player
+        boss.setAI(false) // TODO boss should unfreeze when targeting player
 
         return boss
     }

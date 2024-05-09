@@ -40,7 +40,9 @@ class DungeonGenerationService(
         val layout = layoutGenerator.generateDungeon(random, mapTier)
 
         dungeonBuilderService.build(world, layout.tiles)
-        generateEnemies(layout, random, world, mapTier, entityTypes, bossEntityTypes, leaveLocation)
+
+        generateEnemies(layout, random, world, mapTier, entityTypes)
+        generateBosses(layout, world, mapTier, bossEntityTypes, leaveLocation)
 
         val startLocation = VectorUtil.toLocation(world, layout.startLocation.location, layout.startLocation.rotation)
         portalService.createPortal(startLocation, leaveLocation)
@@ -57,16 +59,23 @@ class DungeonGenerationService(
         world: World,
         mapTier: Int,
         entityTypes: List<RandomOption<CustomEntityType>>,
+    ) {
+        val enemySpawnLocations = layout.enemySpawnLocations
+            .map { VectorUtil.toLocation(world, it.location) }
+
+        enemyGenerationService.generate(random, mapTier, world, entityTypes, enemySpawnLocations)
+    }
+
+    private fun generateBosses(
+        layout: Layout,
+        world: World,
+        mapTier: Int,
         bossEntityTypes: List<CustomEntityType>,
         leaveLocation: Location
     ) {
-        val enemySpawnLocations = layout.spawnLocations
-            .map { VectorUtil.toLocation(world, it.location) }
-
         val bossSpawnLocations = layout.bossSpawnLocations
             .map { VectorUtil.toLocation(world, it.location, it.rotation) }
 
-        enemyGenerationService.generate(random, mapTier, world, entityTypes, enemySpawnLocations)
         bossGenerationService.generate(mapTier, bossEntityTypes, world, bossSpawnLocations, leaveLocation)
     }
 }

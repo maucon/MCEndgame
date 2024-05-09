@@ -12,6 +12,7 @@ import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.EntityExtension.getPortalLocation
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Location
@@ -40,7 +41,9 @@ class DungeonBossService(
         val bossesEntity = dungeonBossesRepo.findByWorld(bossWorld) ?: return
         val dungeonWorld = worldManageRepo.getById(bossWorld.name)
 
-        portalService.createPortal(entity.location, bossesEntity.leaveLocation)
+        val portalLocation = entity.getPortalLocation()!!
+        portalLocation.world = entity.world
+        portalService.createPortal(portalLocation, bossesEntity.leaveLocation)
 
         dropBossLoot(entity, bossesEntity.mapTier)
         empowerOtherBosses(bossesEntity.bosses)
