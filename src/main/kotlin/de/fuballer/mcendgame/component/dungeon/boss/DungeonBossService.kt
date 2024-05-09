@@ -40,7 +40,7 @@ class DungeonBossService(
         val bossesEntity = dungeonBossesRepo.findByWorld(bossWorld) ?: return
         val dungeonWorld = worldManageRepo.getById(bossWorld.name)
 
-        portalService.createPortal(entity.location, bossesEntity.leaveLocation, isInitiallyActive = true)
+        portalService.createPortal(entity.location, bossesEntity.leaveLocation)
 
         dropBossLoot(entity, bossesEntity.mapTier)
         empowerOtherBosses(bossesEntity.bosses)

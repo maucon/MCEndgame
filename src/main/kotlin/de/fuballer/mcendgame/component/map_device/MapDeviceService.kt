@@ -79,7 +79,7 @@ class MapDeviceService(
         mapDevice.portals = MapDeviceSettings.PORTAL_OFFSETS
             .map { deviceCenter.clone().add(it) }
             .onEach { it.yaw = MathUtil.calculateYawToFacingLocation(it, deviceCenter) + 180 }
-            .map { portalService.createPortal(it, target, isInitiallyActive = true, isSingleUse = true) }
+            .map { portalService.createPortal(it, target, isSingleUse = true) }
             .toMutableList()
 
         mapDeviceRepo.save(mapDevice)

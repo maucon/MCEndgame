@@ -43,7 +43,7 @@ class DungeonGenerationService(
         generateEnemies(layout, random, world, mapTier, entityTypes, bossEntityTypes, leaveLocation)
 
         val startLocation = VectorUtil.toLocation(world, layout.startLocation, -90.0)
-        portalService.createPortal(startLocation, leaveLocation, isInitiallyActive = true)
+        portalService.createPortal(startLocation, leaveLocation)
 
         val event = DungeonGeneratedEvent(world, leaveLocation)
         EventGateway.apply(event)
