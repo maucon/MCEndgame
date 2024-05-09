@@ -11,8 +11,8 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-private fun calculateComplexityLimit(mapTier: Int) = 150 + 0 * mapTier
-private fun calculateBranchComplexityLimit(mapTier: Int) = 20 + 0 * mapTier
+private fun calculateComplexityLimit(mapTier: Int) = 150
+private fun calculateBranchComplexityLimit(mapTier: Int) = 20
 
 private val branchingPoints = listOf(0.33, 0.66) // -> 3 boss rooms
 private var complexityLimit = 0
@@ -149,6 +149,8 @@ class LinearLayoutGenerator(
         bossSpawnLocations: MutableList<SpawnLocation>
     ): Boolean {
         val branchTiles = mutableListOf<PlaceableTile>()
+        val branchSpawnLocations = mutableListOf<SpawnLocation>()
+        val branchBossSpawnLocations = mutableListOf<SpawnLocation>()
 
         val updatedExistingBranches = if (remainingDoors.size > 1) existingBranches + 1 else existingBranches
 
@@ -159,13 +161,25 @@ class LinearLayoutGenerator(
             val nextIsMainPath = isMainPath && d == remainingDoors.size - 1
             val nextRoomComplexitySum = if (nextIsMainPath != isMainPath) 0 else (roomComplexitySum + chosenRoomType.complexity)
 
-            if (!generateNextRoom(if (nextIsMainPath) tiles else branchTiles, nextDoor, nextRoomComplexitySum, nextIsMainPath, updatedExistingBranches, spawnLocations, bossSpawnLocations)) {
+            if (!generateNextRoom(
+                    if (nextIsMainPath) tiles else branchTiles,
+                    nextDoor,
+                    nextRoomComplexitySum,
+                    nextIsMainPath,
+                    updatedExistingBranches,
+                    branchSpawnLocations,
+                    branchBossSpawnLocations
+                )
+            ) {
                 unblockTilesByOrigin(branchTiles)
                 return false
             }
         }
 
         tiles.addAll(branchTiles)
+        spawnLocations.addAll(branchSpawnLocations)
+        bossSpawnLocations.addAll(branchBossSpawnLocations)
+
         return true
     }
 
