@@ -22,13 +22,14 @@ class DungeonBossGenerationService(
         mapTier: Int,
         entityTypes: List<CustomEntityType>,
         world: World,
-        locations: List<Location>
+        locations: List<Location>,
+        leaveLocation: Location
     ) {
         // TODO what if there are not enough entity types?
         val bosses = locations.zip(entityTypes)
             .map { (location, entityType) -> spawnBoss(entityType, location, mapTier) }
 
-        val entity = DungeonBossesEntity(UUID.randomUUID(), world, mapTier, bosses)
+        val entity = DungeonBossesEntity(UUID.randomUUID(), world, mapTier, bosses, leaveLocation)
         dungeonBossesRepo.save(entity)
 
         val event = DungeonEnemySpawnedEvent(world, bosses.toSet())

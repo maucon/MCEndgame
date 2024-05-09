@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.component.crafting.reshaping.ReshapingSettings
 import de.fuballer.mcendgame.component.crafting.transfiguration.TransfigurationSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesRepository
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
+import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.EventGateway
@@ -27,7 +28,8 @@ import kotlin.random.Random
 @Component
 class DungeonBossService(
     private val dungeonBossesRepo: DungeonBossesRepository,
-    private val worldManageRepo: WorldManageRepository
+    private val worldManageRepo: WorldManageRepository,
+    private val portalService: PortalService
 ) : Listener {
     @EventHandler
     fun on(event: DungeonEntityDeathEvent) {
@@ -37,6 +39,8 @@ class DungeonBossService(
         val bossWorld = entity.world
         val bossesEntity = dungeonBossesRepo.findByWorld(bossWorld) ?: return
         val dungeonWorld = worldManageRepo.getById(bossWorld.name)
+
+        portalService.createPortal(entity.location, bossesEntity.leaveLocation, isInitiallyActive = true)
 
         dropBossLoot(entity, bossesEntity.mapTier)
         empowerOtherBosses(bossesEntity.bosses)
@@ -51,11 +55,12 @@ class DungeonBossService(
     }
 
     @EventHandler
-    fun on(event: EntityDamageEvent) {
+    fun on(event: EntityDamageEvent) { // FIXME
         val entity = event.entity
-        if (!event.entity.world.isDungeonWorld()) return
+        if (!entity.world.isDungeonWorld()) return
+        if (!entity.isBoss()) return
 
-        if (dungeonBossesRepo.exists(entity.uniqueId)) (entity as LivingEntity).setAI(true)
+        (entity as LivingEntity).setAI(true)
     }
 
     private fun empowerOtherBosses(bosses: List<Creature>) {

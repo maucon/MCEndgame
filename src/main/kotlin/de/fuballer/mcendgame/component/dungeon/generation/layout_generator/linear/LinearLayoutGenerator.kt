@@ -47,7 +47,7 @@ class LinearLayoutGenerator(
             throw IllegalStateException("No valid layout could be generated")
         }
 
-        return Layout(tiles, spawnLocations, bossSpawnLocations)
+        return Layout(startRoomType.startLocation!!, tiles, spawnLocations, bossSpawnLocations)
     }
 
     private fun generateNextRoom(

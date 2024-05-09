@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream
 private val DOOR_MARKER_BLOCK = BlockTypes.BLACK_WOOL!!.id
 private val MONSTER_MARKER_BLOCK = BlockTypes.WHITE_WOOL!!.id
 private val BOSS_MARKER_BLOCK = BlockTypes.DRAGON_HEAD!!.id
+private val START_PORTAL_MARKER_BLOCK = BlockTypes.GREEN_WOOL!!.id
 
 object RoomTypeLoader {
     fun load(schematicPath: String, complexity: Int): RoomType {
@@ -35,6 +36,7 @@ object RoomTypeLoader {
             cleanSchematicData,
             VectorUtil.fromBlockVector3(size),
             complexity,
+            locations.startLocation,
             locations.doors,
             locations.spawnLocations,
             locations.bossSpawnLocations
@@ -42,6 +44,7 @@ object RoomTypeLoader {
     }
 
     private fun findMarkedLocations(clipboard: Clipboard, size: BlockVector3): TileLocations {
+        var startLocation: Vector? = null
         val doors = mutableListOf<Door>()
         val spawnLocations = mutableListOf<SpawnLocation>()
         val bossSpawnLocations = mutableListOf<SpawnLocation>()
@@ -57,6 +60,13 @@ object RoomTypeLoader {
                         DOOR_MARKER_BLOCK -> {
                             val door = getDoor(x, y, z, size)
                             doors.add(door)
+
+                            replaceBlockWithAir(position, clipboard)
+                        }
+
+                        START_PORTAL_MARKER_BLOCK -> {
+                            val centeredBlockPosition = Vector(x + 0.5, y + 0.0, z + 0.5)
+                            startLocation = centeredBlockPosition.clone()
 
                             replaceBlockWithAir(position, clipboard)
                         }
@@ -86,7 +96,7 @@ object RoomTypeLoader {
             }
         }
 
-        return TileLocations(doors, spawnLocations, bossSpawnLocations)
+        return TileLocations(startLocation, doors, spawnLocations, bossSpawnLocations)
     }
 
     private fun getDoor(x: Int, y: Int, z: Int, size: BlockVector3) =

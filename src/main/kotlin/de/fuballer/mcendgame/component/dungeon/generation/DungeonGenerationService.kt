@@ -7,6 +7,8 @@ import de.fuballer.mcendgame.component.dungeon.generation.data.Layout
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
 import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
 import de.fuballer.mcendgame.component.portal.PortalService
+import de.fuballer.mcendgame.event.DungeonGeneratedEvent
+import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.VectorUtil
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -38,11 +40,13 @@ class DungeonGenerationService(
         val layout = layoutGenerator.generateDungeon(random, mapTier)
 
         dungeonBuilderService.build(world, layout.tiles)
-        generateEnemies(layout, random, world, mapTier, entityTypes, bossEntityTypes)
+        generateEnemies(layout, random, world, mapTier, entityTypes, bossEntityTypes, leaveLocation)
 
-        // FIXME start location should be given by layout (marker on startRoom)
-        val startLocation = Location(world, 5.0, 1.5, 5.0)
+        val startLocation = VectorUtil.toLocation(world, layout.startLocation, -90.0)
         portalService.createPortal(startLocation, leaveLocation, isInitiallyActive = true)
+
+        val event = DungeonGeneratedEvent(world, leaveLocation)
+        EventGateway.apply(event)
 
         return startLocation
     }
@@ -53,7 +57,8 @@ class DungeonGenerationService(
         world: World,
         mapTier: Int,
         entityTypes: List<RandomOption<CustomEntityType>>,
-        bossEntityTypes: List<CustomEntityType>
+        bossEntityTypes: List<CustomEntityType>,
+        leaveLocation: Location
     ) {
         val enemySpawnLocations = layout.spawnLocations
             .map { VectorUtil.toLocation(world, it.location) }
@@ -62,6 +67,6 @@ class DungeonGenerationService(
             .map { VectorUtil.toLocation(world, it.location, it.rotation) }
 
         enemyGenerationService.generate(random, mapTier, world, entityTypes, enemySpawnLocations)
-        bossGenerationService.generate(mapTier, bossEntityTypes, world, bossSpawnLocations)
+        bossGenerationService.generate(mapTier, bossEntityTypes, world, bossSpawnLocations, leaveLocation)
     }
 }

@@ -20,7 +20,7 @@ class DungeonTransitionService(
 ) : Listener {
     @EventHandler
     fun on(event: DungeonGeneratedEvent) {
-        val entity = DungeonTransitionEntity(event.world.name, event.leavePortals.toMutableList(), event.leaveLocation)
+        val entity = DungeonTransitionEntity(event.world.name, event.respawnLocation)
         dungeonTransitionRepo.save(entity)
     }
 
@@ -78,13 +78,7 @@ class DungeonTransitionService(
         val world = player.world
 
         val entity = dungeonTransitionRepo.findById(world.name) ?: return
-        event.respawnLocation = entity.leaveLocation
-    }
-
-    @EventHandler
-    fun on(event: DungeonCompleteEvent) {
-        val dungeonLeave = dungeonTransitionRepo.findById(event.world.name) ?: return
-        dungeonLeave.portals.forEach { it.open() }
+        event.respawnLocation = entity.respawnLocation
     }
 
     @EventHandler
