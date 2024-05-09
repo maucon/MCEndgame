@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.dungeon.boss
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesEntity
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesRepository
+import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -10,6 +11,7 @@ import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.setDisableDropEquipment
 import de.fuballer.mcendgame.util.extension.EntityExtension.setIsBoss
 import de.fuballer.mcendgame.util.extension.EntityExtension.setPortalLocation
+import de.fuballer.mcendgame.util.extension.ListExtension.cycle
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Creature
@@ -26,8 +28,10 @@ class DungeonBossGenerationService(
         locations: List<Location>,
         leaveLocation: Location
     ) {
-        // TODO what if there are not enough entity types?
-        val bosses = locations.zip(entityTypes)
+        assert(locations.size == DungeonGenerationSettings.BOSS_AMOUNT) { "too few boss spawning locations" }
+        assert(entityTypes.isNotEmpty()) { "boss entity types cannot be empty" }
+
+        val bosses = locations.zip(entityTypes.cycle())
             .map { (location, entityType) -> spawnBoss(entityType, location, mapTier) }
 
         val entity = DungeonBossesEntity(UUID.randomUUID(), world, mapTier, bosses, leaveLocation)

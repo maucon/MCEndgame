@@ -33,8 +33,8 @@ class RemainingCommand(
             return true
         }
 
-        val bossAliveText = if (entity.bossAlive) RemainingSettings.BOSS_ALIVE else RemainingSettings.BOSS_DEAD
-        commandExecutor.sendMessage("${RemainingSettings.REMAINING_COLOR}${entity.remaining} ${RemainingSettings.REMAINING_MESSAGE} $bossAliveText")
+        val message = RemainingSettings.getRemainingMessage(entity.remaining, entity.bossesSlain, entity.dungeonCompleted)
+        commandExecutor.sendMessage(message)
 
         return true
     }

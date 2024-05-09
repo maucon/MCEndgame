@@ -14,7 +14,7 @@ import kotlin.random.Random
 private fun calculateComplexityLimit(mapTier: Int) = 150 + 0 * mapTier
 private fun calculateBranchComplexityLimit(mapTier: Int) = 20 + 0 * mapTier
 
-private val branchingPoints = listOf(0.33, 0.66)
+private val branchingPoints = listOf(0.33, 0.66) // -> 3 boss rooms
 private var complexityLimit = 0
 private var branchComplexityLimit = 0
 

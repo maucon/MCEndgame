@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -16,31 +17,7 @@ class RemainingService(
     private val remainingRepo: RemainingRepository
 ) : Listener {
     @EventHandler
-    fun onDungeonComplete(event: DungeonCompleteEvent) {
-        val remaining = remainingRepo.findById(event.world.name) ?: return
-        remaining.bossAlive = false
-
-        remainingRepo.save(remaining)
-    }
-
-    @EventHandler
-    fun onDungeonWorldDelete(event: DungeonWorldDeleteEvent) {
-        remainingRepo.delete(event.world.name)
-    }
-
-    @EventHandler
-    fun onEntityDeath(event: DungeonEntityDeathEvent) {
-        val entity = event.entity
-        if (!entity.isEnemy()) return
-
-        val remainingEntity = remainingRepo.findById(entity.world.name) ?: return
-        remainingEntity.remaining -= 1
-
-        remainingRepo.save(remainingEntity)
-    }
-
-    @EventHandler
-    fun onDungeonEnemySpawned(event: DungeonEnemySpawnedEvent) {
+    fun on(event: DungeonEnemySpawnedEvent) {
         val name = event.world.name
 
         val entity = remainingRepo.findById(name)
@@ -48,5 +25,33 @@ class RemainingService(
 
         entity.remaining += event.entities.size
         remainingRepo.save(entity)
+    }
+
+    @EventHandler
+    fun on(event: DungeonEntityDeathEvent) {
+        val entity = event.entity
+        if (!entity.isEnemy()) return
+
+        val remainingEntity = remainingRepo.findById(entity.world.name) ?: return
+        remainingEntity.remaining -= 1
+
+        if (entity.isBoss()) {
+            remainingEntity.bossesSlain += 1
+        }
+
+        remainingRepo.save(remainingEntity)
+    }
+
+    @EventHandler
+    fun on(event: DungeonCompleteEvent) {
+        val remaining = remainingRepo.findById(event.world.name) ?: return
+        remaining.dungeonCompleted = true
+
+        remainingRepo.save(remaining)
+    }
+
+    @EventHandler
+    fun on(event: DungeonWorldDeleteEvent) {
+        remainingRepo.delete(event.world.name)
     }
 }
