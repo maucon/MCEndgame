@@ -36,7 +36,7 @@ object RoomTypeLoader {
             cleanSchematicData,
             VectorUtil.fromBlockVector3(size),
             complexity,
-            locations.startLocation,
+            locations.startLocation?.let { SpawnLocation(it, -90.0) },
             locations.doors,
             locations.spawnLocations,
             locations.bossSpawnLocations

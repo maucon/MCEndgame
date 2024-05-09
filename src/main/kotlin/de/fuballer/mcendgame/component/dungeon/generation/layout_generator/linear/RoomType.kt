@@ -7,7 +7,7 @@ data class RoomType(
     val schematicData: ByteArray,
     val size: Vector, // 8 blocks (inclusive) -> 7 size
     val complexity: Int,
-    val startLocation: Vector?,
+    val startLocation: SpawnLocation?,
     val doors: List<Door>,
     val spawnLocations: List<SpawnLocation>,
     val bossSpawnLocations: List<SpawnLocation>
