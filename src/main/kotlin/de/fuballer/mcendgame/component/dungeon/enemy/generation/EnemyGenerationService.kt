@@ -87,8 +87,6 @@ class EnemyGenerationService(
 
         addEffectUntilLoad(entity)
 
-        entity.setAI(false)
-
         val canBeInvisible = !entityType.hideEquipment
         addEffectsToEnemy(random, entity, mapTier, canBeInvisible)
 

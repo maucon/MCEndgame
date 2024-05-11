@@ -6,7 +6,6 @@ import org.bukkit.util.Vector
 data class RoomType(
     val schematicData: ByteArray,
     val size: Vector, // 8 blocks (inclusive) -> 7 size
-    val complexity: Int,
     val startLocation: SpawnLocation?,
     val doors: List<Door>,
     val spawnLocations: List<SpawnLocation>,
@@ -18,17 +17,13 @@ data class RoomType(
 
         other as RoomType
 
-        if (!schematicData.contentEquals(other.schematicData)) return false
-        if (complexity != other.complexity) return false
-
-        return true
+        return schematicData.contentEquals(other.schematicData)
     }
 
     override fun hashCode(): Int {
-        var result = schematicData.contentHashCode()
-        result = 31 * result + complexity
-        return result
+        return schematicData.contentHashCode()
     }
 
     fun isLinear() = doors.size == 2
+    fun getComplexity() = spawnLocations.size + 1
 }

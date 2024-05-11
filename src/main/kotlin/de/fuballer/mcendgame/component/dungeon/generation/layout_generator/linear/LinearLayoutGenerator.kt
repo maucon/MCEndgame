@@ -11,8 +11,8 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-private fun calculateComplexityLimit(mapTier: Int) = 150
-private fun calculateBranchComplexityLimit(mapTier: Int) = 20
+private fun calculateComplexityLimit() = 100
+private fun calculateBranchComplexityLimit() = 15
 
 private val branchingPoints = listOf(0.33, 0.66) // -> 3 boss rooms
 private var complexityLimit = 0
@@ -32,8 +32,8 @@ class LinearLayoutGenerator(
     ): Layout {
         this.random = random
 
-        complexityLimit = calculateComplexityLimit(mapTier)
-        branchComplexityLimit = calculateBranchComplexityLimit(mapTier)
+        complexityLimit = calculateComplexityLimit()
+        branchComplexityLimit = calculateBranchComplexityLimit()
 
         val startTile = PlaceableTile(startRoomType.schematicData, Vector(0, 0, 0), 0.0)
         val tiles = mutableListOf(startTile)
@@ -159,7 +159,7 @@ class LinearLayoutGenerator(
             nextDoor.position.add(offsetRoomOrigin)
 
             val nextIsMainPath = isMainPath && d == remainingDoors.size - 1
-            val nextRoomComplexitySum = if (nextIsMainPath != isMainPath) 0 else (roomComplexitySum + chosenRoomType.complexity)
+            val nextRoomComplexitySum = if (nextIsMainPath != isMainPath) 0 else (roomComplexitySum + chosenRoomType.getComplexity())
 
             if (!generateNextRoom(
                     if (nextIsMainPath) tiles else branchTiles,
