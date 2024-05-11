@@ -5,6 +5,8 @@ import de.fuballer.mcendgame.component.dungeon.generation.data.PlaceableTile
 import de.fuballer.mcendgame.component.dungeon.generation.data.SpawnLocation
 import de.fuballer.mcendgame.component.dungeon.generation.layout_generator.LayoutGenerator
 import de.fuballer.mcendgame.util.VectorUtil
+import de.fuballer.mcendgame.util.random.RandomOption
+import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.util.Vector
 import kotlin.math.abs
 import kotlin.math.max
@@ -21,7 +23,7 @@ private var branchComplexityLimit = 0
 class LinearLayoutGenerator(
     private val startRoomType: RoomType,
     private val bossRoomType: RoomType,
-    private val roomTypes: List<RoomType>,
+    private val roomTypes: List<RandomOption<RoomType>>,
 ) : LayoutGenerator {
     private lateinit var random: Random
     private val blockedArea = mutableListOf<Area>()
@@ -126,7 +128,7 @@ class LinearLayoutGenerator(
         isMainPath: Boolean,
         existingBranches: Int,
     ): List<RoomType> {
-        val possibleRooms = roomTypes.shuffled(random)
+        val possibleRooms = RandomUtil.shuffle(roomTypes, random)
 
         if (isMainPath
             && existingBranches < branchingPoints.size

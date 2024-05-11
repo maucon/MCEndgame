@@ -16,7 +16,7 @@ private val BOSS_MARKER_BLOCK = BlockTypes.DRAGON_HEAD!!.id
 private val START_PORTAL_MARKER_BLOCK = BlockTypes.GREEN_WOOL!!.id
 
 object RoomTypeLoader {
-    fun load(schematicPath: String, complexity: Int): RoomType {
+    fun load(schematicPath: String): RoomType {
         val fullSchematicPath = DungeonGenerationSettings.getFullSchematicPath(schematicPath)
         val inputStream = javaClass.getResourceAsStream(fullSchematicPath)!!
 
