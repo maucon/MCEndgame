@@ -17,7 +17,6 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityPotionEffectEvent
-import org.bukkit.potion.PotionEffect
 import kotlin.random.Random
 
 @Component
@@ -94,7 +93,6 @@ class EnemyGenerationService(
     }
 
     private fun addEffectUntilLoad(entity: LivingEntity) {
-        val effect = PotionEffect(EnemyGenerationSettings.INIT_POTION_EFFECT_TYPE, 1, 0, false, false)
-        entity.addPotionEffect(effect)
+        entity.addPotionEffect(EnemyGenerationSettings.INIT_POTION_EFFECT)
     }
 }

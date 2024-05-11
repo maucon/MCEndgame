@@ -6,17 +6,20 @@ import de.fuballer.mcendgame.component.crafting.refinement.RefinementSettings
 import de.fuballer.mcendgame.component.crafting.reshaping.ReshapingSettings
 import de.fuballer.mcendgame.component.crafting.transfiguration.TransfigurationSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesRepository
+import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationSettings
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getPortalLocation
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -69,7 +72,12 @@ class DungeonBossService(
     private fun empowerOtherBosses(bosses: List<Creature>) {
         bosses.filter { it.isValid }
             .onEach {
-                // TODO empower stats and drops
+                EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_MAX_HEALTH, 1.15)
+                EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_ATTACK_DAMAGE, 1.1)
+                EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_MOVEMENT_SPEED, 1.05)
+
+                it.addPotionEffect(EnemyGenerationSettings.INIT_POTION_EFFECT)
+                //TODO untested & empower droprates
             }
     }
 

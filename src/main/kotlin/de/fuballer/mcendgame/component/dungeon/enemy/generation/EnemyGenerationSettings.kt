@@ -7,6 +7,7 @@ import org.bukkit.potion.PotionEffectType
 object EnemyGenerationSettings {
     const val SPECIAL_MOB_COUNT = 3
     val INIT_POTION_EFFECT_TYPE: PotionEffectType = PotionEffectType.LUCK
+    val INIT_POTION_EFFECT = org.bukkit.potion.PotionEffect(INIT_POTION_EFFECT_TYPE, 1, 0, false, false)
 
     val STRENGTH_EFFECTS = listOf(
         SortableRandomOption(250, 0, null),

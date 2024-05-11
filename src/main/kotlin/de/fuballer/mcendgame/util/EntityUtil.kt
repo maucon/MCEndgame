@@ -38,6 +38,15 @@ object EntityUtil {
         attributeInstance.baseValue = value
     }
 
+    fun increaseBaseAttribute(
+        entity: LivingEntity,
+        attribute: Attribute,
+        factor: Double
+    ) {
+        val attributeInstance = entity.getAttribute(attribute) ?: return
+        attributeInstance.baseValue *= factor
+    }
+
     fun getPlayerDamager(entity: LivingEntity): Player? {
         if (entity is Player) {
             return entity
