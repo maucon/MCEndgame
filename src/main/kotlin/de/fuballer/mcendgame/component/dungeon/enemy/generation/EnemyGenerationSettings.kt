@@ -2,13 +2,8 @@ package de.fuballer.mcendgame.component.dungeon.enemy.generation
 
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
-import org.bukkit.potion.PotionEffectType
 
 object EnemyGenerationSettings {
-    const val SPECIAL_MOB_COUNT = 3
-    val INIT_POTION_EFFECT_TYPE: PotionEffectType = PotionEffectType.LUCK
-    val INIT_POTION_EFFECT = org.bukkit.potion.PotionEffect(INIT_POTION_EFFECT_TYPE, 1, 0, false, false)
-
     val STRENGTH_EFFECTS = listOf(
         SortableRandomOption(250, 0, null),
         SortableRandomOption(80, 1, PotionEffect.STRENGTH_1),

@@ -14,8 +14,8 @@ object RoomTypes {
         RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_medium_0110_0")),
         RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_medium_0110_1")),
         RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_medium_1110_0")),
-        RandomOption(10, RoomTypeLoader.load("stronghold/stronghold_small_0110_0")),
-        RandomOption(10, RoomTypeLoader.load("stronghold/stronghold_small_1010_0")),
-        RandomOption(10, RoomTypeLoader.load("stronghold/stronghold_small_1010_1")),
+        RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_small_0110_0")),
+        RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_small_1010_0")),
+        RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_small_1010_1")),
     )
 }

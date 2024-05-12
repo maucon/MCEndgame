@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.component.crafting.refinement.RefinementSettings
 import de.fuballer.mcendgame.component.crafting.reshaping.ReshapingSettings
 import de.fuballer.mcendgame.component.crafting.transfiguration.TransfigurationSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesRepository
-import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationSettings
+import de.fuballer.mcendgame.component.dungeon.enemy.EnemyHealingService.Companion.heal
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
 import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
@@ -76,8 +76,9 @@ class DungeonBossService(
                 EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_ATTACK_DAMAGE, 1.1)
                 EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_MOVEMENT_SPEED, 1.05)
 
-                it.addPotionEffect(EnemyGenerationSettings.INIT_POTION_EFFECT)
-                //TODO untested & empower droprates
+                it.heal()
+
+                // TODO empower loot drop rates
             }
     }
 

@@ -1,40 +1,25 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.generation
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.component.dungeon.enemy.EnemyHealingService.Companion.heal
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.EquipmentGenerationService
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.SchedulingUtil
-import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
-import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityPotionEffectEvent
 import kotlin.random.Random
 
 @Component
 class EnemyGenerationService(
     private val equipmentGenerationService: EquipmentGenerationService
 ) : Listener {
-    @EventHandler
-    fun on(event: EntityPotionEffectEvent) {
-        if (event.cause != EntityPotionEffectEvent.Cause.EXPIRATION) return
-        val effect = event.oldEffect ?: return
-        if (effect.type != EnemyGenerationSettings.INIT_POTION_EFFECT_TYPE) return
-
-        val entity = event.entity as? LivingEntity ?: return
-        if (!entity.world.isDungeonWorld()) return
-
-        entity.health = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
-    }
-
     fun generate(
         random: Random,
         mapTier: Int,
@@ -56,7 +41,7 @@ class EnemyGenerationService(
         random: Random,
         entity: LivingEntity,
         mapTier: Int,
-        canBeInvisible: Boolean,
+        canBeInvisible: Boolean
     ) {
         val effects = mutableListOf(
             RandomUtil.pick(EnemyGenerationSettings.STRENGTH_EFFECTS, mapTier, random).option,
@@ -84,15 +69,11 @@ class EnemyGenerationService(
         val entity = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as LivingEntity
         equipmentGenerationService.generate(random, entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
 
-        addEffectUntilLoad(entity)
+        entity.heal()
 
         val canBeInvisible = !entityType.hideEquipment
         addEffectsToEnemy(random, entity, mapTier, canBeInvisible)
 
         return entity
-    }
-
-    private fun addEffectUntilLoad(entity: LivingEntity) {
-        entity.addPotionEffect(EnemyGenerationSettings.INIT_POTION_EFFECT)
     }
 }
