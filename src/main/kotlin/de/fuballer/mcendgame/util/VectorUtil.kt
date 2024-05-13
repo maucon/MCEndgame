@@ -18,4 +18,7 @@ object VectorUtil {
 
     fun fromBlockVector3(blockVector: BlockVector3) =
         Vector(blockVector.x, blockVector.y, blockVector.z)
+
+    fun toBlockVector3(vector: Vector): BlockVector3 =
+        BlockVector3.at(vector.x, vector.y, vector.z)
 }

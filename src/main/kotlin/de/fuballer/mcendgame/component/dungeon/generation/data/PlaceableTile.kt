@@ -6,7 +6,7 @@ data class PlaceableTile(
     val tileData: ByteArray,
     val position: Vector,
     val rotation: Double,
-    val extraBlocks: MutableList<PlaceableBlock> = mutableListOf()
+    val extraBlocks: List<PlaceableBlock> = listOf()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

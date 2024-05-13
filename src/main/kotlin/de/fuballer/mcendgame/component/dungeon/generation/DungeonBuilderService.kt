@@ -18,7 +18,7 @@ import org.bukkit.World
 class DungeonBuilderService {
     fun build(
         world: World,
-        tiles: List<PlaceableTile>,
+        tiles: List<PlaceableTile>
     ) {
         runBlocking {
             for (tile in tiles) {
@@ -49,7 +49,6 @@ class DungeonBuilderService {
         val transform = AffineTransform().rotateY(rotation)
 
         placeExtraBlocks(clipboard, extraBlocks)
-
         pasteClipboard(world, location, clipboard, transform)
     }
 

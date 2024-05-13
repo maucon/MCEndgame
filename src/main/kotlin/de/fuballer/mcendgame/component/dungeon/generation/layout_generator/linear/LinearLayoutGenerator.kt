@@ -114,15 +114,21 @@ class LinearLayoutGenerator(
                 continue
             }
 
-            val tile = PlaceableTile(chosenRoomType.schematicData, offsetRoomOrigin, rotation)
-            tiles.add(tile)
+            val extraBlocks = mutableListOf<PlaceableBlock>()
 
-            if (!isMainPath && roomComplexitySum == 0) {
-                val postLoc = chosenDoor.position
-                val skullRot = (chosenDoor.getDirectionInDegree() + 180) % 360
-                tile.extraBlocks.add(PlaceableBlock(postLoc.x.toInt(), postLoc.y.toInt() + 1, postLoc.z.toInt(), skullRot, BlockTypes.WITHER_SKELETON_SKULL!!))
-                tile.extraBlocks.add(PlaceableBlock(postLoc.x.toInt(), postLoc.y.toInt(), postLoc.z.toInt(), 0.0, BlockTypes.SPRUCE_FENCE!!))
+            if (!isMainPath && roomComplexitySum == 0) { // first room of branch
+                val postLocation = VectorUtil.toBlockVector3(chosenDoor.position)
+                val skullRotation = chosenDoor.getDirectionInDegree()
+
+                val skull = PlaceableBlock(postLocation.x, postLocation.y + 1, postLocation.z, skullRotation, BlockTypes.WITHER_SKELETON_SKULL!!)
+                val post = PlaceableBlock(postLocation.x, postLocation.y, postLocation.z, 0.0, BlockTypes.SPRUCE_FENCE!!)
+
+                extraBlocks.add(skull)
+                extraBlocks.add(post)
             }
+
+            val tile = PlaceableTile(chosenRoomType.schematicData, offsetRoomOrigin, rotation, extraBlocks)
+            tiles.add(tile)
 
             addAdjustSpawnLocations(chosenRoomType, offsetRoomOrigin, rotation, spawnLocations, bossSpawnLocations)
 
