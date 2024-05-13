@@ -1,39 +1,60 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossEntity
-import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
+import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesEntity
+import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesRepository
+import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.setDisableDropEquipment
+import de.fuballer.mcendgame.util.extension.EntityExtension.setIsBoss
+import de.fuballer.mcendgame.util.extension.EntityExtension.setPortalLocation
+import de.fuballer.mcendgame.util.extension.ListExtension.cycle
 import org.bukkit.Location
+import org.bukkit.World
 import org.bukkit.entity.Creature
+import java.util.*
 
 @Component
 class DungeonBossGenerationService(
-    private val dungeonBossRepo: DungeonBossRepository,
+    private val dungeonBossesRepo: DungeonBossesRepository,
 ) {
-    fun spawnNewMapBoss(
+    fun generate(
+        mapTier: Int,
+        entityTypes: List<CustomEntityType>,
+        world: World,
+        locations: List<Location>,
+        leaveLocation: Location
+    ) {
+        assert(locations.size == DungeonGenerationSettings.BOSS_AMOUNT) { "too few boss spawning locations" }
+        assert(entityTypes.isNotEmpty()) { "boss entity types cannot be empty" }
+
+        val bosses = locations.zip(entityTypes.cycle())
+            .map { (location, entityType) -> spawnBoss(entityType, location, mapTier) }
+
+        val entity = DungeonBossesEntity(UUID.randomUUID(), world, mapTier, bosses, leaveLocation)
+        dungeonBossesRepo.save(entity)
+
+        val event = DungeonEnemySpawnedEvent(world, bosses.toSet())
+        EventGateway.apply(event)
+    }
+
+    private fun spawnBoss(
         entityType: CustomEntityType,
         location: Location,
         mapTier: Int
     ): Creature {
-        location.yaw = 180f
-
         val boss = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as Creature
+
+        boss.setIsBoss()
+        boss.setPortalLocation(location)
 
         boss.setDisableDropEquipment()
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
         boss.removeWhenFarAway = false
-        boss.setAI(false)
-
-        val event = DungeonEnemySpawnedEvent(location.world!!, setOf(boss))
-        EventGateway.apply(event)
-
-        val entity = DungeonBossEntity(boss.uniqueId, mapTier)
-        dungeonBossRepo.save(entity)
+        boss.setAI(false) // TODO boss should unfreeze when targeting player
 
         return boss
     }

@@ -55,13 +55,13 @@ class MapDeviceService(
     ) {
         val mapTier = playerDungeonProgressService.getPlayerDungeonLevel(player.uniqueId).tier
         val leaveLocation = mapDevice.location.clone().add(0.5, 1.0, 0.5)
-        val teleportLocation = dungeonGenerationService.generateDungeon(player, mapTier, leaveLocation)
+        val startLocation = dungeonGenerationService.generateDungeon(player, mapTier, leaveLocation)
 
-        val dungeonOpenEvent = DungeonOpenEvent(player, teleportLocation.world!!)
+        val dungeonOpenEvent = DungeonOpenEvent(player, startLocation.world!!)
         EventGateway.apply(dungeonOpenEvent)
 
         closeDungeon(mapDevice)
-        openPortals(mapDevice, teleportLocation)
+        openPortals(mapDevice, startLocation)
         updateMapDeviceVisual(mapDevice)
     }
 
@@ -79,7 +79,7 @@ class MapDeviceService(
         mapDevice.portals = MapDeviceSettings.PORTAL_OFFSETS
             .map { deviceCenter.clone().add(it) }
             .onEach { it.yaw = MathUtil.calculateYawToFacingLocation(it, deviceCenter) + 180 }
-            .map { portalService.createPortal(it, target, isInitiallyActive = true, isSingleUse = true) }
+            .map { portalService.createPortal(it, target, isSingleUse = true) }
             .toMutableList()
 
         mapDeviceRepo.save(mapDevice)

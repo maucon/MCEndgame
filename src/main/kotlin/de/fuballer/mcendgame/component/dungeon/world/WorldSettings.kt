@@ -28,7 +28,7 @@ object WorldSettings {
         world.setGameRule(GameRule.TNT_EXPLOSION_DROP_DECAY, false)
         world.setGameRule(GameRule.DO_TRADER_SPAWNING, false)
         world.setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false)
-        world.setGameRule(GameRule.REDUCED_DEBUG_INFO, true)
+        world.setGameRule(GameRule.REDUCED_DEBUG_INFO, false)
         world.setGameRule(GameRule.DISABLE_RAIDS, true)
         world.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false)
     }

@@ -15,7 +15,6 @@ import java.util.*
 class Portal(
     private var location: Location,
     val target: Location,
-    isInitiallyActive: Boolean = false,
     val isSingleUse: Boolean = false,
     private val skin: PortalSkin = DefaultPortalSkin()
 ) : Entity<UUID> {
@@ -47,7 +46,7 @@ class Portal(
 
         id = portalEntity.uniqueId
 
-        if (isInitiallyActive) open()
+        open()
     }
 
     fun open() {

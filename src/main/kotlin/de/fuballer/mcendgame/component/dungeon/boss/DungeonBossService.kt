@@ -1,15 +1,26 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.crafting.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossRepository
+import de.fuballer.mcendgame.component.crafting.imitation.ImitationSettings
+import de.fuballer.mcendgame.component.crafting.refinement.RefinementSettings
+import de.fuballer.mcendgame.component.crafting.reshaping.ReshapingSettings
+import de.fuballer.mcendgame.component.crafting.transfiguration.TransfigurationSettings
+import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesRepository
+import de.fuballer.mcendgame.component.dungeon.enemy.EnemyHealingService.Companion.heal
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
+import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.getPortalLocation
+import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.attribute.Attribute
+import org.bukkit.entity.Creature
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
@@ -20,33 +31,55 @@ import kotlin.random.Random
 
 @Component
 class DungeonBossService(
-    private val dungeonBossRepo: DungeonBossRepository,
-    private val worldManageRepo: WorldManageRepository
+    private val dungeonBossesRepo: DungeonBossesRepository,
+    private val worldManageRepo: WorldManageRepository,
+    private val portalService: PortalService
 ) : Listener {
     @EventHandler
     fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity
-        val uuid = entity.uniqueId
+        if (!entity.isBoss()) return
 
-        val mapTier = dungeonBossRepo.findById(uuid)?.mapTier ?: return
+        val bossWorld = entity.world
+        val bossesEntity = dungeonBossesRepo.findByWorld(bossWorld) ?: return
+        val dungeonWorld = worldManageRepo.getById(bossWorld.name)
 
-        val world = entity.world
-        val dungeonWorld = worldManageRepo.getById(world.name)
+        val portalLocation = entity.getPortalLocation()!!
+        portalLocation.world = entity.world
+        portalService.createPortal(portalLocation, bossesEntity.leaveLocation)
 
-        dropBossLoot(entity, mapTier)
+        dropBossLoot(entity, bossesEntity.mapTier)
+        empowerOtherBosses(bossesEntity.bosses)
 
-        val dungeonCompleteEvent = DungeonCompleteEvent(dungeonWorld.player, mapTier, world)
+        if (bossesEntity.progressGranted) return
+
+        bossesEntity.progressGranted = true
+        dungeonBossesRepo.save(bossesEntity)
+
+        val dungeonCompleteEvent = DungeonCompleteEvent(dungeonWorld.player, bossesEntity.mapTier, bossWorld)
         EventGateway.apply(dungeonCompleteEvent)
-
-        dungeonBossRepo.delete(uuid)
     }
 
     @EventHandler
-    fun on(event: EntityDamageEvent) {
+    fun on(event: EntityDamageEvent) { // FIXME
         val entity = event.entity
-        if (!event.entity.world.isDungeonWorld()) return
+        if (!entity.world.isDungeonWorld()) return
+        if (!entity.isBoss()) return
 
-        if (dungeonBossRepo.exists(entity.uniqueId)) (entity as LivingEntity).setAI(true)
+        (entity as LivingEntity).setAI(true)
+    }
+
+    private fun empowerOtherBosses(bosses: List<Creature>) {
+        bosses.filter { it.isValid }
+            .onEach {
+                EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_MAX_HEALTH, 1.15)
+                EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_ATTACK_DAMAGE, 1.1)
+                EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_MOVEMENT_SPEED, 1.05)
+
+                it.heal()
+
+                // TODO empower loot drop rates
+            }
     }
 
     private fun dropBossLoot(
@@ -61,19 +94,25 @@ class DungeonBossService(
 
         val doubleCorruptionChance = DungeonBossSettings.calculateDoubleCorruptDropChance(mapTier)
         dropCorruptionHearts(CorruptionSettings.getDoubleCorruptionItem(), doubleCorruptionChance, world, location)
+
+        // TODO only for testing -> remove
+        world.dropItemNaturally(location, ImitationSettings.getImitationItem())
+        world.dropItemNaturally(location, RefinementSettings.getRefinementItem())
+        world.dropItemNaturally(location, ReshapingSettings.getReshapingItem())
+        world.dropItemNaturally(location, TransfigurationSettings.getTransfigurationItem())
     }
 
     private fun dropCorruptionHearts(
         corruptionHeart: ItemStack,
         chance: Double,
         world: World,
-        loc: Location
+        location: Location
     ) {
         val restChance = chance % 1
         val extraDrop = Random.nextDouble() < restChance
         val corruptionCount = chance.toInt() + if (extraDrop) 1 else 0
 
         corruptionHeart.amount = corruptionCount
-        world.dropItemNaturally(loc, corruptionHeart)
+        world.dropItemNaturally(location, corruptionHeart)
     }
 }

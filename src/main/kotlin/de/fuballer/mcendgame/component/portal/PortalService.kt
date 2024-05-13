@@ -62,7 +62,6 @@ class PortalService(
     fun createPortal(
         location: Location,
         target: Location,
-        isInitiallyActive: Boolean = false,
         isSingleUse: Boolean = false,
         skin: PortalSkin = DefaultPortalSkin()
     ): Portal {
@@ -72,7 +71,7 @@ class PortalService(
             throw IllegalArgumentException("world of locations cannot be null")
         }
 
-        val portal = Portal(location, target, isInitiallyActive, isSingleUse, skin)
+        val portal = Portal(location, target, isSingleUse, skin)
         portalRepo.save(portal)
 
         return portal

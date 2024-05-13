@@ -30,6 +30,23 @@ object RandomUtil {
         return pickOption(sortedOptions, randomInt)
     }
 
+    fun <T> shuffle(
+        options: List<RandomOption<T>>,
+        random: Random = Random
+    ): List<T> {
+        val leftOptions = options.toMutableList()
+        val shuffled = mutableListOf<T>()
+
+        while (leftOptions.isNotEmpty()) {
+            val picked = pick(leftOptions, random)
+
+            shuffled.add(picked.option)
+            leftOptions.remove(picked)
+        }
+
+        return shuffled
+    }
+
     private fun <T : RandomOption<*>> pickOption(
         options: List<T>,
         randomInt: Int

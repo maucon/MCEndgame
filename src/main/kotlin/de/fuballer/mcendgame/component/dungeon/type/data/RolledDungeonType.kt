@@ -7,6 +7,5 @@ import de.fuballer.mcendgame.util.random.RandomOption
 data class RolledDungeonType(
     val mapType: DungeonMapType,
     val entityTypes: List<RandomOption<CustomEntityType>>,
-    val specialEntityTypes: List<RandomOption<CustomEntityType>>,
-    val bossEntityType: CustomEntityType
+    val bossEntityTypes: List<CustomEntityType>
 )

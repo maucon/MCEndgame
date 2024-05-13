@@ -1,11 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.generation
 
+import de.fuballer.mcendgame.component.dungeon.generation.layout_generator.LayoutGenerator
+import de.fuballer.mcendgame.component.dungeon.generation.layout_generator.linear.LinearLayoutGenerator
+import de.fuballer.mcendgame.component.dungeon.generation.layout_generator.linear.RoomTypes
+
 enum class DungeonMapType(
-    val typeName: String
+    val layoutGeneratorProvider: () -> LayoutGenerator
 ) {
-    CATACOMBS("catacombs"),
-    CATACOMBS_ALTERNATIVE("catacombs_alternative"),
-    LUSH_CAVE("lush_cave"),
-    MINE("mine"),
-    ICE_CAVE("ice_cave");
+    STRONGHOLD(
+        { LinearLayoutGenerator(RoomTypes.STRONGHOLD_START_ROOM, RoomTypes.STRONGHOLD_BOSS_ROOM, RoomTypes.STRONGHOLD_ROOMS) }
+    )
 }

@@ -66,10 +66,10 @@ class SummonerService(
 
         if (mapTier < 0 || minion !is Creature) return minion
 
-        equipmentGenerationService.setCreatureEquipment(random, minion, mapTier, weapons, ranged, armor)
+        equipmentGenerationService.generate(random, minion, mapTier, weapons, ranged, armor)
 
         val canBeInvisible = !minionType.hideEquipment
-        enemyGenerationService.addEffectsToEntity(random, minion, mapTier, canBeInvisible)
+        enemyGenerationService.addEffectsToEnemy(random, minion, mapTier, canBeInvisible)
 
         return minion
     }

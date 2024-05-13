@@ -105,6 +105,5 @@ class PortalFailedEvent(
  */
 class DungeonGeneratedEvent(
     val world: World,
-    val leavePortals: List<Portal>,
-    val leaveLocation: Location
+    val respawnLocation: Location
 ) : HandleableEvent()
