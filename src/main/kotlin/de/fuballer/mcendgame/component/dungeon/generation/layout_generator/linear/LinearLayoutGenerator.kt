@@ -1,6 +1,8 @@
 package de.fuballer.mcendgame.component.dungeon.generation.layout_generator.linear
 
+import com.sk89q.worldedit.world.block.BlockTypes
 import de.fuballer.mcendgame.component.dungeon.generation.data.Layout
+import de.fuballer.mcendgame.component.dungeon.generation.data.PlaceableBlock
 import de.fuballer.mcendgame.component.dungeon.generation.data.PlaceableTile
 import de.fuballer.mcendgame.component.dungeon.generation.data.SpawnLocation
 import de.fuballer.mcendgame.component.dungeon.generation.layout_generator.LayoutGenerator
@@ -114,6 +116,13 @@ class LinearLayoutGenerator(
 
             val tile = PlaceableTile(chosenRoomType.schematicData, offsetRoomOrigin, rotation)
             tiles.add(tile)
+
+            if (!isMainPath && roomComplexitySum == 0) {
+                val postLoc = chosenDoor.position
+                val skullRot = (chosenDoor.getDirectionInDegree() + 180) % 360
+                tile.extraBlocks.add(PlaceableBlock(postLoc.x.toInt(), postLoc.y.toInt() + 1, postLoc.z.toInt(), skullRot, BlockTypes.WITHER_SKELETON_SKULL!!))
+                tile.extraBlocks.add(PlaceableBlock(postLoc.x.toInt(), postLoc.y.toInt(), postLoc.z.toInt(), 0.0, BlockTypes.SPRUCE_FENCE!!))
+            }
 
             addAdjustSpawnLocations(chosenRoomType, offsetRoomOrigin, rotation, spawnLocations, bossSpawnLocations)
 

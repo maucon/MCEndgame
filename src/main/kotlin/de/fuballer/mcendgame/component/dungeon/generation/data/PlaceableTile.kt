@@ -5,7 +5,8 @@ import org.bukkit.util.Vector
 data class PlaceableTile(
     val tileData: ByteArray,
     val position: Vector,
-    val rotation: Double
+    val rotation: Double,
+    val extraBlocks: MutableList<PlaceableBlock> = mutableListOf()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
