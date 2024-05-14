@@ -1,16 +1,15 @@
 package de.fuballer.mcendgame.component.dungeon.looting
 
-import de.fuballer.mcendgame.component.crafting.refinement.RefinementSettings
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.enchantment.EquipmentEnchantmentService
-import de.fuballer.mcendgame.component.dungeon.killstreak.KillStreakSettings
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
+import de.fuballer.mcendgame.component.totem.data.Totem
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.extension.EntityExtension.isDropEquipmentDisabled
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.util.extension.EntityExtension.isSpecial
+import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Material
 import org.bukkit.World
@@ -31,22 +30,20 @@ class LootingService(
     @EventHandler
     fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity
+        if (!entity.isEnemy()) return
+        if (entity.isMinion()) return
+
+        dropTotem(entity)
+        dropCustomItems(entity, entity.world)
 
         if (entity.isDropEquipmentDisabled()) return
-        if (!entity.isEnemy()) return
-
         dropEquipment(entity, entity.world)
-
-        if (entity.isSpecial()) {
-            dropCustomItems(entity, entity.world)
-            dropOrbOfRefinement(entity, entity.world)
-        }
     }
 
     private fun dropEquipment(entity: LivingEntity, world: World) {
         val looting = getLootingLevel(entity.killer)
         val killStreak = killStreakRepo.findById(world.name)?.streak ?: 0
-        val streakDropChance = 1 + killStreak * KillStreakSettings.GEAR_DROP_CHANCE_MULTIPLIER_PER_STREAK
+        val streakDropChance = 1 + killStreak * LootingSettings.GEAR_DROP_CHANCE_MULTIPLIER_PER_KILLSTREAK
 
         for (item in getEquipment(entity.equipment)) {
             val finalDropChance = getItemDropChance(item, looting) * streakDropChance
@@ -69,13 +66,6 @@ class LootingService(
         item.itemMeta = itemMeta
 
         world.dropItemNaturally(entity.location, item)
-    }
-
-    private fun dropOrbOfRefinement(entity: LivingEntity, world: World) {
-        val mapTier = entity.getMapTier() ?: return
-        if (Random.nextDouble() > LootingSettings.getOrbOfRefinementDropChance(mapTier)) return
-
-        world.dropItemNaturally(entity.location, RefinementSettings.getRefinementItem())
     }
 
     private fun getLootingLevel(player: Player?): Int {
@@ -116,5 +106,18 @@ class LootingService(
             entityEquipment.leggings,
             entityEquipment.boots
         ).filter { it.type != Material.AIR }
+    }
+
+    private fun dropTotem(entity: LivingEntity) {
+        if (Random.nextDouble() > LootingSettings.TOTEM_DROP_CHANCE) return
+
+        val mapTier = entity.getMapTier() ?: 1
+        val type = RandomUtil.pick(LootingSettings.TOTEM_TYPES).option
+        val tier = RandomUtil.pick(LootingSettings.TOTEM_TIERS, mapTier).option
+
+        val totem = Totem(type, tier)
+        val totemItem = totem.toItem()
+
+        entity.world.dropItemNaturally(entity.location, totemItem)
     }
 }
