@@ -13,7 +13,7 @@ class DungeonSeedService(
         val seed = playerDungeonSeedRepo.findById(player.uniqueId)?.seed
             ?: "${UUID.randomUUID()}"
 
-        playerDungeonSeedRepo.delete(player.uniqueId)
+        playerDungeonSeedRepo.deleteById(player.uniqueId)
 
         return seed.hashCode().toLong()
     }

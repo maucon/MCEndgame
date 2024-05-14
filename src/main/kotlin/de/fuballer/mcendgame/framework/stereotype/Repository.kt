@@ -8,5 +8,6 @@ interface Repository<ID, ENTITY : Entity<ID>> {
     fun exists(id: ID): Boolean
 
     fun save(entity: ENTITY): ENTITY
-    fun delete(id: ID): ENTITY?
+    fun deleteById(id: ID): ENTITY?
+    fun delete(entity: ENTITY): ENTITY?
 }

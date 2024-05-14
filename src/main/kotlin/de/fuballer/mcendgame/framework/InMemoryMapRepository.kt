@@ -19,5 +19,7 @@ abstract class InMemoryMapRepository<ID, ENTITY : Entity<ID>> : Repository<ID, E
         return entity
     }
 
-    override fun delete(id: ID) = map.remove(id)
+    override fun deleteById(id: ID) = map.remove(id)
+
+    override fun delete(entity: ENTITY) = map.remove(entity.id)
 }

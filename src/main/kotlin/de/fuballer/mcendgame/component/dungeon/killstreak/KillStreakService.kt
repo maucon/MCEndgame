@@ -102,7 +102,7 @@ class KillStreakService(
         val killStreak = killStreakRepo.findById(worldName) ?: return
         killStreak.updateTask?.cancel()
 
-        killStreakRepo.delete(worldName)
+        killStreakRepo.deleteById(worldName)
     }
 
     @EventHandler

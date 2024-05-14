@@ -15,7 +15,7 @@ class DungeonTypeService(
 ) : Listener {
     @EventHandler
     fun onDungeonComplete(event: DungeonCompleteEvent) {
-        playerDungeonTypeRepo.delete(event.player.uniqueId)
+        playerDungeonTypeRepo.deleteById(event.player.uniqueId)
     }
 
     fun getNextDungeonType(player: Player): DungeonType {
