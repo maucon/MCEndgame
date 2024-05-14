@@ -27,9 +27,7 @@ tasks.register('fatJar', Jar) {
 
     dependsOn configurations.runtimeClasspath
     from {
-        configurations.runtimeClasspath
-                .findAll { !(it.name =~ ('FastAsyncWorldEdit')) }
-                .collect { zipTree(it) }
+        configurations.runtimeClasspath.collect { zipTree(it) }
     }
     with jar
 }
