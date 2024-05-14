@@ -1,10 +1,5 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
-import de.fuballer.mcendgame.component.crafting.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.crafting.imitation.ImitationSettings
-import de.fuballer.mcendgame.component.crafting.refinement.RefinementSettings
-import de.fuballer.mcendgame.component.crafting.reshaping.ReshapingSettings
-import de.fuballer.mcendgame.component.crafting.transfiguration.TransfigurationSettings
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.EnemyHealingService.Companion.heal
 import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
@@ -14,20 +9,17 @@ import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.getLootMultiplier
 import de.fuballer.mcendgame.util.extension.EntityExtension.getPortalLocation
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
+import de.fuballer.mcendgame.util.extension.EntityExtension.setLootMultiplier
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
-import org.bukkit.Location
-import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
-import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.inventory.ItemStack
-import kotlin.random.Random
 
 @Component
 class DungeonBossService(
@@ -48,7 +40,6 @@ class DungeonBossService(
         portalLocation.world = entity.world
         portalService.createPortal(portalLocation, bossesEntity.leaveLocation)
 
-        dropBossLoot(entity, bossesEntity.mapTier)
         empowerOtherBosses(bossesEntity.bosses)
 
         if (bossesEntity.progressGranted) return
@@ -78,41 +69,8 @@ class DungeonBossService(
 
                 it.heal()
 
-                // TODO empower loot drop rates
+                val newLootMultiplier = it.getLootMultiplier() * DungeonBossSettings.EMPOWERED_LOOT_MULTIPLIER
+                it.setLootMultiplier(newLootMultiplier)
             }
-    }
-
-    private fun dropBossLoot(
-        entity: Entity,
-        mapTier: Int
-    ) {
-        val world = entity.world
-        val location = entity.location
-
-        val corruptionChance = DungeonBossSettings.calculateCorruptDropChance(mapTier)
-        dropCorruptionHearts(CorruptionSettings.getCorruptionItem(), corruptionChance, world, location)
-
-        val doubleCorruptionChance = DungeonBossSettings.calculateDoubleCorruptDropChance(mapTier)
-        dropCorruptionHearts(CorruptionSettings.getDoubleCorruptionItem(), doubleCorruptionChance, world, location)
-
-        // TODO only for testing -> remove
-        world.dropItemNaturally(location, ImitationSettings.getImitationItem())
-        world.dropItemNaturally(location, RefinementSettings.getRefinementItem())
-        world.dropItemNaturally(location, ReshapingSettings.getReshapingItem())
-        world.dropItemNaturally(location, TransfigurationSettings.getTransfigurationItem())
-    }
-
-    private fun dropCorruptionHearts(
-        corruptionHeart: ItemStack,
-        chance: Double,
-        world: World,
-        location: Location
-    ) {
-        val restChance = chance % 1
-        val extraDrop = Random.nextDouble() < restChance
-        val corruptionCount = chance.toInt() + if (extraDrop) 1 else 0
-
-        corruptionHeart.amount = corruptionCount
-        world.dropItemNaturally(location, corruptionHeart)
     }
 }
