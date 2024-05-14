@@ -71,27 +71,25 @@ class ManagedWorldService(
             .forEach { deleteWorld(it) }
     }
 
-    private fun updateDeleteTimer(it: ManagedWorldEntity) {
-        if (it.world.players.isEmpty()) {
-            it.deleteTimer++
+    private fun updateDeleteTimer(entity: ManagedWorldEntity) {
+        if (entity.world.players.isEmpty()) {
+            entity.deleteTimer++
         } else {
-            it.deleteTimer = 0
+            entity.deleteTimer = 0
         }
     }
 
     private fun deleteWorld(entity: ManagedWorldEntity) {
         val world = entity.world
 
-        SchedulingUtil.runTask {
-            val dungeonWorldDeleteEvent = DungeonWorldDeleteEvent(world)
-            EventGateway.apply(dungeonWorldDeleteEvent)
+        val dungeonWorldDeleteEvent = DungeonWorldDeleteEvent(world)
+        EventGateway.apply(dungeonWorldDeleteEvent)
 
-            PluginUtil.unloadWorld(world)
-            worldManageRepo.deleteById(world.name)
+        PluginUtil.unloadWorld(world)
+        worldManageRepo.deleteById(world.name)
 
-            val toDelete = File("$worldContainer/${world.name}")
-            fileHelper.deleteFile(toDelete)
-        }
+        val toDelete = File("$worldContainer/${world.name}")
+        fileHelper.deleteFile(toDelete)
 
         worldManageRepo.delete(entity)
     }
