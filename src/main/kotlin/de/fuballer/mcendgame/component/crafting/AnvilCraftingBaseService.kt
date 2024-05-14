@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.crafting
 
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.SchedulingUtil
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -89,6 +90,6 @@ abstract class AnvilCraftingBaseService : Listener {
         craftingItemStack.amount -= 1
         inventory.setItem(1, craftingItemStack)
 
-        event.isCancelled = true
+        event.cancel()
     }
 }

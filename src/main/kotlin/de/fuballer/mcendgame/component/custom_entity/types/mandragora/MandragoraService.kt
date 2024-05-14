@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.SummonerUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -17,7 +18,7 @@ class MandragoraService : Listener {
         if (event.damager.getCustomEntityType() != MandragoraEntityType) return
         if (event.damager.type != EntityType.AREA_EFFECT_CLOUD) return
 
-        event.isCancelled = true
+        event.cancel()
     }
 
     @EventHandler

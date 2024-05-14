@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.custom_entity.types.harpy
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EnemyUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.Sound
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.EntityType
@@ -23,6 +24,6 @@ class HarpyService : Listener {
         if (shooter.getCustomEntityType() != HarpyEntityType) return
         EnemyUtil.shootCustomProjectile(shooter, projectile, EntityType.SNOWBALL, Sound.ENTITY_SNOWBALL_THROW) as Snowball
 
-        event.isCancelled = true
+        event.cancel()
     }
 }

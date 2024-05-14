@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.item
 
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCraftingItem
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
 import org.bukkit.event.EventHandler
@@ -40,7 +41,7 @@ class UnmodifiableItemIntegrityService : Listener {
 
         if (unmodifiableItemCount > unmodifiableItemThreshold) {
             inventory.result = null
-            event.isCancelled = true
+            event.cancel()
         }
     }
 

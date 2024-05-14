@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.tweaks.antibug
 
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Material
 import org.bukkit.entity.Animals
@@ -20,7 +21,9 @@ class DungeonAntiBugService : Listener {
         if (!event.player.world.isDungeonWorld()) return
 
         val isChorusFruit = event.item.type == Material.CHORUS_FRUIT
-        event.isCancelled = isChorusFruit
+        if (isChorusFruit) {
+            event.cancel()
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -28,7 +31,9 @@ class DungeonAntiBugService : Listener {
         if (!event.entity.world.isDungeonWorld()) return
 
         val isEnderPearl = event.entity.type == EntityType.ENDER_PEARL
-        event.isCancelled = isEnderPearl
+        if (isEnderPearl) {
+            event.cancel()
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -40,7 +45,9 @@ class DungeonAntiBugService : Listener {
         val offHandMaterial = event.player.inventory.itemInOffHand.type
 
         val isBoatInHand = DungeonAntiBugSettings.BOATS.contains(mainHandMaterial) || DungeonAntiBugSettings.BOATS.contains(offHandMaterial)
-        event.isCancelled = isBoatInHand
+        if (isBoatInHand) {
+            event.cancel()
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -48,6 +55,6 @@ class DungeonAntiBugService : Listener {
         if (!event.rightClicked.world.isDungeonWorld()) return
         if (event.rightClicked !is Animals) return
 
-        event.isCancelled = true
+        event.cancel()
     }
 }

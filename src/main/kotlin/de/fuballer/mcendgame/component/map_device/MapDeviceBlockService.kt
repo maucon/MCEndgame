@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isMapDevice
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
@@ -60,7 +61,7 @@ class MapDeviceBlockService(
         block.type = Material.AIR
         block.world.dropItemNaturally(block.location, MapDeviceSettings.getMapDeviceItem())
 
-        event.isCancelled = true
+        event.cancel()
     }
 
     private fun useToolInMainhand(player: Player) {

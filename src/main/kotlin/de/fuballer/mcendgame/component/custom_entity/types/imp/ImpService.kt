@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.custom_entity.types.imp
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EnemyUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.Sound
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
@@ -21,7 +22,7 @@ class ImpService : Listener {
 
         val fireball = EnemyUtil.shootCustomProjectile(shooter, projectile, EntityType.SMALL_FIREBALL, Sound.ITEM_FIRECHARGE_USE) as Fireball
 
-        event.isCancelled = true
+        event.cancel()
 
         val creature = shooter as? Creature ?: return
         val target = creature.target ?: return

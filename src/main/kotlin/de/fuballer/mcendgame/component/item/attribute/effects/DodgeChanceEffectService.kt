@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -25,6 +26,6 @@ class DodgeChanceEffectService : Listener {
         val dodgeChance = dodgeAttributes.sum()
         if (Random.nextDouble() > dodgeChance) return
 
-        event.isCancelled = true
+        event.cancel()
     }
 }

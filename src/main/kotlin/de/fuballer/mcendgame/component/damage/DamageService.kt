@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.damage
 import de.fuballer.mcendgame.component.damage.calculators.*
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
@@ -54,7 +55,7 @@ class DamageService(
         EventGateway.apply(damageEvent)
 
         if (damageEvent.isCancelled) {
-            event.isCancelled = true
+            event.cancel()
             return
         }
 

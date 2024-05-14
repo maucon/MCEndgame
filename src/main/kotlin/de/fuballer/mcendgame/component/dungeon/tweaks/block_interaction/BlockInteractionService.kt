@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.tweaks.block_interaction
 
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
@@ -15,9 +16,12 @@ class BlockInteractionService : Listener {
         if (!event.player.world.isDungeonWorld()) return
         if (event.player.gameMode == GameMode.CREATIVE) return
 
-        val isBlockNotBreakable = !BlockInteractionSettings.BREAKABLE_BLOCKS.contains(event.block.type)
+        val isBlockBreakable = BlockInteractionSettings.BREAKABLE_BLOCKS.contains(event.block.type)
+        if (!isBlockBreakable) {
+            event.cancel()
+            return
+        }
 
-        event.isCancelled = isBlockNotBreakable
         event.isDropItems = false
     }
 
@@ -26,6 +30,6 @@ class BlockInteractionService : Listener {
         if (!event.player.world.isDungeonWorld()) return
         if (event.player.gameMode == GameMode.CREATIVE) return
 
-        event.isCancelled = true
+        event.cancel()
     }
 }

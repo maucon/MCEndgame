@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.crafting.imitation
 import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isImitation
 import org.bukkit.GameMode
 import org.bukkit.Material
@@ -68,6 +69,6 @@ class ImitationService : AnvilCraftingBaseService() {
         craftingItemStack.amount -= 1
         inventory.setItem(1, craftingItemStack)
 
-        event.isCancelled = true
+        event.cancel()
     }
 }
