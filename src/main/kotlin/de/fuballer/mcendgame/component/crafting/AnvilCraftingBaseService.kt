@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.inventory.PrepareAnvilEvent
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 
@@ -62,7 +63,7 @@ abstract class AnvilCraftingBaseService : Listener {
 
         val player = event.whoClicked as Player
 
-        if (player.gameMode != GameMode.CREATIVE) {
+        if (player.gameMode != GameMode.CREATIVE) { // FIXME this should be the repaircost
             if (player.level < 1) return
             player.level -= 1
         }
@@ -70,8 +71,7 @@ abstract class AnvilCraftingBaseService : Listener {
         val result = getResult(base.clone(), craftingItem)
         ItemUtil.updateAttributesAndLore(result)
 
-        val sound = if (result.type == Material.AIR) Sound.ENTITY_ITEM_BREAK else Sound.BLOCK_ANVIL_USE
-        player.world.playSound(player.location, sound, SoundCategory.PLAYERS, 1f, 1f)
+        playAnvilSound(result, player)
 
         when (event.action) {
             InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_SOME ->
@@ -86,10 +86,18 @@ abstract class AnvilCraftingBaseService : Listener {
         inventory.setItem(0, null)
         inventory.setItem(2, null)
 
-        val craftingItemStack = inventory.getItem(1) ?: return
-        craftingItemStack.amount -= 1
-        inventory.setItem(1, craftingItemStack)
+        decreaseCraftingItemStack(craftingItem, inventory)
 
         event.cancel()
+    }
+
+    private fun playAnvilSound(result: ItemStack, player: Player) {
+        val sound = if (result.type == Material.AIR) Sound.ENTITY_ITEM_BREAK else Sound.BLOCK_ANVIL_USE
+        player.world.playSound(player.location, sound, SoundCategory.PLAYERS, 1f, 1f)
+    }
+
+    private fun decreaseCraftingItemStack(craftingItem: ItemStack, inventory: Inventory) {
+        craftingItem.amount -= 1
+        inventory.setItem(1, craftingItem)
     }
 }
