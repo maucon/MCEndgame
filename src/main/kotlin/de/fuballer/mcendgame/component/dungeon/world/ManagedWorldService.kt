@@ -19,7 +19,7 @@ import java.io.File
 import java.util.*
 
 @Component
-class WorldManageService(
+class ManagedWorldService(
     private val worldManageRepo: ManagedWorldRepository,
     private val fileHelper: FileHelper,
     @Qualifier("worldContainer")

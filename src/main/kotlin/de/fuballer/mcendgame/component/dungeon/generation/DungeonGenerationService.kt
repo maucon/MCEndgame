@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationS
 import de.fuballer.mcendgame.component.dungeon.generation.data.Layout
 import de.fuballer.mcendgame.component.dungeon.seed.DungeonSeedService
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeService
-import de.fuballer.mcendgame.component.dungeon.world.WorldManageService
+import de.fuballer.mcendgame.component.dungeon.world.ManagedWorldService
 import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.event.DungeonGeneratedEvent
 import de.fuballer.mcendgame.event.EventGateway
@@ -20,7 +20,7 @@ import kotlin.random.Random
 
 @Component
 class DungeonGenerationService(
-    private val worldManageService: WorldManageService,
+    private val managedWorldService: ManagedWorldService,
     private val dungeonBuilderService: DungeonBuilderService,
     private val dungeonTypeService: DungeonTypeService,
     private val enemyGenerationService: EnemyGenerationService,
@@ -34,7 +34,7 @@ class DungeonGenerationService(
         leaveLocation: Location
     ): Location {
         val seed = dungeonSeedService.getSeed(player)
-        val world = worldManageService.createWorld(player, seed)
+        val world = managedWorldService.createWorld(player, seed)
         val random = Random(world.seed)
         val dungeonType = dungeonTypeService.getNextDungeonType(player)
         val (mapType, entityTypes, bossEntityTypes) = dungeonType.roll(random)
