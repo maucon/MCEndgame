@@ -43,10 +43,7 @@ class WorldManageService(
         }
     }
 
-    fun createWorld(
-        player: Player,
-        mapTier: Int
-    ): World {
+    fun createWorld(player: Player): World {
         val seed = dungeonSeedService.getSeed(player)
 
         val name = "${WorldSettings.WORLD_PREFIX}${UUID.randomUUID()}"
@@ -63,7 +60,7 @@ class WorldManageService(
             time = WorldSettings.WORLD_TIME
         }
 
-        val entity = ManagedWorldEntity(name, player, world, mapTier, 0)
+        val entity = ManagedWorldEntity(name, player, world)
         worldManageRepo.save(entity)
 
         return world
