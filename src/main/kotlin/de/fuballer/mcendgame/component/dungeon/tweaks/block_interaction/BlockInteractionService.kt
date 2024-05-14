@@ -10,20 +10,18 @@ import org.bukkit.event.block.BlockPlaceEvent
 
 @Component
 class BlockInteractionService : Listener {
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: BlockBreakEvent) {
         if (!event.player.world.isDungeonWorld()) return
         if (event.player.gameMode == GameMode.CREATIVE) return
 
-        if (BlockInteractionSettings.BREAKABLE_BLOCKS.contains(event.block.type)) {
-            event.isDropItems = false
-            return
-        }
+        val isBlockNotBreakable = !BlockInteractionSettings.BREAKABLE_BLOCKS.contains(event.block.type)
 
-        event.isCancelled = true
+        event.isCancelled = isBlockNotBreakable
+        event.isDropItems = false
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: BlockPlaceEvent) {
         if (!event.player.world.isDungeonWorld()) return
         if (event.player.gameMode == GameMode.CREATIVE) return

@@ -10,7 +10,7 @@ import java.lang.Integer.min
 @Component
 class ArmorDurabilityService : Listener {
     @EventHandler
-    fun onPlayerItemDamage(event: PlayerItemDamageEvent) {
+    fun on(event: PlayerItemDamageEvent) {
         if (!event.player.world.isDungeonWorld()) return
 
         event.damage = min(event.damage, ArmorDurabilitySettings.MAX_ARMOR_DAMAGE)

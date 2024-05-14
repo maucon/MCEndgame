@@ -38,8 +38,8 @@ dependencies {
     implementation 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
 
     implementation platform('com.intellectualsites.bom:bom-1.18.x:1.28')
-    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.6.3'
-    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.6.3'
+    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.9.2'
+    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.9.2'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'

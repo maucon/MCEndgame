@@ -15,39 +15,35 @@ import org.bukkit.event.player.PlayerItemConsumeEvent
 
 @Component
 class DungeonAntiBugService : Listener {
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerItemConsumeEvent) {
         if (!event.player.world.isDungeonWorld()) return
-        if (event.item.type == Material.CHORUS_FRUIT) {
-            event.isCancelled = true
-        }
+
+        val isChorusFruit = event.item.type == Material.CHORUS_FRUIT
+        event.isCancelled = isChorusFruit
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: ProjectileLaunchEvent) {
         if (!event.entity.world.isDungeonWorld()) return
-        if (event.entity.type == EntityType.ENDER_PEARL) {
-            event.isCancelled = true
-        }
+
+        val isEnderPearl = event.entity.type == EntityType.ENDER_PEARL
+        event.isCancelled = isEnderPearl
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) {
         if (!event.player.world.isDungeonWorld()) return
-
         if (event.action != Action.RIGHT_CLICK_BLOCK) return
 
         val mainHandMaterial = event.player.inventory.itemInMainHand.type
         val offHandMaterial = event.player.inventory.itemInOffHand.type
 
-        if (!DungeonAntiBugSettings.BOATS.contains(mainHandMaterial)
-            && !DungeonAntiBugSettings.BOATS.contains(offHandMaterial)
-        ) return
-
-        event.isCancelled = true
+        val isBoatInHand = DungeonAntiBugSettings.BOATS.contains(mainHandMaterial) || DungeonAntiBugSettings.BOATS.contains(offHandMaterial)
+        event.isCancelled = isBoatInHand
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEntityEvent) {
         if (!event.rightClicked.world.isDungeonWorld()) return
         if (event.rightClicked !is Animals) return
