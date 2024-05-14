@@ -19,4 +19,6 @@ object DungeonBossSettings {
     val BOSS_POTION_EFFECTS = listOf(
         PotionEffect(PotionEffectType.FIRE_RESISTANCE, Int.MAX_VALUE, 0, false, false)
     )
+
+    const val EMPOWERED_LOOT_MULTIPLIER = 1.2
 }
