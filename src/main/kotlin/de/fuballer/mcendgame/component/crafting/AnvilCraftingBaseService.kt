@@ -63,9 +63,9 @@ abstract class AnvilCraftingBaseService : Listener {
 
         val player = event.whoClicked as Player
 
-        if (player.gameMode != GameMode.CREATIVE) { // FIXME this should be the repaircost
-            if (player.level < 1) return
-            player.level -= 1
+        if (player.gameMode != GameMode.CREATIVE) {
+            if (player.level < repairCost) return
+            player.level -= repairCost
         }
 
         val result = getResult(base.clone(), craftingItem)
