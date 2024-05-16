@@ -12,8 +12,6 @@ import org.bukkit.inventory.ItemStack
 
 @Component
 class RefinementService : AnvilCraftingBaseService() {
-    override val repairCost = 2
-
     override fun isBaseValid(base: ItemStack) =
         Equipment.existsByMaterial(base.type)
                 && base.getCustomItemType() == null

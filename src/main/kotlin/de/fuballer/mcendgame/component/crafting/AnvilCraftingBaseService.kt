@@ -26,6 +26,11 @@ abstract class AnvilCraftingBaseService : Listener {
     abstract fun getResultPreview(base: ItemStack): ItemStack
     abstract fun getResult(base: ItemStack, craftingItem: ItemStack): ItemStack
 
+    open fun cleanupInventory(inventory: Inventory) {
+        inventory.setItem(0, null)
+        inventory.setItem(2, null)
+    }
+
     @EventHandler(ignoreCancelled = true)
     fun on(event: PrepareAnvilEvent) {
         val inventory = event.inventory
@@ -83,9 +88,7 @@ abstract class AnvilCraftingBaseService : Listener {
             else -> return
         }
 
-        inventory.setItem(0, null)
-        inventory.setItem(2, null)
-
+        cleanupInventory(inventory)
         decreaseCraftingItemStack(craftingItem, inventory)
 
         event.cancel()
