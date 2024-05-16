@@ -10,8 +10,6 @@ import org.bukkit.inventory.ItemStack
 
 @Component
 class TransfigurationService : AnvilCraftingBaseService() {
-    override val repairCost = 9
-
     override fun isBaseValid(base: ItemStack) =
         Equipment.existsByMaterial(base.type)
                 && hasMultipleAttributes(base)

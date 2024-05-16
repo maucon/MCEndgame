@@ -16,8 +16,6 @@ import kotlin.random.Random
 
 @Component
 class CorruptionService : AnvilCraftingBaseService() {
-    override val repairCost = 6
-
     override fun isBaseValid(base: ItemStack) =
         Equipment.existsByMaterial(base.type)
 

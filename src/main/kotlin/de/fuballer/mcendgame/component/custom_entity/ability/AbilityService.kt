@@ -47,14 +47,14 @@ class AbilityService(
         val entityAbility = entityAbilityRepo.findById(uuid) ?: return
         entityAbility.abilityRunner?.cancel()
 
-        entityAbilityRepo.delete(uuid)
+        entityAbilityRepo.deleteById(uuid)
     }
 
     private fun removeInactive() {
         entityAbilityRepo.findAll()
             .filter { it.abilityRunner == null || it.abilityRunner!!.isCancelled() }
             .forEach {
-                entityAbilityRepo.delete(it.id)
+                entityAbilityRepo.delete(it)
             }
     }
 

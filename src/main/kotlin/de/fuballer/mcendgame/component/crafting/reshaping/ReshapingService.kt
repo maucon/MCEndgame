@@ -10,8 +10,6 @@ import org.bukkit.inventory.ItemStack
 
 @Component
 class ReshapingService : AnvilCraftingBaseService() {
-    override val repairCost = 23
-
     override fun isBaseValid(base: ItemStack) =
         base.getCustomItemType() != null
 

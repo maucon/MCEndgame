@@ -4,4 +4,4 @@ import de.fuballer.mcendgame.framework.InMemoryMapRepository
 import de.fuballer.mcendgame.framework.annotation.Component
 
 @Component
-class WorldManageRepository : InMemoryMapRepository<String, ManagedWorldEntity>()
+class ManagedWorldRepository : InMemoryMapRepository<String, ManagedWorldEntity>()

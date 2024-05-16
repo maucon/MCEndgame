@@ -46,6 +46,6 @@ class MapDeviceRepository(
 
     fun deleteByLocation(location: Location) {
         val entity = findByLocation(location) ?: return
-        delete(entity.id)
+        delete(entity)
     }
 }

@@ -83,6 +83,6 @@ class DungeonTransitionService(
 
     @EventHandler
     fun on(event: DungeonWorldDeleteEvent) {
-        dungeonTransitionRepo.delete(event.world.name)
+        dungeonTransitionRepo.deleteById(event.world.name)
     }
 }

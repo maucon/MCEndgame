@@ -9,6 +9,5 @@ data class ManagedWorldEntity(
 
     var player: Player,
     var world: World,
-    var mapTier: Int,
-    var deleteTimer: Int
+    var deleteTimer: Int = 0
 ) : Entity<String>

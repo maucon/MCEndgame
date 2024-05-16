@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.EnemyHealingService.Companion.heal
-import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
+import de.fuballer.mcendgame.component.dungeon.world.db.ManagedWorldRepository
 import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
@@ -24,7 +24,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 @Component
 class DungeonBossService(
     private val dungeonBossesRepo: DungeonBossesRepository,
-    private val worldManageRepo: WorldManageRepository,
+    private val worldManageRepo: ManagedWorldRepository,
     private val portalService: PortalService
 ) : Listener {
     @EventHandler

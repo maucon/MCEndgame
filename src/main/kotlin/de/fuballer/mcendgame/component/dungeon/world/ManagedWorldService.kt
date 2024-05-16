@@ -1,8 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.world
 
-import de.fuballer.mcendgame.component.dungeon.seed.DungeonSeedService
 import de.fuballer.mcendgame.component.dungeon.world.db.ManagedWorldEntity
-import de.fuballer.mcendgame.component.dungeon.world.db.WorldManageRepository
+import de.fuballer.mcendgame.component.dungeon.world.db.ManagedWorldRepository
 import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -20,9 +19,8 @@ import java.io.File
 import java.util.*
 
 @Component
-class WorldManageService(
-    private val worldManageRepo: WorldManageRepository,
-    private val dungeonSeedService: DungeonSeedService,
+class ManagedWorldService(
+    private val worldManageRepo: ManagedWorldRepository,
     private val fileHelper: FileHelper,
     @Qualifier("worldContainer")
     private val worldContainer: File
@@ -35,20 +33,14 @@ class WorldManageService(
     }
 
     override fun terminate() {
-        worldManageRepo.findAll().forEach {
-            PluginUtil.unloadWorld(it.world)
-
-            val toDelete = File("$worldContainer/${it.world.name}")
-            fileHelper.deleteFile(toDelete)
-        }
+        worldManageRepo.findAll()
+            .forEach { deleteWorld(it) }
     }
 
     fun createWorld(
         player: Player,
-        mapTier: Int
+        seed: Long
     ): World {
-        val seed = dungeonSeedService.getSeed(player)
-
         val name = "${WorldSettings.WORLD_PREFIX}${UUID.randomUUID()}"
         val worldCreator = WorldCreator(name)
             .seed(seed)
@@ -63,7 +55,7 @@ class WorldManageService(
             time = WorldSettings.WORLD_TIME
         }
 
-        val entity = ManagedWorldEntity(name, player, world, mapTier, 0)
+        val entity = ManagedWorldEntity(name, player, world)
         worldManageRepo.save(entity)
 
         return world
@@ -72,30 +64,33 @@ class WorldManageService(
     private fun checkWorldTimers() {
         worldManageRepo.findAll()
             .map {
-                if (it.world.players.isEmpty()) {
-                    it.deleteTimer++
-                } else {
-                    it.deleteTimer = 0
-                }
-
+                updateDeleteTimer(it)
                 worldManageRepo.save(it)
             }
             .filter { it.deleteTimer > WorldSettings.MAX_WORLD_EMPTY_TIME }
-            .forEach { deleteWorld(it.world) }
+            .forEach { deleteWorld(it) }
     }
 
-    private fun deleteWorld(world: World) {
-        val name = world.name
-
-        SchedulingUtil.runTask {
-            val dungeonWorldDeleteEvent = DungeonWorldDeleteEvent(world)
-            EventGateway.apply(dungeonWorldDeleteEvent)
-
-            PluginUtil.unloadWorld(world)
-            worldManageRepo.delete(name)
-
-            val toDelete = File("$worldContainer/$name")
-            fileHelper.deleteFile(toDelete)
+    private fun updateDeleteTimer(entity: ManagedWorldEntity) {
+        if (entity.world.players.isEmpty()) {
+            entity.deleteTimer++
+        } else {
+            entity.deleteTimer = 0
         }
+    }
+
+    private fun deleteWorld(entity: ManagedWorldEntity) {
+        val world = entity.world
+
+        val dungeonWorldDeleteEvent = DungeonWorldDeleteEvent(world)
+        EventGateway.apply(dungeonWorldDeleteEvent)
+
+        PluginUtil.unloadWorld(world)
+        worldManageRepo.deleteById(world.name)
+
+        val toDelete = File("$worldContainer/${world.name}")
+        fileHelper.deleteFile(toDelete)
+
+        worldManageRepo.delete(entity)
     }
 }

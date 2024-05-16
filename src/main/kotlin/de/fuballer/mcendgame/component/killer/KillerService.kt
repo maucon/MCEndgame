@@ -4,10 +4,10 @@ import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.component.killer.db.KillerEntity
 import de.fuballer.mcendgame.component.killer.db.KillerRepository
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.InventoryExtension.getCustomType
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
-import org.bukkit.entity.Projectile
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -23,15 +23,11 @@ class KillerService(
         val damaged = event.entity
         if (damaged !is Player) return
 
-        var damageCause = event.damager
-
-        if (damageCause is Projectile && damageCause.shooter is Entity) {
-            damageCause.shooter.also { damageCause = it as Entity }
-        }
+        val damager = EntityUtil.getLivingEntityDamager(event.damager) ?: return
 
         if (event.finalDamage < damaged.health) return
 
-        val entity = KillerEntity(damaged.uniqueId, damageCause)
+        val entity = KillerEntity(damaged.uniqueId, damager)
         killerRepo.save(entity)
     }
 
@@ -39,6 +35,6 @@ class KillerService(
     fun on(event: InventoryClickEvent) {
         if (event.inventory.getCustomType() != CustomInventoryType.KILLER) return
 
-        event.isCancelled = true
+        event.cancel()
     }
 }

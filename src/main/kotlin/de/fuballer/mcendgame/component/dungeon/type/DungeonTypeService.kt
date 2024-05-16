@@ -14,15 +14,16 @@ class DungeonTypeService(
     private val playerDungeonTypeRepo: PlayerDungeonTypeRepository
 ) : Listener {
     @EventHandler
-    fun onDungeonComplete(event: DungeonCompleteEvent) {
-        playerDungeonTypeRepo.delete(event.player.uniqueId)
+    fun on(event: DungeonCompleteEvent) {
+        playerDungeonTypeRepo.deleteById(event.player.uniqueId)
     }
 
     fun getNextDungeonType(player: Player): DungeonType {
         val playerId = player.uniqueId
 
         if (playerDungeonTypeRepo.exists(playerId)) {
-            return playerDungeonTypeRepo.getById(playerId).dungeonType
+            val entity = playerDungeonTypeRepo.getById(playerId)
+            return entity.dungeonType
         }
 
         val dungeonType = RandomUtil.pick(DungeonTypeSettings.DUNGEON_TYPE_WEIGHTS).option

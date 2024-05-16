@@ -52,6 +52,6 @@ class RemainingService(
 
     @EventHandler
     fun on(event: DungeonWorldDeleteEvent) {
-        remainingRepo.delete(event.world.name)
+        remainingRepo.deleteById(event.world.name)
     }
 }

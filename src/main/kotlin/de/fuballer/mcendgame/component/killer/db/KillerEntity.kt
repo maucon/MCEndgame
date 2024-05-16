@@ -7,7 +7,6 @@ import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Ageable
-import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
@@ -21,7 +20,7 @@ private val DECIMAL_FORMAT = DecimalFormat("#.##")
 
 class KillerEntity(
     override var id: UUID,
-    entity: Entity
+    entity: LivingEntity
 ) : de.fuballer.mcendgame.framework.stereotype.Entity<UUID> {
 
     private var spawnEgg: ItemStack
@@ -48,13 +47,14 @@ class KillerEntity(
         inventory.setItem(9, spawnEgg)
         inventory.setItem(10, damage)
         inventory.setItem(11, health)
+
         (0..5).forEach { inventory.setItem(12 + it, equipment[it]) }
         potions.indices.forEach { inventory.setItem(26 - it, potions[it]) }
 
         return inventory
     }
 
-    private fun getSpawnEgg(entity: Entity): ItemStack {
+    private fun getSpawnEgg(entity: LivingEntity): ItemStack {
         val spawnEgg = ItemStack(KillerSettings.DEFAULT_SPAWN_EGG)
 
         val meta = spawnEgg.itemMeta ?: return spawnEgg
@@ -65,10 +65,8 @@ class KillerEntity(
         return spawnEgg.apply { itemMeta = meta }
     }
 
-    private fun getEquipment(entity: Entity): Array<ItemStack?> {
+    private fun getEquipment(entity: LivingEntity): Array<ItemStack?> {
         val equipment = arrayOfNulls<ItemStack>(6)
-
-        if (entity !is LivingEntity) return equipment
         val entityEquipment = entity.equipment ?: return equipment
 
         equipment[0] = entityEquipment.itemInMainHand.clone()
@@ -81,8 +79,7 @@ class KillerEntity(
         return equipment
     }
 
-    private fun getPotions(entity: Entity): List<ItemStack> {
-        if (entity !is LivingEntity) return listOf()
+    private fun getPotions(entity: LivingEntity): List<ItemStack> {
         return entity.activePotionEffects.map {
             val potion = ItemStack(Material.POTION, 1)
             val meta = potion.itemMeta as PotionMeta? ?: return@map potion
@@ -94,35 +91,29 @@ class KillerEntity(
         }
     }
 
-    private fun getDamage(entity: Entity): ItemStack {
+    private fun getDamage(entity: LivingEntity): ItemStack {
         val damage = ItemStack(Material.RED_DYE, 1)
         val meta = damage.itemMeta ?: return damage
 
-        meta.setDisplayName(ChatColor.RED.toString() + "0 Damage")
-        damage.itemMeta = meta
-
-        if (entity !is LivingEntity) return damage
         val attribute = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) ?: return damage
 
         val formattedValue = DECIMAL_FORMAT.format(attribute.baseValue)
         meta.setDisplayName(ChatColor.RED.toString() + formattedValue + " Damage")
         damage.itemMeta = meta
+
         return damage
     }
 
-    private fun getHealth(entity: Entity): ItemStack {
+    private fun getHealth(entity: LivingEntity): ItemStack {
         val health = ItemStack(Material.GREEN_DYE, 1)
         val meta = health.itemMeta ?: return health
 
-        meta.setDisplayName(ChatColor.GREEN.toString() + "0 Health")
-        health.itemMeta = meta
-
-        if (entity !is LivingEntity) return health
         val attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) ?: return health
 
         val formattedValue = DECIMAL_FORMAT.format(attribute.baseValue)
         meta.setDisplayName(ChatColor.RED.toString() + formattedValue + " Health")
         health.itemMeta = meta
+
         return health
     }
 }

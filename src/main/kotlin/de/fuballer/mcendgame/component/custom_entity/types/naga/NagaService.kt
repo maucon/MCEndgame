@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.custom_entity.types.poison_spit.PoisonSpi
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EnemyUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.Sound
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.EntityType
@@ -26,6 +27,6 @@ class NagaService : Listener {
         val spit = EnemyUtil.shootCustomProjectile(shooter, projectile, EntityType.LLAMA_SPIT, Sound.ENTITY_LLAMA_SPIT) as LlamaSpit
         spit.customName = PoisonSpitEntityType.customName
 
-        event.isCancelled = true
+        event.cancel()
     }
 }

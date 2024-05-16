@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.filter
 import de.fuballer.mcendgame.component.filter.db.FilterRepository
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.InventoryExtension.getCustomType
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.Player
@@ -22,7 +23,7 @@ class FilterService(
         val filterInventory = event.inventory
         if (filterInventory.getCustomType() != CustomInventoryType.FILTER) return
 
-        event.isCancelled = true
+        event.cancel()
 
         val action = event.action
         if (action != InventoryAction.MOVE_TO_OTHER_INVENTORY && action != InventoryAction.PICKUP_ALL) return
@@ -57,6 +58,6 @@ class FilterService(
         val entity = filterRepo.findById(uuid) ?: return
         if (!entity.filters.contains(item)) return
 
-        event.isCancelled = true
+        event.cancel()
     }
 }

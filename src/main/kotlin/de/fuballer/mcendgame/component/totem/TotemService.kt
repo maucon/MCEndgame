@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.totem
 
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.InventoryExtension.getCustomType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getTotem
 import de.fuballer.mcendgame.util.extension.PlayerExtension.setTotems
@@ -21,7 +22,7 @@ class TotemService : Listener {
         val totemInventory = event.inventory
         if (totemInventory.getCustomType() != CustomInventoryType.TOTEM) return
 
-        event.isCancelled = true
+        event.cancel()
 
         if (event.whoClicked.world.isDungeonWorld()) {
             event.whoClicked.sendMessage(TotemSettings.CANNOT_CHANGE_TOTEM_MESSAGE)

@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestTotemTier
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.DyeColor
@@ -59,6 +60,6 @@ class WolfCompanionEffectService : Listener {
 
         if (event.target !is Player) return
 
-        event.isCancelled = true
+        event.cancel()
     }
 }

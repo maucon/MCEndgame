@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.component.custom_entity.types.leech.LeechEntityType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.SummonerUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.entity.Bee
 import org.bukkit.entity.Creature
 import org.bukkit.event.EventHandler
@@ -18,10 +19,10 @@ class HatcheryService(
     private val summonerService: SummonerService
 ) : Listener {
     @EventHandler
-    fun onEntityShootBow(event: EntityShootBowEvent) {
+    fun on(event: EntityShootBowEvent) {
         if (event.entity.getCustomEntityType() != HatcheryEntityType) return
 
-        event.isCancelled = true
+        event.cancel()
         summonLeech(event)
     }
 

@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.InventoryUtil
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.InventoryExtension.getCustomType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getMapDeviceAction
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getLastMapDevice
@@ -37,8 +38,9 @@ class MapDeviceInventoryService(
         if (!block.hasMetadata(MapDeviceSettings.MAP_DEVICE_BLOCK_METADATA_KEY)) return
 
         val player = event.player
-        event.isCancelled = true
         val location = block.location
+
+        event.cancel()
 
         val entity = mapDeviceRepo.findByLocation(location)
             ?: MapDeviceEntity(location).apply { mapDeviceRepo.save(this) }
@@ -51,7 +53,7 @@ class MapDeviceInventoryService(
     @EventHandler
     fun on(event: InventoryClickEvent) {
         if (event.inventory.getCustomType() != CustomInventoryType.MAP_DEVICE) return
-        event.isCancelled = true
+        event.cancel()
 
         val inventory = event.inventory
         val clickedSlot = event.rawSlot

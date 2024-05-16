@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.looting
+package de.fuballer.mcendgame.component.dungeon.loot
 
 import com.google.common.math.IntMath.pow
 import de.fuballer.mcendgame.component.crafting.corruption.CorruptionSettings
@@ -12,7 +12,7 @@ import de.fuballer.mcendgame.component.totem.data.TotemType
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 
-object LootingSettings {
+object LootSettings {
     const val ITEMS_DROP_CHANCE = 0.015f
     const val ITEMS_DROP_CHANCE_PER_LOOTING = 0.008f
     const val ITEMS_DROP_CHANCE_DIAMOND = 0.004f

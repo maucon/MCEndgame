@@ -18,8 +18,8 @@ class CreeperExplodeService : Listener {
         if (!event.entity.world.isDungeonWorld()) return
 
         val creeper = entity as LivingEntity
-        creeper.activePotionEffects.forEach { potionEffect ->
-            creeper.removePotionEffect(potionEffect.type)
-        }
+
+        creeper.activePotionEffects
+            .forEach { creeper.removePotionEffect(it.type) }
     }
 }

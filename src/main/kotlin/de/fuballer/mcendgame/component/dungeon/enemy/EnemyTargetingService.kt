@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.enemy
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.DungeonUtil
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -18,13 +19,13 @@ class EnemyTargetingService : Listener {
         if (!DungeonUtil.isEnemyOrEnemyProjectile(entity)) return
 
         if (event.reason == TargetReason.TARGET_ATTACKED_NEARBY_ENTITY) {
-            event.isCancelled = true
+            event.cancel()
             return
         }
 
         val target = event.target ?: return
-        if (!DungeonUtil.isEnemyOrEnemyProjectile(target)) return
-
-        event.isCancelled = true
+        if (DungeonUtil.isEnemyOrEnemyProjectile(target)) {
+            event.cancel()
+        }
     }
 }

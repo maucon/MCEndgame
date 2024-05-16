@@ -20,15 +20,17 @@ class Portal(
 ) : Entity<UUID> {
     override var id: UUID
 
-    private var status = PortalStatus.CREATED
-
     init {
+        val world = location.world
+            ?: throw IllegalArgumentException("World not set")
+
         skin.prepare(location)
 
+        // initially spawn the armorstand out of player vision to avoid rendering the armorstand for a split second
         val offsetLocation = location.clone()
         offsetLocation.y = -66.0
 
-        val portalEntity = (location.world!!.spawnEntity(offsetLocation, EntityType.ARMOR_STAND, false) as ArmorStand)
+        val portalEntity = (world.spawnEntity(offsetLocation, EntityType.ARMOR_STAND, false) as ArmorStand)
 
         portalEntity.apply {
             isInvulnerable = true
@@ -46,25 +48,13 @@ class Portal(
 
         id = portalEntity.uniqueId
 
-        open()
-    }
-
-    fun open() {
-        if (status != PortalStatus.CREATED) return
-        status = PortalStatus.OPEN
-
-        val entity = WorldUtil.getEntity(location.world!!, id)
-
         SchedulingUtil.scheduleSyncDelayedTask {
-            entity?.teleport(location)
+            portalEntity.teleport(location)
             skin.play()
         }
     }
 
     fun close() {
-        if (status != PortalStatus.OPEN) return
-        status = PortalStatus.CLOSED
-
         skin.cancel()
 
         val entity = WorldUtil.getEntity(location.world!!, id) ?: return

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.looting
+package de.fuballer.mcendgame.component.dungeon.loot
 
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -11,7 +11,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
 @Component
-class BossLootingService : Listener {
+class BossLootService : Listener {
     @EventHandler
     fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity
@@ -28,13 +28,13 @@ class BossLootingService : Listener {
         val world = entity.world
         val location = entity.location
 
-        val orbAmountChance = LootingSettings.getBossOrbAmount(mapTier)
+        val orbAmountChance = LootSettings.getBossOrbAmount(mapTier)
         val lootMultiplier = entity.getLootMultiplier()
         val increasedOrbAmountChance = orbAmountChance * lootMultiplier
         val orbAmount = increasedOrbAmountChance.toInt() + if (Math.random() < increasedOrbAmountChance % 1) 1 else 0
 
         for (i in 0 until orbAmount) {
-            val orb = RandomUtil.pick(LootingSettings.BOSS_ORBS).option.clone()
+            val orb = RandomUtil.pick(LootSettings.BOSS_ORBS).option.clone()
             world.dropItemNaturally(location, orb)
         }
     }

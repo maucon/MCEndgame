@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.looting
+package de.fuballer.mcendgame.component.dungeon.loot
 
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.enchantment.EquipmentEnchantmentService
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
+import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.EntityExtension.isDropEquipmentDisabled
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
@@ -23,7 +24,7 @@ import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
 @Component
-class LootingService(
+class LootService(
     private val killStreakRepo: KillStreakRepository,
     private val equipmentEnchantmentService: EquipmentEnchantmentService
 ) : Listener {
@@ -32,6 +33,7 @@ class LootingService(
         val entity = event.entity
         if (!entity.isEnemy()) return
         if (entity.isMinion()) return
+        if (entity.isBoss()) return
 
         dropTotem(entity)
         dropCustomItems(entity, entity.world)
@@ -43,7 +45,7 @@ class LootingService(
     private fun dropEquipment(entity: LivingEntity, world: World) {
         val looting = getLootingLevel(entity.killer)
         val killStreak = killStreakRepo.findById(world.name)?.streak ?: 0
-        val streakDropChance = 1 + killStreak * LootingSettings.GEAR_DROP_CHANCE_MULTIPLIER_PER_KILLSTREAK
+        val streakDropChance = 1 + killStreak * LootSettings.GEAR_DROP_CHANCE_MULTIPLIER_PER_KILLSTREAK
 
         for (item in getEquipment(entity.equipment)) {
             val finalDropChance = getItemDropChance(item, looting) * streakDropChance
@@ -56,9 +58,9 @@ class LootingService(
 
     private fun dropCustomItems(entity: LivingEntity, world: World) {
         val mapTier = entity.getMapTier() ?: return
-        if (Random.nextDouble() > LootingSettings.getCustomItemDropChance(mapTier)) return
+        if (Random.nextDouble() > LootSettings.getCustomItemDropChance(mapTier)) return
 
-        val customItemType = RandomUtil.pick(LootingSettings.CUSTOM_ITEM_OPTIONS).option
+        val customItemType = RandomUtil.pick(LootSettings.CUSTOM_ITEM_OPTIONS).option
         val item = ItemUtil.createCustomItem(customItemType)
 
         val itemMeta = item.itemMeta!!
@@ -83,16 +85,16 @@ class LootingService(
         val typeString = item.type.toString()
 
         if (typeString.contains("DIAMOND")) {
-            return LootingSettings.ITEMS_DROP_CHANCE_DIAMOND + LootingSettings.ITEMS_DROP_CHANCE_DIAMOND_PER_LOOTING * looting
+            return LootSettings.ITEMS_DROP_CHANCE_DIAMOND + LootSettings.ITEMS_DROP_CHANCE_DIAMOND_PER_LOOTING * looting
         }
         if (typeString.contains("NETHERITE")) {
-            return LootingSettings.ITEMS_DROP_CHANCE_NETHERITE + LootingSettings.ITEMS_DROP_CHANCE_NETHERITE_PER_LOOTING * looting
+            return LootSettings.ITEMS_DROP_CHANCE_NETHERITE + LootSettings.ITEMS_DROP_CHANCE_NETHERITE_PER_LOOTING * looting
         }
         if (typeString.contains("TRIDENT")) {
             return 0.0f
         }
 
-        return LootingSettings.ITEMS_DROP_CHANCE + LootingSettings.ITEMS_DROP_CHANCE_PER_LOOTING * looting
+        return LootSettings.ITEMS_DROP_CHANCE + LootSettings.ITEMS_DROP_CHANCE_PER_LOOTING * looting
     }
 
     private fun getEquipment(entityEquipment: EntityEquipment?): List<ItemStack> {
@@ -109,11 +111,11 @@ class LootingService(
     }
 
     private fun dropTotem(entity: LivingEntity) {
-        if (Random.nextDouble() > LootingSettings.TOTEM_DROP_CHANCE) return
+        if (Random.nextDouble() > LootSettings.TOTEM_DROP_CHANCE) return
 
         val mapTier = entity.getMapTier() ?: 1
-        val type = RandomUtil.pick(LootingSettings.TOTEM_TYPES).option
-        val tier = RandomUtil.pick(LootingSettings.TOTEM_TIERS, mapTier).option
+        val type = RandomUtil.pick(LootSettings.TOTEM_TYPES).option
+        val tier = RandomUtil.pick(LootSettings.TOTEM_TIERS, mapTier).option
 
         val totem = Totem(type, tier)
         val totemItem = totem.toItem()

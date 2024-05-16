@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.component.custom_entity.types.chupacabra.Chupacabra
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.SummonerUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.entity.Spellcaster
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -17,17 +18,16 @@ class NecromancerService(
     private val summonerService: SummonerService
 ) : Listener {
     @EventHandler
-    fun onEntitySpellCast(event: EntitySpellCastEvent) {
+    fun on(event: EntitySpellCastEvent) {
         if (event.entity.getCustomEntityType() != NecromancerEntityType) return
 
         if (event.spell == Spellcaster.Spell.SUMMON_VEX) {
+            event.cancel()
             summonVexSpell(event)
         }
     }
 
     private fun summonVexSpell(event: EntitySpellCastEvent) {
-        event.isCancelled = true
-
         val necromancer = event.entity
         val minions = SummonerUtil.getMinionEntities(necromancer)
 

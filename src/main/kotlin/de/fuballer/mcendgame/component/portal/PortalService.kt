@@ -14,6 +14,7 @@ import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Location
 import org.bukkit.Server
 import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
@@ -41,11 +42,7 @@ class PortalService(
         val portal = portalRepo.getById(entity.uniqueId)
 
         if (!server.worlds.contains(portal.target.world)) {
-            player.sendMessage(PortalSettings.INSTANCE_CLOSED)
-
-            val failedEvent = PortalFailedEvent(portal, player)
-            EventGateway.apply(failedEvent)
-
+            failPortalUsage(player, portal)
             return
         }
 
@@ -75,5 +72,12 @@ class PortalService(
         portalRepo.save(portal)
 
         return portal
+    }
+
+    private fun failPortalUsage(player: Player, portal: Portal) {
+        player.sendMessage(PortalSettings.INSTANCE_CLOSED)
+
+        val failedEvent = PortalFailedEvent(portal, player)
+        EventGateway.apply(failedEvent)
     }
 }

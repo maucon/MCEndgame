@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.MathUtil
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
@@ -27,6 +28,6 @@ class StealthEffectService : Listener {
         val angle = MathUtil.getFacingAngle(event.entity, target)
         if (angle < 90) return
 
-        event.isCancelled = true
+        event.cancel()
     }
 }

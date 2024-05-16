@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.crafting
 
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.SchedulingUtil
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -13,6 +14,7 @@ import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.inventory.PrepareAnvilEvent
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 
@@ -23,6 +25,11 @@ abstract class AnvilCraftingBaseService : Listener {
     abstract fun isCraftingItemValid(craftingItem: ItemStack): Boolean
     abstract fun getResultPreview(base: ItemStack): ItemStack
     abstract fun getResult(base: ItemStack, craftingItem: ItemStack): ItemStack
+
+    open fun cleanupInventory(inventory: Inventory) {
+        inventory.setItem(0, null)
+        inventory.setItem(2, null)
+    }
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: PrepareAnvilEvent) {
@@ -62,15 +69,14 @@ abstract class AnvilCraftingBaseService : Listener {
         val player = event.whoClicked as Player
 
         if (player.gameMode != GameMode.CREATIVE) {
-            if (player.level < 1) return
-            player.level -= 1
+            if (player.level < repairCost) return
+            player.level -= repairCost
         }
 
         val result = getResult(base.clone(), craftingItem)
         ItemUtil.updateAttributesAndLore(result)
 
-        val sound = if (result.type == Material.AIR) Sound.ENTITY_ITEM_BREAK else Sound.BLOCK_ANVIL_USE
-        player.world.playSound(player.location, sound, SoundCategory.PLAYERS, 1f, 1f)
+        playAnvilSound(result, player)
 
         when (event.action) {
             InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_SOME ->
@@ -82,13 +88,19 @@ abstract class AnvilCraftingBaseService : Listener {
             else -> return
         }
 
-        inventory.setItem(0, null)
-        inventory.setItem(2, null)
+        cleanupInventory(inventory)
+        decreaseCraftingItemStack(craftingItem, inventory)
 
-        val craftingItemStack = inventory.getItem(1) ?: return
-        craftingItemStack.amount -= 1
-        inventory.setItem(1, craftingItemStack)
+        event.cancel()
+    }
 
-        event.isCancelled = true
+    private fun playAnvilSound(result: ItemStack, player: Player) {
+        val sound = if (result.type == Material.AIR) Sound.ENTITY_ITEM_BREAK else Sound.BLOCK_ANVIL_USE
+        player.world.playSound(player.location, sound, SoundCategory.PLAYERS, 1f, 1f)
+    }
+
+    private fun decreaseCraftingItemStack(craftingItem: ItemStack, inventory: Inventory) {
+        craftingItem.amount -= 1
+        inventory.setItem(1, craftingItem)
     }
 }

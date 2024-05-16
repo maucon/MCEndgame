@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.technical.packet.SendingPacketAdapter
 import de.fuballer.mcendgame.util.extension.EntityExtension.isHideEquipment
+import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.plugin.java.JavaPlugin
 
 @Component
@@ -30,7 +31,7 @@ class CustomEntityPacketManager(
             val entity = protocolManager.getEntityFromID(world, entityId) ?: return@SendingPacketAdapter
 
             if (entity.isHideEquipment()) {
-                event.isCancelled = true
+                event.cancel()
             }
         }
 }
