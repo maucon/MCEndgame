@@ -14,6 +14,7 @@ import de.fuballer.mcendgame.util.extension.EntityExtension.setPortalLocation
 import de.fuballer.mcendgame.util.extension.ListExtension.cycle
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import java.util.*
 
@@ -53,8 +54,8 @@ class DungeonBossGenerationService(
 
         boss.setDisableDropEquipment()
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
+        boss.getAttribute(Attribute.GENERIC_FOLLOW_RANGE)?.baseValue = DungeonBossSettings.FOLLOW_RANGE
         boss.removeWhenFarAway = false
-        boss.setAI(false) // TODO boss should unfreeze when targeting player
 
         return boss
     }
