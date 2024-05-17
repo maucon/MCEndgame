@@ -7,16 +7,16 @@ object BuffCowEntityType : CustomEntityType {
     override val type = EntityType.WITHER_SKELETON
 
     override val customName = "Buff Cow"
-    override val canHaveWeapons = true
+    override val canHaveWeapons = false
     override val isRanged = false
-    override val canHaveArmor = true
+    override val canHaveArmor = false
     override val hideEquipment = true
 
-    override val baseHealth = 25.0
-    override val healthPerTier = 0.0
-    override val baseDamage = 4.0
-    override val damagePerTier = 2.0
-    override val baseSpeed = 0.22
+    override val baseHealth = 200.0
+    override val healthPerTier = 10.0
+    override val baseDamage = 0.0
+    override val damagePerTier = 0.0
+    override val baseSpeed = 0.15
     override val speedPerTier = 0.0
 
     override val abilities = null

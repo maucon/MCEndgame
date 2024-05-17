@@ -24,7 +24,7 @@ object MinotaurEntityType : CustomEntityType {
     override val baseDamage = 12.0
     override val damagePerTier = 3.0
     override val baseSpeed = 0.4
-    override val speedPerTier = 0.0
+    override val speedPerTier = 0.002
 
     override val sounds = EntitySoundData.create("minotaur")
     override val abilities: List<RandomOption<Ability>> = listOf(

@@ -8,9 +8,9 @@ object NagaEntityType : CustomEntityType {
     override val type = EntityType.SKELETON
 
     override val customName = "Naga"
-    override val canHaveWeapons = true
+    override val canHaveWeapons = false
     override val isRanged = true
-    override val canHaveArmor = true
+    override val canHaveArmor = false
     override val hideEquipment = true
 
     override val baseHealth = 10.0
