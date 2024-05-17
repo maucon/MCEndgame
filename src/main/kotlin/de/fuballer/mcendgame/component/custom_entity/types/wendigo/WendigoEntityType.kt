@@ -1,7 +1,12 @@
 package de.fuballer.mcendgame.component.custom_entity.types.wendigo
 
 import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
+import de.fuballer.mcendgame.component.custom_entity.ability.Ability
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ChangeTargetAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.PoisonCloudAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.SummonVinesAbility
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.entity.EntityType
 
 object WendigoEntityType : CustomEntityType {
@@ -21,5 +26,9 @@ object WendigoEntityType : CustomEntityType {
     override val speedPerTier = 0.005
 
     override val sounds = EntitySoundData.create("wendigo")
-    override val abilities = null
+    override val abilities: List<RandomOption<Ability>> = listOf(
+        RandomOption(25, ChangeTargetAbility),
+        RandomOption(25, PoisonCloudAbility),
+        RandomOption(25, SummonVinesAbility),
+    )
 }
