@@ -14,6 +14,27 @@ object RandomUtil {
         return pickOption(options, randomInt)
     }
 
+    fun <T> pick(
+        options: List<RandomOption<T>>,
+        random: Random = Random,
+        amount: Int
+    ): List<T> {
+        if (options.size < amount) {
+            throw IllegalArgumentException("Too few options")
+        }
+
+        val remainingOptions = options.toMutableList()
+        val picked = mutableListOf<T>()
+
+        repeat(amount) {
+            val pick = pick(remainingOptions, random)
+            picked.add(pick.option)
+            remainingOptions.remove(pick)
+        }
+
+        return picked
+    }
+
     fun <T : SortableRandomOption<*>> pick(
         options: List<T>,
         rolls: Int,

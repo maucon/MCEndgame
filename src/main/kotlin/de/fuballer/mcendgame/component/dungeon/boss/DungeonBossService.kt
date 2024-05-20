@@ -19,7 +19,8 @@ import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityTargetEvent
+import org.bukkit.potion.PotionEffectType
 
 @Component
 class DungeonBossService(
@@ -52,12 +53,13 @@ class DungeonBossService(
     }
 
     @EventHandler
-    fun on(event: EntityDamageEvent) { // FIXME
+    fun on(event: EntityTargetEvent) {
         val entity = event.entity
         if (!entity.world.isDungeonWorld()) return
         if (!entity.isBoss()) return
 
-        (entity as LivingEntity).setAI(true)
+        val boss = entity as LivingEntity
+        boss.removePotionEffect(PotionEffectType.SLOW)
     }
 
     private fun empowerOtherBosses(bosses: List<Creature>) {

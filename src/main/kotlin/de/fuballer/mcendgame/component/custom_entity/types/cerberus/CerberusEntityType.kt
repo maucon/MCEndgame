@@ -15,12 +15,12 @@ object CerberusEntityType : CustomEntityType {
     override val canHaveArmor = false
     override val hideEquipment = true
 
-    override val baseHealth = 100.0
+    override val baseHealth = 125.0
     override val healthPerTier = 5.0
-    override val baseDamage = 15.0
+    override val baseDamage = 20.0
     override val damagePerTier = 3.5
-    override val baseSpeed = 0.35
-    override val speedPerTier = 0.0
+    override val baseSpeed = 0.30
+    override val speedPerTier = 0.003
 
     override val sounds = null
     override val abilities: List<RandomOption<Ability>> = listOf(
