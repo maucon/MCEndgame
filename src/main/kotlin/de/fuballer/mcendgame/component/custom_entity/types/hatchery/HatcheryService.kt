@@ -38,8 +38,7 @@ class HatcheryService(
             hatchery,
             LeechEntityType,
             amount = 1, weapons = true, ranged = false, armor = true,
-            HatcherySettings.MINION_HEALTH,
-            Vector(0, 1, 0)
+            hatchery.location.add(Vector(0.0, 1.0, 0.0))
         )
 
         setLeechAnger(minions)

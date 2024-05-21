@@ -1,45 +1,44 @@
 package de.fuballer.mcendgame.component.custom_entity.types.necromancer
 
-import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerService
-import de.fuballer.mcendgame.component.custom_entity.types.chupacabra.ChupacabraEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.deathball.DeathBallEntityType
+import de.fuballer.mcendgame.configuration.PluginConfiguration
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.SummonerUtil
+import de.fuballer.mcendgame.util.EnemyUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
-import org.bukkit.entity.Spellcaster
+import org.bukkit.Sound
+import org.bukkit.entity.Arrow
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Snowball
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntitySpellCastEvent
-import org.bukkit.util.Vector
-import kotlin.math.min
+import org.bukkit.event.entity.EntityShootBowEvent
+import org.bukkit.scheduler.BukkitRunnable
+
+const val baseAttackDelay = 10L
 
 @Component
-class NecromancerService(
-    private val summonerService: SummonerService
-) : Listener {
+class NecromancerService : Listener {
     @EventHandler
-    fun on(event: EntitySpellCastEvent) {
+    fun on(event: EntityShootBowEvent) {
         if (event.entity.getCustomEntityType() != NecromancerEntityType) return
 
-        if (event.spell == Spellcaster.Spell.SUMMON_VEX) {
-            event.cancel()
-            summonVexSpell(event)
-        }
+        event.entity.swingMainHand()
+
+        val arrow = event.projectile as? Arrow ?: return
+        ShootDeathBall(event.entity, arrow).runTaskLater(PluginConfiguration.INSTANCE, baseAttackDelay)
+
+        event.cancel()
     }
 
-    private fun summonVexSpell(event: EntitySpellCastEvent) {
-        val necromancer = event.entity
-        val minions = SummonerUtil.getMinionEntities(necromancer)
-
-        val spawnAmount = min(NecromancerSettings.SPAWN_AMOUNT, NecromancerSettings.MAX_MINIONS - minions.size)
-        if (spawnAmount <= 0) return
-
-        summonerService.summonMinions(
-            event.entity,
-            ChupacabraEntityType,
-            spawnAmount, weapons = true, ranged = false, armor = true,
-            NecromancerSettings.MINION_HEALTH,
-            Vector(0, 0, 0)
-        )
+    private class ShootDeathBall(
+        private val necromancer: LivingEntity,
+        private val arrow: Arrow
+    ) : BukkitRunnable() {
+        override fun run() {
+            val deathBall = EnemyUtil.shootCustomProjectile(necromancer, arrow, EntityType.SNOWBALL, Sound.ITEM_FIRECHARGE_USE) as Snowball
+            deathBall.customName = DeathBallEntityType.customName
+        }
     }
 }

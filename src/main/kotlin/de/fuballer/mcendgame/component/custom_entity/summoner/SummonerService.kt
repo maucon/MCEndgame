@@ -6,22 +6,29 @@ import de.fuballer.mcendgame.component.dungeon.enemy.generation.EnemyGenerationS
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.SummonerUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.extension.EntityExtension.setDisableDropEquipment
 import de.fuballer.mcendgame.util.extension.EntityExtension.setIsMinion
-import org.bukkit.attribute.Attribute
+import org.bukkit.Location
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
-import org.bukkit.util.Vector
+import org.bukkit.plugin.java.JavaPlugin
 import kotlin.random.Random
 
 @Component
 class SummonerService(
     private val equipmentGenerationService: EquipmentGenerationService,
     private val enemyGenerationService: EnemyGenerationService
-) {
+) : LifeCycleListener {
+
+    override fun initialize(plugin: JavaPlugin) {
+        super.initialize(plugin)
+        SummonerUtil.summonerService = this
+    }
+
     fun summonMinions(
         summoner: Creature,
         minionType: CustomEntityType,
@@ -29,13 +36,12 @@ class SummonerService(
         weapons: Boolean,
         ranged: Boolean,
         armor: Boolean,
-        health: Double,
-        spawnOffset: Vector,
-    ) {
+        spawnLocation: Location,
+    ): Set<LivingEntity> {
         val mapTier = summoner.getMapTier() ?: -1
 
         val minions = (0 until amount)
-            .map { summonMinion(Random, summoner, mapTier, minionType, weapons, ranged, armor, health, spawnOffset) }
+            .map { summonMinion(Random, mapTier, minionType, weapons, ranged, armor, spawnLocation) }
             .toSet()
 
         SummonerUtil.addMinions(summoner, minions)
@@ -43,23 +49,20 @@ class SummonerService(
 
         val event = DungeonEnemySpawnedEvent(summoner.world, minions)
         EventGateway.apply(event)
+
+        return minions
     }
 
     private fun summonMinion(
         random: Random,
-        summoner: LivingEntity,
         mapTier: Int,
         minionType: CustomEntityType,
         weapons: Boolean,
         ranged: Boolean,
         armor: Boolean,
-        health: Double,
-        spawnOffset: Vector,
+        spawnLocation: Location,
     ): LivingEntity {
-        val minion = EntityUtil.spawnCustomEntity(minionType, summoner.location.add(spawnOffset), mapTier) as LivingEntity
-
-        EntityUtil.setAttribute(minion, Attribute.GENERIC_MAX_HEALTH, health)
-        minion.health = health
+        val minion = EntityUtil.spawnCustomEntity(minionType, spawnLocation, mapTier) as LivingEntity
 
         minion.setIsMinion()
         minion.setDisableDropEquipment()

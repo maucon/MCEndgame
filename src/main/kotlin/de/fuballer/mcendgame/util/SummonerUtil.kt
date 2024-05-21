@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.util
 
+import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerService
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMinionIds
 import de.fuballer.mcendgame.util.extension.EntityExtension.setMinionIds
 import org.bukkit.entity.Creature
@@ -7,6 +8,8 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 
 object SummonerUtil {
+    var summonerService: SummonerService? = null
+
     fun getMinionEntities(summoner: Entity): List<Creature> {
         val world = summoner.world
         val minionIds = summoner.getMinionIds() ?: return listOf()
