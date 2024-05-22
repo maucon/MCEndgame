@@ -9,16 +9,10 @@
 			"translate": [0, -24, 0]
 		},
 		{
-			"part": "hat",
-			"id": "hat",
+			"part": "headwear",
+			"id": "headwear",
 			"invertAxis": "xy",
-			"translate": [0, 0, 0]
-		},
-		{
-			"part": "nose",
-			"id": "nose",
-			"invertAxis": "xy",
-			"translate": [0, -26, 0]
+			"translate": [0, -24, 0]
 		},
 		{
 			"part": "body",
@@ -121,41 +115,34 @@
 			"animations": [
 				{
 					"necroHead.rx": "torad(head_pitch)",
-					"necroHead.ry": "torad(head_yaw)",
-					"necroLegL.rx": "sin(limb_swing*0.75) * limb_speed",
-					"necroLegR.rx": "-sin(limb_swing*0.75) * limb_speed",
-					"necroArmL.rx": "if(swing_progress > 0, torad(180), 0)",
-					"necroArmR.rx": "if(swing_progress > 0, torad(180), 0)",
-					"necroArmL.rz": "if(limb_speed < 0.01, torad(-6) + sin(age*0.1)*0.085, torad(-3))",
+					"necroHead.ry": "torad(head_yaw)"
+				},
+				{
+					"necroArmL.rz": "if(limb_speed < 0.01, torad(-6) + sin(age * 0.1) * 0.085, torad(-3))",
 					"necroArmR.rz": "-necroArmL.rz",
-					"necroChest.rx": "torad(-20) + sin(age*0.1) * 0.025"
-				}
-			]
-		},
-		{
-			"part": "arms",
-			"id": "arms",
-			"invertAxis": "xy",
-			"translate": [0, -20.5, -0.3],
-			"submodels": [
+					"necroChest.rx": "torad(-20) + sin(age * 0.1) * 0.025"
+				},
 				{
-					"id": "arms_rotation",
-					"invertAxis": "xy",
-					"translate": [0, 22.5, 0.35],
-					"rotate": [43, 0, 0],
-					"submodels": [
-						{
-							"id": "arms_flipped",
-							"invertAxis": "xy",
-							"mirrorTexture": "u",
-							"translate": [0, -24, 0]
-						}
-					]
-				}
-			],
-			"animations": [
+					"var.walkSwingLegs": "torad(sin(limb_swing * 0.75) * limb_speed * 55)",
+					"var.walkSwingArms": "var.walkSwingLegs / 2"
+				},
 				{
-					"arms_rotation.rx": 0
+					"varb.defaultAttackStarting": "var.defaultAttackSwing < 1 && (swing_progress > 0 || varb.defaultAttackStarting)",
+					"var.defaultAttackSwing": "max(0, var.defaultAttackSwing + if(var.defaultAttackSwing < 1 && (swing_progress > 0 || (var.defaultAttackSwing> 0 && varb.defaultAttackStarting)), frame_time * 2, -frame_time * 2))",
+					"var.defaultAttackSwingRadX": "torad(105 * var.defaultAttackSwing)",
+					"var.defaultAttackSwingRadY": "torad(8 * var.defaultAttackSwing)"
+				},
+				{
+					"varb.defaultAttackDone": "if(var.defaultAttackSwing > 0.01, if(var.defaultAttackSwing < 0.03, 1, 0), 0) == 1",
+					"var.arm": "if(varb.defaultAttackDone, random(), var.arm)"
+				},
+				{
+					"necroLegL.rx": "var.walkSwingLegs",
+					"necroLegR.rx": "-var.walkSwingLegs",
+					"necroArmL.rx": "if(var.arm >= 0.5, (-var.walkSwingArms * (1 - var.defaultAttackSwing)) - (var.defaultAttackSwingRadX * var.defaultAttackSwing), -var.walkSwingArms)",
+					"necroArmR.rx": "if(var.arm < 0.5, (var.walkSwingArms * (1 - var.defaultAttackSwing)) - (var.defaultAttackSwingRadX * var.defaultAttackSwing), var.walkSwingArms)",
+					"necroArmL.ry": "if(var.arm > 0.5, var.defaultAttackSwingRadY, 0)",
+					"necroArmR.ry": "if(var.arm < 0.5, -var.defaultAttackSwingRadY, 0)"
 				}
 			]
 		},
@@ -177,13 +164,13 @@
 			"id": "left_leg",
 			"invertAxis": "xy",
 			"mirrorTexture": "u",
-			"translate": [2, -12, 0]
+			"translate": [2, -12, -0.1]
 		},
 		{
 			"part": "right_leg",
 			"id": "right_leg",
 			"invertAxis": "xy",
-			"translate": [-2, -12, 0]
+			"translate": [-2, -12, -0.1]
 		}
 	]
 }

@@ -24,6 +24,18 @@ object SchedulingUtil {
     fun runTaskTimer(period: Long, task: Runnable) = PluginConfiguration.scheduler().runTaskTimer(PluginConfiguration.plugin(), task, period, period)
 
     /**
+     * Returns a task that will run after the specified number of server
+     * ticks.
+     *
+     * @param plugin the reference to the plugin scheduling task
+     * @param task the task to be run
+     * @param delay the ticks to wait before running the task
+     * @throws IllegalArgumentException if plugin is null
+     * @throws IllegalArgumentException if task is null
+     */
+    fun runTaskLater(delay: Long, task: Runnable) = PluginConfiguration.scheduler().runTaskLater(PluginConfiguration.plugin(), task, delay)
+
+    /**
      * Schedules a once off task to occur as soon as possible.
      * <p>
      * This task will be executed by the main server thread.
