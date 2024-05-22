@@ -25,7 +25,7 @@ object NecromancerEntityType : CustomEntityType {
     override val sounds = null
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(25, ChangeTargetAbility),
-        RandomOption(15, ApplySpeedAbility),
+        RandomOption(5, ApplySpeedAbility),
         RandomOption(10, ApplyDarknessAbility),
         RandomOption(25, SummonChupacabraAbility),
         RandomOption(25, KnockbackAbility),
