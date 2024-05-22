@@ -26,8 +26,7 @@ object SummonVinesAbility : Ability {
             val newVines = SummonerUtil.summonerService!!.summonMinions(
                 creature,
                 ChupacabraEntityType,
-                amount, weapons = true, ranged = false, armor = true,
-                target.location
+                amount, target.location
             )
             vines.addAll(newVines)
         }

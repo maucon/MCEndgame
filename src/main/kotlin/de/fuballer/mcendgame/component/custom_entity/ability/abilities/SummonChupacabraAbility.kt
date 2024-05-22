@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.component.custom_entity.ability.AbilitySettings
 import de.fuballer.mcendgame.component.custom_entity.types.chupacabra.ChupacabraEntityType
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.SummonerUtil
+import org.bukkit.Particle
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import kotlin.math.min
@@ -28,8 +29,14 @@ object SummonChupacabraAbility : Ability {
         SummonerUtil.summonerService?.summonMinions(
             creature,
             ChupacabraEntityType,
-            spawnAmount, weapons = true, ranged = false, armor = true,
-            creature.location
+            spawnAmount, creature.location
+        )
+
+        val location = caster.eyeLocation
+        caster.world.spawnParticle(
+            Particle.ASH,
+            location.x, location.y, location.z,
+            100, 0.5, 0.5, 0.5, 0.0001
         )
     }
 }
