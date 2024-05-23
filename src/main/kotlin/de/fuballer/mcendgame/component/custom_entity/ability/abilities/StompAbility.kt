@@ -119,7 +119,7 @@ object StompAbility : Ability {
             }
 
             createParticle(healthPercent)
-            caster.world.playSound(caster.location, Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.AMBIENT, (3 - 2.5 * healthPercent).toFloat(), 1f)
+            caster.world.playSound(caster.location, Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.AMBIENT, (3 - 2.5 * healthPercent).toFloat(), 0.8f)
 
             this.cancel()
         }
