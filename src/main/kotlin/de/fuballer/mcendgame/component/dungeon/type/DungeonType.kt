@@ -48,7 +48,7 @@ enum class DungeonType(
             RandomOption(100, MinotaurEntityType),
             RandomOption(100, CerberusEntityType),
             RandomOption(100, WendigoEntityType),
-            RandomOption(1, BuffCowEntityType),
+            RandomOption(10000, BuffCowEntityType),
         )
     );
 
