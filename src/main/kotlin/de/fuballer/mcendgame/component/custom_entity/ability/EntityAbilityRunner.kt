@@ -44,20 +44,31 @@ class EntityAbilityRunner(
 
             ticksSinceAbility = 0
 
-            val usedAbility = castAbility()
-            noTargetCount = if (usedAbility) 0 else noTargetCount + 1
+            if (entity.target != null) { // entity has target
+                castAbility()
+                noTargetCount = 0
+            } else {
+                noTargetCount++
+            }
 
             if (noTargetCount * abilityCooldown >= AbilitySettings.MAX_IDLE_TIME) {
                 this.cancel()
             }
         }
 
-        private fun castAbility(): Boolean {
-            val abilities = customEntityType.abilities!! // checked when starting the EntityAbilityRunner
-            val pickedAbility = RandomUtil.pick(abilities).option
-            pickedAbility.cast(entity)
+        private fun castAbility() {
+            val remainingOptions = customEntityType.abilities!!.toMutableList() // checked when starting the EntityAbilityRunner
 
-            return true
+            while (remainingOptions.isNotEmpty()) {
+                val pick = RandomUtil.pick(remainingOptions)
+                remainingOptions.remove(pick)
+
+                val ability = pick.option
+                if (!ability.canCast(entity)) continue
+
+                ability.cast(entity)
+                return
+            }
         }
     }
 }
