@@ -7,6 +7,11 @@ import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 
 object ChangeTargetAbility : Ability {
+    override fun canCast(caster: LivingEntity): Boolean {
+        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
+        return targets.size > 1
+    }
+
     override fun cast(caster: LivingEntity) {
         val creature = caster as? Creature ?: return
 

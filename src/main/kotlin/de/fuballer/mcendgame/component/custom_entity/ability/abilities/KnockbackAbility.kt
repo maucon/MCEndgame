@@ -12,9 +12,15 @@ private val Y_KNOCKBACK_VEC = Vector(0.0, 0.3, 0.0)
 
 private const val KNOCKBACK_RANGE = 10.0
 private const val MAX_KNOCKBACK_STRENGTH = 2.0
-fun getKnockbackStrength(distance: Double) = MAX_KNOCKBACK_STRENGTH * (1 - min(1.0, distance / KNOCKBACK_RANGE))
+
+private fun getKnockbackStrength(distance: Double) = MAX_KNOCKBACK_STRENGTH * (1 - min(1.0, distance / KNOCKBACK_RANGE))
 
 object KnockbackAbility : Ability {
+    override fun canCast(caster: LivingEntity): Boolean {
+        val targets = DungeonUtil.getNearbyPlayers(caster, KNOCKBACK_RANGE)
+        return targets.isNotEmpty()
+    }
+
     override fun cast(caster: LivingEntity) {
         val location = caster.eyeLocation
         caster.world.spawnParticle(

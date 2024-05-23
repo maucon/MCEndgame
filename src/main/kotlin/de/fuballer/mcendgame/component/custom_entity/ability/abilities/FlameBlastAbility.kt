@@ -31,6 +31,11 @@ private const val PARTICLE_LOCATIONS_PER_RING = 10
 private const val PARTICLE_LOCATION_RADIUS_MULTIPLIER = 1
 
 object FlameBlastAbility : Ability {
+    override fun canCast(caster: LivingEntity): Boolean {
+        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
+        return targets.isNotEmpty()
+    }
+
     override fun cast(caster: LivingEntity) {
         val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
 

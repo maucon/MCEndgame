@@ -11,9 +11,14 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.util.Vector
 import kotlin.random.Random
 
-fun getSummonVineAmountPerTarget(bossLevel: Int) = (3 + bossLevel / 5)
+private fun getSummonVineAmountPerTarget(bossLevel: Int) = (3 + bossLevel / 5)
 
 object SummonVinesAbility : Ability {
+    override fun canCast(caster: LivingEntity): Boolean {
+        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
+        return targets.isNotEmpty()
+    }
+
     override fun cast(caster: LivingEntity) {
         val creature = caster as? Creature ?: return
 
@@ -26,7 +31,8 @@ object SummonVinesAbility : Ability {
             val newVines = SummonerUtil.summonerService.summonMinions(
                 creature,
                 ChupacabraEntityType,
-                amount, target.location
+                amount,
+                target.location
             )
             vines.addAll(newVines)
         }
