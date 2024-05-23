@@ -11,26 +11,7 @@ import org.bukkit.entity.Projectile
 import org.bukkit.util.Vector
 
 object EnemyUtil {
-    fun shootCustomProjectile(
-        entity: LivingEntity,
-        projectile: AbstractArrow,
-        newProjectileType: EntityType,
-        sound: Sound
-    ): Projectile {
-        val newProjectile = entity.world.spawnEntity(projectile.location, newProjectileType, false) as Projectile
-        newProjectile.shooter = entity
-        newProjectile.velocity = projectile.velocity
-
-        entity.world.playSound(entity.location, sound, SoundCategory.HOSTILE, 1f, 1f)
-
-        val addedDamage = projectile.getAddedBaseDamage() ?: 0.0
-        val damage = projectile.damage + addedDamage
-        newProjectile.setAddedBaseDamage(damage)
-
-        return newProjectile
-    }
-
-    fun shootCustomProjectile(
+    fun shootProjectile(
         shooter: LivingEntity,
         oldProjectile: AbstractArrow,
         target: LivingEntity,

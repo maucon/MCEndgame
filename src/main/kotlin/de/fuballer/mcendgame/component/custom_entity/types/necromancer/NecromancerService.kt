@@ -37,7 +37,7 @@ class NecromancerService : Listener {
         private val target: LivingEntity
     ) : BukkitRunnable() {
         override fun run() {
-            val witherSkull = EnemyUtil.shootCustomProjectile(necromancer, arrow, target, EntityType.WITHER_SKULL, Sound.ITEM_FIRECHARGE_USE) as WitherSkull
+            val witherSkull = EnemyUtil.shootProjectile(necromancer, arrow, target, EntityType.WITHER_SKULL, Sound.ITEM_FIRECHARGE_USE) as WitherSkull
             witherSkull.direction = witherSkull.velocity
         }
     }

@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 
 object SummonerUtil {
-    var summonerService: SummonerService? = null
+    lateinit var summonerService: SummonerService // FIXME
 
     fun getMinionEntities(summoner: Entity): List<Creature> {
         val world = summoner.world

@@ -17,9 +17,8 @@ import org.bukkit.plugin.java.JavaPlugin
 
 @Component
 class SummonerService : LifeCycleListener {
-
     override fun initialize(plugin: JavaPlugin) {
-        SummonerUtil.summonerService = this
+        SummonerUtil.summonerService = this // FIXME
     }
 
     fun summonMinions(

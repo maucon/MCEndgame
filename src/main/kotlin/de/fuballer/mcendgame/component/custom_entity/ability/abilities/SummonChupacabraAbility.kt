@@ -26,7 +26,7 @@ object SummonChupacabraAbility : Ability {
         val spawnAmount = min(CHUPACABRA_PER_CAST, maxChupacabra - minions.size)
         if (spawnAmount <= 0) return
 
-        SummonerUtil.summonerService?.summonMinions(
+        SummonerUtil.summonerService.summonMinions(
             creature,
             ChupacabraEntityType,
             spawnAmount, creature.location

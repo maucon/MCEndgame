@@ -60,7 +60,8 @@ class DungeonBossGenerationService(
         boss.removeWhenFarAway = false
 
         if (entityType.isRanged) {
-            boss.equipment?.setItemInMainHand(ItemStack(Material.BOW))
+            val bow = ItemStack(Material.BOW)
+            boss.equipment?.setItemInMainHand(bow)
         }
 
         return boss
