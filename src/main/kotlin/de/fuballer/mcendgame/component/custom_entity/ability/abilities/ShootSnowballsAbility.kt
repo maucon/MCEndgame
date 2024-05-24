@@ -27,7 +27,7 @@ object ShootSnowballsAbility : Ability {
     }
 
     private class ShootSnowballRunnable(
-        private val caster: Creature,
+        private val caster: LivingEntity,
         private val target: LivingEntity,
         private val healthPercent: Double,
         private val side: Boolean,
