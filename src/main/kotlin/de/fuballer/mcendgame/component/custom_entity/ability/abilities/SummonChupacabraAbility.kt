@@ -15,21 +15,22 @@ private const val MAX_CHUPACABRA_PER_EXTRA_PLAYER = 3
 private const val CHUPACABRA_PER_CAST = 3
 
 object SummonChupacabraAbility : Ability {
+    override fun canCast(caster: LivingEntity): Boolean {
+        val spawnAmount = getChupacabraSpawnAmount(caster)
+        return spawnAmount > 0
+    }
+
     override fun cast(caster: LivingEntity) {
         val creature = caster as? Creature ?: return
 
-        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
-
-        val maxChupacabra = MAX_CHUPACABRA + MAX_CHUPACABRA_PER_EXTRA_PLAYER * (targets.size - 1)
-        val minions = SummonerUtil.getMinionEntities(creature)
-
-        val spawnAmount = min(CHUPACABRA_PER_CAST, maxChupacabra - minions.size)
+        val spawnAmount = getChupacabraSpawnAmount(caster)
         if (spawnAmount <= 0) return
 
         SummonerUtil.summonerService.summonMinions(
             creature,
             ChupacabraEntityType,
-            spawnAmount, creature.location
+            spawnAmount,
+            creature.location
         )
 
         val location = caster.eyeLocation
@@ -38,5 +39,14 @@ object SummonChupacabraAbility : Ability {
             location.x, location.y, location.z,
             100, 0.5, 0.5, 0.5, 0.0001
         )
+    }
+
+    private fun getChupacabraSpawnAmount(caster: LivingEntity): Int {
+        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
+
+        val maxChupacabra = MAX_CHUPACABRA + MAX_CHUPACABRA_PER_EXTRA_PLAYER * (targets.size - 1)
+        val minions = SummonerUtil.getMinionEntities(caster)
+
+        return min(CHUPACABRA_PER_CAST, maxChupacabra - minions.size)
     }
 }

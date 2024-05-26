@@ -10,12 +10,17 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
-const val ARROWS_COUNT = 5
-const val ARROWS_TIME_DIFFERENCE = 4L // in ticks
+private const val ARROWS_COUNT = 5
+private const val ARROWS_TIME_DIFFERENCE = 4L // in ticks
 
-fun getArrowAddedDamage(bossLevel: Int) = 6.0 + bossLevel * 2.0
+private fun getArrowAddedDamage(bossLevel: Int) = 6.0 + bossLevel * 2.0
 
 object ShootFireArrowsAbility : Ability {
+    override fun canCast(caster: LivingEntity): Boolean {
+        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
+        return targets.isNotEmpty()
+    }
+
     override fun cast(caster: LivingEntity) {
         val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
 

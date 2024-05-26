@@ -5,7 +5,7 @@ import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.util.Vector
 
-const val LEAP_RANGE = 0.25
+private const val LEAP_RANGE = 0.25
 
 object LeapAbility : Ability {
     override fun cast(caster: LivingEntity) {

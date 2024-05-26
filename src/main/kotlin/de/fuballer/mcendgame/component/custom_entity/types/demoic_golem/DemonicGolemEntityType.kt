@@ -2,7 +2,10 @@ package de.fuballer.mcendgame.component.custom_entity.types.demoic_golem
 
 import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
-import de.fuballer.mcendgame.component.custom_entity.ability.abilities.*
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplyDarknessAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.FireCascadeAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.FlameBlastAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.SummonGravitationPillarAbility
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.entity.EntityType
@@ -29,6 +32,5 @@ object DemonicGolemEntityType : CustomEntityType {
         RandomOption(40, SummonGravitationPillarAbility),
         RandomOption(30, ApplyDarknessAbility),
         RandomOption(20, FlameBlastAbility),
-        RandomOption(25, ChangeTargetAbility),
     )
 }
