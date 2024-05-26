@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.component.custom_entity.types.wendigo
 
 import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
-import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ChangeTargetAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.PoisonCloudAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.SummonVinesAbility
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
@@ -27,7 +26,6 @@ object WendigoEntityType : CustomEntityType {
 
     override val sounds = EntitySoundData.create("wendigo")
     override val abilities: List<RandomOption<Ability>> = listOf(
-        RandomOption(25, ChangeTargetAbility),
         RandomOption(25, PoisonCloudAbility),
         RandomOption(25, SummonVinesAbility),
     )

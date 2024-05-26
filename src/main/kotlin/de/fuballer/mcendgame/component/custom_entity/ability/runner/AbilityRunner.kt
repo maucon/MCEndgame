@@ -1,5 +1,6 @@
-package de.fuballer.mcendgame.component.custom_entity.ability
+package de.fuballer.mcendgame.component.custom_entity.ability.runner
 
+import de.fuballer.mcendgame.component.custom_entity.ability.AbilitySettings
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.util.PluginUtil.runTaskTimer
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -7,7 +8,7 @@ import org.bukkit.entity.Creature
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
 
-class EntityAbilityRunner(
+class AbilityRunner(
     private val entity: Creature,
     private val customEntityType: CustomEntityType,
     private val abilityCooldown: Int
@@ -17,43 +18,27 @@ class EntityAbilityRunner(
     fun run() {
         if (customEntityType.abilities == null) return
 
-        task = EntityAbilityRunnable(entity, customEntityType, abilityCooldown)
+        task = AbilityRunnable(entity, customEntityType, abilityCooldown)
             .runTaskTimer(0, AbilitySettings.ABILITY_CHECK_PERIOD)
     }
 
     fun cancel() = task?.cancel()
 
-    fun isCancelled() = task?.isCancelled ?: true
-
-    class EntityAbilityRunnable(
+    class AbilityRunnable(
         private val entity: Creature,
         private val customEntityType: CustomEntityType,
         private val abilityCooldown: Int
     ) : BukkitRunnable() {
         private var ticksSinceAbility = 0L
-        private var noTargetCount = 0
 
         override fun run() {
-            if (entity.isDead) {
-                this.cancel()
-                return
+            if (ticksSinceAbility >= abilityCooldown) {
+                ticksSinceAbility = 0
+
+                castAbility()
             }
 
             ticksSinceAbility += AbilitySettings.ABILITY_CHECK_PERIOD
-            if (ticksSinceAbility < abilityCooldown) return
-
-            ticksSinceAbility = 0
-
-            if (entity.target != null) { // entity has target
-                castAbility()
-                noTargetCount = 0
-            } else {
-                noTargetCount++
-            }
-
-            if (noTargetCount * abilityCooldown >= AbilitySettings.MAX_IDLE_TIME) {
-                this.cancel()
-            }
         }
 
         private fun castAbility() {
