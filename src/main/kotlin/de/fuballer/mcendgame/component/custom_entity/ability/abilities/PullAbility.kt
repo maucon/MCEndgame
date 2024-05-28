@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.util.DungeonUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskTimer
+import de.fuballer.mcendgame.util.extension.EntityExtension.setIsForcedVehicle
 import org.bukkit.Particle
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
@@ -30,6 +31,7 @@ object PullAbility : Ability {
             armorStand.isInvulnerable = true
             armorStand.isSmall = true
             armorStand.addPassenger(target)
+            armorStand.setIsForcedVehicle()
 
             PullRunnable(caster, target, armorStand, System.currentTimeMillis()).runTaskTimer(0, 1)
         }
