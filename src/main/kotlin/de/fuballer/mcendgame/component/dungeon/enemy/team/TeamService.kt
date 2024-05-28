@@ -14,6 +14,7 @@ class TeamService : Listener, LifeCycleListener {
     private var team: Team? = null
 
     @EventHandler
+    @Suppress("UNUSED_PARAMETER")
     fun on(event: WorldLoadEvent) {
         createTeam()
     }

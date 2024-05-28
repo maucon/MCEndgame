@@ -62,12 +62,6 @@ object EntityExtension {
 
     fun Entity.isBoss() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_BOSS)
 
-    fun Entity.setLootMultiplier(value: Double) {
-        PersistentDataUtil.setValue(this, TypeKeys.LOOT_MULTIPLIER, value)
-    }
-
-    fun Entity.getLootMultiplier() = PersistentDataUtil.getValue(this, TypeKeys.LOOT_MULTIPLIER) ?: 1.0
-
     fun Entity.setPortalLocation(value: Location) {
         PersistentDataUtil.setValue(this, TypeKeys.PORTAL_LOCATION, value)
     }

@@ -13,9 +13,11 @@ import de.fuballer.mcendgame.util.extension.EntityExtension.setIsBoss
 import de.fuballer.mcendgame.util.extension.EntityExtension.setPortalLocation
 import de.fuballer.mcendgame.util.extension.ListExtension.cycle
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
+import org.bukkit.inventory.ItemStack
 import java.util.*
 
 @Component
@@ -54,8 +56,13 @@ class DungeonBossGenerationService(
 
         boss.setDisableDropEquipment()
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
-        boss.getAttribute(Attribute.GENERIC_FOLLOW_RANGE)?.baseValue = DungeonBossSettings.FOLLOW_RANGE
+        EntityUtil.setAttribute(boss, Attribute.GENERIC_FOLLOW_RANGE, DungeonBossSettings.FOLLOW_RANGE)
         boss.removeWhenFarAway = false
+
+        if (entityType.isRanged) {
+            val bow = ItemStack(Material.BOW)
+            boss.equipment?.setItemInMainHand(bow)
+        }
 
         return boss
     }

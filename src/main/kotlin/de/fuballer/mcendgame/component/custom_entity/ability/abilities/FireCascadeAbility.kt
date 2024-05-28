@@ -26,6 +26,11 @@ private const val FIRE_CASCADE_DAMAGE_PER_LEVEL = 3.0
 private const val FIRE_CASCADE_FIRE_TICKS = 100
 
 object FireCascadeAbility : Ability {
+    override fun canCast(caster: LivingEntity): Boolean {
+        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
+        return targets.isNotEmpty()
+    }
+
     override fun cast(caster: LivingEntity) {
         val mapTier = caster.getMapTier() ?: 1
         val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)

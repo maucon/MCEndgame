@@ -3,7 +3,6 @@ package de.fuballer.mcendgame.component.custom_entity.types.minotaur
 import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplySpeedAbility
-import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ChangeTargetAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.LeapAbility
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -29,6 +28,5 @@ object MinotaurEntityType : CustomEntityType {
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(20, ApplySpeedAbility),
         RandomOption(50, LeapAbility),
-        RandomOption(25, ChangeTargetAbility),
     )
 }

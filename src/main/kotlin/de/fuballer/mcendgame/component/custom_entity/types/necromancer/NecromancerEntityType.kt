@@ -3,13 +3,14 @@ package de.fuballer.mcendgame.component.custom_entity.types.necromancer
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplyDarknessAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplySpeedAbility
-import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ChangeTargetAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.KnockbackAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.SummonChupacabraAbility
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.entity.EntityType
 
 object NecromancerEntityType : CustomEntityType {
-    override val type = EntityType.EVOKER
+    override val type = EntityType.SKELETON
 
     override val customName = "Necromancer"
     override val canHaveWeapons = true
@@ -26,8 +27,9 @@ object NecromancerEntityType : CustomEntityType {
 
     override val sounds = null
     override val abilities: List<RandomOption<Ability>> = listOf(
-        RandomOption(25, ChangeTargetAbility),
-        RandomOption(15, ApplySpeedAbility),
-        RandomOption(25, ApplyDarknessAbility),
+        RandomOption(5, ApplySpeedAbility),
+        RandomOption(10, ApplyDarknessAbility),
+        RandomOption(25, SummonChupacabraAbility),
+        RandomOption(25, KnockbackAbility),
     )
 }

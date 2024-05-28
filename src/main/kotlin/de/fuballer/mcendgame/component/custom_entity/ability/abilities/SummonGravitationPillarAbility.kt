@@ -16,8 +16,8 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
-const val GRAVITATION_PILLAR_RANGE = 20.0
-const val GRAVITATION_PILLAR_COOLDOWN = 40L // in ticks
+private const val GRAVITATION_PILLAR_RANGE = 20.0
+private const val GRAVITATION_PILLAR_COOLDOWN = 40L // in ticks
 
 object SummonGravitationPillarAbility : Ability {
     override fun cast(caster: LivingEntity) {

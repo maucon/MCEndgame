@@ -13,5 +13,6 @@ class PersistentEnum<T : Enum<T>>(
 
     override fun toPrimitive(complex: T, context: PersistentDataAdapterContext) = complex.name
 
-    override fun fromPrimitive(primitive: String, context: PersistentDataAdapterContext): T = java.lang.Enum.valueOf(enumClass.java, primitive)
+    override fun fromPrimitive(primitive: String, context: PersistentDataAdapterContext): T =
+        java.lang.Enum.valueOf(enumClass.java, primitive)
 }

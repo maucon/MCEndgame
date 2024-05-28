@@ -37,7 +37,25 @@ class EnemyGenerationService(
         }
     }
 
-    fun addEffectsToEnemy(
+    private fun spawnEntity(
+        random: Random,
+        mapTier: Int,
+        randomEntityTypes: List<RandomOption<CustomEntityType>>,
+        location: Location
+    ): LivingEntity {
+        val entityType = RandomUtil.pick(randomEntityTypes, random).option
+        val entity = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as LivingEntity
+        equipmentGenerationService.generate(random, entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
+
+        entity.heal()
+
+        val canBeInvisible = !entityType.hideEquipment
+        addEffectsToEnemy(random, entity, mapTier, canBeInvisible)
+
+        return entity
+    }
+
+    private fun addEffectsToEnemy(
         random: Random,
         entity: LivingEntity,
         mapTier: Int,
@@ -57,23 +75,5 @@ class EnemyGenerationService(
             .map { it.getPotionEffect() }
 
         entity.addPotionEffects(potionEffects)
-    }
-
-    private fun spawnEntity(
-        random: Random,
-        mapTier: Int,
-        randomEntityTypes: List<RandomOption<CustomEntityType>>,
-        location: Location
-    ): LivingEntity {
-        val entityType = RandomUtil.pick(randomEntityTypes, random).option
-        val entity = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as LivingEntity
-        equipmentGenerationService.generate(random, entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
-
-        entity.heal()
-
-        val canBeInvisible = !entityType.hideEquipment
-        addEffectsToEnemy(random, entity, mapTier, canBeInvisible)
-
-        return entity
     }
 }
