@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesRepository
 import de.fuballer.mcendgame.component.dungeon.enemy.EnemyHealingService.Companion.heal
+import de.fuballer.mcendgame.component.dungeon.modifier.ModifierUtil.addModifier
 import de.fuballer.mcendgame.component.dungeon.world.db.ManagedWorldRepository
 import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
@@ -9,10 +10,8 @@ import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EntityUtil
-import de.fuballer.mcendgame.util.extension.EntityExtension.getLootMultiplier
 import de.fuballer.mcendgame.util.extension.EntityExtension.getPortalLocation
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
-import de.fuballer.mcendgame.util.extension.EntityExtension.setLootMultiplier
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
@@ -64,15 +63,14 @@ class DungeonBossService(
 
     private fun empowerOtherBosses(bosses: List<Creature>) {
         bosses.filter { it.isValid }
-            .onEach {
+            .forEach {
                 EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_MAX_HEALTH, 1.15)
                 EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_ATTACK_DAMAGE, 1.1)
                 EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_MOVEMENT_SPEED, 1.05)
 
-                it.heal()
+                it.addModifier(DungeonBossSettings.EMPOWERED_LOOT_MODIFIER)
 
-                val newLootMultiplier = it.getLootMultiplier() * DungeonBossSettings.EMPOWERED_LOOT_MULTIPLIER
-                it.setLootMultiplier(newLootMultiplier)
+                it.heal()
             }
     }
 }

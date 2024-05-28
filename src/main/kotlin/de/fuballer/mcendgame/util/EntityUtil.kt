@@ -29,15 +29,6 @@ object EntityUtil {
         return entity
     }
 
-    fun setAttribute(
-        entity: LivingEntity,
-        attribute: Attribute,
-        value: Double
-    ) {
-        val attributeInstance = entity.getAttribute(attribute) ?: return
-        attributeInstance.baseValue = value
-    }
-
     fun increaseBaseAttribute(
         entity: LivingEntity,
         attribute: Attribute,
@@ -65,6 +56,15 @@ object EntityUtil {
             return entity.shooter as LivingEntity
         }
         return null
+    }
+
+    fun setAttribute(
+        entity: LivingEntity,
+        attribute: Attribute,
+        value: Double
+    ) {
+        val attributeInstance = entity.getAttribute(attribute) ?: return
+        attributeInstance.baseValue = value
     }
 
     private fun setCustomData(entity: Entity, entityType: CustomEntityType, mapTier: Int) {

@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityPotionEffectEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
-val POTION_EFFECT = PotionEffect(PotionEffectType.LUCK, 1, 0, false, false)
+private val POTION_EFFECT = PotionEffect(PotionEffectType.LUCK, 1, 0, false, false)
 
 @Component
 class EnemyHealingService : Listener {

@@ -21,10 +21,8 @@ object DungeonUtil {
     fun getNearbyPlayers(
         entity: LivingEntity,
         range: Double
-    ) = getNearbyPlayers(entity, range, range, range)
-
-    private fun getNearbyPlayers(entity: LivingEntity, x: Double, y: Double, z: Double): List<Player> {
-        val entities = entity.world.getNearbyEntities(entity.location, x, y, z)
+    ): List<Player> {
+        val entities = entity.world.getNearbyEntities(entity.location, range, range, range)
 
         val players = entities.filterIsInstance<Player>()
         return players.filter { it.gameMode == GameMode.ADVENTURE || it.gameMode == GameMode.SURVIVAL }

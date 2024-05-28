@@ -3,10 +3,7 @@ package de.fuballer.mcendgame.technical.persistent_data
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.map_device.MapDeviceAction
-import de.fuballer.mcendgame.technical.persistent_data.types.PersistentLocation
-import de.fuballer.mcendgame.technical.persistent_data.types.PersistentRolledAttribute
-import de.fuballer.mcendgame.technical.persistent_data.types.PersistentTotem
-import de.fuballer.mcendgame.technical.persistent_data.types.PersistentUUID
+import de.fuballer.mcendgame.technical.persistent_data.types.*
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentEnum
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentList
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentObjectClass
@@ -25,8 +22,8 @@ object TypeKeys {
     val MINION_IDS = TypeKey(createNamespacedKey("minions"), PersistentList(PersistentUUID))
     val IS_PORTAL = TypeKey(createNamespacedKey("is_portal"), PersistentDataType.BOOLEAN)
     val IS_BOSS = TypeKey(createNamespacedKey("is_boss"), PersistentDataType.BOOLEAN)
-    val LOOT_MULTIPLIER = TypeKey(createNamespacedKey("loot_increase"), PersistentDataType.DOUBLE)
     val PORTAL_LOCATION = TypeKey(createNamespacedKey("portal_location"), PersistentLocation)
+    val MODIFIERS = TypeKey(createNamespacedKey("modifiers"), PersistentList(PersistentModifier))
 
     // projectile
     val PROJECTILE_ADDED_BASE_DAMAGE = TypeKey(createNamespacedKey("projectile_added_base_damage"), PersistentDataType.DOUBLE)

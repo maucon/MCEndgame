@@ -11,5 +11,6 @@ object PersistentUUID : PersistentDataType<String, UUID> {
 
     override fun toPrimitive(complex: UUID, context: PersistentDataAdapterContext) = complex.toString()
 
-    override fun fromPrimitive(primitive: String, context: PersistentDataAdapterContext): UUID = UUID.fromString(primitive)
+    override fun fromPrimitive(primitive: String, context: PersistentDataAdapterContext): UUID =
+        UUID.fromString(primitive)
 }
