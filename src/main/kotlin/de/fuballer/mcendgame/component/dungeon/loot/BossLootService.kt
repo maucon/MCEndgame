@@ -19,10 +19,10 @@ class BossLootService : Listener {
         if (!entity.isBoss()) return
 
         val mapTier = entity.getMapTier() ?: return
-        dropBossLoot(entity, mapTier)
+        dropCraftingOrbs(entity, mapTier)
     }
 
-    private fun dropBossLoot(
+    private fun dropCraftingOrbs(
         entity: Entity,
         mapTier: Int
     ) {
@@ -35,8 +35,8 @@ class BossLootService : Listener {
         val orbAmount = finalOrbAmountChance.toInt() + if (Math.random() < finalOrbAmountChance % 1) 1 else 0
 
         for (i in 0 until orbAmount) {
-            val orb = RandomUtil.pick(LootSettings.BOSS_ORBS).option.clone()
-            world.dropItemNaturally(location, orb)
+            val orb = RandomUtil.pick(LootSettings.BOSS_ORBS).option
+            world.dropItemNaturally(location, orb.clone())
         }
     }
 }
