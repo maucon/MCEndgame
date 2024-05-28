@@ -16,15 +16,15 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-fun getStompRadius(
+private fun getStompRadius(
     healthPercent: Double
 ) = 2 + (10 - (10 * healthPercent))
 
-fun getMaxStompKnockback(
+private fun getMaxStompKnockback(
     healthPercent: Double
 ) = 0.5 + (3 - (3 * healthPercent))
 
-fun getKnockbackStrength(
+private fun getKnockbackStrength(
     distance: Double,
     maxDistance: Double,
     maxKnockback: Double
