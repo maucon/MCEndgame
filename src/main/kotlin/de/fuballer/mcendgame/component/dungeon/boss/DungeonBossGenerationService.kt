@@ -56,7 +56,7 @@ class DungeonBossGenerationService(
 
         boss.setDisableDropEquipment()
         boss.addPotionEffects(DungeonBossSettings.BOSS_POTION_EFFECTS)
-        boss.getAttribute(Attribute.GENERIC_FOLLOW_RANGE)?.baseValue = DungeonBossSettings.FOLLOW_RANGE
+        EntityUtil.setAttribute(boss, Attribute.GENERIC_FOLLOW_RANGE, DungeonBossSettings.FOLLOW_RANGE)
         boss.removeWhenFarAway = false
 
         if (entityType.isRanged) {
