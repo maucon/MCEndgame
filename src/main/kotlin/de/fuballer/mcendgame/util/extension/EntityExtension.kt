@@ -62,6 +62,12 @@ object EntityExtension {
 
     fun Entity.isBoss() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_BOSS)
 
+    fun Entity.setIsForcedVehicle(value: Boolean = true) {
+        PersistentDataUtil.setValue(this, TypeKeys.IS_FORCED_VEHICLE, value)
+    }
+
+    fun Entity.isForcedVehicle() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_FORCED_VEHICLE)
+
     fun Entity.setPortalLocation(value: Location) {
         PersistentDataUtil.setValue(this, TypeKeys.PORTAL_LOCATION, value)
     }

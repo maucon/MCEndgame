@@ -24,6 +24,7 @@ object TypeKeys {
     val IS_BOSS = TypeKey(createNamespacedKey("is_boss"), PersistentDataType.BOOLEAN)
     val PORTAL_LOCATION = TypeKey(createNamespacedKey("portal_location"), PersistentLocation)
     val MODIFIERS = TypeKey(createNamespacedKey("modifiers"), PersistentList(PersistentModifier))
+    val IS_FORCED_VEHICLE = TypeKey(createNamespacedKey("is_forced_vehicle"), PersistentDataType.BOOLEAN)
 
     // projectile
     val PROJECTILE_ADDED_BASE_DAMAGE = TypeKey(createNamespacedKey("projectile_added_base_damage"), PersistentDataType.DOUBLE)

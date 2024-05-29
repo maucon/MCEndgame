@@ -29,15 +29,19 @@
 							"id": "cowBody",
 							"invertAxis": "xy",
 							"translate": [0, -14.5, 0.5],
-							"boxes": [
-								{"coordinates": [-6.5, 0.25, -3, 13, 5, 6], "textureOffset": [13, 91], "sizeAdd": 0.25}
-							],
 							"submodels": [
+								{
+									"id": "cowLowerBodyAnim",
+									"invertAxis": "xy",
+									"translate": [0, 5.5, 0],
+									"boxes": [
+										{"coordinates": [-6.5, -5.25, -3, 13, 5, 6], "textureOffset": [13, 91], "sizeAdd": 0.25}
+									]
+								},
 								{
 									"id": "cowTail",
 									"invertAxis": "xy",
 									"translate": [0, 5, 3.25],
-									"rotate": [-7.5, 0, 0],
 									"boxes": [
 										{"coordinates": [-2, -11, 0, 4, 11, 0], "textureOffset": [28, 103]}
 									]
@@ -46,18 +50,28 @@
 									"id": "cowUpperBody",
 									"invertAxis": "xy",
 									"translate": [0, 5.5, -0.5],
-									"boxes": [
-										{"coordinates": [-4.5, 0, -2.25, 9, 2, 5], "textureOffset": [18, 83]}
-									],
 									"submodels": [
+										{
+											"id": "cowUpperBodyAnim",
+											"invertAxis": "xy",
+											"translate": [0, 2, 0.25],
+											"boxes": [
+												{"coordinates": [-4.5, -2, -2.5, 9, 2, 5], "textureOffset": [18, 83]}
+											]
+										},
 										{
 											"id": "cowChest",
 											"invertAxis": "xy",
 											"translate": [0, 2, 0],
-											"boxes": [
-												{"coordinates": [-6, 0, -3, 12, 7, 6], "textureOffset": [14, 57]}
-											],
 											"submodels": [
+												{
+													"id": "cowChestAnim",
+													"invertAxis": "xy",
+													"translate": [0, 7, 0],
+													"boxes": [
+														{"coordinates": [-6, -7, -3, 12, 7, 6], "textureOffset": [14, 57]}
+													]
+												},
 												{
 													"id": "cowBreast",
 													"invertAxis": "xy",
@@ -100,44 +114,51 @@
 																	]
 																}
 															]
-														},
-														{
-															"id": "cowBell",
-															"invertAxis": "xy",
-															"translate": [0, 0, 0],
-															"rotate": [-42.5, 0, 0],
-															"boxes": [
-																{"coordinates": [-2.5, -0.75, -4, 5, 2, 5], "textureOffset": [21, 18], "sizeAdd": -1}
-															]
 														}
+													]
+												},
+												{
+													"id": "cowBell",
+													"invertAxis": "xy",
+													"translate": [0, 5.75, -3],
+													"rotate": [-42.5, 0, 0],
+													"boxes": [
+														{"coordinates": [-2.5, -0.75, -4, 5, 2, 5], "textureOffset": [21, 18], "sizeAdd": -1}
 													]
 												},
 												{
 													"id": "cowHead",
 													"invertAxis": "xy",
 													"translate": [0, 7, 0],
-													"boxes": [
-														{"coordinates": [-4, 0, -4, 8, 8, 8], "textureOffset": [15, 31]},
-														{"coordinates": [-5, 6, -1, 1, 3, 1], "textureOffset": [35, 26]},
-														{"coordinates": [4, 6, -1, 1, 3, 1], "textureOffset": [23, 26]}
-													],
 													"submodels": [
 														{
-															"id": "cowEarLeft",
+															"id": "cowHeadAnim",
 															"invertAxis": "xy",
-															"translate": [-4, 6.25, -2.25],
-															"rotate": [3.17537, 50.34986, 3.86109],
+															"translate": [0, 8, 0],
 															"boxes": [
-																{"coordinates": [-3, -3, 0, 3, 3, 0], "textureOffset": [48, 39]}
-															]
-														},
-														{
-															"id": "cowEarRight",
-															"invertAxis": "xy",
-															"translate": [4, 6.25, -2.25],
-															"rotate": [3.17537, -50.34986, -3.86109],
-															"boxes": [
-																{"coordinates": [0, -3, 0, 3, 3, 0], "textureOffset": [8, 39]}
+																{"coordinates": [-4, -8, -4, 8, 8, 8], "textureOffset": [15, 31]},
+																{"coordinates": [-5, -2, -1, 1, 3, 1], "textureOffset": [35, 26]},
+																{"coordinates": [4, -2, -1, 1, 3, 1], "textureOffset": [23, 26]}
+															],
+															"submodels": [
+																{
+																	"id": "cowEarLeft",
+																	"invertAxis": "xy",
+																	"translate": [-4, -1.75, -2.25],
+																	"rotate": [3.17537, 50.34986, 3.86109],
+																	"boxes": [
+																		{"coordinates": [-3, -3, 0, 3, 3, 0], "textureOffset": [48, 39]}
+																	]
+																},
+																{
+																	"id": "cowEarRight",
+																	"invertAxis": "xy",
+																	"translate": [4, -1.75, -2.25],
+																	"rotate": [3.17537, -50.34986, -3.86109],
+																	"boxes": [
+																		{"coordinates": [0, -3, 0, 3, 3, 0], "textureOffset": [8, 39]}
+																	]
+																}
 															]
 														}
 													]
@@ -210,17 +231,29 @@
 									"invertAxis": "xy",
 									"translate": [-3, 1.5, 0],
 									"rotate": [0, 0, 2.5],
-									"boxes": [
-										{"coordinates": [0, -6, -2.97, 6, 6, 6], "textureOffset": [40, 103]}
-									],
 									"submodels": [
 										{
-											"id": "cowLefLeftLower",
+											"id": "cowLegLeftUpperAnim",
+											"invertAxis": "xy",
+											"translate": [3, 0, 0],
+											"boxes": [
+												{"coordinates": [-3, -6, -2.97, 6, 6, 6], "textureOffset": [40, 103]}
+											]
+										},
+										{
+											"id": "cowLegLeftLower",
 											"invertAxis": "xy",
 											"translate": [5.25, -5.75, -0.25],
 											"rotate": [0, 0, -2.5],
-											"boxes": [
-												{"coordinates": [-5.25, -6, -2.72, 6, 6, 6], "textureOffset": [40, 116], "sizeAdd": -0.25}
+											"submodels": [
+												{
+													"id": "cowLegLeftLowerAnim",
+													"invertAxis": "xy",
+													"translate": [-2.25, -0.25, 0.25],
+													"boxes": [
+														{"coordinates": [-3, -5.75, -2.97, 6, 6, 6], "textureOffset": [40, 116], "sizeAdd": -0.25}
+													]
+												}
 											]
 										}
 									]
@@ -237,17 +270,29 @@
 									"invertAxis": "xy",
 									"translate": [3, 1.5, -0.25],
 									"rotate": [0, 0, -2.5],
-									"boxes": [
-										{"coordinates": [-6, -6, -2.72, 6, 6, 6], "textureOffset": [0, 103]}
-									],
 									"submodels": [
 										{
-											"id": "cowLefRightLower",
+											"id": "cowLegRightUpperAnim",
+											"invertAxis": "xy",
+											"translate": [-3, 0, 0.25],
+											"boxes": [
+												{"coordinates": [-3, -6, -2.97, 6, 6, 6], "textureOffset": [0, 103]}
+											]
+										},
+										{
+											"id": "cowLegRightLower",
 											"invertAxis": "xy",
 											"translate": [-5.25, -5.75, 0],
 											"rotate": [0, 0, 2.5],
-											"boxes": [
-												{"coordinates": [-0.75, -6, -2.72, 6, 6, 6], "textureOffset": [0, 116], "sizeAdd": -0.25}
+											"submodels": [
+												{
+													"id": "cowLegRightLowerAnim",
+													"invertAxis": "xy",
+													"translate": [2.25, -0.25, 0.25],
+													"boxes": [
+														{"coordinates": [-3, -5.75, -2.97, 6, 6, 6], "textureOffset": [0, 116], "sizeAdd": -0.25}
+													]
+												}
 											]
 										}
 									]
@@ -259,6 +304,102 @@
 			],
 			"animations": [
 				{
+					"var.hp": "health / max_health",
+					"var.heightFactor": "1.2 - (var.hp * 0.4)",
+					"var.thickFactor": "1.35 - (var.hp * 0.7)",
+					"var.chestXThickFactor": "(var.hp * var.thickFactor) + ((1 - var.hp) * sqrt(var.thickFactor))",
+					"var.armXThickFactor": "(var.hp * var.thickFactor) + ((1 - var.hp) * sqrt(var.thickFactor))",
+					"var.breastFactorWidth": "1.6 - (var.hp * 1)",
+					"var.breastFactorHeight": "1.5 - (var.hp * 0.85)",
+					"var.breastFactorDepth": "1.4 - (var.hp * 0.7)",
+					"var.breastBounceFactor": "1.5 - var.hp"
+				},
+				{
+					"var.legXOffset": "3.5 - (13.5 - (13.5 * var.thickFactor)) / 4",
+					"cowLegLeft.tx": "var.legXOffset",
+					"cowLegRight.tx": "-var.legXOffset"
+				},
+				{
+					"var.legLowerHeightOffset": "5.5 - (5.5 * var.heightFactor)",
+					"cowLegLeftLowerAnim.sy": "var.heightFactor",
+					"cowLegLeftLowerAnim.sx": "var.thickFactor",
+					"cowLegLeftLowerAnim.sz": "var.thickFactor",
+					"cowLegLeftLowerAnim.ty": "0.25 + var.legLowerHeightOffset",
+					"cowLegRightLowerAnim.sy": "var.heightFactor",
+					"cowLegRightLowerAnim.sx": "var.thickFactor",
+					"cowLegRightLowerAnim.sz": "var.thickFactor",
+					"cowLegRightLowerAnim.ty": "0.25 + var.legLowerHeightOffset"
+				},
+				{
+					"var.legUpperHeightOffset": "var.legLowerHeightOffset + 6 - (6 * var.heightFactor)",
+					"cowLegLeftUpperAnim.sy": "var.heightFactor",
+					"cowLegLeftUpperAnim.sx": "var.thickFactor",
+					"cowLegLeftUpperAnim.sz": "var.thickFactor",
+					"cowLegLeftUpperAnim.ty": "var.legUpperHeightOffset",
+					"cowLegRightUpperAnim.sy": "var.heightFactor",
+					"cowLegRightUpperAnim.sx": "var.thickFactor",
+					"cowLegRightUpperAnim.sz": "var.thickFactor",
+					"cowLegRightUpperAnim.ty": "var.legUpperHeightOffset"
+				},
+				{
+					"var.lowerBodyHeightOffset": "var.legUpperHeightOffset + 5.5 - (5.5 * var.heightFactor)",
+					"cowLowerBodyAnim.sy": "var.heightFactor",
+					"cowLowerBodyAnim.sx": "var.thickFactor",
+					"cowLowerBodyAnim.sz": "var.thickFactor * 1.05",
+					"cowLowerBodyAnim.ty": "-5.5 + var.lowerBodyHeightOffset"
+				},
+				{
+					"var.tailZOffset": "(6.5 - (6.5 * var.thickFactor * 1.05)) / 2",
+					"cowTail.sy": "var.heightFactor",
+					"cowTail.sx": "var.heightFactor",
+					"cowTail.ty": "-3.5 + var.lowerBodyHeightOffset",
+					"cowTail.tz": "3.25 -var.tailZOffset"
+				},
+				{
+					"var.upperBodyHeightOffset": "var.lowerBodyHeightOffset + 2 - (2 * var.heightFactor)",
+					"cowUpperBodyAnim.sy": "var.heightFactor",
+					"cowUpperBodyAnim.sx": "var.thickFactor",
+					"cowUpperBodyAnim.sz": "var.thickFactor * 1.05",
+					"cowUpperBodyAnim.ty": "-2 + var.upperBodyHeightOffset"
+				},
+				{
+					"var.chestHeightOffset": "var.upperBodyHeightOffset + 7 - (7 * var.heightFactor)",
+					"cowChestAnim.sy": "var.heightFactor",
+					"cowChestAnim.sx": "var.chestXThickFactor",
+					"cowChestAnim.sz": "var.thickFactor * 1.05",
+					"cowChestAnim.ty": "-7 + var.chestHeightOffset"
+				},
+				{
+					"var.headHeightOffset": "var.chestHeightOffset + 8 - (8 * var.heightFactor)",
+					"cowHeadAnim.sy": "var.heightFactor",
+					"cowHeadAnim.sx": "var.heightFactor",
+					"cowHeadAnim.sz": "var.heightFactor",
+					"cowHeadAnim.ty": "-8 + var.headHeightOffset"
+				},
+				{
+					"var.breastZOffset": "(6 - (6 * var.thickFactor * 1.05)) / 2",
+					"cowBreast.ty": "-6 + var.chestHeightOffset",
+					"cowBreast.tz": "-3 + var.breastZOffset",
+					"cowBreast.sx": "var.breastFactorWidth",
+					"cowBreast.sy": "var.breastFactorHeight",
+					"cowBreast.sz": "var.breastFactorDepth",
+					"cowBell.ty": "-6 + var.chestHeightOffset",
+					"cowBell.tz": "-3 + var.breastZOffset"
+				},
+				{
+					"var.armXOffset": "(12 - (12 * var.chestXThickFactor)) / 2",
+					"cowArmLeft.sy": "var.heightFactor",
+					"cowArmLeft.sx": "var.armXThickFactor",
+					"cowArmLeft.sz": "var.thickFactor",
+					"cowArmLeft.ty": "-6.25 + var.chestHeightOffset",
+					"cowArmLeft.tx": "5.5 - var.armXOffset",
+					"cowArmRight.sy": "var.heightFactor",
+					"cowArmRight.sx": "var.armXThickFactor",
+					"cowArmRight.sz": "var.thickFactor",
+					"cowArmRight.ty": "-6.25 + var.chestHeightOffset",
+					"cowArmRight.tx": "-5.5 + var.armXOffset"
+				},
+				{
 					"cowChest.rx": "torad(head_pitch * 0.25)",
 					"cowHead.rx": "torad(head_pitch * 0.35)",
 					"cowChest.ry": "torad(head_yaw * 0.3)",
@@ -267,7 +408,10 @@
 					"cowLegRightUpper.rx": "-sin(limb_swing * 0.5) * limb_speed",
 					"cowArmLeft.rz": "if(limb_speed < 0.01, torad(-9.5 + sin(age * 0.1) * 2), torad(-7.5))",
 					"cowArmRight.rz": "if(limb_speed < 0.01, torad(9.5 - sin(age * 0.1) * 2), torad(7.5))",
-					"cowBreast.rx": "sin(age * 0.1) * 0.05",
+					"cowBreast.rx": "if( limb_speed < 0.01, sin(age * 0.1) * 0.05, torad(sin((limb_swing) * 0.5 + 0.5) * 10) * limb_speed * var.breastBounceFactor)",
+					"cowEarLeft.ry": "torad(-50) + sin(age * 0.1) * 0.075",
+					"cowEarRight.ry": "torad(50) - sin(age * 0.1) * 0.075",
+					"cowBell.rx": "torad(42.5) + cowBreast.rx",
 					"cowTail.rx": "torad(7.5) - sin(age * 0.1) * 0.05 + torad(limb_speed * 45)",
 					"cowTail.rz": "sin(age * 0.05) * 0.072",
 					"var.swing_state": "max(swing_progress, var.swing_state - 0.035 * frame_time * 20)",

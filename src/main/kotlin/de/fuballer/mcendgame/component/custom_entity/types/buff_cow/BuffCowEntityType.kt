@@ -1,6 +1,9 @@
 package de.fuballer.mcendgame.component.custom_entity.types.buff_cow
 
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.PullAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ShootSnowballsAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.StompAbility
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.entity.EntityType
@@ -23,5 +26,8 @@ object BuffCowEntityType : CustomEntityType {
 
     override val sounds = null
     override val abilities: List<RandomOption<Ability>> = listOf(
+        RandomOption(25, StompAbility),
+        RandomOption(25, ShootSnowballsAbility),
+        RandomOption(25, PullAbility),
     )
 }
