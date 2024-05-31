@@ -16,17 +16,24 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+private fun getStompRadius(
+    healthPercent: Double
+) = 2 + (10 - (10 * healthPercent))
+
+private fun getMaxStompKnockback(
+    healthPercent: Double
+) = 0.5 + (3 - (3 * healthPercent))
+
 private fun getKnockbackStrength(
     distance: Double,
-) = MAX_STOMP_KNOCKBACK * (1 - min(1.0, distance / STOMP_RADIUS))
-
-private const val STOMP_RADIUS = 8.0
-private const val MAX_STOMP_KNOCKBACK = 1.2
+    maxDistance: Double,
+    maxKnockback: Double
+) = maxKnockback * (1 - min(1.0, distance / maxDistance))
 
 private val REMOVE_Y_VEC = Vector(1.0, 0.0, 1.0)
 private val Y_KNOCKBACK_VEC = Vector(0.0, 0.6, 0.0)
 
-object StompAbility : Ability {
+object CowStompAbility : Ability {
     override fun cast(caster: LivingEntity) {
         val creature = caster as? Creature ?: return
         val target = creature.target ?: return
@@ -95,20 +102,23 @@ object StompAbility : Ability {
             val maxHealth = caster.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: caster.health
             val healthPercent = caster.health / maxHealth
 
+            val stompRadius = getStompRadius(healthPercent)
+            val maxStompKnockBack = getMaxStompKnockback(healthPercent)
+
             val castLocVec = caster.location.toVector()
-            val targets = DungeonUtil.getNearbyPlayers(caster, STOMP_RADIUS)
+            val targets = DungeonUtil.getNearbyPlayers(caster, stompRadius)
 
             for (player in targets) {
                 val distanceVector = player.location.toVector().subtract(castLocVec)
                 val distance = distanceVector.length()
                 val direction = distanceVector.multiply(REMOVE_Y_VEC).normalize().add(Y_KNOCKBACK_VEC)
-                val knockbackStrength = getKnockbackStrength(distance)
+                val knockbackStrength = getKnockbackStrength(distance, stompRadius, maxStompKnockBack)
                 val knockback = direction.multiply(knockbackStrength)
 
                 player.velocity = knockback
             }
 
-            createParticle()
+            createParticle(healthPercent)
             caster.world.playSound(caster.location, Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.AMBIENT, (3 - 2.5 * healthPercent).toFloat(), 0.8f)
 
             this.cancel()
@@ -120,13 +130,14 @@ object StompAbility : Ability {
             return true
         }
 
-        private fun createParticle() {
+        private fun createParticle(healthPercent: Double) {
             val world = caster.world
             val location = caster.location
+            val area = 5 - 5 * healthPercent
             world.spawnParticle(
-                Particle.CLOUD,
-                location.x, location.y + 0.05, location.z,
-                100, 3.0, 0.1, 3.0, 0.15
+                Particle.DAMAGE_INDICATOR,
+                location.x, location.y + 0.15, location.z,
+                (100 - 100 * healthPercent).toInt(), area, 0.1, area, 0.1
             )
         }
     }
