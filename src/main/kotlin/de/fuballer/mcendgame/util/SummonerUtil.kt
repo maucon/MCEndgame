@@ -1,18 +1,43 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerService
+import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
+import de.fuballer.mcendgame.event.EventGateway
+import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMinionIds
+import de.fuballer.mcendgame.util.extension.EntityExtension.setDisableDropEquipment
+import de.fuballer.mcendgame.util.extension.EntityExtension.setIsMinion
 import de.fuballer.mcendgame.util.extension.EntityExtension.setMinionIds
+import org.bukkit.Location
 import org.bukkit.entity.Creature
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 
 object SummonerUtil {
-    lateinit var summonerService: SummonerService // FIXME
+    fun summonMinions(
+        summoner: Creature,
+        minionType: CustomEntityType,
+        amount: Int,
+        spawnLocation: Location,
+    ): Set<LivingEntity> {
+        val mapTier = summoner.getMapTier() ?: -1
+
+        val minions = (0 until amount)
+            .map { summonMinion(mapTier, minionType, spawnLocation) }
+            .toSet()
+
+        addMinions(summoner, minions)
+        setMinionsTarget(summoner, minions)
+
+        val event = DungeonEnemySpawnedEvent(summoner.world, minions)
+        EventGateway.apply(event)
+
+        return minions
+    }
 
     fun getMinionEntities(summoner: Entity): List<Creature> {
         val world = summoner.world
-        val minionIds = summoner.getMinionIds() ?: return listOf()
+        val minionIds = summoner.getMinionIds()
 
         val aliveMinions = WorldUtil.getFilteredEntities(world, minionIds, Creature::class)
             .filter { !it.isDead }
@@ -25,7 +50,7 @@ object SummonerUtil {
     fun addMinions(summoner: Entity, newMinions: Collection<Entity>) {
         val minionIds = newMinions.map { it.uniqueId }
             .toMutableList()
-        val oldMinionsIds = summoner.getMinionIds() ?: listOf()
+        val oldMinionsIds = summoner.getMinionIds()
 
         minionIds.addAll(oldMinionsIds)
         summoner.setMinionIds(minionIds)
@@ -36,5 +61,18 @@ object SummonerUtil {
 
         minions.mapNotNull { it as? Creature }
             .forEach { it.target = target }
+    }
+
+    private fun summonMinion(
+        mapTier: Int,
+        minionType: CustomEntityType,
+        spawnLocation: Location,
+    ): LivingEntity {
+        val minion = EntityUtil.spawnCustomEntity(minionType, spawnLocation, mapTier) as LivingEntity
+
+        minion.setIsMinion()
+        minion.setDisableDropEquipment()
+
+        return minion
     }
 }

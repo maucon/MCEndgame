@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityEnt
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityRepository
 import de.fuballer.mcendgame.component.custom_entity.ability.runner.EntityRunner
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.EntityExtension.canUseAbilities
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import org.bukkit.entity.Creature
@@ -23,6 +24,7 @@ class AbilityService(
         val entity = event.entity as? Creature ?: return
         if (event.target !is Player) return
 
+        if (!entity.canUseAbilities()) return
         val type = entity.getCustomEntityType() ?: return
         if (type.abilities == null) return
 

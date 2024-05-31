@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplyDarknessAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.FireCascadeAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.FlameBlastAbility
-import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ShootFireArrowsAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.KnockbackAbility
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.entity.EntityType
@@ -28,7 +28,7 @@ object CerberusEntityType : CustomEntityType {
     override val sounds = null
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(35, FireCascadeAbility),
-        RandomOption(30, ShootFireArrowsAbility),
+        RandomOption(10, KnockbackAbility),
         RandomOption(25, ApplyDarknessAbility),
         RandomOption(35, FlameBlastAbility),
     )

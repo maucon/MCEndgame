@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.dungeon.type
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.buff_cow.BuffCowEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.cerberus.CerberusEntityType
-import de.fuballer.mcendgame.component.custom_entity.types.demoic_golem.DemonicGolemEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.demonic_golem.DemonicGolemEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.husk.HuskEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.melee_skeleton.MeleeSkeletonEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.minotaur.MinotaurEntityType

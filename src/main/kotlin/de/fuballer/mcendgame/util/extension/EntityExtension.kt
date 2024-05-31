@@ -48,7 +48,7 @@ object EntityExtension {
         PersistentDataUtil.setValue(this, TypeKeys.MINION_IDS, value)
     }
 
-    fun Entity.getMinionIds() = PersistentDataUtil.getValue(this, TypeKeys.MINION_IDS)
+    fun Entity.getMinionIds() = PersistentDataUtil.getValue(this, TypeKeys.MINION_IDS) ?: listOf()
 
     fun Entity.setIsPortal(value: Boolean = true) {
         PersistentDataUtil.setValue(this, TypeKeys.IS_PORTAL, value)
@@ -62,11 +62,23 @@ object EntityExtension {
 
     fun Entity.isBoss() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_BOSS)
 
+    fun Entity.setCanUseAbilities(value: Boolean = true) {
+        PersistentDataUtil.setValue(this, TypeKeys.CAN_USE_ABILITIES, value)
+    }
+
+    fun Entity.canUseAbilities() = PersistentDataUtil.getBooleanValue(this, TypeKeys.CAN_USE_ABILITIES, true)
+
     fun Entity.setIsForcedVehicle(value: Boolean = true) {
         PersistentDataUtil.setValue(this, TypeKeys.IS_FORCED_VEHICLE, value)
     }
 
     fun Entity.isForcedVehicle() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_FORCED_VEHICLE)
+
+    fun Entity.setHitCountBasedHealth(value: Int) {
+        PersistentDataUtil.setValue(this, TypeKeys.HIT_COUNT_BASED_HEALTH, value)
+    }
+
+    fun Entity.getHitCountBasedHealth() = PersistentDataUtil.getValue(this, TypeKeys.HIT_COUNT_BASED_HEALTH)
 
     fun Entity.setPortalLocation(value: Location) {
         PersistentDataUtil.setValue(this, TypeKeys.PORTAL_LOCATION, value)

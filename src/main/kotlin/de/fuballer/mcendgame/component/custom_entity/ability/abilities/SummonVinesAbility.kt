@@ -28,7 +28,7 @@ object SummonVinesAbility : Ability {
 
         val vines = mutableSetOf<LivingEntity>()
         for (target in targets) {
-            val newVines = SummonerUtil.summonerService.summonMinions(
+            val newVines = SummonerUtil.summonMinions(
                 creature,
                 ChupacabraEntityType,
                 amount,

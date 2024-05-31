@@ -22,9 +22,11 @@ object TypeKeys {
     val MINION_IDS = TypeKey(createNamespacedKey("minions"), PersistentList(PersistentUUID))
     val IS_PORTAL = TypeKey(createNamespacedKey("is_portal"), PersistentDataType.BOOLEAN)
     val IS_BOSS = TypeKey(createNamespacedKey("is_boss"), PersistentDataType.BOOLEAN)
+    val CAN_USE_ABILITIES = TypeKey(createNamespacedKey("can_use_abilities"), PersistentDataType.BOOLEAN)
     val PORTAL_LOCATION = TypeKey(createNamespacedKey("portal_location"), PersistentLocation)
     val MODIFIERS = TypeKey(createNamespacedKey("modifiers"), PersistentList(PersistentModifier))
     val IS_FORCED_VEHICLE = TypeKey(createNamespacedKey("is_forced_vehicle"), PersistentDataType.BOOLEAN)
+    val HIT_COUNT_BASED_HEALTH = TypeKey(createNamespacedKey("hit_count_based_health"), PersistentDataType.INTEGER)
 
     // projectile
     val PROJECTILE_ADDED_BASE_DAMAGE = TypeKey(createNamespacedKey("projectile_added_base_damage"), PersistentDataType.DOUBLE)
