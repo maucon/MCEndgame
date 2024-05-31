@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.custom_entity.types.minotaur
 import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplySpeedAbility
-import de.fuballer.mcendgame.component.custom_entity.ability.abilities.CowStompAbility
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.StompAbility
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.entity.EntityType
@@ -27,6 +27,6 @@ object MinotaurEntityType : CustomEntityType {
     override val sounds = EntitySoundData.create("minotaur")
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(20, ApplySpeedAbility),
-        RandomOption(30, CowStompAbility),
+        RandomOption(30, StompAbility),
     )
 }

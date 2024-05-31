@@ -18,9 +18,7 @@ import kotlin.math.sqrt
 
 private fun getKnockbackStrength(
     distance: Double,
-    maxDistance: Double,
-    maxKnockback: Double
-) = maxKnockback * (1 - min(1.0, distance / maxDistance))
+) = MAX_STOMP_KNOCKBACK * (1 - min(1.0, distance / STOMP_RADIUS))
 
 private const val STOMP_RADIUS = 8.0
 private const val MAX_STOMP_KNOCKBACK = 1.2
@@ -104,13 +102,13 @@ object StompAbility : Ability {
                 val distanceVector = player.location.toVector().subtract(castLocVec)
                 val distance = distanceVector.length()
                 val direction = distanceVector.multiply(REMOVE_Y_VEC).normalize().add(Y_KNOCKBACK_VEC)
-                val knockbackStrength = getKnockbackStrength(distance, STOMP_RADIUS, MAX_STOMP_KNOCKBACK)
+                val knockbackStrength = getKnockbackStrength(distance)
                 val knockback = direction.multiply(knockbackStrength)
 
                 player.velocity = knockback
             }
 
-            createParticle(healthPercent)
+            createParticle()
             caster.world.playSound(caster.location, Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.AMBIENT, (3 - 2.5 * healthPercent).toFloat(), 0.8f)
 
             this.cancel()
@@ -122,14 +120,13 @@ object StompAbility : Ability {
             return true
         }
 
-        private fun createParticle(healthPercent: Double) {
+        private fun createParticle() {
             val world = caster.world
             val location = caster.location
-            val area = 5 - 5 * healthPercent
             world.spawnParticle(
-                Particle.DAMAGE_INDICATOR,
-                location.x, location.y + 0.15, location.z,
-                (100 - 100 * healthPercent).toInt(), area, 0.1, area, 0.1
+                Particle.CLOUD,
+                location.x, location.y + 0.05, location.z,
+                100, 3.0, 0.1, 3.0, 0.15
             )
         }
     }
