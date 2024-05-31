@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.component.custom_entity.summoner
 
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.SummonerUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMinionIds
 import org.bukkit.entity.Creature

@@ -2,9 +2,9 @@ package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.AbilitySettings
+import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerUtil
 import de.fuballer.mcendgame.component.custom_entity.types.chupacabra.ChupacabraEntityType
 import de.fuballer.mcendgame.util.DungeonUtil
-import de.fuballer.mcendgame.util.SummonerUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
@@ -26,19 +26,8 @@ object SummonVinesAbility : Ability {
         val amount = getSummonVineAmountPerTarget(mapTier)
         val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
 
-        val vines = mutableSetOf<LivingEntity>()
-        for (target in targets) {
-            val newVines = SummonerUtil.summonMinions(
-                creature,
-                ChupacabraEntityType,
-                amount,
-                target.location
-            )
-            vines.addAll(newVines)
-        }
-
-        for (vine in vines) {
-            vine.velocity = Vector(1 - Random.nextDouble() * 2, 0.2 + Random.nextDouble() * 0.1, 1 - Random.nextDouble() * 2)
-        }
+        targets
+            .flatMap { SummonerUtil.summonMinions(creature, ChupacabraEntityType, amount, it.location) }
+            .forEach { it.velocity = Vector(1 - Random.nextDouble() * 2, 0.2 + Random.nextDouble() * 0.1, 1 - Random.nextDouble() * 2) }
     }
 }

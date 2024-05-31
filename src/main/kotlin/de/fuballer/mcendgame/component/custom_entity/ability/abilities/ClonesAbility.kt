@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
-import de.fuballer.mcendgame.util.SummonerUtil
+import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.extension.EntityExtension.setCanUseAbilities

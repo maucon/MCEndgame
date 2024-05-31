@@ -2,9 +2,9 @@ package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.AbilitySettings
+import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerUtil
 import de.fuballer.mcendgame.component.custom_entity.types.chupacabra.ChupacabraEntityType
 import de.fuballer.mcendgame.util.DungeonUtil
-import de.fuballer.mcendgame.util.SummonerUtil
 import org.bukkit.Particle
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
@@ -26,12 +26,7 @@ object SummonChupacabraAbility : Ability {
         val spawnAmount = getChupacabraSpawnAmount(caster)
         if (spawnAmount <= 0) return
 
-        SummonerUtil.summonMinions(
-            creature,
-            ChupacabraEntityType,
-            spawnAmount,
-            creature.location
-        )
+        SummonerUtil.summonMinions(creature, ChupacabraEntityType, spawnAmount, creature.location)
 
         val location = caster.eyeLocation
         caster.world.spawnParticle(

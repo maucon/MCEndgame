@@ -1,11 +1,14 @@
-package de.fuballer.mcendgame.util
+package de.fuballer.mcendgame.component.custom_entity.summoner
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
+import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMinionIds
 import de.fuballer.mcendgame.util.extension.EntityExtension.setDisableDropEquipment
+import de.fuballer.mcendgame.util.extension.EntityExtension.setIsEnemy
 import de.fuballer.mcendgame.util.extension.EntityExtension.setIsMinion
 import de.fuballer.mcendgame.util.extension.EntityExtension.setMinionIds
 import org.bukkit.Location
@@ -70,6 +73,7 @@ object SummonerUtil {
     ): LivingEntity {
         val minion = EntityUtil.spawnCustomEntity(minionType, spawnLocation, mapTier) as LivingEntity
 
+        minion.setIsEnemy()
         minion.setIsMinion()
         minion.setDisableDropEquipment()
 
