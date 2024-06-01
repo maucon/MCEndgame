@@ -25,18 +25,27 @@ object LootSettings {
     fun getCustomItemDropChance(mapTier: Int) = 0.000004 * pow(mapTier, 2) + 0.00003 * mapTier + 0.0003
 
     val CUSTOM_ITEM_OPTIONS = listOf(
+        RandomOption(1, AbyssalMaskItemType),
         RandomOption(1, ArcheryAnnexItemType),
         RandomOption(1, ArrowfallItemType),
         RandomOption(1, BitterfrostItemType),
+        RandomOption(1, BloodlustItemType),
+        RandomOption(1, ChaosguardItemType),
         RandomOption(1, FatesplitterItemType),
+        RandomOption(1, GalestrideItemType),
         RandomOption(1, GeistergaloschenItemType),
         RandomOption(1, HeadhuntersHaremType),
         RandomOption(1, LifewardAegisItemType),
+        RandomOption(1, MoonshadowItemType),
+        RandomOption(1, SerpentsFangItemType),
         RandomOption(1, ShrinkshadowItemType),
+        RandomOption(1, StonewardItemType),
         RandomOption(1, StormfeatherItemType),
         RandomOption(1, TitansEmbraceItemType),
         RandomOption(1, TwinfireItemType),
+        RandomOption(1, TyrantsReachItemType),
         RandomOption(1, VitalitySurgeItemType),
+        RandomOption(1, WingedFlightItemType),
     )
 
     fun getBossOrbAmount(mapTier: Int) = 0.5 + 0.05 * (mapTier - 1)

@@ -6,14 +6,13 @@ import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.armor.Chestplate
 import de.fuballer.mcendgame.util.PluginUtil
 
-object TitansEmbraceItemType : CustomItemType {
-    override val key = PluginUtil.createNamespacedKey("titans_embrace")
-    override val customName = "Titan's Embrace"
+object ChaosguardItemType : CustomItemType {
+    override val key = PluginUtil.createNamespacedKey("chaosguard")
+    override val customName = "Chaosguard"
     override val equipment = Chestplate.NETHERITE
-    override val usesEquipmentBaseStats = false
+    override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.SIZE_INCREASE, 0.1, 0.25),
-        RollableAttribute(AttributeType.MAX_HEALTH, 3.0, 6.0),
-        RollableAttribute(AttributeType.MAX_HEALTH_INCREASE, 0.1, 0.2),
+        RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 3.0, 5.0),
+        RollableAttribute(AttributeType.RANDOMIZED_DAMAGE_TAKEN, 1.4, 1.6),
     )
 }

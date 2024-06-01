@@ -27,6 +27,7 @@ class DamageCalculationEvent(
     var enchantDamage: Double = 0.0,
     var isCritical: Boolean = false,
     var criticalRoll: Double = 0.0,
+    var isExecute: Boolean = false, //TODO actually use it
     var sweepingEdgeMultiplier: Double = 0.0,
     var onHitPotionEffects: MutableList<PotionEffect> = mutableListOf(),
 ) : HandleableEvent(), Cancellable {

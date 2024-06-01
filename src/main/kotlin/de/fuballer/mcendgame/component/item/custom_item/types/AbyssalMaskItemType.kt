@@ -3,15 +3,15 @@ package de.fuballer.mcendgame.component.item.custom_item.types
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
-import de.fuballer.mcendgame.component.item.equipment.armor.Chestplate
+import de.fuballer.mcendgame.component.item.equipment.armor.Helmet
 import de.fuballer.mcendgame.util.PluginUtil
 
-object ArrowfallItemType : CustomItemType {
-    override val key = PluginUtil.createNamespacedKey("arrowfall")
-    override val customName = "Arrowfall"
-    override val equipment = Chestplate.NETHERITE
+object AbyssalMaskItemType : CustomItemType {
+    override val key = PluginUtil.createNamespacedKey("abyssal_mask")
+    override val customName = "Abyssal Mask"
+    override val equipment = Helmet.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.ADDITIONAL_ARROWS, 0.3, 0.85),
+        RollableAttribute(AttributeType.NEGATIVE_EFFECT_IMMUNITY, 0.0, 0.0),
     )
 }
