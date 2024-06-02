@@ -14,6 +14,7 @@ data class StatisticsEntity(
     var highestCompletedDungeon: Int = 0,
     var dungeonsOpened: Int = 0,
     var totalKills: Int = 0,
+    var bossKills: Int = 0,
     var deaths: Int = 0,
     var highestKillstreak: Int = 0,
 
@@ -44,7 +45,7 @@ data class StatisticsEntity(
 
         val page1 = createPage(
             listOf(
-                StatisticsSettings.STATISTICS_BOOK_BASICS_HEADLINE,
+                StatisticsSettings.STATISTICS_BOOK_DUNGEONS_HEADLINE,
                 "",
                 StatisticsSettings.DUNGEONS_OPENED_TEXT,
                 "   $dungeonsOpened",
@@ -52,17 +53,27 @@ data class StatisticsEntity(
                 "   $dungeonsCompleted",
                 StatisticsSettings.HIGHEST_DUNGEONS_COMPLETED_TEXT,
                 "   $highestCompletedDungeon",
+            )
+        )
+        pages.add(page1)
+
+        val page2 = createPage(
+            listOf(
+                StatisticsSettings.STATISTICS_BOOK_COMBAT_HEADLINE,
+                "",
                 StatisticsSettings.TOTAL_KILLS_TEXT,
                 "   $totalKills",
+                StatisticsSettings.BOSS_KILLS_TEXT,
+                "   $bossKills",
                 StatisticsSettings.DEATHS_TEXT,
                 "   $deaths",
                 StatisticsSettings.KILLSTREAK_TEXT,
                 "   $highestKillstreak"
             )
         )
-        pages.add(page1)
+        pages.add(page2)
 
-        val page2 = createPage(
+        val page3 = createPage(
             listOf(
                 StatisticsSettings.STATISTICS_BOOK_DAMAGE_HEADLINE,
                 "",
@@ -78,7 +89,7 @@ data class StatisticsEntity(
                 "   ${String.format("%.2f", rawDamageTaken)}"
             )
         )
-        pages.add(page2)
+        pages.add(page3)
 
         return pages
     }

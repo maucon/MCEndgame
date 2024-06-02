@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.statistics.db.StatisticsEntity
 import de.fuballer.mcendgame.component.statistics.db.StatisticsRepository
 import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
@@ -41,7 +42,7 @@ class StatisticsService(
         val killer = monster.killer ?: return
         val player = killer as? Player ?: return
 
-        onMonsterKilledByPlayer(player)
+        onMonsterKilledByPlayer(player, monster)
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -96,9 +97,13 @@ class StatisticsService(
         statisticsRepo.flush()
     }
 
-    private fun onMonsterKilledByPlayer(player: Player) {
+    private fun onMonsterKilledByPlayer(player: Player, monster: Monster) {
         val statistics = statisticsRepo.findById(player.uniqueId) ?: return
         statistics.totalKills++
+
+        if (monster.isBoss()) {
+            statistics.bossKills++
+        }
 
         statisticsRepo.save(statistics)
     }
