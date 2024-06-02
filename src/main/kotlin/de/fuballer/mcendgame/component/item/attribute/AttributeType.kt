@@ -54,6 +54,12 @@ enum class AttributeType(
             Attribute.GENERIC_ATTACK_SPEED, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
+    ATTACK_RANGE(
+        { "+${DECIMAL_FORMAT.format(it)} Attack Range" },
+        VanillaAttributeType(
+            Attribute.GENERIC_LUCK, AttributeModifier.Operation.ADD_NUMBER // FIXME when range attribute gets implemented
+        )
+    ),
     ARMOR(
         { "+${DECIMAL_FORMAT.format(it)} Armor" },
         VanillaAttributeType(
@@ -78,9 +84,6 @@ enum class AttributeType(
             Attribute.GENERIC_LUCK, AttributeModifier.Operation.ADD_SCALAR // FIXME when size attribute gets implemented
         )
     ),
-
-    // custom
-    HEALTH_SCALED_SIZE({ " ${DECIMAL_FORMAT.format(it)}% increased size per 2 extra health" }),
 
     DISABLE_MELEE({ " Cannot deal melee damage" }),
 
@@ -107,4 +110,12 @@ enum class AttributeType(
     SLOW_ON_HIT({ " Affect nearby enemies with Slowness II for ${DECIMAL_FORMAT.format(it)} seconds on hit" }),
 
     TAUNT({ "+${DECIMAL_FORMAT.format(it * 100)}% chance to taunt an enemy on hit" }),
+
+    CRITICAL_DAMAGE({ " Critical strikes deal ${DECIMAL_FORMAT.format(it * 100)}% more damage" }),
+
+    CRITICAL_EXECUTE({ " Critical strikes execute enemies below ${DECIMAL_FORMAT.format(it * 100)}% health" }),
+
+    RANDOMIZED_DAMAGE_TAKEN({ " Damage taken is randomized between 25% and ${DECIMAL_FORMAT.format(it * 100)}%" }),
+
+    NEGATIVE_EFFECT_IMMUNITY({ " Immune to negative effects" }),
 }

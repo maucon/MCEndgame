@@ -14,18 +14,27 @@ interface CustomItemType : Keyed {
 
     companion object {
         val REGISTRY = KeyedRegistry<CustomItemType>().also {
+            it.register(AbyssalMaskItemType)
             it.register(ArcheryAnnexItemType)
             it.register(ArrowfallItemType)
             it.register(BitterfrostItemType)
+            it.register(BloodlustItemType)
+            it.register(ChaosguardItemType)
             it.register(FatesplitterItemType)
+            it.register(GalestrideItemType)
             it.register(GeistergaloschenItemType)
             it.register(HeadhuntersHaremType)
             it.register(LifewardAegisItemType)
+            it.register(MoonshadowItemType)
+            it.register(SerpentsFangItemType)
             it.register(ShrinkshadowItemType)
+            it.register(StonewardItemType)
             it.register(StormfeatherItemType)
             it.register(TitansEmbraceItemType)
             it.register(TwinfireItemType)
+            it.register(TyrantsReachItemType)
             it.register(VitalitySurgeItemType)
+            it.register(WingedFlightItemType)
         }
     }
 }
