@@ -57,7 +57,7 @@ class DamageService(
         val target = damageEvent.damaged
 
         if (damageEvent.isExecute) {
-            target.damage(Double.MAX_VALUE)
+            target.damage(99999.0)
         }
         damageEvent.onHitPotionEffects.forEach {
             target.addPotionEffect(it)
@@ -101,21 +101,24 @@ class DamageService(
         val cause = event.cause
         val isDungeonWorld = event.damager.world.isDungeonWorld()
 
-        val baseDamage = event.finalDamage
         val isDamageBlocked = event.getDamage(DamageModifier.BLOCKING) < 0
         val isCritical = DamageUtil.isCritical(event.cause, event.damager)
 
-        return DamageCalculationEvent(baseDamage, damager, damagedEntity, cause, isDungeonWorld, isDamageBlocked, isCritical)
+        return DamageCalculationEvent(event, damager, damagedEntity, cause, isDungeonWorld, isDamageBlocked, isCritical)
     }
 
     private fun updateOriginalEvent(originalEvent: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent) {
-        val rawDamage = originalEvent.damage
-        val addedFinalDamage = damageEvent.getFinalDamage() - originalEvent.finalDamage
+        val oldRawDamage = originalEvent.damage
+        val oldAbsorbedDamage = abs(originalEvent.getDamage(DamageModifier.ABSORPTION))
+        val oldDamage = originalEvent.finalDamage + oldAbsorbedDamage
 
-        val newRawDamage = rawDamage + addedFinalDamage
-        val absorbableDamage = DamageUtil.getAbsorbableDamage(damageEvent.damaged, newRawDamage)
+        val addedDamage = damageEvent.getFinalDamage() - oldDamage
 
-        originalEvent.setDamage(DamageModifier.BASE, newRawDamage)
-        originalEvent.setDamage(DamageModifier.ABSORPTION, absorbableDamage)
+        val rawDamage = oldRawDamage + addedDamage
+        originalEvent.setDamage(DamageModifier.BASE, rawDamage)
+        originalEvent.setDamage(DamageModifier.ABSORPTION, 0.0)
+
+        val absorbedDamage = DamageUtil.getAbsorptionDamage(damageEvent.damaged, originalEvent.finalDamage)
+        originalEvent.setDamage(DamageModifier.ABSORPTION, -absorbedDamage)
     }
 }

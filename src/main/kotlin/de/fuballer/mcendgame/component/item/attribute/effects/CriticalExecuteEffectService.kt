@@ -19,7 +19,7 @@ class CriticalExecuteEffectService : Listener {
 
         val damaged = event.damaged
         val damagedHealth = damaged.health
-        val damagedMaxHealth = damaged.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: damagedHealth
+        val damagedMaxHealth = damaged.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value!!
         val damagedHealthPercent = damagedHealth / damagedMaxHealth
 
         if (damagedHealthPercent > highestValue) return
