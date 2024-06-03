@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
+import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Entity
@@ -28,7 +28,7 @@ object DamageUtil {
         max(0.0, min(entity.absorptionAmount, damage))
 
     fun getEntityCustomAttributes(entity: LivingEntity): Map<AttributeType, List<Double>> {
-        val attributes: MutableList<RolledAttribute> = mutableListOf()
+        val attributes = mutableListOf<RolledAttribute>()
         val equipment = entity.equipment ?: return mapOf()
 
         equipment.helmet?.getRolledAttributes()?.let { attributes.addAll(it) }
@@ -36,18 +36,20 @@ object DamageUtil {
         equipment.leggings?.getRolledAttributes()?.let { attributes.addAll(it) }
         equipment.boots?.getRolledAttributes()?.let { attributes.addAll(it) }
 
-        equipment.itemInMainHand.getCustomItemType()?.also { customItemType ->
-            val customItemEquipment = customItemType.equipment
-            if (customItemEquipment.slot == EquipmentSlot.HAND || !customItemEquipment.extraAttributesInSlot) {
-                equipment.itemInMainHand.getRolledAttributes()?.let { attributes.addAll(it) }
-            }
+        val mainHandItem = equipment.itemInMainHand
+        val grantAttributesInMainHand = Equipment.fromMaterial(mainHandItem.type)
+            ?.let { it.slot == EquipmentSlot.HAND || !it.extraAttributesInSlot } ?: false
+
+        if (grantAttributesInMainHand) {
+            mainHandItem.getRolledAttributes()?.let { attributes.addAll(it) }
         }
 
-        equipment.itemInOffHand.getCustomItemType()?.also { customItemType ->
-            val customItemEquipment = customItemType.equipment
-            if (customItemEquipment.slot == EquipmentSlot.OFF_HAND || !customItemEquipment.extraAttributesInSlot) {
-                equipment.itemInOffHand.getRolledAttributes()?.let { attributes.addAll(it) }
-            }
+        val offHandItem = equipment.itemInOffHand
+        val grantAttributesInOffHand = Equipment.fromMaterial(offHandItem.type)
+            ?.let { it.slot == EquipmentSlot.OFF_HAND || !it.extraAttributesInSlot } ?: false
+
+        if (grantAttributesInOffHand) {
+            offHandItem.getRolledAttributes()?.let { attributes.addAll(it) }
         }
 
         return attributes

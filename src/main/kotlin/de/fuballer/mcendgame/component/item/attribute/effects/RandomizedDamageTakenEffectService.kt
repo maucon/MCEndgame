@@ -13,10 +13,10 @@ private const val MIN_ROLL = 0.25 // should be equal to attribute type descripti
 class RandomizedDamageTakenEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        val randomizedDamageTakenAttributes = event.damagerAttributes[AttributeType.RANDOMIZED_DAMAGE_TAKEN] ?: return
+        val randomizedDamageTakenAttributes = event.damagedAttributes[AttributeType.RANDOMIZED_DAMAGE_TAKEN] ?: return
 
         randomizedDamageTakenAttributes.forEach {
-            val multiplier = MIN_ROLL + (it - MIN_ROLL) * Random.nextDouble()
+            val multiplier = MIN_ROLL + (it - MIN_ROLL) * Random.nextDouble() - 1
             event.moreDamage.add(multiplier)
         }
     }
