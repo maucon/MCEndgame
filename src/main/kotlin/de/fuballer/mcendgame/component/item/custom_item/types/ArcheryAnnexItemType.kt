@@ -12,7 +12,7 @@ object ArcheryAnnexItemType : CustomItemType {
     override val equipment = Helmet.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.ATTACK_DAMAGE, 5.0, 10.0),
+        RollableAttribute(AttributeType.INCREASED_PROJECTILE_DAMAGE, 50.0, 150.0),
         RollableAttribute(AttributeType.DISABLE_MELEE, 1.0),
     )
 }

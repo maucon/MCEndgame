@@ -4,7 +4,6 @@ import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
-import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -15,8 +14,7 @@ import org.bukkit.potion.PotionEffectType
 class SlowWhenHitEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        val damagerCustomAttributes = event.damager.getCustomAttributes()
-        val slowOnHitAttributes = damagerCustomAttributes[AttributeType.SLOW_ON_HIT] ?: return
+        val slowOnHitAttributes = event.damagerAttributes[AttributeType.SLOW_ON_HIT] ?: return
         val slowOnHitAttribute = slowOnHitAttributes.max()
 
         val duration = (slowOnHitAttribute * 20).toInt()

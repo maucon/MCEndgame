@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.DamageUtil
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
+import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -97,14 +98,18 @@ class DamageService(
      */
     private fun createDamageEvent(event: EntityDamageByEntityEvent): DamageCalculationEvent? {
         val damager = EntityUtil.getLivingEntityDamager(event.damager) ?: return null
-        val damagedEntity = event.entity as? LivingEntity ?: return null
+        val damagerAttributes = damager.getCustomAttributes()
+
+        val damaged = event.entity as? LivingEntity ?: return null
+        val damagedAttributes = damaged.getCustomAttributes()
+
         val cause = event.cause
         val isDungeonWorld = event.damager.world.isDungeonWorld()
 
         val isDamageBlocked = event.getDamage(DamageModifier.BLOCKING) < 0
         val isCritical = DamageUtil.isCritical(event.cause, event.damager)
 
-        return DamageCalculationEvent(event, damager, damagedEntity, cause, isDungeonWorld, isDamageBlocked, isCritical)
+        return DamageCalculationEvent(event, damager, damagerAttributes, damaged, damagedAttributes, cause, isDungeonWorld, isDamageBlocked, isCritical)
     }
 
     private fun updateOriginalEvent(originalEvent: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent) {

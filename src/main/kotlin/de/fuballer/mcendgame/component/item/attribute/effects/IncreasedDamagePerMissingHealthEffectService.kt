@@ -3,19 +3,17 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import org.bukkit.attribute.Attribute
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
 @Component
-class IncDamagePerMissingHealthEffectService : Listener {
+class IncreasedDamagePerMissingHealthEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        val damager = event.damager
-        val damagerCustomAttributes = damager.getCustomAttributes()
-        val incDamageAttributes = damagerCustomAttributes[AttributeType.INC_DAMAGE_PER_MISSING_HEART] ?: return
+        val incDamageAttributes = event.damagerAttributes[AttributeType.INCREASED_DAMAGE_PER_MISSING_HEART] ?: return
 
+        val damager = event.damager
         val missingHealth = damager.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value - damager.health
 
         incDamageAttributes.forEach {

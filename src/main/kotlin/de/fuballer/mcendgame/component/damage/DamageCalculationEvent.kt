@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.damage
 
+import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.event.HandleableEvent
 import de.fuballer.mcendgame.util.DamageUtil
 import org.bukkit.entity.LivingEntity
@@ -14,7 +15,11 @@ class DamageCalculationEvent(
     private val originalEvent: EntityDamageByEntityEvent,
 
     val damager: LivingEntity,
+    val damagerAttributes: Map<AttributeType, List<Double>>,
+
     val damaged: LivingEntity,
+    val damagedAttributes: Map<AttributeType, List<Double>>,
+
     val cause: DamageCause,
     val isDungeonWorld: Boolean,
     val isDamageBlocked: Boolean,

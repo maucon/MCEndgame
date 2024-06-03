@@ -85,6 +85,8 @@ enum class AttributeType(
         )
     ),
 
+    INCREASED_PROJECTILE_DAMAGE({ " Deal ${DECIMAL_FORMAT.format(it * 100)}% increased projectile damage" }),
+
     DISABLE_MELEE({ " Cannot deal melee damage" }),
 
     DODGE_CHANCE({ " ${DECIMAL_FORMAT.format(it * 100)}% chance to dodge hits" }),
@@ -105,7 +107,7 @@ enum class AttributeType(
 
     HEAL_ON_BLOCK({ " Heal ${DECIMAL_FORMAT.format(it)} health on block, with a cooldown of 7 seconds" }),
 
-    INC_DAMAGE_PER_MISSING_HEART({ " ${DECIMAL_FORMAT.format(it * 100)}% increased damage per missing heart" }),
+    INCREASED_DAMAGE_PER_MISSING_HEART({ " ${DECIMAL_FORMAT.format(it * 100)}% increased damage per missing heart" }),
 
     SLOW_ON_HIT({ " Affect nearby enemies with Slowness II for ${DECIMAL_FORMAT.format(it)} seconds on hit" }),
 

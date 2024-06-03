@@ -34,8 +34,7 @@ private val NEGATIVE_EFFECTS = listOf(
 class NegativeEffectImmunityEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        val damagerCustomAttributes = event.damager.getCustomAttributes()
-        damagerCustomAttributes[AttributeType.NEGATIVE_EFFECT_IMMUNITY] ?: return
+        if (!event.damagerAttributes.containsKey(AttributeType.NEGATIVE_EFFECT_IMMUNITY)) return
 
         event.onHitPotionEffects.clear()
     }
@@ -47,7 +46,7 @@ class NegativeEffectImmunityEffectService : Listener {
 
         val entity = event.entity as? LivingEntity ?: return
         val damagerCustomAttributes = entity.getCustomAttributes()
-        damagerCustomAttributes[AttributeType.NEGATIVE_EFFECT_IMMUNITY] ?: return
+        if (!damagerCustomAttributes.containsKey(AttributeType.NEGATIVE_EFFECT_IMMUNITY)) return
 
         event.cancel()
     }

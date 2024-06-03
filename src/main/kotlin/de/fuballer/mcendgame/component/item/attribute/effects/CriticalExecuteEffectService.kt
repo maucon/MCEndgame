@@ -3,7 +3,6 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import org.bukkit.attribute.Attribute
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -14,9 +13,7 @@ class CriticalExecuteEffectService : Listener {
     fun on(event: DamageCalculationEvent) {
         if (!event.isDamageCritical) return
 
-        val damagerCustomAttributes = event.damager.getCustomAttributes()
-        val criticalExecuteAttributes = damagerCustomAttributes[AttributeType.CRITICAL_EXECUTE] ?: return
-
+        val criticalExecuteAttributes = event.damagerAttributes[AttributeType.CRITICAL_EXECUTE] ?: return
         val highestValue = criticalExecuteAttributes.max()
 
         val damaged = event.damaged

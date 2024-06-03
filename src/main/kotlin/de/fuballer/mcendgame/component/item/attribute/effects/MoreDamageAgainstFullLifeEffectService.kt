@@ -3,7 +3,6 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import org.bukkit.Color
 import org.bukkit.Particle
 import org.bukkit.attribute.Attribute
@@ -16,10 +15,11 @@ import org.bukkit.event.Listener
 class MoreDamageAgainstFullLifeEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        val damagerCustomAttributes = event.damager.getCustomAttributes()
-        val moreDamageAttributes = damagerCustomAttributes[AttributeType.MORE_DAMAGE_AGAINST_FULL_LIFE] ?: return
+        val moreDamageAttributes = event.damagerAttributes[AttributeType.MORE_DAMAGE_AGAINST_FULL_LIFE] ?: return
 
-        if (event.damaged.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value > event.damaged.health + 0.1) return
+        val maxHealth = event.damaged.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
+        val currentHealth = event.damaged.health
+        if (maxHealth > currentHealth + 0.1) return
 
         spawnParticles(event.damaged)
 

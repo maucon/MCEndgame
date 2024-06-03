@@ -5,17 +5,18 @@ import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
 
 @Component
-class CriticalDamageEffectService : Listener {
+class IncreasedProjectileDamageEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        if (!event.isDamageCritical) return
+        if (event.cause != EntityDamageEvent.DamageCause.PROJECTILE) return
 
-        val criticalDamageAttributes = event.damagerAttributes[AttributeType.CRITICAL_DAMAGE] ?: return
+        val values = event.damagerAttributes[AttributeType.INCREASED_PROJECTILE_DAMAGE] ?: return
 
-        criticalDamageAttributes.forEach {
-            event.moreDamage.add(it)
+        values.forEach {
+            event.increasedDamage.add(it)
         }
     }
 }
