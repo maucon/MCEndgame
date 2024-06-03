@@ -1,7 +1,5 @@
 package de.fuballer.mcendgame.util
 
-import de.fuballer.mcendgame.util.extension.ProjectileExtension.getAddedBaseDamage
-import de.fuballer.mcendgame.util.extension.ProjectileExtension.setAddedBaseDamage
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.AbstractArrow
@@ -25,10 +23,6 @@ object EnemyUtil {
         newProjectile.velocity = targetPosition.subtract(oldProjectile.location.toVector()).normalize()
 
         shooter.world.playSound(shooter.location, sound, SoundCategory.HOSTILE, 1f, 1f)
-
-        val addedDamage = oldProjectile.getAddedBaseDamage() ?: 0.0
-        val damage = oldProjectile.damage + addedDamage
-        newProjectile.setAddedBaseDamage(damage)
 
         return newProjectile
     }

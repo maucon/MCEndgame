@@ -12,7 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.scheduler.BukkitRunnable
 
-const val baseAttackDelay = 10L
+private const val BASE_ATTACK_DELAY = 10L
 
 @Component
 class NecromancerService : Listener {
@@ -20,13 +20,11 @@ class NecromancerService : Listener {
     fun on(event: EntityShootBowEvent) {
         if (event.entity.getCustomEntityType() != NecromancerEntityType) return
         val necromancer = event.entity as? Creature ?: return
-
-        necromancer.swingMainHand()
-
         val arrow = event.projectile as? Arrow ?: return
         val target = necromancer.target ?: return
 
-        ShootWitherSkull(necromancer, arrow, target).runTaskLater(baseAttackDelay)
+        necromancer.swingMainHand()
+        ShootWitherSkull(necromancer, arrow, target).runTaskLater(BASE_ATTACK_DELAY)
 
         event.cancel()
     }
