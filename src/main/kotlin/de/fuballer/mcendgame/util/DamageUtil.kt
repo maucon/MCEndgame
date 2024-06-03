@@ -24,7 +24,8 @@ object DamageUtil {
         return damage
     }
 
-    fun getAbsorbableDamage(entity: LivingEntity, damage: Double) = max(0.0, min(entity.absorptionAmount, damage))
+    fun getAbsorbableDamage(entity: LivingEntity, damage: Double) =
+        max(0.0, min(entity.absorptionAmount, damage))
 
     fun getEntityCustomAttributes(entity: LivingEntity): Map<AttributeType, List<Double>> {
         val attributes: MutableList<RolledAttribute> = mutableListOf()

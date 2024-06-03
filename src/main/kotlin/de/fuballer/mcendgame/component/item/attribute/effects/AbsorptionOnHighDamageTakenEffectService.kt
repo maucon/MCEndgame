@@ -10,6 +10,8 @@ import org.bukkit.event.Listener
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
+private val ABSORPTION_EFFECT = PotionEffect(PotionEffectType.ABSORPTION, 100, 1, false, false, false)
+
 @Component
 class AbsorptionOnHighDamageTakenEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -20,6 +22,6 @@ class AbsorptionOnHighDamageTakenEffectService : Listener {
         val minDamage = absorptionAttributes.min()
         if (event.getFinalDamage() < minDamage) return
 
-        event.onHitPotionEffects.add(PotionEffect(PotionEffectType.ABSORPTION, 100, 1, false, false, false))
+        event.onHitPotionEffects.add(ABSORPTION_EFFECT)
     }
 }
