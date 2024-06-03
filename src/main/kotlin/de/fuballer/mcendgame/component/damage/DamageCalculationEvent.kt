@@ -18,7 +18,7 @@ class DamageCalculationEvent(
     val cause: DamageCause,
     val isDungeonWorld: Boolean,
     val isDamageBlocked: Boolean,
-    val isCritical: Boolean,
+    val isDamageCritical: Boolean,
 
     // === custom properties ===
     val increasedDamage: MutableList<Double> = mutableListOf(),

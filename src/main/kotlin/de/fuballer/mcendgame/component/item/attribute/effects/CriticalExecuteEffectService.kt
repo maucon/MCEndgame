@@ -12,6 +12,8 @@ import org.bukkit.event.Listener
 class CriticalExecuteEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
+        if (!event.isDamageCritical) return
+
         val damagerCustomAttributes = event.damager.getCustomAttributes()
         val criticalExecuteAttributes = damagerCustomAttributes[AttributeType.CRITICAL_EXECUTE] ?: return
 
