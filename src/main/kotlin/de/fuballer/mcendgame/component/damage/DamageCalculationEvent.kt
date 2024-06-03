@@ -6,7 +6,6 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.event.Cancellable
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.potion.PotionEffect
-import kotlin.math.max
 
 class DamageCalculationEvent(
     private val baseDamage: Double,
@@ -33,8 +32,6 @@ class DamageCalculationEvent(
         this.cancelled = cancel
     }
 
-    fun getFinalDamage(): Double {
-        val damage = DamageUtil.calculateFinalDamage(baseDamage, increasedDamage, moreDamage)
-        return max(damage, 0.0)
-    }
+    fun getFinalDamage(): Double =
+        DamageUtil.calculateFinalDamage(baseDamage, increasedDamage, moreDamage)
 }

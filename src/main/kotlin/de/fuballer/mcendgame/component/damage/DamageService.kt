@@ -109,11 +109,13 @@ class DamageService(
     }
 
     private fun updateOriginalEvent(originalEvent: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent) {
-        val finalDamage = damageEvent.getFinalDamage()
-        val absorbableDamage = DamageUtil.getAbsorbableDamage(damageEvent.damaged, finalDamage)
-        val leftDamage = finalDamage - absorbableDamage
+        val rawDamage = originalEvent.damage
+        val addedFinalDamage = damageEvent.getFinalDamage() - originalEvent.finalDamage
 
-        originalEvent.setDamage(DamageModifier.BASE, leftDamage)
+        val newRawDamage = rawDamage + addedFinalDamage
+        val absorbableDamage = DamageUtil.getAbsorbableDamage(damageEvent.damaged, newRawDamage)
+
+        originalEvent.setDamage(DamageModifier.BASE, newRawDamage)
         originalEvent.setDamage(DamageModifier.ABSORPTION, absorbableDamage)
     }
 }
