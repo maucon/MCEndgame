@@ -12,6 +12,13 @@ object ModifierUtil {
         setModifiers(modifiers)
     }
 
+    fun Entity.removeModifiersBySource(source: String) {
+        val modifiers = getModifiers().toMutableList()
+            .filter { it.source != source }
+
+        setModifiers(modifiers)
+    }
+
     fun calculateFinalModifierValue(
         entity: Entity,
         type: ModifierType,

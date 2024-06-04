@@ -17,7 +17,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
 import java.util.logging.Logger
 import kotlin.math.abs
 
-private const val ALWAYS_SHOW_DEBUG = true
+private const val ALWAYS_SHOW_DEBUG = false
 private const val EXECUTE_DAMAGE = 99999.0
 
 @Component

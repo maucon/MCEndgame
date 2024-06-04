@@ -12,6 +12,7 @@ import org.bukkit.persistence.PersistentDataType
 private val TYPE_KEY = PluginUtil.createNamespacedKey("type")
 private val OPERATION_KEY = PluginUtil.createNamespacedKey("operation")
 private val VALUE_KEY = PluginUtil.createNamespacedKey("value")
+private val SOURCE_KEY = PluginUtil.createNamespacedKey("source")
 
 object PersistentModifier : PersistentDataType<PersistentDataContainer, Modifier> {
     override fun getPrimitiveType() = PersistentDataContainer::class.java
@@ -24,6 +25,7 @@ object PersistentModifier : PersistentDataType<PersistentDataContainer, Modifier
         container.set(TYPE_KEY, PersistentEnum(ModifierType::class), complex.type)
         container.set(OPERATION_KEY, PersistentEnum(ModifierOperation::class), complex.operation)
         container.set(VALUE_KEY, PersistentDataType.DOUBLE, complex.value)
+        container.set(SOURCE_KEY, PersistentDataType.STRING, complex.source)
 
         return container
     }
@@ -32,7 +34,8 @@ object PersistentModifier : PersistentDataType<PersistentDataContainer, Modifier
         val type = primitive.get(TYPE_KEY, PersistentEnum(ModifierType::class))!!
         val operation = primitive.get(OPERATION_KEY, PersistentEnum(ModifierOperation::class))!!
         val value = primitive.get(VALUE_KEY, PersistentDataType.DOUBLE)!!
+        val source = primitive.get(SOURCE_KEY, PersistentDataType.STRING)!!
 
-        return Modifier(type, operation, value)
+        return Modifier(type, operation, value, source)
     }
 }

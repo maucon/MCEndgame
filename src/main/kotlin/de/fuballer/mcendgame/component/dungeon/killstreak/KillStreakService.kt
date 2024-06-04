@@ -10,14 +10,12 @@ import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Server
-import org.bukkit.World
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.player.PlayerChangedWorldEvent
 import kotlin.math.min
 
 @Component
@@ -25,6 +23,36 @@ class KillStreakService(
     private val killStreakRepo: KillStreakRepository,
     private val server: Server
 ) : Listener {
+    @EventHandler
+    fun on(event: DungeonOpenEvent) {
+        val name = event.dungeonWorld.name
+        if (killStreakRepo.exists(name)) return
+
+        val bossBar = server.createBossBar("0", KillStreakSettings.BAR_COLOR, KillStreakSettings.BAR_STYLE)
+            .apply { progress = 0.0 }
+        val killStreak = KillStreakEntity(name, bossBar)
+
+        killStreak.updateTask = SchedulingUtil.runTaskTimer(KillStreakSettings.TIMER_PERIOD) {
+            updateKillStreak(killStreak)
+        }
+
+        killStreakRepo.save(killStreak)
+    }
+
+    @EventHandler
+    fun on(event: PlayerDungeonJoinEvent) {
+        val player = event.player
+        val world = event.world
+
+        val killStreak = killStreakRepo.findById(world.name) ?: return
+        killStreak.bossBar.addPlayer(player)
+
+        killStreakRepo.save(killStreak)
+
+        val killStreakCreated = KillStreakCreatedEvent(killStreak.streak, player)
+        EventGateway.apply(killStreakCreated)
+    }
+
     @EventHandler
     fun on(event: DungeonEntityDeathEvent) {
         val entity = event.entity as? LivingEntity ?: return
@@ -41,8 +69,8 @@ class KillStreakService(
 
         killStreakRepo.save(killStreak)
 
-        val killStreakIncreaseEvent = KillStreakIncreaseEvent(killStreak.streak, entity.world)
-        EventGateway.apply(killStreakIncreaseEvent)
+        val killStreakUpdated = KillStreakUpdatedEvent(killStreak.streak, entity.world.players)
+        EventGateway.apply(killStreakUpdated)
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -70,29 +98,15 @@ class KillStreakService(
     @EventHandler
     fun on(event: PlayerDungeonLeaveEvent) {
         val player = event.player
-        val world = event.player.world
 
-        removePlayerFromBossBar(player, world)
-    }
+        killStreakRepo.findAllByPlayerInBossBar(player)
+            .forEach {
+                it.bossBar.removePlayer(player)
+                killStreakRepo.save(it)
+            }
 
-    @EventHandler
-    fun on(event: PlayerDungeonJoinEvent) {
-        val player = event.player
-        val world = event.world
-
-        addPlayerToBossBar(player, world)
-    }
-
-    @EventHandler
-    fun on(event: PlayerChangedWorldEvent) {
-        val player = event.player
-        val world = event.player.world
-
-        if (world.isDungeonWorld()) {
-            addPlayerToBossBar(player, world)
-        } else {
-            removePlayerFromBossBar(player, event.from)
-        }
+        val killStreakRemoved = KillStreakRemovedEvent(player)
+        EventGateway.apply(killStreakRemoved)
     }
 
     @EventHandler
@@ -103,36 +117,6 @@ class KillStreakService(
         killStreak.updateTask?.cancel()
 
         killStreakRepo.deleteById(worldName)
-    }
-
-    @EventHandler
-    fun on(event: DungeonOpenEvent) {
-        val name = event.dungeonWorld.name
-        if (killStreakRepo.exists(name)) return
-
-        val bossBar = server.createBossBar("0", KillStreakSettings.BAR_COLOR, KillStreakSettings.BAR_STYLE)
-            .apply { progress = 0.0 }
-        val killStreak = KillStreakEntity(name, bossBar)
-
-        killStreak.updateTask = SchedulingUtil.runTaskTimer(KillStreakSettings.TIMER_PERIOD) {
-            updateKillStreak(killStreak)
-        }
-
-        killStreakRepo.save(killStreak)
-    }
-
-    private fun addPlayerToBossBar(player: Player, world: World) {
-        val killStreak = killStreakRepo.findById(world.name) ?: return
-        killStreak.bossBar.addPlayer(player)
-
-        killStreakRepo.save(killStreak)
-    }
-
-    private fun removePlayerFromBossBar(player: Player, world: World) {
-        val killStreak = killStreakRepo.findById(world.name) ?: return
-        killStreak.bossBar.removePlayer(player)
-
-        killStreakRepo.save(killStreak)
     }
 
     private fun updateKillStreak(killStreak: KillStreakEntity) {
@@ -152,5 +136,8 @@ class KillStreakService(
         killStreak.bossBar.setTitle("0")
 
         killStreakRepo.save(killStreak)
+
+        val killStreakUpdated = KillStreakUpdatedEvent(0, killStreak.bossBar.players)
+        EventGateway.apply(killStreakUpdated)
     }
 }
