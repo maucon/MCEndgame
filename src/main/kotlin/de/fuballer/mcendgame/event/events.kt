@@ -27,11 +27,27 @@ class DungeonOpenEvent(
 ) : HandleableEvent()
 
 /**
- * Thrown whenever the killstreak of a dungeon increases
+ * Thrown whenever the killstreak is created for a player.
  */
-class KillStreakIncreaseEvent(
-    val killstreak: Int,
-    val world: World
+class KillStreakCreatedEvent(
+    val streak: Int,
+    val player: Player
+) : HandleableEvent()
+
+/**
+ * Thrown whenever the killstreak of players updated
+ */
+class KillStreakUpdatedEvent(
+    val streak: Int,
+    val players: List<Player>
+) : HandleableEvent()
+
+/**
+ * Thrown whenever the killstreak of a player is removed.
+ * (Does not mean the killstreak expired)
+ */
+class KillStreakRemovedEvent(
+    val player: Player
 ) : HandleableEvent()
 
 /**

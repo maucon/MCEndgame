@@ -1,7 +1,8 @@
 package de.fuballer.mcendgame.component.dungeon.loot
 
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.enchantment.EquipmentEnchantmentService
-import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
+import de.fuballer.mcendgame.component.dungeon.modifier.ModifierType
+import de.fuballer.mcendgame.component.dungeon.modifier.ModifierUtil
 import de.fuballer.mcendgame.component.totem.data.Totem
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -25,7 +26,6 @@ import kotlin.random.Random
 
 @Component
 class LootService(
-    private val killStreakRepo: KillStreakRepository,
     private val equipmentEnchantmentService: EquipmentEnchantmentService
 ) : Listener {
     @EventHandler
@@ -43,12 +43,15 @@ class LootService(
     }
 
     private fun dropEquipment(entity: LivingEntity, world: World) {
-        val looting = getLootingLevel(entity.killer)
-        val killStreak = killStreakRepo.findById(world.name)?.streak ?: 0
-        val streakDropChance = 1 + killStreak * LootSettings.GEAR_DROP_CHANCE_MULTIPLIER_PER_KILLSTREAK
+        val killer = entity.killer
+
+        val looting = getLootingLevel(killer)
+        val magicFindMultiplier = ModifierUtil.getModifierMultiplier(killer, ModifierType.MAGIC_FIND)
 
         for (item in getEquipment(entity.equipment)) {
-            val finalDropChance = getItemDropChance(item, looting) * streakDropChance
+            val baseDropChance = getItemDropChance(item, looting)
+            val finalDropChance = baseDropChance * magicFindMultiplier
+
             if (Random.nextDouble() > finalDropChance) continue
 
             val finalItem = ItemUtil.setRandomDurability(item)
@@ -81,7 +84,7 @@ class LootService(
             .coerceAtLeast(itemMeta.getEnchantLevel(Enchantment.LOOT_BONUS_MOBS))
     }
 
-    private fun getItemDropChance(item: ItemStack, looting: Int): Float {
+    private fun getItemDropChance(item: ItemStack, looting: Int): Double {
         val typeString = item.type.toString()
 
         if (typeString.contains("DIAMOND")) {
@@ -91,7 +94,7 @@ class LootService(
             return LootSettings.ITEMS_DROP_CHANCE_NETHERITE + LootSettings.ITEMS_DROP_CHANCE_NETHERITE_PER_LOOTING * looting
         }
         if (typeString.contains("TRIDENT")) {
-            return 0.0f
+            return 0.0
         }
 
         return LootSettings.ITEMS_DROP_CHANCE + LootSettings.ITEMS_DROP_CHANCE_PER_LOOTING * looting

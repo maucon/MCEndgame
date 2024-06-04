@@ -29,8 +29,9 @@ class BossLootService : Listener {
         val world = entity.world
         val location = entity.location
 
-        val orbAmountChance = LootSettings.getBossOrbAmount(mapTier)
-        val finalOrbAmountChance = ModifierUtil.calculateFinalModifierValue(entity, ModifierType.LOOT, orbAmountChance)
+        val baseOrbAmountChance = LootSettings.getBossOrbAmount(mapTier)
+        val lootMultiplier = ModifierUtil.getModifierMultiplier(entity, ModifierType.LOOT_DROP)
+        val finalOrbAmountChance = baseOrbAmountChance * lootMultiplier
 
         val orbAmount = finalOrbAmountChance.toInt() + if (Math.random() < finalOrbAmountChance % 1) 1 else 0
 

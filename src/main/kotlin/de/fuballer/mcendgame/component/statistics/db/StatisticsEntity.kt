@@ -77,7 +77,6 @@ data class StatisticsEntity(
             listOf(
                 StatisticsSettings.STATISTICS_BOOK_DAMAGE_HEADLINE,
                 "",
-                "",
                 StatisticsSettings.DAMAGE_DEALT_TEXT,
                 "   ${String.format("%.2f", damageDealt)}",
                 StatisticsSettings.RAW_DAMAGE_DEALT_TEXT,

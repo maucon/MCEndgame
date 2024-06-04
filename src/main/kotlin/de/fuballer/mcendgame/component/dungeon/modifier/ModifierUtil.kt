@@ -12,12 +12,19 @@ object ModifierUtil {
         setModifiers(modifiers)
     }
 
-    fun calculateFinalModifierValue(
-        entity: Entity,
-        type: ModifierType,
-        baseValue: Double = 0.0
+    fun Entity.removeModifiersBySource(source: String) {
+        val modifiers = getModifiers().toMutableList()
+            .filter { it.source != source }
+
+        setModifiers(modifiers)
+    }
+
+    fun getModifierMultiplier(
+        entity: Entity?,
+        type: ModifierType
     ): Double {
-        var flat = 0.0
+        if (entity == null) return 1.0
+
         var increase = 0.0
         var more = 1.0
 
@@ -25,13 +32,12 @@ object ModifierUtil {
             .filter { it.type == type }
             .forEach {
                 when (it.operation) {
-                    ModifierOperation.FLAT -> flat += it.value
                     ModifierOperation.INCREASE -> increase += it.value
                     ModifierOperation.MORE -> more *= 1 + it.value
                 }
             }
 
-        return (baseValue + flat) * (1 + increase) * more
+        return (1 + increase) * more
     }
 
     private fun Entity.setModifiers(value: List<Modifier>) {

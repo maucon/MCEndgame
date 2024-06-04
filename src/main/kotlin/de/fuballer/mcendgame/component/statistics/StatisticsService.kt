@@ -81,12 +81,10 @@ class StatisticsService(
     }
 
     @EventHandler
-    fun on(event: KillStreakIncreaseEvent) {
-        val killStreak = event.killstreak
-
-        for (player in event.world.players) {
+    fun on(event: KillStreakUpdatedEvent) {
+        for (player in event.players) {
             val statistics = statisticsRepo.findById(player.uniqueId) ?: return
-            statistics.highestKillstreak = max(killStreak, statistics.highestKillstreak)
+            statistics.highestKillstreak = max(event.streak, statistics.highestKillstreak)
 
             statisticsRepo.save(statistics)
         }

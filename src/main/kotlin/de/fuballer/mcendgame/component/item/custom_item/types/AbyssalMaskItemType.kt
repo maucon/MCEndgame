@@ -12,6 +12,6 @@ object AbyssalMaskItemType : CustomItemType {
     override val equipment = Helmet.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.NEGATIVE_EFFECT_IMMUNITY, 0.0, 0.0),
+        RollableAttribute(AttributeType.NEGATIVE_EFFECT_IMMUNITY),
     )
 }
