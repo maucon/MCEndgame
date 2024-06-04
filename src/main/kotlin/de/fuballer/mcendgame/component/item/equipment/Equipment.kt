@@ -18,7 +18,7 @@ interface Equipment {
     val slot: EquipmentSlot
 
     /** whether to only grant extra attributes when the item is in the correct slot */
-    val extraAttributesInSlot: Boolean
+    val slotDependentAttributes: Boolean
     val rollableAttributes: List<RandomOption<RollableAttribute>>
     val rollableEnchants: List<RandomOption<ItemEnchantment>>
 

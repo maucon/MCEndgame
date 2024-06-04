@@ -54,7 +54,7 @@ enum class Chestplate(
     );
 
     override val slot = EquipmentSlot.CHEST
-    override val extraAttributesInSlot = true
+    override val slotDependentAttributes = true
 
     override val rollableAttributes = listOf(
         RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.0)),

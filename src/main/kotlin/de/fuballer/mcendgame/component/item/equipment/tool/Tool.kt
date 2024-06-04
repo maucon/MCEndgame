@@ -13,7 +13,7 @@ enum class Tool(
     override val material: Material,
     override val baseAttributes: List<RolledAttribute>,
     override val slot: EquipmentSlot,
-    override val extraAttributesInSlot: Boolean,
+    override val slotDependentAttributes: Boolean,
     override val rollableAttributes: List<RandomOption<RollableAttribute>>,
     override val rollableEnchants: List<RandomOption<ItemEnchantment>>,
 ) : Equipment {

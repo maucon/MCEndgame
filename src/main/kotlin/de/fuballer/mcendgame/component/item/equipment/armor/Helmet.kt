@@ -60,7 +60,7 @@ enum class Helmet(
     );
 
     override val slot = EquipmentSlot.HEAD
-    override val extraAttributesInSlot = true
+    override val slotDependentAttributes = true
 
     override val rollableAttributes = listOf(
         RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.0)),

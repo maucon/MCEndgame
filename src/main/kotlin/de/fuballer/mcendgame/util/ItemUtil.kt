@@ -123,7 +123,7 @@ object ItemUtil {
         if (hasBaseAttributes) {
             addAllAttributes(itemMeta, baseAttributes, equipment.slot, true)
         }
-        val extraAttributeSlot = if (equipment.extraAttributesInSlot) equipment.slot else null
+        val extraAttributeSlot = if (equipment.slotDependentAttributes) equipment.slot else null
         addAllAttributes(itemMeta, extraAttributes, extraAttributeSlot, false)
     }
 

@@ -41,7 +41,7 @@ object LivingEntityExtension {
         if (item == null) return listOf()
 
         val grantAttributes = Equipment.fromMaterial(item.type)
-            ?.let { it.slot == slot || !it.extraAttributesInSlot } ?: false
+            ?.let { it.slot == slot || !it.slotDependentAttributes } ?: false
 
         if (!grantAttributes) return listOf()
         return item.getRolledAttributes() ?: listOf()
