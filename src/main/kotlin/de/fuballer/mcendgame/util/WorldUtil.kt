@@ -8,6 +8,8 @@ import kotlin.reflect.KClass
 object WorldUtil {
     fun getEntity(world: World, uuid: UUID) = world.entities.firstOrNull { it.uniqueId == uuid }
 
+    fun getEntity(world: World, entityId: Int) = world.entities.firstOrNull { it.entityId == entityId }
+
     inline fun <reified T : Entity> getFilteredEntities(
         world: World,
         ids: List<UUID>,
