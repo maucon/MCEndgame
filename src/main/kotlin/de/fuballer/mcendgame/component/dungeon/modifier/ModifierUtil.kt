@@ -37,7 +37,7 @@ object ModifierUtil {
                 }
             }
 
-        return 1 + increase * more
+        return (1 + increase) * more
     }
 
     private fun Entity.setModifiers(value: List<Modifier>) {
