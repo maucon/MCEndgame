@@ -18,6 +18,7 @@ import java.util.logging.Logger
 import kotlin.math.abs
 
 private const val ALWAYS_SHOW_DEBUG = true
+private const val EXECUTE_DAMAGE = 99999.0
 
 @Component
 class DamageService(
@@ -57,7 +58,7 @@ class DamageService(
         val target = damageEvent.damaged
 
         if (damageEvent.isExecute) {
-            target.damage(99999.0)
+            target.damage(EXECUTE_DAMAGE)
         }
         damageEvent.onHitPotionEffects.forEach {
             target.addPotionEffect(it)
@@ -101,9 +102,6 @@ class DamageService(
 
         val damaged = event.entity as? LivingEntity ?: return null
         val damagedAttributes = damaged.getCustomAttributes()
-
-        println(damagerAttributes)
-        println(damagedAttributes)
 
         val cause = event.cause
         val isDungeonWorld = event.damager.world.isDungeonWorld()
