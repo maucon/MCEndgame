@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.component.damage
 
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.DamageUtil
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
@@ -102,6 +101,9 @@ class DamageService(
 
         val damaged = event.entity as? LivingEntity ?: return null
         val damagedAttributes = damaged.getCustomAttributes()
+
+        println(damagerAttributes)
+        println(damagedAttributes)
 
         val cause = event.cause
         val isDungeonWorld = event.damager.world.isDungeonWorld()

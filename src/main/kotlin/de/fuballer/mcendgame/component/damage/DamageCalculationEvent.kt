@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.component.damage
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.event.HandleableEvent
-import de.fuballer.mcendgame.util.DamageUtil
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.Cancellable
 import org.bukkit.event.entity.EntityDamageByEntityEvent
