@@ -13,7 +13,7 @@ object GeistergaloschenItemType : CustomItemType {
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
         RollableAttribute(AttributeType.BACKSTAB, 0.2, 0.4),
-        RollableAttribute(AttributeType.STEALTH, 0.0, 0.0),
+        RollableAttribute(AttributeType.STEALTH),
         RollableAttribute(AttributeType.MOVEMENT_SPEED, 0.005, 0.015),
     )
 }
