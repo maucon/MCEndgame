@@ -3,8 +3,6 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
-import de.fuballer.mcendgame.util.extension.ProjectileExtension.getAddedBaseDamage
-import de.fuballer.mcendgame.util.extension.ProjectileExtension.setAddedBaseDamage
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
@@ -24,19 +22,15 @@ class AdditionalArrowsEffectService : Listener {
         val additionalArrowsAttribute = attributes[AttributeType.ADDITIONAL_ARROWS] ?: return
 
         val damagePercentages = additionalArrowsAttribute.sortedDescending()
-
         val arrow = event.projectile as Arrow
-        val addedBaseDamage = arrow.getAddedBaseDamage() ?: 0.0
 
         for ((index, damagePercentage) in damagePercentages.withIndex()) {
-            val newAddedBaseDamage = damagePercentage * addedBaseDamage
             val newDamage = damagePercentage * arrow.damage
 
             listOf(
                 player.launchProjectile(Arrow::class.java, arrow.velocity.clone().rotateAroundY((index + 1) * 5.0 * PI / 180.0)),
                 player.launchProjectile(Arrow::class.java, arrow.velocity.clone().rotateAroundY(-(index + 1) * 5.0 * PI / 180.0))
             ).forEach {
-                it.setAddedBaseDamage(newAddedBaseDamage)
                 it.damage = newDamage
                 it.isCritical = arrow.isCritical
                 it.isShotFromCrossbow = arrow.isShotFromCrossbow

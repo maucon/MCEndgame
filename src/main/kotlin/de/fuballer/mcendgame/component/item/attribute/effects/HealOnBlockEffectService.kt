@@ -3,7 +3,6 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHealOnBlockActivation
 import de.fuballer.mcendgame.util.extension.PlayerExtension.setHealOnBlockActivation
 import org.bukkit.Color
@@ -22,9 +21,7 @@ class HealOnBlockEffectService : Listener {
         val player = event.damaged as? Player ?: return
         if (!event.isDamageBlocked) return
 
-        val damagedCustomAttributes = event.damaged.getCustomAttributes()
-        val healOnBlockAttributes = damagedCustomAttributes[AttributeType.HEAL_ON_BLOCK] ?: return
-
+        val healOnBlockAttributes = event.damagedAttributes[AttributeType.HEAL_ON_BLOCK] ?: return
         val healOnBlockAttribute = healOnBlockAttributes.sum()
 
         if (isHealOnBlockOnCooldown(player)) return

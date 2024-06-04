@@ -13,7 +13,7 @@ enum class Tool(
     override val material: Material,
     override val baseAttributes: List<RolledAttribute>,
     override val slot: EquipmentSlot,
-    override val extraAttributesInSlot: Boolean,
+    override val slotDependentAttributes: Boolean,
     override val rollableAttributes: List<RandomOption<RollableAttribute>>,
     override val rollableEnchants: List<RandomOption<ItemEnchantment>>,
 ) : Equipment {
@@ -23,7 +23,7 @@ enum class Tool(
         EquipmentSlot.HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.INCREASED_PROJECTILE_DAMAGE, 0.5)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
             RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))

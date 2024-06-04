@@ -1,35 +1,35 @@
 package de.fuballer.mcendgame.component.damage
 
-import de.fuballer.mcendgame.component.damage.calculators.DamageCauseCalculator
+import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.event.HandleableEvent
-import org.bukkit.Difficulty
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.Cancellable
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
 import org.bukkit.potion.PotionEffect
+import kotlin.math.abs
 
 class DamageCalculationEvent(
     private val originalEvent: EntityDamageByEntityEvent,
-    private val damageCauseCalculator: DamageCauseCalculator,
 
     val damager: LivingEntity,
+    val damagerAttributes: Map<AttributeType, List<Double>>,
+
     val damaged: LivingEntity,
-    val cause: EntityDamageEvent.DamageCause,
+    val damagedAttributes: Map<AttributeType, List<Double>>,
+
+    val cause: DamageCause,
     val isDungeonWorld: Boolean,
     val isDamageBlocked: Boolean,
-    val difficulty: Difficulty,
+    val isDamageCritical: Boolean,
 
-    val baseDamage: MutableList<Double> = mutableListOf(),
+    // === custom properties ===
     val increasedDamage: MutableList<Double> = mutableListOf(),
     val moreDamage: MutableList<Double> = mutableListOf(),
-    var enchantDamage: Double = 0.0,
-    var isCritical: Boolean = false,
-    var criticalRoll: Double = 0.0,
-    var isExecute: Boolean = false, //TODO actually use it
-    var sweepingEdgeMultiplier: Double = 0.0,
-    var onHitPotionEffects: MutableList<PotionEffect> = mutableListOf(),
+
+    var isExecute: Boolean = false,
+    val onHitPotionEffects: MutableList<PotionEffect> = mutableListOf(),
 ) : HandleableEvent(), Cancellable {
     private var cancelled = false
 
@@ -39,23 +39,11 @@ class DamageCalculationEvent(
         this.cancelled = cancel
     }
 
-    fun toBaseEvent(): EntityDamageByEntityEvent {
-        val baseDamage = damageCauseCalculator.getBaseDamage(this)
-        var leftDamage = baseDamage
+    fun getFinalDamage(): Double {
+        val baseDamage = originalEvent.finalDamage
+        val absorbedDamage = abs(originalEvent.getDamage(DamageModifier.ABSORPTION))
+        val realBaseDamage = baseDamage + absorbedDamage
 
-        originalEvent.setDamage(DamageModifier.BASE, baseDamage)
-        DamageModifier.entries
-            .filter { it != DamageModifier.BASE }
-            .filter { originalEvent.isApplicable(it) }
-            .forEach {
-                val reduction = damageCauseCalculator.getFlatDamageReduction(this, leftDamage, it)
-                originalEvent.setDamage(it, -reduction)
-
-                leftDamage -= reduction
-            }
-
-        return originalEvent
+        return DamageUtil.calculateFinalDamage(realBaseDamage, increasedDamage, moreDamage)
     }
-
-    fun getFinalDamage() = toBaseEvent().finalDamage
 }

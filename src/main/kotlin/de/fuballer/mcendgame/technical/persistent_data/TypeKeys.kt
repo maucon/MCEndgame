@@ -28,9 +28,6 @@ object TypeKeys {
     val IS_FORCED_VEHICLE = TypeKey(createNamespacedKey("is_forced_vehicle"), PersistentDataType.BOOLEAN)
     val HIT_COUNT_BASED_HEALTH = TypeKey(createNamespacedKey("hit_count_based_health"), PersistentDataType.INTEGER)
 
-    // projectile
-    val PROJECTILE_ADDED_BASE_DAMAGE = TypeKey(createNamespacedKey("projectile_added_base_damage"), PersistentDataType.DOUBLE)
-
     // player
     val LAST_MAP_DEVICE = TypeKey(createNamespacedKey("last_map_device"), PersistentUUID)
     val TOTEMS = TypeKey(createNamespacedKey("totems"), PersistentList(PersistentTotem))
