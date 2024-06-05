@@ -24,13 +24,13 @@ class PlayerCosmeticsPacketManager(
         val adapter = listOf(
             modifyEntityEquipmentPacket(),
             modifyWindowItemsPacket(),
-            a(),
+            modifySetSlotPacket(),
         )
 
         adapter.forEach { protocolManager.addPacketListener(it) }
     }
 
-    private fun a() =
+    private fun modifySetSlotPacket() =
         SendingPacketAdapter(
             PacketType.Play.Server.SET_SLOT
         ) { event: PacketEvent ->
