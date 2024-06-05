@@ -23,25 +23,52 @@ class PlayerPacketManager(
     override fun initialize(plugin: JavaPlugin) {
         val adapter = listOf(
             changeEquipmentAdapter(),
-            a(),
+            c(),
         )
 
         adapter.forEach { protocolManager.addPacketListener(it) }
+
     }
 
-    private fun a() =
+    private fun c() =
         SendingPacketAdapter(
-            PacketType.Play.Server.ENTITY_METADATA
+            PacketType.Play.Server.WINDOW_ITEMS
         ) { event: PacketEvent ->
-            val entityId = event.packet.integers.read(0)
+            val windowId = event.packet.integers.read(0)
+            if (windowId != 0) return@SendingPacketAdapter
 
-            val player = server.onlinePlayers.firstOrNull { it.entityId == entityId } ?: return@SendingPacketAdapter
+            val items = event.packet.itemListModifier.read(0)
 
+            val player = event.player
             val playerEquipment = player.equipment
             val playerCosmeticsEntity = playerCosmeticsRepository.findById(player.uniqueId) ?: return@SendingPacketAdapter
 
-            val modifier = event.packet.watchableCollectionModifier
-            modifier.readSafely(0) // TODO FKING FIX IT
+            if (playerCosmeticsEntity.helmet != null) {
+                items[5] = playerCosmeticsEntity.getHelmetItemOrAir(false)
+            } else {
+                if (playerCosmeticsEntity.showHelmet) {
+                    items[5] = playerEquipment?.helmet ?: ItemStack(Material.AIR)
+                } else {
+                    items[5] = ItemStack(Material.AIR)
+                }
+            }
+            if (playerCosmeticsEntity.chestplate != null) {
+                items[6] = playerCosmeticsEntity.getChestplateItemOrAir()
+            } else {
+                items[6] = playerEquipment?.chestplate ?: ItemStack(Material.AIR)
+            }
+            if (playerCosmeticsEntity.leggings != null) {
+                items[7] = playerCosmeticsEntity.getLeggingsItemOrAir()
+            } else {
+                items[7] = playerEquipment?.leggings ?: ItemStack(Material.AIR)
+            }
+            if (playerCosmeticsEntity.boots != null) {
+                items[8] = playerCosmeticsEntity.getBootsItemOrAir()
+            } else {
+                items[8] = playerEquipment?.boots ?: ItemStack(Material.AIR)
+            }
+
+            event.packet.itemListModifier.write(0, items)
         }
 
     private fun changeEquipmentAdapter() =
@@ -57,10 +84,14 @@ class PlayerPacketManager(
 
             val itemList = mutableListOf<Pair<ItemSlot, ItemStack>>()
 
-            if (playerCosmeticsEntity.showHelmet && playerCosmeticsEntity.helmet != null) {
-                itemList.add(Pair(ItemSlot.HEAD, playerCosmeticsEntity.getHelmetItemOrAir()))
+            if (playerCosmeticsEntity.showHelmet) {
+                if (playerCosmeticsEntity.helmet != null) {
+                    itemList.add(Pair(ItemSlot.HEAD, playerCosmeticsEntity.getHelmetItemOrAir()))
+                } else {
+                    itemList.add(Pair(ItemSlot.HEAD, playerEquipment?.helmet ?: ItemStack(Material.AIR)))
+                }
             } else {
-                itemList.add(Pair(ItemSlot.HEAD, playerEquipment?.helmet ?: ItemStack(Material.AIR)))
+                itemList.add(Pair(ItemSlot.HEAD, ItemStack(Material.AIR)))
             }
 
             if (playerCosmeticsEntity.chestplate != null) {

@@ -2,8 +2,6 @@ package de.fuballer.mcendgame.component.cosmetics.player
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolManager
-import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot
-import com.comphenix.protocol.wrappers.Pair
 import de.fuballer.mcendgame.component.cosmetics.player.db.PlayerCosmeticsRepository
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
@@ -97,21 +95,10 @@ class PlayerCosmeticsService(
         sendCosmeticsPacket(player)
     }
 
-    fun sendCosmeticsPacket(player: Player) {
-        val playerCosmeticsEntity = playerCosmeticsRepository.findById(player.uniqueId) ?: return
-
-        val cosmeticEquipment = mutableListOf(
-            Pair(ItemSlot.HEAD, playerCosmeticsEntity.getHelmetItemOrAir(false)),
-            Pair(ItemSlot.CHEST, playerCosmeticsEntity.getChestplateItemOrAir()),
-            Pair(ItemSlot.LEGS, playerCosmeticsEntity.getLeggingsItemOrAir()),
-            Pair(ItemSlot.FEET, playerCosmeticsEntity.getBootsItemOrAir()),
-        )
-
+    private fun sendCosmeticsPacket(player: Player) {
         val equipmentPacket = protocolManager.createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT)
 
         equipmentPacket.integers.write(0, player.entityId)
-        equipmentPacket.slotStackPairLists.write(0, cosmeticEquipment)
-
         try {
             protocolManager.sendServerPacket(player, equipmentPacket)
         } catch (e: Exception) {
