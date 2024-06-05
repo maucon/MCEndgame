@@ -34,8 +34,6 @@ class PlayerCosmeticsPacketManager(
         SendingPacketAdapter(
             PacketType.Play.Server.SET_SLOT
         ) { event: PacketEvent ->
-            println("SET_SLOT")
-
             val windowId = event.packet.integers.read(0)
             if (windowId != 0) return@SendingPacketAdapter // player inventory
 
