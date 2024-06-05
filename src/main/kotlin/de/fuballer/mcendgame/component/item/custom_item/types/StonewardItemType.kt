@@ -14,7 +14,7 @@ object StonewardItemType : CustomItemType {
     override val attributes = listOf(
         RollableAttribute(AttributeType.MOVEMENT_SPEED, -0.025, -0.015),
         RollableAttribute(AttributeType.ARMOR, 2.0, 3.0),
-        RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 2.5, 4.0),
+        RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 2.5, 3.5),
         RollableAttribute(AttributeType.SIZE_INCREASE, 0.05, 0.15),
     )
 }

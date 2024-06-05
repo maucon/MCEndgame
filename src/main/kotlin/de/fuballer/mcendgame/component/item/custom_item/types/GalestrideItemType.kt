@@ -13,6 +13,6 @@ object GalestrideItemType : CustomItemType {
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
         RollableAttribute(AttributeType.MOVEMENT_SPEED, 0.01, 0.02),
-        RollableAttribute(AttributeType.ARMOR, 0.5, 1.5),
+        RollableAttribute(AttributeType.MAX_HEALTH, 1.0, 3.0),
     )
 }

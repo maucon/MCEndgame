@@ -12,6 +12,8 @@ object VitalitySurgeItemType : CustomItemType {
     override val equipment = Chestplate.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.ABSORPTION_ON_HIGH_DAMAGE_TAKEN, 5.0, 8.0),
+        RollableAttribute(AttributeType.ABSORPTION_ON_HIGH_DAMAGE_TAKEN, 4.0, 6.0),
+        RollableAttribute(AttributeType.ARMOR_TOUGHNESS, -3.0, -1.5),
+        RollableAttribute(AttributeType.MAX_HEALTH, 1.0, 3.0),
     )
 }

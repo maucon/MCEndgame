@@ -15,5 +15,6 @@ object TitansEmbraceItemType : CustomItemType {
         RollableAttribute(AttributeType.SIZE_INCREASE, 0.1, 0.25),
         RollableAttribute(AttributeType.MAX_HEALTH, 3.0, 6.0),
         RollableAttribute(AttributeType.MAX_HEALTH_INCREASE, 0.1, 0.2),
+        RollableAttribute(AttributeType.REGEN_ON_DAMAGE_TAKEN, 5.0, 8.0),
     )
 }

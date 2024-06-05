@@ -17,8 +17,8 @@ object MinotaurEntityType : CustomEntityType {
     override val canHaveArmor = false
     override val hideEquipment = true
 
-    override val baseHealth = 100.0
-    override val healthPerTier = 5.0
+    override val baseHealth = 200.0
+    override val healthPerTier = 8.0
     override val baseDamage = 12.0
     override val damagePerTier = 3.0
     override val baseSpeed = 0.4

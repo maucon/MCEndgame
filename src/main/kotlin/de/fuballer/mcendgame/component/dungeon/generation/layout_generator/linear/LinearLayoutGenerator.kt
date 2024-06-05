@@ -15,8 +15,8 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-private fun calculateComplexityLimit() = 100
-private fun calculateBranchComplexityLimit() = 15
+private fun calculateComplexityLimit() = 125
+private fun calculateBranchComplexityLimit() = 5
 
 private val branchingPoints = listOf(0.33, 0.66) // -> 3 boss rooms
 private var complexityLimit = 0

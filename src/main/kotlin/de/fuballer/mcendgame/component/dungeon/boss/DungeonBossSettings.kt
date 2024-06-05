@@ -3,6 +3,9 @@ package de.fuballer.mcendgame.component.dungeon.boss
 import de.fuballer.mcendgame.component.dungeon.modifier.Modifier
 import de.fuballer.mcendgame.component.dungeon.modifier.ModifierOperation
 import de.fuballer.mcendgame.component.dungeon.modifier.ModifierType
+import de.fuballer.mcendgame.util.EntityUtil
+import org.bukkit.attribute.Attribute
+import org.bukkit.entity.LivingEntity
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -15,4 +18,10 @@ object DungeonBossSettings {
     )
 
     val EMPOWERED_LOOT_MODIFIER = Modifier(ModifierType.LOOT_DROP, ModifierOperation.MORE, 0.2, "boss empower")
+
+    fun empowerStats(boss: LivingEntity) {
+        EntityUtil.increaseBaseAttribute(boss, Attribute.GENERIC_MAX_HEALTH, 1.15)
+        EntityUtil.increaseBaseAttribute(boss, Attribute.GENERIC_ATTACK_DAMAGE, 1.1)
+        EntityUtil.increaseBaseAttribute(boss, Attribute.GENERIC_MOVEMENT_SPEED, 1.05)
+    }
 }

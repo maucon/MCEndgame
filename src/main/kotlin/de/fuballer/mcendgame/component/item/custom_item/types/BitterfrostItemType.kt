@@ -14,5 +14,7 @@ object BitterfrostItemType : CustomItemType {
     override val attributes = listOf(
         RollableAttribute(AttributeType.SLOW_ON_HIT, 2.5, 5.0),
         RollableAttribute(AttributeType.TAUNT, 0.25, 0.75),
+        RollableAttribute(AttributeType.ATTACK_SPEED, -0.5, -0.3),
+        RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 1.0, 3.0),
     )
 }

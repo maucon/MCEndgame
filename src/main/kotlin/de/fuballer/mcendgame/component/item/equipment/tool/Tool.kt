@@ -24,8 +24,8 @@ enum class Tool(
         false,
         listOf(
             RandomOption(10, RollableAttribute(AttributeType.INCREASED_PROJECTILE_DAMAGE, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.25)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 1.0)),
             RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
         ),
         listOf(

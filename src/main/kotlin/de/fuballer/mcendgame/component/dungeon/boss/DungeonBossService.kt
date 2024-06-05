@@ -9,11 +9,9 @@ import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getPortalLocation
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
-import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
@@ -64,9 +62,7 @@ class DungeonBossService(
     private fun empowerOtherBosses(bosses: List<Creature>) {
         bosses.filter { it.isValid }
             .forEach {
-                EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_MAX_HEALTH, 1.15)
-                EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_ATTACK_DAMAGE, 1.1)
-                EntityUtil.increaseBaseAttribute(it, Attribute.GENERIC_MOVEMENT_SPEED, 1.05)
+                DungeonBossSettings.empowerStats(it)
 
                 it.addModifier(DungeonBossSettings.EMPOWERED_LOOT_MODIFIER)
 

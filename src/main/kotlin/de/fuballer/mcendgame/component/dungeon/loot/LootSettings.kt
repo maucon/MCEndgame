@@ -20,7 +20,7 @@ object LootSettings {
     const val ITEMS_DROP_CHANCE_NETHERITE = 0.0
     const val ITEMS_DROP_CHANCE_NETHERITE_PER_LOOTING = 0.0015
 
-    fun getCustomItemDropChance(mapTier: Int) = 0.000004 * pow(mapTier, 2) + 0.00003 * mapTier + 0.0003
+    fun getCustomItemDropChance(mapTier: Int) = 0.000012 * pow(mapTier, 2) + 0.0001 * mapTier + 0.001
 
     val CUSTOM_ITEM_OPTIONS = listOf(
         RandomOption(1, AbyssalMaskItemType),

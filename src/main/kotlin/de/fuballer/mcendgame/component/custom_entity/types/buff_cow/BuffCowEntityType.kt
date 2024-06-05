@@ -17,7 +17,7 @@ object BuffCowEntityType : CustomEntityType {
     override val canHaveArmor = false
     override val hideEquipment = true
 
-    override val baseHealth = 200.0
+    override val baseHealth = 300.0
     override val healthPerTier = 10.0
     override val baseDamage = 0.0
     override val damagePerTier = 0.0

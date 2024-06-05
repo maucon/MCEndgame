@@ -18,10 +18,10 @@ object CerberusEntityType : CustomEntityType {
     override val canHaveArmor = false
     override val hideEquipment = true
 
-    override val baseHealth = 125.0
-    override val healthPerTier = 5.0
-    override val baseDamage = 20.0
-    override val damagePerTier = 3.5
+    override val baseHealth = 250.0
+    override val healthPerTier = 10.0
+    override val baseDamage = 15.0
+    override val damagePerTier = 2.5
     override val baseSpeed = 0.30
     override val speedPerTier = 0.003
 

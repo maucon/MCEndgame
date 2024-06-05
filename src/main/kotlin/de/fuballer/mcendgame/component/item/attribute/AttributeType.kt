@@ -95,6 +95,8 @@ enum class AttributeType(
 
     ABSORPTION_ON_HIGH_DAMAGE_TAKEN({ " When taking at least ${DECIMAL_FORMAT.format(it)} damage, gain Absorption II" }),
 
+    REGEN_ON_DAMAGE_TAKEN({ " Gain Regeneration II for ${DECIMAL_FORMAT.format(it)}s when damaged" }),
+
     STEALTH({ " Cannot be targeted by enemies facing away" }),
 
     BACKSTAB({ " ${DECIMAL_FORMAT.format(it * 100)}% more damage with attacks from behind" }),

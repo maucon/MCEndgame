@@ -19,10 +19,10 @@ object DemonicGolemEntityType : CustomEntityType {
     override val canHaveArmor = false
     override val hideEquipment = true
 
-    override val baseHealth = 150.0
-    override val healthPerTier = 8.0
-    override val baseDamage = 20.0
-    override val damagePerTier = 3.0
+    override val baseHealth = 300.0
+    override val healthPerTier = 12.0
+    override val baseDamage = 15.0
+    override val damagePerTier = 2.5
     override val baseSpeed = 0.2
     override val speedPerTier = 0.0
 
