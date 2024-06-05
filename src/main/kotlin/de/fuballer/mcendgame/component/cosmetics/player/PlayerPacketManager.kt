@@ -22,15 +22,15 @@ class PlayerPacketManager(
 ) : LifeCycleListener {
     override fun initialize(plugin: JavaPlugin) {
         val adapter = listOf(
-            changeEquipmentAdapter(),
-            c(),
+            modifyEntityEquipmentPacket(),
+            modifyWindowItemsPacket(),
         )
 
         adapter.forEach { protocolManager.addPacketListener(it) }
 
     }
 
-    private fun c() =
+    private fun modifyWindowItemsPacket() =
         SendingPacketAdapter(
             PacketType.Play.Server.WINDOW_ITEMS
         ) { event: PacketEvent ->
@@ -71,7 +71,7 @@ class PlayerPacketManager(
             event.packet.itemListModifier.write(0, items)
         }
 
-    private fun changeEquipmentAdapter() =
+    private fun modifyEntityEquipmentPacket() =
         SendingPacketAdapter(
             PacketType.Play.Server.ENTITY_EQUIPMENT
         ) { event: PacketEvent ->
