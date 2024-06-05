@@ -8,6 +8,8 @@ import org.bukkit.inventory.ItemStack
 object PlayerCosmeticsSettings {
     const val COMMAND_NAME = "cosmetics"
 
+    val COSMETIC_ITEM_LORE_TAG = "${ChatColor.LIGHT_PURPLE}COSMETIC"
+
     const val INVENTORY_TITLE = "Cosmetics"
     val INVENTORY_TYPE = InventoryType.HOPPER
 

@@ -42,22 +42,22 @@ class PlayerCosmeticsService(
             }
 
             PlayerCosmeticsSettings.HELMET_INVENTORY_INDEX -> {
-                cosmeticsEntity.helmet = null
+                cosmeticsEntity.cosmeticEquipment[EquipmentSlot.HEAD] = null
                 cosmeticsInventory.setItem(PlayerCosmeticsSettings.HELMET_INVENTORY_INDEX, null)
             }
 
             PlayerCosmeticsSettings.CHESTPLATE_INVENTORY_INDEX -> {
-                cosmeticsEntity.chestplate = null
+                cosmeticsEntity.cosmeticEquipment[EquipmentSlot.CHEST] = null
                 cosmeticsInventory.setItem(PlayerCosmeticsSettings.CHESTPLATE_INVENTORY_INDEX, null)
             }
 
             PlayerCosmeticsSettings.LEGGINGS_INVENTORY_INDEX -> {
-                cosmeticsEntity.leggings = null
+                cosmeticsEntity.cosmeticEquipment[EquipmentSlot.LEGS] = null
                 cosmeticsInventory.setItem(PlayerCosmeticsSettings.LEGGINGS_INVENTORY_INDEX, null)
             }
 
             PlayerCosmeticsSettings.BOOTS_INVENTORY_INDEX -> {
-                cosmeticsEntity.boots = null
+                cosmeticsEntity.cosmeticEquipment[EquipmentSlot.FEET] = null
                 cosmeticsInventory.setItem(PlayerCosmeticsSettings.BOOTS_INVENTORY_INDEX, null)
             }
 
@@ -68,22 +68,22 @@ class PlayerCosmeticsService(
 
                 when (equipment.slot) {
                     EquipmentSlot.HEAD -> {
-                        cosmeticsEntity.helmet = item.clone()
+                        cosmeticsEntity.cosmeticEquipment[EquipmentSlot.HEAD] = item.clone()
                         cosmeticsInventory.setItem(PlayerCosmeticsSettings.HELMET_INVENTORY_INDEX, item.clone())
                     }
 
                     EquipmentSlot.CHEST -> {
-                        cosmeticsEntity.chestplate = item.clone()
+                        cosmeticsEntity.cosmeticEquipment[EquipmentSlot.CHEST] = item.clone()
                         cosmeticsInventory.setItem(PlayerCosmeticsSettings.CHESTPLATE_INVENTORY_INDEX, item.clone())
                     }
 
                     EquipmentSlot.LEGS -> {
-                        cosmeticsEntity.leggings = item.clone()
+                        cosmeticsEntity.cosmeticEquipment[EquipmentSlot.LEGS] = item.clone()
                         cosmeticsInventory.setItem(PlayerCosmeticsSettings.LEGGINGS_INVENTORY_INDEX, item.clone())
                     }
 
                     EquipmentSlot.FEET -> {
-                        cosmeticsEntity.boots = item.clone()
+                        cosmeticsEntity.cosmeticEquipment[EquipmentSlot.FEET] = item.clone()
                         cosmeticsInventory.setItem(PlayerCosmeticsSettings.BOOTS_INVENTORY_INDEX, item.clone())
                     }
 
