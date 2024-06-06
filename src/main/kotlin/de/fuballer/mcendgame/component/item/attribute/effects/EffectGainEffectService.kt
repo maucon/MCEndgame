@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import kotlin.random.Random
 
-private const val DURATION = 12000
+private const val DURATION = 3600
 private val EFFECTS = listOf(
     RandomOption(1000, PotionEffect(PotionEffectType.INCREASE_DAMAGE, DURATION, 0, false)),
     RandomOption(300, PotionEffect(PotionEffectType.INCREASE_DAMAGE, DURATION, 1, false)),
