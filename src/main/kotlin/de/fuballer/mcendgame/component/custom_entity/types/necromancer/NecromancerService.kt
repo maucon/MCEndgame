@@ -12,7 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.scheduler.BukkitRunnable
 
-const val baseAttackDelay = 10L
+private const val BASE_ATTACK_DELAY = 10L
 
 @Component
 class NecromancerService : Listener {
@@ -26,7 +26,7 @@ class NecromancerService : Listener {
         val arrow = event.projectile as? Arrow ?: return
         val target = necromancer.target ?: return
 
-        ShootWitherSkull(necromancer, arrow, target).runTaskLater(baseAttackDelay)
+        ShootWitherSkull(necromancer, arrow, target).runTaskLater(BASE_ATTACK_DELAY)
 
         event.cancel()
     }

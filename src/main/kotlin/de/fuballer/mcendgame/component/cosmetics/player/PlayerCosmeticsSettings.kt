@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.cosmetics.player
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryType
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
 object PlayerCosmeticsSettings {
@@ -14,10 +15,13 @@ object PlayerCosmeticsSettings {
     val INVENTORY_TYPE = InventoryType.HOPPER
 
     const val SHOW_HELMET_INVENTORY_INDEX = 0
-    const val HELMET_INVENTORY_INDEX = 1
-    const val CHESTPLATE_INVENTORY_INDEX = 2
-    const val LEGGINGS_INVENTORY_INDEX = 3
-    const val BOOTS_INVENTORY_INDEX = 4
+
+    val EQUIPMENT_INVENTORY_INDICES = mapOf(
+        EquipmentSlot.HEAD to 1,
+        EquipmentSlot.CHEST to 2,
+        EquipmentSlot.LEGS to 3,
+        EquipmentSlot.FEET to 4,
+    )
 
     val SHOW_HELMET_ITEM = ItemStack(Material.LIME_STAINED_GLASS_PANE).apply {
         val itemMeta = this.itemMeta ?: return@apply

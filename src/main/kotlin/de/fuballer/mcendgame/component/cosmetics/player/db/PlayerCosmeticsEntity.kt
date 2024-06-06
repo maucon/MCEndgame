@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.cosmetics.player.db
 import de.fuballer.mcendgame.component.cosmetics.player.PlayerCosmeticsSettings
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.util.InventoryUtil
+import de.fuballer.mcendgame.util.ItemUtil
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
@@ -40,10 +41,9 @@ class PlayerCosmeticsEntity(
         )
 
         inventory.setItem(PlayerCosmeticsSettings.SHOW_HELMET_INVENTORY_INDEX, getShowHelmetItem())
-        inventory.setItem(PlayerCosmeticsSettings.HELMET_INVENTORY_INDEX, cosmeticEquipment[EquipmentSlot.HEAD]?.clone())
-        inventory.setItem(PlayerCosmeticsSettings.CHESTPLATE_INVENTORY_INDEX, cosmeticEquipment[EquipmentSlot.CHEST]?.clone())
-        inventory.setItem(PlayerCosmeticsSettings.LEGGINGS_INVENTORY_INDEX, cosmeticEquipment[EquipmentSlot.LEGS]?.clone())
-        inventory.setItem(PlayerCosmeticsSettings.BOOTS_INVENTORY_INDEX, cosmeticEquipment[EquipmentSlot.FEET]?.clone())
+        PlayerCosmeticsSettings.EQUIPMENT_INVENTORY_INDICES.forEach {
+            inventory.setItem(it.value, cosmeticEquipment[it.key]?.clone())
+        }
 
         return inventory
     }
@@ -52,7 +52,10 @@ class PlayerCosmeticsEntity(
         if (showHelmet) PlayerCosmeticsSettings.SHOW_HELMET_ITEM.clone()
         else PlayerCosmeticsSettings.HIDE_HELMET_ITEM.clone()
 
-    fun getDisplayedItem(player: Player, slot: EquipmentSlot): ItemStack {
+    fun getDisplayedItem(
+        player: Player,
+        slot: EquipmentSlot
+    ): ItemStack {
         if (slot == EquipmentSlot.HEAD && !showHelmet) return ItemStack(Material.AIR)
 
         val playerEquipment = player.equipment ?: return ItemStack(Material.AIR)
@@ -64,19 +67,26 @@ class PlayerCosmeticsEntity(
         return getItemRepresentingOtherItem(cosmeticItem, playerEquipment.getItem(slot))
     }
 
-    private fun getItemRepresentingOtherItem(base: ItemStack, projection: ItemStack): ItemStack {
+    private fun getItemRepresentingOtherItem(
+        base: ItemStack,
+        projection: ItemStack
+    ): ItemStack {
         val result = base.clone()
+        val projectionClone = projection.clone()
+        ItemUtil.updateAttributesAndLore(projectionClone)
 
-        setRepresentingDurability(result, projection)
-        setRepresentingEnchants(result, projection)
-        setRepresentingLore(result, projection)
+        setRepresentingDurability(result, projectionClone)
+        setRepresentingEnchants(result, projectionClone)
+        setRepresentingLore(result, projectionClone)
         addCosmeticTag(result)
         setHideAttributes(result)
 
         return result
     }
 
-    private fun addCosmeticTag(item: ItemStack) {
+    private fun addCosmeticTag(
+        item: ItemStack
+    ) {
         val meta = item.itemMeta ?: return
         val lore = meta.lore ?: mutableListOf()
         lore.add(0, PlayerCosmeticsSettings.COSMETIC_ITEM_LORE_TAG)
@@ -85,7 +95,10 @@ class PlayerCosmeticsEntity(
         item.itemMeta = meta
     }
 
-    private fun setRepresentingDurability(base: ItemStack, projection: ItemStack) {
+    private fun setRepresentingDurability(
+        base: ItemStack,
+        projection: ItemStack
+    ) {
         val projectionMeta = projection.itemMeta as? Damageable ?: return
         val projectionDamage = projectionMeta.damage
         val projectionMaxDurability = projection.type.maxDurability
@@ -99,7 +112,10 @@ class PlayerCosmeticsEntity(
         base.itemMeta = baseMeta
     }
 
-    private fun setRepresentingEnchants(base: ItemStack, projection: ItemStack) {
+    private fun setRepresentingEnchants(
+        base: ItemStack,
+        projection: ItemStack
+    ) {
         val baseMeta = base.itemMeta ?: return
 
         val projectionMeta = projection.itemMeta
@@ -122,7 +138,10 @@ class PlayerCosmeticsEntity(
         base.itemMeta = baseMeta
     }
 
-    private fun setRepresentingLore(base: ItemStack, projection: ItemStack) {
+    private fun setRepresentingLore(
+        base: ItemStack,
+        projection: ItemStack
+    ) {
         val baseMeta = base.itemMeta ?: return
 
         val projectionLore = projection.itemMeta?.lore
@@ -137,7 +156,9 @@ class PlayerCosmeticsEntity(
         base.itemMeta = baseMeta
     }
 
-    private fun setHideAttributes(base: ItemStack) {
+    private fun setHideAttributes(
+        base: ItemStack
+    ) {
         val baseMeta = base.itemMeta ?: return
         baseMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
         base.itemMeta = baseMeta
