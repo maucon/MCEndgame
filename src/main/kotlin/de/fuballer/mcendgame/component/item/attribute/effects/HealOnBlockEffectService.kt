@@ -14,6 +14,8 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import kotlin.math.min
 
+private const val COOLDOWN = 5000 // should equal attribute type text
+
 @Component
 class HealOnBlockEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -22,21 +24,22 @@ class HealOnBlockEffectService : Listener {
         if (!event.isDamageBlocked) return
 
         val healOnBlockAttributes = event.damagedAttributes[AttributeType.HEAL_ON_BLOCK] ?: return
-        val healOnBlockAttribute = healOnBlockAttributes.sum()
 
         if (isHealOnBlockOnCooldown(player)) return
         player.setHealOnBlockActivation(System.currentTimeMillis())
 
         spawnParticles(player)
 
+        val healOnBlockAttribute = healOnBlockAttributes.sum()
         val maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
-        val newHealth = min(player.health + healOnBlockAttribute, maxHealth)
+        val heal = maxHealth * healOnBlockAttribute
+        val newHealth = min(player.health + heal, maxHealth)
         player.health = newHealth
     }
 
     private fun isHealOnBlockOnCooldown(player: Player): Boolean {
         val lastActivation = player.getHealOnBlockActivation() ?: return false
-        return lastActivation + 7000 > System.currentTimeMillis()
+        return lastActivation + COOLDOWN > System.currentTimeMillis()
     }
 
     private fun spawnParticles(player: Player) {

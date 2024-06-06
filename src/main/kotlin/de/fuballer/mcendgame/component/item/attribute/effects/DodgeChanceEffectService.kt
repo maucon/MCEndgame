@@ -21,8 +21,8 @@ class DodgeChanceEffectService : Listener {
 
         val dodgeAttributes = event.damagedAttributes[AttributeType.DODGE_CHANCE] ?: return
 
-        val dodgeChance = dodgeAttributes.sum()
-        if (Random.nextDouble() > dodgeChance) return
+        val hitChance = dodgeAttributes.map { 1 - it }.reduce { a, b -> a * b }
+        if (Random.nextDouble() < hitChance) return
 
         event.cancel()
     }

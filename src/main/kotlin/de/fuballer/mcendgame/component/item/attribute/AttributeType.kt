@@ -107,7 +107,7 @@ enum class AttributeType(
 
     MORE_DAMAGE_AGAINST_FULL_LIFE({ " ${DECIMAL_FORMAT.format(it * 100)}% more damage against full life enemies" }),
 
-    HEAL_ON_BLOCK({ " Heal ${DECIMAL_FORMAT.format(it)} health on block, with a cooldown of 7 seconds" }),
+    HEAL_ON_BLOCK({ " Heal ${DECIMAL_FORMAT.format(it * 100)}% health on block, with a cooldown of 5 seconds" }),
 
     INCREASED_DAMAGE_PER_MISSING_HEART({ " ${DECIMAL_FORMAT.format(it * 100)}% increased damage per missing heart" }),
 
