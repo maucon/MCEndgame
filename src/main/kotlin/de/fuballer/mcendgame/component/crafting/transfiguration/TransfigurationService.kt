@@ -14,10 +14,9 @@ class TransfigurationService : AnvilCraftingBaseService() {
         Equipment.existsByMaterial(base.type)
                 && hasMultipleAttributes(base)
 
-    override fun isCraftingItemValid(craftingItem: ItemStack) =
-        craftingItem.isTransfiguration()
+    override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isTransfiguration()
 
-    override fun getResultPreview(base: ItemStack) = TransfigurationSettings.getPreviewItem()
+    override fun getResultPreview(base: ItemStack) = base
 
     override fun getResult(base: ItemStack, craftingItem: ItemStack): ItemStack {
         val attributes = base.getRolledAttributes()?.toMutableList() ?: return base

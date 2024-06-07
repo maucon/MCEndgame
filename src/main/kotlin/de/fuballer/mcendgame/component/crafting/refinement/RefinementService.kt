@@ -17,10 +17,9 @@ class RefinementService : AnvilCraftingBaseService() {
                 && base.getCustomItemType() == null
                 && hasMultipleAttributes(base)
 
-    override fun isCraftingItemValid(craftingItem: ItemStack) =
-        craftingItem.isRefinement()
+    override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isRefinement()
 
-    override fun getResultPreview(base: ItemStack) = RefinementSettings.getPreviewItem()
+    override fun getResultPreview(base: ItemStack) = base
 
     override fun getResult(base: ItemStack, craftingItem: ItemStack): ItemStack {
         val attributes = base.getRolledAttributes()?.toMutableList() ?: return base

@@ -26,10 +26,4 @@ object RefinementSettings {
     }
 
     fun getRefinementItem() = REFINEMENT_ITEM.clone()
-
-    fun getPreviewItem() = ItemCreatorUtil.create(
-        ItemStack(BASE_ITEM),
-        "Test",
-        listOf("what happens in vegas", "stays in vegas")
-    )
 }

@@ -13,10 +13,9 @@ class ReshapingService : AnvilCraftingBaseService() {
     override fun isBaseValid(base: ItemStack) =
         base.getCustomItemType() != null
 
-    override fun isCraftingItemValid(craftingItem: ItemStack) =
-        craftingItem.isReshaping()
+    override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isReshaping()
 
-    override fun getResultPreview(base: ItemStack) = ReshapingSettings.getPreviewItem()
+    override fun getResultPreview(base: ItemStack) = base
 
     override fun getResult(base: ItemStack, craftingItem: ItemStack): ItemStack {
         val options = CustomItemType.REGISTRY.values.toMutableList()

@@ -34,6 +34,7 @@ abstract class AnvilCraftingBaseService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PrepareAnvilEvent) {
         val inventory = event.inventory
+        if (!inventory.renameText.isNullOrEmpty()) return
 
         val base = inventory.getItem(0) ?: return
         if (!isBaseValid(base)) return
