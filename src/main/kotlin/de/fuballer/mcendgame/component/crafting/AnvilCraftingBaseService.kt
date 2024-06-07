@@ -39,7 +39,7 @@ abstract class AnvilCraftingBaseService : Listener {
         val base = inventory.getItem(0) ?: return
         if (!isBaseValid(base)) return
 
-        if (isItemRenaming(inventory.renameText, base)) return
+        if (ItemUtil.isItemRenaming(inventory.renameText, base)) return
 
         val craftingItem = inventory.getItem(1) ?: return
         if (!isCraftingItemValid(craftingItem)) return
@@ -66,7 +66,7 @@ abstract class AnvilCraftingBaseService : Listener {
         val base = inventory.getItem(0) ?: return
         if (!isBaseValid(base)) return
 
-        if (isItemRenaming(inventory.renameText, base)) return
+        if (ItemUtil.isItemRenaming(inventory.renameText, base)) return
 
         val craftingItem = inventory.getItem(1) ?: return
         if (!isCraftingItemValid(craftingItem)) return
@@ -96,20 +96,6 @@ abstract class AnvilCraftingBaseService : Listener {
         playAnvilSound(result, player)
         cleanupInventory(inventory)
         decreaseCraftingItemStack(craftingItem, inventory)
-    }
-
-    private fun isItemRenaming(renameText: String?, base: ItemStack): Boolean {
-        if (renameText.isNullOrEmpty()) return false
-
-        val itemMeta = base.itemMeta ?: return false
-        if (!itemMeta.hasDisplayName()) return false
-
-        var oldName = itemMeta.displayName
-        if (oldName.startsWith("§")) { // remove color codes
-            oldName = oldName.substring(2)
-        }
-
-        return oldName != renameText
     }
 
     private fun playAnvilSound(result: ItemStack, player: Player) {

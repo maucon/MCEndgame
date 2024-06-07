@@ -106,6 +106,20 @@ object ItemUtil {
         return item
     }
 
+    fun isItemRenaming(renameText: String?, base: ItemStack): Boolean {
+        if (renameText.isNullOrEmpty()) return false
+
+        val itemMeta = base.itemMeta ?: return false
+        if (!itemMeta.hasDisplayName()) return false
+
+        var oldName = itemMeta.displayName
+        if (oldName.startsWith("§")) { // remove color codes
+            oldName = oldName.substring(2)
+        }
+
+        return oldName != renameText
+    }
+
     private fun updateAttributes(
         item: ItemStack,
         itemMeta: ItemMeta,
