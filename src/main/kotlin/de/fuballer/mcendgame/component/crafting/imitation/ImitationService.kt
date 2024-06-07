@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack
 
 @Component
 class ImitationService : AnvilCraftingBaseService() {
-    override fun isBaseValid(base: ItemStack) = true
+    override fun isBaseValid(base: ItemStack) = base.amount == 1
 
     override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isImitation()
 
