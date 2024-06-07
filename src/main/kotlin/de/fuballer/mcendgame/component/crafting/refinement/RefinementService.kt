@@ -4,8 +4,8 @@ import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isRefinement
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setRolledAttributes
 import org.bukkit.inventory.ItemStack
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack
 class RefinementService : AnvilCraftingBaseService() {
     override fun isBaseValid(base: ItemStack) =
         Equipment.existsByMaterial(base.type)
-                && base.getCustomItemType() == null
+                && !base.isCustomItemType()
                 && hasMultipleAttributes(base)
 
     override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isRefinement()

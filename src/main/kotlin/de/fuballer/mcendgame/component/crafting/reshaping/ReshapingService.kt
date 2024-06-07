@@ -5,13 +5,13 @@ import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isReshaping
 import org.bukkit.inventory.ItemStack
 
 @Component
 class ReshapingService : AnvilCraftingBaseService() {
-    override fun isBaseValid(base: ItemStack) =
-        base.getCustomItemType() != null
+    override fun isBaseValid(base: ItemStack) = base.isCustomItemType()
 
     override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isReshaping()
 
