@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.inventory.PrepareAnvilEvent
+import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
@@ -34,10 +35,11 @@ abstract class AnvilCraftingBaseService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PrepareAnvilEvent) {
         val inventory = event.inventory
-        if (!inventory.renameText.isNullOrEmpty()) return
 
         val base = inventory.getItem(0) ?: return
         if (!isBaseValid(base)) return
+
+        if (isItemRenaming(inventory.renameText, base)) return
 
         val craftingItem = inventory.getItem(1) ?: return
         if (!isCraftingItemValid(craftingItem)) return
@@ -57,12 +59,14 @@ abstract class AnvilCraftingBaseService : Listener {
 
     @EventHandler(ignoreCancelled = true)
     open fun on(event: InventoryClickEvent) {
-        val inventory = event.inventory
+        val inventory = event.inventory as? AnvilInventory ?: return
         if (inventory.type != InventoryType.ANVIL) return
         if (event.rawSlot != 2) return
 
         val base = inventory.getItem(0) ?: return
         if (!isBaseValid(base)) return
+
+        if (isItemRenaming(inventory.renameText, base)) return
 
         val craftingItem = inventory.getItem(1) ?: return
         if (!isCraftingItemValid(craftingItem)) return
@@ -77,8 +81,6 @@ abstract class AnvilCraftingBaseService : Listener {
         val result = getResult(base.clone(), craftingItem)
         ItemUtil.updateAttributesAndLore(result)
 
-        playAnvilSound(result, player)
-
         when (event.action) {
             InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_SOME ->
                 player.setItemOnCursor(result)
@@ -89,10 +91,25 @@ abstract class AnvilCraftingBaseService : Listener {
             else -> return
         }
 
+        event.cancel()
+
+        playAnvilSound(result, player)
         cleanupInventory(inventory)
         decreaseCraftingItemStack(craftingItem, inventory)
+    }
 
-        event.cancel()
+    private fun isItemRenaming(renameText: String?, base: ItemStack): Boolean {
+        if (renameText.isNullOrEmpty()) return false
+
+        val itemMeta = base.itemMeta ?: return false
+        if (!itemMeta.hasDisplayName()) return false
+
+        var oldName = itemMeta.displayName
+        if (oldName.startsWith("§")) { // remove color codes
+            oldName = oldName.substring(2)
+        }
+
+        return oldName != renameText
     }
 
     private fun playAnvilSound(result: ItemStack, player: Player) {
