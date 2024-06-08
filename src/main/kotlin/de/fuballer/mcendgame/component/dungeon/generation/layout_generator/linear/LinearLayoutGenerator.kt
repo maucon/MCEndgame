@@ -216,7 +216,7 @@ class LinearLayoutGenerator(
     }
 
     private fun unblockTilesByOrigin(
-        tiles: MutableList<PlaceableTile>,
+        tiles: List<PlaceableTile>,
     ) {
         for (tile in tiles)
             blockedArea.removeAll { it.contains(tile.position) }
