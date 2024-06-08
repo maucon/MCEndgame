@@ -3,20 +3,26 @@ package de.fuballer.mcendgame.component.dungeon.generation.layout_generator.line
 import de.fuballer.mcendgame.util.random.RandomOption
 
 object RoomTypes {
-    val STRONGHOLD_START_ROOM = RoomTypeLoader.load("stronghold/stronghold_start_1000_0")
-    val STRONGHOLD_BOSS_ROOM = RoomTypeLoader.load("stronghold/stronghold_boss_0010_0")
+    val STRONGHOLD_START_ROOM = RoomTypeLoader.load("stronghold/start")
+    val STRONGHOLD_BOSS_ROOM = RoomTypeLoader.load("stronghold/boss")
 
     val STRONGHOLD_ROOMS = listOf(
-        RandomOption(1, RoomTypeLoader.load("stronghold/stronghold_large_0011_0")),
-        RandomOption(4, RoomTypeLoader.load("stronghold/stronghold_large_1010_0")),
-        RandomOption(4, RoomTypeLoader.load("stronghold/stronghold_large_1010_1")),
-        RandomOption(4, RoomTypeLoader.load("stronghold/stronghold_large_1010_2")),
-        RandomOption(2, RoomTypeLoader.load("stronghold/stronghold_medium_0110_0")),
-        RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_medium_0110_1")),
-        RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_medium_1110_0")),
-        RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_medium_0111_0")),
-        RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_small_0110_0")),
-        RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_small_1010_0")),
-        RandomOption(7, RoomTypeLoader.load("stronghold/stronghold_small_1010_1")),
+        RandomOption(4, RoomTypeLoader.load("stronghold/arena")),
+        RandomOption(4, RoomTypeLoader.load("stronghold/bridge_dive_plantrooms")),
+        RandomOption(1, RoomTypeLoader.load("stronghold/decayed-staircase_branching")),
+        RandomOption(7, RoomTypeLoader.load("stronghold/flat_chandelier_branching")),
+        RandomOption(3, RoomTypeLoader.load("stronghold/inverted-pyramid_curve")),
+        RandomOption(1, RoomTypeLoader.load("stronghold/parkour_curve")),
+        RandomOption(3, RoomTypeLoader.load("stronghold/sewer")),
+        RandomOption(4, RoomTypeLoader.load("stronghold/slimebounce")),
+        RandomOption(7, RoomTypeLoader.load("stronghold/small_connector_curve")),
+        RandomOption(7, RoomTypeLoader.load("stronghold/small_connector_sloped")),
+        RandomOption(5, RoomTypeLoader.load("stronghold/stair_chandelier_sidedrop_curve")),
+        RandomOption(7, RoomTypeLoader.load("stronghold/stair_elevated_branching")),
+        RandomOption(3, RoomTypeLoader.load("stronghold/stairs_statue")),
+        RandomOption(4, RoomTypeLoader.load("stronghold/tight_hanging-lamps_curve")),
+        RandomOption(7, RoomTypeLoader.load("stronghold/tiny_flat_connector")),
+        RandomOption(4, RoomTypeLoader.load("stronghold/tunnelbridge_curve")),
+        RandomOption(4, RoomTypeLoader.load("stronghold/zigzag-stairs_ponds")),
     )
 }
