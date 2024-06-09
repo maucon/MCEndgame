@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.util.extension
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
-import de.fuballer.mcendgame.component.item.attribute.CustomAttribute
-import de.fuballer.mcendgame.component.item.attribute.RollType
-import de.fuballer.mcendgame.component.item.attribute.SingleValueAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.RollType
+import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import org.bukkit.entity.LivingEntity

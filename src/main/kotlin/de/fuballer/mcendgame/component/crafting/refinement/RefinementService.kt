@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.component.crafting.refinement
 
 import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
 import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
-import de.fuballer.mcendgame.component.item.attribute.RollType
-import de.fuballer.mcendgame.component.item.attribute.SingleValueAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.RollType
+import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isRefinement

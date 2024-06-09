@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.technical.persistent_data.types
 
-import de.fuballer.mcendgame.component.item.attribute.*
+import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.data.*
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentEnum
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.persistence.PersistentDataAdapterContext

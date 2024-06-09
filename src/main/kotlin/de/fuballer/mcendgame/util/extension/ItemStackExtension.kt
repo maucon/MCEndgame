@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.util.extension
 
-import de.fuballer.mcendgame.component.item.attribute.CustomAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.map_device.MapDeviceAction
 import de.fuballer.mcendgame.component.totem.data.Totem

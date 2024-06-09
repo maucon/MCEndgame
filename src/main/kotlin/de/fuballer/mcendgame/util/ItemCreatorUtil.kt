@@ -42,14 +42,14 @@ object ItemCreatorUtil {
 
     fun createCustomItem(
         itemType: CustomItemType,
-        percentageRoll: Double = Random.nextDouble()
+        percentageRoll: Double? = null
     ): ItemStack {
         val item = ItemStack(itemType.equipment.material)
         val itemMeta = item.itemMeta!!
 
         itemMeta.setDisplayName("${ChatColor.GOLD}${itemType.customName}")
         val customAttributes = itemType.attributes
-            .map { it.roll(percentageRoll) }
+            .map { it.roll(percentageRoll ?: Random.nextDouble()) }
 
         if (!itemType.usesEquipmentBaseStats) {
             itemMeta.attributeModifiers?.let {

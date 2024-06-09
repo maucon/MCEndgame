@@ -1,7 +1,11 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.crafting.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.item.attribute.*
+import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
+import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.VanillaAttributeType
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes

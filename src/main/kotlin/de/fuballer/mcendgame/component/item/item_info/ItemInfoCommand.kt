@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.component.item.item_info
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
-import de.fuballer.mcendgame.component.item.attribute.CustomAttribute
-import de.fuballer.mcendgame.component.item.attribute.RollType
-import de.fuballer.mcendgame.component.item.attribute.SingleValueAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.RollType
+import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.CommandHandler

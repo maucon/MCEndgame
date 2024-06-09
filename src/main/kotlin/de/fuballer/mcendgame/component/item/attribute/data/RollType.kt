@@ -1,11 +1,11 @@
-package de.fuballer.mcendgame.component.item.attribute
+package de.fuballer.mcendgame.component.item.attribute.data
 
 /**
  * Represents the types of rolls that an attribute can have.
  */
 enum class RollType {
     /**
-     * Indicates that the attribute does not have a roll.
+     * The attribute does not have a roll.
      */
     STATIC,
 
