@@ -62,11 +62,8 @@ class PortalService(
         isSingleUse: Boolean = false,
         skin: PortalSkin = DefaultPortalSkin()
     ): Portal {
-        if (location.world == null
-            || target.world == null
-        ) {
-            throw IllegalArgumentException("world of locations cannot be null")
-        }
+        assert(location.world != null) { "world of location cannot be null" }
+        assert(target.world != null) { "world of target cannot be null" }
 
         val portal = Portal(location, target, isSingleUse, skin)
         portalRepo.save(portal)

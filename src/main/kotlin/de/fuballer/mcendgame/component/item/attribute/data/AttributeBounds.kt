@@ -5,6 +5,6 @@ data class AttributeBounds(
     val max: Double
 ) {
     init {
-        if (min > max) throw IllegalArgumentException("min cannot be greater than max")
+        assert(min <= max) { "min must be smaller than or equal max" }
     }
 }
