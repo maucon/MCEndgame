@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.item.equipment.armor
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.BaseAttribute
 import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
-import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -11,45 +11,45 @@ import org.bukkit.inventory.EquipmentSlot
 
 enum class Leggings(
     override val material: Material,
-    override val baseAttributes: List<RolledAttribute>
+    override val baseAttributes: List<BaseAttribute>
 ) : Equipment {
     LEATHER(
         Material.LEATHER_LEGGINGS,
         listOf(
-            RolledAttribute(AttributeType.ARMOR, 2.0)
+            BaseAttribute(AttributeType.ARMOR, 2.0)
         )
     ),
     GOLDEN(
         Material.GOLDEN_LEGGINGS,
         listOf(
-            RolledAttribute(AttributeType.ARMOR, 3.0)
+            BaseAttribute(AttributeType.ARMOR, 3.0)
         )
     ),
     CHAINMAIL(
         Material.CHAINMAIL_LEGGINGS,
         listOf(
-            RolledAttribute(AttributeType.ARMOR, 4.0)
+            BaseAttribute(AttributeType.ARMOR, 4.0)
         )
     ),
     IRON(
         Material.IRON_LEGGINGS,
         listOf(
-            RolledAttribute(AttributeType.ARMOR, 5.0)
+            BaseAttribute(AttributeType.ARMOR, 5.0)
         )
     ),
     DIAMOND(
         Material.DIAMOND_LEGGINGS,
         listOf(
-            RolledAttribute(AttributeType.ARMOR, 6.0),
-            RolledAttribute(AttributeType.ARMOR_TOUGHNESS, 2.0)
+            BaseAttribute(AttributeType.ARMOR, 6.0),
+            BaseAttribute(AttributeType.ARMOR_TOUGHNESS, 2.0)
         )
     ),
     NETHERITE(
         Material.NETHERITE_LEGGINGS,
         listOf(
-            RolledAttribute(AttributeType.ARMOR, 6.0),
-            RolledAttribute(AttributeType.ARMOR_TOUGHNESS, 3.0),
-            RolledAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1)
+            BaseAttribute(AttributeType.ARMOR, 6.0),
+            BaseAttribute(AttributeType.ARMOR_TOUGHNESS, 3.0),
+            BaseAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1)
         )
     );
 

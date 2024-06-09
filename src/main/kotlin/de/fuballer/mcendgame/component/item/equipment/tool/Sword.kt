@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.item.equipment.tool
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.BaseAttribute
 import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
-import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -11,48 +11,48 @@ import org.bukkit.inventory.EquipmentSlot
 
 enum class Sword(
     override val material: Material,
-    override val baseAttributes: List<RolledAttribute>
+    override val baseAttributes: List<BaseAttribute>
 ) : Equipment {
     WOODEN(
         Material.WOODEN_SWORD,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 4.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 4.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
         )
     ),
     GOLDEN(
         Material.GOLDEN_SWORD,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 4.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 4.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
         )
     ),
     STONE(
         Material.STONE_SWORD,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 5.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 5.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
         )
     ),
     IRON(
         Material.IRON_SWORD,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 6.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 6.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
         )
     ),
     DIAMOND(
         Material.DIAMOND_SWORD,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 7.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 7.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
         )
     ),
     NETHERITE(
         Material.NETHERITE_SWORD,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 8.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 8.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
         )
     );
 

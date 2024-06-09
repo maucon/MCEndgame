@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.util.extension
 
-import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
+import de.fuballer.mcendgame.component.item.attribute.CustomAttribute
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.map_device.MapDeviceAction
 import de.fuballer.mcendgame.component.totem.data.Totem
@@ -12,8 +12,9 @@ object ItemStackExtension {
     fun ItemStack.setCustomItemType(value: CustomItemType) = setPersistentData(this, TypeKeys.CUSTOM_ITEM_TYPE, value)
     fun ItemStack.getCustomItemType() = getPersistentData(this, TypeKeys.CUSTOM_ITEM_TYPE)
     fun ItemStack.isCustomItemType() = getCustomItemType() != null
-    fun ItemStack.setRolledAttributes(value: List<RolledAttribute>) = setPersistentData(this, TypeKeys.ATTRIBUTES, value)
-    fun ItemStack.getRolledAttributes() = getPersistentData(this, TypeKeys.ATTRIBUTES)
+
+    fun ItemStack.setCustomAttributes(value: List<CustomAttribute>) = setPersistentData(this, TypeKeys.CUSTOM_ATTRIBUTES, value)
+    fun ItemStack.getCustomAttributes() = getPersistentData(this, TypeKeys.CUSTOM_ATTRIBUTES)
     fun ItemStack.setUnmodifiable(value: Boolean = true) = setPersistentData(this, TypeKeys.UNMODIFIABLE, value)
     fun ItemStack.isUnmodifiable() = getPersistentDataBoolean(this, TypeKeys.UNMODIFIABLE)
     fun ItemStack.setCorruptionRounds(value: Int) = setPersistentData(this, TypeKeys.CORRUPTION_ROUNDS, value)

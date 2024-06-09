@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.item.equipment.tool
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.BaseAttribute
 import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
-import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -11,7 +11,7 @@ import org.bukkit.inventory.EquipmentSlot
 
 enum class Tool(
     override val material: Material,
-    override val baseAttributes: List<RolledAttribute>,
+    override val baseAttributes: List<BaseAttribute>,
     override val slot: EquipmentSlot,
     override val slotDependentAttributes: Boolean,
     override val rollableAttributes: List<RandomOption<RollableAttribute>>,
@@ -48,8 +48,8 @@ enum class Tool(
     TRIDENT(
         Material.TRIDENT,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 9.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.1)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 9.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.1)
         ),
         EquipmentSlot.HAND,
         false,

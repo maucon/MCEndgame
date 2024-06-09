@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.crafting.corruption
 
-import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.SingleValueAttribute
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCorruptionRounds
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCraftingItem
@@ -34,7 +34,9 @@ object CorruptionSettings {
 
     const val PRESENT_ENCHANT_WEIGHT_MULTIPLIER = 3
 
-    fun corruptAttributeValue(bounds: RollableAttribute, value: Double, random: Double) = value + 0.3 * (bounds.max - bounds.min) * (random - 0.5)
+    fun corruptAttributePercentRoll(attribute: SingleValueAttribute, random: Double) {
+        attribute.percentRoll += (random * 0.6 - 0.3)
+    }
 
     private val CORRUPTION_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),

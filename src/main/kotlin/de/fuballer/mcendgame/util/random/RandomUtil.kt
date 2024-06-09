@@ -16,7 +16,7 @@ object RandomUtil {
 
     fun <T> pick(
         options: List<RandomOption<T>>,
-        random: Random = Random,
+        random: Random,
         amount: Int
     ): List<T> {
         if (options.size < amount) {

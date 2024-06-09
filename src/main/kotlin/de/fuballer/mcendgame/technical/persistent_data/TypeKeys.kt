@@ -35,7 +35,7 @@ object TypeKeys {
 
     // items
     val CUSTOM_ITEM_TYPE = TypeKey(createNamespacedKey("custom_item_type"), PersistentObjectClass(CustomItemType::class))
-    val ATTRIBUTES = TypeKey(createNamespacedKey("attributes"), PersistentList(PersistentRolledAttribute))
+    val CUSTOM_ATTRIBUTES = TypeKey(createNamespacedKey("custom_attributes"), PersistentList(PersistentCustomAttribute))
     val UNMODIFIABLE = TypeKey(createNamespacedKey("unmodifiable"), PersistentDataType.BOOLEAN)
     val CRAFTING_ITEM = TypeKey(createNamespacedKey("crafting_item"), PersistentDataType.BOOLEAN)
     val CORRUPTION_ROUNDS = TypeKey(createNamespacedKey("corruption_rounds"), PersistentDataType.INTEGER)
