@@ -40,6 +40,7 @@ object BlockInteractionSettings {
         Material.TALL_SEAGRASS,
         Material.SPORE_BLOSSOM,
         Material.KELP_PLANT,
+        Material.SUGAR_CANE,
 
         Material.BRAIN_CORAL,
         Material.BUBBLE_CORAL,
