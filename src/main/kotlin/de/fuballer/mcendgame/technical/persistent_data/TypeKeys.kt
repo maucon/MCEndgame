@@ -34,7 +34,7 @@ object TypeKeys {
     val HEAL_ON_BLOCK_ACTIVATION = TypeKey(createNamespacedKey("heal_on_block_activation"), PersistentDataType.LONG)
 
     // items
-    val CUSTOM_ITEM_TYPE = TypeKey(createNamespacedKey("custom_entity_type"), PersistentObjectClass(CustomItemType::class))
+    val CUSTOM_ITEM_TYPE = TypeKey(createNamespacedKey("custom_item_type"), PersistentObjectClass(CustomItemType::class))
     val ATTRIBUTES = TypeKey(createNamespacedKey("attributes"), PersistentList(PersistentRolledAttribute))
     val UNMODIFIABLE = TypeKey(createNamespacedKey("unmodifiable"), PersistentDataType.BOOLEAN)
     val CRAFTING_ITEM = TypeKey(createNamespacedKey("crafting_item"), PersistentDataType.BOOLEAN)
