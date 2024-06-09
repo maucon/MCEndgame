@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.item.equipment.tool
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
-import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
-import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -11,48 +11,48 @@ import org.bukkit.inventory.EquipmentSlot
 
 enum class Pickaxe(
     override val material: Material,
-    override val baseAttributes: List<RolledAttribute>
+    override val baseAttributes: List<BaseAttribute>
 ) : Equipment {
     WOODEN(
         Material.WOODEN_PICKAXE,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 2.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.2)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 2.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.2)
         )
     ),
     GOLDEN(
         Material.GOLDEN_PICKAXE,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 2.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.2)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 2.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.2)
         )
     ),
     STONE(
         Material.STONE_PICKAXE,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 3.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.2)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 3.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.2)
         )
     ),
     IRON(
         Material.IRON_PICKAXE,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 4.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.2)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 4.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.2)
         )
     ),
     DIAMOND(
         Material.DIAMOND_PICKAXE,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 5.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.2)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 5.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.2)
         )
     ),
     NETHERITE(
         Material.NETHERITE_PICKAXE,
         listOf(
-            RolledAttribute(AttributeType.ATTACK_DAMAGE, 6.0),
-            RolledAttribute(AttributeType.ATTACK_SPEED, 1.2)
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 6.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 1.2)
         )
     );
 

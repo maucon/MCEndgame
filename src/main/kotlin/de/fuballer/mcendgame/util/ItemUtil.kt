@@ -1,16 +1,16 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.crafting.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
-import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
-import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeType
+import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
+import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.VanillaAttributeType
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomItemType
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.setRolledAttributes
 import org.bukkit.ChatColor
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
@@ -24,49 +24,6 @@ import java.util.*
 import kotlin.random.Random
 
 object ItemUtil {
-    fun createCustomItem(itemType: CustomItemType, roll: Double? = null): ItemStack {
-        val item = ItemStack(itemType.equipment.material)
-        val itemMeta = item.itemMeta!!
-
-        itemMeta.setDisplayName("${ChatColor.GOLD}${itemType.customName}")
-        val rolledAttributes = itemType.attributes.map {
-            if (roll == null) {
-                it.roll(1)
-            } else {
-                it.roll(roll)
-            }
-        }
-
-        if (!itemType.usesEquipmentBaseStats) {
-            itemMeta.attributeModifiers?.let {
-                it.forEach { attribute, _ -> itemMeta.removeAttributeModifier(attribute) }
-            }
-        }
-
-        item.itemMeta = itemMeta
-
-        item.setCustomItemType(itemType)
-        item.setRolledAttributes(rolledAttributes)
-
-        updateAttributesAndLore(item)
-        return item
-    }
-
-    fun getEquipmentAttributes(item: ItemStack): List<RollableAttribute> {
-        val itemType = item.type
-
-        val customItemAttributes = item.getCustomItemType()?.attributes
-        if (customItemAttributes != null) return customItemAttributes
-
-        val equipment = Equipment.fromMaterial(itemType) ?: return listOf()
-        return equipment.rollableAttributes.map { it.option }
-    }
-
-    fun hasCustomAttributes(item: ItemStack): Boolean {
-        val attributes = item.getRolledAttributes() ?: return false
-        return attributes.isNotEmpty()
-    }
-
     fun isVanillaItem(item: ItemStack): Boolean {
         val itemMeta = item.itemMeta ?: return true
         return !itemMeta.hasLore()
@@ -77,22 +34,13 @@ object ItemUtil {
 
         val equipment = Equipment.fromMaterial(item.type) ?: return
         val baseAttributes = equipment.baseAttributes
-        val extraAttributes = item.getRolledAttributes() ?: listOf()
+        val customAttributes = item.getCustomAttributes() ?: listOf()
         val slotLore = Equipment.getLoreForSlot(equipment.slot)
 
-        updateAttributes(item, itemMeta, baseAttributes, extraAttributes, equipment)
-        updateLore(item, itemMeta, baseAttributes, extraAttributes, slotLore)
+        updateAttributes(item, itemMeta, baseAttributes, customAttributes, equipment)
+        updateLore(item, itemMeta, baseAttributes, customAttributes, slotLore)
 
         item.itemMeta = itemMeta
-    }
-
-    fun getCorrectSignLore(attribute: RolledAttribute): String {
-        val lore = attribute.type.lore(attribute.roll)
-
-        if (attribute.roll >= 0) return lore
-        if (!lore.startsWith("+")) return lore
-
-        return lore.replaceFirstChar { "" }
     }
 
     fun setRandomDurability(item: ItemStack): ItemStack {
@@ -106,11 +54,25 @@ object ItemUtil {
         return item
     }
 
+    fun isItemRenaming(renameText: String?, base: ItemStack): Boolean {
+        if (renameText.isNullOrEmpty()) return false
+
+        val itemMeta = base.itemMeta ?: return false
+        if (!itemMeta.hasDisplayName()) return false
+
+        var oldName = itemMeta.displayName
+        if (oldName.startsWith("§")) { // remove color codes
+            oldName = oldName.substring(2)
+        }
+
+        return oldName != renameText
+    }
+
     private fun updateAttributes(
         item: ItemStack,
         itemMeta: ItemMeta,
-        baseAttributes: List<RolledAttribute>,
-        extraAttributes: List<RolledAttribute>,
+        baseAttributes: List<BaseAttribute>,
+        customAttributes: List<CustomAttribute>,
         equipment: Equipment
     ) {
         itemMeta.attributeModifiers?.let {
@@ -121,27 +83,46 @@ object ItemUtil {
         val hasBaseAttributes = customItemType?.usesEquipmentBaseStats != false
 
         if (hasBaseAttributes) {
-            addAllAttributes(itemMeta, baseAttributes, equipment.slot, true)
+            addAllVanillaAttributes(itemMeta, baseAttributes, equipment.slot)
         }
-        val extraAttributeSlot = if (equipment.slotDependentAttributes) equipment.slot else null
-        addAllAttributes(itemMeta, extraAttributes, extraAttributeSlot, false)
+        val customAttributeSlot = if (equipment.slotDependentAttributes) equipment.slot else null
+        addAllVanillaApplicableCustomAttributes(itemMeta, customAttributes, customAttributeSlot)
     }
 
-    private fun addAllAttributes(
+    private fun addAllVanillaAttributes(
         itemMeta: ItemMeta,
-        attributes: List<RolledAttribute>,
-        slot: EquipmentSlot?,
-        baseAttributes: Boolean
+        attributes: List<BaseAttribute>,
+        slot: EquipmentSlot?
     ) {
         attributes
             .filter { it.type.isVanillaAttributeType }
             .forEach {
                 val attribute = it.type.vanillaAttributeType!!.attribute
-                val realRoll = if (baseAttributes) getActualAttributeValue(attribute, it.roll) else it.roll
+                val realRoll = getActualAttributeValue(attribute, it.roll)
                 addAttribute(
                     itemMeta,
                     attribute,
                     realRoll,
+                    it.type.vanillaAttributeType.scaleType,
+                    slot
+                )
+            }
+    }
+
+    private fun addAllVanillaApplicableCustomAttributes(
+        itemMeta: ItemMeta,
+        attributes: List<CustomAttribute>,
+        slot: EquipmentSlot?
+    ) {
+        attributes
+            .filter { it.type.isVanillaAttributeType }
+            .forEach {
+                val attribute = it.type.vanillaAttributeType!!.attribute
+                val roll = (it as SingleValueAttribute).getAbsoluteRoll()
+                addAttribute(
+                    itemMeta,
+                    attribute,
+                    roll,
                     it.type.vanillaAttributeType.scaleType,
                     slot
                 )
@@ -176,8 +157,8 @@ object ItemUtil {
     private fun updateLore(
         item: ItemStack,
         itemMeta: ItemMeta,
-        baseAttributes: List<RolledAttribute>,
-        extraAttributes: List<RolledAttribute>,
+        baseAttributes: List<BaseAttribute>,
+        customAttributes: List<CustomAttribute>,
         slotLore: String
     ) {
         val lore = mutableListOf<String>()
@@ -188,17 +169,17 @@ object ItemUtil {
             lore.add(slotLore)
 
             baseAttributes.forEach {
-                val attributeLine = getAttributeLine(itemMeta, it, true)
+                val attributeLine = getBaseAttributeLine(itemMeta, it)
                 lore.add(attributeLine)
             }
         }
-        if (extraAttributes.isNotEmpty()) {
+        if (customAttributes.isNotEmpty()) {
             lore.add(Equipment.GENERIC_SLOT_LORE)
 
-            val attributes = getSortedAttributes(item, extraAttributes)
+            val attributes = getSortedCustomAttributes(customItemType, customAttributes)
 
             attributes.forEach {
-                val attributeLine = getAttributeLine(itemMeta, it, false)
+                val attributeLine = getCustomAttributeLine(it)
                 lore.add(attributeLine)
             }
         }
@@ -213,20 +194,23 @@ object ItemUtil {
         itemMeta.lore = lore
     }
 
-    private fun getSortedAttributes(
-        item: ItemStack,
-        extraAttributes: List<RolledAttribute>
-    ): List<RolledAttribute> {
-        val customType = item.getCustomItemType()
-            ?: return extraAttributes.sortedBy { it.type.ordinal }
+    private fun getSortedCustomAttributes(
+        customItemType: CustomItemType?,
+        customAttributes: List<CustomAttribute>
+    ): List<CustomAttribute> {
+        if (customItemType == null) {
+            return customAttributes.sortedBy { it.type.ordinal }
+        }
 
-        val attributeTypeOrder = customType.attributes.map { it.type }
-        return extraAttributes.sortedWith(compareBy { attributeTypeOrder.indexOf(it.type) })
+        val attributeTypeOrder = customItemType.attributes.map { it.type }
+        return customAttributes.sortedWith(compareBy { attributeTypeOrder.indexOf(it.type) })
     }
 
-    private fun getAttributeLine(itemMeta: ItemMeta, attribute: RolledAttribute, isBaseAttribute: Boolean): String {
-        var attributeLore = getCorrectSignLore(attribute)
-        if (!isBaseAttribute) return "${ChatColor.BLUE}$attributeLore"
+    private fun getBaseAttributeLine(
+        itemMeta: ItemMeta,
+        attribute: BaseAttribute
+    ): String {
+        var attributeLore = AttributeUtil.getCorrectSignLore(attribute)
 
         val vanillaAttributeType = attribute.type.vanillaAttributeType
             ?: return "${ChatColor.BLUE}$attributeLore"
@@ -241,6 +225,11 @@ object ItemUtil {
         }
         attributeLore = attributeLore.replaceFirstChar { " " }
         return "${ChatColor.DARK_GREEN}$attributeLore"
+    }
+
+    private fun getCustomAttributeLine(attribute: CustomAttribute): String {
+        val attributeLore = AttributeUtil.getCorrectSignLore(attribute)
+        return "${ChatColor.BLUE}$attributeLore"
     }
 
     private fun isNotPlayerBaseAttribute(vanillaAttributeType: VanillaAttributeType) =

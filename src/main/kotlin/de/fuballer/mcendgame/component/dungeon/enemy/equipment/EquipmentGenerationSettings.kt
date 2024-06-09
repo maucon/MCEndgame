@@ -10,6 +10,9 @@ import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 
 object EquipmentGenerationSettings {
+    const val ATTRIBUTE_EXPONENT_TIER_SCALING = .05
+    const val ATTRIBUTE_EXPONENT_TIER_OFFSET = 10
+
     val STAT_AMOUNTS = listOf(
         SortableRandomOption(5000, 0, 0),
         SortableRandomOption(3000, 1, 1),

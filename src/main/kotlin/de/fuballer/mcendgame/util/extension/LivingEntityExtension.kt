@@ -1,9 +1,11 @@
 package de.fuballer.mcendgame.util.extension
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
-import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.RollType
+import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
@@ -14,7 +16,7 @@ object LivingEntityExtension {
     }
 
     private fun getEntityCustomAttributes(entity: LivingEntity): Map<AttributeType, List<Double>> {
-        val attributes = mutableListOf<RolledAttribute>()
+        val attributes = mutableListOf<CustomAttribute>()
         val equipment = entity.equipment ?: return mapOf()
 
         val helmetAttributes = getValidItemAttributes(equipment.helmet, EquipmentSlot.HEAD)
@@ -34,16 +36,23 @@ object LivingEntityExtension {
         return attributes
             .filter { !it.type.isVanillaAttributeType }
             .groupBy { it.type }
-            .mapValues { (_, values) -> values.map { it.roll } }
+            .mapValues { (_, attributes) ->
+                attributes.map { attribute ->
+                    when (attribute.rollType) {
+                        RollType.STATIC -> 0.0
+                        RollType.SINGLE -> (attribute as SingleValueAttribute).getAbsoluteRoll()
+                    }
+                }
+            }
     }
 
-    private fun getValidItemAttributes(item: ItemStack?, slot: EquipmentSlot): List<RolledAttribute> {
+    private fun getValidItemAttributes(item: ItemStack?, slot: EquipmentSlot): List<CustomAttribute> {
         if (item == null) return listOf()
 
         val grantAttributes = Equipment.fromMaterial(item.type)
             ?.let { it.slot == slot || !it.slotDependentAttributes } ?: false
 
         if (!grantAttributes) return listOf()
-        return item.getRolledAttributes() ?: listOf()
+        return item.getCustomAttributes() ?: listOf()
     }
 }

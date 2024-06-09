@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.item.attribute
+package de.fuballer.mcendgame.component.item.attribute.data
 
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
