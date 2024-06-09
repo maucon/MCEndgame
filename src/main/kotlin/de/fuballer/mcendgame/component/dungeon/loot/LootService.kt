@@ -6,6 +6,7 @@ import de.fuballer.mcendgame.component.dungeon.modifier.ModifierUtil
 import de.fuballer.mcendgame.component.totem.data.Totem
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
@@ -64,7 +65,7 @@ class LootService(
         if (Random.nextDouble() > LootSettings.getCustomItemDropChance(mapTier)) return
 
         val customItemType = RandomUtil.pick(LootSettings.CUSTOM_ITEM_OPTIONS).option
-        val item = ItemUtil.createCustomItem(customItemType)
+        val item = ItemCreatorUtil.createCustomItem(customItemType)
 
         val itemMeta = item.itemMeta!!
         equipmentEnchantmentService.enchantItem(Random, mapTier, itemMeta, customItemType.equipment.rollableEnchants)

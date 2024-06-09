@@ -13,7 +13,7 @@ object RefinementSettings {
     private val ITEM_NAME = ChatColor.DARK_AQUA.toString() + "Orb of Refinement"
     private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Enhance an item's attribute by sacrificing another")
 
-    fun refineAttributeValue(enhanceRollRange: Double, sacrificedRollPercentage: Double) = enhanceRollRange * 0.25 * sacrificedRollPercentage
+    fun refineAttributeValue(sacrificedRollPercentage: Double) = 0.5 * sacrificedRollPercentage
 
     private val REFINEMENT_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),
@@ -26,10 +26,4 @@ object RefinementSettings {
     }
 
     fun getRefinementItem() = REFINEMENT_ITEM.clone()
-
-    fun getPreviewItem() = ItemCreatorUtil.create(
-        ItemStack(BASE_ITEM),
-        "Test",
-        listOf("what happens in vegas", "stays in vegas")
-    )
 }

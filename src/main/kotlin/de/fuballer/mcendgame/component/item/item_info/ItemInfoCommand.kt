@@ -1,12 +1,13 @@
 package de.fuballer.mcendgame.component.item.item_info
 
-import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
-import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
+import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
+import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.RollType
+import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.CommandHandler
-import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.getRolledAttributes
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.command.Command
@@ -44,7 +45,7 @@ class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
             return
         }
 
-        val attributes = item.getRolledAttributes()
+        val attributes = item.getCustomAttributes()
         if (!Equipment.existsByMaterial(itemType) || attributes.isNullOrEmpty()) {
             player.sendMessage(ItemInfoSettings.INVALID_ITEM)
             return
@@ -75,11 +76,10 @@ class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
         val itemDisplayName = getItemTypeDisplayName(itemType)
         val header = "${ItemInfoSettings.ITEM_TYPE_COLOR}$itemDisplayName${ChatColor.RESET}"
 
-        val attributeBounds = ItemUtil.getEquipmentAttributes(item)
-        val presentAttributes = item.getRolledAttributes() ?: listOf()
+        val attributes = item.getCustomAttributes() ?: listOf()
 
-        return attributeBounds
-            .mapNotNull { getAttributeTextIfPresent(it, presentAttributes) }
+        return attributes
+            .map { mapToAttributeText(it) }
             .map { "$header\n\n\n$it" }
     }
 
@@ -96,33 +96,28 @@ class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
         return displayName.trim()
     }
 
-    private fun getAttributeTextIfPresent(
-        attributeBound: RollableAttribute,
-        presentAttributes: List<RolledAttribute>
-    ): String? {
-        val attribute = presentAttributes.firstOrNull { it.type == attributeBound.type } ?: return null
-        val attributeRollString = getAttributeRollString(attributeBound, attribute.roll)
+    private fun mapToAttributeText(attribute: CustomAttribute): String {
+        val attributeRollText = when (attribute.rollType) {
+            RollType.STATIC -> ItemInfoSettings.NOT_ROLLED_TEXT
+            RollType.SINGLE -> getAttributeRollText(attribute as SingleValueAttribute)
+        }
 
-        var attributeLore = ItemUtil.getCorrectSignLore(attribute)
+        var attributeLore = AttributeUtil.getCorrectSignLore(attribute)
         if (attributeLore.firstOrNull() != null && attributeLore.first() == ' ') {
             attributeLore = attributeLore.replaceFirstChar { "" }
         }
 
         return "${ItemInfoSettings.ATTRIBUTE_COLOR}$attributeLore\n\n" +
-                "${ItemInfoSettings.VALUE_COLOR}${attributeRollString}\n"
+                "${ItemInfoSettings.VALUE_COLOR}${attributeRollText}\n"
     }
 
-    private fun getAttributeRollString(attributeBounds: RollableAttribute, roll: Double): String {
-        if (attributeBounds.min - attributeBounds.max == 0.0) {
-            return ItemInfoSettings.NOT_ROLLED_TEXT
-        }
-
+    private fun getAttributeRollText(attribute: SingleValueAttribute): String {
         return String.format(
             "Min: %s\nMax: %s\nRoll: %s\n%%Roll: %s%%",
-            DECIMAL_FORMAT.format(attributeBounds.min),
-            DECIMAL_FORMAT.format(attributeBounds.max),
-            DECIMAL_FORMAT.format(roll),
-            DECIMAL_FORMAT.format((roll - attributeBounds.min) / (attributeBounds.max - attributeBounds.min) * 100)
+            DECIMAL_FORMAT.format(attribute.bounds.min),
+            DECIMAL_FORMAT.format(attribute.bounds.max),
+            DECIMAL_FORMAT.format(attribute.getAbsoluteRoll()),
+            DECIMAL_FORMAT.format(attribute.percentRoll * 100)
         )
     }
 }

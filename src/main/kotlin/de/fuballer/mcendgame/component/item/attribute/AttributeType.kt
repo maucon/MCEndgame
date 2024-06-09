@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.item.attribute
 
+import de.fuballer.mcendgame.component.item.attribute.data.VanillaAttributeType
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import java.text.DecimalFormat

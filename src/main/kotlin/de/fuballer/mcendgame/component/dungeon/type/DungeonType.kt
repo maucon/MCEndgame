@@ -52,10 +52,13 @@ enum class DungeonType(
         )
     );
 
-    fun roll(random: Random) =
-        RolledDungeonType(
+    fun roll(random: Random): RolledDungeonType {
+        assert(bossEntityTypes.size >= 3) { "there must be at least 3 boss entity types" }
+
+        return RolledDungeonType(
             RandomUtil.pick(mapTypes, random).option,
             entityTypes,
             RandomUtil.pick(bossEntityTypes, random, 3)
         )
+    }
 }

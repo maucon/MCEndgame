@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.item.equipment
 
-import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
-import de.fuballer.mcendgame.component.item.attribute.RolledAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
 import de.fuballer.mcendgame.component.item.equipment.armor.Boots
 import de.fuballer.mcendgame.component.item.equipment.armor.Chestplate
 import de.fuballer.mcendgame.component.item.equipment.armor.Helmet
@@ -14,7 +14,7 @@ import org.bukkit.inventory.EquipmentSlot
 
 interface Equipment {
     val material: Material
-    val baseAttributes: List<RolledAttribute>
+    val baseAttributes: List<BaseAttribute>
     val slot: EquipmentSlot
 
     /** whether to only grant extra attributes when the item is in the correct slot */

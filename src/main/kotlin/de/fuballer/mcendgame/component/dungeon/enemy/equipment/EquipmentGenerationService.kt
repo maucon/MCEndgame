@@ -1,16 +1,16 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.equipment
 
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.enchantment.EquipmentEnchantmentService
-import de.fuballer.mcendgame.component.item.attribute.RollableAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.setRolledAttributes
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttributes
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
+import kotlin.math.pow
 import kotlin.random.Random
 
 @Component
@@ -133,20 +133,21 @@ class EquipmentGenerationService(
         equipment: Equipment
     ) {
         val statAmount = RandomUtil.pick(EquipmentGenerationSettings.STAT_AMOUNTS, mapTier, random).option
-        val rollableAttributesCopy = equipment.rollableAttributes.toMutableList()
-
-        val pickedAttributes = mutableListOf<RollableAttribute>()
-        repeat(statAmount) {
-            if (rollableAttributesCopy.isEmpty()) return@repeat
-            val pickedAttribute = RandomUtil.pick(rollableAttributesCopy, random)
-
-            pickedAttributes.add(pickedAttribute.option)
-            rollableAttributesCopy.remove(pickedAttribute)
-        }
+        val pickedAttributes = RandomUtil.pick(equipment.rollableAttributes, random, statAmount)
 
         val rolledAttributes = pickedAttributes.sortedBy { it.type.ordinal }
-            .map { it.roll(mapTier) }
+            .map {
+                val percentageRoll = calculateAttributePercentageRoll(mapTier)
+                it.roll(percentageRoll)
+            }
 
-        item.setRolledAttributes(rolledAttributes)
+        item.setCustomAttributes(rolledAttributes)
+    }
+
+    private fun calculateAttributePercentageRoll(mapTier: Int): Double {
+        val random = Random.nextDouble()
+        if (mapTier <= EquipmentGenerationSettings.ATTRIBUTE_EXPONENT_TIER_OFFSET) return random
+
+        return 1 - random.pow(1 + EquipmentGenerationSettings.ATTRIBUTE_EXPONENT_TIER_SCALING * (mapTier - EquipmentGenerationSettings.ATTRIBUTE_EXPONENT_TIER_OFFSET))
     }
 }
