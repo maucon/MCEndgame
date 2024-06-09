@@ -11,6 +11,7 @@ object RoomTypes {
         RandomOption(4, RoomTypeLoader.load("stronghold/bridge_dive_plantrooms")),
         RandomOption(1, RoomTypeLoader.load("stronghold/decayed-staircase_branching")),
         RandomOption(7, RoomTypeLoader.load("stronghold/flat_chandelier_branching")),
+        RandomOption(1, RoomTypeLoader.load("stronghold/giant_tower")),
         RandomOption(3, RoomTypeLoader.load("stronghold/inverted-pyramid_curve")),
         RandomOption(1, RoomTypeLoader.load("stronghold/parkour_curve")),
         RandomOption(3, RoomTypeLoader.load("stronghold/sewer")),
