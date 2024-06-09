@@ -40,7 +40,7 @@ class CorruptionService : AnvilCraftingBaseService() {
     }
 
     private fun corruptItem(item: ItemStack) {
-        val hasRollableCustomAttributes = AttributeUtil.getRollableCustomAttributes(item).isNotEmpty()
+        val hasRollableCustomAttributes = AttributeUtil.getSingleValueAttributes(item).isNotEmpty()
 
         val corruptions =
             if (hasRollableCustomAttributes) CorruptionSettings.CORRUPTIONS

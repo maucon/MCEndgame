@@ -8,9 +8,11 @@ import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttribut
 import org.bukkit.inventory.ItemStack
 
 object AttributeUtil {
-    fun getRollableCustomAttributes(item: ItemStack): List<CustomAttribute> {
+    fun getSingleValueAttributes(item: ItemStack): List<SingleValueAttribute> {
         val attributes = item.getCustomAttributes() ?: return listOf()
-        return attributes.filter { it.rollType != RollType.STATIC }
+        return attributes
+            .filter { it.rollType == RollType.SINGLE }
+            .map { it as SingleValueAttribute }
     }
 
     fun getCorrectSignLore(attribute: CustomAttribute): String {
