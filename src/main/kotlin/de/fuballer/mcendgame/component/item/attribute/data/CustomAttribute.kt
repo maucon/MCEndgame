@@ -16,6 +16,6 @@ class SingleValueAttribute(
     val bounds: AttributeBounds,
     var percentRoll: Double
 ) : CustomAttribute(type, RollType.SINGLE) {
-    fun getAbsolutRoll() =
+    fun getAbsoluteRoll() =
         bounds.min + (bounds.max - bounds.min) * percentRoll
 }

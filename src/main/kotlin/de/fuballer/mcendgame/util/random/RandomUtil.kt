@@ -17,16 +17,14 @@ object RandomUtil {
     fun <T> pick(
         options: List<RandomOption<T>>,
         random: Random,
-        amount: Int
+        maxAmount: Int
     ): List<T> {
-        if (options.size < amount) {
-            throw IllegalArgumentException("Too few options")
-        }
-
         val remainingOptions = options.toMutableList()
         val picked = mutableListOf<T>()
 
-        repeat(amount) {
+        repeat(maxAmount) {
+            if (remainingOptions.isEmpty()) return picked
+
             val pick = pick(remainingOptions, random)
             picked.add(pick.option)
             remainingOptions.remove(pick)

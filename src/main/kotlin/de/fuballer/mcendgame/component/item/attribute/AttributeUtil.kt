@@ -15,8 +15,8 @@ object AttributeUtil {
 
     fun getCorrectSignLore(attribute: CustomAttribute): String {
         val roll = when (attribute.rollType) {
-            RollType.STATIC -> 1.0
-            RollType.SINGLE -> (attribute as SingleValueAttribute).getAbsolutRoll()
+            RollType.STATIC -> 0.0
+            RollType.SINGLE -> (attribute as SingleValueAttribute).getAbsoluteRoll()
 
         }
         val lore = attribute.type.lore(roll)

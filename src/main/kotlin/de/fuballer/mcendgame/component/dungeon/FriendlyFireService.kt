@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.damage
+package de.fuballer.mcendgame.component.dungeon
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.framework.annotation.Component

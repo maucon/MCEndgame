@@ -52,10 +52,13 @@ enum class DungeonType(
         )
     );
 
-    fun roll(random: Random) =
-        RolledDungeonType(
+    fun roll(random: Random): RolledDungeonType {
+        if (bossEntityTypes.size < 3) throw IllegalStateException("too few boss entity types")
+
+        return RolledDungeonType(
             RandomUtil.pick(mapTypes, random).option,
             entityTypes,
             RandomUtil.pick(bossEntityTypes, random, 3)
         )
+    }
 }

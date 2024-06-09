@@ -39,8 +39,8 @@ object LivingEntityExtension {
             .mapValues { (_, attributes) ->
                 attributes.map { attribute ->
                     when (attribute.rollType) {
-                        RollType.STATIC -> 1.0// FIXME hm
-                        RollType.SINGLE -> (attribute as SingleValueAttribute).getAbsolutRoll()
+                        RollType.STATIC -> 0.0
+                        RollType.SINGLE -> (attribute as SingleValueAttribute).getAbsoluteRoll()
                     }
                 }
             }

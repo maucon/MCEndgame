@@ -17,10 +17,9 @@ data class RollableAttribute(
     constructor(type: AttributeType, max: Double)
             : this(type, RollType.SINGLE, AttributeBounds(0.0, max))
 
-    fun roll(percentRoll: Double): CustomAttribute {
-        val bounds = bounds ?: throw IllegalStateException("bounds not present")
-        val value = bounds.min + (bounds.max - bounds.min) * percentRoll
-
-        return SingleValueAttribute(type, bounds, value)
-    }
+    fun roll(percentRoll: Double) =
+        when (rollType) {
+            RollType.STATIC -> StaticAttribute(type)
+            RollType.SINGLE -> SingleValueAttribute(type, bounds!!, percentRoll)
+        }
 }

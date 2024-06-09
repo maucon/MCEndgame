@@ -116,7 +116,7 @@ class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
             "Min: %s\nMax: %s\nRoll: %s\n%%Roll: %s%%",
             DECIMAL_FORMAT.format(attribute.bounds.min),
             DECIMAL_FORMAT.format(attribute.bounds.max),
-            DECIMAL_FORMAT.format(attribute.getAbsolutRoll()),
+            DECIMAL_FORMAT.format(attribute.getAbsoluteRoll()),
             DECIMAL_FORMAT.format(attribute.percentRoll * 100)
         )
     }

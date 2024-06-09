@@ -23,7 +23,7 @@ object PersistentCustomAttribute : PersistentDataType<PersistentDataContainer, C
         return when (complex.rollType) {
             RollType.STATIC -> PersistentStaticAttribute.toPrimitive(complex as StaticAttribute, container)
             RollType.SINGLE -> PersistentSingleValueAttribute.toPrimitive(complex as SingleValueAttribute, container)
-        }.also { println(it.keys) }
+        }
     }
 
     override fun fromPrimitive(primitive: PersistentDataContainer, context: PersistentDataAdapterContext): CustomAttribute {

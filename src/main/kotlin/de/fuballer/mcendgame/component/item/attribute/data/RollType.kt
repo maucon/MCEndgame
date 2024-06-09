@@ -10,7 +10,7 @@ enum class RollType {
     STATIC,
 
     /**
-     * The attribute has one value rolled.
+     * The attribute has one value rolled with bounds.
      */
     SINGLE
 }

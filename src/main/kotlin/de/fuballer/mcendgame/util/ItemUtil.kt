@@ -118,7 +118,7 @@ object ItemUtil {
             .filter { it.type.isVanillaAttributeType }
             .forEach {
                 val attribute = it.type.vanillaAttributeType!!.attribute
-                val roll = (it as SingleValueAttribute).getAbsolutRoll()
+                val roll = (it as SingleValueAttribute).getAbsoluteRoll()
                 addAttribute(
                     itemMeta,
                     attribute,
