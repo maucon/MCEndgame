@@ -38,7 +38,7 @@ commands:
     usage: "§CUsage /<command>"
     aliases: [ totems ]
 
-  dungeon-totem-give:
+  give-dungeon-totem:
     description: "Gives a specified tier of dungeon totem to a player"
     usage: "§CUsage /<command> player totem-type tier"
     aliases: [ give-totem ]
