@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.configuration
 
+import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
 import de.fuballer.mcendgame.framework.annotation.Bean
 import de.fuballer.mcendgame.framework.annotation.Configuration
@@ -26,7 +27,7 @@ class PluginConfiguration {
     fun server(): Server = PluginConfiguration.server()
 
     @Bean
-    fun protocolManager(): ProtocolManager = PluginConfiguration.protocolManager()
+    fun protocolManager(): ProtocolManager = ProtocolLibrary.getProtocolManager()
 
     companion object {
         lateinit var INSTANCE: JavaPlugin
@@ -36,7 +37,6 @@ class PluginConfiguration {
         fun scheduler(): BukkitScheduler = INSTANCE.server.scheduler
         fun pluginManager(): PluginManager = INSTANCE.server.pluginManager
         fun server(): Server = INSTANCE.server
-        fun protocolManager(): ProtocolManager = PROTOCOL_MANAGER
         fun scoreboardManager(): ScoreboardManager = plugin().server.scoreboardManager!!
     }
 }

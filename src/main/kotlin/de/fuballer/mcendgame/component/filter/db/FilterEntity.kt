@@ -7,5 +7,5 @@ import java.util.*
 data class FilterEntity(
     override var id: UUID,
 
-    var filters: MutableSet<Material> = mutableSetOf()
+    var filter: MutableSet<Material> = mutableSetOf()
 ) : Entity<UUID>

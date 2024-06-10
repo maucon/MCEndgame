@@ -9,6 +9,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
+@Suppress("unused")
 class MCEndgame : JavaPlugin() {
     private var lifeCycleListener: List<LifeCycleListener>? = null
 
@@ -32,6 +33,7 @@ class MCEndgame : JavaPlugin() {
 
     override fun onDisable() {
         lifeCycleListener?.forEach { it.terminate() }
+        ProtocolLibrary.getProtocolManager().removePacketListeners(this)
 
         logger.info("Disabled MC-Endgame")
     }

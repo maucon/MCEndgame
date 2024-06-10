@@ -5,6 +5,9 @@ import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.InventoryExtension.getCustomType
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getTotem
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCraftingItem
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCustomItemType
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -37,10 +40,10 @@ class FilterService(
         val entity = filterRepo.findById(player.uniqueId) ?: return
 
         if (slot < FilterSettings.FILTER_SIZE) {
-            if (!entity.filters.remove(material)) return
+            if (!entity.filter.remove(material)) return
             filterInventory.setItem(slot, null)
         } else {
-            if (!entity.filters.add(material)) return
+            if (!entity.filter.add(material)) return
             filterInventory.addItem(ItemStack(material))
         }
 
@@ -53,10 +56,17 @@ class FilterService(
         val player = event.entity as? Player ?: return
         if (!event.entity.world.isDungeonWorld()) return
 
-        val item = event.item.itemStack.type
         val uuid = player.uniqueId
         val entity = filterRepo.findById(uuid) ?: return
-        if (!entity.filters.contains(item)) return
+
+        val item = event.item.itemStack
+        val material = item.type
+
+        if (item.isCustomItemType()) return
+        if (item.getTotem() != null) return
+        if (item.isCraftingItem()) return
+
+        if (!entity.filter.contains(material)) return
 
         event.cancel()
     }
