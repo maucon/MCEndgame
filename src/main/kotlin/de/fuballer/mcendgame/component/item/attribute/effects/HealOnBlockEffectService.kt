@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.LivingEntityExtension.heal
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHealOnBlockActivation
 import de.fuballer.mcendgame.util.extension.PlayerExtension.setHealOnBlockActivation
 import org.bukkit.Color
@@ -12,31 +13,33 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import kotlin.math.min
+
+private const val COOLDOWN = 5000 // should equal attribute type text
 
 @Component
 class HealOnBlockEffectService : Listener {
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
         val player = event.damaged as? Player ?: return
         if (!event.isDamageBlocked) return
 
         val healOnBlockAttributes = event.damagedAttributes[AttributeType.HEAL_ON_BLOCK] ?: return
-        val healOnBlockAttribute = healOnBlockAttributes.sum()
 
         if (isHealOnBlockOnCooldown(player)) return
         player.setHealOnBlockActivation(System.currentTimeMillis())
 
         spawnParticles(player)
 
+        val healOnBlockAttribute = healOnBlockAttributes.sum()
         val maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
-        val newHealth = min(player.health + healOnBlockAttribute, maxHealth)
-        player.health = newHealth
+        val amount = maxHealth * healOnBlockAttribute
+
+        player.heal(amount)
     }
 
     private fun isHealOnBlockOnCooldown(player: Player): Boolean {
         val lastActivation = player.getHealOnBlockActivation() ?: return false
-        return lastActivation + 7000 > System.currentTimeMillis()
+        return lastActivation + COOLDOWN > System.currentTimeMillis()
     }
 
     private fun spawnParticles(player: Player) {

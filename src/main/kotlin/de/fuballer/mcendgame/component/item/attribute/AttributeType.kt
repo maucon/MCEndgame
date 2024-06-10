@@ -96,6 +96,8 @@ enum class AttributeType(
 
     ABSORPTION_ON_HIGH_DAMAGE_TAKEN({ " When taking at least ${DECIMAL_FORMAT.format(it)} damage, gain Absorption II" }),
 
+    REGEN_ON_DAMAGE_TAKEN({ " Gain Regeneration II for ${DECIMAL_FORMAT.format(it)}s when damaged" }),
+
     STEALTH({ " Cannot be targeted by enemies facing away" }),
 
     BACKSTAB({ " ${DECIMAL_FORMAT.format(it * 100)}% more damage with attacks from behind" }),
@@ -106,7 +108,7 @@ enum class AttributeType(
 
     MORE_DAMAGE_AGAINST_FULL_LIFE({ " ${DECIMAL_FORMAT.format(it * 100)}% more damage against full life enemies" }),
 
-    HEAL_ON_BLOCK({ " Heal ${DECIMAL_FORMAT.format(it)} health on block, with a cooldown of 7 seconds" }),
+    HEAL_ON_BLOCK({ " Heal ${DECIMAL_FORMAT.format(it * 100)}% health on block, with a cooldown of 5 seconds" }),
 
     INCREASED_DAMAGE_PER_MISSING_HEART({ " ${DECIMAL_FORMAT.format(it * 100)}% increased damage per missing heart" }),
 
@@ -121,4 +123,6 @@ enum class AttributeType(
     RANDOMIZED_DAMAGE_TAKEN({ " Damage taken is randomized between 25% and ${DECIMAL_FORMAT.format(it * 100)}%" }),
 
     NEGATIVE_EFFECT_IMMUNITY({ " Immune to negative effects" }),
+
+    HEALTH_RESERVATION({ " ${DECIMAL_FORMAT.format(it * 100)}% of health cannot be recovered" }),
 }

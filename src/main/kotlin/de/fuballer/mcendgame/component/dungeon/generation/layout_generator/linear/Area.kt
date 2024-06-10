@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.dungeon.generation.layout_generator.line
 import org.bukkit.util.Vector
 
 data class Area(
-    var pos1: Vector,
+    var pos1: Vector, //pos1 < pos2
     var pos2: Vector
 ) {
     fun contains(
@@ -14,7 +14,7 @@ data class Area(
         if (pos.z < pos1.z) return false
         if (pos.x > pos2.x) return false
         if (pos.y > pos2.y) return false
-        if (pos.y > pos2.z) return false
+        if (pos.z > pos2.z) return false
 
         return true
     }

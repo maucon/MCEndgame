@@ -38,6 +38,10 @@ object CorruptionSettings {
         attribute.percentRoll += (random * 0.6 - 0.3)
     }
 
+    fun corruptAttributePercentRollForCustomItems(attribute: SingleValueAttribute, random: Double) {
+        attribute.percentRoll += (random - 0.5)
+    }
+
     private val CORRUPTION_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),
         ITEM_NAME,

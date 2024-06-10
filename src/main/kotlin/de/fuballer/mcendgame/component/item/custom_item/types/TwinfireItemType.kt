@@ -13,5 +13,6 @@ object TwinfireItemType : CustomItemType {
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
         RollableAttribute(AttributeType.TWINFIRE_DUAL_WIELD, 0.15, 0.25),
+        RollableAttribute(AttributeType.ATTACK_SPEED, 0.1, 0.15),
     )
 }

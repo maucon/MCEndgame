@@ -21,8 +21,8 @@ private const val FIRE_CASCADE_ACTIVATION_DELAY = 10L // in ticks
 private const val FIRE_CASCADE_STEP_DELAY = 0.7 // in ticks
 
 private const val FIRE_CASCADE_STEPS_PER_SOUND = 5
-private const val FIRE_CASCADE_DAMAGE = 5.0
-private const val FIRE_CASCADE_DAMAGE_PER_LEVEL = 3.0
+private const val FIRE_CASCADE_DAMAGE = 20.0
+private const val FIRE_CASCADE_DAMAGE_PER_LEVEL = 3.5
 private const val FIRE_CASCADE_FIRE_TICKS = 100
 
 object FireCascadeAbility : Ability {

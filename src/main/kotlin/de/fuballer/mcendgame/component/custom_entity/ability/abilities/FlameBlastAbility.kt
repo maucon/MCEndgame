@@ -23,9 +23,9 @@ private const val RADIUS_INCREASE_STEPS = 15
 private const val FULL_RADIUS_STEPS = 10
 private const val FULL_RADIUS = RADIUS_INCREASE_STEPS * RADIUS_PER_STEP
 
-private const val FIRE_TICKS = 10
-private const val BASE_DAMAGE = 15.0
-private const val DAMAGE_PER_TIER = 4.0
+private const val FIRE_TICKS = 80
+private const val BASE_DAMAGE = 20.0
+private const val DAMAGE_PER_TIER = 3.5
 
 private const val PARTICLE_LOCATIONS_PER_RING = 10
 private const val PARTICLE_LOCATION_RADIUS_MULTIPLIER = 1

@@ -34,6 +34,7 @@ interface CustomItemType : Keyed {
             it.register(TwinfireItemType)
             it.register(TyrantsReachItemType)
             it.register(VitalitySurgeItemType)
+            it.register(CrownOfConflictItemType)
             it.register(WingedFlightItemType)
         }
     }

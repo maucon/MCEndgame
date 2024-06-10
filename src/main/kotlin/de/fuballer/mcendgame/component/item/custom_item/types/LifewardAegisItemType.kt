@@ -12,7 +12,7 @@ object LifewardAegisItemType : CustomItemType {
     override val equipment = Tool.SHIELD
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.HEAL_ON_BLOCK, 0.75, 2.0),
-        RollableAttribute(AttributeType.ATTACK_DAMAGE, -5.0, -2.0),
+        RollableAttribute(AttributeType.HEAL_ON_BLOCK, 0.1, 0.15),
+        RollableAttribute(AttributeType.ATTACK_DAMAGE, -4.0, -2.0),
     )
 }

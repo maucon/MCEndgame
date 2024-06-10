@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import kotlin.random.Random
 
-private const val DURATION = 12000
+private const val DURATION = 3600
 private val EFFECTS = listOf(
     RandomOption(1000, PotionEffect(PotionEffectType.INCREASE_DAMAGE, DURATION, 0, false)),
     RandomOption(300, PotionEffect(PotionEffectType.INCREASE_DAMAGE, DURATION, 1, false)),
@@ -37,18 +37,18 @@ private val EFFECTS = listOf(
 class EffectGainEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: EntityDeathEvent) {
-        val player = event.entity.killer ?: return
+        val entity = event.entity.killer ?: return
 
-        val attributes = player.getCustomAttributes()
+        val attributes = entity.getCustomAttributes()
         val effectStealAttributes = attributes[AttributeType.EFFECT_GAIN] ?: return
 
         for (effectStealChance in effectStealAttributes) {
             if (Random.nextDouble() > effectStealChance) continue
 
             val effect = RandomUtil.pick(EFFECTS).option
-            player.addPotionEffect(effect)
+            entity.addPotionEffect(effect)
 
-            player.playSound(player.location, Sound.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.PLAYERS, 1f, 1f)
+            entity.playSound(entity.location, Sound.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.PLAYERS, 1f, 1f)
         }
     }
 }
