@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCorruptionRounds
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -99,18 +100,14 @@ class CorruptionService : AnvilCraftingBaseService() {
     }
 
     private fun corruptAttributes(item: ItemStack) {
-        val attributes = item.getCustomAttributes() ?: return
-        val rolledAttributes = attributes.filter { it.rollType != RollType.STATIC }
+        val attributes = item.getCustomAttributes()!!
+        val rolledAttributes = attributes.filter { it.rollType == RollType.SINGLE }
 
-        val chosenAttribute = rolledAttributes.randomOrNull() ?: return
-
-        when (chosenAttribute.rollType) {
-            RollType.SINGLE -> {
-                val attribute = chosenAttribute as SingleValueAttribute
-                CorruptionSettings.corruptAttributePercentRoll(attribute, Random.nextDouble())
-            }
-
-            RollType.STATIC -> throw IllegalStateException() // cannot happen as we filter beforehand
+        val chosenAttribute = rolledAttributes.random() as SingleValueAttribute
+        if (item.isCustomItemType()) {
+            CorruptionSettings.corruptAttributePercentRollForCustomItems(chosenAttribute, Random.nextDouble())
+        } else {
+            CorruptionSettings.corruptAttributePercentRoll(chosenAttribute, Random.nextDouble())
         }
 
         item.setCustomAttributes(attributes)
