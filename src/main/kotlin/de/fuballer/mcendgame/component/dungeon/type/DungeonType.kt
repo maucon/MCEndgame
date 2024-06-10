@@ -27,7 +27,7 @@ enum class DungeonType(
     private val entityTypes: List<RandomOption<CustomEntityType>>,
     private val bossEntityTypes: List<RandomOption<CustomEntityType>>
 ) {
-    STANDARD(
+    STRONGHOLD(
         listOf(
             RandomOption(1, DungeonMapType.STRONGHOLD),
         ),

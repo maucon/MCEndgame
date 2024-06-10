@@ -7,14 +7,14 @@ import java.text.DecimalFormat
 
 object TotemSettings {
     const val COMMAND_NAME = "dungeon-totems"
-    const val GIVE_COMMAND_NAME = "dungeon-totem-give"
+    const val GIVE_COMMAND_NAME = "give-dungeon-totem"
 
     val TOTEM_BASE_TYPE = Material.TOTEM_OF_UNDYING
 
     val TOTEM_WINDOW_TYPE = InventoryType.HOPPER
     val TOTEM_WINDOW_SIZE = TOTEM_WINDOW_TYPE.defaultSize
     const val TOTEM_WINDOW_TITLE = "Totems"
-    val CANNOT_CHANGE_TOTEM_MESSAGE = "${ChatColor.RED}You cannot change totems whilst inside a dungeon."
+    val CANNOT_CHANGE_TOTEM_MESSAGE = "${ChatColor.RED}You cannot change totems whilst inside a dungeon"
 
     private val LORE_NUMBER_FORMAT = DecimalFormat("0.#")
     private val LORE_COLOR = "${ChatColor.GRAY}${ChatColor.ITALIC}"

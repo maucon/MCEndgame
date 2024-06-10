@@ -7,8 +7,8 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.Server
 import org.bukkit.entity.Player
 
-val ONLINE_PLAYER_NOT_FOUND_MESSAGE = "${ChatColor.RED}Player not found or online!"
-val OFFLINE_PLAYER_NOT_FOUND_MESSAGE = "${ChatColor.RED}Player not found!"
+val ONLINE_PLAYER_NOT_FOUND_MESSAGE = "${ChatColor.RED}No player was found"
+val OFFLINE_PLAYER_NOT_FOUND_MESSAGE = "${ChatColor.RED}No player was found"
 
 @Component
 class CommandHelper(
