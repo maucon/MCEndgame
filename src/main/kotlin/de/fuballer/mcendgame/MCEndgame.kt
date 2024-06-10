@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package de.fuballer.mcendgame
 
 import com.comphenix.protocol.ProtocolLibrary
@@ -32,6 +34,7 @@ class MCEndgame : JavaPlugin() {
 
     override fun onDisable() {
         lifeCycleListener?.forEach { it.terminate() }
+        ProtocolLibrary.getProtocolManager().removePacketListeners(this)
 
         logger.info("Disabled MC-Endgame")
     }

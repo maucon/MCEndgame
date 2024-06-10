@@ -35,7 +35,7 @@ class FilterCommand(
         val entity = filterRepo.findById(uuid)
             ?: filterRepo.save(FilterEntity(uuid))
 
-        showFilter(player, entity.filters)
+        showFilter(player, entity.filter)
     }
 
     private fun showFilter(
