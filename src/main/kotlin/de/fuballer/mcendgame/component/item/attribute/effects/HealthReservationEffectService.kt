@@ -37,7 +37,7 @@ class HealthReservationEffectService : Listener {
 
         val entity = event.entity
         val unreservedHealth = getUnreservedHealth(entity)
-        if (unreservedHealth > entity.health + 0.01) return //+0.01 prevents inaccuracy
+        if (unreservedHealth > entity.health + 0.01) return // +0.01 prevents inaccuracy
 
         event.cancel()
     }
