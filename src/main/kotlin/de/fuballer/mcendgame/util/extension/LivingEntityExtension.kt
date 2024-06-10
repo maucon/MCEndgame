@@ -5,12 +5,23 @@ import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
 import de.fuballer.mcendgame.component.item.attribute.data.RollType
 import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
+import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import org.bukkit.entity.LivingEntity
+import org.bukkit.event.entity.EntityRegainHealthEvent
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
 object LivingEntityExtension {
+    fun LivingEntity.heal(
+        amount: Double,
+        reason: RegainReason = RegainReason.CUSTOM
+    ) {
+        val event = EntityRegainHealthEvent(this, amount, reason)
+        EventGateway.apply(event)
+    }
+
     fun LivingEntity.getCustomAttributes(): Map<AttributeType, List<Double>> {
         return getEntityCustomAttributes(this)
     }

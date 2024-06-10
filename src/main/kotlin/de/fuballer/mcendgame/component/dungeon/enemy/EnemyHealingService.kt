@@ -30,7 +30,7 @@ class EnemyHealingService : Listener {
         /**
          * Heals the given entity to full health after a one tick delay
          */
-        fun LivingEntity.heal() {
+        fun LivingEntity.healOnLoad() {
             this.addPotionEffect(POTION_EFFECT)
         }
     }

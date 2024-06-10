@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.generation
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
-import de.fuballer.mcendgame.component.dungeon.enemy.EnemyHealingService.Companion.heal
+import de.fuballer.mcendgame.component.dungeon.enemy.EnemyHealingService.Companion.healOnLoad
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.EquipmentGenerationService
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
@@ -47,7 +47,7 @@ class EnemyGenerationService(
         val entity = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as LivingEntity
         equipmentGenerationService.generate(random, entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
 
-        entity.heal()
+        entity.healOnLoad()
 
         val canBeInvisible = !entityType.hideEquipment
         addEffectsToEnemy(random, entity, mapTier, canBeInvisible)

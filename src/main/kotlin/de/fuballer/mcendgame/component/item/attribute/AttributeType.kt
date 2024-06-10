@@ -123,4 +123,6 @@ enum class AttributeType(
     RANDOMIZED_DAMAGE_TAKEN({ " Damage taken is randomized between 25% and ${DECIMAL_FORMAT.format(it * 100)}%" }),
 
     NEGATIVE_EFFECT_IMMUNITY({ " Immune to negative effects" }),
+
+    HEALTH_RESERVATION({ " ${DECIMAL_FORMAT.format(it * 100)}% of health cannot be recovered" }),
 }

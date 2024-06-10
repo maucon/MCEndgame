@@ -37,18 +37,18 @@ private val EFFECTS = listOf(
 class EffectGainEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: EntityDeathEvent) {
-        val player = event.entity.killer ?: return
+        val entity = event.entity.killer ?: return
 
-        val attributes = player.getCustomAttributes()
+        val attributes = entity.getCustomAttributes()
         val effectStealAttributes = attributes[AttributeType.EFFECT_GAIN] ?: return
 
         for (effectStealChance in effectStealAttributes) {
             if (Random.nextDouble() > effectStealChance) continue
 
             val effect = RandomUtil.pick(EFFECTS).option
-            player.addPotionEffect(effect)
+            entity.addPotionEffect(effect)
 
-            player.playSound(player.location, Sound.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.PLAYERS, 1f, 1f)
+            entity.playSound(entity.location, Sound.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.PLAYERS, 1f, 1f)
         }
     }
 }

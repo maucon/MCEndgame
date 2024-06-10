@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.boss
 
 import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesRepository
-import de.fuballer.mcendgame.component.dungeon.enemy.EnemyHealingService.Companion.heal
+import de.fuballer.mcendgame.component.dungeon.enemy.EnemyHealingService.Companion.healOnLoad
 import de.fuballer.mcendgame.component.dungeon.modifier.ModifierUtil.addModifier
 import de.fuballer.mcendgame.component.dungeon.world.db.ManagedWorldRepository
 import de.fuballer.mcendgame.component.portal.PortalService
@@ -66,7 +66,7 @@ class DungeonBossService(
 
                 it.addModifier(DungeonBossSettings.EMPOWERED_LOOT_MODIFIER)
 
-                it.heal()
+                it.healOnLoad()
             }
     }
 }
