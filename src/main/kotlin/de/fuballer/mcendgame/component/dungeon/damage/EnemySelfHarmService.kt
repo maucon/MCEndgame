@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.dungeon.tweaks
+package de.fuballer.mcendgame.component.dungeon.damage
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
@@ -20,11 +20,13 @@ private val IGNORED_DAMAGE = listOf(
 )
 
 @Component
-class EntitySuicideService : Listener {
+class EnemySelfHarmService : Listener {
     @EventHandler
     fun on(event: EntityDamageEvent) {
-        if (!event.entity.world.isDungeonWorld()) return
-        if (!event.entity.isEnemy()) return
+        val entity = event.entity
+
+        if (!entity.world.isDungeonWorld()) return
+        if (!entity.isEnemy()) return
 
         if (!IGNORED_DAMAGE.contains(event.cause)) return
 
