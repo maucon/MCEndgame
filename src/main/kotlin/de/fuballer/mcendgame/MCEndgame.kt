@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package de.fuballer.mcendgame
 
 import com.comphenix.protocol.ProtocolLibrary
@@ -11,6 +9,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
+@Suppress("unused")
 class MCEndgame : JavaPlugin() {
     private var lifeCycleListener: List<LifeCycleListener>? = null
 
