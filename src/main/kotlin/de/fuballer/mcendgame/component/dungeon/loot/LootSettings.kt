@@ -43,6 +43,7 @@ object LootSettings {
         RandomOption(1, TwinfireItemType),
         RandomOption(1, TyrantsReachItemType),
         RandomOption(1, VitalitySurgeItemType),
+        RandomOption(1, CrownOfConflictItemType),
         RandomOption(1, WingedFlightItemType),
     )
 
