@@ -7,8 +7,8 @@ import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
 
 object KillStreakSettings {
-    const val MAX_TIMER = 8 * 20L
-    const val TIME_PER_HIT = 20
+    const val MAX_TIMER = 12 * 20L
+    const val TIME_PER_HIT = 25
     const val MIN_ATTACK_COOLDOWN_FOR_EXTRA_TIME = 0.8
     const val TIMER_PERIOD = 2L // in ticks
 
