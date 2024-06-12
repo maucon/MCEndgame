@@ -6,5 +6,5 @@ import org.bukkit.Location
 data class DungeonTransitionEntity(
     override var id: String,
 
-    var respawnLocation: Location
+    var teleportLocation: Location
 ) : Entity<String>

@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.statistics.db.StatisticsEntity
 import de.fuballer.mcendgame.component.statistics.db.StatisticsRepository
 import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.*
@@ -17,7 +18,11 @@ import kotlin.math.max
 @Component
 class StatisticsService(
     private val statisticsRepo: StatisticsRepository
-) : Listener {
+) : Listener, LifeCycleListener {
+    override fun terminate() {
+        statisticsRepo.flush()
+    }
+
     @EventHandler
     fun on(event: PlayerJoinEvent) {
         val player = event.player.uniqueId
@@ -91,7 +96,7 @@ class StatisticsService(
     }
 
     @EventHandler
-    fun on(event: PlayerDungeonLeaveEvent) {
+    fun on(@Suppress("UNUSED_PARAMETER") event: DungeonWorldDeleteEvent) {
         statisticsRepo.flush()
     }
 
