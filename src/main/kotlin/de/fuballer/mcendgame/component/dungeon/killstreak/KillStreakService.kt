@@ -42,7 +42,7 @@ class KillStreakService(
     @EventHandler
     fun on(event: PlayerDungeonJoinEvent) {
         val player = event.player
-        val world = event.world
+        val world = event.dungeonWorld
 
         val killStreak = killStreakRepo.findById(world.name) ?: return
         killStreak.bossBar.addPlayer(player)
@@ -99,11 +99,9 @@ class KillStreakService(
     fun on(event: PlayerDungeonLeaveEvent) {
         val player = event.player
 
-        killStreakRepo.findAllByPlayerInBossBar(player)
-            .forEach {
-                it.bossBar.removePlayer(player)
-                killStreakRepo.save(it)
-            }
+        val killStreak = killStreakRepo.findById(event.dungeonWorld.name) ?: return
+        killStreak.bossBar.removePlayer(player)
+        killStreakRepo.save(killStreak)
 
         val killStreakRemoved = KillStreakRemovedEvent(player)
         EventGateway.apply(killStreakRemoved)

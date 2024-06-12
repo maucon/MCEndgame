@@ -62,7 +62,7 @@ class DungeonWorldDeleteEvent(
  */
 class PlayerDungeonJoinEvent(
     val player: Player,
-    val world: World,
+    val dungeonWorld: World,
     val locationToTeleport: Location
 ) : HandleableEvent()
 
@@ -70,7 +70,8 @@ class PlayerDungeonJoinEvent(
  * Thrown whenever a player leaves a dungeon
  */
 class PlayerDungeonLeaveEvent(
-    val player: Player
+    val player: Player,
+    val dungeonWorld: World
 ) : HandleableEvent()
 
 /**

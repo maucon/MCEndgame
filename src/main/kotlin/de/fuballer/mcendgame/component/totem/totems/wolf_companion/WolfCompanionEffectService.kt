@@ -44,8 +44,7 @@ class WolfCompanionEffectService : Listener {
     fun on(event: PlayerDungeonLeaveEvent) {
         val player = event.player
 
-        // FIXME player.world is not always the dungeon world
-        player.world.getEntitiesByClass(Wolf::class.java)
+        event.dungeonWorld.getEntitiesByClass(Wolf::class.java)
             .filter { it.owner == player }
             .forEach { it.remove() }
     }
