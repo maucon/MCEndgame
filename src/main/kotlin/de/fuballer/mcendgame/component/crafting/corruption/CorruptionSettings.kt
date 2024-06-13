@@ -56,7 +56,7 @@ object CorruptionSettings {
         ItemStack(BASE_ITEM),
         ITEM_NAME,
         ITEM_LORE_DOUBLE,
-        Enchantment.ARROW_FIRE, 1, true,
+        Enchantment.FLAME, 1, true,
         ItemFlag.HIDE_ENCHANTS
     ).apply {
         setCorruptionRounds(2)

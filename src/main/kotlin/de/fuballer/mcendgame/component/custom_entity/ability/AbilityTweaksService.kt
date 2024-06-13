@@ -10,7 +10,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
-import org.spigotmc.event.entity.EntityDismountEvent
+import org.bukkit.event.entity.EntityDismountEvent
 
 @Component
 class AbilityTweaksService : Listener {

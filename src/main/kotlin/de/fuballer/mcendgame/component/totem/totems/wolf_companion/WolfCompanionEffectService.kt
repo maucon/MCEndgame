@@ -32,7 +32,7 @@ class WolfCompanionEffectService : Listener {
             val wolf = targetWorld.spawnEntity(event.locationToTeleport, EntityType.WOLF, false) as Wolf
             wolf.owner = player
 
-            val potionEffect = PotionEffect(PotionEffectType.INCREASE_DAMAGE, Int.MAX_VALUE, realStrength.toInt(), false, false)
+            val potionEffect = PotionEffect(PotionEffectType.STRENGTH, Int.MAX_VALUE, realStrength.toInt(), false, false)
             wolf.addPotionEffect(potionEffect)
 
             wolf.isInvulnerable = true

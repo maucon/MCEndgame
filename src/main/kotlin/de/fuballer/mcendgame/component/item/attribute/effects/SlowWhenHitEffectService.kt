@@ -18,7 +18,7 @@ class SlowWhenHitEffectService : Listener {
         val slowOnHitAttribute = slowOnHitAttributes.max()
 
         val duration = (slowOnHitAttribute * 20).toInt()
-        val slowEffect = PotionEffect(PotionEffectType.SLOW, duration, 1, true)
+        val slowEffect = PotionEffect(PotionEffectType.SLOWNESS, duration, 1, true)
 
         event.damaged.getNearbyEntities(4.0, 4.0, 4.0)
             .filter { it != event.damager }

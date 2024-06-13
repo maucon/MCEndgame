@@ -4,7 +4,7 @@ import org.bukkit.Material
 
 object BlockInteractionSettings {
     val BREAKABLE_BLOCKS = listOf(
-        Material.GRASS,
+        Material.SHORT_GRASS,
         Material.TALL_GRASS,
         Material.FERN,
         Material.LARGE_FERN,

@@ -33,7 +33,7 @@ tasks.register('fatJar', Jar) {
 }
 
 dependencies {
-    implementation 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
+    implementation 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
 
     implementation platform('com.intellectualsites.bom:bom-1.18.x:1.28')
     compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.9.2'

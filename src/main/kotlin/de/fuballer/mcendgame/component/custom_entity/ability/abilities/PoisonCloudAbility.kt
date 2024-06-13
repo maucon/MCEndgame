@@ -14,7 +14,7 @@ private const val POISON_CLOUD_RANGE = 20.0
 private const val POISON_CLOUD_DURATION = 100 //in Ticks
 private const val POISON_CLOUD_RADIUS = 3f
 private const val POISON_CLOUD_RADIUS_PER_TICK = 0.015f
-private val POISON_CLOUD_EFFECT = PotionEffect(PotionEffectType.HARM, 0, 1, true)
+private val POISON_CLOUD_EFFECT = PotionEffect(PotionEffectType.INSTANT_DAMAGE, 0, 1, true)
 private const val POISON_CLOUD_REAPPLICATION_DELAY = 10 // in ticks
 
 object PoisonCloudAbility : Ability {

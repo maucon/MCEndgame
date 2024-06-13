@@ -15,7 +15,7 @@ import org.bukkit.ChatColor
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.EquipmentSlotGroup
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
@@ -83,16 +83,16 @@ object ItemUtil {
         val hasBaseAttributes = customItemType?.usesEquipmentBaseStats != false
 
         if (hasBaseAttributes) {
-            addAllVanillaAttributes(itemMeta, baseAttributes, equipment.slot)
+            addAllVanillaAttributes(itemMeta, baseAttributes, equipment.slot.group)
         }
-        val customAttributeSlot = if (equipment.slotDependentAttributes) equipment.slot else null
+        val customAttributeSlot = if (equipment.slotDependentAttributes) equipment.slot.group else EquipmentSlotGroup.ANY
         addAllVanillaApplicableCustomAttributes(itemMeta, customAttributes, customAttributeSlot)
     }
 
     private fun addAllVanillaAttributes(
         itemMeta: ItemMeta,
         attributes: List<BaseAttribute>,
-        slot: EquipmentSlot?
+        slot: EquipmentSlotGroup
     ) {
         attributes
             .filter { it.type.isVanillaAttributeType }
@@ -112,7 +112,7 @@ object ItemUtil {
     private fun addAllVanillaApplicableCustomAttributes(
         itemMeta: ItemMeta,
         attributes: List<CustomAttribute>,
-        slot: EquipmentSlot?
+        slot: EquipmentSlotGroup
     ) {
         attributes
             .filter { it.type.isVanillaAttributeType }
@@ -140,13 +140,12 @@ object ItemUtil {
         attribute: Attribute,
         value: Double,
         operation: AttributeModifier.Operation,
-        slot: EquipmentSlot?
+        slot: EquipmentSlotGroup
     ) {
         itemMeta.addAttributeModifier(
             attribute,
             AttributeModifier(
-                UUID.randomUUID(),
-                attribute.key.toString(),
+                PluginUtil.createNamespacedKey(UUID.randomUUID().toString()),
                 value,
                 operation,
                 slot
@@ -218,9 +217,9 @@ object ItemUtil {
         if (isNotPlayerBaseAttribute(vanillaAttributeType)) return "${ChatColor.BLUE}$attributeLore"
 
         if (vanillaAttributeType.attribute == Attribute.GENERIC_ATTACK_DAMAGE
-            && itemMeta.hasEnchant(Enchantment.DAMAGE_ALL)
+            && itemMeta.hasEnchant(Enchantment.SHARPNESS)
         ) {
-            val damageIncrease = 0.5 + 0.5 * itemMeta.getEnchantLevel(Enchantment.DAMAGE_ALL)
+            val damageIncrease = 0.5 + 0.5 * itemMeta.getEnchantLevel(Enchantment.SHARPNESS)
             attributeLore = attribute.type.lore(attribute.roll + damageIncrease)
         }
         attributeLore = attributeLore.replaceFirstChar { " " }

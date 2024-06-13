@@ -35,5 +35,6 @@ object WorldSettings {
         world.setGameRule(GameRule.DROWNING_DAMAGE, false)
         world.setGameRule(GameRule.FREEZE_DAMAGE, false)
         world.setGameRule(GameRule.DO_VINES_SPREAD, false)
+        world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS, 0)
     }
 }

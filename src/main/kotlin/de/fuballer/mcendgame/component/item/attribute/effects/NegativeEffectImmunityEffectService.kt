@@ -19,11 +19,11 @@ private val CANCELLED_ACTIONS = listOf(
 
 private val NEGATIVE_EFFECTS = listOf(
     PotionEffectType.WEAKNESS,
-    PotionEffectType.SLOW,
-    PotionEffectType.SLOW_DIGGING,
+    PotionEffectType.SLOWNESS,
+    PotionEffectType.MINING_FATIGUE,
     PotionEffectType.BLINDNESS,
     PotionEffectType.DARKNESS,
-    PotionEffectType.CONFUSION,
+    PotionEffectType.NAUSEA,
     PotionEffectType.WITHER,
     PotionEffectType.POISON,
     PotionEffectType.HUNGER,
