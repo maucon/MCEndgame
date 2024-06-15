@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.10'
+    id 'org.jetbrains.kotlin.jvm' version '2.0.0'
 }
 
 group = 'de.fuballer'
@@ -24,7 +24,6 @@ repositories {
 
 tasks.register('fatJar', Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
     dependsOn configurations.runtimeClasspath
     from {
         configurations.runtimeClasspath.collect { zipTree(it) }
@@ -36,8 +35,8 @@ dependencies {
     implementation 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
 
     implementation platform('com.intellectualsites.bom:bom-1.18.x:1.28')
-    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.9.2'
-    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.9.2'
+    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.10.0'
+    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.10.0'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.3.0-SNAPSHOT'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
@@ -57,6 +56,6 @@ processResources {
 
 kotlin {
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
