@@ -14,6 +14,6 @@ object ShrinkshadowItemType : CustomItemType {
     override val attributes = listOf(
         RollableAttribute(AttributeType.DODGE_CHANCE, 0.2, 0.35),
         RollableAttribute(AttributeType.HEALTH_RESERVATION, 0.2, 0.4),
-        RollableAttribute(AttributeType.SIZE_INCREASE, -0.25, -0.1),
+        RollableAttribute(AttributeType.SIZE_INCREASE, -0.2, -0.1),
     )
 }
