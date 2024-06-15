@@ -88,6 +88,8 @@ enum class AttributeType(
 
     INCREASED_PROJECTILE_DAMAGE({ " Deal ${DECIMAL_FORMAT.format(it * 100)}% increased projectile damage" }),
 
+    INCREASED_ARROW_VELOCITY({ " Shot arrows have ${DECIMAL_FORMAT.format(it * 100)}% increased velocity" }),
+
     DISABLE_MELEE({ " Cannot deal melee damage" }),
 
     DODGE_CHANCE({ " ${DECIMAL_FORMAT.format(it * 100)}% chance to dodge hits" }),
