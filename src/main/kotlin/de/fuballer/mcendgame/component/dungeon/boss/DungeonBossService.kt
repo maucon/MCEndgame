@@ -56,7 +56,7 @@ class DungeonBossService(
         if (!entity.isBoss()) return
 
         val boss = entity as LivingEntity
-        boss.removePotionEffect(PotionEffectType.SLOW)
+        boss.removePotionEffect(PotionEffectType.SLOWNESS)
     }
 
     private fun empowerOtherBosses(bosses: List<Creature>) {

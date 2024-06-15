@@ -81,8 +81,8 @@ class LootService(
         val item = equipment.itemInMainHand
         val itemMeta = item.itemMeta ?: return 0
 
-        return itemMeta.getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS)
-            .coerceAtLeast(itemMeta.getEnchantLevel(Enchantment.LOOT_BONUS_MOBS))
+        return itemMeta.getEnchantLevel(Enchantment.FORTUNE)
+            .coerceAtLeast(itemMeta.getEnchantLevel(Enchantment.LOOTING))
     }
 
     private fun getItemDropChance(item: ItemStack, looting: Int): Double {

@@ -72,8 +72,8 @@ class MapDeviceBlockService(
         val toolType = tool.type
 
         player.setStatistic(Statistic.USE_ITEM, toolType, player.getStatistic(Statistic.USE_ITEM, toolType) + 1)
-        if (toolMeta.hasEnchant(Enchantment.DURABILITY)) {
-            val damageProbability = 1.0 / (toolMeta.getEnchantLevel(Enchantment.DURABILITY) + 1)
+        if (toolMeta.hasEnchant(Enchantment.UNBREAKING)) {
+            val damageProbability = 1.0 / (toolMeta.getEnchantLevel(Enchantment.UNBREAKING) + 1)
             if (Math.random() < damageProbability) return
         }
 

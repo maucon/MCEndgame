@@ -75,7 +75,7 @@ object FlameBlastAbility : Ability {
                 val calcLocation = location.clone().add(offset)
 
                 world.spawnParticle(
-                    Particle.SMOKE_NORMAL,
+                    Particle.SMOKE,
                     calcLocation.x, calcLocation.y, calcLocation.z,
                     2, 0.2, 0.1, 0.2, 0.01
                 )

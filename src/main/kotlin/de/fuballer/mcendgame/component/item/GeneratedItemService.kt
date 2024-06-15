@@ -17,9 +17,9 @@ class GeneratedItemService : Listener {
     fun on(event: EnchantItemEvent) {
         val item = event.item
         val enchants = event.enchantsToAdd
-        val damageAllTier = enchants[Enchantment.DAMAGE_ALL] ?: return
+        val damageAllTier = enchants[Enchantment.SHARPNESS] ?: return
 
-        item.addEnchantment(Enchantment.DAMAGE_ALL, damageAllTier)
+        item.addEnchantment(Enchantment.SHARPNESS, damageAllTier)
         ItemUtil.updateAttributesAndLore(item)
     }
 

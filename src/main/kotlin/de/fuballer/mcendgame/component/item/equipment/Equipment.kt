@@ -34,6 +34,7 @@ interface Equipment {
                 EquipmentSlot.LEGS -> "${SLOT_LORE_COLOR}When on Legs:"
                 EquipmentSlot.CHEST -> "${SLOT_LORE_COLOR}When on Body:"
                 EquipmentSlot.HEAD -> "${SLOT_LORE_COLOR}When on Head:"
+                EquipmentSlot.BODY -> "${SLOT_LORE_COLOR}$GENERIC_SLOT_LORE"
             }
 
         private val materialToEquipment = mutableMapOf<Material, Equipment>()
