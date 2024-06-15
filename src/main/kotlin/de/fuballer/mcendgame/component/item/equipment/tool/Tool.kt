@@ -23,7 +23,8 @@ enum class Tool(
         EquipmentSlot.HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.INCREASED_PROJECTILE_DAMAGE, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.INCREASED_PROJECTILE_DAMAGE, 0.35)),
+            RandomOption(10, RollableAttribute(AttributeType.INCREASED_ARROW_VELOCITY, 0.3)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.25)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 1.0)),
             RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
