@@ -8,14 +8,31 @@ import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestTotemTier
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.DyeColor
+import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.entity.Wolf
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityTargetEvent
+import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+
+private val WOLF_VARIANTS = listOf(
+    Wolf.Variant.PALE,
+    Wolf.Variant.SPOTTED,
+    Wolf.Variant.SNOWY,
+    Wolf.Variant.BLACK,
+    Wolf.Variant.ASHEN,
+    Wolf.Variant.RUSTY,
+    Wolf.Variant.WOODS,
+    Wolf.Variant.CHESTNUT,
+    Wolf.Variant.STRIPED,
+)
+
+private val WOLF_ARMOR = ItemStack(Material.WOLF_ARMOR)
 
 @Component
 class WolfCompanionEffectService : Listener {
@@ -36,7 +53,9 @@ class WolfCompanionEffectService : Listener {
             wolf.addPotionEffect(potionEffect)
 
             wolf.isInvulnerable = true
+            wolf.variant = WOLF_VARIANTS.random()
             wolf.collarColor = DyeColor.entries.toTypedArray().random()
+            wolf.equipment?.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone()) ?: continue
         }
     }
 
