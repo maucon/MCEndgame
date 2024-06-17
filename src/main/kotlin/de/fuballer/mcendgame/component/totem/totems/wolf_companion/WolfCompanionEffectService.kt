@@ -19,6 +19,7 @@ import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import kotlin.random.Random
 
 private val WOLF_VARIANTS = listOf(
     Wolf.Variant.PALE,
@@ -30,6 +31,13 @@ private val WOLF_VARIANTS = listOf(
     Wolf.Variant.WOODS,
     Wolf.Variant.CHESTNUT,
     Wolf.Variant.STRIPED,
+)
+
+private val ARMOR_PROBABILITIES = listOf(
+    0.05,
+    0.15,
+    0.3,
+    0.5
 )
 
 private val WOLF_ARMOR = ItemStack(Material.WOLF_ARMOR)
@@ -55,7 +63,9 @@ class WolfCompanionEffectService : Listener {
             wolf.isInvulnerable = true
             wolf.variant = WOLF_VARIANTS.random()
             wolf.collarColor = DyeColor.entries.toTypedArray().random()
-            wolf.equipment?.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone()) ?: continue
+
+            if (Random.nextDouble() > ARMOR_PROBABILITIES[tier.tier]) continue
+            wolf.equipment!!.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone())
         }
     }
 
