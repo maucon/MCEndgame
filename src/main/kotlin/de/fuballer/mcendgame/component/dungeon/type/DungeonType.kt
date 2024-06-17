@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.type
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.bogged.BoggedEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.buff_cow.BuffCowEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.cerberus.CerberusEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.demonic_golem.DemonicGolemEntityType
@@ -38,6 +39,7 @@ enum class DungeonType(
             RandomOption(50, SkeletonEntityType),
             RandomOption(20, MeleeSkeletonEntityType),
             RandomOption(30, StrayEntityType),
+            RandomOption(10, BoggedEntityType),
             RandomOption(5, WitchEntityType),
             RandomOption(20, PiglinBruteEntityType),
         ),
