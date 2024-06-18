@@ -19,6 +19,6 @@ class ProjectileDamageService : Listener {
         val entityType = shooter.getCustomEntityType() ?: return
         val mapTier = shooter.getMapTier() ?: return
 
-        projectile.damage += entityType.baseDamage + entityType.damagePerTier * mapTier
+        projectile.damage = entityType.baseDamage + entityType.damagePerTier * mapTier
     }
 }

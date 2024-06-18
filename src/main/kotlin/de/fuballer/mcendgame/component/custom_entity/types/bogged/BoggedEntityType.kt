@@ -14,8 +14,8 @@ object BoggedEntityType : CustomEntityType {
 
     override val baseHealth = 15.0
     override val healthPerTier = 0.0
-    override val baseDamage = 0.0
-    override val damagePerTier = 1.2
+    override val baseDamage = 4.0
+    override val damagePerTier = 2.0
     override val baseSpeed = 0.25
     override val speedPerTier = 0.0
 
