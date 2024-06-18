@@ -12,6 +12,7 @@ import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.Listener
 import kotlin.random.Random
@@ -46,6 +47,9 @@ class EnemyGenerationService(
         val entityType = RandomUtil.pick(randomEntityTypes, random).option
         val entity = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as LivingEntity
         equipmentGenerationService.generate(random, entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
+
+        val scaleAttribute = entity.getAttribute(Attribute.GENERIC_SCALE)
+        scaleAttribute?.baseValue = EnemyGenerationSettings.getRandomScale(random)
 
         entity.healOnLoad()
 

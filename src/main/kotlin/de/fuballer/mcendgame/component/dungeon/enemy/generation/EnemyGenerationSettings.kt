@@ -2,6 +2,8 @@ package de.fuballer.mcendgame.component.dungeon.enemy.generation
 
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
+import kotlin.math.pow
+import kotlin.random.Random
 
 object EnemyGenerationSettings {
     val STRENGTH_EFFECTS = listOf(
@@ -37,4 +39,6 @@ object EnemyGenerationSettings {
         RandomOption(10, null),
         RandomOption(1, PotionEffect.INVISIBILITY),
     )
+
+    fun getRandomScale(random: Random) = 1.0 + 0.2 * random.nextDouble().pow(3) * if (random.nextBoolean()) 1 else -1
 }
