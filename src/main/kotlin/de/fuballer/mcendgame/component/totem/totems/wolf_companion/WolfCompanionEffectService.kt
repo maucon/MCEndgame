@@ -63,7 +63,7 @@ class WolfCompanionEffectService : Listener {
 
             wolf.isInvulnerable = true
             wolf.variant = WOLF_VARIANTS.random()
-            wolf.collarColor = DyeColor.entries.toTypedArray().random()
+            wolf.collarColor = DyeColor.entries.random()
 
             if (Random.nextDouble() > getArmorProbability(tier)) continue
             wolf.equipment!!.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone())
