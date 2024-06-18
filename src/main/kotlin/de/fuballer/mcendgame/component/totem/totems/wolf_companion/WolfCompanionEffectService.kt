@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.totem.totems.wolf_companion
 
+import de.fuballer.mcendgame.component.totem.data.TotemTier
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -33,12 +34,12 @@ private val WOLF_VARIANTS = listOf(
     Wolf.Variant.STRIPED,
 )
 
-private val ARMOR_PROBABILITIES = listOf(
-    0.05,
-    0.15,
-    0.3,
-    0.5
-)
+private fun getArmorProbability(tier: TotemTier) = when (tier) {
+    TotemTier.COMMON -> 0.05
+    TotemTier.UNCOMMON -> 0.15
+    TotemTier.RARE -> 0.3
+    TotemTier.LEGENDARY -> 0.5
+}
 
 private val WOLF_ARMOR = ItemStack(Material.WOLF_ARMOR)
 
@@ -64,7 +65,7 @@ class WolfCompanionEffectService : Listener {
             wolf.variant = WOLF_VARIANTS.random()
             wolf.collarColor = DyeColor.entries.toTypedArray().random()
 
-            if (Random.nextDouble() > ARMOR_PROBABILITIES[tier.tier]) continue
+            if (Random.nextDouble() > getArmorProbability(tier)) continue
             wolf.equipment!!.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone())
         }
     }
