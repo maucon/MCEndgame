@@ -70,6 +70,7 @@ class EnemyGenerationService(
             RandomUtil.pick(EnemyGenerationSettings.RESISTANCE_EFFECTS, mapTier, random).option,
             RandomUtil.pick(EnemyGenerationSettings.SPEED_EFFECTS, mapTier, random).option,
             RandomUtil.pick(EnemyGenerationSettings.FIRE_RESISTANCE_EFFECT, mapTier, random).option,
+            RandomUtil.pick(EnemyGenerationSettings.ON_DEATH_EFFECTS, random).option,
         )
         if (canBeInvisible) {
             effects.add(RandomUtil.pick(EnemyGenerationSettings.INVISIBILITY_EFFECT, random).option)

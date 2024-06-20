@@ -16,7 +16,7 @@ object WorldSettings {
 
     fun updateGameRules(world: World) {
         world.setGameRule(GameRule.KEEP_INVENTORY, true)
-        world.setGameRule(GameRule.MOB_GRIEFING, false)
+        world.setGameRule(GameRule.MOB_GRIEFING, true)
         world.setGameRule(GameRule.DO_MOB_SPAWNING, false)
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
         world.setGameRule(GameRule.DO_WEATHER_CYCLE, false)

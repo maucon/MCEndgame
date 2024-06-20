@@ -35,6 +35,12 @@ object EnemyGenerationSettings {
         SortableRandomOption(5, 1, PotionEffect.FIRE_RESISTANCE),
     )
 
+    val ON_DEATH_EFFECTS = listOf(
+        RandomOption(20, null),
+        RandomOption(1, PotionEffect.WIND_CHARGED),
+        RandomOption(1, PotionEffect.WEAVING),
+    )
+
     val INVISIBILITY_EFFECT = listOf(
         RandomOption(10, null),
         RandomOption(1, PotionEffect.INVISIBILITY),
