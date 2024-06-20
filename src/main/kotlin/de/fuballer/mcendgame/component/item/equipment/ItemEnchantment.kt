@@ -70,6 +70,20 @@ enum class ItemEnchantment(
     RIPTIDE_2(Enchantment.RIPTIDE, 2),
     RIPTIDE_3(Enchantment.RIPTIDE, 3),
 
+    // mace
+    DENSITY_1(Enchantment.DENSITY, 1),
+    DENSITY_2(Enchantment.DENSITY, 2),
+    DENSITY_3(Enchantment.DENSITY, 3),
+    DENSITY_4(Enchantment.DENSITY, 4),
+    DENSITY_5(Enchantment.DENSITY, 5),
+    BREACH_1(Enchantment.BREACH, 1),
+    BREACH_2(Enchantment.BREACH, 2),
+    BREACH_3(Enchantment.BREACH, 3),
+    BREACH_4(Enchantment.BREACH, 4),
+    WINDBURST_1(Enchantment.WIND_BURST, 1),
+    WINDBURST_2(Enchantment.WIND_BURST, 2),
+    WINDBURST_3(Enchantment.WIND_BURST, 3),
+
     // melee weapons
     BANE_OF_ARTHROPODS_1(Enchantment.BANE_OF_ARTHROPODS, 1),
     BANE_OF_ARTHROPODS_2(Enchantment.BANE_OF_ARTHROPODS, 2),
