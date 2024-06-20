@@ -20,6 +20,8 @@ enum class PotionEffect(
     SPEED_3(PotionEffectType.SPEED, 2),
     SPEED_4(PotionEffectType.SPEED, 3),
     FIRE_RESISTANCE(PotionEffectType.FIRE_RESISTANCE, 0),
+    WIND_CHARGED(PotionEffectType.WIND_CHARGED, 0),
+    WEAVING(PotionEffectType.WEAVING, 0),
     INVISIBILITY(PotionEffectType.INVISIBILITY, 0),
     ;
 

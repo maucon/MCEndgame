@@ -12,6 +12,7 @@ import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.Listener
 import kotlin.random.Random
@@ -47,6 +48,9 @@ class EnemyGenerationService(
         val entity = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as LivingEntity
         equipmentGenerationService.generate(random, entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
 
+        val scaleAttribute = entity.getAttribute(Attribute.GENERIC_SCALE)
+        scaleAttribute?.baseValue = EnemyGenerationSettings.getRandomScale(random)
+
         entity.healOnLoad()
 
         val canBeInvisible = !entityType.hideEquipment
@@ -66,6 +70,7 @@ class EnemyGenerationService(
             RandomUtil.pick(EnemyGenerationSettings.RESISTANCE_EFFECTS, mapTier, random).option,
             RandomUtil.pick(EnemyGenerationSettings.SPEED_EFFECTS, mapTier, random).option,
             RandomUtil.pick(EnemyGenerationSettings.FIRE_RESISTANCE_EFFECT, mapTier, random).option,
+            RandomUtil.pick(EnemyGenerationSettings.ON_DEATH_EFFECTS, random).option,
         )
         if (canBeInvisible) {
             effects.add(RandomUtil.pick(EnemyGenerationSettings.INVISIBILITY_EFFECT, random).option)
