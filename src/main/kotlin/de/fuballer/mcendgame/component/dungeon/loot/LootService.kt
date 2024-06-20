@@ -94,7 +94,7 @@ class LootService(
         if (typeString.contains("NETHERITE")) {
             return LootSettings.ITEMS_DROP_CHANCE_NETHERITE + LootSettings.ITEMS_DROP_CHANCE_NETHERITE_PER_LOOTING * looting
         }
-        if (typeString.contains("TRIDENT")) {
+        if (typeString.contains("TRIDENT") || typeString.contains("MACE")) {
             return 0.0
         }
 

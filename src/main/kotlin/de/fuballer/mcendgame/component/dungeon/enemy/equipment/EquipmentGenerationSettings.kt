@@ -106,8 +106,9 @@ object EquipmentGenerationSettings {
     private val BOWS = listOf(
         SortableRandomOption(100, 0, Tool.BOW)
     )
-    private val TRIDENTS = listOf(
-        SortableRandomOption(100, 0, Tool.TRIDENT)
+    private val SPECIAL_WEAPONS = listOf(
+        SortableRandomOption(100, 0, Tool.TRIDENT),
+        SortableRandomOption(50, 0, Tool.MACE)
     )
     const val OFFHAND_OTHER_OVER_MAINHAND_PROBABILITY = 0.25
     val OTHER_ITEMS = listOf(
@@ -121,7 +122,7 @@ object EquipmentGenerationSettings {
         RandomOption(10, PICKAXES),
         RandomOption(10, SHOVELS),
         RandomOption(10, HOES),
-        RandomOption(1, TRIDENTS),
+        RandomOption(1, SPECIAL_WEAPONS),
     )
     val RANGED_MAINHAND_PROBABILITIES = listOf<RandomOption<List<SortableRandomOption<out Equipment>>>>(
         RandomOption(100, BOWS),
