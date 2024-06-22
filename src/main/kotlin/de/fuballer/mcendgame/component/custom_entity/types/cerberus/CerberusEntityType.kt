@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.types.cerberus
 
+import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplyDarknessAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.FireCascadeAbility
@@ -25,7 +26,7 @@ object CerberusEntityType : CustomEntityType {
     override val baseSpeed = 0.30
     override val speedPerTier = 0.003
 
-    override val sounds = null
+    override val sounds = EntitySoundData.create("cerberus")
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(35, FireCascadeAbility),
         RandomOption(10, KnockbackAbility),

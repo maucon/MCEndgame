@@ -1,26 +1,4 @@
 {
-  "mcendgame_naga_hurt" : {
-    "sounds" : [
-      "mcendgame/entity/naga/hurt0",
-      "mcendgame/entity/naga/hurt1"
-    ]
-  },
-  "mcendgame_naga_death" : {
-    "sounds" : [
-      "mcendgame/entity/naga/death0"
-    ]
-  },
-  "mcendgame_harpy_hurt" : {
-    "sounds" : [
-      "mcendgame/entity/harpy/hurt0",
-      "mcendgame/entity/harpy/hurt1"
-    ]
-  },
-  "mcendgame_harpy_death" : {
-    "sounds" : [
-      "mcendgame/entity/harpy/death0"
-    ]
-  },
   "mcendgame_demonic_golem_hurt" : {
     "sounds" : [
       "mcendgame/entity/demonic_golem/hurt0",
@@ -31,19 +9,6 @@
   "mcendgame_demonic_golem_death" : {
     "sounds" : [
       "mcendgame/entity/demonic_golem/death0"
-    ]
-  },
-  "mcendgame_cyclops_hurt" : {
-    "sounds" : [
-      "mcendgame/entity/cyclops/hurt0",
-      "mcendgame/entity/cyclops/hurt1",
-      "mcendgame/entity/cyclops/hurt2"
-    ]
-  },
-  "mcendgame_cyclops_death" : {
-    "sounds" : [
-      "mcendgame/entity/cyclops/death0",
-      "mcendgame/entity/cyclops/death1"
     ]
   },
   "mcendgame_minotaur_hurt" : {
@@ -58,30 +23,6 @@
       "mcendgame/entity/minotaur/death0"
     ]
   },
-  "mcendgame_mandragora_hurt" : {
-    "sounds" : [
-      "mcendgame/entity/mandragora/hurt0",
-      "mcendgame/entity/mandragora/hurt1",
-      "mcendgame/entity/mandragora/hurt2"
-    ]
-  },
-  "mcendgame_mandragora_death" : {
-    "sounds" : [
-      "mcendgame/entity/mandragora/death0"
-    ]
-  },
-  "mcendgame_stalker_hurt" : {
-    "sounds" : [
-      "mcendgame/entity/stalker/hurt0",
-      "mcendgame/entity/stalker/hurt1",
-      "mcendgame/entity/stalker/hurt2"
-    ]
-  },
-  "mcendgame_stalker_death" : {
-    "sounds" : [
-      "mcendgame/entity/stalker/death0"
-    ]
-  },
   "mcendgame_wendigo_hurt" : {
     "sounds" : [
       "mcendgame/entity/wendigo/hurt0",
@@ -92,22 +33,6 @@
   "mcendgame_wendigo_death" : {
     "sounds" : [
       "mcendgame/entity/wendigo/death0"
-    ]
-  },
-  "mcendgame_buff_villager_hurt" : {
-    "sounds" : [
-      "mcendgame/entity/buff_villager/hurt0",
-      "mcendgame/entity/buff_villager/hurt1",
-      "mcendgame/entity/buff_villager/hurt2"
-    ]
-  },
-  "mcendgame_buff_villager_death" : {
-    "sounds" : [
-      "mcendgame/entity/buff_villager/death0",
-      "mcendgame/entity/buff_villager/death1",
-      "mcendgame/entity/buff_villager/death2",
-      "mcendgame/entity/buff_villager/death3",
-      "mcendgame/entity/buff_villager/death4"
     ]
   },
   "mcendgame_reaper_hurt" : {
@@ -125,6 +50,44 @@
       "mcendgame/entity/reaper/death1",
       "mcendgame/entity/reaper/death2",
       "mcendgame/entity/reaper/death3"
+    ]
+  },
+  "mcendgame_cerberus_hurt" : {
+    "sounds" : [
+      "mcendgame/entity/cerberus/hurt0",
+      "mcendgame/entity/cerberus/hurt1",
+      "mcendgame/entity/cerberus/hurt2"
+    ]
+  },
+  "mcendgame_cerberus_death" : {
+    "sounds" : [
+      "mcendgame/entity/cerberus/death0",
+      "mcendgame/entity/cerberus/death1"
+    ]
+  },
+  "mcendgame_necromancer_hurt" : {
+    "sounds" : [
+      "mcendgame/entity/necromancer/hurt0",
+      "mcendgame/entity/necromancer/hurt1",
+      "mcendgame/entity/necromancer/hurt2"
+    ]
+  },
+  "mcendgame_necromancer_death" : {
+    "sounds" : [
+      "mcendgame/entity/necromancer/death0"
+    ]
+  },
+  "mcendgame_buff_cow_hurt" : {
+    "sounds" : [
+      "mcendgame/entity/buff_cow/hurt0",
+      "mcendgame/entity/buff_cow/hurt1",
+      "mcendgame/entity/buff_cow/hurt2"
+    ]
+  },
+  "mcendgame_buff_cow_death" : {
+    "sounds" : [
+      "mcendgame/entity/buff_cow/death0",
+      "mcendgame/entity/buff_cow/death1"
     ]
   }
 }
