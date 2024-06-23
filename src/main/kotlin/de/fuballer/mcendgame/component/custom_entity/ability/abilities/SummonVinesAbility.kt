@@ -28,6 +28,9 @@ object SummonVinesAbility : Ability {
 
         targets
             .flatMap { SummonerUtil.summonMinions(creature, VineEntityType, amount, it.location) }
-            .forEach { it.velocity = Vector(1 - Random.nextDouble() * 2, 0.2 + Random.nextDouble() * 0.1, 1 - Random.nextDouble() * 2) }
+            .forEach {
+                it.velocity = Vector(1 - Random.nextDouble() * 2, 0.2 + Random.nextDouble() * 0.1, 1 - Random.nextDouble() * 2)
+                it.isSilent = true
+            }
     }
 }
