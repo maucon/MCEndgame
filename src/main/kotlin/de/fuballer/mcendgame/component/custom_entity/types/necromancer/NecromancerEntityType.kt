@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.types.necromancer
 
+import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplyDarknessAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplySpeedAbility
@@ -25,7 +26,7 @@ object NecromancerEntityType : CustomEntityType {
     override val baseSpeed = 0.4
     override val speedPerTier = 0.0025
 
-    override val sounds = null
+    override val sounds = EntitySoundData.create("necromancer")
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(5, ApplySpeedAbility),
         RandomOption(10, ApplyDarknessAbility),

@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.custom_entity.ability.abilities
 
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.util.DungeonUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.setIsEnemy
 import org.bukkit.Color
 import org.bukkit.Location
 import org.bukkit.entity.AreaEffectCloud
@@ -40,6 +41,7 @@ object PoisonCloudAbility : Ability {
                 cloud.addCustomEffect(POISON_CLOUD_EFFECT, true)
                 cloud.reapplicationDelay = POISON_CLOUD_REAPPLICATION_DELAY
                 cloud.waitTime = POISON_CLOUD_REAPPLICATION_DELAY
+                cloud.setIsEnemy()
             }
     }
 }
