@@ -15,7 +15,7 @@ import kotlin.math.PI
 import kotlin.math.sqrt
 
 private val velocity = Vector(0.3, 0.3, 0.0)
-private const val cloneHitCountBasedHealth = 2
+private const val cloneHitCountBasedHealth = 1
 
 private fun getClonesAmount(mapTier: Int) = 1 + sqrt(mapTier.toDouble()).toInt()
 

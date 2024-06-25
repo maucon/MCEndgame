@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.buff_cow.BuffCowEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.cerberus.CerberusEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.demonic_golem.DemonicGolemEntityType
+import de.fuballer.mcendgame.component.custom_entity.types.elf_duelist.ElfDuelistEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.husk.HuskEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.melee_skeleton.MeleeSkeletonEntityType
 import de.fuballer.mcendgame.component.custom_entity.types.minotaur.MinotaurEntityType
@@ -42,6 +43,7 @@ enum class DungeonType(
             RandomOption(20, PiglinBruteEntityType),
         ),
         listOf(
+            RandomOption(100, ElfDuelistEntityType),
             RandomOption(100, ReaperEntityType),
             RandomOption(100, NecromancerEntityType),
             RandomOption(100, DemonicGolemEntityType),

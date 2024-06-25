@@ -1,0 +1,317 @@
+{
+	"credit": "Made with Blockbench",
+	"textureSize": [128, 128],
+	"models": [
+		{
+			"part": "head",
+			"id": "head",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "headwear",
+			"id": "headwear",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0]
+		},
+		{
+			"part": "body",
+			"id": "body",
+			"invertAxis": "xy",
+			"translate": [0, -24, 0],
+			"submodels": [
+				{
+					"id": "elf",
+					"invertAxis": "xy",
+					"translate": [0, 24, 0],
+					"submodels": [
+						{
+							"id": "elfBody",
+							"invertAxis": "xy",
+							"translate": [0, -10.5, 0],
+							"boxes": [
+								{"coordinates": [-4, -1.5, -1.85, 8, 3, 4], "textureOffset": [55, 46]}
+							],
+							"submodels": [
+								{
+									"id": "elfUpperBody",
+									"invertAxis": "xy",
+									"translate": [0, 1.5, 0],
+									"boxes": [
+										{"coordinates": [-3.5, 0, -1.5, 7, 3, 3], "textureOffset": [57, 39]}
+									],
+									"submodels": [
+										{
+											"id": "elfChest",
+											"invertAxis": "xy",
+											"translate": [0, 3, 0],
+											"boxes": [
+												{"coordinates": [-3.5, 0, -1.5, 7, 6, 3], "textureOffset": [57, 22], "sizeAdd": 0.25}
+											],
+											"submodels": [
+												{
+													"id": "elfBreast",
+													"invertAxis": "xy",
+													"translate": [0, 4.75, -1.75],
+													"rotate": [12.5, 0, 0],
+													"boxes": [
+														{"coordinates": [-3.5, -4, 0, 7, 4, 2], "textureOffset": [58, 32]}
+													]
+												},
+												{
+													"id": "elfCape",
+													"invertAxis": "xy",
+													"translate": [0, 5.75, 2],
+													"rotate": [-7.5, 0, 0],
+													"boxes": [
+														{"coordinates": [-4, -14, -0.25, 8, 14, 0], "textureOffset": [104, 25]}
+													]
+												},
+												{
+													"id": "elfNeck",
+													"invertAxis": "xy",
+													"translate": [0, 6.25, 0],
+													"boxes": [
+														{"coordinates": [-1, -0.25, -1, 2, 2, 2], "textureOffset": [63, 17], "sizeAdd": 0.25}
+													],
+													"submodels": [
+														{
+															"id": "elfHead",
+															"invertAxis": "xy",
+															"translate": [0, 0.75, 0],
+															"boxes": [
+																{"coordinates": [-4, 0, -4, 8, 8, 8], "textureOffset": [51, 0]},
+																{"coordinates": [-4, -8, -4, 8, 16, 8], "textureOffset": [96, 0], "sizeAdd": 0.25}
+															],
+															"submodels": [
+																{
+																	"id": "elfEarLeft",
+																	"invertAxis": "xy",
+																	"translate": [-3.5, 1.25, -1.25],
+																	"rotate": [15, -35, 0],
+																	"boxes": [
+																		{"coordinates": [0, 0, 0, 0, 6, 3], "textureOffset": [84, 7]}
+																	]
+																},
+																{
+																	"id": "elfEarRight",
+																	"invertAxis": "xy",
+																	"translate": [3.5, 1.25, -1.25],
+																	"rotate": [15, 35, 0],
+																	"boxes": [
+																		{"coordinates": [0, 0, 0, 0, 6, 3], "textureOffset": [44, 7]}
+																	]
+																}
+															]
+														}
+													]
+												},
+												{
+													"id": "elfArmLeft",
+													"invertAxis": "xy",
+													"translate": [-3.5, 5.25, 0.25],
+													"submodels": [
+														{
+															"id": "elfArmUpperLeft",
+															"invertAxis": "xy",
+															"translate": [3.75, 0.75, -0.25],
+															"boxes": [
+																{"coordinates": [-6.75, -5.75, -1.3, 3, 6, 3], "textureOffset": [80, 32]}
+															],
+															"submodels": [
+																{
+																	"id": "elfPauldronLeft",
+																	"invertAxis": "xy",
+																	"translate": [-3.75, 0.75, 0.25],
+																	"rotate": [0, 0, 2.5],
+																	"boxes": [
+																		{"coordinates": [-3.25, -5.25, -1.5, 3, 5, 3], "textureOffset": [80, 23], "sizeAdd": 0.25}
+																	]
+																},
+																{
+																	"id": "elfArmLowerLeft",
+																	"invertAxis": "xy",
+																	"translate": [0, 0, 0],
+																	"boxes": [
+																		{"coordinates": [-6.75, -12.25, -1.3, 3, 7, 3], "textureOffset": [80, 42], "sizeAdd": -0.25}
+																	],
+																	"submodels": [
+																		{
+																			"id": "elfSwordLeft",
+																			"invertAxis": "xy",
+																			"translate": [-5, -11, 0.25],
+																			"rotate": [-90, 0, 0],
+																			"boxes": [
+																				{"coordinates": [-0.5, -3.25, -0.5, 1, 5, 1], "textureOffset": [95, 46]},
+																				{"coordinates": [-2, 1.75, -2, 4, 1, 4], "textureOffset": [89, 53]},
+																				{"coordinates": [-0.5, 2.75, -0.5, 1, 17, 1], "textureOffset": [95, 59]}
+																			]
+																		}
+																	]
+																}
+															]
+														}
+													]
+												},
+												{
+													"id": "elfArmRight",
+													"invertAxis": "xy",
+													"translate": [3.5, 5.25, 0.25],
+													"submodels": [
+														{
+															"id": "elfArmUpperRight",
+															"invertAxis": "xy",
+															"translate": [-3.75, 0.75, -0.25],
+															"boxes": [
+																{"coordinates": [3.75, -5.75, -1.3, 3, 6, 3], "textureOffset": [42, 32]}
+															],
+															"submodels": [
+																{
+																	"id": "elfPauldronRight",
+																	"invertAxis": "xy",
+																	"translate": [3.75, 0.75, 0.25],
+																	"rotate": [0, 0, -2.5],
+																	"boxes": [
+																		{"coordinates": [0.25, -5.25, -1.5, 3, 5, 3], "textureOffset": [42, 23], "sizeAdd": 0.25}
+																	]
+																},
+																{
+																	"id": "elfArmLowerRight",
+																	"invertAxis": "xy",
+																	"translate": [0, 0, 0],
+																	"boxes": [
+																		{"coordinates": [3.75, -12.25, -1.3, 3, 7, 3], "textureOffset": [42, 42], "sizeAdd": -0.25}
+																	],
+																	"submodels": [
+																		{
+																			"id": "elfSwordRight",
+																			"invertAxis": "xy",
+																			"translate": [5, -11, 0.25],
+																			"rotate": [-90, 0, 0],
+																			"boxes": [
+																				{"coordinates": [-0.5, -3.25, -0.5, 1, 5, 1], "textureOffset": [35, 46]},
+																				{"coordinates": [-2, 1.75, -2, 4, 1, 4], "textureOffset": [29, 53]},
+																				{"coordinates": [-0.5, 2.75, -0.5, 1, 17, 1], "textureOffset": [35, 59]}
+																			]
+																		}
+																	]
+																}
+															]
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "elfLegLeft",
+							"invertAxis": "xy",
+							"translate": [-2, -12, 0],
+							"boxes": [
+								{"coordinates": [-1.5, -6, -1.5, 3, 6, 3], "textureOffset": [73, 72], "sizeAdd": 0.25},
+								{"coordinates": [-1.5, -12, -1.5, 3, 6, 3], "textureOffset": [73, 82]},
+								{"coordinates": [-2, -11.25, -1.75, 4, 13, 4], "textureOffset": [71, 54], "sizeAdd": 0.25}
+							]
+						},
+						{
+							"id": "elfLegRight",
+							"invertAxis": "xy",
+							"translate": [2.25, -12, 0],
+							"boxes": [
+								{"coordinates": [-1.75, -6, -1.5, 3, 6, 3], "textureOffset": [49, 72], "sizeAdd": 0.25},
+								{"coordinates": [-1.75, -12, -1.5, 3, 6, 3], "textureOffset": [49, 82]},
+								{"coordinates": [-2.25, -11.25, -1.75, 4, 13, 4], "textureOffset": [47, 54], "sizeAdd": 0.25}
+							]
+						}
+					]
+				}
+			],
+			"animations": [
+				{
+					"var.attackProgress": "if(swing_progress > 0, swing_progress, max(var.attackProgress - 0.025, 0))",
+					"var.invAttackProgress": "(1 - var.attackProgress)",
+					"var.attack": "if(var.attackProgress == 0, floor(random() * 2.99), var.attack)",
+					"varb.changeArmR": "var.attackProgress > 0 && (var.attack == 0 || var.attack == 2 || var.attack == 3)",
+					"var.armRTargetX": "torad(if(var.attack == 0, -105, var.attack == 2, -110, 0))",
+					"var.armRTargetY": "torad(if(var.attack == 0, 25, var.attack == 2, -15, 0))",
+					"var.swordRTargetX": "torad(if(var.attack == 0, 90, var.attack == 2, 75, 0))",
+					"var.swordRTargetY": "torad(if(var.attack == 0, 15, var.attack == 2, 15, 0))",
+					"varb.changeArmL": "var.attackProgress > 0 && (var.attack == 1 || var.attack == 2)",
+					"var.armLTargetX": "torad(if(var.attack == 1, -105, var.attack == 2, -110, 0))",
+					"var.armLTargetY": "torad(if(var.attack == 1, -25, var.attack == 2, 15, 0))",
+					"var.swordLTargetX": "torad(if(var.attack == 1, 90, var.attack == 2, 75, 0))",
+					"var.swordLTargetY": "torad(if(var.attack == 1, -15, var.attack == 2, -15, 0))",
+					"varb.changeBody": "var.attackProgress > 0 && (var.attack == 0 || var.attack == 1 || var.attack == 2)",
+					"var.uperBodyTargetY": "torad(if(var.attack == 0, -20, var.attack == 1, 20, 0))",
+					"var.chestTargetY": "torad(if(var.attack == 0, -35, var.attack == 1, 35, 0))",
+					"var.neckTargetY": "torad(if(var.attack == 0, 15, var.attack == 1, -15, 0))",
+					"var.headTargetY": "torad(if(var.attack == 0, 15, var.attack == 1, -15, 0))",
+					"var.bodyTargetX": "torad(if(var.attack == 0, 5, var.attack == 1, 5, var.attack == 2, 10, 0))",
+					"var.uperBodyTargetX": "torad(if(var.attack == 0, 8, var.attack == 1, 8, var.attack == 2, 15, 0))",
+					"var.chestTargetX": "torad(if(var.attack == 0, 15, var.attack == 1, 15, var.attack == 2, 25, 0))",
+					"var.neckTargetX": "torad(if(var.attack == 0, -5, var.attack == 1, -5, var.attack == 2, -10, 0))",
+					"var.headTargetX": "torad(if(var.attack == 0, -5, var.attack == 1, -5, var.attack == 2, -10, 0))"
+				},
+				{
+					"elfBody.ry": "torad(head_yaw / 90 * 5)",
+					"elfUpperBody.ry": "torad(head_yaw / 90 * 10) + if(varb.changeBody, var.upperBodyTargetY * var.attackProgress, 0)",
+					"elfChest.ry": "torad(head_yaw / 90 * 20) + if(varb.changeBody, var.chestTargetY * var.attackProgress, 0)",
+					"elfNeck.ry": "torad(head_yaw / 90 * 15) + if(varb.changeBody, var.neckTargetY * var.attackProgress, 0)",
+					"elfHead.ry": "torad(head_yaw / 90 * 30) + if(varb.changeBody, var.headTargetY * var.attackProgress, 0)",
+					"elfBody.rx": "torad(head_pitch / 90 * 5) + if(varb.changeBody, var.bodyTargetX * var.attackProgress, 0)",
+					"elfUpperBody.rx": "torad(head_pitch / 90 * 5) + if(varb.changeBody, var.upperBodyTargetX * var.attackProgress, 0)",
+					"elfChest.rx": "torad(head_pitch / 90 * 10) + if(varb.changeBody, var.chestTargetX * var.attackProgress, 0)",
+					"elfNeck.rx": "torad(head_pitch / 90 * 10) + if(varb.changeBody, var.neckTargetX * var.attackProgress, 0)",
+					"elfHead.rx": "torad(head_pitch / 90 * 25) + if(varb.changeBody, var.headTargetX * var.attackProgress, 0)"
+				},
+				{
+					"var.armsXRot": "if(limb_speed > 0.01, torad(sin(limb_swing) * (10 + 15 * limb_speed)), 0)",
+					"elfArmLeft.rx": "if(!varb.changeArmL, -var.armsXRot, var.attackProgress * var.armLTargetX + var.invAttackProgress * -var.armsXRot)",
+					"elfArmRight.rx": "if(!varb.changeArmR, var.armsXRot, var.attackProgress * var.armRTargetX + var.invAttackProgress * var.armsXRot)",
+					"elfArmLeft.ry": "if(varb.changeArmL, var.attackProgress * var.armLTargetY, 0)",
+					"elfArmRight.ry": "if(varb.changeArmR, var.attackProgress * var.armRTargetY, 0)",
+					"elfSwordLeft.rx": "torad(90) + if(varb.changeArmL, var.attackProgress * var.swordLTargetX, 0)",
+					"elfSwordRight.rx": "torad(90) + if(varb.changeArmR, var.attackProgress * var.swordRTargetX, 0)",
+					"elfSwordLeft.ry": "if(varb.changeArmL, var.attackProgress * var.swordLTargetY, 0)",
+					"elfSwordRight.ry": "if(varb.changeArmR, var.attackProgress * var.swordRTargetY, 0)",
+					"var.armsZRot": "if(limb_speed > 0.01, torad(8), torad(8 + 3 * sin(age * 0.1)))",
+					"elfArmLeft.rz": "-var.armsZRot",
+					"elfArmRight.rz": "var.armsZRot",
+					"var.legsXRot": "if(limb_speed > 0.01, torad(sin(limb_swing) * (25 + 25 * limb_speed)), 0)",
+					"elfLegLeft.rx": "var.legsXRot",
+					"elfLegRight.rx": "-var.legsXRot",
+					"elfCape.rx": "torad(12.5 + sin(limb_swing * 0.3) * 2.5)"
+				}
+			]
+		},
+		{
+			"part": "left_arm",
+			"id": "left_arm",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [5, -22, 0]
+		},
+		{
+			"part": "right_arm",
+			"id": "right_arm",
+			"invertAxis": "xy",
+			"translate": [-5, -22, 0]
+		},
+		{
+			"part": "left_leg",
+			"id": "left_leg",
+			"invertAxis": "xy",
+			"mirrorTexture": "u",
+			"translate": [2, -12, -0.1]
+		},
+		{
+			"part": "right_leg",
+			"id": "right_leg",
+			"invertAxis": "xy",
+			"translate": [-2, -12, -0.1]
+		}
+	]
+}
