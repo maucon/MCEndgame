@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.types.buff_cow
 
+import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.CowStompAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.PullAbility
@@ -24,7 +25,7 @@ object BuffCowEntityType : CustomEntityType {
     override val baseSpeed = 0.15
     override val speedPerTier = 0.0
 
-    override val sounds = null
+    override val sounds = EntitySoundData.create("buff_cow")
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(25, CowStompAbility),
         RandomOption(25, ShootSnowballsAbility),
