@@ -43,7 +43,7 @@ enum class DungeonType(
             RandomOption(20, PiglinBruteEntityType),
         ),
         listOf(
-            RandomOption(500, ElfDuelistEntityType),
+            RandomOption(100, ElfDuelistEntityType),
             RandomOption(100, ReaperEntityType),
             RandomOption(100, NecromancerEntityType),
             RandomOption(100, DemonicGolemEntityType),
