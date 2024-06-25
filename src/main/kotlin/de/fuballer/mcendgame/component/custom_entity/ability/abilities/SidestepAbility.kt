@@ -42,7 +42,7 @@ object SidestepAbility : Ability {
         val finalLocation = LocationUtil.getLocationRotatedAroundLocationsYAxis(casterLocation, target.location, finalAngle * direction)
         caster.teleport(finalLocation)
 
-        caster.world.spawnParticle(Particle.SMOKE_NORMAL, casterLocation.x, casterLocation.y + 1, casterLocation.z, 15, 0.2, 0.5, 0.2, 0.01)
-        caster.world.spawnParticle(Particle.SMOKE_NORMAL, finalLocation.x, finalLocation.y + 1, finalLocation.z, 50, 0.2, 0.5, 0.2, 0.05)
+        caster.world.spawnParticle(Particle.SMOKE, casterLocation.x, casterLocation.y + 1, casterLocation.z, 15, 0.2, 0.5, 0.2, 0.01)
+        caster.world.spawnParticle(Particle.SMOKE, finalLocation.x, finalLocation.y + 1, finalLocation.z, 50, 0.2, 0.5, 0.2, 0.05)
     }
 }
