@@ -28,5 +28,10 @@ jobs:
       - name: Grant Gradle Permissions
         run: chmod +x ./gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Build FatJar
+        run: ./gradlew fatJar
+
+      - name: Add Jar Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: build/libs/*.jar
