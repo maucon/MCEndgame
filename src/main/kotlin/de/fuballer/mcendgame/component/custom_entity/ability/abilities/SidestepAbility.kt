@@ -17,7 +17,6 @@ object SidestepAbility : Ability {
         val target = creature.target ?: return false
 
         val distance = creature.location.toVector().subtract(target.location.toVector()).length()
-
         return distance <= MAX_RANGE_TO_TARGET
     }
 
