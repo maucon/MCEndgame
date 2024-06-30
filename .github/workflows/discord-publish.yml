@@ -9,7 +9,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: discord-publish
+    #    environment: discord-publish
     steps:
       - name: Call Discord Webhook
         run: |
