@@ -14,7 +14,7 @@ object DungeonBossSettings {
 
     val BOSS_POTION_EFFECTS = listOf(
         PotionEffect(PotionEffectType.FIRE_RESISTANCE, Int.MAX_VALUE, 0, false, false),
-        PotionEffect(PotionEffectType.SLOW, Int.MAX_VALUE, 255, false, false)
+        PotionEffect(PotionEffectType.SLOWNESS, Int.MAX_VALUE, 255, false, false)
     )
 
     val EMPOWERED_LOOT_MODIFIER = Modifier(ModifierType.LOOT_DROP, ModifierOperation.MORE, 0.2, "boss empower")

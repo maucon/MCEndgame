@@ -17,14 +17,14 @@ import kotlin.random.Random
 
 private const val DURATION = 3600
 private val EFFECTS = listOf(
-    RandomOption(1000, PotionEffect(PotionEffectType.INCREASE_DAMAGE, DURATION, 0, false)),
-    RandomOption(300, PotionEffect(PotionEffectType.INCREASE_DAMAGE, DURATION, 1, false)),
-    RandomOption(30, PotionEffect(PotionEffectType.INCREASE_DAMAGE, DURATION, 2, false)),
-    RandomOption(2, PotionEffect(PotionEffectType.INCREASE_DAMAGE, DURATION, 3, false)),
-    RandomOption(1000, PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, DURATION, 0, false)),
-    RandomOption(300, PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, DURATION, 1, false)),
-    RandomOption(30, PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, DURATION, 2, false)),
-    RandomOption(2, PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, DURATION, 3, false)),
+    RandomOption(1000, PotionEffect(PotionEffectType.STRENGTH, DURATION, 0, false)),
+    RandomOption(300, PotionEffect(PotionEffectType.STRENGTH, DURATION, 1, false)),
+    RandomOption(30, PotionEffect(PotionEffectType.STRENGTH, DURATION, 2, false)),
+    RandomOption(2, PotionEffect(PotionEffectType.STRENGTH, DURATION, 3, false)),
+    RandomOption(1000, PotionEffect(PotionEffectType.RESISTANCE, DURATION, 0, false)),
+    RandomOption(300, PotionEffect(PotionEffectType.RESISTANCE, DURATION, 1, false)),
+    RandomOption(30, PotionEffect(PotionEffectType.RESISTANCE, DURATION, 2, false)),
+    RandomOption(2, PotionEffect(PotionEffectType.RESISTANCE, DURATION, 3, false)),
     RandomOption(1000, PotionEffect(PotionEffectType.SPEED, DURATION, 0, false)),
     RandomOption(300, PotionEffect(PotionEffectType.SPEED, DURATION, 1, false)),
     RandomOption(30, PotionEffect(PotionEffectType.SPEED, DURATION, 2, false)),

@@ -58,7 +58,7 @@ enum class AttributeType(
     ATTACK_RANGE(
         { "+${DECIMAL_FORMAT.format(it)} Attack Range" },
         VanillaAttributeType(
-            Attribute.GENERIC_LUCK, AttributeModifier.Operation.ADD_NUMBER // FIXME when range attribute gets implemented
+            Attribute.PLAYER_ENTITY_INTERACTION_RANGE, AttributeModifier.Operation.ADD_NUMBER
         )
     ),
     ARMOR(
@@ -82,11 +82,13 @@ enum class AttributeType(
     SIZE_INCREASE(
         { "+${DECIMAL_FORMAT.format(it * 100)}% Size" },
         VanillaAttributeType(
-            Attribute.GENERIC_LUCK, AttributeModifier.Operation.ADD_SCALAR // FIXME when size attribute gets implemented
+            Attribute.GENERIC_SCALE, AttributeModifier.Operation.ADD_SCALAR
         )
     ),
 
     INCREASED_PROJECTILE_DAMAGE({ " Deal ${DECIMAL_FORMAT.format(it * 100)}% increased projectile damage" }),
+
+    INCREASED_ARROW_VELOCITY({ " Shot arrows have ${DECIMAL_FORMAT.format(it * 100)}% increased velocity" }),
 
     DISABLE_MELEE({ " Cannot deal melee damage" }),
 

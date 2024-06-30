@@ -33,7 +33,7 @@ class MoreDamageAgainstFullLifeEffectService : Listener {
         val dustOptions = Particle.DustOptions(Color.fromRGB(255, 50, 50), 1.0f)
 
         entity.world.spawnParticle(
-            Particle.REDSTONE,
+            Particle.DUST_PLUME,
             location.x, location.y + 1.3, location.z,
             25, 0.2, 0.3, 0.2, 0.01, dustOptions
         )

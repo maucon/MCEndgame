@@ -58,9 +58,9 @@ class DungeonBuilderService {
     ) {
         for (block in extraBlocks) {
             val (x, y, z, rotation, type) = block
-            val xFinal = clipboard.origin.x + x
-            val yFinal = clipboard.origin.y + y
-            val zFinal = clipboard.origin.z + z
+            val xFinal = clipboard.origin.x() + x
+            val yFinal = clipboard.origin.y() + y
+            val zFinal = clipboard.origin.z() + z
 
             val stepRotation = (rotation / 22.5).toInt()
 

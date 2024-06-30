@@ -16,7 +16,7 @@ object WorldSettings {
 
     fun updateGameRules(world: World) {
         world.setGameRule(GameRule.KEEP_INVENTORY, true)
-        world.setGameRule(GameRule.MOB_GRIEFING, false)
+        world.setGameRule(GameRule.MOB_GRIEFING, true)
         world.setGameRule(GameRule.DO_MOB_SPAWNING, false)
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
         world.setGameRule(GameRule.DO_WEATHER_CYCLE, false)
@@ -35,5 +35,6 @@ object WorldSettings {
         world.setGameRule(GameRule.DROWNING_DAMAGE, false)
         world.setGameRule(GameRule.FREEZE_DAMAGE, false)
         world.setGameRule(GameRule.DO_VINES_SPREAD, false)
+        world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS, 0)
     }
 }

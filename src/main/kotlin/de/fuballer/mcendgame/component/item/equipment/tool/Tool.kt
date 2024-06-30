@@ -23,7 +23,8 @@ enum class Tool(
         EquipmentSlot.HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.INCREASED_PROJECTILE_DAMAGE, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.INCREASED_PROJECTILE_DAMAGE, 0.35)),
+            RandomOption(10, RollableAttribute(AttributeType.INCREASED_ARROW_VELOCITY, 0.3)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.25)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 1.0)),
             RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
@@ -77,6 +78,52 @@ enum class Tool(
             RandomOption(15, ItemEnchantment.RIPTIDE_1),
             RandomOption(10, ItemEnchantment.RIPTIDE_2),
             RandomOption(5, ItemEnchantment.RIPTIDE_3),
+        )
+    ),
+    MACE(
+        Material.MACE,
+        listOf(
+            BaseAttribute(AttributeType.ATTACK_DAMAGE, 6.0),
+            BaseAttribute(AttributeType.ATTACK_SPEED, 0.6)
+        ),
+        EquipmentSlot.HAND,
+        false,
+        listOf(
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.2)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+        ),
+        listOf(
+            RandomOption(10, ItemEnchantment.MENDING),
+            RandomOption(20, ItemEnchantment.UNBREAKING_1),
+            RandomOption(15, ItemEnchantment.UNBREAKING_2),
+            RandomOption(10, ItemEnchantment.UNBREAKING_3),
+            RandomOption(0, ItemEnchantment.CURSE_OF_VANISHING),
+            RandomOption(15, ItemEnchantment.SMITE_1),
+            RandomOption(12, ItemEnchantment.SMITE_2),
+            RandomOption(9, ItemEnchantment.SMITE_3),
+            RandomOption(6, ItemEnchantment.SMITE_4),
+            RandomOption(3, ItemEnchantment.SMITE_5),
+            RandomOption(15, ItemEnchantment.BANE_OF_ARTHROPODS_1),
+            RandomOption(12, ItemEnchantment.BANE_OF_ARTHROPODS_2),
+            RandomOption(9, ItemEnchantment.BANE_OF_ARTHROPODS_3),
+            RandomOption(6, ItemEnchantment.BANE_OF_ARTHROPODS_4),
+            RandomOption(3, ItemEnchantment.BANE_OF_ARTHROPODS_5),
+            RandomOption(10, ItemEnchantment.FIRE_ASPECT_1),
+            RandomOption(5, ItemEnchantment.FIRE_ASPECT_2),
+            RandomOption(25, ItemEnchantment.DENSITY_1),
+            RandomOption(20, ItemEnchantment.DENSITY_2),
+            RandomOption(15, ItemEnchantment.DENSITY_3),
+            RandomOption(10, ItemEnchantment.DENSITY_4),
+            RandomOption(5, ItemEnchantment.DENSITY_5),
+            RandomOption(12, ItemEnchantment.BREACH_1),
+            RandomOption(9, ItemEnchantment.BREACH_2),
+            RandomOption(6, ItemEnchantment.BREACH_3),
+            RandomOption(3, ItemEnchantment.BREACH_4),
+            RandomOption(12, ItemEnchantment.WINDBURST_1),
+            RandomOption(8, ItemEnchantment.WINDBURST_2),
+            RandomOption(4, ItemEnchantment.WINDBURST_3),
         )
     ),
     FISHING_ROD(

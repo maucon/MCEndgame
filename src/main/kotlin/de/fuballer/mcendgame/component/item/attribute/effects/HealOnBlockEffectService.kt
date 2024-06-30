@@ -47,7 +47,7 @@ class HealOnBlockEffectService : Listener {
         val dustOptions = Particle.DustOptions(Color.fromRGB(50, 255, 50), 1.0f)
 
         player.world.spawnParticle(
-            Particle.REDSTONE,
+            Particle.DUST_PLUME,
             location.x, location.y + 1, location.z,
             15, 0.2, 0.2, 0.2, 0.01, dustOptions
         )

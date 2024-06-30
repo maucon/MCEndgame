@@ -81,8 +81,8 @@ class LootService(
         val item = equipment.itemInMainHand
         val itemMeta = item.itemMeta ?: return 0
 
-        return itemMeta.getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS)
-            .coerceAtLeast(itemMeta.getEnchantLevel(Enchantment.LOOT_BONUS_MOBS))
+        return itemMeta.getEnchantLevel(Enchantment.FORTUNE)
+            .coerceAtLeast(itemMeta.getEnchantLevel(Enchantment.LOOTING))
     }
 
     private fun getItemDropChance(item: ItemStack, looting: Int): Double {
@@ -94,7 +94,7 @@ class LootService(
         if (typeString.contains("NETHERITE")) {
             return LootSettings.ITEMS_DROP_CHANCE_NETHERITE + LootSettings.ITEMS_DROP_CHANCE_NETHERITE_PER_LOOTING * looting
         }
-        if (typeString.contains("TRIDENT")) {
+        if (typeString.contains("TRIDENT") || typeString.contains("MACE")) {
             return 0.0
         }
 

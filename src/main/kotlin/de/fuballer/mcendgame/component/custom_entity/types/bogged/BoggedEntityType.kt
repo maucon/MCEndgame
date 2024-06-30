@@ -1,10 +1,10 @@
-package de.fuballer.mcendgame.component.custom_entity.types.stray
+package de.fuballer.mcendgame.component.custom_entity.types.bogged
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import org.bukkit.entity.EntityType
 
-object StrayEntityType : CustomEntityType {
-    override val type = EntityType.STRAY
+object BoggedEntityType : CustomEntityType {
+    override val type = EntityType.BOGGED
 
     override val customName = null
     override val canHaveWeapons = true

@@ -31,11 +31,10 @@ class AdditionalArrowsEffectService : Listener {
                 entity.launchProjectile(Arrow::class.java, arrow.velocity.clone().rotateAroundY((index + 1) * 5.0 * PI / 180.0)),
                 entity.launchProjectile(Arrow::class.java, arrow.velocity.clone().rotateAroundY(-(index + 1) * 5.0 * PI / 180.0))
             ).forEach {
+                it.weapon = arrow.weapon
                 it.damage = newDamage
                 it.isCritical = arrow.isCritical
-                it.isShotFromCrossbow = arrow.isShotFromCrossbow
                 it.pierceLevel = arrow.pierceLevel
-                it.knockbackStrength = arrow.knockbackStrength
                 it.shooter = arrow.shooter
                 it.fireTicks = arrow.fireTicks
                 it.isVisualFire = arrow.isVisualFire
