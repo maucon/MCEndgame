@@ -10,10 +10,10 @@ import de.fuballer.mcendgame.util.VectorUtil
 import org.bukkit.util.Vector
 import java.io.ByteArrayOutputStream
 
-private val DOOR_MARKER_BLOCK = BlockTypes.BLACK_WOOL!!.id
-private val MONSTER_MARKER_BLOCK = BlockTypes.WHITE_WOOL!!.id
-private val BOSS_MARKER_BLOCK = BlockTypes.DRAGON_HEAD!!.id
-private val START_PORTAL_MARKER_BLOCK = BlockTypes.GREEN_WOOL!!.id
+private val DOOR_MARKER_BLOCK = BlockTypes.BLACK_WOOL!!.id()
+private val MONSTER_MARKER_BLOCK = BlockTypes.WHITE_WOOL!!.id()
+private val BOSS_MARKER_BLOCK = BlockTypes.DRAGON_HEAD!!.id()
+private val START_PORTAL_MARKER_BLOCK = BlockTypes.GREEN_WOOL!!.id()
 
 object RoomTypeLoader {
     fun load(schematicPath: String): RoomType {
@@ -48,14 +48,14 @@ object RoomTypeLoader {
         val spawnLocations = mutableListOf<SpawnLocation>()
         val bossSpawnLocations = mutableListOf<SpawnLocation>()
 
-        for (x in 0..size.x) {
-            for (y in 0..size.y) {
-                for (z in 0..size.z) {
+        for (x in 0..size.x()) {
+            for (y in 0..size.y()) {
+                for (z in 0..size.z()) {
 
                     val position = clipboard.origin.add(x, y, z)
                     val block = clipboard.getFullBlock(position)
 
-                    when (block.blockType.id) {
+                    when (block.blockType.id()) {
                         DOOR_MARKER_BLOCK -> {
                             val door = getDoor(x, y, z, size)
                             doors.add(door)
@@ -109,7 +109,7 @@ object RoomTypeLoader {
             Vector(-1, 0, 0)
         } else if (z == 0) {
             Vector(0, 0, -1)
-        } else if (x == size.x) {
+        } else if (x == size.x()) {
             Vector(1, 0, 0)
         } else {
             Vector(0, 0, 1)
@@ -117,6 +117,6 @@ object RoomTypeLoader {
 
     private fun replaceBlockWithAir(position: BlockVector3, clipboard: Clipboard) {
         val airBlock = BlockTypes.AIR!!.applyBlock(position)
-        clipboard.setBlock(position.x, position.y, position.z, airBlock)
+        clipboard.setBlock(position.x(), position.y(), position.z(), airBlock)
     }
 }
