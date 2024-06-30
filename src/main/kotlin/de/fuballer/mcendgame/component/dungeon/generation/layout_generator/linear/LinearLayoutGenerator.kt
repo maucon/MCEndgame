@@ -133,8 +133,8 @@ class LinearLayoutGenerator(
                 val postLocation = VectorUtil.toBlockVector3(chosenDoor.position)
                 val skullRotation = chosenDoor.getDirectionInDegree()
 
-                val skull = PlaceableBlock(postLocation.x, postLocation.y + 1, postLocation.z, skullRotation, BlockTypes.WITHER_SKELETON_SKULL!!)
-                val post = PlaceableBlock(postLocation.x, postLocation.y, postLocation.z, 0.0, BlockTypes.SPRUCE_FENCE!!)
+                val skull = PlaceableBlock(postLocation.x(), postLocation.y() + 1, postLocation.z(), skullRotation, BlockTypes.WITHER_SKELETON_SKULL!!)
+                val post = PlaceableBlock(postLocation.x(), postLocation.y(), postLocation.z(), 0.0, BlockTypes.SPRUCE_FENCE!!)
 
                 extraBlocks.add(skull)
                 extraBlocks.add(post)
