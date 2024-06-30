@@ -7,19 +7,19 @@ group = 'de.fuballer'
 version = '0.9'
 
 repositories {
-    mavenCentral()
     maven {
         name = 'spigotmc-repo'
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
     maven {
-        name = 'papermc-repo'
-        url = uri('https://repo.papermc.io/repository/maven-public/')
+        name = 'protocollib-repo'
+        url = 'https://repo.dmulloy2.net/repository/public/'
     }
     maven {
-        name = 'protocollib-repo'
-        url = "https://repo.dmulloy2.net/repository/public/"
+        name = 'enginehub-repo'
+        url = 'https://maven.enginehub.org/repo'
     }
+    mavenCentral()
 }
 
 tasks.register('fatJar', Jar) {
@@ -34,14 +34,12 @@ tasks.register('fatJar', Jar) {
 dependencies {
     implementation 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
 
-    implementation platform('com.intellectualsites.bom:bom-1.18.x:1.28')
-    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.10.0'
-    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.10.0'
+    compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.11.0'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.3.0-SNAPSHOT'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.10'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.0'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:2.0.0'
     implementation 'org.reflections:reflections:0.10.2'
 }
 
