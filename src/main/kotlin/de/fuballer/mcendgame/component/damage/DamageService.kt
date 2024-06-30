@@ -6,8 +6,7 @@ import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
+import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -17,7 +16,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
 import java.util.logging.Logger
 import kotlin.math.abs
 
-private const val ALWAYS_SHOW_DEBUG = false
 private const val EXECUTE_DAMAGE = 99999.0
 
 @Component
@@ -26,27 +24,7 @@ class DamageService(
 ) : Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {
-        // region debug
-        println("----- ${event.cause} to ${event.entity.type} -----")
-        val oldDamageValues = DamageModifier.entries
-            .filter { event.isApplicable(it) }
-            .map {
-                Pair(it.name.padEnd(10), event.getDamage(it))
-            }
-        val oldFinalValue = Pair("FINAL_DMG ", event.finalDamage)
-        // endregion debug
-
-        val damageEvent = createDamageEvent(event)
-        // region debug
-        if (damageEvent == null) {
-            logger.severe("could not map event")
-            logger.severe("= damager ${event.damager}")
-            logger.severe("= damaged ${event.entity}")
-            logger.severe("= cause ${event.cause}")
-            return
-        }
-        // endregion
-
+        val damageEvent = createDamageEvent(event) ?: return
         EventGateway.apply(damageEvent)
 
         if (damageEvent.isCancelled) {
@@ -63,30 +41,6 @@ class DamageService(
         damageEvent.onHitPotionEffects.forEach {
             target.addPotionEffect(it)
         }
-
-        // region debug
-        DamageModifier.entries
-            .filter { event.isApplicable(it) }
-            .withIndex()
-            .forEach { (index, damageModifier) ->
-                val (modifier, oldDamage) = oldDamageValues[index]
-                val newDamage = event.getDamage(damageModifier)
-                val damageDiff = abs(oldDamage - newDamage)
-                val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
-                val format = "%s%s : %.3f -> %.3f | %.3f"
-                if (damageDiff > 0.001 || ALWAYS_SHOW_DEBUG) {
-                    Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, modifier, oldDamage, newDamage, damageDiff))
-                }
-            }
-        val newDamage = event.finalDamage
-        val damageDiff = abs(oldFinalValue.second - newDamage)
-        val chatColor = if (damageDiff > 0.001) ChatColor.RED else ChatColor.RESET
-
-        val format = "%s%s : %.3f -> %.3f | %.3f"
-        if (damageDiff > 0.001 || ALWAYS_SHOW_DEBUG) {
-            Bukkit.getConsoleSender().sendMessage(String.format(format, chatColor, oldFinalValue.first, oldFinalValue.second, newDamage, damageDiff))
-        }
-        // endregion debug
     }
 
     /**
@@ -101,6 +55,7 @@ class DamageService(
         val damagerAttributes = damager.getCustomAttributes()
 
         val damaged = event.entity as? LivingEntity ?: return null
+        if (damaged is ArmorStand) return null
         val damagedAttributes = damaged.getCustomAttributes()
 
         val cause = event.cause
