@@ -1,0 +1,20 @@
+name: Discord-Notification
+
+on:
+  workflow_run:
+    workflows: [ Build ]
+    types:
+      - completed
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    environment: discord-publish
+    steps:
+      - name: Call Discord Webhook
+        run: |
+          BUILD_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"content\": \"$BUILD_URL\"}" \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
