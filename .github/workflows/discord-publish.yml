@@ -3,13 +3,13 @@ name: Discord-Publish
 on:
   workflow_run:
     workflows: [ Build ]
-    types:
-      - completed
+    types: [ completed ]
+    branches: [ master ]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    #    environment: discord-publish
+    environment: discord-publish
     steps:
       - name: Call Discord Webhook
         run: |
