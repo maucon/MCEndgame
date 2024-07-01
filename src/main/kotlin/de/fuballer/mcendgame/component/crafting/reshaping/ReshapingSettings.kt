@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 object ReshapingSettings {
-    private val BASE_ITEM = Material.STICK
+    private val BASE_ITEM = Material.PAPER
     private val ITEM_NAME = ChatColor.LIGHT_PURPLE.toString() + "Orb of Reshaping"
     private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Forge a new custom item from another")
 
