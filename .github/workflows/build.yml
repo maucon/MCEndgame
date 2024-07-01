@@ -55,5 +55,5 @@ jobs:
       - name: Call Discord Webhook
         run: |
           curl -F "payload_json={\"content\":\"\"}" \
-               -F "file=@${{ env.JAR_FILE }}" 
+               -F "file=@${{ env.JAR_FILE }}" \
                ${{ secrets.DISCORD_WEBHOOK_URL }}
