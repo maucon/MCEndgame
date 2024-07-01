@@ -13,15 +13,12 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier
-import java.util.logging.Logger
 import kotlin.math.abs
 
 private const val EXECUTE_DAMAGE = 99999.0
 
 @Component
-class DamageService(
-    private val logger: Logger
-) : Listener {
+class DamageService : Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {
         val damageEvent = createDamageEvent(event) ?: return
