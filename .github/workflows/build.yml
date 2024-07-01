@@ -47,11 +47,6 @@ jobs:
           name: "MCEndgame-${{ github.ref_name }}"
           path: ./artifact
 
-      - name: Unzip Artifact
-        run: |
-          sudo apt-get install unzip
-          unzip ./artifact/* -d ./artifact
-
       - name: Find JAR File
         run: |
           JAR_FILE=$(find ./artifact -name "*.jar" | head -n 1)
