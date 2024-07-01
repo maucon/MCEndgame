@@ -25,8 +25,9 @@ class CommandHelper(
     }
 
     fun getPlayer(commandExecutor: Player, playerName: String): OfflinePlayer? {
-        val player = PluginUtil.getOfflinePlayers()
-            .find { it.name == playerName }
+        val player =
+            PluginUtil.getOnlinePlayers().find { it.name == playerName }
+                ?: PluginUtil.getOfflinePlayers().find { it.name == playerName }
 
         if (player != null) return player
 
