@@ -38,8 +38,9 @@ jobs:
 
   notify:
     needs: build
-    runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    environment: discord-publish
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@v4
