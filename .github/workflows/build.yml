@@ -16,14 +16,13 @@ jobs:
           distribution: 'temurin'
 
       - name: Cache Gradle Packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Grant Gradle Permissions
         run: chmod +x ./gradlew
@@ -37,16 +36,25 @@ jobs:
           name: "MCEndgame-${{ github.ref_name }}"
           path: build/libs/*.jar
 
-  discord-notification:
+  notify:
     needs: build
     if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     environment: discord-publish
     steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: "MCEndgame-${{ github.ref_name }}"
+          path: ./artifact
+
+      - name: Find JAR File
+        run: |
+          JAR_FILE=$(find ./artifact -name "*.jar" | head -n 1)
+          echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
+
       - name: Call Discord Webhook
         run: |
-          BUILD_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          curl -H "Content-Type: application/json" \
-               -X POST \
-               -d "{\"content\": \"$BUILD_URL\"}" \
+          curl -F "payload_json={\"content\":\"\"}" \
+               -F "file=@${{ env.JAR_FILE }}" \
                ${{ secrets.DISCORD_WEBHOOK_URL }}
