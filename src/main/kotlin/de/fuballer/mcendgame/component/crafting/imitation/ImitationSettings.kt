@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 object ImitationSettings {
-    private val BASE_ITEM = Material.STICK
+    private val BASE_ITEM = Material.SLIME_BALL
     private val ITEM_NAME = ChatColor.WHITE.toString() + "Orb of Imitation"
     private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Duplicate an item")
 

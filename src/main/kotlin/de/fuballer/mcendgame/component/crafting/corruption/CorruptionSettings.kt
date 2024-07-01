@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
 object CorruptionSettings {
-    private val BASE_ITEM = Material.STICK
+    private val BASE_ITEM = Material.SLIME_BALL
     private val ITEM_NAME = ChatColor.DARK_RED.toString() + "Orb of Corruption"
     private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Corrupt an item, modifying it unpredictably")
     private val ITEM_LORE_DOUBLE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Corrupt an item, modifying it unpredictably. Twice!")

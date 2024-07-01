@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 object TransfigurationSettings {
-    private val BASE_ITEM = Material.STICK
+    private val BASE_ITEM = Material.SLIME_BALL
     private val ITEM_NAME = ChatColor.DARK_GREEN.toString() + "Orb of Transfiguration"
     private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Shuffle an item's attribute rolls")
 
