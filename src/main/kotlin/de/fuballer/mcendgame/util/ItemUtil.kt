@@ -20,8 +20,11 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.ItemMeta
+import java.text.DecimalFormat
 import java.util.*
 import kotlin.random.Random
+
+private val DECIMAL_FORMAT = DecimalFormat("#.##")
 
 object ItemUtil {
     fun isVanillaItem(item: ItemStack): Boolean {
@@ -169,24 +172,22 @@ object ItemUtil {
         val enchantments = item.enchantments
         val updateEnchantmentAttributes = enchantments.isNotEmpty()
 
-        if (updateBaseAttributes || updateEnchantmentAttributes) {
-            if (updateBaseAttributes) {
-                baseAttributes.forEach {
-                    val attributeLine = getBaseAttributeLine(it)
-                    lore.add(attributeLine)
-                }
-            }
-            if (updateEnchantmentAttributes) {
-                for (enchantment in enchantments) {
-                    val enchantmentAttributeLine = getEnchantmentAttributeLine(enchantment.key, enchantment.value) ?: continue
-                    lore.add(enchantmentAttributeLine)
-                }
-            }
-
-            if (lore.isNotEmpty()) {
-                lore.add(0, slotLore)
+        if (updateBaseAttributes) {
+            baseAttributes.forEach {
+                val attributeLine = getBaseAttributeLine(it)
+                lore.add(attributeLine)
             }
         }
+        if (updateEnchantmentAttributes) {
+            for (enchantment in enchantments) {
+                val enchantmentAttributeLine = getEnchantmentAttributeLine(enchantment.key, enchantment.value) ?: continue
+                lore.add(enchantmentAttributeLine)
+            }
+        }
+        if (lore.isNotEmpty()) {
+            lore.add(0, slotLore)
+        }
+
         if (customAttributes.isNotEmpty()) {
             lore.add("")
             lore.add(Equipment.GENERIC_SLOT_LORE)
@@ -238,14 +239,14 @@ object ItemUtil {
         level: Int,
     ): String? {
         val line = when (enchantment) {
-            Enchantment.DEPTH_STRIDER -> "+${level / 3.0} Water Movement Efficiency"
-            Enchantment.SWIFT_SNEAK -> "+${0.15 * level} Sneaking Speed"
+            Enchantment.DEPTH_STRIDER -> "+${DECIMAL_FORMAT.format(level / 3.0)} Water Movement Efficiency"
+            Enchantment.SWIFT_SNEAK -> "+${DECIMAL_FORMAT.format(0.15 * level)} Sneaking Speed"
             Enchantment.AQUA_AFFINITY -> "+${400 * level}% Submerged Mining Speed"
             Enchantment.RESPIRATION -> "+${1 * level} Oxygen Bonus"
-            Enchantment.SWEEPING_EDGE -> "+${level / (level + 1)} Sweeping Damage Ratio"
+            Enchantment.SWEEPING_EDGE -> "+${DECIMAL_FORMAT.format(level / (level + 1))} Sweeping Damage Ratio"
             Enchantment.EFFICIENCY -> "+${2 + (1 until level).sumOf { 1 + 2 * it }} Mining Efficiency"
             Enchantment.FIRE_PROTECTION -> "-${15 * level}% Burning Time"
-            Enchantment.BLAST_PROTECTION -> "+${0.15 * level} Explosion Knockback Resistance"
+            Enchantment.BLAST_PROTECTION -> "+${DECIMAL_FORMAT.format(0.15 * level)} Explosion Knockback Resistance"
             else -> return null
         }
 
