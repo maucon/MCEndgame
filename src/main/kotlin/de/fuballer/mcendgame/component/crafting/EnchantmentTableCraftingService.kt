@@ -4,13 +4,14 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.enchantment.EnchantItemEvent
 
 @Component
 class EnchantmentTableCraftingService : Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     fun on(event: EnchantItemEvent) {
         if (event.item.getCustomAttributes() == null) return
 
