@@ -199,11 +199,11 @@ object ItemUtil {
                 lore.add(attributeLine)
             }
         }
-        if (item.isUnmodifiable()) {
-            lore.add(CorruptionSettings.CORRUPTION_TAG_LORE)
-        }
         if (lore.isNotEmpty()) {
             lore.add(0, "")
+        }
+        if (item.isUnmodifiable()) {
+            lore.add(0, CorruptionSettings.CORRUPTION_TAG_LORE)
         }
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
@@ -243,7 +243,7 @@ object ItemUtil {
             Enchantment.SWIFT_SNEAK -> "+${DECIMAL_FORMAT.format(0.15 * level)} Sneaking Speed"
             Enchantment.AQUA_AFFINITY -> "+${400 * level}% Submerged Mining Speed"
             Enchantment.RESPIRATION -> "+${1 * level} Oxygen Bonus"
-            Enchantment.SWEEPING_EDGE -> "+${DECIMAL_FORMAT.format(level / (level + 1))} Sweeping Damage Ratio"
+            Enchantment.SWEEPING_EDGE -> "+${DECIMAL_FORMAT.format(level / (level + 1.0))} Sweeping Damage Ratio"
             Enchantment.EFFICIENCY -> "+${2 + (1 until level).sumOf { 1 + 2 * it }} Mining Efficiency"
             Enchantment.FIRE_PROTECTION -> "-${15 * level}% Burning Time"
             Enchantment.BLAST_PROTECTION -> "+${DECIMAL_FORMAT.format(0.15 * level)} Explosion Knockback Resistance"
