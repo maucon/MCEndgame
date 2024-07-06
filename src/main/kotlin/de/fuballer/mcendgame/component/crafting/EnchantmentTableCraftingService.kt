@@ -10,7 +10,6 @@ import org.bukkit.event.enchantment.EnchantItemEvent
 
 @Component
 class EnchantmentTableCraftingService : Listener {
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     fun on(event: EnchantItemEvent) {
         if (event.item.getCustomAttributes() == null) return

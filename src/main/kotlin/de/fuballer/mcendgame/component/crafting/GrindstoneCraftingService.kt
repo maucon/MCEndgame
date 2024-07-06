@@ -13,7 +13,6 @@ import org.bukkit.inventory.GrindstoneInventory
 
 @Component
 class GrindstoneCraftingService : Listener {
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     fun on(event: InventoryClickEvent) {
         val inventory = event.inventory as? GrindstoneInventory ?: return
