@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.dungeon.generation
 import com.fastasyncworldedit.core.registry.state.PropertyKey
 import com.sk89q.worldedit.bukkit.BukkitWorld
 import com.sk89q.worldedit.extent.clipboard.Clipboard
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat
 import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.math.transform.AffineTransform
 import de.fuballer.mcendgame.component.dungeon.generation.data.PlaceableBlock
@@ -31,20 +31,20 @@ class DungeonBuilderService {
         world: World,
         tile: PlaceableTile
     ) {
-        val (tileData, position, rotation, extraBlocks) = tile
+        val (tileData, format, position, rotation, extraBlocks) = tile
         val location = Location(world, position.x, position.y, position.z)
 
-        placeTile(tileData, world, location, rotation, extraBlocks)
+        placeTile(tileData, format, world, location, rotation, extraBlocks)
     }
 
     private fun placeTile(
         tileData: ByteArray,
+        format: ClipboardFormat,
         world: World,
         location: Location,
         rotation: Double,
         extraBlocks: List<PlaceableBlock>
     ) {
-        val format = ClipboardFormats.findByAlias("schem")!!
         val clipboard = format.load(tileData.inputStream())
         val transform = AffineTransform().rotateY(rotation)
 
