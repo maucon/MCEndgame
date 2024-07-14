@@ -186,6 +186,7 @@ object ItemUtil {
         }
         if (lore.isNotEmpty()) {
             lore.add(0, slotLore)
+            lore.add(0, "")
         }
 
         if (customAttributes.isNotEmpty()) {
@@ -198,9 +199,6 @@ object ItemUtil {
                 val attributeLine = getCustomAttributeLine(it)
                 lore.add(attributeLine)
             }
-        }
-        if (lore.isNotEmpty()) {
-            lore.add(0, "")
         }
         if (item.isUnmodifiable()) {
             lore.add(0, CorruptionSettings.CORRUPTION_TAG_LORE)
