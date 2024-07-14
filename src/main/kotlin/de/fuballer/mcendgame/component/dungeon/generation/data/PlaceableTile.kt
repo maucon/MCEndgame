@@ -1,9 +1,11 @@
 package de.fuballer.mcendgame.component.dungeon.generation.data
 
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat
 import org.bukkit.util.Vector
 
 data class PlaceableTile(
     val tileData: ByteArray,
+    val format: ClipboardFormat,
     val position: Vector,
     val rotation: Double,
     val extraBlocks: List<PlaceableBlock> = listOf()

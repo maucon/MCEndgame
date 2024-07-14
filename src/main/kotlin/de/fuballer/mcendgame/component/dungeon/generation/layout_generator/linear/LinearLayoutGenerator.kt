@@ -39,7 +39,7 @@ class LinearLayoutGenerator(
         complexityLimit = calculateComplexityLimit()
         branchComplexityLimit = calculateBranchComplexityLimit()
 
-        val startTile = PlaceableTile(startRoomType.schematicData, Vector(0, 0, 0), 0.0)
+        val startTile = PlaceableTile(startRoomType.schematicData, startRoomType.format, Vector(0, 0, 0), 0.0)
         val tiles = mutableListOf(startTile)
 
         val spawnLocations = mutableListOf<SpawnLocation>()
@@ -140,7 +140,7 @@ class LinearLayoutGenerator(
                 extraBlocks.add(post)
             }
 
-            val tile = PlaceableTile(chosenRoomType.schematicData, offsetRoomOrigin, rotation, extraBlocks)
+            val tile = PlaceableTile(chosenRoomType.schematicData, chosenRoomType.format, offsetRoomOrigin, rotation, extraBlocks)
             tiles.add(tile)
 
             addAdjustSpawnLocations(chosenRoomType, offsetRoomOrigin, rotation, spawnLocations, bossSpawnLocations)

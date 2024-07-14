@@ -1,10 +1,12 @@
 package de.fuballer.mcendgame.component.dungeon.generation.layout_generator.linear
 
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat
 import de.fuballer.mcendgame.component.dungeon.generation.data.SpawnLocation
 import org.bukkit.util.Vector
 
 data class RoomType(
     val schematicData: ByteArray,
+    val format: ClipboardFormat,
     val size: Vector, // 8 blocks (inclusive) -> 7 size
     val startLocation: SpawnLocation?,
     val doors: List<Door>,

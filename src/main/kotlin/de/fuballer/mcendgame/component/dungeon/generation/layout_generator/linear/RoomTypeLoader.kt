@@ -9,6 +9,7 @@ import de.fuballer.mcendgame.component.dungeon.generation.data.SpawnLocation
 import de.fuballer.mcendgame.util.VectorUtil
 import org.bukkit.util.Vector
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 private val DOOR_MARKER_BLOCK = BlockTypes.BLACK_WOOL!!.id()
 private val MONSTER_MARKER_BLOCK = BlockTypes.WHITE_WOOL!!.id()
@@ -18,9 +19,10 @@ private val START_PORTAL_MARKER_BLOCK = BlockTypes.GREEN_WOOL!!.id()
 object RoomTypeLoader {
     fun load(schematicPath: String): RoomType {
         val fullSchematicPath = DungeonGenerationSettings.getFullSchematicPath(schematicPath)
-        val inputStream = javaClass.getResourceAsStream(fullSchematicPath)!!
+        val schematic = File(fullSchematicPath)
 
-        val format = ClipboardFormats.findByAlias("schem")!!
+        val inputStream = schematic.inputStream()
+        val format = ClipboardFormats.findByFile(schematic)!!
         val clipboard = format.load(inputStream)
 
         val size = clipboard.dimensions.subtract(1, 1, 1)
@@ -34,6 +36,7 @@ object RoomTypeLoader {
 
         return RoomType(
             cleanSchematicData,
+            format,
             VectorUtil.fromBlockVector3(size),
             locations.startLocation?.let { SpawnLocation(it, -90.0) },
             locations.doors,
