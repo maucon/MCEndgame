@@ -41,6 +41,8 @@ object BlockInteractionSettings {
         Material.SPORE_BLOSSOM,
         Material.KELP_PLANT,
         Material.SUGAR_CANE,
+        Material.BAMBOO,
+        Material.BAMBOO_SAPLING,
 
         Material.BRAIN_CORAL,
         Material.BUBBLE_CORAL,

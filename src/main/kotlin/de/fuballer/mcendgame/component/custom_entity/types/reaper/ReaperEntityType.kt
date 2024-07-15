@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.custom_entity.types.reaper
 
 import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplyDarknessAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplySpeedAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ClonesAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.FlameBlastAbility
@@ -30,5 +31,6 @@ object ReaperEntityType : CustomEntityType {
         RandomOption(25, ApplySpeedAbility),
         RandomOption(25, FlameBlastAbility),
         RandomOption(25, ClonesAbility),
+        RandomOption(10, ApplyDarknessAbility),
     )
 }

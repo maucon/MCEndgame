@@ -28,6 +28,6 @@ object ElfDuelistEntityType : CustomEntityType {
         RandomOption(45, SidestepAbility),
         RandomOption(15, KnockbackAbility),
         RandomOption(5, StompAbility),
-        RandomOption(10, ApplyDarknessAbility),
+        RandomOption(5, ApplyDarknessAbility),
     )
 }
