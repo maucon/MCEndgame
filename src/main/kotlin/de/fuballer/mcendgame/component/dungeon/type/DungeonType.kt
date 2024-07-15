@@ -35,13 +35,13 @@ enum class DungeonType(
         ),
         listOf(
             RandomOption(50, ZombieEntityType),
-            RandomOption(50, SkeletonEntityType),
+            RandomOption(25, SkeletonEntityType),
             RandomOption(30, HuskEntityType),
-            RandomOption(30, StrayEntityType),
+            RandomOption(20, StrayEntityType),
             RandomOption(20, MeleeSkeletonEntityType),
             RandomOption(20, PiglinBruteEntityType),
             RandomOption(10, WitherSkeletonEntityType),
-            RandomOption(10, BoggedEntityType),
+            RandomOption(7, BoggedEntityType),
             RandomOption(5, WitchEntityType),
         ),
         listOf(

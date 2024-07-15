@@ -12,13 +12,15 @@ import de.fuballer.mcendgame.util.random.SortableRandomOption
 object EquipmentGenerationSettings {
     const val ATTRIBUTE_EXPONENT_TIER_SCALING = .05
     const val ATTRIBUTE_EXPONENT_TIER_OFFSET = 10
+    const val MIN_MAX_ROLL = .5
+    const val MAX_ROLL_INC_PER_TIER = (1 - MIN_MAX_ROLL) / ATTRIBUTE_EXPONENT_TIER_OFFSET
 
     val STAT_AMOUNTS = listOf(
         SortableRandomOption(5000, 0, 0),
         SortableRandomOption(3000, 1, 1),
-        SortableRandomOption(1000, 2, 2),
-        SortableRandomOption(250, 3, 3),
-        SortableRandomOption(50, 4, 4),
+        SortableRandomOption(800, 2, 2),
+        SortableRandomOption(150, 3, 3),
+        SortableRandomOption(25, 4, 4),
         SortableRandomOption(1, 5, 5),
     )
 
