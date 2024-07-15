@@ -21,11 +21,11 @@ class MoreDamageAgainstFullLifeEffectService : Listener {
         val currentHealth = event.damaged.health
         if (maxHealth > currentHealth + 0.1) return
 
-        spawnParticles(event.damaged)
-
         moreDamageAttributes.forEach {
             event.moreDamage.add(it)
         }
+
+        spawnParticles(event.damaged)
     }
 
     private fun spawnParticles(entity: LivingEntity) {
@@ -33,7 +33,7 @@ class MoreDamageAgainstFullLifeEffectService : Listener {
         val dustOptions = Particle.DustOptions(Color.fromRGB(255, 50, 50), 1.0f)
 
         entity.world.spawnParticle(
-            Particle.DUST_PLUME,
+            Particle.DUST,
             location.x, location.y + 1.3, location.z,
             25, 0.2, 0.3, 0.2, 0.01, dustOptions
         )
