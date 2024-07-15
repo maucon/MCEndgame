@@ -28,13 +28,12 @@ class HealOnBlockEffectService : Listener {
         if (isHealOnBlockOnCooldown(player)) return
         player.setHealOnBlockActivation(System.currentTimeMillis())
 
-        spawnParticles(player)
-
         val healOnBlockAttribute = healOnBlockAttributes.sum()
         val maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
         val amount = maxHealth * healOnBlockAttribute
-
         player.heal(amount)
+
+        spawnParticles(player)
     }
 
     private fun isHealOnBlockOnCooldown(player: Player): Boolean {
@@ -47,7 +46,7 @@ class HealOnBlockEffectService : Listener {
         val dustOptions = Particle.DustOptions(Color.fromRGB(50, 255, 50), 1.0f)
 
         player.world.spawnParticle(
-            Particle.DUST_PLUME,
+            Particle.DUST,
             location.x, location.y + 1, location.z,
             15, 0.2, 0.2, 0.2, 0.01, dustOptions
         )
