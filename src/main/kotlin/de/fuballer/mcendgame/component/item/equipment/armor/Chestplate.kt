@@ -86,8 +86,8 @@ enum class Chestplate(
         RandomOption(30, ItemEnchantment.PROTECTION_2),
         RandomOption(20, ItemEnchantment.PROTECTION_3),
         RandomOption(10, ItemEnchantment.PROTECTION_4),
-        RandomOption(8, ItemEnchantment.THORNS_1),
-        RandomOption(6, ItemEnchantment.THORNS_2),
-        RandomOption(4, ItemEnchantment.THORNS_3),
+        RandomOption(3, ItemEnchantment.THORNS_1),
+        RandomOption(2, ItemEnchantment.THORNS_2),
+        RandomOption(1, ItemEnchantment.THORNS_3),
     )
 }

@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.custom_entity.types.wendigo
 
 import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
+import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplyDarknessAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.ApplySpeedAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.PoisonCloudAbility
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.SummonVinesAbility
@@ -30,5 +31,6 @@ object WendigoEntityType : CustomEntityType {
         RandomOption(15, ApplySpeedAbility),
         RandomOption(25, PoisonCloudAbility),
         RandomOption(25, SummonVinesAbility),
+        RandomOption(10, ApplyDarknessAbility),
     )
 }

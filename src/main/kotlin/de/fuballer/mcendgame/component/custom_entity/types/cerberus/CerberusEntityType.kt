@@ -30,7 +30,7 @@ object CerberusEntityType : CustomEntityType {
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(35, FireCascadeAbility),
         RandomOption(10, KnockbackAbility),
-        RandomOption(25, ApplyDarknessAbility),
+        RandomOption(15, ApplyDarknessAbility),
         RandomOption(35, FlameBlastAbility),
     )
 }

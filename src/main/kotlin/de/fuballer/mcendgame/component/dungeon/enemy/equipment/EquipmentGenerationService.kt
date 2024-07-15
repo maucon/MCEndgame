@@ -146,7 +146,11 @@ class EquipmentGenerationService(
 
     private fun calculateAttributePercentageRoll(mapTier: Int): Double {
         val random = Random.nextDouble()
-        if (mapTier <= EquipmentGenerationSettings.ATTRIBUTE_EXPONENT_TIER_OFFSET) return random
+
+        if (mapTier < EquipmentGenerationSettings.ATTRIBUTE_EXPONENT_TIER_OFFSET) {
+            val maxRoll = EquipmentGenerationSettings.MIN_MAX_ROLL + mapTier * EquipmentGenerationSettings.MAX_ROLL_INC_PER_TIER
+            return random * maxRoll
+        }
 
         return 1 - random.pow(1 + EquipmentGenerationSettings.ATTRIBUTE_EXPONENT_TIER_SCALING * (mapTier - EquipmentGenerationSettings.ATTRIBUTE_EXPONENT_TIER_OFFSET))
     }
