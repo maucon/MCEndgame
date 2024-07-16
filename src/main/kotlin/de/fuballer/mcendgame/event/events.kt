@@ -124,3 +124,11 @@ class DungeonGeneratedEvent(
     val world: World,
     val respawnLocation: Location
 ) : HandleableEvent()
+
+/**
+ * Thrown whenever an entity gets healed
+ */
+class EntityHealEvent(
+    val entity: LivingEntity,
+    val amount: Double
+) : HandleableEvent()

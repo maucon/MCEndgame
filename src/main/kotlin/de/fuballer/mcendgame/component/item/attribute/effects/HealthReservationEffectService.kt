@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.item.attribute.effects
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.event.EntityHealEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
@@ -20,15 +21,19 @@ class HealthReservationEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: EntityRegainHealthEvent) {
         val entity = event.entity as? LivingEntity ?: return
+        val finalHeal = getFinalHealAmount(entity, event.amount)
 
-        val unreservedHealth = getUnreservedHealth(entity)
-
-        val finalHeal = min(max(unreservedHealth - entity.health, 0.0), event.amount)
         event.amount = finalHeal
 
-        if (finalHeal > 0) return
+        if (finalHeal <= 0) {
+            event.cancel()
+        }
+    }
 
-        event.cancel()
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    fun on(event: EntityHealEvent) {
+        val finalHeal = getFinalHealAmount(event.entity, event.amount)
+        event.entity.health += finalHeal
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -50,5 +55,10 @@ class HealthReservationEffectService : Listener {
         val unreservedHealthPercentage = 1 - healthReservationAttributes.sum()
 
         return maxHealth * unreservedHealthPercentage
+    }
+
+    private fun getFinalHealAmount(entity: LivingEntity, amount: Double): Double {
+        val unreservedHealth = getUnreservedHealth(entity)
+        return min(max(unreservedHealth - entity.health, 0.0), amount)
     }
 }
