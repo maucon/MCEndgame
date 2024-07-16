@@ -31,8 +31,8 @@ class HealOnBlockEffectService : Listener {
         val healOnBlockAttribute = healOnBlockAttributes.sum()
         val maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
         val amount = maxHealth * healOnBlockAttribute
-        player.heal(amount)
 
+        player.heal(amount)
         spawnParticles(player)
     }
 

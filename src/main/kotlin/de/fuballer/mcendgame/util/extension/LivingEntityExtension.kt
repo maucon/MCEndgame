@@ -9,15 +9,11 @@ import de.fuballer.mcendgame.event.EntityHealEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import org.bukkit.entity.LivingEntity
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 
 object LivingEntityExtension {
-    fun LivingEntity.heal(
-        amount: Double,
-        reason: RegainReason = RegainReason.CUSTOM
-    ) {
+    fun LivingEntity.heal(amount: Double) {
         val event = EntityHealEvent(this, amount)
         EventGateway.apply(event)
     }
