@@ -10,8 +10,10 @@ import org.bukkit.event.Listener
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
+const val SLOW_RANGE = 4.0
+
 @Component
-class SlowWhenHitEffectService : Listener {
+class SlowOnHitEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
         val slowOnHitAttributes = event.damagerAttributes[AttributeType.SLOW_ON_HIT] ?: return
@@ -20,9 +22,12 @@ class SlowWhenHitEffectService : Listener {
         val duration = (slowOnHitAttribute * 20).toInt()
         val slowEffect = PotionEffect(PotionEffectType.SLOWNESS, duration, 1, true)
 
-        event.damaged.getNearbyEntities(4.0, 4.0, 4.0)
+        val damaged = event.damaged
+
+        damaged.addPotionEffect(slowEffect)
+        damaged.getNearbyEntities(SLOW_RANGE, SLOW_RANGE, SLOW_RANGE)
             .filter { it != event.damager }
-            .filter { !event.isDungeonWorld || event.damaged.isEnemy() }
+            .filter { !event.isDungeonWorld || it.isEnemy() }
             .filterIsInstance<LivingEntity>()
             .forEach { it.addPotionEffect(slowEffect) }
     }
