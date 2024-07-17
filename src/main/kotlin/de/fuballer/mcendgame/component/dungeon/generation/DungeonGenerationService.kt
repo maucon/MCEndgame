@@ -53,7 +53,7 @@ class DungeonGenerationService(
         val event = DungeonGeneratedEvent(world, leaveLocation)
         EventGateway.apply(event)
 
-        return startLocation
+        return addOffset(startLocation)
     }
 
     private fun generateEnemies(
@@ -80,5 +80,10 @@ class DungeonGenerationService(
             .map { VectorUtil.toLocation(world, it.location, it.rotation) }
 
         bossGenerationService.generate(mapTier, bossEntityTypes, world, bossSpawnLocations, leaveLocation)
+    }
+
+    private fun addOffset(startLocation: Location): Location {
+        val offset = startLocation.direction.multiply(0.3)
+        return startLocation.clone().add(offset)
     }
 }
