@@ -12,14 +12,16 @@ object ProjectileDamageTotemType : TotemType {
     override val displayName = "Totem of Impact"
 
     override fun getValues(tier: TotemTier) = when (tier) {
-        TotemTier.COMMON -> listOf(15.0)
-        TotemTier.UNCOMMON -> listOf(30.0)
-        TotemTier.RARE -> listOf(45.0)
-        TotemTier.LEGENDARY -> listOf(75.0)
+        TotemTier.COMMON -> listOf(0.15)
+        TotemTier.UNCOMMON -> listOf(0.30)
+        TotemTier.RARE -> listOf(0.45)
+        TotemTier.LEGENDARY -> listOf(0.75)
     }
 
     override fun getLore(tier: TotemTier): List<String> {
-        val values = getValues(tier)
+        val (increasedDamage) = getValues(tier)
+        val values = listOf(increasedDamage * 100)
+
         return TotemSettings.formatLore(LORE_FORMAT, values)
     }
 }
