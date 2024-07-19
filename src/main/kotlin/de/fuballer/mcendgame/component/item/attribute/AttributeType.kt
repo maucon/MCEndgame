@@ -93,35 +93,35 @@ enum class AttributeType(
 
     DISABLE_MELEE({ " Cannot deal Melee Damage" }),
 
-    DODGE_CHANCE({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% chance to dodge Hits" }),
+    DODGE_CHANCE({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% Dodge" }),
 
     TWINFIRE_DUAL_WIELD({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more Damage while Dual Wielding Twinfire" }),
 
-    ABSORPTION_ON_HIGH_DAMAGE_TAKEN({ " When taking at least ${DECIMAL_FORMAT_BASE.format(it)} Damage, gain Absorption II" }),
+    ABSORPTION_ON_HIGH_DAMAGE_TAKEN({ " Gain Absorption II when taking ${DECIMAL_FORMAT_BASE.format(it)} Damage" }),
 
     REGEN_ON_DAMAGE_TAKEN({ " Gain Regeneration II for ${DECIMAL_FORMAT_BASE.format(it)}s when damaged" }),
 
     STEALTH({ " Cannot be targeted by Enemies facing away" }),
 
-    BACKSTAB({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more Damage with Attacks from behind" }),
+    BACKSTAB({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more Damage with Backstabs" }),
 
-    ADDITIONAL_ARROWS({ " Shoot 2 additional Arrows dealing ${DECIMAL_FORMAT_BASE.format(it * 100)}% Damage" }),
+    ADDITIONAL_ARROWS({ " +2 Arrows with ${DECIMAL_FORMAT_BASE.format(it * 100)}% Damage" }),
 
-    EFFECT_GAIN({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% chance to gain a random positive Effect on kill" }),
+    EFFECT_GAIN({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% Chance to gain a positive Effect on Kill" }),
 
-    MORE_DAMAGE_AGAINST_FULL_LIFE({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more Damage against full life Enemies" }),
+    MORE_DAMAGE_AGAINST_FULL_LIFE({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more Damage against Full Life Enemies" }),
 
-    HEAL_ON_BLOCK({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Health healed on block, with a Cooldown of 5 seconds" }),
+    HEAL_ON_BLOCK({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Heal on Block (5s Cooldown)" }),
 
     INCREASED_DAMAGE_PER_MISSING_HEART({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Damage per missing Heart" }),
 
-    SLOW_ON_HIT({ " Affect nearby Enemies with Slowness II for ${DECIMAL_FORMAT_BASE.format(it)} seconds on hit" }),
+    SLOW_ON_HIT({ " Slow nearby Enemies for ${DECIMAL_FORMAT_BASE.format(it)}s on Hit" }),
 
-    TAUNT({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% chance to taunt an Enemy on hit" }),
+    TAUNT({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Taunt on Hit" }),
 
-    CRITICAL_DAMAGE({ " Critical strikes deal ${DECIMAL_FORMAT_BASE.format(it * 100)}% more Damage" }),
+    CRITICAL_DAMAGE({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more Damage with Critical Hits" }),
 
-    CRITICAL_EXECUTE({ " Critical strikes execute Enemies below ${DECIMAL_FORMAT_BASE.format(it * 100)}% Health" }),
+    CRITICAL_EXECUTE({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% Health Execute on Critical Hits" }),
 
     RANDOMIZED_DAMAGE_TAKEN({ " Damage taken is randomized between 25% and ${DECIMAL_FORMAT_BASE.format(it * 100)}%" }),
 
@@ -131,5 +131,5 @@ enum class AttributeType(
 
     REDUCED_DAMAGE_TAKEN({ "-${DECIMAL_FORMAT_BASE.format(it * 100)}% Damage taken" }),
 
-    INCREASED_DAMAGE_DEALT({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Damage" }),
+    INCREASED_DAMAGE({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Damage" }),
 }

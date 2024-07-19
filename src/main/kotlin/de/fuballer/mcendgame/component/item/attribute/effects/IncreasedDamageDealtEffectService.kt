@@ -11,7 +11,7 @@ import org.bukkit.event.Listener
 class IncreasedDamageDealtEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        val increasedDamageDealtAttributes = event.damagedAttributes[AttributeType.INCREASED_DAMAGE_DEALT] ?: return
+        val increasedDamageDealtAttributes = event.damagedAttributes[AttributeType.INCREASED_DAMAGE] ?: return
         event.increasedDamage.add(increasedDamageDealtAttributes.sum())
     }
 }

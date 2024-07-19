@@ -26,7 +26,7 @@ enum class Tool(
             RandomOption(10, RollableAttribute(AttributeType.INCREASED_PROJECTILE_DAMAGE, 0.35)),
             RandomOption(10, RollableAttribute(AttributeType.INCREASED_ARROW_VELOCITY, 0.3)),
             RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
-            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE_DEALT, 0.08))
+            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.08))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -58,7 +58,7 @@ enum class Tool(
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
             RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
-            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE_DEALT, 0.08))
+            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.08))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -93,7 +93,7 @@ enum class Tool(
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.2)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
             RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
-            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE_DEALT, 0.08))
+            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.08))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -182,7 +182,7 @@ enum class Tool(
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
             RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
-            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE_DEALT, 0.08))
+            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.08))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),

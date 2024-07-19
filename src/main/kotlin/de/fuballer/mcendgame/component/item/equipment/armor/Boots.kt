@@ -63,7 +63,7 @@ enum class Boots(
         RandomOption(10, RollableAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1)),
         RandomOption(10, RollableAttribute(AttributeType.MOVEMENT_SPEED, 0.015)),
         RandomOption(8, RollableAttribute(AttributeType.REDUCED_DAMAGE_TAKEN, 0.03)),
-        RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE_DEALT, 0.05)),
+        RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.05)),
         RandomOption(7, RollableAttribute(AttributeType.DODGE_CHANCE, 0.05))
     )
 

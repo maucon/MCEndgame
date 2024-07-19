@@ -14,5 +14,6 @@ object AbyssalMaskItemType : CustomItemType {
     override val attributes = listOf(
         RollableAttribute(AttributeType.NEGATIVE_EFFECT_IMMUNITY),
         RollableAttribute(AttributeType.DODGE_CHANCE, 0.05, 0.15),
+        RollableAttribute(AttributeType.REDUCED_DAMAGE_TAKEN, 0.03, 0.05),
     )
 }

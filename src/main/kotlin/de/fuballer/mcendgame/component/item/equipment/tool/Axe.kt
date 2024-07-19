@@ -64,7 +64,7 @@ enum class Axe(
         RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
         RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
         RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
-        RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE_DEALT, 0.08))
+        RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.08))
     )
 
     override val rollableEnchants = listOf(

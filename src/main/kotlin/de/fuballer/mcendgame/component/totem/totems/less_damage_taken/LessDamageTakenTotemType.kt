@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.totem.totems.reduced_damage_taken
+package de.fuballer.mcendgame.component.totem.totems.less_damage_taken
 
 import de.fuballer.mcendgame.component.totem.TotemSettings
 import de.fuballer.mcendgame.component.totem.data.TotemTier
@@ -6,9 +6,9 @@ import de.fuballer.mcendgame.component.totem.data.TotemType
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
-object ReducedDamageTakenTotemType : TotemType {
-    private const val LORE_FORMAT = "You take %s%% reduced Damage"
-    override val key: NamespacedKey = PluginUtil.createNamespacedKey("reduced_damage_taken")
+object LessDamageTakenTotemType : TotemType {
+    private const val LORE_FORMAT = "You take %s%% less Damage"
+    override val key: NamespacedKey = PluginUtil.createNamespacedKey("less_damage_taken")
     override val displayName = "Totem of Fortress"
 
     override fun getValues(tier: TotemTier) = when (tier) {

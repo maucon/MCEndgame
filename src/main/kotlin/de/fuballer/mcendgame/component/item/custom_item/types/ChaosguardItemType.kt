@@ -12,7 +12,8 @@ object ChaosguardItemType : CustomItemType {
     override val equipment = Chestplate.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 3.0, 5.0),
+        RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 2.0, 4.0),
+        RollableAttribute(AttributeType.MAX_HEALTH, 1.0, 2.0),
         RollableAttribute(AttributeType.RANDOMIZED_DAMAGE_TAKEN, 1.4, 1.6),
     )
 }
