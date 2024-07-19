@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
 object ReducedDamageTakenTotemType : TotemType {
-    private const val LORE_FORMAT = "You take %s%% reduced damage"
+    private const val LORE_FORMAT = "You take %s%% reduced Damage"
     override val key: NamespacedKey = PluginUtil.createNamespacedKey("reduced_damage_taken")
     override val displayName = "Totem of Fortress"
 

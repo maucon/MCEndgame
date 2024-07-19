@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
 object MaxHealthTotemType : TotemType {
-    private const val LORE_FORMAT = "You have %s more health"
+    private const val LORE_FORMAT = "You have %s more Health"
     override val key: NamespacedKey = PluginUtil.createNamespacedKey("max_health")
     override val displayName = "Totem of Thickness" // name chosen by xX20Erik01Xx
 

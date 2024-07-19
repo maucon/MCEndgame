@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
 object DodgeTotemType : TotemType {
-    private const val LORE_FORMAT = "You gain %s%% chance to dodge hits"
+    private const val LORE_FORMAT = "You gain %s%% chance to dodge Hits"
     override val key: NamespacedKey = PluginUtil.createNamespacedKey("dodge")
     override val displayName = "Totem of Grace"
 

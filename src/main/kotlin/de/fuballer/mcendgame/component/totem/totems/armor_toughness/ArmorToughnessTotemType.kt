@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
 object ArmorToughnessTotemType : TotemType {
-    private const val LORE_FORMAT = "You gain %s additional armor toughness"
+    private const val LORE_FORMAT = "You gain %s additional Armor Toughness"
     override val key: NamespacedKey = PluginUtil.createNamespacedKey("armor_toughness")
     override val displayName = "Totem of Vanguard"
 
