@@ -12,6 +12,8 @@ class ReducedDamageTakenEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
         val reducedDamageTakenAttributes = event.damagedAttributes[AttributeType.REDUCED_DAMAGE_TAKEN] ?: return
-        event.moreDamage.addAll(reducedDamageTakenAttributes.map { -it })
+        val reducedDamage = -reducedDamageTakenAttributes.sum()
+
+        event.moreDamage.add(reducedDamage)
     }
 }

@@ -33,7 +33,7 @@ enum class AttributeType(
         )
     ),
     MOVEMENT_SPEED(
-        { "+${DECIMAL_FORMAT_BASE.format(it * 100)} Movement Speed" },
+        { "+${DECIMAL_FORMAT_PRECISE.format(it * 100)} Movement Speed" },
         VanillaAttributeType(
             Attribute.GENERIC_MOVEMENT_SPEED, AttributeModifier.Operation.ADD_NUMBER
         )
@@ -87,49 +87,49 @@ enum class AttributeType(
         )
     ),
 
-    INCREASED_PROJECTILE_DAMAGE({ " Deal ${DECIMAL_FORMAT_BASE.format(it * 100)}% increased projectile damage" }),
+    INCREASED_PROJECTILE_DAMAGE({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Projectile Damage" }),
 
-    INCREASED_ARROW_VELOCITY({ " Shot arrows have ${DECIMAL_FORMAT_BASE.format(it * 100)}% increased velocity" }),
+    INCREASED_ARROW_VELOCITY({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Arrow Velocity" }),
 
-    DISABLE_MELEE({ " Cannot deal melee damage" }),
+    DISABLE_MELEE({ " Cannot deal Melee Damage" }),
 
-    DODGE_CHANCE({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% chance to dodge hits" }),
+    DODGE_CHANCE({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% chance to dodge Hits" }),
 
-    TWINFIRE_DUAL_WIELD({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more damage while dual wielding Twinfire" }),
+    TWINFIRE_DUAL_WIELD({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more Damage while Dual Wielding Twinfire" }),
 
-    ABSORPTION_ON_HIGH_DAMAGE_TAKEN({ " When taking at least ${DECIMAL_FORMAT_BASE.format(it)} damage, gain Absorption II" }),
+    ABSORPTION_ON_HIGH_DAMAGE_TAKEN({ " When taking at least ${DECIMAL_FORMAT_BASE.format(it)} Damage, gain Absorption II" }),
 
     REGEN_ON_DAMAGE_TAKEN({ " Gain Regeneration II for ${DECIMAL_FORMAT_BASE.format(it)}s when damaged" }),
 
-    STEALTH({ " Cannot be targeted by enemies facing away" }),
+    STEALTH({ " Cannot be targeted by Enemies facing away" }),
 
-    BACKSTAB({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more damage with attacks from behind" }),
+    BACKSTAB({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more Damage with Attacks from behind" }),
 
-    ADDITIONAL_ARROWS({ " Shoot 2 additional arrows dealing ${DECIMAL_FORMAT_BASE.format(it * 100)}% damage" }),
+    ADDITIONAL_ARROWS({ " Shoot 2 additional Arrows dealing ${DECIMAL_FORMAT_BASE.format(it * 100)}% Damage" }),
 
-    EFFECT_GAIN({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% chance to gain a random positive effect on kill" }),
+    EFFECT_GAIN({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% chance to gain a random positive Effect on kill" }),
 
-    MORE_DAMAGE_AGAINST_FULL_LIFE({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more damage against full life enemies" }),
+    MORE_DAMAGE_AGAINST_FULL_LIFE({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% more Damage against full life Enemies" }),
 
-    HEAL_ON_BLOCK({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% health healed on block, with a cooldown of 5 seconds" }),
+    HEAL_ON_BLOCK({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Health healed on block, with a Cooldown of 5 seconds" }),
 
-    INCREASED_DAMAGE_PER_MISSING_HEART({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% increased damage per missing heart" }),
+    INCREASED_DAMAGE_PER_MISSING_HEART({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Damage per missing Heart" }),
 
-    SLOW_ON_HIT({ " Affect nearby enemies with Slowness II for ${DECIMAL_FORMAT_BASE.format(it)} seconds on hit" }),
+    SLOW_ON_HIT({ " Affect nearby Enemies with Slowness II for ${DECIMAL_FORMAT_BASE.format(it)} seconds on hit" }),
 
-    TAUNT({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% chance to taunt an enemy on hit" }),
+    TAUNT({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% chance to taunt an Enemy on hit" }),
 
-    CRITICAL_DAMAGE({ " Critical strikes deal ${DECIMAL_FORMAT_BASE.format(it * 100)}% more damage" }),
+    CRITICAL_DAMAGE({ " Critical strikes deal ${DECIMAL_FORMAT_BASE.format(it * 100)}% more Damage" }),
 
-    CRITICAL_EXECUTE({ " Critical strikes execute enemies below ${DECIMAL_FORMAT_BASE.format(it * 100)}% health" }),
+    CRITICAL_EXECUTE({ " Critical strikes execute Enemies below ${DECIMAL_FORMAT_BASE.format(it * 100)}% Health" }),
 
     RANDOMIZED_DAMAGE_TAKEN({ " Damage taken is randomized between 25% and ${DECIMAL_FORMAT_BASE.format(it * 100)}%" }),
 
-    NEGATIVE_EFFECT_IMMUNITY({ " Immune to negative effects" }),
+    NEGATIVE_EFFECT_IMMUNITY({ " Immune to negative Effects" }),
 
-    HEALTH_RESERVATION({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% health reservation" }),
+    HEALTH_RESERVATION({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Health Reservation" }),
 
-    REDUCED_DAMAGE_TAKEN({ " ${DECIMAL_FORMAT_BASE.format(it * 100)}% reduced damage taken" }),
+    REDUCED_DAMAGE_TAKEN({ "-${DECIMAL_FORMAT_BASE.format(it * 100)}% Damage taken" }),
 
-    INCREASED_DAMAGE_DEALT({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% increased damage" }),
+    INCREASED_DAMAGE_DEALT({ "+${DECIMAL_FORMAT_BASE.format(it * 100)}% Damage" }),
 }
