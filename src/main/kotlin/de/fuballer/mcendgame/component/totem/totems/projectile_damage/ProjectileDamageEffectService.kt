@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 @Component
 class ProjectileDamageEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
-    fun on(event: DamageCalculationEvent) {
+    fun on(event: DamageCalculationEvent) { // FIXME change with #234
         if (!event.isDungeonWorld) return
         if (event.cause != EntityDamageEvent.DamageCause.PROJECTILE) return
 
