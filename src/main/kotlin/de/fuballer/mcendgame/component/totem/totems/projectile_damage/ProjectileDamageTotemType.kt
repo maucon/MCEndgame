@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
 object ProjectileDamageTotemType : TotemType {
-    private const val LORE_FORMAT = "Your projectiles deal %s%% increased damage."
+    private const val LORE_FORMAT = "Your Projectiles deal %s%% increased Damage."
     override val key: NamespacedKey = PluginUtil.createNamespacedKey("projectile_damage")
     override val displayName = "Totem of Impact"
 

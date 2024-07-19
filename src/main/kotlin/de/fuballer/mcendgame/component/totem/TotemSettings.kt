@@ -10,6 +10,12 @@ object TotemSettings {
     const val GIVE_COMMAND_NAME = "give-dungeon-totem"
 
     val TOTEM_BASE_TYPE = Material.TOTEM_OF_UNDYING
+    val TOTEM_ITEM_DUNGEON_DISCLAIMER = listOf(
+        "",
+        "${ChatColor.GRAY}${ChatColor.ITALIC}The totem's effect is only active",
+        "${ChatColor.GRAY}${ChatColor.ITALIC}when in the totem inventory and",
+        "${ChatColor.GRAY}${ChatColor.ITALIC}whilst inside a dungeon."
+    )
 
     val TOTEM_WINDOW_TYPE = InventoryType.HOPPER
     val TOTEM_WINDOW_SIZE = TOTEM_WINDOW_TYPE.defaultSize
@@ -17,7 +23,7 @@ object TotemSettings {
     val CANNOT_CHANGE_TOTEM_MESSAGE = "${ChatColor.RED}You cannot change totems whilst inside a dungeon"
 
     private val LORE_NUMBER_FORMAT = DecimalFormat("0.#")
-    private val LORE_COLOR = "${ChatColor.GRAY}${ChatColor.ITALIC}"
+    private val LORE_COLOR = "${ChatColor.DARK_GREEN}"
 
     fun formatLore(loreFormat: String, values: List<Double>): List<String> {
         val formattedValues = values.map { LORE_NUMBER_FORMAT.format(it) }

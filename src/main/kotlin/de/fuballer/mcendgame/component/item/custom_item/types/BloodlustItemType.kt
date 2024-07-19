@@ -14,5 +14,6 @@ object BloodlustItemType : CustomItemType {
     override val attributes = listOf(
         RollableAttribute(AttributeType.MOVEMENT_SPEED, 0.008, 0.02),
         RollableAttribute(AttributeType.ATTACK_SPEED, 0.1, 0.15),
+        RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.1, 0.15),
     )
 }

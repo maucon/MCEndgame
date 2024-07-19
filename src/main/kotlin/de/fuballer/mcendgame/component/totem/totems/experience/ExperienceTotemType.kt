@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
 object ExperienceTotemType : TotemType {
-    private const val LORE_FORMAT = "You gain %s%% increased experience"
+    private const val LORE_FORMAT = "You gain %s%% increased Experience"
     override val key: NamespacedKey = PluginUtil.createNamespacedKey("experience")
     override val displayName = "Totem of Catalyst"
 

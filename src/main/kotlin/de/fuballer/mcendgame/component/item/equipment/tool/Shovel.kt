@@ -60,10 +60,11 @@ enum class Shovel(
     override val slotDependentAttributes = false
 
     override val rollableAttributes = listOf(
-        RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+        RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 2.0)),
         RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
         RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-        RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+        RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
+        RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.08))
     )
 
     override val rollableEnchants = listOf(

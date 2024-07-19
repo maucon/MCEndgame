@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
 object AttackSpeedTotemType : TotemType {
-    private const val LORE_FORMAT = "You have %s%% increased attack speed"
+    private const val LORE_FORMAT = "You have %s%% increased Attack Speed"
     override val key: NamespacedKey = PluginUtil.createNamespacedKey("attack_speed")
     override val displayName = "Totem of Frenzy"
 

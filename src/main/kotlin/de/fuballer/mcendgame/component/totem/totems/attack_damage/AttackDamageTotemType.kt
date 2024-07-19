@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
 object AttackDamageTotemType : TotemType {
-    private const val LORE_FORMAT = "You deal %s additional base damage\\with melee attacks"
+    private const val LORE_FORMAT = "You gain %s additional Attack Damage"
     override val key: NamespacedKey = PluginUtil.createNamespacedKey("attack_damage")
     override val displayName = "Totem of Force"
 

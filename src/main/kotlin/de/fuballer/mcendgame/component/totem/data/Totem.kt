@@ -14,8 +14,12 @@ data class Totem(
         val itemMeta = item.itemMeta!!
 
         itemMeta.setDisplayName("${tier.color}${type.displayName}")
-        itemMeta.lore = type.getLore(tier)
 
+        val lore = mutableListOf<String>()
+        lore.addAll(type.getLore(tier))
+        lore.addAll(TotemSettings.TOTEM_ITEM_DUNGEON_DISCLAIMER)
+
+        itemMeta.lore = lore
         item.itemMeta = itemMeta
 
         item.setTotem(this)

@@ -13,6 +13,7 @@ object TyrantsReachItemType : CustomItemType {
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
         RollableAttribute(AttributeType.ATTACK_DAMAGE, 2.0, 4.0),
+        RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.1, 0.15),
         RollableAttribute(AttributeType.ATTACK_RANGE, 0.2, 0.5),
     )
 }
