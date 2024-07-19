@@ -12,10 +12,10 @@ object ArmorToughnessTotemType : TotemType {
     override val displayName = "Totem of Vanguard"
 
     override fun getValues(tier: TotemTier) = when (tier) {
-        TotemTier.COMMON -> listOf(3.0)
-        TotemTier.UNCOMMON -> listOf(5.0)
-        TotemTier.RARE -> listOf(8.0)
-        TotemTier.LEGENDARY -> listOf(12.0)
+        TotemTier.COMMON -> listOf(1.5)
+        TotemTier.UNCOMMON -> listOf(2.5)
+        TotemTier.RARE -> listOf(3.5)
+        TotemTier.LEGENDARY -> listOf(5.0)
     }
 
     override fun getLore(tier: TotemTier): List<String> {

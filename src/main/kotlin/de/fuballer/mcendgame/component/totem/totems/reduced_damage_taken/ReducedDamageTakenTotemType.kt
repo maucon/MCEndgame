@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.totem.totems.armor_increase
+package de.fuballer.mcendgame.component.totem.totems.reduced_damage_taken
 
 import de.fuballer.mcendgame.component.totem.TotemSettings
 import de.fuballer.mcendgame.component.totem.data.TotemTier
@@ -6,16 +6,16 @@ import de.fuballer.mcendgame.component.totem.data.TotemType
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.NamespacedKey
 
-object ArmorIncreaseTotemType : TotemType {
-    private const val LORE_FORMAT = "You gain %s%% increased armor"
-    override val key: NamespacedKey = PluginUtil.createNamespacedKey("armor_increase")
+object ReducedDamageTakenTotemType : TotemType {
+    private const val LORE_FORMAT = "You take %s%% reduced damage"
+    override val key: NamespacedKey = PluginUtil.createNamespacedKey("reduced_damage_taken")
     override val displayName = "Totem of Fortress"
 
     override fun getValues(tier: TotemTier) = when (tier) {
-        TotemTier.COMMON -> listOf(0.10)
-        TotemTier.UNCOMMON -> listOf(0.15)
-        TotemTier.RARE -> listOf(0.2)
-        TotemTier.LEGENDARY -> listOf(0.30)
+        TotemTier.COMMON -> listOf(0.4)
+        TotemTier.UNCOMMON -> listOf(0.7)
+        TotemTier.RARE -> listOf(0.10)
+        TotemTier.LEGENDARY -> listOf(0.15)
     }
 
     override fun getLore(tier: TotemTier): List<String> {

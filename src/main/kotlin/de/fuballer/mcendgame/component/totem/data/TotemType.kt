@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.component.totem.data
 
 import de.fuballer.mcendgame.component.totem.totems.armor.ArmorTotemType
-import de.fuballer.mcendgame.component.totem.totems.armor_increase.ArmorIncreaseTotemType
 import de.fuballer.mcendgame.component.totem.totems.armor_toughness.ArmorToughnessTotemType
 import de.fuballer.mcendgame.component.totem.totems.attack_damage.AttackDamageTotemType
 import de.fuballer.mcendgame.component.totem.totems.attack_speed.AttackSpeedTotemType
@@ -10,6 +9,7 @@ import de.fuballer.mcendgame.component.totem.totems.experience.ExperienceTotemTy
 import de.fuballer.mcendgame.component.totem.totems.max_health.MaxHealthTotemType
 import de.fuballer.mcendgame.component.totem.totems.movement_speed.MovementSpeedTotemType
 import de.fuballer.mcendgame.component.totem.totems.projectile_damage.ProjectileDamageTotemType
+import de.fuballer.mcendgame.component.totem.totems.reduced_damage_taken.ReducedDamageTakenTotemType
 import de.fuballer.mcendgame.component.totem.totems.wolf_companion.WolfCompanionTotemType
 import de.fuballer.mcendgame.technical.registry.Keyed
 import de.fuballer.mcendgame.technical.registry.KeyedRegistry
@@ -22,7 +22,7 @@ interface TotemType : Keyed {
     companion object {
         val REGISTRY = KeyedRegistry<TotemType>().also {
             it.register(ArmorTotemType)
-            it.register(ArmorIncreaseTotemType)
+            it.register(ReducedDamageTakenTotemType)
             it.register(ArmorToughnessTotemType)
             it.register(AttackDamageTotemType)
             it.register(AttackSpeedTotemType)

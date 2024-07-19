@@ -27,7 +27,8 @@ enum class Tool(
             RandomOption(10, RollableAttribute(AttributeType.INCREASED_ARROW_VELOCITY, 0.3)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.25)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 1.0)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
+            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE_DEALT, 0.08))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -55,10 +56,11 @@ enum class Tool(
         EquipmentSlot.HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 2.0)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
+            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE_DEALT, 0.08))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -89,10 +91,11 @@ enum class Tool(
         EquipmentSlot.HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 2.0)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.2)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
+            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE_DEALT, 0.08))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -157,10 +160,11 @@ enum class Tool(
         EquipmentSlot.OFF_HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 2.0)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
+            RandomOption(10, RollableAttribute(AttributeType.REDUCED_DAMAGE_TAKEN, 0.04))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -176,10 +180,11 @@ enum class Tool(
         EquipmentSlot.HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
+            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 2.0)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
             RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
+            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE_DEALT, 0.08))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
