@@ -89,5 +89,21 @@
       "mcendgame/entity/buff_cow/death0",
       "mcendgame/entity/buff_cow/death1"
     ]
+  },
+  "mcendgame_elf_duelist_hurt" : {
+    "sounds" : [
+      "mcendgame/entity/elf_duelist/hurt0",
+      "mcendgame/entity/elf_duelist/hurt1",
+      "mcendgame/entity/elf_duelist/hurt2",
+      "mcendgame/entity/elf_duelist/hurt3",
+      "mcendgame/entity/elf_duelist/hurt4"
+    ]
+  },
+  "mcendgame_elf_duelist_death" : {
+    "sounds" : [
+      "mcendgame/entity/elf_duelist/death0",
+      "mcendgame/entity/elf_duelist/death1",
+      "mcendgame/entity/elf_duelist/death2"
+    ]
   }
 }
