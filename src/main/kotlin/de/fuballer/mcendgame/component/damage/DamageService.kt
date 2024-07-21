@@ -56,12 +56,13 @@ class DamageService : Listener {
         val damagedAttributes = damaged.getCustomAttributes()
 
         val cause = event.cause
-        val isDungeonWorld = event.damager.world.isDungeonWorld()
+        val world = event.damager.world
+        val isDungeonWorld = world.isDungeonWorld()
 
         val isDamageBlocked = event.getDamage(DamageModifier.BLOCKING) < 0
         val isCritical = DamageUtil.isCritical(event.cause, event.damager)
 
-        return DamageCalculationEvent(event, damager, damagerAttributes, damaged, damagedAttributes, cause, isDungeonWorld, isDamageBlocked, isCritical)
+        return DamageCalculationEvent(event, damager, damagerAttributes, damaged, damagedAttributes, cause, world, isDungeonWorld, isDamageBlocked, isCritical)
     }
 
     private fun updateOriginalEvent(originalEvent: EntityDamageByEntityEvent, damageEvent: DamageCalculationEvent) {

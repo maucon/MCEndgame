@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.damage
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.event.HandleableEvent
+import org.bukkit.World
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.Cancellable
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -20,6 +21,7 @@ class DamageCalculationEvent(
     val damagedAttributes: Map<AttributeType, List<Double>>,
 
     val cause: DamageCause,
+    val world: World,
     val isDungeonWorld: Boolean,
     val isDamageBlocked: Boolean,
     val isDamageCritical: Boolean,
