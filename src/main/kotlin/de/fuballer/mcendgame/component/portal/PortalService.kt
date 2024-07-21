@@ -8,39 +8,33 @@ import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PortalFailedEvent
 import de.fuballer.mcendgame.event.PortalUsedEvent
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.extension.EntityExtension.isPortal
-import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Location
 import org.bukkit.Server
+import org.bukkit.World
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
-import org.bukkit.plugin.java.JavaPlugin
 
 @Component
 class PortalService(
     private val portalRepo: PortalRepository,
     private val server: Server
-) : Listener, LifeCycleListener {
-    override fun initialize(plugin: JavaPlugin) {
-        server.worlds
-            .filter { !it.isDungeonWorld() }
-            .flatMap { it.entities }
-            .filter { it.isPortal() }
-            .forEach { it.remove() }
-    }
-
+) : Listener {
     @EventHandler
     fun on(event: PlayerInteractAtEntityEvent) {
         val entity = event.rightClicked as? ArmorStand ?: return
         if (!entity.isPortal()) return
 
         val player = event.player
-        val portal = portalRepo.getById(entity.uniqueId)
+        val portal = portalRepo.findById(entity.uniqueId)
 
+        if (portal == null) {
+            deleteInvalidPortals(entity.location.world!!)
+            return
+        }
         if (!server.worlds.contains(portal.target.world)) {
             failPortalUsage(player, portal)
             return
@@ -76,5 +70,12 @@ class PortalService(
 
         val failedEvent = PortalFailedEvent(portal, player)
         EventGateway.apply(failedEvent)
+    }
+
+    private fun deleteInvalidPortals(world: World) {
+        world.entities
+            .filter { it.isPortal() }
+            .filter { !portalRepo.exists(it.uniqueId) }
+            .forEach { it.remove() }
     }
 }
