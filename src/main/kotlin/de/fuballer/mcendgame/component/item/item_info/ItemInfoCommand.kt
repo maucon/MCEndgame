@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.item.item_info
 
+import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
 import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
 import de.fuballer.mcendgame.component.item.attribute.data.RollType
@@ -112,12 +113,20 @@ class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
     }
 
     private fun getAttributeRollText(attribute: SingleValueAttribute): String {
+        val type = attribute.type
         return String.format(
             "Min: %s\nMax: %s\nRoll: %s\n%%Roll: %s%%",
-            DECIMAL_FORMAT.format(attribute.bounds.min),
-            DECIMAL_FORMAT.format(attribute.bounds.max),
-            DECIMAL_FORMAT.format(attribute.getAbsoluteRoll()),
+            DECIMAL_FORMAT.format(getAttributeDisplayValue(type, attribute.bounds.min)),
+            DECIMAL_FORMAT.format(getAttributeDisplayValue(type, attribute.bounds.max)),
+            DECIMAL_FORMAT.format(getAttributeDisplayValue(type, attribute.getAbsoluteRoll())),
             DECIMAL_FORMAT.format(attribute.percentRoll * 100)
         )
     }
+
+    private fun getAttributeDisplayValue(type: AttributeType, value: Double) =
+        when (type) {
+            AttributeType.MOVEMENT_SPEED -> value * 100
+            AttributeType.KNOCKBACK_RESISTANCE -> value * 10
+            else -> value
+        }
 }
