@@ -12,6 +12,7 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.EntityExtension.getPortalLocation
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
+import org.bukkit.Sound
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
@@ -44,6 +45,8 @@ class DungeonBossService(
 
         bossesEntity.progressGranted = true
         dungeonBossesRepo.save(bossesEntity)
+
+        bossWorld.players.forEach { it.playSound(it, Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.5f, 1.3f) }
 
         val dungeonCompleteEvent = DungeonCompleteEvent(dungeonWorld.player, bossesEntity.mapTier, bossWorld)
         EventGateway.apply(dungeonCompleteEvent)
