@@ -84,6 +84,7 @@ object EntityUtil {
 
         setAttribute(entity, Attribute.GENERIC_ATTACK_DAMAGE, newDamage)
         setAttribute(entity, Attribute.GENERIC_MOVEMENT_SPEED, newSpeed)
+        setAttribute(entity, Attribute.GENERIC_KNOCKBACK_RESISTANCE, entityType.knockbackResistance)
     }
 
     private fun setMiscellaneous(entity: LivingEntity) {

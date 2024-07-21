@@ -25,6 +25,7 @@ object CerberusEntityType : CustomEntityType {
     override val damagePerTier = 2.5
     override val baseSpeed = 0.30
     override val speedPerTier = 0.003
+    override val knockbackResistance = 0.8
 
     override val sounds = EntitySoundData.create("cerberus")
     override val abilities: List<RandomOption<Ability>> = listOf(

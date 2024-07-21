@@ -18,6 +18,7 @@ object HuskEntityType : CustomEntityType {
     override val damagePerTier = 2.5
     override val baseSpeed = 0.23
     override val speedPerTier = 0.0
+    override val knockbackResistance = 0.0
 
     override val sounds = null
     override val abilities = null
