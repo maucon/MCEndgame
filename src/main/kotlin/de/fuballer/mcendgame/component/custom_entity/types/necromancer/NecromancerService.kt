@@ -33,27 +33,17 @@ class NecromancerService : Listener {
         event.cancel()
     }
 
-    private class ShootWitherSkull(
-        private val necromancer: LivingEntity,
-        private val arrow: Arrow,
-        private val target: LivingEntity
-    ) : BukkitRunnable() {
-        override fun run() {
-            val witherSkull = EnemyUtil.shootProjectile(necromancer, arrow, target, EntityType.WITHER_SKULL, Sound.ITEM_FIRECHARGE_USE) as WitherSkull
-            witherSkull.direction = witherSkull.velocity
-        }
-    }
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    private fun onNecromancerDamageByEntity(event: EntityDamageByEntityEvent) {
-        if (event.entity.getCustomEntityType() != NecromancerEntityType) return
+    private fun on(event: EntityDamageByEntityEvent) {
+        val entity = event.entity
+        if (entity.getCustomEntityType() != NecromancerEntityType) return
         val arrow = event.damager as? Arrow ?: return
 
         if (!NecromancerSettings.doesBatBlockArrow()) return
         event.cancel()
         arrow.remove()
 
-        val location = event.entity.location
+        val location = entity.location
         location.add(0.0, 0.25, 0.0)
         val world = location.world ?: return
 
@@ -67,6 +57,17 @@ class NecromancerService : Listener {
                 world.spawnParticle(Particle.ASH, batLocation.x, batLocation.y, batLocation.z, 25, 0.1, 0.2, 0.1, 1.0)
                 bat.remove()
             }
+        }
+    }
+
+    private class ShootWitherSkull(
+        private val necromancer: LivingEntity,
+        private val arrow: Arrow,
+        private val target: LivingEntity
+    ) : BukkitRunnable() {
+        override fun run() {
+            val witherSkull = EnemyUtil.shootProjectile(necromancer, arrow, target, EntityType.WITHER_SKULL, Sound.ITEM_FIRECHARGE_USE) as WitherSkull
+            witherSkull.direction = witherSkull.velocity
         }
     }
 }
