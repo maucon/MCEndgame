@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
+import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -135,6 +136,8 @@ class DungeonPlayerListService(
         entity: DungeonPlayerListEntity,
         player: Player
     ) {
+        if (!player.world.isDungeonWorld()) return
+
         val playerStats = entity.playerStats[player]!!
 
         val footer = DungeonPlayerListSettings.getFooter(entity)
