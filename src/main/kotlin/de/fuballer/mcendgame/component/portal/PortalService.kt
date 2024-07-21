@@ -38,8 +38,14 @@ class PortalService(
         val entity = event.rightClicked as? ArmorStand ?: return
         if (!entity.isPortal()) return
 
+        val portalID = entity.uniqueId
+        if (!portalRepo.exists(portalID)) {
+            deleteNearbyBuggedPortals(entity.location)
+            return
+        }
+
         val player = event.player
-        val portal = portalRepo.getById(entity.uniqueId)
+        val portal = portalRepo.getById(portalID)
 
         if (!server.worlds.contains(portal.target.world)) {
             failPortalUsage(player, portal)
@@ -76,5 +82,13 @@ class PortalService(
 
         val failedEvent = PortalFailedEvent(portal, player)
         EventGateway.apply(failedEvent)
+    }
+
+    private fun deleteNearbyBuggedPortals(location: Location) {
+        val world = location.world ?: return
+        world.getNearbyEntities(location, 5.0, 2.0, 5.0)
+            .filter { it.isPortal() }
+            .filter { !portalRepo.exists(it.uniqueId) }
+            .forEach { it.remove() }
     }
 }
