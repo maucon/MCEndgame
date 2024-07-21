@@ -122,7 +122,9 @@ class PortalFailedEvent(
  */
 class DungeonGeneratedEvent(
     val world: World,
-    val respawnLocation: Location
+    val seed: Long,
+    val respawnLocation: Location,
+    val tier: Int
 ) : HandleableEvent()
 
 /**

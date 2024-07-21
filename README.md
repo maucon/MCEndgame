@@ -46,7 +46,6 @@ allowing players to min-max their gear with a gamble.
 ## Commands
 
 * `/killer`: Provides information about the last mob that eliminated you
-* `/dungeon-remaining`: Displays details on the number of mobs still alive within the dungeon
 * `/dungeon-filter`: Opens the filter page, allowing you to manage item blacklisting
 * `/dungeon-totem`: Opens the totem page, showcasing and changing equipped totems
 * `/dungeon-totem-give`: Generates a new totem for the player

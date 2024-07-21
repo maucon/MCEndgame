@@ -50,7 +50,7 @@ class DungeonGenerationService(
         val startLocation = VectorUtil.toLocation(world, layout.startLocation.location, layout.startLocation.rotation)
         portalService.createPortal(startLocation, leaveLocation)
 
-        val event = DungeonGeneratedEvent(world, leaveLocation)
+        val event = DungeonGeneratedEvent(world, seed, leaveLocation, mapTier)
         EventGateway.apply(event)
 
         return addOffset(startLocation)
