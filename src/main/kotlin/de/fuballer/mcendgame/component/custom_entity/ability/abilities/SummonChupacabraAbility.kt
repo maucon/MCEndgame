@@ -12,7 +12,8 @@ import kotlin.math.min
 
 private const val MAX_CHUPACABRA = 5
 private const val MAX_CHUPACABRA_PER_EXTRA_PLAYER = 3
-private const val CHUPACABRA_PER_CAST = 3
+private const val CHUPACABRA_PER_CAST = 2
+private const val CHUPACABRA_PER_CAST_PER_EXTRA_PLAYER = 1
 
 object SummonChupacabraAbility : Ability {
     override fun canCast(caster: LivingEntity): Boolean {
@@ -37,11 +38,13 @@ object SummonChupacabraAbility : Ability {
     }
 
     private fun getChupacabraSpawnAmount(caster: LivingEntity): Int {
-        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE)
+        val targets = DungeonUtil.getNearbyPlayers(caster, AbilitySettings.DEFAULT_TARGET_RANGE).size
+        val extraPlayers = targets - 1
 
-        val maxChupacabra = MAX_CHUPACABRA + MAX_CHUPACABRA_PER_EXTRA_PLAYER * (targets.size - 1)
-        val minions = SummonerUtil.getMinionEntities(caster)
+        val maxChupacabra = MAX_CHUPACABRA + MAX_CHUPACABRA_PER_EXTRA_PLAYER * extraPlayers
+        val amountToCap = maxChupacabra - SummonerUtil.getMinionEntities(caster).size
 
-        return min(CHUPACABRA_PER_CAST, maxChupacabra - minions.size)
+        val amount = CHUPACABRA_PER_CAST + CHUPACABRA_PER_CAST_PER_EXTRA_PLAYER * extraPlayers
+        return min(amount, amountToCap)
     }
 }

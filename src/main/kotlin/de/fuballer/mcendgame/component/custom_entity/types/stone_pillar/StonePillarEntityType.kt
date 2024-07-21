@@ -18,6 +18,7 @@ object StonePillarEntityType : CustomEntityType {
     override val damagePerTier = 0.0
     override val baseSpeed = 0.0
     override val speedPerTier = 0.0
+    override val knockbackResistance = 1.0
 
     override val sounds = null
     override val abilities = null

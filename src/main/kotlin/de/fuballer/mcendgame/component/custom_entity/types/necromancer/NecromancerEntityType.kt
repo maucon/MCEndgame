@@ -25,6 +25,7 @@ object NecromancerEntityType : CustomEntityType {
     override val damagePerTier = 2.5
     override val baseSpeed = 0.4
     override val speedPerTier = 0.0025
+    override val knockbackResistance = 0.5
 
     override val sounds = EntitySoundData.create("necromancer")
     override val abilities: List<RandomOption<Ability>> = listOf(

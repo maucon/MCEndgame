@@ -22,6 +22,7 @@ object ElfDuelistEntityType : CustomEntityType {
     override val damagePerTier = 3.0
     override val baseSpeed = 0.35
     override val speedPerTier = 0.005
+    override val knockbackResistance = 0.6
 
     override val sounds = EntitySoundData.create("elf_duelist")
     override val abilities: List<RandomOption<Ability>> = listOf(

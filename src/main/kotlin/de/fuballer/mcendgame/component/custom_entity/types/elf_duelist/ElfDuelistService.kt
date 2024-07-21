@@ -5,9 +5,11 @@ import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.SchedulingUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
+import org.bukkit.Particle
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Creature
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.projectiles.ProjectileSource
@@ -15,7 +17,7 @@ import org.bukkit.util.Vector
 
 @Component
 class ElfDuelistService : Listener {
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     fun on(event: EntityDamageByEntityEvent) {
         if (event.damager.getCustomEntityType() == ElfDuelistEntityType) onEntityDamageByElfDuelist(event)
         if (event.entity.getCustomEntityType() == ElfDuelistEntityType) onElfDuelistDamageByEntity(event)
@@ -34,9 +36,11 @@ class ElfDuelistService : Listener {
 
         arrow.shooter = event.entity as ProjectileSource
         arrow.velocity = newVelocity
-        arrow.location.add(newVelocity)
         (event.entity as Creature).swingMainHand()
         event.cancel()
+
+        val arrowLocation = arrow.location
+        arrow.world.spawnParticle(Particle.CRIT, arrowLocation.x, arrowLocation.y, arrowLocation.z, 10, 0.1, 0.1, 0.1, 0.25)
 
         SchedulingUtil.runTaskLater(1L) {
             arrow.velocity = newVelocity

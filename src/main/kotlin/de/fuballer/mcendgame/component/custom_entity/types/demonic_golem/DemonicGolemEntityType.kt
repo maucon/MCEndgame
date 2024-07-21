@@ -25,6 +25,7 @@ object DemonicGolemEntityType : CustomEntityType {
     override val damagePerTier = 2.5
     override val baseSpeed = 0.2
     override val speedPerTier = 0.0
+    override val knockbackResistance = 0.9
 
     override val sounds = EntitySoundData.create("demonic_golem")
     override val abilities: List<RandomOption<Ability>> = listOf(

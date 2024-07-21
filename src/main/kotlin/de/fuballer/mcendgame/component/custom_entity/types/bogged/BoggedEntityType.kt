@@ -18,6 +18,7 @@ object BoggedEntityType : CustomEntityType {
     override val damagePerTier = 2.0
     override val baseSpeed = 0.25
     override val speedPerTier = 0.0
+    override val knockbackResistance = 0.0
 
     override val sounds = null
     override val abilities = null

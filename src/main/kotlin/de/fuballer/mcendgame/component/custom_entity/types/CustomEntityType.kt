@@ -20,6 +20,7 @@ interface CustomEntityType {
     val damagePerTier: Double
     val baseSpeed: Double
     val speedPerTier: Double
+    val knockbackResistance: Double
 
     val sounds: EntitySoundData?
     val abilities: List<RandomOption<Ability>>?

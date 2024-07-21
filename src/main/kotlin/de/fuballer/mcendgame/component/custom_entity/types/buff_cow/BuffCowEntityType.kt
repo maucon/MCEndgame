@@ -24,6 +24,7 @@ object BuffCowEntityType : CustomEntityType {
     override val damagePerTier = 0.0
     override val baseSpeed = 0.15
     override val speedPerTier = 0.0
+    override val knockbackResistance = 0.8
 
     override val sounds = EntitySoundData.create("buff_cow")
     override val abilities: List<RandomOption<Ability>> = listOf(
