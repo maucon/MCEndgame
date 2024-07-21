@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.types.elf_duelist
 
+import de.fuballer.mcendgame.component.custom_entity.EntitySoundData
 import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.ability.abilities.*
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
@@ -22,7 +23,7 @@ object ElfDuelistEntityType : CustomEntityType {
     override val baseSpeed = 0.35
     override val speedPerTier = 0.005
 
-    override val sounds = null
+    override val sounds = EntitySoundData.create("elf_duelist")
     override val abilities: List<RandomOption<Ability>> = listOf(
         RandomOption(5, ClonesAbility),
         RandomOption(45, SidestepAbility),
