@@ -10,9 +10,9 @@ abstract class AttributeType(
 )
 
 class VanillaAttributeType(
-    lore: (List<AttributeRoll<*>>) -> String,
     val attribute: Attribute,
-    val scaleType: AttributeModifier.Operation
+    val scaleType: AttributeModifier.Operation,
+    lore: (List<AttributeRoll<*>>) -> String
 ) : AttributeType(lore)
 
 class CustomAttributeType(
@@ -73,6 +73,7 @@ data class DoubleRoll(
     val percentRoll: Double,
 ) : AttributeRoll<Double> {
     override fun getRoll() = bounds.min + (bounds.max - bounds.min) * percentRoll
+    override fun toString(): String = getRoll().toString()
 }
 
 data class StringRoll(
@@ -80,6 +81,7 @@ data class StringRoll(
     val indexRoll: Int,
 ) : AttributeRoll<String> {
     override fun getRoll() = bounds.options[indexRoll]
+    override fun toString(): String = getRoll()
 }
 
 data class IntRoll(
@@ -87,6 +89,7 @@ data class IntRoll(
     val percentRoll: Double,
 ) : AttributeRoll<Int> {
     override fun getRoll() = (bounds.min + (bounds.max - bounds.min) * percentRoll).toInt()
+    override fun toString(): String = getRoll().toString()
 }
 
 // ##################################################################################################
@@ -128,20 +131,28 @@ data class RolledAttribute(
 
 // ##################################################################################################
 
+val SIMPLE = DecimalFormat("#.#")
 val PRECISE = DecimalFormat("#.##")
 
 object AttributeTypes {
-    val ATTACK_DAMAGE = VanillaAttributeType({ "+${PRECISE.format(it[0].getRoll())}% Attack Damage" }, Attribute.GENERIC_ATTACK_DAMAGE, AttributeModifier.Operation.ADD_NUMBER)
-    val DISABLE_MELEE = CustomAttributeType { "No Melee Damage frfr" }
-    val EFFECT_IMMUNITY = CustomAttributeType { " ${PRECISE.format((it[0].getRoll() as Double) * 100)}% Chance to avoid Effect ${it[1].getRoll()}" }
-    val DAMAGE_INT = CustomAttributeType { "+${PRECISE.format(it[0].getRoll())}% Damage" }
+    val ATTACK_DAMAGE = VanillaAttributeType(Attribute.GENERIC_ATTACK_DAMAGE, AttributeModifier.Operation.ADD_NUMBER) { "+${SIMPLE.formatDouble(it[0])} Attack Damage" }
+    val DISABLE_MELEE = CustomAttributeType { " Cannot deal Melee Damage" }
+    val EFFECT_IMMUNITY = CustomAttributeType { " ${PRECISE.formatDouble(it[0], 100)}% Chance to avoid ${it[1]}" }
+    val DAMAGE_INT = CustomAttributeType { "+${it[0]}% Damage" }
+    val DISABLE_TARGETTING = CustomAttributeType { " Cannot be targeted by ${it[0]}" }
+
+    private fun DecimalFormat.formatDouble(attributeRoll: AttributeRoll<*>, multiplier: Int = 1): String {
+        val roll = attributeRoll.getRoll() as Double
+        return format(roll * multiplier)
+    }
 }
 
 object Attributes {
     val SWORD_ATTACK_DAMAGE = RollableAttribute(AttributeTypes.ATTACK_DAMAGE, DoubleBounds(3.0))
     val DISABLE_MELEE = RollableAttribute(AttributeTypes.DISABLE_MELEE)
-    val EFFECT_IMMUNITY = RollableAttribute(AttributeTypes.EFFECT_IMMUNITY, DoubleBounds(0.3, 0.7), StringBounds("WITHER", "SLOWNESS", "WEAKNESS"))
+    val EFFECT_IMMUNITY = RollableAttribute(AttributeTypes.EFFECT_IMMUNITY, DoubleBounds(0.3, 0.7), StringBounds("Wither", "Slowness", "Weakness", "Poison"))
     val DAMAGE_INT = RollableAttribute(AttributeTypes.DAMAGE_INT, IntBounds(3, 10))
+    val DISABLE_TARGETTING = RollableAttribute(AttributeTypes.DISABLE_TARGETTING, StringBounds("Skeletons", "Zombies", "Pigmen"))
 }
 
 fun main() {
@@ -152,13 +163,11 @@ fun main() {
 
     val r3 = Attributes.DISABLE_MELEE.roll()
     val r4 = Attributes.DAMAGE_INT.roll(listOf(1.0))
+    val r5 = Attributes.DISABLE_TARGETTING.roll()
 
-    println(r1)
     println(r1.getLore())
-    println(r2)
     println(r2.getLore())
-    println(r3)
     println(r3.getLore())
-    println(r4)
     println(r4.getLore())
+    println(r5.getLore())
 }
