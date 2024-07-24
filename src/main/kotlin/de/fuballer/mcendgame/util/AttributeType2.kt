@@ -129,6 +129,16 @@ data class RolledAttribute(
     fun getLore() = type.lore(attributeRolls)
 }
 
+data class BaseAttribute(
+    val type: VanillaAttributeType,
+    var amount: Double
+) {
+    fun getLore(): String {
+        val roll = DoubleRoll(DoubleBounds(1.0), amount)
+        return type.lore(listOf(roll))
+    }
+}
+
 // ##################################################################################################
 
 val SIMPLE = DecimalFormat("#.#")
@@ -139,7 +149,7 @@ object AttributeTypes {
     val DISABLE_MELEE = CustomAttributeType { " Cannot deal Melee Damage" }
     val EFFECT_IMMUNITY = CustomAttributeType { " ${PRECISE.formatDouble(it[0], 100)}% Chance to avoid ${it[1]}" }
     val DAMAGE_INT = CustomAttributeType { "+${it[0]}% Damage" }
-    val DISABLE_TARGETTING = CustomAttributeType { " Cannot be targeted by ${it[0]}" }
+    val DISABLE_TARGETING = CustomAttributeType { " Cannot be targeted by ${it[0]}" }
 
     private fun DecimalFormat.formatDouble(attributeRoll: AttributeRoll<*>, multiplier: Int = 1): String {
         val roll = attributeRoll.getRoll() as Double
@@ -152,7 +162,7 @@ object Attributes {
     val DISABLE_MELEE = RollableAttribute(AttributeTypes.DISABLE_MELEE)
     val EFFECT_IMMUNITY = RollableAttribute(AttributeTypes.EFFECT_IMMUNITY, DoubleBounds(0.3, 0.7), StringBounds("Wither", "Slowness", "Weakness", "Poison"))
     val DAMAGE_INT = RollableAttribute(AttributeTypes.DAMAGE_INT, IntBounds(3, 10))
-    val DISABLE_TARGETTING = RollableAttribute(AttributeTypes.DISABLE_TARGETTING, StringBounds("Skeletons", "Zombies", "Pigmen"))
+    val DISABLE_TARGETING = RollableAttribute(AttributeTypes.DISABLE_TARGETING, StringBounds("Skeletons", "Zombies", "Pigmen"))
 }
 
 fun main() {
@@ -163,11 +173,14 @@ fun main() {
 
     val r3 = Attributes.DISABLE_MELEE.roll()
     val r4 = Attributes.DAMAGE_INT.roll(listOf(1.0))
-    val r5 = Attributes.DISABLE_TARGETTING.roll()
+    val r5 = Attributes.DISABLE_TARGETING.roll()
+
+    val base = BaseAttribute(AttributeTypes.ATTACK_DAMAGE, 7.5)
 
     println(r1.getLore())
     println(r2.getLore())
     println(r3.getLore())
     println(r4.getLore())
     println(r5.getLore())
+    println(base.getLore())
 }
