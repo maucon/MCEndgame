@@ -1,8 +1,10 @@
 package de.fuballer.mcendgame.component.item.equipment.tool
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeTypes
 import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
-import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleBounds
+import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -16,55 +18,55 @@ enum class Sword(
     WOODEN(
         Material.WOODEN_SWORD,
         listOf(
-            BaseAttribute(AttributeType.ATTACK_DAMAGE, 4.0),
-            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 4.0),
+            BaseAttribute(VanillaAttributeTypes.ATTACK_SPEED, 1.6)
         )
     ),
     GOLDEN(
         Material.GOLDEN_SWORD,
         listOf(
-            BaseAttribute(AttributeType.ATTACK_DAMAGE, 4.0),
-            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 4.0),
+            BaseAttribute(VanillaAttributeTypes.ATTACK_SPEED, 1.6)
         )
     ),
     STONE(
         Material.STONE_SWORD,
         listOf(
-            BaseAttribute(AttributeType.ATTACK_DAMAGE, 5.0),
-            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 5.0),
+            BaseAttribute(VanillaAttributeTypes.ATTACK_SPEED, 1.6)
         )
     ),
     IRON(
         Material.IRON_SWORD,
         listOf(
-            BaseAttribute(AttributeType.ATTACK_DAMAGE, 6.0),
-            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 6.0),
+            BaseAttribute(VanillaAttributeTypes.ATTACK_SPEED, 1.6)
         )
     ),
     DIAMOND(
         Material.DIAMOND_SWORD,
         listOf(
-            BaseAttribute(AttributeType.ATTACK_DAMAGE, 7.0),
-            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 7.0),
+            BaseAttribute(VanillaAttributeTypes.ATTACK_SPEED, 1.6)
         )
     ),
     NETHERITE(
         Material.NETHERITE_SWORD,
         listOf(
-            BaseAttribute(AttributeType.ATTACK_DAMAGE, 8.0),
-            BaseAttribute(AttributeType.ATTACK_SPEED, 1.6)
+            BaseAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 8.0),
+            BaseAttribute(VanillaAttributeTypes.ATTACK_SPEED, 1.6)
         )
     );
 
     override val slot = EquipmentSlot.HAND
     override val slotDependentAttributes = false
 
-    override val rollableAttributes = listOf(
-        RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 2.0)),
-        RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
-        RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-        RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
-        RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.08))
+    val rollableCustomAttributes = listOf(
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(2.0))),
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.4))),
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_KNOCKBACK, DoubleBounds(0.5))),
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5))),
+        RandomOption(5, RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE, DoubleBounds(0.08)))
     )
 
     override val rollableEnchants = listOf(

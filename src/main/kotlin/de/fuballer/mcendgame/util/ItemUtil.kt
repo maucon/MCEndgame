@@ -2,10 +2,7 @@ package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.crafting.corruption.CorruptionSettings
 import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
-import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
-import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
-import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
-import de.fuballer.mcendgame.component.item.attribute.data.VanillaAttributeType
+import de.fuballer.mcendgame.component.item.attribute.data.*
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
@@ -89,7 +86,7 @@ object ItemUtil {
             addAllVanillaAttributes(itemMeta, baseAttributes, equipment.slot.group)
         }
         val customAttributeSlot = if (equipment.slotDependentAttributes) equipment.slot.group else EquipmentSlotGroup.ANY
-        addAllVanillaApplicableCustomAttributes(itemMeta, customAttributes, customAttributeSlot)
+        addAllVanillaTypeCustomAttributes(itemMeta, customAttributes, customAttributeSlot)
     }
 
     private fun addAllVanillaAttributes(
@@ -97,36 +94,34 @@ object ItemUtil {
         attributes: List<BaseAttribute>,
         slot: EquipmentSlotGroup
     ) {
-        attributes
-            .filter { it.type.isVanillaAttributeType }
-            .forEach {
-                val attribute = it.type.vanillaAttributeType!!.attribute
-                val realRoll = getActualAttributeValue(attribute, it.roll)
-                addAttribute(
-                    itemMeta,
-                    attribute,
-                    realRoll,
-                    it.type.vanillaAttributeType.scaleType,
-                    slot
-                )
-            }
+        attributes.forEach {
+            val attribute = it.type.attribute
+            val realRoll = getActualAttributeValue(attribute, it.amount)
+            addAttribute(
+                itemMeta,
+                attribute,
+                realRoll,
+                it.type.scaleType,
+                slot
+            )
+        }
     }
 
-    private fun addAllVanillaApplicableCustomAttributes(
+    private fun addAllVanillaTypeCustomAttributes(
         itemMeta: ItemMeta,
         attributes: List<CustomAttribute>,
         slot: EquipmentSlotGroup
     ) {
         attributes
-            .filter { it.type.isVanillaAttributeType }
+            .filter { it.type is VanillaAttributeType }
             .forEach {
-                val attribute = it.type.vanillaAttributeType!!.attribute
-                val roll = (it as SingleValueAttribute).getAbsoluteRoll()
+                val type = it.type as VanillaAttributeType
+                val roll = it.attributeRolls[0] as DoubleRoll // vanilla attributes always have one double roll
                 addAttribute(
                     itemMeta,
-                    attribute,
-                    roll,
-                    it.type.vanillaAttributeType.scaleType,
+                    type.attribute,
+                    roll.getRoll(),
+                    it.type.scaleType,
                     slot
                 )
             }

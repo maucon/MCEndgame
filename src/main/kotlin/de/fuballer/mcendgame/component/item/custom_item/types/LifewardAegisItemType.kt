@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.item.custom_item.types
 
 import de.fuballer.mcendgame.component.item.attribute.AttributeType
-import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.tool.Tool
 import de.fuballer.mcendgame.util.PluginUtil
@@ -12,7 +12,7 @@ object LifewardAegisItemType : CustomItemType {
     override val equipment = Tool.SHIELD
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.HEAL_ON_BLOCK, 0.1, 0.15),
-        RollableAttribute(AttributeType.ATTACK_DAMAGE, -4.0, -2.0),
+        RollableCustomAttribute(AttributeType.HEAL_ON_BLOCK, 0.1, 0.15),
+        RollableCustomAttribute(AttributeType.ATTACK_DAMAGE, -4.0, -2.0),
     )
 }

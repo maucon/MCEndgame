@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.item.equipment
 
 import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
-import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.equipment.armor.Boots
 import de.fuballer.mcendgame.component.item.equipment.armor.Chestplate
 import de.fuballer.mcendgame.component.item.equipment.armor.Helmet
@@ -19,7 +19,7 @@ interface Equipment {
 
     /** whether to only grant extra attributes when the item is in the correct slot */
     val slotDependentAttributes: Boolean
-    val rollableAttributes: List<RandomOption<RollableAttribute>>
+    val rollableCustomAttributes: List<RandomOption<RollableCustomAttribute>>
     val rollableEnchants: List<RandomOption<ItemEnchantment>>
 
     companion object {

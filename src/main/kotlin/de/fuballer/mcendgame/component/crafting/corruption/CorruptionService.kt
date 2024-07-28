@@ -2,12 +2,9 @@ package de.fuballer.mcendgame.component.crafting.corruption
 
 import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
 import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
-import de.fuballer.mcendgame.component.item.attribute.data.RollType
-import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCorruptionRounds
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
@@ -41,11 +38,11 @@ class CorruptionService : AnvilCraftingBaseService() {
     }
 
     private fun corruptItem(item: ItemStack) {
-        val hasRollableCustomAttributes = AttributeUtil.getSingleValueAttributes(item).isNotEmpty()
+        val hasCustomAttributesWithRolls = AttributeUtil.hasCustomAttributesWithRolls(item)
 
         val corruptions =
-            if (hasRollableCustomAttributes) CorruptionSettings.CORRUPTIONS
-            else CorruptionSettings.ALTERNATE_CORRUPTIONS
+            if (hasCustomAttributesWithRolls) CorruptionSettings.CORRUPTIONS
+            else CorruptionSettings.CORRUPTIONS_WITHOUT_ATTRIBUTES
 
         when (RandomUtil.pick(corruptions).option) {
             CorruptionModification.CORRUPT_ENCHANTS -> corruptEnchant(item)
@@ -100,14 +97,13 @@ class CorruptionService : AnvilCraftingBaseService() {
     }
 
     private fun corruptAttributes(item: ItemStack) {
-        val attributes = item.getCustomAttributes()!!
-        val rolledAttributes = attributes.filter { it.rollType == RollType.SINGLE }
+        val attributes = AttributeUtil.getCustomAttributesWithRolls(item).toMutableList()
+        val chosenAttribute = attributes.random()
 
-        val chosenAttribute = rolledAttributes.random() as SingleValueAttribute
         if (item.isCustomItemType()) {
-            CorruptionSettings.corruptAttributePercentRollForCustomItems(chosenAttribute, Random.nextDouble())
+            CorruptionSettings.corruptAttributeRollForCustomItem(chosenAttribute)
         } else {
-            CorruptionSettings.corruptAttributePercentRoll(chosenAttribute, Random.nextDouble())
+            CorruptionSettings.corruptAttributeRoll(chosenAttribute)
         }
 
         item.setCustomAttributes(attributes)

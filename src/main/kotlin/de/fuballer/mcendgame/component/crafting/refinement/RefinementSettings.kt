@@ -13,7 +13,7 @@ object RefinementSettings {
     private val ITEM_NAME = ChatColor.DARK_AQUA.toString() + "Orb of Refinement"
     private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Enhance an item's attribute by sacrificing another")
 
-    fun refineAttributeValue(sacrificedRollPercentage: Double) = 0.5 * sacrificedRollPercentage
+    const val REFINEMENT_ATTRIBUTE_VALUE = 0.5
 
     private val REFINEMENT_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),

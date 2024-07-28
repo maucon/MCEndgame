@@ -1,8 +1,10 @@
 package de.fuballer.mcendgame.component.item.equipment.armor
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeTypes
 import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
-import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleBounds
+import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -16,60 +18,60 @@ enum class Helmet(
     LEATHER(
         Material.LEATHER_HELMET,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 1.0)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 1.0)
         )
     ),
     GOLDEN(
         Material.GOLDEN_HELMET,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 2.0)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 2.0)
         )
     ),
     CHAINMAIL(
         Material.CHAINMAIL_HELMET,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 2.0)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 2.0)
         )
     ),
     IRON(
         Material.IRON_HELMET,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 2.0)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 2.0)
         )
     ),
     TURTLE(
         Material.TURTLE_HELMET,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 2.0)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 2.0)
         )
     ),
     DIAMOND(
         Material.DIAMOND_HELMET,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 3.0),
-            BaseAttribute(AttributeType.ARMOR_TOUGHNESS, 2.0)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 3.0),
+            BaseAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 2.0)
         )
     ),
     NETHERITE(
         Material.NETHERITE_HELMET,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 3.0),
-            BaseAttribute(AttributeType.ARMOR_TOUGHNESS, 3.0),
-            BaseAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 3.0),
+            BaseAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 3.0),
+            BaseAttribute(VanillaAttributeTypes.KNOCKBACK_RESISTANCE, 0.1)
         )
     );
 
     override val slot = EquipmentSlot.HEAD
     override val slotDependentAttributes = true
 
-    override val rollableAttributes = listOf(
-        RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.0)),
-        RandomOption(10, RollableAttribute(AttributeType.ARMOR, 2.0)),
-        RandomOption(10, RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 2.5)),
-        RandomOption(10, RollableAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1)),
-        RandomOption(8, RollableAttribute(AttributeType.REDUCED_DAMAGE_TAKEN, 0.03)),
-        RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.05)),
-        RandomOption(7, RollableAttribute(AttributeType.DODGE_CHANCE, 0.05))
+    val rollableCustomAttributes = listOf(
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH, DoubleBounds(2.0))),
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ARMOR, DoubleBounds(2.0))),
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, DoubleBounds(2.5))),
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.KNOCKBACK_RESISTANCE, DoubleBounds(0.1))),
+        RandomOption(8, RollableCustomAttribute(CustomAttributeTypes.REDUCED_DAMAGE_TAKEN, DoubleBounds(0.03))),
+        RandomOption(5, RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE, DoubleBounds(0.05))),
+        RandomOption(7, RollableCustomAttribute(CustomAttributeTypes.DODGE_CHANCE, DoubleBounds(0.05)))
     )
 
     override val rollableEnchants = listOf(

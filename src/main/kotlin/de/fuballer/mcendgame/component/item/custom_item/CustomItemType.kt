@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.item.custom_item
 
-import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.custom_item.types.*
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.technical.registry.Keyed
@@ -10,7 +10,7 @@ interface CustomItemType : Keyed {
     val customName: String
     val equipment: Equipment
     val usesEquipmentBaseStats: Boolean
-    val attributes: List<RollableAttribute>
+    val attributes: List<RollableCustomAttribute>
 
     companion object {
         val REGISTRY = KeyedRegistry<CustomItemType>().also {
