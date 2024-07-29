@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.item.custom_item.types
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleBounds
 import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.tool.Sword
@@ -12,7 +13,7 @@ object SerpentsFangItemType : CustomItemType {
     override val equipment = Sword.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableCustomAttribute(AttributeType.CRITICAL_DAMAGE, 0.1, 0.3),
-        RollableCustomAttribute(AttributeType.CRITICAL_EXECUTE, 0.05, 0.12),
+        RollableCustomAttribute(CustomAttributeTypes.CRITICAL_DAMAGE, DoubleBounds(0.1, 0.3)),
+        RollableCustomAttribute(CustomAttributeTypes.CRITICAL_EXECUTE, DoubleBounds(0.05, 0.12)),
     )
 }

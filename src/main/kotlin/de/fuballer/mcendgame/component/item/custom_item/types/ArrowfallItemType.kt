@@ -1,6 +1,8 @@
 package de.fuballer.mcendgame.component.item.custom_item.types
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleBounds
 import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.armor.Chestplate
@@ -12,8 +14,8 @@ object ArrowfallItemType : CustomItemType {
     override val equipment = Chestplate.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableCustomAttribute(AttributeType.ADDITIONAL_ARROWS, 0.3, 0.85),
-        RollableCustomAttribute(AttributeType.MOVEMENT_SPEED, 0.003, 0.01),
-        RollableCustomAttribute(AttributeType.DODGE_CHANCE, 0.05, 0.15),
+        RollableCustomAttribute(CustomAttributeTypes.ADDITIONAL_ARROWS, DoubleBounds(0.3, 0.85)),
+        RollableCustomAttribute(VanillaAttributeTypes.MOVEMENT_SPEED, DoubleBounds(0.003, 0.01)),
+        RollableCustomAttribute(CustomAttributeTypes.DODGE_CHANCE, DoubleBounds(0.05, 0.15)),
     )
 }

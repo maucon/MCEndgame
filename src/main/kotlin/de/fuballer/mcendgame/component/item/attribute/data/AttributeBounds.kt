@@ -11,7 +11,7 @@ data class DoubleBounds(
     val max: Double
 ) : AttributeBounds<DoubleRoll> {
     init {
-        assert(min <= max) { "min must be smaller than max" }
+        require(min <= max) { "min must be smaller than max" }
     }
 
     constructor(max: Double) : this(0.0, max)
@@ -32,7 +32,7 @@ data class IntBounds(
     val max: Int
 ) : AttributeBounds<IntRoll> {
     init {
-        assert(min <= max) { "min must be smaller than max" }
+        require(min <= max) { "min must be smaller than max" }
     }
 
     constructor(max: Int) : this(0, max)

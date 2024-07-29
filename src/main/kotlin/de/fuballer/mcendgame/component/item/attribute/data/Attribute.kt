@@ -22,7 +22,7 @@ data class RollableCustomAttribute(
     }
 
     fun roll(percentRolls: List<Double>): CustomAttribute {
-        assert(bounds.size == percentRolls.size) { "number of percentRolls must be equal to the number of bounds" }
+        require(bounds.size == percentRolls.size) { "number of percentRolls must be equal to the number of bounds" }
         val attributeRolls = bounds.zip(percentRolls)
             .map { (attributeBounds, percentRoll) -> attributeBounds.roll(percentRoll) }
 
