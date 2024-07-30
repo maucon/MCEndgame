@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.technical.persistent_data.types
+package de.fuballer.mcendgame.technical.persistent_data.types.attribute
 
 import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentList

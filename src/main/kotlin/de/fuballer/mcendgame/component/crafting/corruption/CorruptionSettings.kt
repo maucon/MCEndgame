@@ -16,10 +16,10 @@ import kotlin.random.Random
 
 object CorruptionSettings {
     private val BASE_ITEM = Material.PAPER
-    private val ITEM_NAME = ChatColor.DARK_RED.toString() + "Orb of Corruption"
+    private val ITEM_NAME = "${ChatColor.DARK_RED}Orb of Corruption"
     private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Corrupt an item, modifying it unpredictably")
     private val ITEM_LORE_DOUBLE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Corrupt an item, modifying it unpredictably. Twice!")
-    val CORRUPTION_TAG_LORE = ChatColor.DARK_RED.toString() + "Corrupted"
+    val CORRUPTION_TAG_LORE = "${ChatColor.DARK_RED}Corrupted"
 
     val CORRUPTIONS = listOf(
         RandomOption(40, CorruptionModification.CORRUPT_ENCHANTS),

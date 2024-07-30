@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.technical.persistent_data.types
+package de.fuballer.mcendgame.technical.persistent_data.types.attribute
 
 import de.fuballer.mcendgame.component.item.attribute.data.*
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentEnum
@@ -10,7 +10,7 @@ import org.bukkit.persistence.PersistentDataType
 
 private val TYPE_KEY = PluginUtil.createNamespacedKey("type")
 private val BOUNDS_KEY = PluginUtil.createNamespacedKey("bounds")
-private val PERCENT_ROLL_KEY = PluginUtil.createNamespacedKey("bounds")
+private val PERCENT_ROLL_KEY = PluginUtil.createNamespacedKey("percent_roll")
 private val INDEX_ROLL_KEY = PluginUtil.createNamespacedKey("index_roll")
 
 private enum class AttributeRollType {
@@ -26,7 +26,7 @@ object PersistentAttributeRoll : PersistentDataType<PersistentDataContainer, Att
 
     override fun fromPrimitive(primitive: PersistentDataContainer, context: PersistentDataAdapterContext): AttributeRoll<*> {
         val type = primitive.get(TYPE_KEY, PersistentEnum(AttributeRollType::class))!!
-        val bounds = primitive.get(PERCENT_ROLL_KEY, PersistentAttributeBounds)!!
+        val bounds = primitive.get(BOUNDS_KEY, PersistentAttributeBounds)!!
 
         return when (type) {
             AttributeRollType.DOUBLE_ROLL -> {

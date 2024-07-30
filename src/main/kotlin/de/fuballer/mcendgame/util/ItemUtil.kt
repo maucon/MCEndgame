@@ -1,10 +1,12 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.crafting.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeTypes
 import de.fuballer.mcendgame.component.item.attribute.data.*
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
+import de.fuballer.mcendgame.technical.Order
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
@@ -20,10 +22,25 @@ import org.bukkit.inventory.meta.ItemMeta
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.random.Random
+import kotlin.reflect.KVisibility
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.memberProperties
 
 private val DECIMAL_FORMAT = DecimalFormat("#.##")
 
 object ItemUtil {
+    private val vanillaAttributeTypes = VanillaAttributeTypes::class.memberProperties
+        .filter { it.visibility == KVisibility.PUBLIC }
+        .sortedBy { it.findAnnotation<Order>()?.order }
+        .map { it.get(VanillaAttributeTypes) as VanillaAttributeType }
+
+    private val customAttributeTypes = CustomAttributeTypes::class.memberProperties
+        .filter { it.visibility == KVisibility.PUBLIC }
+        .sortedBy { it.findAnnotation<Order>()?.order }
+        .map { it.get(CustomAttributeTypes) as CustomAttributeType }
+
+    private val attributeTypes = vanillaAttributeTypes + customAttributeTypes
+
     fun isVanillaItem(item: ItemStack): Boolean {
         val itemMeta = item.itemMeta ?: return true
         return !itemMeta.hasLore()
@@ -169,8 +186,8 @@ object ItemUtil {
 
         if (updateBaseAttributes) {
             baseAttributes.forEach {
-                val attributeLine = getBaseAttributeLine(it)
-                lore.add(attributeLine)
+                val attributeLore = getBaseAttributeLore(it)
+                lore.add(attributeLore)
             }
         }
         if (updateEnchantmentAttributes) {
@@ -188,7 +205,7 @@ object ItemUtil {
             lore.add("")
             lore.add(Equipment.GENERIC_SLOT_LORE)
 
-            val attributes = getSortedCustomAttributes(customItemType, customAttributes)
+            val attributes = getCustomAttributesSorted(customItemType, customAttributes)
 
             attributes.forEach {
                 val attributeLine = getCustomAttributeLine(it)
@@ -203,25 +220,24 @@ object ItemUtil {
         itemMeta.lore = lore
     }
 
-    private fun getSortedCustomAttributes(
+    private fun getCustomAttributesSorted(
         customItemType: CustomItemType?,
         customAttributes: List<CustomAttribute>
     ): List<CustomAttribute> {
         if (customItemType == null) {
-            return customAttributes.sortedBy { it.type.ordinal }
+            return customAttributes.sortedBy { attributeTypes.indexOf(it.type) }
         }
 
         val attributeTypeOrder = customItemType.attributes.map { it.type }
-        return customAttributes.sortedWith(compareBy { attributeTypeOrder.indexOf(it.type) })
+        return customAttributes.sortedBy { attributeTypeOrder.indexOf(it.type) }
     }
 
-    private fun getBaseAttributeLine(
-        attribute: BaseAttribute
-    ): String {
-        var attributeLore = AttributeUtil.getCorrectSignLore(attribute)
-        val vanillaAttributeType = attribute.type.vanillaAttributeType!!
+    private fun getBaseAttributeLore(attribute: BaseAttribute): String {
+        var attributeLore = attribute.getLore()
 
-        if (isNotPlayerBaseAttribute(vanillaAttributeType)) return "${ChatColor.BLUE}$attributeLore"
+        if (isNotPlayerBaseAttribute(attribute.type)) {
+            return "${ChatColor.BLUE}$attributeLore"
+        }
 
         attributeLore = attributeLore.replaceFirstChar { " " }
         return "${ChatColor.DARK_GREEN}$attributeLore"
@@ -247,7 +263,7 @@ object ItemUtil {
     }
 
     private fun getCustomAttributeLine(attribute: CustomAttribute): String {
-        val attributeLore = AttributeUtil.getCorrectSignLore(attribute)
+        val attributeLore = attribute.getLore()
         return "${ChatColor.BLUE}$attributeLore"
     }
 

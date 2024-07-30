@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.technical.persistent_data.types
+package de.fuballer.mcendgame.technical.persistent_data.types.attribute
 
 import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeTypes
@@ -13,7 +13,7 @@ import org.bukkit.persistence.PersistentDataType
 import kotlin.reflect.full.memberProperties
 
 private val TYPE_KEY = PluginUtil.createNamespacedKey("type")
-private val MEMBER_KEY = PluginUtil.createNamespacedKey("type")
+private val MEMBER_KEY = PluginUtil.createNamespacedKey("member")
 
 private enum class AttributeTypeType {
     CUSTOM_ATTRIBUTE_TYPE,

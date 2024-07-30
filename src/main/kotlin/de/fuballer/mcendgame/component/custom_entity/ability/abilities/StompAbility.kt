@@ -62,7 +62,7 @@ object StompAbility : Ability {
     private fun getLeapHorizontalVelocity(caster: LivingEntity, target: LivingEntity, ticks: Int): Double {
         val horizontalDistance = sqrt((caster.location.x - target.location.x).pow(2) + (caster.location.z - target.location.z).pow(2))
         val horizontalVelocity = (horizontalDistance * (1 - 0.91)) / (1 - 0.91.pow(ticks + 1)) // 0.91 minecraft horizontal air resistance
-        return horizontalVelocity * 1.4 // FIXME (dont know why its too little velocity doesnt make any sense)
+        return horizontalVelocity * 1.4 // FIXME dont know why its too little velocity doesnt make any sense
     }
 
     private fun getLeapDuration(yVelocity: Double, yOffset: Double): Int {

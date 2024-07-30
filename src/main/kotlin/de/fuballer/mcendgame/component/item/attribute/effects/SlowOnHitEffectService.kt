@@ -1,8 +1,9 @@
 package de.fuballer.mcendgame.component.item.attribute.effects
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsDouble
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.EventHandler
@@ -16,8 +17,8 @@ const val SLOW_RANGE = 4.0
 class SlowOnHitEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        val slowOnHitAttributes = event.damagerAttributes[AttributeType.SLOW_ON_HIT] ?: return
-        val slowOnHitAttribute = slowOnHitAttributes.max()
+        val slowOnHitAttributes = event.damagerAttributes[CustomAttributeTypes.SLOW_ON_HIT] ?: return
+        val slowOnHitAttribute = slowOnHitAttributes.maxOf { it.attributeRolls.getFirstAsDouble() }
 
         val duration = (slowOnHitAttribute * 20).toInt()
         val slowEffect = PotionEffect(PotionEffectType.SLOWNESS, duration, 1, true)

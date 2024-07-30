@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.item.attribute.effects
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
@@ -34,7 +34,7 @@ private val NEGATIVE_EFFECTS = listOf(
 class NegativeEffectImmunityEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        if (!event.damagedAttributes.containsKey(AttributeType.NEGATIVE_EFFECT_IMMUNITY)) return
+        if (!event.damagedAttributes.containsKey(CustomAttributeTypes.NEGATIVE_EFFECT_IMMUNITY)) return
 
         event.onHitPotionEffects.clear()
     }
@@ -46,7 +46,7 @@ class NegativeEffectImmunityEffectService : Listener {
 
         val entity = event.entity as? LivingEntity ?: return
         val entityCustomAttributes = entity.getCustomAttributes()
-        if (!entityCustomAttributes.containsKey(AttributeType.NEGATIVE_EFFECT_IMMUNITY)) return
+        if (!entityCustomAttributes.containsKey(CustomAttributeTypes.NEGATIVE_EFFECT_IMMUNITY)) return
 
         event.cancel()
     }

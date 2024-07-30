@@ -16,6 +16,6 @@ object ChaosguardItemType : CustomItemType {
     override val attributes = listOf(
         RollableCustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, DoubleBounds(2.0, 4.0)),
         RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH, DoubleBounds(1.0, 2.0)),
-        RollableCustomAttribute(CustomAttributeTypes.RANDOMIZED_DAMAGE_TAKEN, DoubleBounds(1.4, 1.6)),
+        RollableCustomAttribute(CustomAttributeTypes.RANDOMIZED_DAMAGE_TAKEN, DoubleBounds(0.2, 0.4), DoubleBounds(1.4, 1.6)),
     )
 }

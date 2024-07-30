@@ -23,4 +23,8 @@ object AttributeRollExtension {
             is IntRoll -> intRollFunction.apply(this)
             else -> throw IllegalStateException("Invalid ${AttributeRoll::class.simpleName} instance")
         }
+
+    fun List<AttributeRoll<*>>.getFirstAsDouble(): Double = (get(0) as DoubleRoll).getRoll()
+    fun List<AttributeRoll<*>>.getFirstAsInt(): Int = (get(0) as IntRoll).getRoll()
+    fun List<AttributeRoll<*>>.getSecondAsDouble(): Double = (get(1) as DoubleRoll).getRoll()
 }

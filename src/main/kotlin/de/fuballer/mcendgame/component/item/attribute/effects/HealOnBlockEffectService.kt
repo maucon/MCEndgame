@@ -1,8 +1,9 @@
 package de.fuballer.mcendgame.component.item.attribute.effects
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsDouble
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.heal
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHealOnBlockActivation
 import de.fuballer.mcendgame.util.extension.PlayerExtension.setHealOnBlockActivation
@@ -23,12 +24,12 @@ class HealOnBlockEffectService : Listener {
         val player = event.damaged as? Player ?: return
         if (!event.isDamageBlocked) return
 
-        val healOnBlockAttributes = event.damagedAttributes[AttributeType.HEAL_ON_BLOCK] ?: return
+        val healOnBlockAttributes = event.damagedAttributes[CustomAttributeTypes.HEAL_ON_BLOCK] ?: return
 
         if (isHealOnBlockOnCooldown(player)) return
         player.setHealOnBlockActivation(System.currentTimeMillis())
 
-        val healOnBlockAttribute = healOnBlockAttributes.sum()
+        val healOnBlockAttribute = healOnBlockAttributes.sumOf { it.attributeRolls.getFirstAsDouble() }
         val maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
         val amount = maxHealth * healOnBlockAttribute
 

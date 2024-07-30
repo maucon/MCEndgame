@@ -36,6 +36,8 @@ interface CustomItemType : Keyed {
             it.register(VitalitySurgeItemType)
             it.register(CrownOfConflictItemType)
             it.register(WingedFlightItemType)
+
+            it.register(TestItemType)
         }
     }
 }

@@ -1,8 +1,9 @@
 package de.fuballer.mcendgame.component.item.attribute.effects
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.event.EntityHealEvent
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsDouble
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import org.bukkit.attribute.Attribute
@@ -51,8 +52,8 @@ class HealthReservationEffectService : Listener {
         val maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
 
         val attributes = entity.getCustomAttributes()
-        val healthReservationAttributes = attributes[AttributeType.HEALTH_RESERVATION] ?: return maxHealth
-        val unreservedHealthPercentage = 1 - healthReservationAttributes.sum()
+        val healthReservationAttributes = attributes[CustomAttributeTypes.HEALTH_RESERVATION] ?: return maxHealth
+        val unreservedHealthPercentage = 1 - healthReservationAttributes.sumOf { it.attributeRolls.getFirstAsDouble() }
 
         return maxHealth * unreservedHealthPercentage
     }
