@@ -12,8 +12,8 @@ object LessDamageTakenTotemType : TotemType {
     override val displayName = "Totem of Fortress"
 
     override fun getValues(tier: TotemTier) = when (tier) {
-        TotemTier.COMMON -> listOf(0.4)
-        TotemTier.UNCOMMON -> listOf(0.8)
+        TotemTier.COMMON -> listOf(0.04)
+        TotemTier.UNCOMMON -> listOf(0.08)
         TotemTier.RARE -> listOf(0.12)
         TotemTier.LEGENDARY -> listOf(0.2)
     }

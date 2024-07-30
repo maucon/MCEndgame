@@ -51,9 +51,9 @@ object LootSettings {
 
     val BOSS_ORBS = listOf(
         RandomOption(1, ImitationSettings.getImitationItem()),
+        RandomOption(3, RefinementSettings.getRefinementItem()),
         RandomOption(5, CorruptionSettings.getDoubleCorruptionItem()),
         RandomOption(5, ReshapingSettings.getReshapingItem()),
-        RandomOption(10, RefinementSettings.getRefinementItem()),
         RandomOption(15, TransfigurationSettings.getTransfigurationItem()),
         RandomOption(20, CorruptionSettings.getCorruptionItem()),
     )

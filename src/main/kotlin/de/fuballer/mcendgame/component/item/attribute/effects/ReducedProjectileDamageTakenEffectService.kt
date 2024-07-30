@@ -16,8 +16,8 @@ class ReducedProjectileDamageTakenEffectService : Listener {
         if (event.cause != EntityDamageEvent.DamageCause.PROJECTILE) return
 
         val reducedProjDamageTakenAttributes = event.damagedAttributes[CustomAttributeTypes.REDUCED_PROJECTILE_DAMAGE_TAKEN] ?: return
-        val reducedDamage = -reducedProjDamageTakenAttributes.sumOf { it.attributeRolls.getFirstAsDouble() }
+        val reducedDamage = reducedProjDamageTakenAttributes.sumOf { it.attributeRolls.getFirstAsDouble() }
 
-        event.moreDamage.add(reducedDamage)
+        event.reducedDamage.add(reducedDamage)
     }
 }

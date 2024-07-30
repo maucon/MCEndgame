@@ -16,6 +16,6 @@ class LessDamageTakenEffectService : Listener {
         val tier = player.getHighestTotemTier(LessDamageTakenTotemType) ?: return
 
         val (lessDmg) = LessDamageTakenTotemType.getValues(tier)
-        event.moreDamage.add(-lessDmg)
+        event.lessDamage.add(lessDmg)
     }
 }
