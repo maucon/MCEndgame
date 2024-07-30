@@ -19,9 +19,10 @@ object DamageUtil {
     ): Double {
         var damage = baseDamage
 
-        damage *= 1 + increase.sum() - decrease.sum()
-
+        damage *= 1 + increase.sum()
         more.forEach { damage *= 1 + it }
+
+        damage *= 1 - decrease.sum()
         less.forEach { damage *= 1 - it }
 
         return damage
