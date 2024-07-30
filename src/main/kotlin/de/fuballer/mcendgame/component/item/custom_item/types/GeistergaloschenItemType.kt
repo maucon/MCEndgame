@@ -14,7 +14,7 @@ object GeistergaloschenItemType : CustomItemType {
     override val equipment = Boots.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableCustomAttribute(CustomAttributeTypes.BACKSTAB, DoubleBounds(0.2, 0.4)),
+        RollableCustomAttribute(CustomAttributeTypes.BACKSTAB, DoubleBounds(0.2, 0.5)),
         RollableCustomAttribute(CustomAttributeTypes.STEALTH),
         RollableCustomAttribute(VanillaAttributeTypes.MOVEMENT_SPEED, DoubleBounds(0.005, 0.015)),
     )

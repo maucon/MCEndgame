@@ -15,6 +15,6 @@ object MoonshadowItemType : CustomItemType {
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
         RollableCustomAttribute(VanillaAttributeTypes.MOVEMENT_SPEED, DoubleBounds(0.005, 0.015)),
-        RollableCustomAttribute(CustomAttributeTypes.DODGE_CHANCE, DoubleBounds(0.05, 0.15)),
+        RollableCustomAttribute(CustomAttributeTypes.DODGE_CHANCE, DoubleBounds(0.1, 0.25)),
     )
 }

@@ -14,7 +14,7 @@ object FatesplitterItemType : CustomItemType {
     override val equipment = Axe.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE_PER_MISSING_HEART, DoubleBounds(0.05, 0.1)),
+        RollableCustomAttribute(CustomAttributeTypes.INCREASED_MELEE_DAMAGE_PER_MISSING_HEART, DoubleBounds(0.1, 0.2)),
         RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(2.0, 5.0)),
         RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(-0.2, -0.1)),
     )

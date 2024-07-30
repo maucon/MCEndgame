@@ -13,9 +13,9 @@ object AttackSpeedTotemType : TotemType {
 
     override fun getValues(tier: TotemTier) = when (tier) {
         TotemTier.COMMON -> listOf(0.1)
-        TotemTier.UNCOMMON -> listOf(0.15)
-        TotemTier.RARE -> listOf(0.2)
-        TotemTier.LEGENDARY -> listOf(0.3)
+        TotemTier.UNCOMMON -> listOf(0.17)
+        TotemTier.RARE -> listOf(0.25)
+        TotemTier.LEGENDARY -> listOf(0.4)
     }
 
     override fun getLore(tier: TotemTier): List<String> {

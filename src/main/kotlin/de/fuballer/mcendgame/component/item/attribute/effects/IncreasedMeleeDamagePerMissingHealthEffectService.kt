@@ -7,12 +7,17 @@ import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsDou
 import org.bukkit.attribute.Attribute
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
 
 @Component
-class IncreasedDamagePerMissingHealthEffectService : Listener {
+class IncreasedMeleeDamagePerMissingHealthEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        val incDamageAttributes = event.damagerAttributes[CustomAttributeTypes.INCREASED_DAMAGE_PER_MISSING_HEART] ?: return
+        if (event.cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK
+            && event.cause != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK
+        ) return
+
+        val incDamageAttributes = event.damagerAttributes[CustomAttributeTypes.INCREASED_MELEE_DAMAGE_PER_MISSING_HEART] ?: return
 
         val damager = event.damager
         val missingHealth = damager.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value - damager.health

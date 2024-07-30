@@ -31,6 +31,9 @@ class DamageCalculationEvent(
     val increasedDamage: MutableList<Double> = mutableListOf(),
     val moreDamage: MutableList<Double> = mutableListOf(),
 
+    val reducedDamage: MutableList<Double> = mutableListOf(),
+    val lessDamage: MutableList<Double> = mutableListOf(),
+
     var isExecute: Boolean = false,
     val onHitPotionEffects: MutableList<PotionEffect> = mutableListOf(),
 ) : HandleableEvent(), Cancellable {
@@ -47,6 +50,6 @@ class DamageCalculationEvent(
         val absorbedDamage = abs(originalEvent.getDamage(DamageModifier.ABSORPTION))
         val realBaseDamage = baseDamage + absorbedDamage
 
-        return DamageUtil.calculateFinalDamage(realBaseDamage, increasedDamage, moreDamage)
+        return DamageUtil.calculateFinalDamage(realBaseDamage, increasedDamage, moreDamage, reducedDamage, lessDamage)
     }
 }

@@ -12,10 +12,10 @@ object DodgeTotemType : TotemType {
     override val displayName = "Totem of Grace"
 
     override fun getValues(tier: TotemTier) = when (tier) {
-        TotemTier.COMMON -> listOf(0.05)
-        TotemTier.UNCOMMON -> listOf(0.1)
-        TotemTier.RARE -> listOf(0.15)
-        TotemTier.LEGENDARY -> listOf(0.2)
+        TotemTier.COMMON -> listOf(0.1)
+        TotemTier.UNCOMMON -> listOf(0.2)
+        TotemTier.RARE -> listOf(0.3)
+        TotemTier.LEGENDARY -> listOf(0.45)
     }
 
     override fun getLore(tier: TotemTier): List<String> {

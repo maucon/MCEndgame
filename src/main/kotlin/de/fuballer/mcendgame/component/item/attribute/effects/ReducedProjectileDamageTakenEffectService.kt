@@ -7,13 +7,16 @@ import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsDou
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
 
 @Component
-class ReducedDamageTakenEffectService : Listener {
+class ReducedProjectileDamageTakenEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        val reducedDamageTakenAttributes = event.damagedAttributes[CustomAttributeTypes.REDUCED_DAMAGE_TAKEN] ?: return
-        val reducedDamage = reducedDamageTakenAttributes.sumOf { it.attributeRolls.getFirstAsDouble() }
+        if (event.cause != EntityDamageEvent.DamageCause.PROJECTILE) return
+
+        val reducedProjDamageTakenAttributes = event.damagedAttributes[CustomAttributeTypes.REDUCED_PROJECTILE_DAMAGE_TAKEN] ?: return
+        val reducedDamage = reducedProjDamageTakenAttributes.sumOf { it.attributeRolls.getFirstAsDouble() }
 
         event.reducedDamage.add(reducedDamage)
     }

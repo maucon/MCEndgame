@@ -12,10 +12,10 @@ object ExperienceTotemType : TotemType {
     override val displayName = "Totem of Catalyst"
 
     override fun getValues(tier: TotemTier) = when (tier) {
-        TotemTier.COMMON -> listOf(0.4)
-        TotemTier.UNCOMMON -> listOf(0.8)
-        TotemTier.RARE -> listOf(1.2)
-        TotemTier.LEGENDARY -> listOf(2.0)
+        TotemTier.COMMON -> listOf(1.0)
+        TotemTier.UNCOMMON -> listOf(2.0)
+        TotemTier.RARE -> listOf(3.0)
+        TotemTier.LEGENDARY -> listOf(5.0)
     }
 
     override fun getLore(tier: TotemTier): List<String> {

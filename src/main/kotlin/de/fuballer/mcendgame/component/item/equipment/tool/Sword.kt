@@ -62,11 +62,11 @@ enum class Sword(
     override val slotDependentAttributes = false
 
     override val rollableCustomAttributes = listOf(
-        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(2.0))),
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(5.0))),
         RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.4))),
         RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_KNOCKBACK, DoubleBounds(0.5))),
         RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5))),
-        RandomOption(5, RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE, DoubleBounds(0.08)))
+        RandomOption(5, RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE, DoubleBounds(0.15)))
     )
 
     override val rollableEnchants = listOf(

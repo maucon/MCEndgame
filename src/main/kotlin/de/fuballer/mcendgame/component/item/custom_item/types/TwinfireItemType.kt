@@ -14,7 +14,8 @@ object TwinfireItemType : CustomItemType {
     override val equipment = Sword.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableCustomAttribute(CustomAttributeTypes.TWINFIRE_DUAL_WIELD, DoubleBounds(0.15, 0.25)),
-        RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.1, 0.15)),
+        RollableCustomAttribute(CustomAttributeTypes.TWINFIRE_DUAL_WIELD, DoubleBounds(0.2, 0.35)),
+        RollableCustomAttribute(CustomAttributeTypes.REDUCED_PROJECTILE_DAMAGE_TAKEN, DoubleBounds(0.1, 0.2)),
+        RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.15, 0.25)),
     )
 }

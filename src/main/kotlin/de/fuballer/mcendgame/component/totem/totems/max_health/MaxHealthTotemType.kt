@@ -12,10 +12,10 @@ object MaxHealthTotemType : TotemType {
     override val displayName = "Totem of Thickness" // name chosen by xX20Erik01Xx
 
     override fun getValues(tier: TotemTier) = when (tier) {
-        TotemTier.COMMON -> listOf(1.0)
-        TotemTier.UNCOMMON -> listOf(2.0)
-        TotemTier.RARE -> listOf(3.0)
-        TotemTier.LEGENDARY -> listOf(5.0)
+        TotemTier.COMMON -> listOf(2.0)
+        TotemTier.UNCOMMON -> listOf(3.5)
+        TotemTier.RARE -> listOf(5.0)
+        TotemTier.LEGENDARY -> listOf(7.0)
     }
 
     override fun getLore(tier: TotemTier): List<String> {

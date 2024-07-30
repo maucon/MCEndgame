@@ -10,11 +10,20 @@ import kotlin.math.max
 import kotlin.math.min
 
 object DamageUtil {
-    /** flat, increase, more */
-    fun calculateFinalDamage(baseDamage: Double, increase: List<Double>, more: List<Double>): Double {
+    fun calculateFinalDamage(
+        baseDamage: Double,
+        increase: List<Double>,
+        more: List<Double>,
+        decrease: List<Double>,
+        less: List<Double>
+    ): Double {
         var damage = baseDamage
+
         damage *= 1 + increase.sum()
         more.forEach { damage *= 1 + it }
+
+        damage *= 1 - decrease.sum()
+        less.forEach { damage *= 1 - it }
 
         return damage
     }
