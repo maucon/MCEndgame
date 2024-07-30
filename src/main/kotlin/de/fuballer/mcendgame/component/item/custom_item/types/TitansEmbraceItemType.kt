@@ -1,7 +1,9 @@
 package de.fuballer.mcendgame.component.item.custom_item.types
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
-import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleBounds
+import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.armor.Chestplate
 import de.fuballer.mcendgame.util.PluginUtil
@@ -12,10 +14,10 @@ object TitansEmbraceItemType : CustomItemType {
     override val equipment = Chestplate.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.ARMOR, -5.0, -2.0),
-        RollableAttribute(AttributeType.MAX_HEALTH, 3.0, 6.0),
-        RollableAttribute(AttributeType.MAX_HEALTH_INCREASE, 0.1, 0.2),
-        RollableAttribute(AttributeType.REGEN_ON_DAMAGE_TAKEN, 5.0, 8.0),
-        RollableAttribute(AttributeType.SIZE_INCREASE, 0.1, 0.2),
+        RollableCustomAttribute(VanillaAttributeTypes.ARMOR, DoubleBounds(-5.0, -2.0)),
+        RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH, DoubleBounds(3.0, 6.0)),
+        RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH_INCREASE, DoubleBounds(0.1, 0.2)),
+        RollableCustomAttribute(CustomAttributeTypes.REGEN_ON_DAMAGE_TAKEN, DoubleBounds(5.0, 8.0)),
+        RollableCustomAttribute(VanillaAttributeTypes.SIZE_INCREASE, DoubleBounds(0.1, 0.2)),
     )
 }

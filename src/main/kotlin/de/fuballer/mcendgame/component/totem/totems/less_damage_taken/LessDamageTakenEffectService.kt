@@ -10,7 +10,7 @@ import org.bukkit.event.Listener
 @Component
 class LessDamageTakenEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
-    fun on(event: DamageCalculationEvent) { // FIXME change with #234
+    fun on(event: DamageCalculationEvent) { // FIXME add to player attributes
         if (!event.isDungeonWorld) return
         val player = event.damaged as? Player ?: return
         val tier = player.getHighestTotemTier(LessDamageTakenTotemType) ?: return

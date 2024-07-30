@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.damage
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.CustomAttributeType
 import de.fuballer.mcendgame.event.HandleableEvent
 import org.bukkit.World
 import org.bukkit.entity.LivingEntity
@@ -15,10 +16,10 @@ class DamageCalculationEvent(
     private val originalEvent: EntityDamageByEntityEvent,
 
     val damager: LivingEntity,
-    val damagerAttributes: Map<AttributeType, List<Double>>,
+    val damagerAttributes: Map<CustomAttributeType, List<CustomAttribute>>,
 
     val damaged: LivingEntity,
-    val damagedAttributes: Map<AttributeType, List<Double>>,
+    val damagedAttributes: Map<CustomAttributeType, List<CustomAttribute>>,
 
     val cause: DamageCause,
     val world: World,

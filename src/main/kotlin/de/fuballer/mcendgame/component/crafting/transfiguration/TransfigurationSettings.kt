@@ -13,6 +13,8 @@ object TransfigurationSettings {
     private val ITEM_NAME = ChatColor.DARK_GREEN.toString() + "Orb of Transfiguration"
     private val ITEM_LORE = listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Shuffle an item's attribute rolls")
 
+    const val SHUFFLE_TRIES = 10
+
     private val TRANSFIGURATION_ITEM = ItemCreatorUtil.create(
         ItemStack(BASE_ITEM),
         ITEM_NAME,

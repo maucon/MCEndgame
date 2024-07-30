@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.item.attribute.effects
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.MathUtil
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
@@ -21,7 +21,7 @@ class StealthEffectService : Listener {
         val target = event.target as? LivingEntity ?: return
 
         val damagerCustomAttributes = target.getCustomAttributes()
-        val stealthAttributes = damagerCustomAttributes[AttributeType.STEALTH] ?: return
+        val stealthAttributes = damagerCustomAttributes[CustomAttributeTypes.STEALTH] ?: return
 
         if (stealthAttributes.isEmpty()) return
 

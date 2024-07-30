@@ -1,9 +1,7 @@
 package de.fuballer.mcendgame.util.extension
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
 import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
-import de.fuballer.mcendgame.component.item.attribute.data.RollType
-import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.CustomAttributeType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.event.EntityHealEvent
 import de.fuballer.mcendgame.event.EventGateway
@@ -18,42 +16,34 @@ object LivingEntityExtension {
         EventGateway.apply(event)
     }
 
-    fun LivingEntity.getCustomAttributes(): Map<AttributeType, List<Double>> {
+    fun LivingEntity.getCustomAttributes(): Map<CustomAttributeType, List<CustomAttribute>> {
         return getEntityCustomAttributes(this)
     }
 
-    private fun getEntityCustomAttributes(entity: LivingEntity): Map<AttributeType, List<Double>> {
+    private fun getEntityCustomAttributes(entity: LivingEntity): Map<CustomAttributeType, List<CustomAttribute>> {
         val attributes = mutableListOf<CustomAttribute>()
         val equipment = entity.equipment ?: return mapOf()
 
-        val helmetAttributes = getValidItemAttributes(equipment.helmet, EquipmentSlot.HEAD)
+        val helmetAttributes = getValidItemRolledAttributes(equipment.helmet, EquipmentSlot.HEAD)
         attributes.addAll(helmetAttributes)
-        val chestplateAttributes = getValidItemAttributes(equipment.chestplate, EquipmentSlot.CHEST)
+        val chestplateAttributes = getValidItemRolledAttributes(equipment.chestplate, EquipmentSlot.CHEST)
         attributes.addAll(chestplateAttributes)
-        val leggingsAttributes = getValidItemAttributes(equipment.leggings, EquipmentSlot.LEGS)
+        val leggingsAttributes = getValidItemRolledAttributes(equipment.leggings, EquipmentSlot.LEGS)
         attributes.addAll(leggingsAttributes)
-        val bootsAttributes = getValidItemAttributes(equipment.boots, EquipmentSlot.FEET)
+        val bootsAttributes = getValidItemRolledAttributes(equipment.boots, EquipmentSlot.FEET)
         attributes.addAll(bootsAttributes)
 
-        val mainHandAttributes = getValidItemAttributes(equipment.itemInMainHand, EquipmentSlot.HAND)
+        val mainHandAttributes = getValidItemRolledAttributes(equipment.itemInMainHand, EquipmentSlot.HAND)
         attributes.addAll(mainHandAttributes)
-        val offHandAttributes = getValidItemAttributes(equipment.itemInOffHand, EquipmentSlot.OFF_HAND)
+        val offHandAttributes = getValidItemRolledAttributes(equipment.itemInOffHand, EquipmentSlot.OFF_HAND)
         attributes.addAll(offHandAttributes)
 
         return attributes
-            .filter { !it.type.isVanillaAttributeType }
-            .groupBy { it.type }
-            .mapValues { (_, attributes) ->
-                attributes.map { attribute ->
-                    when (attribute.rollType) {
-                        RollType.STATIC -> 0.0
-                        RollType.SINGLE -> (attribute as SingleValueAttribute).getAbsoluteRoll()
-                    }
-                }
-            }
+            .filter { it.type is CustomAttributeType }
+            .groupBy { it.type as CustomAttributeType }
     }
 
-    private fun getValidItemAttributes(item: ItemStack?, slot: EquipmentSlot): List<CustomAttribute> {
+    private fun getValidItemRolledAttributes(item: ItemStack?, slot: EquipmentSlot): List<CustomAttribute> {
         if (item == null) return listOf()
 
         val grantAttributes = Equipment.fromMaterial(item.type)

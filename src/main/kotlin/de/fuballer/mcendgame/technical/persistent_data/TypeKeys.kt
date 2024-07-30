@@ -3,7 +3,11 @@ package de.fuballer.mcendgame.technical.persistent_data
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.map_device.MapDeviceAction
-import de.fuballer.mcendgame.technical.persistent_data.types.*
+import de.fuballer.mcendgame.technical.persistent_data.types.PersistentLocation
+import de.fuballer.mcendgame.technical.persistent_data.types.PersistentModifier
+import de.fuballer.mcendgame.technical.persistent_data.types.PersistentTotem
+import de.fuballer.mcendgame.technical.persistent_data.types.PersistentUUID
+import de.fuballer.mcendgame.technical.persistent_data.types.attribute.PersistentCustomAttribute
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentEnum
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentList
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentObjectClass

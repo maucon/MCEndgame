@@ -1,15 +1,11 @@
 package de.fuballer.mcendgame.component.item.item_info
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
-import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
-import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
-import de.fuballer.mcendgame.component.item.attribute.data.RollType
-import de.fuballer.mcendgame.component.item.attribute.data.SingleValueAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.*
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.technical.CommandHandler
+import de.fuballer.mcendgame.util.extension.AttributeRollExtension.extract
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -66,67 +62,52 @@ class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
         bookMeta.author = ItemInfoSettings.BOOK_AUTHOR
         bookMeta.title = ItemInfoSettings.BOOK_TITLE
 
-        getAttributePages(item, itemType)
+        getAttributePages(item)
             .forEach { bookMeta.addPage(it) }
 
         book.itemMeta = bookMeta
         return book
     }
 
-    private fun getAttributePages(item: ItemStack, itemType: Material): List<String> {
-        val itemDisplayName = getItemTypeDisplayName(itemType)
-        val header = "${ItemInfoSettings.ITEM_TYPE_COLOR}$itemDisplayName${ChatColor.RESET}"
-
+    private fun getAttributePages(item: ItemStack): List<String> {
         val attributes = item.getCustomAttributes() ?: listOf()
 
         return attributes
-            .map { mapToAttributeText(it) }
-            .map { "$header\n\n\n$it" }
+            .map { mapAttributeToText(it) }
     }
 
-    private fun getItemTypeDisplayName(itemType: Material): String {
-        var displayName = ""
-
-        val words = itemType.name.split("_")
-        for (word in words) {
-            val lowerCaseWord = word.lowercase()
-            val uppercaseWord = lowerCaseWord[0].uppercase() + lowerCaseWord.substring(1)
-            displayName = displayName.plus("$uppercaseWord ")
-        }
-
-        return displayName.trim()
-    }
-
-    private fun mapToAttributeText(attribute: CustomAttribute): String {
-        val attributeRollText = when (attribute.rollType) {
-            RollType.STATIC -> ItemInfoSettings.NOT_ROLLED_TEXT
-            RollType.SINGLE -> getAttributeRollText(attribute as SingleValueAttribute)
-        }
-
-        var attributeLore = AttributeUtil.getCorrectSignLore(attribute)
-        if (attributeLore.firstOrNull() != null && attributeLore.first() == ' ') {
+    private fun mapAttributeToText(attribute: CustomAttribute): String {
+        var attributeLore = attribute.getLore()
+        if (attributeLore.firstOrNull() == ' ') {
             attributeLore = attributeLore.replaceFirstChar { "" }
         }
 
+        val attributeRollsText = mapAttributeRollsToText(attribute.attributeRolls)
+
         return "${ItemInfoSettings.ATTRIBUTE_COLOR}$attributeLore\n\n" +
-                "${ItemInfoSettings.VALUE_COLOR}${attributeRollText}\n"
+                "${ItemInfoSettings.VALUE_COLOR}${attributeRollsText}\n"
     }
 
-    private fun getAttributeRollText(attribute: SingleValueAttribute): String {
-        val type = attribute.type
-        return String.format(
+    private fun mapAttributeRollsToText(attributeRolls: List<AttributeRoll<*>>) =
+        attributeRolls.joinToString("\n\n") { it.extract(::mapDoubleRollToText, ::mapStringRollToText, ::mapIntRollToText) }
+
+    private fun mapDoubleRollToText(roll: DoubleRoll) =
+        String.format(
             "Min: %s\nMax: %s\nRoll: %s\n%%Roll: %s%%",
-            DECIMAL_FORMAT.format(getAttributeDisplayValue(type, attribute.bounds.min)),
-            DECIMAL_FORMAT.format(getAttributeDisplayValue(type, attribute.bounds.max)),
-            DECIMAL_FORMAT.format(getAttributeDisplayValue(type, attribute.getAbsoluteRoll())),
-            DECIMAL_FORMAT.format(attribute.percentRoll * 100)
+            DECIMAL_FORMAT.format(roll.bounds.min),
+            DECIMAL_FORMAT.format(roll.bounds.max),
+            DECIMAL_FORMAT.format(roll.getRoll()),
+            DECIMAL_FORMAT.format(roll.percentRoll * 100)
         )
-    }
 
-    private fun getAttributeDisplayValue(type: AttributeType, value: Double) =
-        when (type) {
-            AttributeType.MOVEMENT_SPEED -> value * 100
-            AttributeType.KNOCKBACK_RESISTANCE -> value * 10
-            else -> value
-        }
+    private fun mapStringRollToText(roll: StringRoll) = "Options: ${roll.bounds.options}\nIndex: ${roll.indexRoll}\nValue: ${roll.getRoll()}"
+
+    private fun mapIntRollToText(roll: IntRoll) =
+        String.format(
+            "Min: %s\nMax: %s\nRoll: %s\n%%Roll: %s%%",
+            DECIMAL_FORMAT.format(roll.bounds.min),
+            DECIMAL_FORMAT.format(roll.bounds.max),
+            DECIMAL_FORMAT.format(roll.getRoll()),
+            DECIMAL_FORMAT.format(roll.percentRoll * 100)
+        )
 }

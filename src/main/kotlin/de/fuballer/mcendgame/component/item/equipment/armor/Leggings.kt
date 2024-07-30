@@ -1,8 +1,10 @@
 package de.fuballer.mcendgame.component.item.equipment.armor
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeTypes
 import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
-import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleBounds
+import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -16,54 +18,54 @@ enum class Leggings(
     LEATHER(
         Material.LEATHER_LEGGINGS,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 2.0)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 2.0)
         )
     ),
     GOLDEN(
         Material.GOLDEN_LEGGINGS,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 3.0)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 3.0)
         )
     ),
     CHAINMAIL(
         Material.CHAINMAIL_LEGGINGS,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 4.0)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 4.0)
         )
     ),
     IRON(
         Material.IRON_LEGGINGS,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 5.0)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 5.0)
         )
     ),
     DIAMOND(
         Material.DIAMOND_LEGGINGS,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 6.0),
-            BaseAttribute(AttributeType.ARMOR_TOUGHNESS, 2.0)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 6.0),
+            BaseAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 2.0)
         )
     ),
     NETHERITE(
         Material.NETHERITE_LEGGINGS,
         listOf(
-            BaseAttribute(AttributeType.ARMOR, 6.0),
-            BaseAttribute(AttributeType.ARMOR_TOUGHNESS, 3.0),
-            BaseAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1)
+            BaseAttribute(VanillaAttributeTypes.ARMOR, 6.0),
+            BaseAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 3.0),
+            BaseAttribute(VanillaAttributeTypes.KNOCKBACK_RESISTANCE, 0.1)
         )
     );
 
     override val slot = EquipmentSlot.LEGS
     override val slotDependentAttributes = true
 
-    override val rollableAttributes = listOf(
-        RandomOption(10, RollableAttribute(AttributeType.MAX_HEALTH, 2.0)),
-        RandomOption(10, RollableAttribute(AttributeType.ARMOR, 2.0)),
-        RandomOption(10, RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 2.5)),
-        RandomOption(10, RollableAttribute(AttributeType.KNOCKBACK_RESISTANCE, 0.1)),
-        RandomOption(8, RollableAttribute(AttributeType.REDUCED_DAMAGE_TAKEN, 0.04)),
-        RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.05)),
-        RandomOption(7, RollableAttribute(AttributeType.DODGE_CHANCE, 0.07))
+    override val rollableCustomAttributes = listOf(
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH, DoubleBounds(2.0))),
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ARMOR, DoubleBounds(2.0))),
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, DoubleBounds(2.5))),
+        RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.KNOCKBACK_RESISTANCE, DoubleBounds(0.1))),
+        RandomOption(8, RollableCustomAttribute(CustomAttributeTypes.REDUCED_DAMAGE_TAKEN, DoubleBounds(0.04))),
+        RandomOption(5, RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE, DoubleBounds(0.05))),
+        RandomOption(7, RollableCustomAttribute(CustomAttributeTypes.DODGE_CHANCE, DoubleBounds(0.07)))
     )
 
     override val rollableEnchants = listOf(

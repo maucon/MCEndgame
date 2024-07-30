@@ -1,7 +1,9 @@
 package de.fuballer.mcendgame.component.item.custom_item.types
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
-import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleBounds
+import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.armor.Boots
 import de.fuballer.mcendgame.util.PluginUtil
@@ -12,8 +14,8 @@ object GeistergaloschenItemType : CustomItemType {
     override val equipment = Boots.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.BACKSTAB, 0.2, 0.4),
-        RollableAttribute(AttributeType.STEALTH),
-        RollableAttribute(AttributeType.MOVEMENT_SPEED, 0.005, 0.015),
+        RollableCustomAttribute(CustomAttributeTypes.BACKSTAB, DoubleBounds(0.2, 0.4)),
+        RollableCustomAttribute(CustomAttributeTypes.STEALTH),
+        RollableCustomAttribute(VanillaAttributeTypes.MOVEMENT_SPEED, DoubleBounds(0.005, 0.015)),
     )
 }

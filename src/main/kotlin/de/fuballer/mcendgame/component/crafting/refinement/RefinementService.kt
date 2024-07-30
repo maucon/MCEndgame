@@ -1,8 +1,9 @@
 package de.fuballer.mcendgame.component.crafting.refinement
 
 import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
-import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.AttributeRollExtension.run
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isRefinement
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttributes
@@ -11,10 +12,11 @@ import org.bukkit.inventory.ItemStack
 @Component
 class RefinementService : AnvilCraftingBaseService() {
     override fun isBaseValid(base: ItemStack): Boolean {
-        val hasMultipleRollableCustomAttributes = AttributeUtil.getSingleValueAttributes(base).size >= 2
+        val rolledAttributes = base.getCustomAttributes() ?: return false
+        val hasMultipleCustomAttribute = rolledAttributes.size >= 2
 
         return !base.isCustomItemType()
-                && hasMultipleRollableCustomAttributes
+                && hasMultipleCustomAttribute
     }
 
     override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isRefinement()
@@ -22,13 +24,20 @@ class RefinementService : AnvilCraftingBaseService() {
     override fun getResultPreview(base: ItemStack) = base
 
     override fun getResult(base: ItemStack, craftingItem: ItemStack): ItemStack {
-        val attributes = AttributeUtil.getSingleValueAttributes(base).toMutableList()
+        val attributes = base.getCustomAttributes()!!.toMutableList()
 
         val sacrificedAttribute = attributes.random()
         attributes.remove(sacrificedAttribute)
 
         val enhancedAttribute = attributes.random()
-        enhancedAttribute.percentRoll += RefinementSettings.refineAttributeValue(sacrificedAttribute.percentRoll)
+        enhancedAttribute.attributeRolls
+            .forEach { attributesRoll ->
+                attributesRoll.run(
+                    { it.percentRoll += RefinementSettings.REFINEMENT_ATTRIBUTE_VALUE },
+                    {}, // string rolls do not change
+                    { it.percentRoll += RefinementSettings.REFINEMENT_ATTRIBUTE_VALUE }
+                )
+            }
 
         base.setCustomAttributes(attributes)
         return base

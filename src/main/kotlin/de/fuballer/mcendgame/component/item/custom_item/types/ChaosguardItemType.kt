@@ -1,7 +1,9 @@
 package de.fuballer.mcendgame.component.item.custom_item.types
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
-import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleBounds
+import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.armor.Chestplate
 import de.fuballer.mcendgame.util.PluginUtil
@@ -12,8 +14,8 @@ object ChaosguardItemType : CustomItemType {
     override val equipment = Chestplate.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableAttribute(AttributeType.ARMOR_TOUGHNESS, 2.0, 4.0),
-        RollableAttribute(AttributeType.MAX_HEALTH, 1.0, 2.0),
-        RollableAttribute(AttributeType.RANDOMIZED_DAMAGE_TAKEN, 1.4, 1.6),
+        RollableCustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, DoubleBounds(2.0, 4.0)),
+        RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH, DoubleBounds(1.0, 2.0)),
+        RollableCustomAttribute(CustomAttributeTypes.RANDOMIZED_DAMAGE_TAKEN, DoubleBounds(0.2, 0.4), DoubleBounds(1.4, 1.6)),
     )
 }

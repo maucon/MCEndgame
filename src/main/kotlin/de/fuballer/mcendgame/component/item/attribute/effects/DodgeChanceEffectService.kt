@@ -1,8 +1,9 @@
 package de.fuballer.mcendgame.component.item.attribute.effects
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsDouble
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -19,11 +20,13 @@ class DodgeChanceEffectService : Listener {
             && event.cause != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK
         ) return
 
-        val dodgeAttributes = event.damagedAttributes[AttributeType.DODGE_CHANCE] ?: return
+        val dodgeAttributes = event.damagedAttributes[CustomAttributeTypes.DODGE_CHANCE] ?: return
+        val hitChance = dodgeAttributes
+            .map { 1 - it.attributeRolls.getFirstAsDouble() }
+            .reduce { a, b -> a * b }
 
-        val hitChance = dodgeAttributes.map { 1 - it }.reduce { a, b -> a * b }
-        if (Random.nextDouble() < hitChance) return
-
-        event.cancel()
+        if (Random.nextDouble() >= hitChance) {
+            event.cancel()
+        }
     }
 }

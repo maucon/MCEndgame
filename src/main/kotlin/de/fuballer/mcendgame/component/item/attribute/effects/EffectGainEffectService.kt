@@ -1,7 +1,8 @@
 package de.fuballer.mcendgame.component.item.attribute.effects
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsDouble
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -40,9 +41,10 @@ class EffectGainEffectService : Listener {
         val entity = event.entity.killer ?: return
 
         val attributes = entity.getCustomAttributes()
-        val effectStealAttributes = attributes[AttributeType.EFFECT_GAIN] ?: return
+        val effectStealAttributes = attributes[CustomAttributeTypes.EFFECT_GAIN] ?: return
 
-        for (effectStealChance in effectStealAttributes) {
+        for (effectStealAttribute in effectStealAttributes) {
+            val effectStealChance = effectStealAttribute.attributeRolls.getFirstAsDouble()
             if (Random.nextDouble() > effectStealChance) continue
 
             val effect = RandomUtil.pick(EFFECTS).option

@@ -1,7 +1,8 @@
 package de.fuballer.mcendgame.component.item.attribute.effects
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleRoll
 import de.fuballer.mcendgame.framework.annotation.Component
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -15,11 +16,14 @@ private val ABSORPTION_EFFECT = PotionEffect(PotionEffectType.ABSORPTION, 100, 1
 class AbsorptionOnHighDamageTakenEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {
-        val absorptionAttributes = event.damagedAttributes[AttributeType.ABSORPTION_ON_HIGH_DAMAGE_TAKEN] ?: return
+        val absorptionAttributes = event.damagedAttributes[CustomAttributeTypes.ABSORPTION_ON_HIGH_DAMAGE_TAKEN] ?: return
 
-        val minDamage = absorptionAttributes.min()
-        if (event.getFinalDamage() < minDamage) return
+        val minDamage = absorptionAttributes
+            .map { it.attributeRolls[0] as DoubleRoll }
+            .minOf { it.getRoll() }
 
-        event.onHitPotionEffects.add(ABSORPTION_EFFECT)
+        if (event.getFinalDamage() >= minDamage) {
+            event.onHitPotionEffects.add(ABSORPTION_EFFECT)
+        }
     }
 }

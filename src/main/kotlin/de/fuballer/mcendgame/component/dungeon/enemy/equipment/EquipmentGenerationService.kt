@@ -133,9 +133,9 @@ class EquipmentGenerationService(
         equipment: Equipment
     ) {
         val statAmount = RandomUtil.pick(EquipmentGenerationSettings.STAT_AMOUNTS, mapTier, random).option
-        val pickedAttributes = RandomUtil.pick(equipment.rollableAttributes, random, statAmount)
+        val pickedAttributes = RandomUtil.pick(equipment.rollableCustomAttributes, random, statAmount)
 
-        val rolledAttributes = pickedAttributes.sortedBy { it.type.ordinal }
+        val rolledAttributes = pickedAttributes
             .map {
                 val percentageRoll = calculateAttributePercentageRoll(mapTier)
                 it.roll(percentageRoll)

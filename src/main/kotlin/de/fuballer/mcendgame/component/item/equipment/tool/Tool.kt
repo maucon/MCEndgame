@@ -1,8 +1,10 @@
 package de.fuballer.mcendgame.component.item.equipment.tool
 
-import de.fuballer.mcendgame.component.item.attribute.AttributeType
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeTypes
 import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
-import de.fuballer.mcendgame.component.item.attribute.data.RollableAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleBounds
+import de.fuballer.mcendgame.component.item.attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -14,7 +16,7 @@ enum class Tool(
     override val baseAttributes: List<BaseAttribute>,
     override val slot: EquipmentSlot,
     override val slotDependentAttributes: Boolean,
-    override val rollableAttributes: List<RandomOption<RollableAttribute>>,
+    override val rollableCustomAttributes: List<RandomOption<RollableCustomAttribute>>,
     override val rollableEnchants: List<RandomOption<ItemEnchantment>>,
 ) : Equipment {
     BOW(
@@ -23,10 +25,10 @@ enum class Tool(
         EquipmentSlot.HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.INCREASED_PROJECTILE_DAMAGE, 0.35)),
-            RandomOption(10, RollableAttribute(AttributeType.INCREASED_ARROW_VELOCITY, 0.3)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
-            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.08))
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5))),
+            RandomOption(10, RollableCustomAttribute(CustomAttributeTypes.INCREASED_PROJECTILE_DAMAGE, DoubleBounds(0.35))),
+            RandomOption(10, RollableCustomAttribute(CustomAttributeTypes.INCREASED_ARROW_VELOCITY, DoubleBounds(0.3))),
+            RandomOption(5, RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE, DoubleBounds(0.08)))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -48,17 +50,17 @@ enum class Tool(
     TRIDENT(
         Material.TRIDENT,
         listOf(
-            BaseAttribute(AttributeType.ATTACK_DAMAGE, 9.0),
-            BaseAttribute(AttributeType.ATTACK_SPEED, 1.1)
+            BaseAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 9.0),
+            BaseAttribute(VanillaAttributeTypes.ATTACK_SPEED, 1.1)
         ),
         EquipmentSlot.HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 2.0)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
-            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.08))
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(2.0))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.4))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_KNOCKBACK, DoubleBounds(0.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5))),
+            RandomOption(5, RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE, DoubleBounds(0.08)))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -83,17 +85,17 @@ enum class Tool(
     MACE(
         Material.MACE,
         listOf(
-            BaseAttribute(AttributeType.ATTACK_DAMAGE, 6.0),
-            BaseAttribute(AttributeType.ATTACK_SPEED, 0.6)
+            BaseAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 6.0),
+            BaseAttribute(VanillaAttributeTypes.ATTACK_SPEED, 0.6)
         ),
         EquipmentSlot.HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 2.0)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.2)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
-            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.08))
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(2.0))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.2))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_KNOCKBACK, DoubleBounds(0.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5))),
+            RandomOption(5, RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE, DoubleBounds(0.08)))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -133,10 +135,10 @@ enum class Tool(
         EquipmentSlot.OFF_HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(1.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.4))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_KNOCKBACK, DoubleBounds(0.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5)))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -158,11 +160,11 @@ enum class Tool(
         EquipmentSlot.OFF_HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 2.0)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
-            RandomOption(10, RollableAttribute(AttributeType.REDUCED_DAMAGE_TAKEN, 0.04))
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(2.0))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.4))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_KNOCKBACK, DoubleBounds(0.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5))),
+            RandomOption(10, RollableCustomAttribute(CustomAttributeTypes.REDUCED_DAMAGE_TAKEN, DoubleBounds(0.04)))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -178,11 +180,11 @@ enum class Tool(
         EquipmentSlot.HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 2.0)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5)),
-            RandomOption(5, RollableAttribute(AttributeType.INCREASED_DAMAGE, 0.08))
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(2.0))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.4))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_KNOCKBACK, DoubleBounds(0.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5))),
+            RandomOption(5, RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE, DoubleBounds(0.08)))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -206,10 +208,10 @@ enum class Tool(
         EquipmentSlot.OFF_HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(1.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.4))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_KNOCKBACK, DoubleBounds(0.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5)))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -225,10 +227,10 @@ enum class Tool(
         EquipmentSlot.OFF_HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(1.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.4))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_KNOCKBACK, DoubleBounds(0.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5)))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -244,10 +246,10 @@ enum class Tool(
         EquipmentSlot.OFF_HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(1.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.4))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_KNOCKBACK, DoubleBounds(0.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5)))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),
@@ -278,10 +280,10 @@ enum class Tool(
         EquipmentSlot.OFF_HAND,
         false,
         listOf(
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_DAMAGE, 1.5)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_SPEED, 0.4)),
-            RandomOption(10, RollableAttribute(AttributeType.ATTACK_KNOCKBACK, 0.5)),
-            RandomOption(10, RollableAttribute(AttributeType.LUCK, 2.5))
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(1.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_SPEED, DoubleBounds(0.4))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.ATTACK_KNOCKBACK, DoubleBounds(0.5))),
+            RandomOption(10, RollableCustomAttribute(VanillaAttributeTypes.LUCK, DoubleBounds(2.5)))
         ),
         listOf(
             RandomOption(10, ItemEnchantment.MENDING),

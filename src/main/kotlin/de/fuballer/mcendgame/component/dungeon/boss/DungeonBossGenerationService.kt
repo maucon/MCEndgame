@@ -31,8 +31,8 @@ class DungeonBossGenerationService(
         locations: List<Location>,
         leaveLocation: Location
     ) {
-        assert(locations.size == DungeonGenerationSettings.BOSS_AMOUNT) { "too few boss spawning locations" }
-        assert(entityTypes.isNotEmpty()) { "boss entity types cannot be empty" }
+        require(locations.size == DungeonGenerationSettings.BOSS_AMOUNT) { "too few boss spawning locations" }
+        require(entityTypes.isNotEmpty()) { "boss entity types cannot be empty" }
 
         val bosses = locations.zip(entityTypes.cycle())
             .map { (location, entityType) -> spawnBoss(entityType, location, mapTier) }
