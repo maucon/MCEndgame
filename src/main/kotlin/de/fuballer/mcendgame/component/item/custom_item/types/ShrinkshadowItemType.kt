@@ -14,7 +14,7 @@ object ShrinkshadowItemType : CustomItemType {
     override val equipment = Leggings.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableCustomAttribute(CustomAttributeTypes.DODGE_CHANCE, DoubleBounds(0.2, 0.35)),
+        RollableCustomAttribute(CustomAttributeTypes.DODGE_CHANCE, DoubleBounds(0.25, 0.45)),
         RollableCustomAttribute(CustomAttributeTypes.HEALTH_RESERVATION, DoubleBounds(0.2, 0.4)),
         RollableCustomAttribute(VanillaAttributeTypes.SIZE_INCREASE, DoubleBounds(-0.2, -0.1)),
     )

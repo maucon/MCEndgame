@@ -15,6 +15,6 @@ object StormfeatherItemType : CustomItemType {
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
         RollableCustomAttribute(CustomAttributeTypes.ADDITIONAL_ARROWS, IntBounds(2, 2), DoubleBounds(0.35, 0.75)),
-        RollableCustomAttribute(CustomAttributeTypes.INCREASED_PROJECTILE_DAMAGE, DoubleBounds(0.1, 0.35)),
+        RollableCustomAttribute(CustomAttributeTypes.INCREASED_PROJECTILE_DAMAGE, DoubleBounds(0.1, 0.2)),
     )
 }

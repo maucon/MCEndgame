@@ -49,7 +49,7 @@ object CustomAttributeTypes {
     val HEAL_ON_BLOCK = CustomAttributeType { "${SIMPLE.formatDouble(it[0], 100)}% Heal on Block (5s Cooldown)" }
 
     @Order(14)
-    val INCREASED_DAMAGE_PER_MISSING_HEART = CustomAttributeType { "${SIMPLE.formatDouble(it[0], 100)}% Damage per missing Heart" }
+    val INCREASED_MELEE_DAMAGE_PER_MISSING_HEART = CustomAttributeType { "${SIMPLE.formatDouble(it[0], 100)}% Melee Damage per missing Heart" }
 
     @Order(15)
     val SLOW_ON_HIT = CustomAttributeType { " Slow nearby Enemies for ${SIMPLE.formatDouble(it[0])}s on Hit" }
@@ -76,8 +76,8 @@ object CustomAttributeTypes {
     val REDUCED_DAMAGE_TAKEN = CustomAttributeType { "-${SIMPLE_NO_SIGN.formatDouble(it[0], 100)}% Damage taken" }
 
     @Order(23)
-    val INCREASED_DAMAGE = CustomAttributeType { "${SIMPLE.formatDouble(it[0], 100)}% Damage" }
+    val REDUCED_PROJECTILE_DAMAGE_TAKEN = CustomAttributeType { "-${SIMPLE_NO_SIGN.formatDouble(it[0], 100)}% Projectile Damage taken" }
 
     @Order(24)
-    val TEST = CustomAttributeType { "${SIMPLE.formatDouble(it[0], 100)} ${it[1]} ${it[2]}" }
+    val INCREASED_DAMAGE = CustomAttributeType { "${SIMPLE.formatDouble(it[0], 100)}% Damage" }
 }

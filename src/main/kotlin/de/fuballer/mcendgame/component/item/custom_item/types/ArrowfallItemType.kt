@@ -17,6 +17,6 @@ object ArrowfallItemType : CustomItemType {
     override val attributes = listOf(
         RollableCustomAttribute(CustomAttributeTypes.ADDITIONAL_ARROWS, IntBounds(2, 2), DoubleBounds(0.3, 0.85)),
         RollableCustomAttribute(VanillaAttributeTypes.MOVEMENT_SPEED, DoubleBounds(0.003, 0.01)),
-        RollableCustomAttribute(CustomAttributeTypes.DODGE_CHANCE, DoubleBounds(0.05, 0.15)),
+        RollableCustomAttribute(CustomAttributeTypes.DODGE_CHANCE, DoubleBounds(0.1, 0.2)),
     )
 }

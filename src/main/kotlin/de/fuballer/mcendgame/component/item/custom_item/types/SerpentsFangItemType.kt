@@ -13,7 +13,7 @@ object SerpentsFangItemType : CustomItemType {
     override val equipment = Sword.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableCustomAttribute(CustomAttributeTypes.CRITICAL_DAMAGE, DoubleBounds(0.1, 0.3)),
-        RollableCustomAttribute(CustomAttributeTypes.CRITICAL_EXECUTE, DoubleBounds(0.05, 0.12)),
+        RollableCustomAttribute(CustomAttributeTypes.CRITICAL_DAMAGE, DoubleBounds(0.1, 0.35)),
+        RollableCustomAttribute(CustomAttributeTypes.CRITICAL_EXECUTE, DoubleBounds(0.15, 0.20)),
     )
 }

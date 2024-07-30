@@ -14,8 +14,8 @@ object TyrantsReachItemType : CustomItemType {
     override val equipment = Helmet.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(2.0, 4.0)),
+        RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, DoubleBounds(3.0, 5.0)),
         RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE, DoubleBounds(0.1, 0.15)),
-        RollableCustomAttribute(VanillaAttributeTypes.ATTACK_RANGE, DoubleBounds(0.2, 0.5)),
+        RollableCustomAttribute(VanillaAttributeTypes.ATTACK_RANGE, DoubleBounds(0.35, 0.55)),
     )
 }

@@ -14,7 +14,7 @@ object CrownOfConflictItemType : CustomItemType {
     override val equipment = Helmet.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableCustomAttribute(CustomAttributeTypes.HEALTH_RESERVATION, DoubleBounds(0.15, 0.3)),
+        RollableCustomAttribute(CustomAttributeTypes.HEALTH_RESERVATION, DoubleBounds(0.1, 0.3)),
         RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH_INCREASE, DoubleBounds(0.1, 0.2)),
         RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH, DoubleBounds(-4.0, 4.0)),
         RollableCustomAttribute(VanillaAttributeTypes.SIZE_INCREASE, DoubleBounds(-0.05, 0.05)),
