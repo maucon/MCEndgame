@@ -39,16 +39,6 @@ object CorruptionSettings {
     fun corruptAttributeRoll(attribute: CustomAttribute) {
         for (attributeRoll in attribute.attributeRolls) {
             attributeRoll.run(
-                { it.percentRoll += (Random.nextDouble() * 0.6 - 0.3) },
-                { it.indexRoll = Random.nextInt(it.bounds.options.size) },
-                { it.percentRoll += (Random.nextDouble() * 0.6 - 0.3) }
-            )
-        }
-    }
-
-    fun corruptAttributeRollForCustomItem(attribute: CustomAttribute) {
-        for (attributeRoll in attribute.attributeRolls) {
-            attributeRoll.run(
                 { it.percentRoll += (Random.nextDouble() - 0.5) },
                 { it.indexRoll = Random.nextInt(it.bounds.options.size) },
                 { it.percentRoll += (Random.nextDouble() - 0.5) }
