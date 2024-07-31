@@ -105,5 +105,8 @@ Should you have any questions or encounter any difficulties, please don't hesita
 * [ProtocolLib](https://github.com/aadnk/ProtocolLib)
 
 
+* [Path of Exile](https://www.pathofexile.com/)
+
+
 * [Choose an Open Source License](https://choosealicense.com/)
 * [README-Template](https://github.com/othneildrew/Best-README-Template)
