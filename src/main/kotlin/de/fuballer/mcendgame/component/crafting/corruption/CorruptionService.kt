@@ -54,7 +54,7 @@ class CorruptionService : AnvilCraftingBaseService() {
     private fun corruptEnchant(item: ItemStack) {
         val meta = item.itemMeta ?: return
 
-        if (Random.nextBoolean()) {
+        if (Random.nextDouble() < CorruptionSettings.CORRUPT_ENCHANTS_INCREASE_LEVEL_CHANCE) {
             increaseEnchantLevel(item, meta)
         } else {
             decreaseEnchantLevel(item, meta)

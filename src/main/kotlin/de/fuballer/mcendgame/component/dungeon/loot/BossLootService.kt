@@ -36,8 +36,9 @@ class BossLootService : Listener {
         val orbAmount = finalOrbAmountChance.toInt() + if (Math.random() < finalOrbAmountChance % 1) 1 else 0
 
         for (i in 0 until orbAmount) {
-            val orb = RandomUtil.pick(LootSettings.BOSS_ORBS).option
-            world.dropItemNaturally(location, orb.clone())
+            val bossLootOptions = LootSettings.getBossLootOptions(mapTier)
+            val loot = RandomUtil.pick(bossLootOptions).option
+            world.dropItemNaturally(location, loot.clone())
         }
     }
 }

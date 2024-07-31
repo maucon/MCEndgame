@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.crafting.transfiguration
+package de.fuballer.mcendgame.component.crafting.roll_shuffle
 
 import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
 import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
@@ -6,15 +6,15 @@ import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.extract
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.run
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.isTransfiguration
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.isRollShuffleCraftingItem
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttributes
 import org.bukkit.inventory.ItemStack
 
 @Component
-class TransfigurationService : AnvilCraftingBaseService() {
+class RollShuffleService : AnvilCraftingBaseService() {
     override fun isBaseValid(base: ItemStack) = AttributeUtil.getNonStringOnlyRollAttributes(base).size >= 2
 
-    override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isTransfiguration()
+    override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isRollShuffleCraftingItem()
 
     override fun getResultPreview(base: ItemStack) = base
 
@@ -38,7 +38,7 @@ class TransfigurationService : AnvilCraftingBaseService() {
         do {
             shuffledRolls = originalRolls.shuffled()
             retryCount++
-        } while (shuffledRolls == originalRolls && retryCount < TransfigurationSettings.SHUFFLE_TRIES)
+        } while (shuffledRolls == originalRolls && retryCount < RollShuffleSettings.SHUFFLE_TRIES)
 
         var index = 0
         attributes.forEach { attribute ->

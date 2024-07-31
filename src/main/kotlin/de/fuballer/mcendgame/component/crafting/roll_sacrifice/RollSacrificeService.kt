@@ -1,16 +1,16 @@
-package de.fuballer.mcendgame.component.crafting.refinement
+package de.fuballer.mcendgame.component.crafting.roll_sacrifice
 
 import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.run
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCustomItemType
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.isRefinement
+import de.fuballer.mcendgame.util.extension.ItemStackExtension.isRollSacrificeCraftingItem
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttributes
 import org.bukkit.inventory.ItemStack
 
 @Component
-class RefinementService : AnvilCraftingBaseService() {
+class RollSacrificeService : AnvilCraftingBaseService() {
     override fun isBaseValid(base: ItemStack): Boolean {
         val rolledAttributes = base.getCustomAttributes() ?: return false
         val hasMultipleCustomAttribute = rolledAttributes.size >= 2
@@ -19,7 +19,7 @@ class RefinementService : AnvilCraftingBaseService() {
                 && hasMultipleCustomAttribute
     }
 
-    override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isRefinement()
+    override fun isCraftingItemValid(craftingItem: ItemStack) = craftingItem.isRollSacrificeCraftingItem()
 
     override fun getResultPreview(base: ItemStack) = base
 
@@ -33,9 +33,9 @@ class RefinementService : AnvilCraftingBaseService() {
         enhancedAttribute.attributeRolls
             .forEach { attributesRoll ->
                 attributesRoll.run(
-                    { it.percentRoll += RefinementSettings.REFINEMENT_ATTRIBUTE_VALUE },
+                    { it.percentRoll += RollSacrificeSettings.REFINEMENT_ATTRIBUTE_VALUE },
                     {}, // string rolls do not change
-                    { it.percentRoll += RefinementSettings.REFINEMENT_ATTRIBUTE_VALUE }
+                    { it.percentRoll += RollSacrificeSettings.REFINEMENT_ATTRIBUTE_VALUE }
                 )
             }
 
