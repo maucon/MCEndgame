@@ -15,10 +15,10 @@ import de.fuballer.mcendgame.util.random.SortableRandomOption
 object LootSettings {
     const val ITEMS_DROP_CHANCE = 0.015
     const val ITEMS_DROP_CHANCE_PER_LOOTING = 0.008
-    const val ITEMS_DROP_CHANCE_DIAMOND = 0.004
-    const val ITEMS_DROP_CHANCE_DIAMOND_PER_LOOTING = 0.002
-    const val ITEMS_DROP_CHANCE_NETHERITE = 0.0
-    const val ITEMS_DROP_CHANCE_NETHERITE_PER_LOOTING = 0.0015
+    const val ITEMS_DROP_CHANCE_DIAMOND = 0.006
+    const val ITEMS_DROP_CHANCE_DIAMOND_PER_LOOTING = 0.003
+    const val ITEMS_DROP_CHANCE_NETHERITE = 0.003
+    const val ITEMS_DROP_CHANCE_NETHERITE_PER_LOOTING = 0.002
 
     fun getCustomItemDropChance(mapTier: Int) = 0.000012 * pow(mapTier, 2) + 0.0001 * mapTier + 0.001
 

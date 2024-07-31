@@ -8,12 +8,25 @@ import de.fuballer.mcendgame.component.item.equipment.armor.Leggings
 import de.fuballer.mcendgame.component.item.equipment.tool.*
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
+import kotlin.math.pow
+import kotlin.random.Random
 
 object EquipmentGenerationSettings {
-    const val ATTRIBUTE_EXPONENT_TIER_SCALING = .05
-    const val ATTRIBUTE_EXPONENT_TIER_OFFSET = 10
-    const val MIN_MAX_ROLL = .5
-    const val MAX_ROLL_INC_PER_TIER = (1 - MIN_MAX_ROLL) / ATTRIBUTE_EXPONENT_TIER_OFFSET
+    private const val ATTRIBUTE_EXPONENT_TIER_SCALING = .05
+    private const val ATTRIBUTE_EXPONENT_TIER_OFFSET = 10
+    private const val MIN_MAX_ROLL = .5
+    private const val MAX_ROLL_INC_PER_TIER = (1 - MIN_MAX_ROLL) / ATTRIBUTE_EXPONENT_TIER_OFFSET
+
+    fun calculateAttributePercentageRoll(mapTier: Int): Double {
+        val random = Random.nextDouble()
+
+        if (mapTier < ATTRIBUTE_EXPONENT_TIER_OFFSET) {
+            val maxRoll = MIN_MAX_ROLL + mapTier * MAX_ROLL_INC_PER_TIER
+            return random * maxRoll
+        }
+
+        return 1 - random.pow(1 + ATTRIBUTE_EXPONENT_TIER_SCALING * (mapTier - ATTRIBUTE_EXPONENT_TIER_OFFSET))
+    }
 
     val STAT_AMOUNTS = listOf(
         SortableRandomOption(5000, 0, 0),

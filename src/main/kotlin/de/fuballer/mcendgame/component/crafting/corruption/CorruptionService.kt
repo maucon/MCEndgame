@@ -5,7 +5,6 @@ import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCorruptionRounds
-import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -100,11 +99,7 @@ class CorruptionService : AnvilCraftingBaseService() {
         val attributes = AttributeUtil.getCustomAttributesWithRolls(item).toMutableList()
         val chosenAttribute = attributes.random()
 
-        if (item.isCustomItemType()) {
-            CorruptionSettings.corruptAttributeRollForCustomItem(chosenAttribute)
-        } else {
-            CorruptionSettings.corruptAttributeRoll(chosenAttribute)
-        }
+        CorruptionSettings.corruptAttributeRoll(chosenAttribute)
 
         item.setCustomAttributes(attributes)
     }
