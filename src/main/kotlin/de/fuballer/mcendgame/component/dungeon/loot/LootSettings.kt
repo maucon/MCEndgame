@@ -2,15 +2,17 @@ package de.fuballer.mcendgame.component.dungeon.loot
 
 import com.google.common.math.IntMath.pow
 import de.fuballer.mcendgame.component.crafting.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.crafting.imitation.ImitationSettings
-import de.fuballer.mcendgame.component.crafting.refinement.RefinementSettings
-import de.fuballer.mcendgame.component.crafting.reshaping.ReshapingSettings
-import de.fuballer.mcendgame.component.crafting.transfiguration.TransfigurationSettings
+import de.fuballer.mcendgame.component.crafting.duplication.DuplicationSettings
+import de.fuballer.mcendgame.component.crafting.reforge.ReforgeSettings
+import de.fuballer.mcendgame.component.crafting.roll_randomization.RollRandomizationSettings
+import de.fuballer.mcendgame.component.crafting.roll_sacrifice.RollSacrificeSettings
+import de.fuballer.mcendgame.component.crafting.roll_shuffle.RollShuffleSettings
 import de.fuballer.mcendgame.component.item.custom_item.types.*
 import de.fuballer.mcendgame.component.totem.data.TotemTier
 import de.fuballer.mcendgame.component.totem.data.TotemType
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
+import org.bukkit.inventory.ItemStack
 
 object LootSettings {
     const val ITEMS_DROP_CHANCE = 0.015
@@ -49,14 +51,26 @@ object LootSettings {
 
     fun getBossOrbAmount(mapTier: Int) = 0.5 + 0.05 * (mapTier - 1)
 
-    val BOSS_ORBS = listOf(
-        RandomOption(1, ImitationSettings.getImitationItem()),
-        RandomOption(3, RefinementSettings.getRefinementItem()),
-        RandomOption(5, CorruptionSettings.getDoubleCorruptionItem()),
-        RandomOption(5, ReshapingSettings.getReshapingItem()),
-        RandomOption(15, TransfigurationSettings.getTransfigurationItem()),
-        RandomOption(20, CorruptionSettings.getCorruptionItem()),
+    private val BASE_BOSS_LOOT = listOf(
+        RandomOption(1, DuplicationSettings.getItem()),
+        RandomOption(12, RollSacrificeSettings.getItem()),
+        RandomOption(15, RollShuffleSettings.getItem()),
+        RandomOption(20, CorruptionSettings.getCorruptItem()),
     )
+
+    fun getBossLootOptions(mapTier: Int): List<RandomOption<ItemStack>> {
+        val baseLoot = BASE_BOSS_LOOT.toMutableList()
+
+        if (mapTier >= 5) {
+            baseLoot.add(RandomOption(5, CorruptionSettings.getDoubleCorruptItem()))
+            baseLoot.add(RandomOption(5, ReforgeSettings.getItem()))
+        }
+        if (mapTier >= 10) {
+            baseLoot.add(RandomOption(10, RollRandomizationSettings.getItem()))
+        }
+
+        return baseLoot
+    }
 
     const val TOTEM_DROP_CHANCE = 0.00133
 
