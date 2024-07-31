@@ -10,7 +10,6 @@ import de.fuballer.mcendgame.util.random.RandomUtil
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
-import kotlin.math.pow
 import kotlin.random.Random
 
 @Component
@@ -137,21 +136,10 @@ class EquipmentGenerationService(
 
         val rolledAttributes = pickedAttributes
             .map {
-                val percentageRoll = calculateAttributePercentageRoll(mapTier)
+                val percentageRoll = EquipmentGenerationSettings.calculateAttributePercentageRoll(mapTier)
                 it.roll(percentageRoll)
             }
 
         item.setCustomAttributes(rolledAttributes)
-    }
-
-    private fun calculateAttributePercentageRoll(mapTier: Int): Double {
-        val random = Random.nextDouble()
-
-        if (mapTier < EquipmentGenerationSettings.ATTRIBUTE_EXPONENT_TIER_OFFSET) {
-            val maxRoll = EquipmentGenerationSettings.MIN_MAX_ROLL + mapTier * EquipmentGenerationSettings.MAX_ROLL_INC_PER_TIER
-            return random * maxRoll
-        }
-
-        return 1 - random.pow(1 + EquipmentGenerationSettings.ATTRIBUTE_EXPONENT_TIER_SCALING * (mapTier - EquipmentGenerationSettings.ATTRIBUTE_EXPONENT_TIER_OFFSET))
     }
 }
