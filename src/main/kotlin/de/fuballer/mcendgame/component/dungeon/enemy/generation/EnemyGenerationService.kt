@@ -49,8 +49,9 @@ class EnemyGenerationService(
         val entity = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as LivingEntity
 
         val isLootGoblin = EnemyGenerationSettings.isLootGoblin(entityType, random)
-        if (isLootGoblin)
-            entity.setIsLootGoblin(true)
+        if (isLootGoblin) {
+            entity.setIsLootGoblin()
+        }
 
         equipmentGenerationService.generate(random, entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor, isLootGoblin)
 

@@ -61,7 +61,7 @@ class LootService(
             val finalDropChance = baseDropChance * magicFindMultiplier
 
             if (Random.nextDouble() > finalDropChance) continue
-            dropFinalItem(world, entity.location, item)
+            dropDamagedItem(world, entity.location, item)
         }
     }
 
@@ -69,15 +69,18 @@ class LootService(
         val location = entity.location
 
         for (item in getEquipment(entity.equipment)) {
-            if (getItemDropChance(item, 1) == 0.0) continue
-            dropFinalItem(world, location, item)
+            val itemDropChance = getItemDropChance(item, 1)
+            if (itemDropChance == 0.0) continue
+
+            dropDamagedItem(world, location, item)
         }
 
-        val orb = RandomUtil.pick(LootSettings.getBossLootOptions(entity.getMapTier() ?: 1)).option
+        val mapTier = entity.getMapTier() ?: 1
+        val orb = RandomUtil.pick(LootSettings.getBossLootOptions(mapTier)).option
         world.dropItemNaturally(location, orb.clone())
     }
 
-    private fun dropFinalItem(world: World, location: Location, item: ItemStack) {
+    private fun dropDamagedItem(world: World, location: Location, item: ItemStack) {
         val finalItem = ItemUtil.setRandomDurability(item)
         world.dropItemNaturally(location, finalItem)
     }
