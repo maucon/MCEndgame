@@ -23,6 +23,7 @@ object TypeKeys {
     val HIDE_EQUIPMENT = TypeKey(createNamespacedKey("hide_equipment"), PersistentDataType.BOOLEAN)
     val CUSTOM_ENTITY_TYPE = TypeKey(createNamespacedKey("custom_entity_type"), PersistentObjectClass(CustomEntityType::class))
     val IS_ENEMY = TypeKey(createNamespacedKey("is_enemy"), PersistentDataType.BOOLEAN)
+    val IS_LOOT_GOBLIN = TypeKey(createNamespacedKey("is_loot_goblin"), PersistentDataType.BOOLEAN)
     val MINION_IDS = TypeKey(createNamespacedKey("minions"), PersistentList(PersistentUUID))
     val IS_PORTAL = TypeKey(createNamespacedKey("is_portal"), PersistentDataType.BOOLEAN)
     val IS_BOSS = TypeKey(createNamespacedKey("is_boss"), PersistentDataType.BOOLEAN)

@@ -44,6 +44,12 @@ object EntityExtension {
 
     fun Entity.isEnemy() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_ENEMY)
 
+    fun Entity.setIsLootGoblin(value: Boolean = true) {
+        PersistentDataUtil.setValue(this, TypeKeys.IS_LOOT_GOBLIN, value)
+    }
+
+    fun Entity.isLootGoblin() = PersistentDataUtil.getBooleanValue(this, TypeKeys.IS_LOOT_GOBLIN)
+
     fun Entity.setMinionIds(value: List<UUID>) {
         PersistentDataUtil.setValue(this, TypeKeys.MINION_IDS, value)
     }

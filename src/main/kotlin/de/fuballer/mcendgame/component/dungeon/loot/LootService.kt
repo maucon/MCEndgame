@@ -12,8 +12,10 @@ import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.EntityExtension.isDropEquipmentDisabled
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.util.extension.EntityExtension.isLootGoblin
 import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
 import de.fuballer.mcendgame.util.random.RandomUtil
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.enchantments.Enchantment
@@ -44,6 +46,11 @@ class LootService(
     }
 
     private fun dropEquipment(entity: LivingEntity, world: World) {
+        if (entity.isLootGoblin()) {
+            dropLootGoblinLoot(entity, world)
+            return
+        }
+
         val killer = entity.killer
 
         val looting = getLootingLevel(killer)
@@ -54,10 +61,25 @@ class LootService(
             val finalDropChance = baseDropChance * magicFindMultiplier
 
             if (Random.nextDouble() > finalDropChance) continue
-
-            val finalItem = ItemUtil.setRandomDurability(item)
-            world.dropItemNaturally(entity.location, finalItem)
+            dropFinalItem(world, entity.location, item)
         }
+    }
+
+    private fun dropLootGoblinLoot(entity: LivingEntity, world: World) {
+        val location = entity.location
+
+        for (item in getEquipment(entity.equipment)) {
+            if (getItemDropChance(item, 1) == 0.0) continue
+            dropFinalItem(world, location, item)
+        }
+
+        val orb = RandomUtil.pick(LootSettings.getBossLootOptions(entity.getMapTier() ?: 1)).option
+        world.dropItemNaturally(location, orb.clone())
+    }
+
+    private fun dropFinalItem(world: World, location: Location, item: ItemStack) {
+        val finalItem = ItemUtil.setRandomDurability(item)
+        world.dropItemNaturally(location, finalItem)
     }
 
     private fun dropCustomItems(entity: LivingEntity, world: World) {
