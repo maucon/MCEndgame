@@ -3,8 +3,8 @@ package de.fuballer.mcendgame.component.killer.command
 import de.fuballer.mcendgame.component.killer.KillerSettings
 import de.fuballer.mcendgame.component.killer.db.KillerRepository
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.helper.CommandHelper
 import de.fuballer.mcendgame.technical.CommandHandler
+import de.fuballer.mcendgame.util.helper.CommandHelper
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.helper
+package de.fuballer.mcendgame.util.helper
 
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.PluginUtil
