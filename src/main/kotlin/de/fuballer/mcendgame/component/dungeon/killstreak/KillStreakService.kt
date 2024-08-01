@@ -49,7 +49,7 @@ class KillStreakService(
 
         killStreakRepo.save(killStreak)
 
-        val killStreakCreated = KillStreakCreatedEvent(killStreak.streak, player)
+        val killStreakCreated = KillStreakCreatedForPlayerEvent(killStreak.streak, player)
         EventGateway.apply(killStreakCreated)
     }
 

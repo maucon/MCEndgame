@@ -29,7 +29,7 @@ class DungeonOpenEvent(
 /**
  * Thrown whenever the killstreak is created for a player.
  */
-class KillStreakCreatedEvent(
+class KillStreakCreatedForPlayerEvent(
     val streak: Int,
     val player: Player
 ) : HandleableEvent()

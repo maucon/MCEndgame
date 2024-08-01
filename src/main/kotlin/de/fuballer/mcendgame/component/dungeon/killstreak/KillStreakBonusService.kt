@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.killstreak
 
 import de.fuballer.mcendgame.component.dungeon.modifier.ModifierUtil.addModifier
 import de.fuballer.mcendgame.component.dungeon.modifier.ModifierUtil.removeModifiersBySource
-import de.fuballer.mcendgame.event.KillStreakCreatedEvent
+import de.fuballer.mcendgame.event.KillStreakCreatedForPlayerEvent
 import de.fuballer.mcendgame.event.KillStreakRemovedEvent
 import de.fuballer.mcendgame.event.KillStreakUpdatedEvent
 import de.fuballer.mcendgame.framework.annotation.Component
@@ -12,7 +12,7 @@ import org.bukkit.event.Listener
 @Component
 class KillStreakBonusService : Listener {
     @EventHandler
-    fun on(event: KillStreakCreatedEvent) {
+    fun on(event: KillStreakCreatedForPlayerEvent) {
         val player = event.player
 
         val killStreakModifier = KillStreakSettings.createKillStreakModifier(event.streak)
