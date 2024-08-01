@@ -10,6 +10,8 @@ import de.fuballer.mcendgame.util.random.RandomUtil
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ArmorMeta
+import org.bukkit.inventory.meta.trim.ArmorTrim
 import kotlin.random.Random
 
 @Component
@@ -23,6 +25,7 @@ class EquipmentGenerationService(
         weapons: Boolean,
         ranged: Boolean,
         armor: Boolean,
+        isLootGoblin: Boolean
     ) {
         val equipment = livingEntity.equipment!!
 
@@ -37,23 +40,25 @@ class EquipmentGenerationService(
             }
         }
 
-        if (armor) {
-            createRandomSortableEquipment(random, mapTier, EquipmentGenerationSettings.HELMETS)?.also {
-                equipment.helmet = it
-                equipment.helmetDropChance = 0f
-            }
-            createRandomSortableEquipment(random, mapTier, EquipmentGenerationSettings.CHESTPLATES)?.also {
-                equipment.chestplate = it
-                equipment.chestplateDropChance = 0f
-            }
-            createRandomSortableEquipment(random, mapTier, EquipmentGenerationSettings.LEGGINGS)?.also {
-                equipment.leggings = it
-                equipment.leggingsDropChance = 0f
-            }
-            createRandomSortableEquipment(random, mapTier, EquipmentGenerationSettings.BOOTS)?.also {
-                equipment.boots = it
-                equipment.bootsDropChance = 0f
-            }
+        if (!armor) return
+
+        val armorTrim = if (isLootGoblin) getLootGoblinArmorTrim(random) else null
+
+        createRandomSortableEquipment(random, mapTier, EquipmentGenerationSettings.HELMETS, armorTrim)?.also {
+            equipment.helmet = it
+            equipment.helmetDropChance = 0f
+        }
+        createRandomSortableEquipment(random, mapTier, EquipmentGenerationSettings.CHESTPLATES, armorTrim)?.also {
+            equipment.chestplate = it
+            equipment.chestplateDropChance = 0f
+        }
+        createRandomSortableEquipment(random, mapTier, EquipmentGenerationSettings.LEGGINGS, armorTrim)?.also {
+            equipment.leggings = it
+            equipment.leggingsDropChance = 0f
+        }
+        createRandomSortableEquipment(random, mapTier, EquipmentGenerationSettings.BOOTS, armorTrim)?.also {
+            equipment.boots = it
+            equipment.bootsDropChance = 0f
         }
     }
 
@@ -91,12 +96,13 @@ class EquipmentGenerationService(
     private fun createRandomSortableEquipment(
         random: Random,
         mapTier: Int,
-        equipmentProbabilities: List<SortableRandomOption<out Equipment?>>
+        equipmentProbabilities: List<SortableRandomOption<out Equipment?>>,
+        armorTrim: ArmorTrim? = null
     ): ItemStack? {
         val rolls = EquipmentGenerationSettings.calculateEquipmentRollTries(mapTier)
         val equipment = RandomUtil.pick(equipmentProbabilities, rolls, random).option ?: return null
 
-        return createEquipment(random, equipment, mapTier)
+        return createEquipment(random, equipment, mapTier, armorTrim)
     }
 
     private fun createRandomEquipment(
@@ -111,10 +117,15 @@ class EquipmentGenerationService(
     private fun createEquipment(
         random: Random,
         equipment: Equipment,
-        mapTier: Int
+        mapTier: Int,
+        armorTrim: ArmorTrim? = null
     ): ItemStack {
         val item = ItemStack(equipment.material)
         val itemMeta = item.itemMeta ?: return item
+
+        if (armorTrim != null && itemMeta is ArmorMeta) {
+            itemMeta.trim = armorTrim
+        }
 
         equipmentEnchantmentService.enchantItem(random, mapTier, itemMeta, equipment.rollableEnchants)
         item.itemMeta = itemMeta
@@ -141,5 +152,14 @@ class EquipmentGenerationService(
             }
 
         item.setCustomAttributes(rolledAttributes)
+    }
+
+    private fun getLootGoblinArmorTrim(
+        random: Random
+    ): ArmorTrim {
+        val pattern = RandomUtil.pick(EquipmentGenerationSettings.LOOT_GOBLIN_ARMOR_TRIM_PATTERNS, random).option
+        val material = RandomUtil.pick(EquipmentGenerationSettings.LOOT_GOBLIN_ARMOR_TRIM_MATERIALS, random).option
+
+        return ArmorTrim(material, pattern)
     }
 }
