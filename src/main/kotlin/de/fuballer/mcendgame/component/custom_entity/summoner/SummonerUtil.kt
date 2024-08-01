@@ -1,8 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.summoner
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
-import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
-import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
@@ -31,9 +29,6 @@ object SummonerUtil {
 
         addMinions(summoner, minions)
         setMinionsTarget(summoner, minions)
-
-        val event = DungeonEnemySpawnedEvent(summoner.world, minions)
-        EventGateway.apply(event)
 
         return minions
     }

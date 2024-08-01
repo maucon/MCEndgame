@@ -6,7 +6,6 @@ import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.extension.EntityExtension.setCanUseAbilities
 import de.fuballer.mcendgame.util.extension.EntityExtension.setHitCountBasedHealth
-import de.fuballer.mcendgame.util.extension.EntityExtension.setIsEnemy
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
@@ -36,7 +35,6 @@ object ClonesAbility : Ability {
             clone.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)!!.baseValue = 1.0
             clone.setCanUseAbilities(false)
             clone.setHitCountBasedHealth(cloneHitCountBasedHealth)
-            clone.setIsEnemy()
 
             clone.velocity = rotatedVelocity
             rotatedVelocity.rotateAroundY(rotationPerClone)
