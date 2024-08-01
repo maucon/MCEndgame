@@ -3,8 +3,8 @@ package de.fuballer.mcendgame.component.totem.command
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.component.totem.TotemSettings
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.CommandHandler
 import de.fuballer.mcendgame.util.InventoryUtil
+import de.fuballer.mcendgame.util.command.CommandHandler
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getTotems
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender

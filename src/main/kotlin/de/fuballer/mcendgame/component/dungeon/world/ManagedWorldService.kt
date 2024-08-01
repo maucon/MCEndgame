@@ -9,7 +9,7 @@ import de.fuballer.mcendgame.framework.annotation.Qualifier
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.SchedulingUtil
-import de.fuballer.mcendgame.util.helper.FileHelper
+import de.fuballer.mcendgame.util.file.FileHelper
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.WorldType

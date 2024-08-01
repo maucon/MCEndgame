@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.technical
+package de.fuballer.mcendgame.util.command
 
 import de.fuballer.mcendgame.framework.stereotype.CommandHandler
 import org.bukkit.plugin.java.JavaPlugin

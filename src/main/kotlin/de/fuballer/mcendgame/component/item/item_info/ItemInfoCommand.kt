@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.item.item_info
 import de.fuballer.mcendgame.component.item.attribute.data.*
 import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.framework.annotation.Component
-import de.fuballer.mcendgame.technical.CommandHandler
+import de.fuballer.mcendgame.util.command.CommandHandler
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.extract
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import org.bukkit.Material
