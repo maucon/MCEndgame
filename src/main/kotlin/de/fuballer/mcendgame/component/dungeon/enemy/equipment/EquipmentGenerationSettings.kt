@@ -8,6 +8,8 @@ import de.fuballer.mcendgame.component.item.equipment.armor.Leggings
 import de.fuballer.mcendgame.component.item.equipment.tool.*
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
+import org.bukkit.inventory.meta.trim.TrimMaterial
+import org.bukkit.inventory.meta.trim.TrimPattern
 import kotlin.math.pow
 import kotlin.random.Random
 
@@ -141,5 +143,39 @@ object EquipmentGenerationSettings {
     )
     val RANGED_MAINHAND_PROBABILITIES = listOf<RandomOption<List<SortableRandomOption<out Equipment>>>>(
         RandomOption(100, BOWS),
+    )
+
+    val LOOT_GOBLIN_ARMOR_TRIM_PATTERNS = listOf<RandomOption<TrimPattern>>(
+        RandomOption(1, TrimPattern.SILENCE), //Ancient City chest 1.2%
+        RandomOption(3, TrimPattern.WARD),  //Ancient City chest 5%
+        RandomOption(5, TrimPattern.VEX), //Woodland Mansion chest 50%
+        RandomOption(5, TrimPattern.BOLT), //Vault 6.3%
+        RandomOption(7, TrimPattern.FLOW), //Ominous Vault 22.5%
+        RandomOption(8, TrimPattern.SNOUT), //Bastion Remnant chest 8.3%
+        RandomOption(8, TrimPattern.WILD), //Jungle Temple chest 33.3%
+        RandomOption(10, TrimPattern.EYE), //Stronghold altar chest 10%, library chest 100%
+        RandomOption(15, TrimPattern.SPIRE), //End city chest 6.7%
+        RandomOption(15, TrimPattern.TIDE), //Elder Guardian 20%
+        RandomOption(15, TrimPattern.RIB), //Nether Fortress chest 6.7%
+        RandomOption(15, TrimPattern.DUNE), //Desert Temple 14.3%
+        RandomOption(15, TrimPattern.WAYFINDER), //Suspicious gravel 8.3%
+        RandomOption(15, TrimPattern.SHAPER), //Suspicious gravel 8.3%
+        RandomOption(15, TrimPattern.RAISER), //Suspicious gravel 8.3%
+        RandomOption(15, TrimPattern.HOST), //Suspicious gravel 8.3%
+        RandomOption(20, TrimPattern.SENTRY), //Outpost chest 25%
+        RandomOption(25, TrimPattern.COAST) //Shipwreck chest 16.7%
+    )
+
+    val LOOT_GOBLIN_ARMOR_TRIM_MATERIALS = listOf<RandomOption<TrimMaterial>>(
+        RandomOption(1, TrimMaterial.NETHERITE),
+        RandomOption(3, TrimMaterial.DIAMOND),
+        RandomOption(5, TrimMaterial.EMERALD),
+        RandomOption(5, TrimMaterial.AMETHYST),
+        RandomOption(5, TrimMaterial.QUARTZ),
+        RandomOption(8, TrimMaterial.GOLD),
+        RandomOption(8, TrimMaterial.IRON),
+        RandomOption(8, TrimMaterial.COPPER),
+        RandomOption(8, TrimMaterial.REDSTONE),
+        RandomOption(8, TrimMaterial.LAPIS)
     )
 }

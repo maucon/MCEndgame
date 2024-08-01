@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.SchedulingUtil
+import de.fuballer.mcendgame.util.extension.EntityExtension.setIsLootGoblin
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.Location
@@ -46,7 +47,13 @@ class EnemyGenerationService(
     ): LivingEntity {
         val entityType = RandomUtil.pick(randomEntityTypes, random).option
         val entity = EntityUtil.spawnCustomEntity(entityType, location, mapTier) as LivingEntity
-        equipmentGenerationService.generate(random, entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor)
+
+        val isLootGoblin = EnemyGenerationSettings.isLootGoblin(entityType, random)
+        if (isLootGoblin) {
+            entity.setIsLootGoblin()
+        }
+
+        equipmentGenerationService.generate(random, entity, mapTier, entityType.canHaveWeapons, entityType.isRanged, entityType.canHaveArmor, isLootGoblin)
 
         val scaleAttribute = entity.getAttribute(Attribute.GENERIC_SCALE)
         scaleAttribute?.baseValue = EnemyGenerationSettings.getRandomScale(random)
