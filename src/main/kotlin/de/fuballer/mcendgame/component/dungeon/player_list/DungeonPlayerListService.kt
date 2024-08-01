@@ -8,6 +8,8 @@ import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
+import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -66,7 +68,8 @@ class DungeonPlayerListService(
 
         if (entity.isBoss()) {
             remainingData.bossesSlain++
-        } else {
+        }
+        if (entity.isEnemy() && !entity.isMinion()) {
             remainingData.remaining--
         }
 

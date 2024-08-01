@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.helper
+package de.fuballer.mcendgame.util.command
 
 enum class CommandAction(
     val actionName: String
