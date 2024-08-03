@@ -17,6 +17,7 @@ private const val GRAVITATION_PILLAR_COOLDOWN = 40L // in ticks
 object SummonGravitationPillarAbility : Ability {
     override fun cast(caster: LivingEntity) {
         val pillar = SummonerUtil.summonMinions(caster, StonePillarEntityType, 1, caster.location).first()
+        pillar.isSilent = true
 
         GravitationPillarPullRunnable(pillar)
             .runTaskLater(GRAVITATION_PILLAR_COOLDOWN)
