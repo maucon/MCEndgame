@@ -1,12 +1,13 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.component.crafting.corruption.CorruptionSettings
-import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
-import de.fuballer.mcendgame.component.item.attribute.VanillaAttributeTypes
-import de.fuballer.mcendgame.component.item.attribute.data.*
+import de.fuballer.mcendgame.component.item.attribute.AttributeSorter
+import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleRoll
+import de.fuballer.mcendgame.component.item.attribute.data.VanillaAttributeType
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
-import de.fuballer.mcendgame.technical.Order
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
@@ -22,25 +23,10 @@ import org.bukkit.inventory.meta.ItemMeta
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.random.Random
-import kotlin.reflect.KVisibility
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.memberProperties
 
 private val DECIMAL_FORMAT = DecimalFormat("#.##")
 
 object ItemUtil {
-    private val vanillaAttributeTypes = VanillaAttributeTypes::class.memberProperties
-        .filter { it.visibility == KVisibility.PUBLIC }
-        .sortedBy { it.findAnnotation<Order>()?.order }
-        .map { it.get(VanillaAttributeTypes) as VanillaAttributeType }
-
-    private val customAttributeTypes = CustomAttributeTypes::class.memberProperties
-        .filter { it.visibility == KVisibility.PUBLIC }
-        .sortedBy { it.findAnnotation<Order>()?.order }
-        .map { it.get(CustomAttributeTypes) as CustomAttributeType }
-
-    private val attributeTypes = vanillaAttributeTypes + customAttributeTypes
-
     fun isVanillaItem(item: ItemStack): Boolean {
         val itemMeta = item.itemMeta ?: return true
         return !itemMeta.hasLore()
@@ -225,7 +211,7 @@ object ItemUtil {
         customAttributes: List<CustomAttribute>
     ): List<CustomAttribute> {
         if (customItemType == null) {
-            return customAttributes.sortedBy { attributeTypes.indexOf(it.type) }
+            return customAttributes.sortedBy { AttributeSorter.getSortKey(it.type) }
         }
 
         val attributeTypeOrder = customItemType.attributes.map { it.type }
