@@ -1,6 +1,8 @@
 package de.fuballer.mcendgame.component.custom_entity.summoner
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
+import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
@@ -16,7 +18,7 @@ import org.bukkit.entity.LivingEntity
 
 object SummonerUtil {
     fun summonMinions(
-        summoner: Creature,
+        summoner: LivingEntity,
         minionType: CustomEntityType,
         amount: Int,
         spawnLocation: Location,
@@ -28,7 +30,12 @@ object SummonerUtil {
             .toSet()
 
         addMinions(summoner, minions)
-        setMinionsTarget(summoner, minions)
+        if (summoner is Creature) {
+            setMinionsTarget(summoner, minions)
+        }
+
+        val event = DungeonEnemySpawnedEvent(spawnLocation.world!!, minions, minions = true)
+        EventGateway.apply(event)
 
         return minions
     }
@@ -45,20 +52,20 @@ object SummonerUtil {
         return aliveMinions
     }
 
-    fun addMinions(summoner: Entity, newMinions: Collection<Entity>) {
+    fun setMinionsTarget(summoner: Creature, minions: Collection<LivingEntity>) {
+        val target = summoner.target ?: return
+
+        minions.mapNotNull { it as? Creature }
+            .forEach { it.target = target }
+    }
+
+    private fun addMinions(summoner: Entity, newMinions: Collection<Entity>) {
         val minionIds = newMinions.map { it.uniqueId }
             .toMutableList()
         val oldMinionsIds = summoner.getMinionIds()
 
         minionIds.addAll(oldMinionsIds)
         summoner.setMinionIds(minionIds)
-    }
-
-    fun setMinionsTarget(summoner: Creature, minions: Collection<LivingEntity>) {
-        val target = summoner.target ?: return
-
-        minions.mapNotNull { it as? Creature }
-            .forEach { it.target = target }
     }
 
     private fun summonMinion(

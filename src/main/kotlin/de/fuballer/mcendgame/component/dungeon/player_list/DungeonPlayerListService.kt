@@ -40,6 +40,7 @@ class DungeonPlayerListService(
 
     @EventHandler
     fun on(event: DungeonEnemySpawnedEvent) {
+        if (event.minions) return
         val entity = dungeonPlayerListRepo.findById(event.world) ?: return
 
         entity.remainingData.remaining += event.entities.size

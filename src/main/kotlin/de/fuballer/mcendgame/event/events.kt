@@ -90,7 +90,8 @@ class DiscoverRecipeAddEvent(
  */
 class DungeonEnemySpawnedEvent(
     val world: World,
-    val entities: Set<LivingEntity>
+    val entities: Set<LivingEntity>,
+    val minions: Boolean = false
 ) : HandleableEvent()
 
 /**
