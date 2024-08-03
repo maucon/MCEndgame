@@ -4,10 +4,7 @@ import de.fuballer.mcendgame.component.custom_entity.ability.Ability
 import de.fuballer.mcendgame.component.custom_entity.summoner.SummonerUtil
 import de.fuballer.mcendgame.component.custom_entity.types.stone_pillar.StonePillarEntityType
 import de.fuballer.mcendgame.util.DungeonUtil
-import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
-import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
-import de.fuballer.mcendgame.util.extension.EntityExtension.setIsMinion
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.entity.LivingEntity
@@ -19,15 +16,10 @@ private const val GRAVITATION_PILLAR_COOLDOWN = 40L // in ticks
 
 object SummonGravitationPillarAbility : Ability {
     override fun cast(caster: LivingEntity) {
-        val mapTier = caster.getMapTier() ?: 1
+        val pillar = SummonerUtil.summonMinions(caster, StonePillarEntityType, 1, caster.location).first()
 
-        val pillar = EntityUtil.spawnCustomEntity(StonePillarEntityType, caster.location, mapTier) as LivingEntity
-        pillar.setAI(false)
-        pillar.setIsMinion()
-
-        SummonerUtil.addMinions(caster, setOf(pillar))
-
-        GravitationPillarPullRunnable(pillar).runTaskLater(GRAVITATION_PILLAR_COOLDOWN)
+        GravitationPillarPullRunnable(pillar)
+            .runTaskLater(GRAVITATION_PILLAR_COOLDOWN)
     }
 
     private class GravitationPillarPullRunnable(
@@ -47,7 +39,8 @@ object SummonGravitationPillarAbility : Ability {
 
             pillar.world.playSound(pillar.location, Sound.BLOCK_BASALT_BREAK, SoundCategory.PLAYERS, 1.5f, 0.5f)
 
-            GravitationPillarPullRunnable(pillar).runTaskLater(GRAVITATION_PILLAR_COOLDOWN)
+            GravitationPillarPullRunnable(pillar)
+                .runTaskLater(GRAVITATION_PILLAR_COOLDOWN)
         }
     }
 }
