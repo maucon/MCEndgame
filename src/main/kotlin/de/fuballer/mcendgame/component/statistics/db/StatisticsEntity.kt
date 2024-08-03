@@ -15,15 +15,10 @@ data class StatisticsEntity(
     var dungeonsOpened: Int = 0,
     var totalKills: Int = 0,
     var bossKills: Int = 0,
+    var lootGoblinKills: Int = 0,
     var deaths: Int = 0,
     var highestKillstreak: Int = 0,
-
-    var damageDealt: Double = 0.0,
-    var rawDamageDealt: Double = 0.0,
-    var damageTaken: Double = 0.0,
-    var rawDamageTaken: Double = 0.0,
-
-    ) : Entity<UUID> {
+) : Entity<UUID> {
     fun createBook(): ItemStack {
         val book = ItemStack(Material.WRITTEN_BOOK)
         val bookMeta = book.itemMeta as BookMeta
@@ -65,6 +60,8 @@ data class StatisticsEntity(
                 "   $totalKills",
                 StatisticsSettings.BOSS_KILLS_TEXT,
                 "   $bossKills",
+                StatisticsSettings.LOOT_GOBLINS_KILLS_TEXT,
+                "   $lootGoblinKills",
                 StatisticsSettings.DEATHS_TEXT,
                 "   $deaths",
                 StatisticsSettings.KILLSTREAK_TEXT,
@@ -72,23 +69,6 @@ data class StatisticsEntity(
             )
         )
         pages.add(page2)
-
-        val page3 = createPage(
-            listOf(
-                StatisticsSettings.STATISTICS_BOOK_DAMAGE_HEADLINE,
-                "",
-                StatisticsSettings.DAMAGE_DEALT_TEXT,
-                "   ${String.format("%.2f", damageDealt)}",
-                StatisticsSettings.RAW_DAMAGE_DEALT_TEXT,
-                "   ${String.format("%.2f", rawDamageDealt)}",
-                "",
-                StatisticsSettings.DAMAGE_TAKEN_TEXT,
-                "   ${String.format("%.2f", damageTaken)}",
-                StatisticsSettings.RAW_DAMAGE_TAKEN_TEXT,
-                "   ${String.format("%.2f", rawDamageTaken)}"
-            )
-        )
-        pages.add(page3)
 
         return pages
     }

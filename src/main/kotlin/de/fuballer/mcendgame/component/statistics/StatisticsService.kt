@@ -6,12 +6,11 @@ import de.fuballer.mcendgame.event.*
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
-import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
-import org.bukkit.entity.*
+import de.fuballer.mcendgame.util.extension.EntityExtension.isLootGoblin
+import org.bukkit.entity.Monster
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import kotlin.math.max
 
@@ -48,22 +47,6 @@ class StatisticsService(
         val player = killer as? Player ?: return
 
         onMonsterKilledByPlayer(player, monster)
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    fun on(event: EntityDamageByEntityEvent) {
-        if (!event.entity.world.isDungeonWorld()) return
-
-        var damager = event.damager
-        damager = testIfDamagerIsArrow(damager)
-        damager = testIfDamagerIsPotion(damager)
-
-        if (damager is Player) {
-            onEntityDamagedByPlayer(damager, event)
-        }
-        if (event.entity is Player) {
-            onPlayerDamagedByEntity(event.entity as Player, event)
-        }
     }
 
     @EventHandler
@@ -107,48 +90,9 @@ class StatisticsService(
         if (monster.isBoss()) {
             statistics.bossKills++
         }
-
-        statisticsRepo.save(statistics)
-    }
-
-    private fun testIfDamagerIsArrow(damager: Entity): Entity {
-        if (damager !is Arrow) return damager
-
-        val shooter = damager.shooter
-        if (shooter is LivingEntity) return shooter
-
-        return damager
-    }
-
-    private fun testIfDamagerIsPotion(damager: Entity): Entity {
-        if (damager !is ThrownPotion) return damager
-
-        val shooter = damager.shooter
-        if (shooter is LivingEntity) return shooter
-
-        return damager
-    }
-
-    private fun onEntityDamagedByPlayer(
-        player: Player,
-        event: EntityDamageByEntityEvent
-    ) {
-        if (event.entity !is Monster) return
-
-        val statistics = statisticsRepo.findById(player.uniqueId) ?: return
-        statistics.damageDealt += event.finalDamage
-        statistics.rawDamageDealt += event.damage
-
-        statisticsRepo.save(statistics)
-    }
-
-    private fun onPlayerDamagedByEntity(
-        player: Player,
-        event: EntityDamageByEntityEvent
-    ) {
-        val statistics = statisticsRepo.findById(player.uniqueId) ?: return
-        statistics.damageTaken += event.finalDamage
-        statistics.rawDamageTaken += event.damage
+        if (monster.isLootGoblin()) {
+            statistics.lootGoblinKills++
+        }
 
         statisticsRepo.save(statistics)
     }
