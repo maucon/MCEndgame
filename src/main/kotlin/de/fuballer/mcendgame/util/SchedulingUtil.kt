@@ -1,6 +1,8 @@
 package de.fuballer.mcendgame.util
 
 import de.fuballer.mcendgame.configuration.PluginConfiguration
+import java.util.concurrent.Callable
+import java.util.concurrent.Future
 
 object SchedulingUtil {
     /**
@@ -27,7 +29,6 @@ object SchedulingUtil {
      * Returns a task that will run after the specified number of server
      * ticks.
      *
-     * @param plugin the reference to the plugin scheduling task
      * @param task the task to be run
      * @param delay the ticks to wait before running the task
      * @throws IllegalArgumentException if plugin is null
@@ -63,4 +64,19 @@ object SchedulingUtil {
      * @param taskId ID number of task to be removed
      */
     fun cancelTask(taskId: Int) = PluginConfiguration.scheduler().cancelTask(taskId)
+
+    /**
+     * Calls a method on the main thread and returns a Future object. This
+     * task will be executed by the main server thread.
+     *
+     *  * Note: The Future.get() methods must NOT be called from the main
+     * thread.
+     *  * Note2: There is at least an average of 10ms latency until the
+     * isDone() method returns true.
+     *
+     * @param <T> The callable's return type
+     * @param task Task to be executed
+     * @return Future object related to the task
+    </T> */
+    fun <T> callSyncMethod(task: Callable<T>): Future<T> = PluginConfiguration.scheduler().callSyncMethod(PluginConfiguration.plugin(), task)
 }

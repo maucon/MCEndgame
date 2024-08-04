@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EntityUtil
+import de.fuballer.mcendgame.util.ThreadUtil.bukkitSync
 import de.fuballer.mcendgame.util.extension.EntityExtension.setDisableDropEquipment
 import de.fuballer.mcendgame.util.extension.EntityExtension.setIsBoss
 import de.fuballer.mcendgame.util.extension.EntityExtension.setPortalLocation
@@ -30,7 +31,7 @@ class DungeonBossGenerationService(
         world: World,
         locations: List<Location>,
         leaveLocation: Location
-    ) {
+    ) = bukkitSync {
         require(locations.size == DungeonGenerationSettings.BOSS_AMOUNT) { "too few boss spawning locations" }
         require(entityTypes.isNotEmpty()) { "boss entity types cannot be empty" }
 

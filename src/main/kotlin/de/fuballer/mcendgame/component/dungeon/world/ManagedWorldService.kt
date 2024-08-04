@@ -9,6 +9,7 @@ import de.fuballer.mcendgame.framework.annotation.Qualifier
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.SchedulingUtil
+import de.fuballer.mcendgame.util.ThreadUtil.bukkitSync
 import de.fuballer.mcendgame.util.file.FileHelper
 import org.bukkit.World
 import org.bukkit.WorldCreator
@@ -48,11 +49,13 @@ class ManagedWorldService(
             .generateStructures(false)
             .generatorSettings(WorldSettings.GENERATOR_SETTINGS)
 
-        val world = PluginUtil.createWorld(worldCreator).apply {
-            WorldSettings.updateGameRules(this)
+        val world = bukkitSync {
+            PluginUtil.createWorld(worldCreator).apply {
+                WorldSettings.updateGameRules(this)
 
-            difficulty = WorldSettings.DIFFICULTY
-            time = WorldSettings.WORLD_TIME
+                difficulty = WorldSettings.DIFFICULTY
+                time = WorldSettings.WORLD_TIME
+            }
         }
 
         val entity = ManagedWorldEntity(name, player, world)

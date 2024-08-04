@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.portal.skins.DefaultPortalSkin
 import de.fuballer.mcendgame.component.portal.skins.PortalSkin
 import de.fuballer.mcendgame.framework.stereotype.Entity
 import de.fuballer.mcendgame.util.SchedulingUtil
+import de.fuballer.mcendgame.util.ThreadUtil.bukkitSync
 import de.fuballer.mcendgame.util.WorldUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.setIsPortal
 import org.bukkit.Location
@@ -30,7 +31,7 @@ class Portal(
         val offsetLocation = location.clone()
         offsetLocation.y = -66.0
 
-        val portalEntity = (world.spawnEntity(offsetLocation, EntityType.ARMOR_STAND, false) as ArmorStand)
+        val portalEntity = bukkitSync { (world.spawnEntity(offsetLocation, EntityType.ARMOR_STAND, false) as ArmorStand) }
 
         portalEntity.apply {
             isInvulnerable = true
@@ -57,7 +58,9 @@ class Portal(
     fun close() {
         skin.cancel()
 
-        val entity = WorldUtil.getEntity(location.world!!, id) ?: return
-        entity.remove()
+        bukkitSync {
+            val entity = WorldUtil.getEntity(location.world!!, id) ?: return@bukkitSync
+            entity.remove()
+        }
     }
 }

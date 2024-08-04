@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.util.EntityUtil
-import de.fuballer.mcendgame.util.SchedulingUtil
+import de.fuballer.mcendgame.util.ThreadUtil.bukkitSync
 import de.fuballer.mcendgame.util.extension.EntityExtension.setIsLootGoblin
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -28,15 +28,13 @@ class EnemyGenerationService(
         world: World,
         normalEntityTypes: List<RandomOption<CustomEntityType>>,
         normalEnemySpawnLocations: List<Location>
-    ) {
-        SchedulingUtil.runTask {
-            val entities = normalEnemySpawnLocations
-                .map { spawnEntity(random, mapTier, normalEntityTypes, it) }
-                .toMutableSet()
+    ) = bukkitSync {
+        val entities = normalEnemySpawnLocations
+            .map { spawnEntity(random, mapTier, normalEntityTypes, it) }
+            .toMutableSet()
 
-            val event = DungeonEnemySpawnedEvent(world, entities)
-            EventGateway.apply(event)
-        }
+        val event = DungeonEnemySpawnedEvent(world, entities)
+        EventGateway.apply(event)
     }
 
     private fun spawnEntity(
@@ -86,6 +84,6 @@ class EnemyGenerationService(
         val potionEffects = effects.filterNotNull()
             .map { it.getPotionEffect() }
 
-        entity.addPotionEffects(potionEffects)
+        bukkitSync { entity.addPotionEffects(potionEffects) }
     }
 }

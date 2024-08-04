@@ -3,6 +3,8 @@ package de.fuballer.mcendgame.component.dungeon.generation.layout_generator.line
 import de.fuballer.mcendgame.util.random.RandomOption
 
 object RoomTypes {
+    fun init() {}
+
     val STRONGHOLD_START_ROOM = RoomTypeLoader.load("stronghold/start")
     val STRONGHOLD_BOSS_ROOM = RoomTypeLoader.load("stronghold/boss")
 
