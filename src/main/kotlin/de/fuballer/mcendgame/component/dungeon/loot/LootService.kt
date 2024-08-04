@@ -11,6 +11,7 @@ import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.EntityExtension.isDropEquipmentDisabled
+import de.fuballer.mcendgame.util.extension.EntityExtension.isElite
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.extension.EntityExtension.isLootGoblin
 import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
@@ -38,8 +39,11 @@ class LootService(
         if (entity.isMinion()) return
         if (entity.isBoss()) return
 
-        dropTotem(entity)
         dropCustomItems(entity, entity.world)
+
+        if (entity.isElite()) {
+            dropTotem(entity)
+        }
 
         if (entity.isDropEquipmentDisabled()) return
         dropEquipment(entity, entity.world)
@@ -140,8 +144,6 @@ class LootService(
     }
 
     private fun dropTotem(entity: LivingEntity) {
-        if (Random.nextDouble() > LootSettings.TOTEM_DROP_CHANCE) return
-
         val mapTier = entity.getMapTier() ?: 1
         val type = RandomUtil.pick(LootSettings.TOTEM_TYPES).option
         val tier = RandomUtil.pick(LootSettings.TOTEM_TIERS, mapTier).option

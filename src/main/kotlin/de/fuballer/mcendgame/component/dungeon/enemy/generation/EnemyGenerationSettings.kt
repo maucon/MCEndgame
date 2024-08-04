@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.generation
 
-import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.SortableRandomOption
 import kotlin.math.pow
@@ -47,7 +46,12 @@ object EnemyGenerationSettings {
         RandomOption(1, PotionEffect.INVISIBILITY),
     )
 
-    fun isLootGoblin(type: CustomEntityType, random: Random) = !type.hideEquipment && random.nextDouble() < 0.003
+    const val LOOT_GOBLIN_CHANCE = 0.003
+
+    const val ELITE_CHANCE = 0.00133
+    const val ELITE_SCALE = 1.35
+    const val ELITE_HEALTH_FACTOR = 2.5
+    val ELITE_POTION_EFFECT = PotionEffect.RAID_OMEN.getPotionEffect(true)
 
     fun getRandomScale(random: Random) = 1.0 + 0.2 * random.nextDouble().pow(3) * if (random.nextBoolean()) 1 else -1
 }

@@ -72,8 +72,6 @@ object LootSettings {
         return baseLoot
     }
 
-    const val TOTEM_DROP_CHANCE = 0.00133
-
     val TOTEM_TIERS = listOf(
         SortableRandomOption(1000, 0, TotemTier.COMMON),
         SortableRandomOption(200, 1, TotemTier.UNCOMMON),
