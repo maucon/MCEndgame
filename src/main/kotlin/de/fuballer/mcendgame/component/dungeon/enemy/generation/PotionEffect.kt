@@ -4,7 +4,7 @@ import org.bukkit.potion.PotionEffectType
 
 enum class PotionEffect(
     private val type: PotionEffectType,
-    private val amplifier: Int,
+    private val amplifier: Int = 0,
     private val duration: Int = Int.MAX_VALUE
 ) {
     STRENGTH_1(PotionEffectType.STRENGTH, 0),
@@ -19,11 +19,12 @@ enum class PotionEffect(
     SPEED_2(PotionEffectType.SPEED, 1),
     SPEED_3(PotionEffectType.SPEED, 2),
     SPEED_4(PotionEffectType.SPEED, 3),
-    FIRE_RESISTANCE(PotionEffectType.FIRE_RESISTANCE, 0),
-    WIND_CHARGED(PotionEffectType.WIND_CHARGED, 0),
-    WEAVING(PotionEffectType.WEAVING, 0),
-    INVISIBILITY(PotionEffectType.INVISIBILITY, 0),
+    FIRE_RESISTANCE(PotionEffectType.FIRE_RESISTANCE),
+    WIND_CHARGED(PotionEffectType.WIND_CHARGED),
+    WEAVING(PotionEffectType.WEAVING),
+    INVISIBILITY(PotionEffectType.INVISIBILITY),
+    RAID_OMEN(PotionEffectType.RAID_OMEN),
     ;
 
-    fun getPotionEffect() = org.bukkit.potion.PotionEffect(type, duration, amplifier, false, false)
+    fun getPotionEffect(particles: Boolean = false) = org.bukkit.potion.PotionEffect(type, duration, amplifier, false, particles)
 }
