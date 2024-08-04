@@ -12,19 +12,24 @@ import de.fuballer.mcendgame.event.PortalUsedEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.MathUtil
+import de.fuballer.mcendgame.util.ThreadUtil.async
+import de.fuballer.mcendgame.util.ThreadUtil.bukkitSync
 import org.bukkit.Location
 import org.bukkit.block.data.type.RespawnAnchor
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import java.util.logging.Logger
 import kotlin.math.min
+import kotlin.time.measureTime
 
 @Component
 class MapDeviceService(
     private val mapDeviceRepo: MapDeviceRepository,
     private val dungeonGenerationService: DungeonGenerationService,
     private val playerDungeonProgressService: PlayerDungeonProgressService,
-    private val portalService: PortalService
+    private val portalService: PortalService,
+    private val logger: Logger
 ) : Listener, LifeCycleListener {
     override fun terminate() {
         mapDeviceRepo.findAll()
@@ -52,17 +57,21 @@ class MapDeviceService(
     fun openDungeon(
         mapDevice: MapDeviceEntity,
         player: Player
-    ) {
-        val mapTier = playerDungeonProgressService.getPlayerDungeonLevel(player.uniqueId).tier
-        val leaveLocation = mapDevice.location.clone().add(0.5, 1.0, 0.5)
-        val startLocation = dungeonGenerationService.generateDungeon(player, mapTier, leaveLocation)
+    ) = async {
+        val time = measureTime {
+            val mapTier = playerDungeonProgressService.getPlayerDungeonLevel(player.uniqueId).tier
+            val leaveLocation = mapDevice.location.clone().add(0.5, 1.0, 0.5)
+            val startLocation = dungeonGenerationService.generateDungeon(player, mapTier, leaveLocation)
 
-        val dungeonOpenEvent = DungeonOpenEvent(player, startLocation.world!!)
-        EventGateway.apply(dungeonOpenEvent)
+            val dungeonOpenEvent = DungeonOpenEvent(player, startLocation.world!!)
+            EventGateway.apply(dungeonOpenEvent)
 
-        closeDungeon(mapDevice)
-        openPortals(mapDevice, startLocation)
-        updateMapDeviceVisual(mapDevice)
+            closeDungeon(mapDevice)
+            openPortals(mapDevice, startLocation)
+            updateMapDeviceVisual(mapDevice)
+        }
+
+        logger.info("Created Dungeon in ${time.inWholeMilliseconds} ms")
     }
 
     fun closeDungeon(entity: MapDeviceEntity) {
@@ -90,6 +99,6 @@ class MapDeviceService(
         val anchor = block.blockData as RespawnAnchor
 
         anchor.charges = min(4, mapDevice.portals.size)
-        block.blockData = anchor
+        bukkitSync { block.blockData = anchor }
     }
 }

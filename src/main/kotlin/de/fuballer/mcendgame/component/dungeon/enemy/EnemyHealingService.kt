@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
 import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.util.ThreadUtil.bukkitSync
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
@@ -30,7 +31,7 @@ class EnemyHealingService : Listener {
         /**
          * Heals the given entity to full health after a one tick delay
          */
-        fun LivingEntity.healOnLoad() {
+        fun LivingEntity.healOnLoad() = bukkitSync {
             this.addPotionEffect(POTION_EFFECT)
         }
     }
