@@ -16,8 +16,8 @@ data class StatisticsEntity(
     var totalKills: Int = 0,
     var bossKills: Int = 0,
     var lootGoblinKills: Int = 0,
+    var eliteKills: Int = 0,
     var deaths: Int = 0,
-    var highestKillstreak: Int = 0,
 ) : Entity<UUID> {
     fun createBook(): ItemStack {
         val book = ItemStack(Material.WRITTEN_BOOK)
@@ -62,10 +62,10 @@ data class StatisticsEntity(
                 "   $bossKills",
                 StatisticsSettings.LOOT_GOBLINS_KILLS_TEXT,
                 "   $lootGoblinKills",
+                StatisticsSettings.ELITE_KILLS_TEXT,
+                "   $eliteKills",
                 StatisticsSettings.DEATHS_TEXT,
                 "   $deaths",
-                StatisticsSettings.KILLSTREAK_TEXT,
-                "   $highestKillstreak"
             )
         )
         pages.add(page2)

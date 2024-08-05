@@ -2,10 +2,14 @@ package de.fuballer.mcendgame.component.statistics
 
 import de.fuballer.mcendgame.component.statistics.db.StatisticsEntity
 import de.fuballer.mcendgame.component.statistics.db.StatisticsRepository
-import de.fuballer.mcendgame.event.*
+import de.fuballer.mcendgame.event.DungeonCompleteEvent
+import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
+import de.fuballer.mcendgame.event.DungeonOpenEvent
+import de.fuballer.mcendgame.event.DungeonWorldDeleteEvent
 import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
+import de.fuballer.mcendgame.util.extension.EntityExtension.isElite
 import de.fuballer.mcendgame.util.extension.EntityExtension.isLootGoblin
 import org.bukkit.entity.Monster
 import org.bukkit.entity.Player
@@ -69,16 +73,6 @@ class StatisticsService(
     }
 
     @EventHandler
-    fun on(event: KillStreakUpdatedEvent) {
-        for (player in event.players) {
-            val statistics = statisticsRepo.findById(player.uniqueId) ?: return
-            statistics.highestKillstreak = max(event.streak, statistics.highestKillstreak)
-
-            statisticsRepo.save(statistics)
-        }
-    }
-
-    @EventHandler
     fun on(@Suppress("UNUSED_PARAMETER") event: DungeonWorldDeleteEvent) {
         statisticsRepo.flush()
     }
@@ -92,6 +86,9 @@ class StatisticsService(
         }
         if (monster.isLootGoblin()) {
             statistics.lootGoblinKills++
+        }
+        if (monster.isElite()) {
+            statistics.eliteKills++
         }
 
         statisticsRepo.save(statistics)
