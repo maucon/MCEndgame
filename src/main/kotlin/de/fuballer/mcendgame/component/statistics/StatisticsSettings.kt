@@ -23,6 +23,6 @@ object StatisticsSettings {
     val TOTAL_KILLS_TEXT = "${ChatColor.DARK_GREEN}Kills:${STATISTICS_BOOK_TEXT_COLOR}"
     val BOSS_KILLS_TEXT = "${ChatColor.DARK_BLUE}Boss Kills:${STATISTICS_BOOK_TEXT_COLOR}"
     val LOOT_GOBLINS_KILLS_TEXT = "${ChatColor.DARK_PURPLE}Loot Goblin Kills:${STATISTICS_BOOK_TEXT_COLOR}"
+    val ELITE_KILLS_TEXT = "${ChatColor.GOLD}Elite Kills:${STATISTICS_BOOK_TEXT_COLOR}"
     val DEATHS_TEXT = "${ChatColor.DARK_RED}Deaths:${STATISTICS_BOOK_TEXT_COLOR}"
-    val KILLSTREAK_TEXT = "${ChatColor.GOLD}Highest Killstreak:${STATISTICS_BOOK_TEXT_COLOR}"
 }
