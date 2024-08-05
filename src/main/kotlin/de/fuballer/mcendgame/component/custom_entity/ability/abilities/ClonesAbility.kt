@@ -11,13 +11,13 @@ import org.bukkit.entity.Creature
 import org.bukkit.entity.LivingEntity
 import org.bukkit.util.Vector
 import kotlin.math.PI
+import kotlin.math.min
 import kotlin.math.sqrt
 
 private val velocity = Vector(0.3, 0.3, 0.0)
 private const val cloneHitCountBasedHealth = 1
-private const val CLONE_NAME_SUFFIX = "Clone"
 
-private fun getClonesAmount(mapTier: Int) = 1 + sqrt(mapTier.toDouble()).toInt()
+private fun getClonesAmount(mapTier: Int) = min(1 + sqrt(mapTier.toDouble()).toInt(), 5)
 
 object ClonesAbility : Ability {
     override fun cast(caster: LivingEntity) {
@@ -33,8 +33,6 @@ object ClonesAbility : Ability {
         val clones = SummonerUtil.summonMinions(creature, customEntityType, clonesAmount, creature.location)
 
         for (clone in clones) {
-            clone.customName = (caster.customName?.let { "$it $CLONE_NAME_SUFFIX" } ?: CLONE_NAME_SUFFIX)
-
             clone.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)!!.baseValue = 1.0
             clone.setCanUseAbilities(false)
             clone.setHitCountBasedHealth(cloneHitCountBasedHealth)
