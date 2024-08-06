@@ -1,13 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.enemy.equipment.enchantment
 
 import de.fuballer.mcendgame.component.item.equipment.ItemEnchantment
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.random.RandomOption
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.inventory.meta.ItemMeta
 import kotlin.random.Random
 
-@Component
+@Service
 class EquipmentEnchantmentService {
     fun enchantItem(
         random: Random,

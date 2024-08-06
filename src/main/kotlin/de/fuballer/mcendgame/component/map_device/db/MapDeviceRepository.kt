@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.map_device.db
 
 import de.fuballer.mcendgame.component.map_device.MapDeviceSettings
 import de.fuballer.mcendgame.component.portal.db.Portal
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.technical.PersistentMapRepository
 import de.fuballer.mcendgame.util.SchedulingUtil
 import org.bukkit.Location
@@ -12,7 +12,7 @@ import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
-@Component
+@Service
 class MapDeviceRepository(
     private val server: Server
 ) : PersistentMapRepository<UUID, MapDeviceEntity>() {

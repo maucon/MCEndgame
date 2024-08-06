@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.crafting.roll_shuffle
 
 import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
 import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.extract
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.run
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
@@ -10,7 +10,7 @@ import de.fuballer.mcendgame.util.extension.ItemStackExtension.isRollShuffleCraf
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttributes
 import org.bukkit.inventory.ItemStack
 
-@Component
+@Service
 class RollShuffleService : AnvilCraftingBaseService() {
     override fun isBaseValid(base: ItemStack) = AttributeUtil.getNonStringOnlyRollAttributes(base).size >= 2
 

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.totem.totems.experience
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestTotemTier
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.event.EventHandler
@@ -8,7 +8,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerExpChangeEvent
 import kotlin.random.Random
 
-@Component
+@Service
 class ExperienceEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerExpChangeEvent) {

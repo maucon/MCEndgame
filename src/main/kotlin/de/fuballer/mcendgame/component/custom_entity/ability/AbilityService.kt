@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.custom_entity.ability
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityEntity
 import de.fuballer.mcendgame.component.custom_entity.ability.db.EntityAbilityRepository
 import de.fuballer.mcendgame.component.custom_entity.ability.runner.EntityRunner
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EntityExtension.canUseAbilities
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
@@ -15,7 +15,7 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityTargetEvent
 import java.util.*
 
-@Component
+@Service
 class AbilityService(
     private val entityAbilityRepo: EntityAbilityRepository
 ) : Listener {

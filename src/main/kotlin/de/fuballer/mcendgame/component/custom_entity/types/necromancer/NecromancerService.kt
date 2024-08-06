@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.types.necromancer
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.EnemyUtil
 import de.fuballer.mcendgame.util.PluginUtil.runTaskLater
 import de.fuballer.mcendgame.util.SchedulingUtil
@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable
 
 private const val BASE_ATTACK_DELAY = 10L
 
-@Component
+@Service
 class NecromancerService : Listener {
     @EventHandler
     fun on(event: EntityShootBowEvent) {

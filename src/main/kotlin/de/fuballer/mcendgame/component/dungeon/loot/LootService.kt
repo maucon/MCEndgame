@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.component.dungeon.modifier.ModifierType
 import de.fuballer.mcendgame.component.dungeon.modifier.ModifierUtil
 import de.fuballer.mcendgame.component.totem.data.Totem
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
@@ -28,7 +28,7 @@ import org.bukkit.inventory.EntityEquipment
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
-@Component
+@Service
 class LootService(
     private val equipmentEnchantmentService: EquipmentEnchantmentService
 ) : Listener {

@@ -1,13 +1,13 @@
 package de.fuballer.mcendgame.component.dungeon.tweaks.armor_durability
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerItemDamageEvent
 import java.lang.Integer.min
 
-@Component
+@Service
 class ArmorDurabilityService : Listener {
     @EventHandler
     fun on(event: PlayerItemDamageEvent) {

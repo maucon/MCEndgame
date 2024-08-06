@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.component.totem.data
 import de.fuballer.mcendgame.component.totem.TotemSettings
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setTotem
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
+import net.kyori.adventure.text.Component
 import org.bukkit.inventory.ItemStack
 
 data class Totem(
@@ -13,13 +14,15 @@ data class Totem(
         val item = ItemStack(TotemSettings.TOTEM_BASE_TYPE)
         val itemMeta = item.itemMeta!!
 
-        itemMeta.setDisplayName("${tier.color}${type.displayName}")
+        val nameComponent = Component.text(type.displayName).color(tier.color)
+        itemMeta.displayName(nameComponent)
 
-        val lore = mutableListOf<String>()
+        val lore = mutableListOf<Component>()
+        type
         lore.addAll(type.getLore(tier))
         lore.addAll(TotemSettings.TOTEM_ITEM_DUNGEON_DISCLAIMER)
 
-        itemMeta.lore = lore
+        itemMeta.lore(lore)
         item.itemMeta = itemMeta
 
         item.setTotem(this)

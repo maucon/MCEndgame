@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.killer.command
 
 import de.fuballer.mcendgame.component.killer.KillerSettings
 import de.fuballer.mcendgame.component.killer.db.KillerRepository
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.command.CommandHandler
 import de.fuballer.mcendgame.util.command.CommandHelper
 import org.bukkit.OfflinePlayer
@@ -10,7 +10,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@Component
+@Service
 class KillerCommand(
     private val killerRepo: KillerRepository,
     private val commandHelper: CommandHelper

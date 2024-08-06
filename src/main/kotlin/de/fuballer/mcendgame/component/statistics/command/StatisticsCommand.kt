@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.statistics.command
 
 import de.fuballer.mcendgame.component.statistics.StatisticsSettings
 import de.fuballer.mcendgame.component.statistics.db.StatisticsRepository
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.command.CommandHandler
 import de.fuballer.mcendgame.util.command.CommandHelper
 import org.bukkit.command.Command
@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.*
 
-@Component
+@Service
 class StatisticsCommand(
     private val statisticsRepo: StatisticsRepository,
     private val commandHelper: CommandHelper

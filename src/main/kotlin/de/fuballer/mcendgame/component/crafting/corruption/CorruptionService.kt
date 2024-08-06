@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.crafting.corruption
 import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
 import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
 import de.fuballer.mcendgame.component.item.equipment.Equipment
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCorruptionRounds
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import kotlin.random.Random
 
-@Component
+@Service
 class CorruptionService : AnvilCraftingBaseService() {
     override fun isBaseValid(base: ItemStack) =
         Equipment.existsByMaterial(base.type)

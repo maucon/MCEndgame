@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.totem.command.give_totem
 import de.fuballer.mcendgame.component.totem.TotemSettings
 import de.fuballer.mcendgame.component.totem.data.TotemTier
 import de.fuballer.mcendgame.component.totem.data.TotemType
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.command.Command
@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
-@Component
+@Service
 class GiveTotemTabCompleter : CommandTabCompleter {
     override fun initialize(plugin: JavaPlugin) {
         plugin.getCommand(TotemSettings.GIVE_COMMAND_NAME)!!.tabCompleter = this

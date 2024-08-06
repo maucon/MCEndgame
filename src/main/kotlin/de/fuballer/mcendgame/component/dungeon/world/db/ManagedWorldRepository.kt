@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.world.db
 
 import de.fuballer.mcendgame.framework.InMemoryMapRepository
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 
-@Component
+@Service
 class ManagedWorldRepository : InMemoryMapRepository<String, ManagedWorldEntity>()

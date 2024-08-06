@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.item
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.ItemUtil
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.event.inventory.PrepareSmithingEvent
 
-@Component
+@Service
 class GeneratedItemService : Listener {
     @EventHandler
     fun on(event: EnchantItemEvent) {

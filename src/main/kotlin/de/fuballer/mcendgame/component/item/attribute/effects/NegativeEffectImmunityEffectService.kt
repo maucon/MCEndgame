@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import org.bukkit.entity.LivingEntity
@@ -30,7 +30,7 @@ private val NEGATIVE_EFFECTS = listOf(
     PotionEffectType.UNLUCK,
 )
 
-@Component
+@Service
 class NegativeEffectImmunityEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {

@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeSettings
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeEntity
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeRepository
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.ChatUtil
 import de.fuballer.mcendgame.util.command.CommandAction
 import de.fuballer.mcendgame.util.command.CommandHandler
@@ -13,7 +13,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@Component
+@Service
 class DungeonTypeCommand(
     private val playerDungeonTypeRepo: PlayerDungeonTypeRepository,
     private val commandHelper: CommandHelper

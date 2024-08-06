@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.dungeon.loot
 import de.fuballer.mcendgame.component.dungeon.modifier.ModifierType
 import de.fuballer.mcendgame.component.dungeon.modifier.ModifierUtil
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EntityExtension.getMapTier
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.random.RandomUtil
@@ -11,7 +11,7 @@ import org.bukkit.entity.Entity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-@Component
+@Service
 class BossLootService : Listener {
     @EventHandler
     fun on(event: DungeonEntityDeathEvent) {

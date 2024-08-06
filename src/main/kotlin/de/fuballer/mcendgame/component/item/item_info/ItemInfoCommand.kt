@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.item.item_info
 
 import de.fuballer.mcendgame.component.item.attribute.data.*
 import de.fuballer.mcendgame.component.item.equipment.Equipment
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.command.CommandHandler
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.extract
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
@@ -16,7 +16,7 @@ import java.text.DecimalFormat
 
 private val DECIMAL_FORMAT = DecimalFormat("#.##")
 
-@Component
+@Service
 class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,

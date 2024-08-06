@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakEntity
 import de.fuballer.mcendgame.component.dungeon.killstreak.db.KillStreakRepository
 import de.fuballer.mcendgame.event.*
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.SchedulingUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
@@ -18,7 +18,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import kotlin.math.min
 
-@Component
+@Service
 class KillStreakService(
     private val killStreakRepo: KillStreakRepository,
     private val server: Server

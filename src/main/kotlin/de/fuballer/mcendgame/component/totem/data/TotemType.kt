@@ -13,11 +13,12 @@ import de.fuballer.mcendgame.component.totem.totems.projectile_damage.Projectile
 import de.fuballer.mcendgame.component.totem.totems.wolf_companion.WolfCompanionTotemType
 import de.fuballer.mcendgame.technical.registry.Keyed
 import de.fuballer.mcendgame.technical.registry.KeyedRegistry
+import net.kyori.adventure.text.Component
 
 interface TotemType : Keyed {
     val displayName: String
     fun getValues(tier: TotemTier): List<Double>
-    fun getLore(tier: TotemTier): List<String>
+    fun getLore(tier: TotemTier): List<Component>
 
     companion object {
         val REGISTRY = KeyedRegistry<TotemType>().also {

@@ -4,14 +4,14 @@ import de.fuballer.mcendgame.component.totem.TotemSettings
 import de.fuballer.mcendgame.component.totem.data.Totem
 import de.fuballer.mcendgame.component.totem.data.TotemTier
 import de.fuballer.mcendgame.component.totem.data.TotemType
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.command.CommandHandler
 import de.fuballer.mcendgame.util.command.CommandHelper
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@Component
+@Service
 class GiveTotemCommand(
     private val commandHelper: CommandHelper
 ) : CommandHandler(TotemSettings.GIVE_COMMAND_NAME) {

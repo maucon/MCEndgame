@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.item.custom_item.give_custom_item
 
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.command.Command
@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
-@Component
+@Service
 class GiveCustomItemTabCompleter : CommandTabCompleter {
     override fun initialize(plugin: JavaPlugin) {
         plugin.getCommand(GiveCustomItemSettings.COMMAND_NAME)!!.tabCompleter = this

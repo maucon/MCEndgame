@@ -1,6 +1,8 @@
 package de.fuballer.mcendgame.component.totem
 
-import org.bukkit.ChatColor
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryType
 import java.text.DecimalFormat
@@ -11,25 +13,25 @@ object TotemSettings {
 
     val TOTEM_BASE_TYPE = Material.TOTEM_OF_UNDYING
     val TOTEM_ITEM_DUNGEON_DISCLAIMER = listOf(
-        "",
-        "${ChatColor.GRAY}${ChatColor.ITALIC}The totem's effect is only active",
-        "${ChatColor.GRAY}${ChatColor.ITALIC}when in the totem inventory and",
-        "${ChatColor.GRAY}${ChatColor.ITALIC}whilst inside a dungeon."
+        Component.text(""),
+        Component.text("The totem's effect is only active").color(NamedTextColor.GRAY).decorate(TextDecoration.ITALIC),
+        Component.text("when in the totem inventory and").color(NamedTextColor.GRAY).decorate(TextDecoration.ITALIC),
+        Component.text("whilst inside a dungeon.").color(NamedTextColor.GRAY).decorate(TextDecoration.ITALIC)
     )
 
     val TOTEM_WINDOW_TYPE = InventoryType.HOPPER
     val TOTEM_WINDOW_SIZE = TOTEM_WINDOW_TYPE.defaultSize
     const val TOTEM_WINDOW_TITLE = "Totems"
-    val CANNOT_CHANGE_TOTEM_MESSAGE = "${ChatColor.RED}You cannot change totems whilst inside a dungeon"
+    val CANNOT_CHANGE_TOTEM_MESSAGE = Component.text("You cannot change totems whilst inside a dungeon").color(NamedTextColor.RED)
 
     private val LORE_NUMBER_FORMAT = DecimalFormat("0.#")
-    private val LORE_COLOR = "${ChatColor.DARK_GREEN}"
+    private val LORE_COLOR = NamedTextColor.DARK_GREEN
 
-    fun formatLore(loreFormat: String, values: List<Double>): List<String> {
+    fun formatLore(loreFormat: String, values: List<Double>): List<Component> {
         val formattedValues = values.map { LORE_NUMBER_FORMAT.format(it) }
         val lore = String.format(loreFormat, *formattedValues.toTypedArray())
 
         return lore.split("\\")
-            .map { "$LORE_COLOR$it" }
+            .map { Component.text(it).color(LORE_COLOR) }
     }
 }

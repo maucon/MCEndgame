@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.util.command
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.ChatColor
 import org.bukkit.OfflinePlayer
@@ -10,7 +10,7 @@ import org.bukkit.entity.Player
 val ONLINE_PLAYER_NOT_FOUND_MESSAGE = "${ChatColor.RED}No player was found"
 val OFFLINE_PLAYER_NOT_FOUND_MESSAGE = "${ChatColor.RED}No player was found"
 
-@Component
+@Service
 class CommandHelper(
     private val server: Server
 ) {

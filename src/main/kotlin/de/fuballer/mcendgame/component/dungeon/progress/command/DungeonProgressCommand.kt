@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.dungeon.progress.command
 import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSettings
 import de.fuballer.mcendgame.component.dungeon.progress.db.PlayerDungeonProgressEntity
 import de.fuballer.mcendgame.component.dungeon.progress.db.PlayerDungeonProgressRepository
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.command.CommandAction
 import de.fuballer.mcendgame.util.command.CommandHandler
 import de.fuballer.mcendgame.util.command.CommandHelper
@@ -11,7 +11,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@Component
+@Service
 class DungeonProgressCommand(
     private val dungeonProgressRepo: PlayerDungeonProgressRepository,
     private val commandHelper: CommandHelper
