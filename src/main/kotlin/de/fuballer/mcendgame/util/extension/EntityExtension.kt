@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.util.extension
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.component.item.attribute.effects.summon_suport_wolf.SupportWolfType
 import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.Location
@@ -61,6 +62,12 @@ object EntityExtension {
     }
 
     fun Entity.getMinionIds() = PersistentDataUtil.getValue(this, TypeKeys.MINION_IDS) ?: listOf()
+
+    fun Entity.setSupportWolfType(value: SupportWolfType) {
+        PersistentDataUtil.setValue(this, TypeKeys.SUPPORT_WOLF_TYPE, value)
+    }
+
+    fun Entity.getSupportWolfType() = PersistentDataUtil.getValue(this, TypeKeys.SUPPORT_WOLF_TYPE)
 
     fun Entity.setIsPortal(value: Boolean = true) {
         PersistentDataUtil.setValue(this, TypeKeys.IS_PORTAL, value)

@@ -22,7 +22,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import kotlin.random.Random
 
-private val WOLF_VARIANTS = listOf(
+val WOLF_VARIANTS = listOf(
     Wolf.Variant.PALE,
     Wolf.Variant.SPOTTED,
     Wolf.Variant.SNOWY,
@@ -34,14 +34,16 @@ private val WOLF_VARIANTS = listOf(
     Wolf.Variant.STRIPED,
 )
 
-private fun getArmorProbability(tier: TotemTier) = when (tier) {
+val WOLF_ARMOR = ItemStack(Material.WOLF_ARMOR)
+
+fun getWolfArmor() = WOLF_ARMOR.clone()
+
+fun getArmorProbability(tier: TotemTier) = when (tier) {
     TotemTier.COMMON -> 0.05
     TotemTier.UNCOMMON -> 0.15
     TotemTier.RARE -> 0.3
     TotemTier.LEGENDARY -> 0.5
 }
-
-private val WOLF_ARMOR = ItemStack(Material.WOLF_ARMOR)
 
 @Component
 class WolfCompanionEffectService : Listener {
@@ -66,7 +68,7 @@ class WolfCompanionEffectService : Listener {
             wolf.collarColor = DyeColor.entries.random()
 
             if (Random.nextDouble() > getArmorProbability(tier)) continue
-            wolf.equipment!!.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone())
+            wolf.equipment!!.setItem(EquipmentSlot.BODY, getWolfArmor())
         }
     }
 

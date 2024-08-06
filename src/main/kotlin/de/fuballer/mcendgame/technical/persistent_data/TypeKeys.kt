@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.technical.persistent_data
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
+import de.fuballer.mcendgame.component.item.attribute.effects.summon_suport_wolf.SupportWolfType
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.map_device.MapDeviceAction
 import de.fuballer.mcendgame.technical.persistent_data.types.PersistentLocation
@@ -26,6 +27,7 @@ object TypeKeys {
     val IS_LOOT_GOBLIN = TypeKey(createNamespacedKey("is_loot_goblin"), PersistentDataType.BOOLEAN)
     val IS_ELITE = TypeKey(createNamespacedKey("is_elite"), PersistentDataType.BOOLEAN)
     val MINION_IDS = TypeKey(createNamespacedKey("minions"), PersistentList(PersistentUUID))
+    val SUPPORT_WOLF_TYPE = TypeKey(createNamespacedKey("support_wolf_type"), PersistentEnum(SupportWolfType::class))
     val IS_PORTAL = TypeKey(createNamespacedKey("is_portal"), PersistentDataType.BOOLEAN)
     val IS_BOSS = TypeKey(createNamespacedKey("is_boss"), PersistentDataType.BOOLEAN)
     val CAN_USE_ABILITIES = TypeKey(createNamespacedKey("can_use_abilities"), PersistentDataType.BOOLEAN)
