@@ -98,7 +98,7 @@ object DependencyInjector {
         toInstantiate.sortBy { it.dependencies.size }
 
         while (toInstantiate.isNotEmpty()) {
-            val instantiated = mutableListOf<DependentBean>()
+            val instantiated = mutableSetOf<DependentBean>()
 
             for (dependentBean in toInstantiate) {
                 val dependencies = gatherDependencies(dependentBean.dependencies, instantiatedBeans) ?: continue

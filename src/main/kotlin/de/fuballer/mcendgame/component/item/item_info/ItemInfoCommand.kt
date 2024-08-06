@@ -48,14 +48,11 @@ class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
             return
         }
 
-        val book = getAttributesBook(item, itemType)
+        val book = getAttributesBook(item)
         player.openBook(book)
     }
 
-    private fun getAttributesBook(
-        item: ItemStack,
-        itemType: Material
-    ): ItemStack {
+    private fun getAttributesBook(item: ItemStack): ItemStack {
         val book = ItemStack(Material.WRITTEN_BOOK)
         val bookMeta = book.itemMeta as BookMeta
 

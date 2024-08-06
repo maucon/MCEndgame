@@ -66,7 +66,7 @@ class WolfCompanionEffectService : Listener {
             wolf.collarColor = DyeColor.entries.random()
 
             if (Random.nextDouble() > getArmorProbability(tier)) continue
-            wolf.equipment!!.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone())
+            wolf.equipment.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone())
         }
     }
 

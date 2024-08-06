@@ -66,7 +66,7 @@ class MapDeviceBlockService(
 
     private fun useToolInMainhand(player: Player) {
         if (player.gameMode == GameMode.CREATIVE) return
-        val equipment = player.equipment ?: return
+        val equipment = player.equipment
         val tool = equipment.itemInMainHand
         val toolMeta = tool.itemMeta as? Damageable ?: return
         val toolType = tool.type

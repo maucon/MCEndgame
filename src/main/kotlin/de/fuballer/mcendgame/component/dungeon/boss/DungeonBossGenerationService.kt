@@ -62,7 +62,7 @@ class DungeonBossGenerationService(
 
         if (entityType.isRanged) {
             val bow = ItemStack(Material.BOW)
-            boss.equipment?.setItemInMainHand(bow)
+            boss.equipment.setItemInMainHand(bow)
         }
 
         return boss

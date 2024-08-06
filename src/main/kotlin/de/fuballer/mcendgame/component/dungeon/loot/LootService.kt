@@ -105,7 +105,7 @@ class LootService(
 
     private fun getLootingLevel(player: Player?): Int {
         if (player == null) return 0
-        val equipment = player.equipment ?: return 0
+        val equipment = player.equipment
 
         val item = equipment.itemInMainHand
         val itemMeta = item.itemMeta ?: return 0
