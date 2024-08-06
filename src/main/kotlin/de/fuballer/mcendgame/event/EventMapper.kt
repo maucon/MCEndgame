@@ -76,7 +76,6 @@ class EventMapper : Listener {
         applyArmorChangeEvent(event.player)
     }
 
-
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerItemDamageEvent) {
         val item = event.item
