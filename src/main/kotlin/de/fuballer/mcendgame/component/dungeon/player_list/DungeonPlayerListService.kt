@@ -12,6 +12,7 @@ import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.Player
+import org.bukkit.entity.Wolf
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -58,6 +59,7 @@ class DungeonPlayerListService(
 
         updateIfPlayerIsDamaged(event, entity)
         updateIfPlayerDealtDamage(event, entity)
+        updateIfPlayerWolfDealtDamage(event, entity)
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -128,6 +130,20 @@ class DungeonPlayerListService(
         entity: DungeonPlayerListEntity
     ) {
         val player = EntityUtil.getPlayerDamager(event.damager) ?: return
+        val playerStats = entity.playerStats[player] ?: return
+
+        playerStats.damageDealt += event.getFinalDamage()
+        dungeonPlayerListRepo.save(entity)
+
+        updatePlayerListForPlayer(entity, player)
+    }
+
+    private fun updateIfPlayerWolfDealtDamage(
+        event: DamageCalculationEvent,
+        entity: DungeonPlayerListEntity
+    ) {
+        val wolf = event.damager as? Wolf ?: return
+        val player = wolf.owner as? Player ?: return
         val playerStats = entity.playerStats[player] ?: return
 
         playerStats.damageDealt += event.getFinalDamage()
