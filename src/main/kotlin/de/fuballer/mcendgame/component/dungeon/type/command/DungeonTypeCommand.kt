@@ -67,7 +67,7 @@ class DungeonTypeCommand(
     ): Boolean {
         if (args.size != 3) return false
 
-        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[1]) ?: return false
+        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[1]) ?: return true
 
         if (!DungeonType.entries.map { it.name }.contains(args[2].uppercase())) return false
         val dungeonType = DungeonType.valueOf(args[2])

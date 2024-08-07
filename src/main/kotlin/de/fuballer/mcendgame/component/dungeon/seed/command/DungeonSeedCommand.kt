@@ -66,7 +66,7 @@ class DungeonSeedCommand(
     ): Boolean {
         if (args.size != 3) return false
 
-        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[1]) ?: return false
+        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[1]) ?: return true
 
         val seed = args[2]
         if (seed.length !in 1..64) {

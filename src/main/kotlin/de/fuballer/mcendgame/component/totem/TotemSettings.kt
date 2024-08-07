@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.component.totem
 
+import de.fuballer.mcendgame.util.TextComponent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -13,16 +14,16 @@ object TotemSettings {
 
     val TOTEM_BASE_TYPE = Material.TOTEM_OF_UNDYING
     val TOTEM_ITEM_DUNGEON_DISCLAIMER = listOf(
-        Component.text(""),
-        Component.text("The totem's effect is only active").color(NamedTextColor.GRAY).decorate(TextDecoration.ITALIC),
-        Component.text("when in the totem inventory and").color(NamedTextColor.GRAY).decorate(TextDecoration.ITALIC),
-        Component.text("whilst inside a dungeon.").color(NamedTextColor.GRAY).decorate(TextDecoration.ITALIC)
+        TextComponent.empty(),
+        TextComponent.create("The totem's effect is only active", NamedTextColor.GRAY).decorate(TextDecoration.ITALIC),
+        TextComponent.create("when in the totem inventory and", NamedTextColor.GRAY).decorate(TextDecoration.ITALIC),
+        TextComponent.create("whilst inside a dungeon.", NamedTextColor.GRAY).decorate(TextDecoration.ITALIC)
     )
 
     val TOTEM_WINDOW_TYPE = InventoryType.HOPPER
     val TOTEM_WINDOW_SIZE = TOTEM_WINDOW_TYPE.defaultSize
     const val TOTEM_WINDOW_TITLE = "Totems"
-    val CANNOT_CHANGE_TOTEM_MESSAGE = Component.text("You cannot change totems whilst inside a dungeon").color(NamedTextColor.RED)
+    val CANNOT_CHANGE_TOTEM_MESSAGE = TextComponent.error("You cannot change totems whilst inside a dungeon")
 
     private val LORE_NUMBER_FORMAT = DecimalFormat("0.#")
     private val LORE_COLOR = NamedTextColor.DARK_GREEN
@@ -32,6 +33,6 @@ object TotemSettings {
         val lore = String.format(loreFormat, *formattedValues.toTypedArray())
 
         return lore.split("\\")
-            .map { Component.text(it).color(LORE_COLOR) }
+            .map { TextComponent.create(it, LORE_COLOR) }
     }
 }

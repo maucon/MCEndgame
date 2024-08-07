@@ -28,7 +28,7 @@ class KillerCommand(
             return true
         }
 
-        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[0]) ?: return false
+        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[0]) ?: return true
         showKiller(commandExecutor, targetPlayer)
         return true
     }

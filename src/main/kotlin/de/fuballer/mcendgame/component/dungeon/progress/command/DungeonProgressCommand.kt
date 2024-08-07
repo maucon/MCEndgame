@@ -62,7 +62,7 @@ class DungeonProgressCommand(
     ): Boolean {
         if (args.size !in 3..4) return false
 
-        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[1]) ?: return false
+        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[1]) ?: return true
         val tier = args[2].toIntOrNull() ?: return false
 
         val progress =
