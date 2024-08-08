@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.component.dungeon.enemy.EnemyHealingService.Compani
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.EquipmentGenerationService
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.ThreadUtil.bukkitSync
 import de.fuballer.mcendgame.util.extension.EntityExtension.setIsElite
@@ -19,7 +19,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.event.Listener
 import kotlin.random.Random
 
-@Component
+@Service
 class EnemyGenerationService(
     private val equipmentGenerationService: EquipmentGenerationService
 ) : Listener {

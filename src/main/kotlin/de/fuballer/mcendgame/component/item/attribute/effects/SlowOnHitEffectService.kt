@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsDouble
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import org.bukkit.entity.LivingEntity
@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffectType
 
 const val SLOW_RANGE = 4.0
 
-@Component
+@Service
 class SlowOnHitEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {

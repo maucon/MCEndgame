@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.type.command
 
 import de.fuballer.mcendgame.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.component.dungeon.type.DungeonTypeSettings
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.CommandTabCompleter
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.command.CommandAction
@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
-@Component
+@Service
 class DungeonTypeTabCompleter : CommandTabCompleter {
     override fun initialize(plugin: JavaPlugin) {
         plugin.getCommand(DungeonTypeSettings.COMMAND_NAME)!!.tabCompleter = this

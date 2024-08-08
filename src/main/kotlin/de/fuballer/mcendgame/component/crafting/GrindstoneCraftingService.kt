@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.crafting
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import org.bukkit.event.EventHandler
@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.inventory.PrepareGrindstoneEvent
 import org.bukkit.inventory.GrindstoneInventory
 
-@Component
+@Service
 class GrindstoneCraftingService : Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     fun on(event: InventoryClickEvent) {

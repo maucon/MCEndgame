@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.custom_entity.ability
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EntityExtension.getHitCountBasedHealth
 import de.fuballer.mcendgame.util.extension.EntityExtension.isForcedVehicle
 import de.fuballer.mcendgame.util.extension.EntityExtension.setHitCountBasedHealth
@@ -12,7 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDismountEvent
 
-@Component
+@Service
 class AbilityTweaksService : Listener {
     @EventHandler
     fun on(event: EntityDismountEvent) {

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.tweaks
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Material
@@ -35,7 +35,7 @@ val DISABLED_BLOCK_TYPES = listOf(
     Material.CRAFTER
 )
 
-@Component
+@Service
 class InventoryBlockInteractionService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerInteractEvent) {

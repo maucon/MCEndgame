@@ -4,26 +4,34 @@ import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSetti
 import de.fuballer.mcendgame.component.dungeon.player_list.db.DungeonPlayerListEntity
 import de.fuballer.mcendgame.component.dungeon.player_list.db.PlayerStats
 import de.fuballer.mcendgame.component.dungeon.player_list.db.RemainingData
-import org.bukkit.ChatColor
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.Player
 import java.text.DecimalFormat
 
 private val FORMAT = DecimalFormat("#.##")
 
 object DungeonPlayerListSettings {
-    fun getFooter(entity: DungeonPlayerListEntity): String = "\n" +
-            "Tier: ${entity.tier}\n" +
-            "${getRemainingMessage(entity.remainingData)}\n" +
-            "${ChatColor.DARK_GRAY}Seed: ${entity.seed}"
+    fun getFooter(entity: DungeonPlayerListEntity) =
+        Component.newline()
+            .append(Component.text("Tier: ${entity.tier}")).appendNewline()
+            .append(getRemainingMessage(entity.remainingData)).appendNewline()
+            .append(Component.text("Seed: ${entity.seed}").color(NamedTextColor.DARK_GRAY))
 
-    fun getPlayerName(player: Player, playerStats: PlayerStats) =
-        "${player.name} " +
-                "${ChatColor.RESET}| ⚔${ChatColor.GREEN} ${FORMAT.format(playerStats.damageDealt)} " +
-                "${ChatColor.RESET}| 🛡${ChatColor.RED} ${FORMAT.format(playerStats.damageTaken)} " +
-                "${ChatColor.RESET}| 💀${ChatColor.BLUE} ${playerStats.kills}"
+    fun getPlayerNameComponent(player: Player, playerStats: PlayerStats) =
+        Component.text(player.name)
+            .append(Component.textOfChildren(Component.text(" | "), Component.text("⚔ ${FORMAT.format(playerStats.damageDealt)}").color(NamedTextColor.GREEN)))
+            .append(Component.textOfChildren(Component.text(" | "), Component.text("🛡 ${FORMAT.format(playerStats.damageTaken)}").color(NamedTextColor.RED)))
+            .append(Component.textOfChildren(Component.text(" | "), Component.text("💀 ${playerStats.kills}").color(NamedTextColor.BLUE)))
 
     private fun getRemainingMessage(data: RemainingData) =
-        "${ChatColor.AQUA}${data.remaining} Monsters remaining\n" +
-                "${ChatColor.LIGHT_PURPLE}${data.bossesSlain}/${DungeonGenerationSettings.BOSS_AMOUNT} Bosses slain\n" +
-                "${ChatColor.GRAY}Completed: ${if (data.dungeonCompleted) "${ChatColor.GREEN}✅" else "${ChatColor.RED}❎"}"
+        Component.text("${data.remaining} Monsters remaining").color(NamedTextColor.AQUA).appendNewline()
+            .append(Component.text("${data.bossesSlain}/${DungeonGenerationSettings.BOSS_AMOUNT} Bosses slain").color(NamedTextColor.LIGHT_PURPLE)).appendNewline()
+            .append(Component.textOfChildren(Component.text("Completed: ").color(NamedTextColor.GRAY), getDungeonCompletedComponent(data.dungeonCompleted)))
+
+    private fun getDungeonCompletedComponent(dungeonCompleted: Boolean) =
+        if (dungeonCompleted)
+            Component.text("✅").color(NamedTextColor.GREEN)
+        else
+            Component.text("❎").color(NamedTextColor.RED)
 }

@@ -3,13 +3,13 @@ package de.fuballer.mcendgame.component.dungeon.type
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeEntity
 import de.fuballer.mcendgame.component.dungeon.type.db.PlayerDungeonTypeRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.random.RandomUtil
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-@Component
+@Service
 class DungeonTypeService(
     private val playerDungeonTypeRepo: PlayerDungeonTypeRepository
 ) : Listener {

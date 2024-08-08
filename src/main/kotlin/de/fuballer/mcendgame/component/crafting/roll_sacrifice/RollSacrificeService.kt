@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.crafting.roll_sacrifice
 
 import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.run
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCustomItemType
@@ -9,7 +9,7 @@ import de.fuballer.mcendgame.util.extension.ItemStackExtension.isRollSacrificeCr
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttributes
 import org.bukkit.inventory.ItemStack
 
-@Component
+@Service
 class RollSacrificeService : AnvilCraftingBaseService() {
     override fun isBaseValid(base: ItemStack): Boolean {
         val rolledAttributes = base.getCustomAttributes() ?: return false

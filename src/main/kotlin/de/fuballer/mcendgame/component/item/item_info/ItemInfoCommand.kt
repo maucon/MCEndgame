@@ -2,10 +2,12 @@ package de.fuballer.mcendgame.component.item.item_info
 
 import de.fuballer.mcendgame.component.item.attribute.data.*
 import de.fuballer.mcendgame.component.item.equipment.Equipment
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
+import de.fuballer.mcendgame.util.TextComponent
 import de.fuballer.mcendgame.util.command.CommandHandler
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.extract
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -16,7 +18,7 @@ import java.text.DecimalFormat
 
 private val DECIMAL_FORMAT = DecimalFormat("#.##")
 
-@Component
+@Service
 class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,
@@ -48,35 +50,33 @@ class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
             return
         }
 
-        val book = getAttributesBook(item, itemType)
+        val book = getAttributesBook(item)
         player.openBook(book)
     }
 
-    private fun getAttributesBook(
-        item: ItemStack,
-        itemType: Material
-    ): ItemStack {
+    private fun getAttributesBook(item: ItemStack): ItemStack {
         val book = ItemStack(Material.WRITTEN_BOOK)
         val bookMeta = book.itemMeta as BookMeta
 
         bookMeta.author = ItemInfoSettings.BOOK_AUTHOR
         bookMeta.title = ItemInfoSettings.BOOK_TITLE
 
-        getAttributePages(item)
-            .forEach { bookMeta.addPage(it) }
+        val pages = getAttributePages(item)
+        bookMeta.addPages(*pages)
 
         book.itemMeta = bookMeta
         return book
     }
 
-    private fun getAttributePages(item: ItemStack): List<String> {
+    private fun getAttributePages(item: ItemStack): Array<Component> {
         val attributes = item.getCustomAttributes() ?: listOf()
 
         return attributes
-            .map { mapAttributeToText(it) }
+            .map { mapAttributeToComponent(it) }
+            .toTypedArray()
     }
 
-    private fun mapAttributeToText(attribute: CustomAttribute): String {
+    private fun mapAttributeToComponent(attribute: CustomAttribute): Component {
         var attributeLore = attribute.getLore()
         if (attributeLore.firstOrNull() == ' ') {
             attributeLore = attributeLore.replaceFirstChar { "" }
@@ -84,8 +84,10 @@ class ItemInfoCommand : CommandHandler(ItemInfoSettings.COMMAND_NAME) {
 
         val attributeRollsText = mapAttributeRollsToText(attribute.attributeRolls)
 
-        return "${ItemInfoSettings.ATTRIBUTE_COLOR}$attributeLore\n\n" +
-                "${ItemInfoSettings.VALUE_COLOR}${attributeRollsText}\n"
+        return Component.textOfChildren(
+            TextComponent.create("$attributeLore\n\n", ItemInfoSettings.ATTRIBUTE_COLOR),
+            TextComponent.create("$attributeRollsText\n", ItemInfoSettings.VALUE_COLOR),
+        )
     }
 
     private fun mapAttributeRollsToText(attributeRolls: List<AttributeRoll<*>>) =

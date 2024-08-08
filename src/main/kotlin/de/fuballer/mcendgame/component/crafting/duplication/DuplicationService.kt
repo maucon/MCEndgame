@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.component.crafting.duplication
 
 import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isDuplicationCraftingItem
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-@Component
+@Service
 class DuplicationService : AnvilCraftingBaseService() {
     override fun isBaseValid(base: ItemStack) = base.amount == 1
 

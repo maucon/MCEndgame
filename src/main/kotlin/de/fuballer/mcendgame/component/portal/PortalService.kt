@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.component.portal.skins.PortalSkin
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PortalFailedEvent
 import de.fuballer.mcendgame.event.PortalUsedEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EntityExtension.isPortal
 import org.bukkit.Location
 import org.bukkit.Server
@@ -18,7 +18,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 
-@Component
+@Service
 class PortalService(
     private val portalRepo: PortalRepository,
     private val server: Server

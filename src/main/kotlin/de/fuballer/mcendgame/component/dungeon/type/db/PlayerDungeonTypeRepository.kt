@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.component.dungeon.type.db
 
 import de.fuballer.mcendgame.framework.InMemoryMapRepository
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import java.util.*
 
-@Component
+@Service
 class PlayerDungeonTypeRepository : InMemoryMapRepository<UUID, PlayerDungeonTypeEntity>()

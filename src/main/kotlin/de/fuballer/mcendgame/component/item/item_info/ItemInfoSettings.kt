@@ -1,15 +1,15 @@
 package de.fuballer.mcendgame.component.item.item_info
 
-import org.bukkit.ChatColor
+import de.fuballer.mcendgame.configuration.PluginConfiguration
+import de.fuballer.mcendgame.util.TextComponent
+import net.kyori.adventure.text.format.NamedTextColor
 
 object ItemInfoSettings {
     const val COMMAND_NAME = "item-info"
-    val NO_ITEM = "${ChatColor.RED}No item in mainhand"
-    val INVALID_ITEM = "${ChatColor.RED}Invalid item"
-    val ITEM_TYPE_COLOR = "${ChatColor.BLACK}${ChatColor.BOLD}"
-    val ATTRIBUTE_COLOR = "${ChatColor.BLUE}"
-    val VALUE_COLOR = "${ChatColor.BLACK}"
-    const val NOT_ROLLED_TEXT = ""
-    const val BOOK_AUTHOR = "MCEndgame"
+    val NO_ITEM = TextComponent.error("No item in Mainhand")
+    val INVALID_ITEM = TextComponent.error("Invalid item")
+    val ATTRIBUTE_COLOR: NamedTextColor = NamedTextColor.BLUE
+    val VALUE_COLOR: NamedTextColor = NamedTextColor.BLACK
+    val BOOK_AUTHOR = PluginConfiguration.plugin().name
     const val BOOK_TITLE = "ItemStats"
 }

@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.inventory
 import org.bukkit.inventory.Inventory
 
 object InventoryRegistry {
-    private val map = HashMap<Inventory, CustomInventoryType>();
+    private val map = HashMap<Inventory, CustomInventoryType>()
 
     fun register(inventory: Inventory, type: CustomInventoryType) {
         map[inventory] = type

@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.crafting.roll_randomization
 
 import de.fuballer.mcendgame.component.crafting.AnvilCraftingBaseService
 import de.fuballer.mcendgame.component.item.attribute.AttributeUtil
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.run
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isRollRandomizationCraftingItem
@@ -10,7 +10,7 @@ import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttribut
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
-@Component
+@Service
 class RollRandomizationService : AnvilCraftingBaseService() {
     override fun isBaseValid(base: ItemStack) = AttributeUtil.hasCustomAttributesWithRolls(base)
 

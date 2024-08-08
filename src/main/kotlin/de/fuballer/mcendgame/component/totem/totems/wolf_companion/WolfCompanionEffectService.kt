@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.totem.totems.wolf_companion
 import de.fuballer.mcendgame.component.totem.data.TotemTier
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestTotemTier
@@ -22,7 +22,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import kotlin.random.Random
 
-val WOLF_VARIANTS = listOf(
+private val WOLF_VARIANTS = listOf(
     Wolf.Variant.PALE,
     Wolf.Variant.SPOTTED,
     Wolf.Variant.SNOWY,
@@ -45,7 +45,9 @@ fun getArmorProbability(tier: TotemTier) = when (tier) {
     TotemTier.LEGENDARY -> 0.5
 }
 
-@Component
+private val WOLF_ARMOR = ItemStack(Material.WOLF_ARMOR)
+
+@Service
 class WolfCompanionEffectService : Listener {
     @EventHandler
     fun on(event: PlayerDungeonJoinEvent) {
@@ -68,7 +70,7 @@ class WolfCompanionEffectService : Listener {
             wolf.collarColor = DyeColor.entries.random()
 
             if (Random.nextDouble() > getArmorProbability(tier)) continue
-            wolf.equipment!!.setItem(EquipmentSlot.BODY, getWolfArmor())
+            wolf.equipment.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone())
         }
     }
 

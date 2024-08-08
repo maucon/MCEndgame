@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.component.item
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import com.destroystokyo.paper.event.inventory.PrepareResultEvent
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isCraftingItem
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
@@ -9,13 +10,12 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.event.inventory.PrepareInventoryResultEvent
 import org.bukkit.inventory.Inventory
 
-@Component
+@Service
 class UnmodifiableItemIntegrityService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    fun on(event: PrepareInventoryResultEvent) {
+    fun on(event: PrepareResultEvent) {
         val inventory = event.inventory
 
         if (event.eventName == PrepareAnvilEvent::class.simpleName
@@ -34,7 +34,7 @@ class UnmodifiableItemIntegrityService : Listener {
     fun on(event: CraftItemEvent) {
         val inventory = event.inventory
         val unmodifiableItemCount = inventory.storageContents
-            .count { it.isUnmodifiable() }
+            .count { it?.isUnmodifiable() ?: false }
 
         val result = inventory.result ?: return
         val unmodifiableItemThreshold = if (result.isUnmodifiable()) 1 else 0

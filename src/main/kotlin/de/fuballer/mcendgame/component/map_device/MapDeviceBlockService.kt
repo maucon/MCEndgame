@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.map_device
 
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.PluginUtil
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isMapDevice
@@ -16,7 +16,7 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.plugin.java.JavaPlugin
 
-@Component
+@Service
 class MapDeviceBlockService(
     private val mapDeviceRepo: MapDeviceRepository,
     private val mapDeviceService: MapDeviceService,
@@ -66,7 +66,7 @@ class MapDeviceBlockService(
 
     private fun useToolInMainhand(player: Player) {
         if (player.gameMode == GameMode.CREATIVE) return
-        val equipment = player.equipment ?: return
+        val equipment = player.equipment
         val tool = equipment.itemInMainHand
         val toolMeta = tool.itemMeta as? Damageable ?: return
         val toolType = tool.type

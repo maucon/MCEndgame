@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.tweaks.antibug
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Material
@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 
-@Component
+@Service
 class DungeonAntiBugService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerItemConsumeEvent) {

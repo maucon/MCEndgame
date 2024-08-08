@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.event
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.GameRule
 import org.bukkit.Material
@@ -20,7 +20,7 @@ import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.Damageable
 
-@Component
+@Service
 class EventMapper : Listener {
     @EventHandler
     fun on(event: EntityDeathEvent) {

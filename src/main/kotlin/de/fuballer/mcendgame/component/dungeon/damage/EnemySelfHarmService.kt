@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.damage
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
@@ -19,7 +19,7 @@ private val IGNORED_DAMAGE = listOf(
     DamageCause.FREEZE,
 )
 
-@Component
+@Service
 class EnemySelfHarmService : Listener {
     @EventHandler
     fun on(event: EntityDamageEvent) {

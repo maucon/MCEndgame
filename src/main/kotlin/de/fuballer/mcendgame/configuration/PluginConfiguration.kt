@@ -37,7 +37,7 @@ class PluginConfiguration {
         fun scheduler(): BukkitScheduler = INSTANCE.server.scheduler
         fun pluginManager(): PluginManager = INSTANCE.server.pluginManager
         fun server(): Server = INSTANCE.server
-        fun scoreboardManager(): ScoreboardManager = plugin().server.scoreboardManager!!
+        fun scoreboardManager(): ScoreboardManager = INSTANCE.server.scoreboardManager
         fun dataFolder(): File = plugin().dataFolder
     }
 }
