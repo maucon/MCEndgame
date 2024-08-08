@@ -1,10 +1,11 @@
 package de.fuballer.mcendgame.component.map_device
 
-import de.fuballer.mcendgame.util.ItemCreatorUtil
+import de.fuballer.mcendgame.util.ItemCreator
+import de.fuballer.mcendgame.util.TextComponent
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setMapDevice
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setMapDeviceAction
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
-import org.bukkit.ChatColor
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -12,11 +13,14 @@ import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.util.Vector
 
 object MapDeviceSettings {
-    private val ITEM_NAME = "${ChatColor.DARK_PURPLE}Map Device"
+    private val ITEM_NAME = TextComponent.create("Map Device", NamedTextColor.DARK_PURPLE)
     private val ITEM_LORE =
-        listOf("${ChatColor.GRAY}${ChatColor.ITALIC}Opens portals to dungeons", "${ChatColor.GRAY}${ChatColor.ITALIC}packed with monsters and treasures")
+        listOf(
+            TextComponent.create("Opens portals to dungeons"),
+            TextComponent.create("packed with monsters and treasures")
+        )
 
-    private val ITEM = ItemCreatorUtil.create(
+    private val ITEM = ItemCreator.create(
         ItemStack(Material.RESPAWN_ANCHOR),
         ITEM_NAME,
         ITEM_LORE
@@ -39,23 +43,23 @@ object MapDeviceSettings {
 
     const val MAP_DEVICE_INVENTORY_TITLE = "Map Device"
 
-    private val OPEN_PORTALS_ITEM_LINE = ChatColor.GREEN.toString() + "Open portals"
-    val OPEN_PORTALS_ITEM = ItemCreatorUtil.create(
+    private val OPEN_PORTALS_ITEM_LINE = TextComponent.create("Open portals", NamedTextColor.GREEN)
+    val OPEN_PORTALS_ITEM = ItemCreator.create(
         ItemStack(Material.LIME_STAINED_GLASS_PANE),
         OPEN_PORTALS_ITEM_LINE
     ).apply {
         setMapDeviceAction(MapDeviceAction.OPEN)
     }
 
-    private val CLOSE_PORTALS_ITEM_LINE = ChatColor.RED.toString() + "Close portals"
-    val CLOSE_PORTALS_ITEM = ItemCreatorUtil.create(
+    private val CLOSE_PORTALS_ITEM_LINE = TextComponent.create("Close portals", NamedTextColor.RED)
+    val CLOSE_PORTALS_ITEM = ItemCreator.create(
         ItemStack(Material.RED_STAINED_GLASS_PANE),
         CLOSE_PORTALS_ITEM_LINE
     ).apply {
         setMapDeviceAction(MapDeviceAction.CLOSE)
     }
 
-    val FILLER_ITEM = ItemCreatorUtil.create(ItemStack(Material.GRAY_STAINED_GLASS_PANE), " ", listOf(" "))
+    val FILLER_ITEM = ItemCreator.create(ItemStack(Material.GRAY_STAINED_GLASS_PANE), TextComponent.empty(), listOf())
 
     const val MAP_DEVICE_BLOCK_METADATA_KEY = "MAP_DEVICE"
 

@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.crafting.corruption
 
 import de.fuballer.mcendgame.component.crafting.CraftingItemSettings
 import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
-import de.fuballer.mcendgame.util.ItemCreatorUtil
+import de.fuballer.mcendgame.util.ItemCreator
 import de.fuballer.mcendgame.util.TextComponent
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.run
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCorruptionRounds
@@ -10,16 +10,15 @@ import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCraftingItem
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.random.RandomOption
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.ChatColor
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
 object CorruptionSettings {
-    private val ITEM_NAME = "${ChatColor.DARK_RED}Orb of Corruption"
-    private val ITEM_LORE = listOf("${ChatColor.WHITE}Corrupt an item, modifying it unpredictably.", *CraftingItemSettings.CRAFTING_ITEM_USAGE_DISCLAIMER)
-    private val ITEM_LORE_DOUBLE = listOf("${ChatColor.WHITE}Corrupt an item, modifying it unpredictably. Twice!", *CraftingItemSettings.CRAFTING_ITEM_USAGE_DISCLAIMER)
+    private val ITEM_NAME = TextComponent.create("Orb of Corruption", NamedTextColor.DARK_RED)
+    private val ITEM_LORE = listOf(TextComponent.create("Corrupt an item, modifying it unpredictably"), *CraftingItemSettings.CRAFTING_ITEM_USAGE_DISCLAIMER)
+    private val ITEM_LORE_DOUBLE = listOf(TextComponent.create("Corrupt an item, modifying it unpredictably. Twice!"), *CraftingItemSettings.CRAFTING_ITEM_USAGE_DISCLAIMER)
     val CORRUPTION_TAG_LORE = TextComponent.create("Corrupted", NamedTextColor.DARK_RED)
 
     val CORRUPTIONS = listOf(
@@ -49,7 +48,7 @@ object CorruptionSettings {
         }
     }
 
-    private val CORRUPTION_ITEM = ItemCreatorUtil.create(
+    private val CORRUPTION_ITEM = ItemCreator.create(
         ItemStack(CraftingItemSettings.BASE_ITEM),
         ITEM_NAME,
         ITEM_LORE
@@ -59,7 +58,7 @@ object CorruptionSettings {
         setUnmodifiable()
     }
 
-    private val DOUBLE_CORRUPTION_ITEM = ItemCreatorUtil.create(
+    private val DOUBLE_CORRUPTION_ITEM = ItemCreator.create(
         ItemStack(CraftingItemSettings.BASE_ITEM),
         ITEM_NAME,
         ITEM_LORE_DOUBLE,

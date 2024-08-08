@@ -13,6 +13,7 @@ import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
@@ -64,7 +65,9 @@ object ItemUtil {
         val itemMeta = base.itemMeta ?: return false
         if (!itemMeta.hasDisplayName()) return false
 
-        var oldName = itemMeta.displayName
+        val displayNameComponent = itemMeta.displayName() ?: return false
+        var oldName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent)
+
         if (oldName.startsWith("§")) { // remove color codes
             oldName = oldName.substring(2)
         }

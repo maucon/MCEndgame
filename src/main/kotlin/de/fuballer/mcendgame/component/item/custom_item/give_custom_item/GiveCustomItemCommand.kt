@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.component.item.custom_item.give_custom_item
 
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.framework.annotation.Service
-import de.fuballer.mcendgame.util.ItemCreatorUtil
 import de.fuballer.mcendgame.util.command.CommandHandler
 import de.fuballer.mcendgame.util.command.CommandHelper
 import org.bukkit.command.Command
@@ -30,7 +29,7 @@ class GiveCustomItemCommand(
             ?.also { if (it !in 0..100) return false }
 
         val roll = rollInt?.let { it / 100.0 }
-        val customItem = ItemCreatorUtil.createCustomItem(type, roll)
+        val customItem = CustomItemType.createItem(type, roll)
 
         targetPlayer.inventory.addItem(customItem)
         return true

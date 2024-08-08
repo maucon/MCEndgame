@@ -10,6 +10,7 @@ object TextComponent {
         Component.text(text).color(color).decoration(TextDecoration.ITALIC, false)
 
     fun empty() = Component.empty()
+    fun space() = Component.space()
 
     fun error(text: String) =
         create(text, NamedTextColor.RED)
