@@ -15,6 +15,10 @@ repositories {
         name = 'protocollib-repo'
         url = 'https://repo.dmulloy2.net/repository/public/'
     }
+    maven {
+        name = 'enginehub-repo'
+        url = 'https://maven.enginehub.org/repo'
+    }
     mavenCentral()
 }
 
