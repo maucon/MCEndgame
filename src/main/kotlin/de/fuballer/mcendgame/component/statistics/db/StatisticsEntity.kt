@@ -40,30 +40,30 @@ data class StatisticsEntity(
         val pages = mutableListOf<Component>()
 
         val page1 = Component.textOfChildren(
-            StatisticsSettings.STATISTICS_BOOK_DUNGEONS_HEADLINE,
-            TextComponent.empty(),
-            StatisticsSettings.DUNGEONS_OPENED_TEXT,
-            TextComponent.create("   $dungeonsOpened", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR),
-            StatisticsSettings.DUNGEONS_COMPLETED_TEXT,
-            TextComponent.create("   $dungeonsCompleted", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR),
-            StatisticsSettings.HIGHEST_DUNGEONS_COMPLETED_TEXT,
-            TextComponent.create("   $highestCompletedDungeon", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR),
+            StatisticsSettings.STATISTICS_BOOK_DUNGEONS_HEADLINE.appendNewline(),
+            TextComponent.empty().appendNewline(),
+            StatisticsSettings.DUNGEONS_OPENED_TEXT.appendNewline(),
+            TextComponent.create("   $dungeonsOpened", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR).appendNewline(),
+            StatisticsSettings.DUNGEONS_COMPLETED_TEXT.appendNewline(),
+            TextComponent.create("   $dungeonsCompleted", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR).appendNewline(),
+            StatisticsSettings.HIGHEST_DUNGEONS_COMPLETED_TEXT.appendNewline(),
+            TextComponent.create("   $highestCompletedDungeon", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR).appendNewline(),
         )
         pages.add(page1)
 
         val page2 = Component.textOfChildren(
-            StatisticsSettings.STATISTICS_BOOK_COMBAT_HEADLINE,
-            TextComponent.empty(),
-            StatisticsSettings.TOTAL_KILLS_TEXT,
-            TextComponent.create("   $totalKills", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR),
-            StatisticsSettings.BOSS_KILLS_TEXT,
-            TextComponent.create("   $bossKills", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR),
-            StatisticsSettings.LOOT_GOBLINS_KILLS_TEXT,
-            TextComponent.create("   $lootGoblinKills", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR),
-            StatisticsSettings.ELITE_KILLS_TEXT,
-            TextComponent.create("   $eliteKills", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR),
-            StatisticsSettings.DEATHS_TEXT,
-            TextComponent.create("   $deaths", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR),
+            StatisticsSettings.STATISTICS_BOOK_COMBAT_HEADLINE.appendNewline(),
+            TextComponent.empty().appendNewline(),
+            StatisticsSettings.TOTAL_KILLS_TEXT.appendNewline(),
+            TextComponent.create("   $totalKills", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR).appendNewline(),
+            StatisticsSettings.BOSS_KILLS_TEXT.appendNewline(),
+            TextComponent.create("   $bossKills", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR).appendNewline(),
+            StatisticsSettings.LOOT_GOBLINS_KILLS_TEXT.appendNewline(),
+            TextComponent.create("   $lootGoblinKills", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR).appendNewline(),
+            StatisticsSettings.ELITE_KILLS_TEXT.appendNewline(),
+            TextComponent.create("   $eliteKills", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR).appendNewline(),
+            StatisticsSettings.DEATHS_TEXT.appendNewline(),
+            TextComponent.create("   $deaths", StatisticsSettings.STATISTICS_BOOK_TEXT_COLOR).appendNewline(),
         )
         pages.add(page2)
 

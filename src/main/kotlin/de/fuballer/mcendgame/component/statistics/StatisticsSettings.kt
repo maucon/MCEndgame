@@ -13,7 +13,7 @@ object StatisticsSettings {
     const val STATISTICS_BOOK_TITLE = "ItemStats"
 
     private val STATISTICS_BOOK_HEADLINE_COLOR = NamedTextColor.BLACK
-    private val STATISTICS_BOOK_HEADLINE_DECORATION = TextDecoration.UNDERLINED
+    private val STATISTICS_BOOK_HEADLINE_DECORATION = TextDecoration.BOLD
 
     val STATISTICS_BOOK_TEXT_COLOR: NamedTextColor = NamedTextColor.BLACK
 
