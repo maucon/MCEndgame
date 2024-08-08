@@ -41,7 +41,7 @@ object MapDeviceSettings {
             setIngredient('S', Material.NETHER_STAR)
         }
 
-    const val MAP_DEVICE_INVENTORY_TITLE = "Map Device"
+    val MAP_DEVICE_INVENTORY_TITLE = TextComponent.create("Map Device")
 
     private val OPEN_PORTALS_ITEM_LINE = TextComponent.create("Open portals", NamedTextColor.GREEN)
     val OPEN_PORTALS_ITEM = ItemCreator.create(

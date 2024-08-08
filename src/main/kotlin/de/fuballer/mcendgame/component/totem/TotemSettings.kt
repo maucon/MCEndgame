@@ -22,7 +22,7 @@ object TotemSettings {
 
     val TOTEM_WINDOW_TYPE = InventoryType.HOPPER
     val TOTEM_WINDOW_SIZE = TOTEM_WINDOW_TYPE.defaultSize
-    const val TOTEM_WINDOW_TITLE = "Totems"
+    val TOTEM_WINDOW_TITLE = TextComponent.create("Totems")
     val CANNOT_CHANGE_TOTEM_MESSAGE = TextComponent.error("You cannot change totems whilst inside a dungeon")
 
     private val LORE_NUMBER_FORMAT = DecimalFormat("0.#")
