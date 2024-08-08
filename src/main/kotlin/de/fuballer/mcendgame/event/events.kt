@@ -135,10 +135,3 @@ class EntityHealEvent(
     val entity: LivingEntity,
     val amount: Double
 ) : HandleableEvent()
-
-/**
- * Thrown whenever a player changes armor
- */
-class PlayerArmorChangeEvent(
-    val player: Player,
-) : HandleableEvent()
