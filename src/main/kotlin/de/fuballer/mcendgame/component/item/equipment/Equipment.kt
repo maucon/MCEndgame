@@ -7,8 +7,10 @@ import de.fuballer.mcendgame.component.item.equipment.armor.Chestplate
 import de.fuballer.mcendgame.component.item.equipment.armor.Helmet
 import de.fuballer.mcendgame.component.item.equipment.armor.Leggings
 import de.fuballer.mcendgame.component.item.equipment.tool.*
+import de.fuballer.mcendgame.util.TextComponent
 import de.fuballer.mcendgame.util.random.RandomOption
-import org.bukkit.ChatColor
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 import org.bukkit.inventory.EquipmentSlot
 
@@ -23,19 +25,22 @@ interface Equipment {
     val rollableEnchants: List<RandomOption<ItemEnchantment>>
 
     companion object {
-        private val SLOT_LORE_COLOR = ChatColor.GRAY
-        val GENERIC_SLOT_LORE = "${SLOT_LORE_COLOR}When equipped:"
+        private val SLOT_LORE_COLOR = NamedTextColor.GRAY
+        val GENERIC_SLOT_LORE = TextComponent.create("When equipped:", SLOT_LORE_COLOR)
 
-        fun getLoreForSlot(slot: EquipmentSlot) =
-            when (slot) {
-                EquipmentSlot.HAND -> "${SLOT_LORE_COLOR}When in Main Hand:"
-                EquipmentSlot.OFF_HAND -> "${SLOT_LORE_COLOR}When in Off Hand:"
-                EquipmentSlot.FEET -> "${SLOT_LORE_COLOR}When on Feet:"
-                EquipmentSlot.LEGS -> "${SLOT_LORE_COLOR}When on Legs:"
-                EquipmentSlot.CHEST -> "${SLOT_LORE_COLOR}When on Body:"
-                EquipmentSlot.HEAD -> "${SLOT_LORE_COLOR}When on Head:"
-                EquipmentSlot.BODY -> "${SLOT_LORE_COLOR}$GENERIC_SLOT_LORE"
+        fun getLoreForSlot(slot: EquipmentSlot): Component {
+            val text = when (slot) {
+                EquipmentSlot.HAND -> "When in Main Hand:"
+                EquipmentSlot.OFF_HAND -> "When in Off Hand:"
+                EquipmentSlot.FEET -> "When on Feet:"
+                EquipmentSlot.LEGS -> "When on Legs:"
+                EquipmentSlot.CHEST -> "When on Body:"
+                EquipmentSlot.HEAD -> "When on Head:"
+                EquipmentSlot.BODY -> return GENERIC_SLOT_LORE
             }
+
+            return TextComponent.create(text, SLOT_LORE_COLOR)
+        }
 
         private val materialToEquipment = mutableMapOf<Material, Equipment>()
             .apply {

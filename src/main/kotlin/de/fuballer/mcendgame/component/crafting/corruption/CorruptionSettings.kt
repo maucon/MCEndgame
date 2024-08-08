@@ -3,11 +3,13 @@ package de.fuballer.mcendgame.component.crafting.corruption
 import de.fuballer.mcendgame.component.crafting.CraftingItemSettings
 import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
 import de.fuballer.mcendgame.util.ItemCreatorUtil
+import de.fuballer.mcendgame.util.TextComponent
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.run
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCorruptionRounds
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCraftingItem
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setUnmodifiable
 import de.fuballer.mcendgame.util.random.RandomOption
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.ChatColor
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
@@ -18,7 +20,7 @@ object CorruptionSettings {
     private val ITEM_NAME = "${ChatColor.DARK_RED}Orb of Corruption"
     private val ITEM_LORE = listOf("${ChatColor.WHITE}Corrupt an item, modifying it unpredictably.", *CraftingItemSettings.CRAFTING_ITEM_USAGE_DISCLAIMER)
     private val ITEM_LORE_DOUBLE = listOf("${ChatColor.WHITE}Corrupt an item, modifying it unpredictably. Twice!", *CraftingItemSettings.CRAFTING_ITEM_USAGE_DISCLAIMER)
-    val CORRUPTION_TAG_LORE = "${ChatColor.DARK_RED}Corrupted"
+    val CORRUPTION_TAG_LORE = TextComponent.create("Corrupted", NamedTextColor.DARK_RED)
 
     val CORRUPTIONS = listOf(
         RandomOption(45, CorruptionModification.CORRUPT_ENCHANTS),
