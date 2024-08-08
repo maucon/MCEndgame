@@ -4,11 +4,10 @@ import de.fuballer.mcendgame.configuration.PluginConfiguration
 import de.fuballer.mcendgame.util.TextComponent
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.ChatColor
 
 object StatisticsSettings {
     const val COMMAND_NAME = "dungeon-statistics"
-    val PLAYER_NO_STATISTICS_MESSAGE = "${ChatColor.RED}Player has no dungeon statistics"
+    val PLAYER_NO_STATISTICS_MESSAGE = TextComponent.error("Player does not have dungeon statistics")
 
     val STATISTICS_BOOK_AUTHOR = PluginConfiguration.plugin().name
     const val STATISTICS_BOOK_TITLE = "ItemStats"
