@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.totem.totems.wolf_companion
 import de.fuballer.mcendgame.component.totem.data.TotemTier
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestTotemTier
@@ -43,7 +43,7 @@ private fun getArmorProbability(tier: TotemTier) = when (tier) {
 
 private val WOLF_ARMOR = ItemStack(Material.WOLF_ARMOR)
 
-@Component
+@Service
 class WolfCompanionEffectService : Listener {
     @EventHandler
     fun on(event: PlayerDungeonJoinEvent) {
@@ -66,7 +66,7 @@ class WolfCompanionEffectService : Listener {
             wolf.collarColor = DyeColor.entries.random()
 
             if (Random.nextDouble() > getArmorProbability(tier)) continue
-            wolf.equipment!!.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone())
+            wolf.equipment.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone())
         }
     }
 

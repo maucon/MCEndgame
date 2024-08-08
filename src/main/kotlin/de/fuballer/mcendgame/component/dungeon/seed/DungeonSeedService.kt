@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.component.dungeon.seed
 
 import de.fuballer.mcendgame.component.dungeon.seed.db.DungeonSeedRepository
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import org.bukkit.entity.Player
 import java.util.*
 
-@Component
+@Service
 class DungeonSeedService(
     private val playerDungeonSeedRepo: DungeonSeedRepository
 ) {

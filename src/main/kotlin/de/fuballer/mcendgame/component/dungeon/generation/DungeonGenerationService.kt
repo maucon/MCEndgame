@@ -10,7 +10,7 @@ import de.fuballer.mcendgame.component.dungeon.world.ManagedWorldService
 import de.fuballer.mcendgame.component.portal.PortalService
 import de.fuballer.mcendgame.event.DungeonGeneratedEvent
 import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.VectorUtil
 import de.fuballer.mcendgame.util.random.RandomOption
 import org.bukkit.Location
@@ -18,7 +18,7 @@ import org.bukkit.World
 import org.bukkit.entity.Player
 import kotlin.random.Random
 
-@Component
+@Service
 class DungeonGenerationService(
     private val managedWorldService: ManagedWorldService,
     private val dungeonBuilderService: DungeonBuilderService,

@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.component.dungeon.progress.PlayerDungeonProgressSet
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceEntity
 import de.fuballer.mcendgame.component.map_device.db.MapDeviceRepository
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.InventoryUtil
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.InventoryExtension.getCustomType
@@ -24,7 +24,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-@Component
+@Service
 class MapDeviceInventoryService(
     private val mapDeviceRepo: MapDeviceRepository,
     private val mapDeviceService: MapDeviceService,

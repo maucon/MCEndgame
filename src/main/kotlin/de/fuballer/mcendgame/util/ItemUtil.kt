@@ -11,7 +11,9 @@ import de.fuballer.mcendgame.component.item.equipment.Equipment
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
-import org.bukkit.ChatColor
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
@@ -63,7 +65,9 @@ object ItemUtil {
         val itemMeta = base.itemMeta ?: return false
         if (!itemMeta.hasDisplayName()) return false
 
-        var oldName = itemMeta.displayName
+        val displayNameComponent = itemMeta.displayName() ?: return false
+        var oldName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent)
+
         if (oldName.startsWith("§")) { // remove color codes
             oldName = oldName.substring(2)
         }
@@ -159,9 +163,9 @@ object ItemUtil {
         itemMeta: ItemMeta,
         baseAttributes: List<BaseAttribute>,
         customAttributes: List<CustomAttribute>,
-        slotLore: String
+        slotLore: Component
     ) {
-        val lore = mutableListOf<String>()
+        val lore = mutableListOf<Component>()
 
         val customItemType = item.getCustomItemType()
         val hasBaseAttributes = customItemType?.usesEquipmentBaseStats != false
@@ -184,11 +188,11 @@ object ItemUtil {
         }
         if (lore.isNotEmpty()) {
             lore.add(0, slotLore)
-            lore.add(0, "")
+            lore.add(0, TextComponent.empty())
         }
 
         if (customAttributes.isNotEmpty()) {
-            lore.add("")
+            lore.add(TextComponent.empty())
             lore.add(Equipment.GENERIC_SLOT_LORE)
 
             val attributes = getCustomAttributesSorted(customItemType, customAttributes)
@@ -203,7 +207,7 @@ object ItemUtil {
         }
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
-        itemMeta.lore = lore
+        itemMeta.lore(lore)
     }
 
     private fun getCustomAttributesSorted(
@@ -218,21 +222,21 @@ object ItemUtil {
         return customAttributes.sortedBy { attributeTypeOrder.indexOf(it.type) }
     }
 
-    private fun getBaseAttributeLore(attribute: BaseAttribute): String {
+    private fun getBaseAttributeLore(attribute: BaseAttribute): Component {
         var attributeLore = attribute.getLore()
 
         if (isNotPlayerBaseAttribute(attribute.type)) {
-            return "${ChatColor.BLUE}$attributeLore"
+            return TextComponent.create(attributeLore, NamedTextColor.BLUE)
         }
 
         attributeLore = attributeLore.replaceFirstChar { " " }
-        return "${ChatColor.DARK_GREEN}$attributeLore"
+        return TextComponent.create(attributeLore, NamedTextColor.DARK_GREEN)
     }
 
     private fun getEnchantmentAttributeLine(
         enchantment: Enchantment,
         level: Int,
-    ): String? {
+    ): Component? {
         val line = when (enchantment) {
             Enchantment.DEPTH_STRIDER -> "+${DECIMAL_FORMAT.format(level / 3.0)} Water Movement Efficiency"
             Enchantment.SWIFT_SNEAK -> "+${DECIMAL_FORMAT.format(0.15 * level)} Sneaking Speed"
@@ -245,12 +249,12 @@ object ItemUtil {
             else -> return null
         }
 
-        return "${ChatColor.BLUE}$line"
+        return TextComponent.create(line, NamedTextColor.BLUE)
     }
 
-    private fun getCustomAttributeLine(attribute: CustomAttribute): String {
+    private fun getCustomAttributeLine(attribute: CustomAttribute): Component {
         val attributeLore = attribute.getLore()
-        return "${ChatColor.BLUE}$attributeLore"
+        return TextComponent.create(attributeLore, NamedTextColor.BLUE)
     }
 
     private fun isNotPlayerBaseAttribute(vanillaAttributeType: VanillaAttributeType) =

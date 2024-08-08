@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.totem.TotemSettings
 import de.fuballer.mcendgame.component.totem.data.TotemTier
 import de.fuballer.mcendgame.component.totem.data.TotemType
 import de.fuballer.mcendgame.util.PluginUtil
+import net.kyori.adventure.text.Component
 import org.bukkit.NamespacedKey
 
 object MovementSpeedTotemType : TotemType {
@@ -18,7 +19,7 @@ object MovementSpeedTotemType : TotemType {
         TotemTier.LEGENDARY -> listOf(0.25)
     }
 
-    override fun getLore(tier: TotemTier): List<String> {
+    override fun getLore(tier: TotemTier): List<Component> {
         val (increasedSpeed) = getValues(tier)
         val values = listOf(increasedSpeed * 100)
 

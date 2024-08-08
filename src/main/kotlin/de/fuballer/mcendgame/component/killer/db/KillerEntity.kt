@@ -40,7 +40,7 @@ class KillerEntity(
     fun createInventory(playerName: String): Inventory {
         val inventory = InventoryUtil.createInventory(
             InventoryType.CHEST,
-            "${KillerSettings.INVENTORY_TITLE} - $playerName",
+            KillerSettings.getInventoryTitle(playerName),
             CustomInventoryType.KILLER
         )
 

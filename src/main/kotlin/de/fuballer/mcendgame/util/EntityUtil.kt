@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.util.extension.EntityExtension.setCustomEntityType
 import de.fuballer.mcendgame.util.extension.EntityExtension.setHideEquipment
 import de.fuballer.mcendgame.util.extension.EntityExtension.setIsEnemy
 import de.fuballer.mcendgame.util.extension.EntityExtension.setMapTier
+import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.*
@@ -14,7 +15,9 @@ object EntityUtil {
         val world = loc.world ?: return null
 
         val entity = world.spawnEntity(loc, entityType.type, false)
-        entity.customName = entityType.customName
+        entityType.customName?.let {
+            entity.customName(Component.text(it))
+        }
         entity.isCustomNameVisible = false
 
         setCustomData(entity, entityType, mapTier)

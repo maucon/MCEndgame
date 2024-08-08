@@ -5,11 +5,11 @@ import de.fuballer.mcendgame.component.dungeon.modifier.ModifierUtil.removeModif
 import de.fuballer.mcendgame.event.KillStreakCreatedForPlayerEvent
 import de.fuballer.mcendgame.event.KillStreakRemovedEvent
 import de.fuballer.mcendgame.event.KillStreakUpdatedEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-@Component
+@Service
 class KillStreakBonusService : Listener {
     @EventHandler
     fun on(event: KillStreakCreatedForPlayerEvent) {

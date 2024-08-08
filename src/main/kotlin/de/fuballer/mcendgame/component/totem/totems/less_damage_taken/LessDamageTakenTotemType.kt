@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.component.totem.TotemSettings
 import de.fuballer.mcendgame.component.totem.data.TotemTier
 import de.fuballer.mcendgame.component.totem.data.TotemType
 import de.fuballer.mcendgame.util.PluginUtil
+import net.kyori.adventure.text.Component
 import org.bukkit.NamespacedKey
 
 object LessDamageTakenTotemType : TotemType {
@@ -18,7 +19,7 @@ object LessDamageTakenTotemType : TotemType {
         TotemTier.LEGENDARY -> listOf(0.2)
     }
 
-    override fun getLore(tier: TotemTier): List<String> {
+    override fun getLore(tier: TotemTier): List<Component> {
         val (increasedArmor) = getValues(tier)
         val values = listOf(increasedArmor * 100)
 

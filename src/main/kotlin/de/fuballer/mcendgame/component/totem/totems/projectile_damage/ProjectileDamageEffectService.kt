@@ -1,14 +1,14 @@
 package de.fuballer.mcendgame.component.totem.totems.projectile_damage
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestTotemTier
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 
-@Component
+@Service
 class ProjectileDamageEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) { // FIXME add to player attributes

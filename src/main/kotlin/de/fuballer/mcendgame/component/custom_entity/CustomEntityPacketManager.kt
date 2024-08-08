@@ -3,14 +3,14 @@ package de.fuballer.mcendgame.component.custom_entity
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolManager
 import com.comphenix.protocol.events.PacketEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.technical.packet.SendingPacketAdapter
 import de.fuballer.mcendgame.util.extension.EntityExtension.isHideEquipment
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.plugin.java.JavaPlugin
 
-@Component
+@Service
 class CustomEntityPacketManager(
     private val protocolManager: ProtocolManager
 ) : LifeCycleListener {

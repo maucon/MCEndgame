@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.totem
 
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.InventoryExtension.getCustomType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getTotem
@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-@Component
+@Service
 class TotemService : Listener {
     @EventHandler
     fun on(event: InventoryClickEvent) {

@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.totem.command
 
 import de.fuballer.mcendgame.component.inventory.CustomInventoryType
 import de.fuballer.mcendgame.component.totem.TotemSettings
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.InventoryUtil
 import de.fuballer.mcendgame.util.command.CommandHandler
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getTotems
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.lang.Integer.min
 
-@Component
+@Service
 class TotemCommand : CommandHandler(TotemSettings.COMMAND_NAME) {
     override fun onCommand(
         sender: CommandSender,

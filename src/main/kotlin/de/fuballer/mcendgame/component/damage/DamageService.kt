@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.damage
 
 import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
@@ -17,7 +17,7 @@ import kotlin.math.abs
 
 private const val EXECUTE_DAMAGE = 99999.0
 
-@Component
+@Service
 class DamageService : Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: EntityDamageByEntityEvent) {

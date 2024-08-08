@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.dungeon.seed.command
 import de.fuballer.mcendgame.component.dungeon.seed.DungeonSeedSettings
 import de.fuballer.mcendgame.component.dungeon.seed.db.DungeonSeedEntity
 import de.fuballer.mcendgame.component.dungeon.seed.db.DungeonSeedRepository
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.ChatUtil
 import de.fuballer.mcendgame.util.command.CommandAction
 import de.fuballer.mcendgame.util.command.CommandHandler
@@ -12,7 +12,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@Component
+@Service
 class DungeonSeedCommand(
     private val playerDungeonSeedRepo: DungeonSeedRepository,
     private val commandHelper: CommandHelper
@@ -66,7 +66,7 @@ class DungeonSeedCommand(
     ): Boolean {
         if (args.size != 3) return false
 
-        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[1]) ?: return false
+        val targetPlayer = commandHelper.getPlayer(commandExecutor, args[1]) ?: return true
 
         val seed = args[2]
         if (seed.length !in 1..64) {

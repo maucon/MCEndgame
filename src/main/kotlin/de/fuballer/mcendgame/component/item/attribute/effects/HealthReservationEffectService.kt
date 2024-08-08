@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 
 import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.event.EntityHealEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsDouble
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
@@ -17,7 +17,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent
 import kotlin.math.max
 import kotlin.math.min
 
-@Component
+@Service
 class HealthReservationEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: EntityRegainHealthEvent) {

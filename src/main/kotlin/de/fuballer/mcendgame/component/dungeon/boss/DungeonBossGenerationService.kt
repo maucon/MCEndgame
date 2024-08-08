@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.component.dungeon.boss.db.DungeonBossesRepository
 import de.fuballer.mcendgame.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.event.DungeonEnemySpawnedEvent
 import de.fuballer.mcendgame.event.EventGateway
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.ThreadUtil.bukkitSync
 import de.fuballer.mcendgame.util.extension.EntityExtension.setDisableDropEquipment
@@ -21,7 +21,7 @@ import org.bukkit.entity.Creature
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-@Component
+@Service
 class DungeonBossGenerationService(
     private val dungeonBossesRepo: DungeonBossesRepository,
 ) {
@@ -62,7 +62,7 @@ class DungeonBossGenerationService(
 
         if (entityType.isRanged) {
             val bow = ItemStack(Material.BOW)
-            boss.equipment?.setItemInMainHand(bow)
+            boss.equipment.setItemInMainHand(bow)
         }
 
         return boss

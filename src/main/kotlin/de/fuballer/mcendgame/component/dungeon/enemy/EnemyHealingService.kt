@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.enemy
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffectType
 
 private val POTION_EFFECT = PotionEffect(PotionEffectType.LUCK, 1, 0, false, false)
 
-@Component
+@Service
 class EnemyHealingService : Listener {
     @EventHandler
     fun on(event: EntityPotionEffectEvent) {

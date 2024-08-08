@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.dungeon.transition
 import de.fuballer.mcendgame.component.dungeon.transition.db.DungeonTransitionEntity
 import de.fuballer.mcendgame.component.dungeon.transition.db.DungeonTransitionRepository
 import de.fuballer.mcendgame.event.*
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.Server
@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 
-@Component
+@Service
 class DungeonTransitionService(
     private val dungeonTransitionRepo: DungeonTransitionRepository,
     private val server: Server

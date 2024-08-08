@@ -1,15 +1,15 @@
 package de.fuballer.mcendgame.framework
 
 import de.fuballer.mcendgame.framework.annotation.Bean
-import de.fuballer.mcendgame.framework.annotation.Component
 import de.fuballer.mcendgame.framework.annotation.Configuration
 import de.fuballer.mcendgame.framework.annotation.Qualifier
+import de.fuballer.mcendgame.framework.annotation.Service
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
 import java.lang.reflect.Parameter
 
 object DependencyInjector {
-    private val componentAnnotations = arrayOf(Component::class.java, Configuration::class.java)
+    private val componentAnnotations = arrayOf(Service::class.java, Configuration::class.java)
 
     fun instantiateClasses(startingClass: Class<*>): Collection<Any> {
         val injectables = scanForInjectables(startingClass)
@@ -98,7 +98,7 @@ object DependencyInjector {
         toInstantiate.sortBy { it.dependencies.size }
 
         while (toInstantiate.isNotEmpty()) {
-            val instantiated = mutableListOf<DependentBean>()
+            val instantiated = mutableSetOf<DependentBean>()
 
             for (dependentBean in toInstantiate) {
                 val dependencies = gatherDependencies(dependentBean.dependencies, instantiatedBeans) ?: continue

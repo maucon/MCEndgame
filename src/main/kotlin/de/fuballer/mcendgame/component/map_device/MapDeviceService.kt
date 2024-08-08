@@ -9,7 +9,7 @@ import de.fuballer.mcendgame.event.DungeonOpenEvent
 import de.fuballer.mcendgame.event.EventGateway
 import de.fuballer.mcendgame.event.PortalFailedEvent
 import de.fuballer.mcendgame.event.PortalUsedEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.framework.stereotype.LifeCycleListener
 import de.fuballer.mcendgame.util.MathUtil
 import de.fuballer.mcendgame.util.ThreadUtil.async
@@ -23,7 +23,7 @@ import java.util.logging.Logger
 import kotlin.math.min
 import kotlin.time.measureTime
 
-@Component
+@Service
 class MapDeviceService(
     private val mapDeviceRepo: MapDeviceRepository,
     private val dungeonGenerationService: DungeonGenerationService,
