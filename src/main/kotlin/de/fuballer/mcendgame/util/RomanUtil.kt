@@ -19,18 +19,20 @@ object RomanUtil {
         1 to "I",
     )
 
-    fun getAsRoman(attribute: AttributeRoll<*>): String {
-        return getAsRoman(attribute.getRoll() as Int)
+    fun toRoman(attribute: AttributeRoll<*>): String {
+        return toRoman(attribute.getRoll() as Int)
     }
 
-    private fun getAsRoman(number: Int): String {
+    private fun toRoman(number: Int): String {
         val roman = StringBuilder()
         var remaining = number
 
         for (key in intToRomanMap.keys) {
+            if (key > remaining) continue
+
             val repeats = remaining / key
-            remaining -= repeats * key
             roman.append(intToRomanMap[key]!!.repeat(repeats))
+            remaining -= repeats * key
         }
 
         return roman.toString()

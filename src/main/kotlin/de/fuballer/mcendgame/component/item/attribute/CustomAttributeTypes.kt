@@ -89,5 +89,5 @@ object CustomAttributeTypes {
      * Should only be used on armor items
      */
     @Order(125)
-    val SUMMON_SUPPORT_WOLF = CustomAttributeType { " Summon ${it[0]} Wolf with Strength ${RomanUtil.getAsRoman(it[1])}" }
+    val SUMMON_SUPPORT_WOLF = CustomAttributeType { " Summon ${it[0]} Wolf with Strength ${RomanUtil.toRoman(it[1])}" }
 }
