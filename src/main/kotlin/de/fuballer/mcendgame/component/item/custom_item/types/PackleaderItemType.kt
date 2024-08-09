@@ -15,7 +15,7 @@ object PackleaderItemType : CustomItemType {
     override val equipment = Helmet.NETHERITE
     override val usesEquipmentBaseStats = true
     override val attributes = listOf(
-        RollableCustomAttribute(CustomAttributeTypes.SUMMON_SUPPORT_WOLF, StringBounds(SupportWolfType.getAsStringList()), IntBounds(1, 4)),
-        RollableCustomAttribute(CustomAttributeTypes.SUMMON_SUPPORT_WOLF, StringBounds(SupportWolfType.getAsStringList()), IntBounds(1, 4)),
+        RollableCustomAttribute(CustomAttributeTypes.SUMMON_SUPPORT_WOLF, StringBounds(SupportWolfType.asStringList()), IntBounds(1, 4)),
+        RollableCustomAttribute(CustomAttributeTypes.SUMMON_SUPPORT_WOLF, StringBounds(SupportWolfType.asStringList()), IntBounds(1, 4)),
     )
 }

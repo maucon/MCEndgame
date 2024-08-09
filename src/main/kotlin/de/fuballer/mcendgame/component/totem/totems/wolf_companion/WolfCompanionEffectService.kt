@@ -63,6 +63,7 @@ class WolfCompanionEffectService : Listener {
             val potionEffect = PotionEffect(PotionEffectType.STRENGTH, Int.MAX_VALUE, realStrength.toInt(), false, false)
             wolf.addPotionEffect(potionEffect)
 
+            wolf.isCollidable = false
             wolf.isInvulnerable = true
             wolf.variant = WOLF_VARIANTS.random()
             wolf.collarColor = DyeColor.entries.random()
