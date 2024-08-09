@@ -1,13 +1,13 @@
 package de.fuballer.mcendgame.component.totem.data
 
-import org.bukkit.ChatColor
+import net.kyori.adventure.text.format.NamedTextColor
 
 enum class TotemTier(
     val tier: Int,
-    val color: ChatColor
+    val color: NamedTextColor
 ) {
-    COMMON(1, ChatColor.WHITE),
-    UNCOMMON(2, ChatColor.GREEN),
-    RARE(3, ChatColor.BLUE),
-    LEGENDARY(4, ChatColor.GOLD)
+    COMMON(1, NamedTextColor.WHITE),
+    UNCOMMON(2, NamedTextColor.GREEN),
+    RARE(3, NamedTextColor.BLUE),
+    LEGENDARY(4, NamedTextColor.GOLD)
 }

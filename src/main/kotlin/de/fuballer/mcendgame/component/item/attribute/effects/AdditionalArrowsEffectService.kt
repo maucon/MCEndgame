@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.item.attribute.effects
 
 import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsInt
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getSecondAsDouble
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
@@ -14,7 +14,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityShootBowEvent
 import kotlin.math.PI
 
-@Component
+@Service
 class AdditionalArrowsEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: EntityShootBowEvent) {
@@ -38,7 +38,7 @@ class AdditionalArrowsEffectService : Listener {
                     entity.launchProjectile(Arrow::class.java, arrow.velocity.clone().rotateAroundY((index + 1) * 5.0 * PI / 180.0)),
                     entity.launchProjectile(Arrow::class.java, arrow.velocity.clone().rotateAroundY(-(index + 1) * 5.0 * PI / 180.0))
                 ).forEach {
-                    it.weapon = arrow.weapon
+                    it.setWeapon(arrow.weapon!!)
                     it.damage = newDamage
                     it.isCritical = arrow.isCritical
                     it.pierceLevel = arrow.pierceLevel

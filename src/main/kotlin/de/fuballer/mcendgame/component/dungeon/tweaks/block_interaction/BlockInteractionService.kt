@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.dungeon.tweaks.block_interaction
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.GameMode
@@ -9,7 +9,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 
-@Component
+@Service
 class BlockInteractionService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: BlockBreakEvent) {

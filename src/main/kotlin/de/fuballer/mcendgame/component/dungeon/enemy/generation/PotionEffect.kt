@@ -5,7 +5,7 @@ import org.bukkit.potion.PotionEffectType
 enum class PotionEffect(
     private val type: PotionEffectType,
     private val amplifier: Int = 0,
-    private val duration: Int = Int.MAX_VALUE
+    private val duration: Int = org.bukkit.potion.PotionEffect.INFINITE_DURATION
 ) {
     STRENGTH_1(PotionEffectType.STRENGTH, 0),
     STRENGTH_2(PotionEffectType.STRENGTH, 1),

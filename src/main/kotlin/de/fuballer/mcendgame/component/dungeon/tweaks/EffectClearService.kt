@@ -2,12 +2,12 @@ package de.fuballer.mcendgame.component.dungeon.tweaks
 
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-@Component
+@Service
 class EffectClearService : Listener {
     @EventHandler
     fun on(event: PlayerDungeonJoinEvent) {

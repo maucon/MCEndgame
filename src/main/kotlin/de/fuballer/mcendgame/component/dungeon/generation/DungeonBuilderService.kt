@@ -8,13 +8,13 @@ import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.math.transform.AffineTransform
 import de.fuballer.mcendgame.component.dungeon.generation.data.PlaceableBlock
 import de.fuballer.mcendgame.component.dungeon.generation.data.PlaceableTile
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.bukkit.Location
 import org.bukkit.World
 
-@Component
+@Service
 class DungeonBuilderService {
     fun build(
         world: World,

@@ -1,16 +1,16 @@
 package de.fuballer.mcendgame.util.command
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.PluginUtil
-import org.bukkit.ChatColor
+import de.fuballer.mcendgame.util.TextComponent
 import org.bukkit.OfflinePlayer
 import org.bukkit.Server
 import org.bukkit.entity.Player
 
-val ONLINE_PLAYER_NOT_FOUND_MESSAGE = "${ChatColor.RED}No player was found"
-val OFFLINE_PLAYER_NOT_FOUND_MESSAGE = "${ChatColor.RED}No player was found"
+private val ONLINE_PLAYER_NOT_FOUND_MESSAGE = TextComponent.error("No player was found")
+private val OFFLINE_PLAYER_NOT_FOUND_MESSAGE = TextComponent.error("No player was found")
 
-@Component
+@Service
 class CommandHelper(
     private val server: Server
 ) {

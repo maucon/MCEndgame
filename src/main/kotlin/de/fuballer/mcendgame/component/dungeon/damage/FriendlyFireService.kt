@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.component.dungeon.damage
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import org.bukkit.entity.Player
@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
-@Component
+@Service
 class FriendlyFireService : Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {

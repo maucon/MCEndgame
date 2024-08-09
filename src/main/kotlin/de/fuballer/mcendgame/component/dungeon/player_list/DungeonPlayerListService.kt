@@ -5,19 +5,20 @@ import de.fuballer.mcendgame.component.dungeon.player_list.db.DungeonPlayerListE
 import de.fuballer.mcendgame.component.dungeon.player_list.db.DungeonPlayerListRepository
 import de.fuballer.mcendgame.component.dungeon.player_list.db.PlayerStats
 import de.fuballer.mcendgame.event.*
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.isBoss
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.extension.EntityExtension.isMinion
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
+import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.entity.Wolf
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
-@Component
+@Service
 class DungeonPlayerListService(
     private val dungeonPlayerListRepo: DungeonPlayerListRepository
 ) : Listener {
@@ -103,8 +104,8 @@ class DungeonPlayerListService(
     fun on(event: PlayerDungeonLeaveEvent) {
         val player = event.player
 
-        player.setPlayerListHeaderFooter(null, null)
-        player.setPlayerListName(player.name)
+        player.sendPlayerListHeaderAndFooter(Component.empty(), Component.empty())
+        player.playerListName(null)
     }
 
     @EventHandler
@@ -161,9 +162,9 @@ class DungeonPlayerListService(
         val playerStats = entity.playerStats[player]!!
 
         val footer = DungeonPlayerListSettings.getFooter(entity)
-        val playerName = DungeonPlayerListSettings.getPlayerName(player, playerStats)
+        val playerNameComponent = DungeonPlayerListSettings.getPlayerNameComponent(player, playerStats)
 
-        player.setPlayerListHeaderFooter(null, footer)
-        player.setPlayerListName(playerName)
+        player.sendPlayerListHeaderAndFooter(Component.empty(), footer)
+        player.playerListName(playerNameComponent)
     }
 }

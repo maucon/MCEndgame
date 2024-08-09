@@ -1,28 +1,32 @@
 package de.fuballer.mcendgame.component.statistics
 
 import de.fuballer.mcendgame.configuration.PluginConfiguration
-import org.bukkit.ChatColor
+import de.fuballer.mcendgame.util.TextComponent
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 
 object StatisticsSettings {
     const val COMMAND_NAME = "dungeon-statistics"
-    val PLAYER_NO_STATISTICS_MESSAGE = "${ChatColor.RED}Player has no dungeon statistics"
+    val PLAYER_NO_STATISTICS_MESSAGE = TextComponent.error("Player does not have dungeon statistics")
 
     val STATISTICS_BOOK_AUTHOR = PluginConfiguration.plugin().name
     const val STATISTICS_BOOK_TITLE = "ItemStats"
 
-    private val STATISTICS_BOOK_HEADLINE_COLOR = "" + ChatColor.BLACK + ChatColor.UNDERLINE
-    private val STATISTICS_BOOK_TEXT_COLOR = "" + ChatColor.BLACK
+    private val STATISTICS_BOOK_HEADLINE_COLOR = NamedTextColor.BLACK
+    private val STATISTICS_BOOK_HEADLINE_DECORATION = TextDecoration.BOLD
 
-    val STATISTICS_BOOK_DUNGEONS_HEADLINE = "${STATISTICS_BOOK_HEADLINE_COLOR}Dungeons"
-    val STATISTICS_BOOK_COMBAT_HEADLINE = "${STATISTICS_BOOK_HEADLINE_COLOR}Combat"
+    val STATISTICS_BOOK_TEXT_COLOR: NamedTextColor = NamedTextColor.BLACK
 
-    val DUNGEONS_OPENED_TEXT = "${ChatColor.DARK_BLUE}Opened:${STATISTICS_BOOK_TEXT_COLOR}"
-    val DUNGEONS_COMPLETED_TEXT = "${ChatColor.DARK_GREEN}Completed:${STATISTICS_BOOK_TEXT_COLOR}"
-    val HIGHEST_DUNGEONS_COMPLETED_TEXT = "${ChatColor.GOLD}Highest Tier:${STATISTICS_BOOK_TEXT_COLOR}"
+    val STATISTICS_BOOK_DUNGEONS_HEADLINE = TextComponent.create("Dungeons", STATISTICS_BOOK_HEADLINE_COLOR).decorate(STATISTICS_BOOK_HEADLINE_DECORATION)
+    val STATISTICS_BOOK_COMBAT_HEADLINE = TextComponent.create("Combat", STATISTICS_BOOK_HEADLINE_COLOR).decorate(STATISTICS_BOOK_HEADLINE_DECORATION)
 
-    val TOTAL_KILLS_TEXT = "${ChatColor.DARK_GREEN}Kills:${STATISTICS_BOOK_TEXT_COLOR}"
-    val BOSS_KILLS_TEXT = "${ChatColor.DARK_BLUE}Boss Kills:${STATISTICS_BOOK_TEXT_COLOR}"
-    val LOOT_GOBLINS_KILLS_TEXT = "${ChatColor.DARK_PURPLE}Loot Goblin Kills:${STATISTICS_BOOK_TEXT_COLOR}"
-    val ELITE_KILLS_TEXT = "${ChatColor.GOLD}Elite Kills:${STATISTICS_BOOK_TEXT_COLOR}"
-    val DEATHS_TEXT = "${ChatColor.DARK_RED}Deaths:${STATISTICS_BOOK_TEXT_COLOR}"
+    val DUNGEONS_OPENED_TEXT = TextComponent.create("Opened:", NamedTextColor.DARK_BLUE)
+    val DUNGEONS_COMPLETED_TEXT = TextComponent.create("Completed:", NamedTextColor.DARK_GREEN)
+    val HIGHEST_DUNGEONS_COMPLETED_TEXT = TextComponent.create("Highest Tier:", NamedTextColor.GOLD)
+
+    val TOTAL_KILLS_TEXT = TextComponent.create("Kills:", NamedTextColor.DARK_GREEN)
+    val BOSS_KILLS_TEXT = TextComponent.create("Boss Kills:", NamedTextColor.DARK_BLUE)
+    val LOOT_GOBLINS_KILLS_TEXT = TextComponent.create("Loot Goblin Kills:", NamedTextColor.DARK_PURPLE)
+    val ELITE_KILLS_TEXT = TextComponent.create("Elite Kills:", NamedTextColor.GOLD)
+    val DEATHS_TEXT = TextComponent.create("Deaths:", NamedTextColor.DARK_RED)
 }

@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.dungeon.enemy.equipment
 
 import de.fuballer.mcendgame.component.dungeon.enemy.equipment.enchantment.EquipmentEnchantmentService
 import de.fuballer.mcendgame.component.item.equipment.Equipment
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.ItemUtil
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.setCustomAttributes
 import de.fuballer.mcendgame.util.random.RandomOption
@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ArmorMeta
 import org.bukkit.inventory.meta.trim.ArmorTrim
 import kotlin.random.Random
 
-@Component
+@Service
 class EquipmentGenerationService(
     private val equipmentEnchantmentService: EquipmentEnchantmentService
 ) {

@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.component.dungeon.progress.db.PlayerDungeonProgress
 import de.fuballer.mcendgame.component.dungeon.progress.db.PlayerDungeonProgressRepository
 import de.fuballer.mcendgame.event.DungeonCompleteEvent
 import de.fuballer.mcendgame.event.DungeonEntityDeathEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.WorldExtension.isDungeonWorld
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerRespawnEvent
 import java.util.*
 import kotlin.math.max
 
-@Component
+@Service
 class PlayerDungeonProgressService(
     private val playerDungeonProgressRepo: PlayerDungeonProgressRepository
 ) : Listener {

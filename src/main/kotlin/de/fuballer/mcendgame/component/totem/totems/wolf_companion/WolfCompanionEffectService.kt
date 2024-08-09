@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.totem.totems.wolf_companion
 import de.fuballer.mcendgame.component.totem.data.TotemTier
 import de.fuballer.mcendgame.event.PlayerDungeonJoinEvent
 import de.fuballer.mcendgame.event.PlayerDungeonLeaveEvent
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHighestTotemTier
@@ -34,16 +34,18 @@ private val WOLF_VARIANTS = listOf(
     Wolf.Variant.STRIPED,
 )
 
-private fun getArmorProbability(tier: TotemTier) = when (tier) {
+private val WOLF_ARMOR = ItemStack(Material.WOLF_ARMOR)
+
+fun getWolfArmor() = WOLF_ARMOR.clone()
+
+fun getArmorProbability(tier: TotemTier) = when (tier) {
     TotemTier.COMMON -> 0.05
     TotemTier.UNCOMMON -> 0.15
     TotemTier.RARE -> 0.3
     TotemTier.LEGENDARY -> 0.5
 }
 
-private val WOLF_ARMOR = ItemStack(Material.WOLF_ARMOR)
-
-@Component
+@Service
 class WolfCompanionEffectService : Listener {
     @EventHandler
     fun on(event: PlayerDungeonJoinEvent) {
@@ -61,12 +63,13 @@ class WolfCompanionEffectService : Listener {
             val potionEffect = PotionEffect(PotionEffectType.STRENGTH, Int.MAX_VALUE, realStrength.toInt(), false, false)
             wolf.addPotionEffect(potionEffect)
 
+            wolf.isCollidable = false
             wolf.isInvulnerable = true
             wolf.variant = WOLF_VARIANTS.random()
             wolf.collarColor = DyeColor.entries.random()
 
             if (Random.nextDouble() > getArmorProbability(tier)) continue
-            wolf.equipment!!.setItem(EquipmentSlot.BODY, WOLF_ARMOR.clone())
+            wolf.equipment.setItem(EquipmentSlot.BODY, getWolfArmor())
         }
     }
 

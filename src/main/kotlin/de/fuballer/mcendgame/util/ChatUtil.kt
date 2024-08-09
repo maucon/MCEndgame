@@ -1,26 +1,26 @@
 package de.fuballer.mcendgame.util
 
-import net.md_5.bungee.api.chat.ClickEvent
-import net.md_5.bungee.api.chat.HoverEvent
-import net.md_5.bungee.api.chat.TextComponent
-import net.md_5.bungee.api.chat.hover.content.Text
-import org.bukkit.ChatColor
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.event.ClickEvent
+import net.kyori.adventure.text.event.HoverEvent
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.Player
 
 object ChatUtil {
     fun sendCopyableText(
         player: Player,
-        prefix: String,
+        prefix: Component,
         copyableText: String,
-        suffix: String
+        suffix: Component
     ) {
-        val msgPrefix = TextComponent(prefix)
-        val msgSuffix = TextComponent(suffix)
+        val message = Component.textOfChildren(
+            prefix,
+            TextComponent.create(copyableText, NamedTextColor.GREEN),
+            suffix
+        )
+            .clickEvent(ClickEvent.copyToClipboard(copyableText))
+            .hoverEvent(HoverEvent.showText(TextComponent.create("Click to Copy")))
 
-        val copyPart = TextComponent("${ChatColor.GREEN}$copyableText")
-        copyPart.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, Text("Click to Copy"))
-        copyPart.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, copyableText)
-
-        player.spigot().sendMessage(msgPrefix, copyPart, msgSuffix)
+        player.sendMessage(message)
     }
 }

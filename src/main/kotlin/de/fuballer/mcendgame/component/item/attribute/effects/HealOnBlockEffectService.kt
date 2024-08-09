@@ -2,9 +2,8 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsDouble
-import de.fuballer.mcendgame.util.extension.LivingEntityExtension.heal
 import de.fuballer.mcendgame.util.extension.PlayerExtension.getHealOnBlockActivation
 import de.fuballer.mcendgame.util.extension.PlayerExtension.setHealOnBlockActivation
 import org.bukkit.Color
@@ -17,7 +16,7 @@ import org.bukkit.event.Listener
 
 private const val COOLDOWN = 5000 // should equal attribute type text
 
-@Component
+@Service
 class HealOnBlockEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {

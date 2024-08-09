@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.item.attribute.effects
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.component.item.attribute.data.DoubleRoll
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffectType
 
 private val ABSORPTION_EFFECT = PotionEffect(PotionEffectType.ABSORPTION, 100, 1, false, false, false)
 
-@Component
+@Service
 class AbsorptionOnHighDamageTakenEffectService : Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun on(event: DamageCalculationEvent) {

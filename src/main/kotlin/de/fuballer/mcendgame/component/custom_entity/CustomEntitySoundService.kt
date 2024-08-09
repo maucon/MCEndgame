@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
 import org.bukkit.SoundCategory
 import org.bukkit.entity.Entity
@@ -10,7 +10,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
 
-@Component
+@Service
 class CustomEntitySoundService : Listener {
     @EventHandler
     fun on(event: EntityDamageEvent) {

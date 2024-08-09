@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.component.custom_entity.types.elf_duelist
 
-import de.fuballer.mcendgame.framework.annotation.Component
+import de.fuballer.mcendgame.framework.annotation.Service
 import de.fuballer.mcendgame.util.EntityUtil
 import de.fuballer.mcendgame.util.SchedulingUtil
 import de.fuballer.mcendgame.util.extension.EntityExtension.getCustomEntityType
@@ -15,7 +15,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.projectiles.ProjectileSource
 import org.bukkit.util.Vector
 
-@Component
+@Service
 class ElfDuelistService : Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     fun on(event: EntityDamageByEntityEvent) {
