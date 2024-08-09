@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.technical.persistent_data.types
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent.SlotType
-import de.fuballer.mcendgame.component.item.attribute.effects.summon_suport_wolf.ActiveSupportWolf
-import de.fuballer.mcendgame.component.item.attribute.effects.summon_suport_wolf.SupportWolfType
+import de.fuballer.mcendgame.component.item.attribute.effects.summon_support_wolf.ActiveSupportWolf
+import de.fuballer.mcendgame.component.item.attribute.effects.summon_support_wolf.SupportWolfType
 import de.fuballer.mcendgame.technical.persistent_data.types.generic.PersistentEnum
 import de.fuballer.mcendgame.util.PluginUtil
 import org.bukkit.persistence.PersistentDataAdapterContext

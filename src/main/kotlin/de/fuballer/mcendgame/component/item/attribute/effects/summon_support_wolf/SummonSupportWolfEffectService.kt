@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.item.attribute.effects.summon_suport_wolf
+package de.fuballer.mcendgame.component.item.attribute.effects.summon_support_wolf
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent.SlotType
@@ -67,10 +67,11 @@ class SummonSupportWolfEffectService : Listener {
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerArmorChangeEvent) {
-        if (event.newItem.getCustomAttributes() == event.oldItem.getCustomAttributes()) return //item durability change
+        if (event.newItem.getCustomAttributes() == event.oldItem.getCustomAttributes()) return // item durability change
 
         val player = event.player
-        val newAttributes = event.newItem.getCustomAttributes()?.filter { it.type == CustomAttributeTypes.SUMMON_SUPPORT_WOLF }
+        val newAttributes = event.newItem.getCustomAttributes()
+            ?.filter { it.type == CustomAttributeTypes.SUMMON_SUPPORT_WOLF }
 
         SchedulingUtil.runTaskLater(1) {
             removeWolves(player, event.slotType)
@@ -82,6 +83,7 @@ class SummonSupportWolfEffectService : Listener {
     fun on(event: EntityPortalEvent) {
         val wolf = event.entity as? Wolf ?: return
         if (wolf.getActiveSupportWolf() == null) return
+
         event.cancel()
     }
 
@@ -89,6 +91,7 @@ class SummonSupportWolfEffectService : Listener {
     fun on(event: VehicleEnterEvent) {
         val wolf = event.entered as? Wolf ?: return
         if (wolf.getActiveSupportWolf() == null) return
+
         event.cancel()
     }
 
@@ -96,16 +99,20 @@ class SummonSupportWolfEffectService : Listener {
     fun on(event: PlayerInteractEntityEvent) {
         val wolf = event.rightClicked as? Wolf ?: return
         if (wolf.getActiveSupportWolf() == null) return
+
         event.cancel()
     }
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: EntitiesUnloadEvent) {
-        event.entities.filter { it is Wolf && it.getActiveSupportWolf() != null }.map { it as Wolf }.forEach {
-            it.remove()
-            removeWolves(it.owner as Player) //maybe don't want to respawn
-            spawnWolves(it.owner as Player)
-        }
+        event.entities
+            .filter { it is Wolf && it.getActiveSupportWolf() != null }
+            .map { it as Wolf }
+            .forEach {
+                it.remove()
+                removeWolves(it.owner as Player) // maybe don't want to respawn
+                spawnWolves(it.owner as Player)
+            }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -162,9 +169,9 @@ class SummonSupportWolfEffectService : Listener {
         player.addPotionEffect(SPEED_EFFECT)
 
         val world = player.world
-        world.getEntitiesByClass(Wolf::class.java).filter { it.owner == player }.forEach {
-            it.addPotionEffect(SPEED_EFFECT)
-        }
+        world.getEntitiesByClass(Wolf::class.java)
+            .filter { it.owner == player }
+            .forEach { it.addPotionEffect(SPEED_EFFECT) }
     }
 
     private fun spawnWolves(player: Player, world: World? = null) {
@@ -172,7 +179,9 @@ class SummonSupportWolfEffectService : Listener {
 
         slotMap.forEach { slot ->
             val item = equipment.getItem(slot.key)
-            val attributes = item.getCustomAttributes()?.filter { it.type == CustomAttributeTypes.SUMMON_SUPPORT_WOLF }
+            val attributes = item.getCustomAttributes()
+                ?.filter { it.type == CustomAttributeTypes.SUMMON_SUPPORT_WOLF }
+
             spawnWolves(player, attributes, slot.value, world)
         }
     }
@@ -186,10 +195,8 @@ class SummonSupportWolfEffectService : Listener {
             wolf.owner = player
 
             val supportWolfType = SupportWolfType.getByString(attribute.attributeRolls.getFirstAsString())
+            supportWolfType.updateWolf(wolf)
             wolf.setActiveSupportWolf(ActiveSupportWolf(supportWolfType, slot))
-            wolf.variant = supportWolfType.getVariant()
-            wolf.collarColor = supportWolfType.getCollarColor()
-            wolf.equipment.setItem(EquipmentSlot.BODY, supportWolfType.getArmor())
 
             val strengthEffect = PotionEffect(PotionEffectType.STRENGTH, Int.MAX_VALUE, attribute.attributeRolls.getSecondAsInt() - 1, false, false)
             wolf.addPotionEffect(strengthEffect)
@@ -199,18 +206,18 @@ class SummonSupportWolfEffectService : Listener {
     }
 
     private fun removeWolves(player: Player, world: World? = null) {
-        getPlayersWolfs(player, world)
+        getPlayerWolfs(player, world)
             .filter { it.getActiveSupportWolf() != null }
             .forEach { it.remove() }
     }
 
     private fun removeWolves(player: Player, slot: SlotType, world: World? = null) {
-        getPlayersWolfs(player, world)
+        getPlayerWolfs(player, world)
             .filter { it.getActiveSupportWolf()?.slot == slot }
             .forEach { it.remove() }
     }
 
-    private fun getPlayersWolfs(player: Player, world: World?): List<Tameable> {
+    private fun getPlayerWolfs(player: Player, world: World?): List<Tameable> {
         val actualWorld = world ?: player.world
         return actualWorld.getEntitiesByClass(Wolf::class.java)
             .map { it as Tameable }

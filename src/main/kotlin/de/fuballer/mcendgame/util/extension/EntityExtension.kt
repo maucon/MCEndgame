@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.util.extension
 
 import de.fuballer.mcendgame.component.custom_entity.types.CustomEntityType
-import de.fuballer.mcendgame.component.item.attribute.effects.summon_suport_wolf.ActiveSupportWolf
+import de.fuballer.mcendgame.component.item.attribute.effects.summon_support_wolf.ActiveSupportWolf
 import de.fuballer.mcendgame.technical.persistent_data.TypeKeys
 import de.fuballer.mcendgame.util.PersistentDataUtil
 import org.bukkit.Location

@@ -1,9 +1,10 @@
-package de.fuballer.mcendgame.component.item.attribute.effects.summon_suport_wolf
+package de.fuballer.mcendgame.component.item.attribute.effects.summon_support_wolf
 
 import org.bukkit.Color
 import org.bukkit.DyeColor
 import org.bukkit.Material
 import org.bukkit.entity.Wolf
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ColorableArmorMeta
 
@@ -20,22 +21,21 @@ enum class SupportWolfType(
     HASTING("Hasting", Wolf.Variant.STRIPED, DyeColor.YELLOW, Color.YELLOW),
     ;
 
-    fun getVariant() = variant
+    fun updateWolf(wolf: Wolf) {
+        wolf.variant = variant
+        wolf.collarColor = collarColor
 
-    fun getCollarColor() = collarColor
-
-    fun getArmor(): ItemStack {
         val armor = ItemStack(Material.WOLF_ARMOR)
 
         val meta = armor.itemMeta as ColorableArmorMeta
         meta.setColor(armorColor)
         armor.itemMeta = meta
 
-        return armor
+        wolf.equipment.setItem(EquipmentSlot.BODY, armor)
     }
 
     companion object {
-        fun getByString(string: String): SupportWolfType = entries.first { it.stringName == string }
+        fun getByString(string: String) = entries.first { it.stringName == string }
 
         fun getAsStringList() = entries.map { it.stringName }
     }

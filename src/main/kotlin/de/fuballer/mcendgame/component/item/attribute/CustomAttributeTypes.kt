@@ -37,9 +37,7 @@ object CustomAttributeTypes {
     @Order(109)
     val BACKSTAB = CustomAttributeType { " ${SIMPLE_NO_SIGN.formatDouble(it[0], 100)}% more Damage with Backstabs" }
 
-    /**
-     * Arrow count should always be divisible by 2
-     */
+    /** Arrow count should always be divisible by 2 */
     @Order(110)
     val ADDITIONAL_ARROWS = CustomAttributeType { "+${it[0]} Arrows with ${SIMPLE_NO_SIGN.formatDouble(it[1], 100)}% Damage" }
 
@@ -85,9 +83,7 @@ object CustomAttributeTypes {
     @Order(124)
     val INCREASED_DAMAGE = CustomAttributeType { "${SIMPLE.formatDouble(it[0], 100)}% Damage" }
 
-    /**
-     * Should only be used on armor items
-     */
+    /** Should only be used on armor items */
     @Order(125)
     val SUMMON_SUPPORT_WOLF = CustomAttributeType { " Summon ${it[0]} Wolf with Strength ${RomanUtil.toRoman(it[1])}" }
 }

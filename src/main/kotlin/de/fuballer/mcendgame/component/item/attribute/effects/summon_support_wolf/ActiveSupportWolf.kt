@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.component.item.attribute.effects.summon_suport_wolf
+package de.fuballer.mcendgame.component.item.attribute.effects.summon_support_wolf
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent.SlotType
 
