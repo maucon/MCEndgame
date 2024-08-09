@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.item.attribute.effects.summon_support_wo
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent.SlotType
+import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent
 import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
@@ -53,6 +54,11 @@ class SummonSupportWolfEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerDeathEvent) {
         removeWolves(event.player)
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: PlayerPostRespawnEvent) {
+        spawnWolves(event.player)
     }
 
     @EventHandler(ignoreCancelled = true)
