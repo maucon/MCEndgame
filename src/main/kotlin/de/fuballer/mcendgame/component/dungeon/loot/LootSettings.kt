@@ -37,6 +37,7 @@ object LootSettings {
         RandomOption(1, HeadhuntersHaremType),
         RandomOption(1, LifewardAegisItemType),
         RandomOption(1, MoonshadowItemType),
+        RandomOption(1, PackleaderItemType),
         RandomOption(1, SerpentsFangItemType),
         RandomOption(1, ShrinkshadowItemType),
         RandomOption(1, StonewardItemType),

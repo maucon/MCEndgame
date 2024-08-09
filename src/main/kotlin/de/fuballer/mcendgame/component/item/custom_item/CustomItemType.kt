@@ -33,6 +33,7 @@ interface CustomItemType : Keyed {
             it.register(HeadhuntersHaremType)
             it.register(LifewardAegisItemType)
             it.register(MoonshadowItemType)
+            it.register(PackleaderItemType)
             it.register(SerpentsFangItemType)
             it.register(ShrinkshadowItemType)
             it.register(StonewardItemType)
