@@ -67,6 +67,7 @@ class SummonSupportWolfEffectService : Listener {
     fun on(event: PlayerChangedWorldEvent) {
         println("CHANGE")
         removeWolves(event.player, event.from)
+        removeWolves(event.player)
         spawnWolves(event.player)
     }
 
