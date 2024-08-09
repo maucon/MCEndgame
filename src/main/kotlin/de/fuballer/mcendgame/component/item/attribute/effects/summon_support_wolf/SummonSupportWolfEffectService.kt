@@ -24,7 +24,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityPortalEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
-import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.vehicle.VehicleEnterEvent
 import org.bukkit.event.world.EntitiesUnloadEvent
@@ -51,21 +50,12 @@ private val slotMap = mapOf(
 @Service
 class SummonSupportWolfEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
-    fun on(event: PlayerJoinEvent) {
-        println("JOIN")
-        removeWolves(event.player)
-        spawnWolves(event.player)
-    }
-
-    @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerQuitEvent) {
-        println("QUIT")
         removeWolves(event.player)
     }
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerChangedWorldEvent) {
-        println("CHANGE")
         removeWolves(event.player, event.from)
         removeWolves(event.player)
         spawnWolves(event.player)
@@ -109,16 +99,17 @@ class SummonSupportWolfEffectService : Listener {
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: EntitiesUnloadEvent) {
-        println("UNLOAD")
         event.entities
             .filter { it is Wolf && it.getActiveSupportWolf() != null }
             .map { it as Wolf }
             .forEach {
-                it.remove()
+                val owner = it.owner as? Player
+                if (owner == null) {
+                    it.remove()
+                    return@forEach
+                }
 
-                val owner = it.owner as? Player ?: return@forEach
-                removeWolves(owner)
-                spawnWolves(owner)
+                it.teleport(owner.location)
             }
     }
 
@@ -215,25 +206,19 @@ class SummonSupportWolfEffectService : Listener {
     private fun removeWolves(player: Player, world: World? = null) {
         getPlayerWolfs(player, world)
             .filter { it.getActiveSupportWolf() != null }
-            .forEach {
-                it.remove()
-                println(it.uniqueId)
-            }
+            .forEach { it.remove() }
     }
 
     private fun removeWolves(player: Player, slot: SlotType, world: World? = null) {
         getPlayerWolfs(player, world)
             .filter { it.getActiveSupportWolf()?.slot == slot }
-            .forEach {
-                it.remove()
-                println(it.uniqueId)
-            }
+            .forEach { it.remove() }
     }
 
     private fun getPlayerWolfs(player: Player, world: World?): List<Wolf> {
         val actualWorld = world ?: player.world
         return actualWorld.getEntitiesByClass(Wolf::class.java)
             .map { it as Wolf }
-            .filter { it.owner == player }
+            .filter { it.owner?.uniqueId == player.uniqueId }
     }
 }
