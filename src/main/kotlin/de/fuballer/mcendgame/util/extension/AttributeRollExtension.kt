@@ -26,5 +26,7 @@ object AttributeRollExtension {
 
     fun List<AttributeRoll<*>>.getFirstAsDouble(): Double = (get(0) as DoubleRoll).getRoll()
     fun List<AttributeRoll<*>>.getFirstAsInt(): Int = (get(0) as IntRoll).getRoll()
+    fun List<AttributeRoll<*>>.getFirstAsString(): String = (get(0) as StringRoll).getRoll()
     fun List<AttributeRoll<*>>.getSecondAsDouble(): Double = (get(1) as DoubleRoll).getRoll()
+    fun List<AttributeRoll<*>>.getSecondAsInt(): Int = (get(1) as IntRoll).getRoll()
 }
