@@ -6,7 +6,6 @@ import de.fuballer.mcendgame.component.damage.DamageCalculationEvent
 import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
 import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
 import de.fuballer.mcendgame.framework.annotation.Service
-import de.fuballer.mcendgame.util.SchedulingUtil
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsString
 import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getSecondAsInt
 import de.fuballer.mcendgame.util.extension.EntityExtension.getActiveSupportWolf
@@ -15,7 +14,10 @@ import de.fuballer.mcendgame.util.extension.EventExtension.cancel
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.LivingEntityExtension.getCustomAttributes
 import org.bukkit.World
-import org.bukkit.entity.*
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
+import org.bukkit.entity.Wolf
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -50,17 +52,20 @@ private val slotMap = mapOf(
 class SummonSupportWolfEffectService : Listener {
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerJoinEvent) {
+        println("JOIN")
         removeWolves(event.player)
         spawnWolves(event.player)
     }
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerQuitEvent) {
+        println("QUIT")
         removeWolves(event.player)
     }
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerChangedWorldEvent) {
+        println("CHANGE")
         removeWolves(event.player, event.from)
         spawnWolves(event.player)
     }
@@ -73,10 +78,8 @@ class SummonSupportWolfEffectService : Listener {
         val newAttributes = event.newItem.getCustomAttributes()
             ?.filter { it.type == CustomAttributeTypes.SUMMON_SUPPORT_WOLF }
 
-        SchedulingUtil.runTaskLater(1) {
-            removeWolves(player, event.slotType)
-            spawnWolves(player, newAttributes, event.slotType)
-        }
+        removeWolves(player, event.slotType)
+        spawnWolves(player, newAttributes, event.slotType)
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -105,13 +108,16 @@ class SummonSupportWolfEffectService : Listener {
 
     @EventHandler(ignoreCancelled = true)
     fun on(event: EntitiesUnloadEvent) {
+        println("UNLOAD")
         event.entities
             .filter { it is Wolf && it.getActiveSupportWolf() != null }
             .map { it as Wolf }
             .forEach {
                 it.remove()
-                removeWolves(it.owner as Player) // maybe don't want to respawn
-                spawnWolves(it.owner as Player)
+
+                val owner = it.owner as? Player ?: return@forEach
+                removeWolves(owner)
+                spawnWolves(owner)
             }
     }
 
@@ -208,19 +214,25 @@ class SummonSupportWolfEffectService : Listener {
     private fun removeWolves(player: Player, world: World? = null) {
         getPlayerWolfs(player, world)
             .filter { it.getActiveSupportWolf() != null }
-            .forEach { it.remove() }
+            .forEach {
+                it.remove()
+                println(it.uniqueId)
+            }
     }
 
     private fun removeWolves(player: Player, slot: SlotType, world: World? = null) {
         getPlayerWolfs(player, world)
             .filter { it.getActiveSupportWolf()?.slot == slot }
-            .forEach { it.remove() }
+            .forEach {
+                it.remove()
+                println(it.uniqueId)
+            }
     }
 
-    private fun getPlayerWolfs(player: Player, world: World?): List<Tameable> {
+    private fun getPlayerWolfs(player: Player, world: World?): List<Wolf> {
         val actualWorld = world ?: player.world
         return actualWorld.getEntitiesByClass(Wolf::class.java)
-            .map { it as Tameable }
+            .map { it as Wolf }
             .filter { it.owner == player }
     }
 }
