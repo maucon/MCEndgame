@@ -22,6 +22,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityPortalEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -49,6 +50,11 @@ private val slotMap = mapOf(
 
 @Service
 class SummonSupportWolfEffectService : Listener {
+    @EventHandler(ignoreCancelled = true)
+    fun on(event: PlayerDeathEvent) {
+        removeWolves(event.player)
+    }
+
     @EventHandler(ignoreCancelled = true)
     fun on(event: PlayerQuitEvent) {
         removeWolves(event.player)
