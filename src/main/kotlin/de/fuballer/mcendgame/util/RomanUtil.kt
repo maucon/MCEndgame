@@ -19,9 +19,8 @@ object RomanUtil {
         1 to "I",
     )
 
-    fun toRoman(attribute: AttributeRoll<*>): String {
-        return toRoman(attribute.getRoll() as Int)
-    }
+    fun toRoman(attribute: AttributeRoll<*>) =
+        toRoman(attribute.getRoll() as Int)
 
     private fun toRoman(number: Int): String {
         val roman = StringBuilder()
