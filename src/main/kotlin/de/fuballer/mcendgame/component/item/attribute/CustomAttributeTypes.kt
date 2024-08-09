@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.component.item.attribute
 
 import de.fuballer.mcendgame.component.item.attribute.data.CustomAttributeType
 import de.fuballer.mcendgame.technical.Order
+import de.fuballer.mcendgame.util.RomanUtil
 import de.fuballer.mcendgame.util.extension.DecimalFormatExtension.formatDouble
 import java.text.DecimalFormat
 
@@ -36,8 +37,11 @@ object CustomAttributeTypes {
     @Order(109)
     val BACKSTAB = CustomAttributeType { " ${SIMPLE_NO_SIGN.formatDouble(it[0], 100)}% more Damage with Backstabs" }
 
+    /**
+     * Arrow count should always be divisible by 2
+     */
     @Order(110)
-    val ADDITIONAL_ARROWS = CustomAttributeType { "+${it[0]} Arrows with ${SIMPLE_NO_SIGN.formatDouble(it[1], 100)}% Damage" } // arrow count should always be divisible by 2
+    val ADDITIONAL_ARROWS = CustomAttributeType { "+${it[0]} Arrows with ${SIMPLE_NO_SIGN.formatDouble(it[1], 100)}% Damage" }
 
     @Order(111)
     val EFFECT_GAIN = CustomAttributeType { " ${SIMPLE_NO_SIGN.formatDouble(it[0], 100)}% Chance to gain a positive Effect on Kill" }
@@ -81,6 +85,9 @@ object CustomAttributeTypes {
     @Order(124)
     val INCREASED_DAMAGE = CustomAttributeType { "${SIMPLE.formatDouble(it[0], 100)}% Damage" }
 
+    /**
+     * Should only be used on armor items
+     */
     @Order(125)
-    val SUMMON_SUPPORT_WOLF = CustomAttributeType { " Summon ${it[0]} Wolf with Strength ${it[1]}" } //should only be used on armor items
+    val SUMMON_SUPPORT_WOLF = CustomAttributeType { " Summon ${it[0]} Wolf with Strength ${RomanUtil.getAsRoman(it[1])}" }
 }
