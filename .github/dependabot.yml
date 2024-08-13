@@ -7,4 +7,5 @@ updates:
     labels:
       - "dependency"
     commit-message:
+      prefix: ""
       include: "scope"
