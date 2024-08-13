@@ -1,9 +1,9 @@
-name: Build Prod
+name: Build Release
 
 on:
   push:
     branches:
-      - prod
+      - release
 
 jobs:
   build:

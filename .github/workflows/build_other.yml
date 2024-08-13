@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches-ignore:
-      - prod
+      - release
 
 jobs:
   build:
