@@ -32,7 +32,7 @@ tasks.register('fatJar', Jar) {
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT'
     compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.11.0'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.3.0-SNAPSHOT'
 
