@@ -1,15 +1,15 @@
-name: Check Version Bump
+name: Check Version Increment
 
 on:
   pull_request:
-    branches:
-      - master
+    types: [ opened, reopened, synchronize, edited ]
 
 jobs:
   check:
+    if: github.base_ref == 'prod' && github.head_ref == 'dev'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master branch
+      - name: Checkout base branch
         uses: actions/checkout@v4
         with:
           ref: ${{ github.base_ref }}
@@ -30,8 +30,6 @@ jobs:
           echo "PR version: $PR_VERSION"
           
           if [ "$BASE_VERSION" == "$PR_VERSION" ]; then
-            echo "Version has not been bumped."
+            echo "Version has not been changed."
             exit 1
-          else
-            echo "Version has been bumped."
           fi

@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  push:
+    branches-ignore:
+      - prod
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Grant gradle permissions
+        run: chmod +x ./gradlew
+
+      - name: Build fatJar
+        run: ./gradlew fatJar
+
+      - name: Extract variables
+        run: |
+          echo "VERSION=$(grep '^version' build.gradle | awk '{print $3}' | tr -d \')" >> $GITHUB_ENV
+          echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Add jar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "MCEndgame-${{ env.VERSION }}-${{ env.SHA_SHORT }}"
+          path: build/libs/*.jar

@@ -1,0 +1,35 @@
+name: Check Version Consistency
+
+on:
+  pull_request:
+    types: [ opened, reopened, synchronize, edited ]
+
+jobs:
+  check:
+    if: github.base_ref == 'dev' && github.head_ref != 'prod'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+          path: base
+
+      - name: Checkout pull request branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          path: pr
+
+      - name: Compare versions
+        run: |
+          BASE_VERSION=$(grep '^version' base/build.gradle | awk '{print $3}' | tr -d \')
+          PR_VERSION=$(grep '^version' pr/build.gradle | awk '{print $3}' | tr -d \')
+          
+          echo "Base version: $BASE_VERSION"
+          echo "PR version: $PR_VERSION"
+          
+          if [ "$BASE_VERSION" != "$PR_VERSION" ]; then
+            echo "Version has been changed."
+            exit 1
+          fi

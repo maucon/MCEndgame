@@ -7,5 +7,5 @@ updates:
     labels:
       - "dependency"
     commit-message:
-      prefix: "deps"
+      prefix: ""
       include: "scope"
