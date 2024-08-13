@@ -30,6 +30,6 @@ jobs:
           echo "PR version: $PR_VERSION"
           
           if [ "$BASE_VERSION" == "$PR_VERSION" ]; then
-            echo "Version has been changed."
+            echo "Version has not been changed."
             exit 1
           fi
