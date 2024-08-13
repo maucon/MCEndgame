@@ -3,11 +3,10 @@ name: Check Version Consistency
 on:
   pull_request:
     types: [ opened, reopened, synchronize, edited ]
-    branches-ignore:
-      - prod
 
 jobs:
   check:
+    if: github.base_ref == 'dev' && github.head_ref != 'prod'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout base branch

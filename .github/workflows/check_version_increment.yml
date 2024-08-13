@@ -3,11 +3,10 @@ name: Check Version Increment
 on:
   pull_request:
     types: [ opened, reopened, synchronize, edited ]
-    branches:
-      - prod
 
 jobs:
   check:
+    if: github.base_ref == 'prod' && github.head_ref == 'dev'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout base branch
