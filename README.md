@@ -1,4 +1,4 @@
-# MCEndgame [![Build](https://github.com/maucon/MCEndgame/actions/workflows/build.yml/badge.svg)](https://github.com/maucon/MCEndgame/actions/workflows/build.yml)
+# MCEndgame [![Build](https://github.com/maucon/MCEndgame/actions/workflows/build_other.yml/badge.svg)](https://github.com/maucon/MCEndgame/actions/workflows/build_other.yml)
 
 MCEndgame is a Minecraft server plugin that enhances the endgame experience by introducing a new level of progression.
 
