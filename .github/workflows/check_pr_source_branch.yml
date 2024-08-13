@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Check branches
         run: |
-          if [ ${{ github.head_ref }} != "dev" ] && [ ${{ github.base_ref }} == "prod" ]; then
-            echo "Merge requests to prod branch are only allowed from dev branch."
+          if [ ${{ github.head_ref }} != "dev" ] && [ ${{ github.base_ref }} == "release" ]; then
+            echo "Merge requests to release branch are only allowed from dev branch."
             exit 1
           fi

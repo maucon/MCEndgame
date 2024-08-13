@@ -6,7 +6,7 @@ on:
 
 jobs:
   check:
-    if: github.base_ref == 'dev' && github.head_ref != 'prod'
+    if: github.base_ref == 'dev' && github.head_ref != 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout base branch
