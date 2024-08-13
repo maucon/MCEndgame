@@ -1,0 +1,16 @@
+name: Check Pull Request Source Branch
+
+on:
+  pull_request:
+    types: [ opened, reopened, synchronize, edited ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branches
+        run: |
+          if [ ${{ github.head_ref }} != "dev" ] && [ ${{ github.base_ref }} == "release" ]; then
+            echo "Merge requests to release branch are only allowed from dev branch."
+            exit 1
+          fi

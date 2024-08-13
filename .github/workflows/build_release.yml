@@ -1,12 +1,16 @@
-name: Build
+name: Build Release
 
-on: [ push ]
+on:
+  push:
+    branches:
+      - release
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: discord-publish
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up JDK 21
@@ -15,7 +19,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Cache Gradle Packages
+      - name: Cache gradle packages
         uses: actions/cache@v4
         with:
           path: |
@@ -24,36 +28,35 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
-      - name: Grant Gradle Permissions
+      - name: Grant gradle permissions
         run: chmod +x ./gradlew
 
-      - name: Build FatJar
+      - name: Build fatJar
         run: ./gradlew fatJar
 
-      - name: Add Jar Artifact
+      - name: Extract variables
+        run: |
+          echo "VERSION=$(grep '^version' build.gradle | awk '{print $3}' | tr -d \')" >> $GITHUB_ENV
+          echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Add jar artifact
         uses: actions/upload-artifact@v4
         with:
-          name: "MCEndgame-${{ github.ref_name }}"
+          name: "MCEndgame-${{ env.VERSION }}"
           path: build/libs/*.jar
 
-  notify:
-    needs: build
-    if: ${{ github.ref == 'refs/heads/master' }}
-    runs-on: ubuntu-latest
-    environment: discord-publish
-    steps:
-      - name: Download Artifact
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: "MCEndgame-${{ github.ref_name }}"
+          name: "MCEndgame-${{ env.VERSION }}"
           path: ./artifact
 
-      - name: Find JAR File
+      - name: Find jar file
         run: |
           JAR_FILE=$(find ./artifact -name "*.jar" | head -n 1)
           echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
 
-      - name: Call Discord Webhook
+      - name: Call discord webhook
         run: |
           curl -F "payload_json={\"content\":\"\"}" \
                -F "file=@${{ env.JAR_FILE }}" \
