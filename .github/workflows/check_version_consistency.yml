@@ -1,15 +1,15 @@
-name: Check Version Bump
+name: Check Version Consistency
 
 on:
   pull_request:
-    branches:
-      - master
+    branches-ignore:
+      - prod
 
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master branch
+      - name: Checkout base branch
         uses: actions/checkout@v4
         with:
           ref: ${{ github.base_ref }}
@@ -29,9 +29,7 @@ jobs:
           echo "Base version: $BASE_VERSION"
           echo "PR version: $PR_VERSION"
           
-          if [ "$BASE_VERSION" == "$PR_VERSION" ]; then
-            echo "Version has not been bumped."
+          if [ "$BASE_VERSION" != "$PR_VERSION" ]; then
+            echo "Version has been changed."
             exit 1
-          else
-            echo "Version has been bumped."
           fi
