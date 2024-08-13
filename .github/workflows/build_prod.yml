@@ -1,0 +1,60 @@
+name: Build
+
+on: [ push ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Gradle Packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Grant Gradle Permissions
+        run: chmod +x ./gradlew
+
+      - name: Build FatJar
+        run: ./gradlew fatJar
+
+      - name: Add Jar Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "MCEndgame-${{ github.ref_name }}"
+          path: build/libs/*.jar
+
+  notify:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    environment: discord-publish
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: "MCEndgame-${{ github.ref_name }}"
+          path: ./artifact
+
+      - name: Find JAR File
+        run: |
+          JAR_FILE=$(find ./artifact -name "*.jar" | head -n 1)
+          echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
+
+      - name: Call Discord Webhook
+        run: |
+          curl -F "payload_json={\"content\":\"\"}" \
+               -F "file=@${{ env.JAR_FILE }}" \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
