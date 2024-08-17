@@ -1,26 +1,31 @@
 package de.fuballer.mcendgame.component.totem.totems.wolf_companion
 
-import de.fuballer.mcendgame.component.totem.TotemSettings
+import de.fuballer.mcendgame.component.totem.TotemSettings.LORE_COLOR
 import de.fuballer.mcendgame.component.totem.data.TotemTier
 import de.fuballer.mcendgame.component.totem.data.TotemType
 import de.fuballer.mcendgame.util.PluginUtil
+import de.fuballer.mcendgame.util.RomanUtil
+import de.fuballer.mcendgame.util.TextComponent
 import net.kyori.adventure.text.Component
 import org.bukkit.NamespacedKey
 
 object WolfCompanionTotemType : TotemType {
-    private const val LORE_FORMAT = "You are accompanied by %s invincible wolfs.\\Your wolfs gains permanent Strength %s"
     override val key: NamespacedKey = PluginUtil.createNamespacedKey("wolf_companion")
     override val displayName = "Totem of Company"
 
-    override fun getValues(tier: TotemTier) = when (tier) {
-        TotemTier.COMMON -> listOf(2.0, 1.0)
-        TotemTier.UNCOMMON -> listOf(2.0, 3.0)
-        TotemTier.RARE -> listOf(3.0, 3.0)
-        TotemTier.LEGENDARY -> listOf(4.0, 5.0)
+    fun getValues(tier: TotemTier) = when (tier) {
+        TotemTier.COMMON -> listOf(2, 1)
+        TotemTier.UNCOMMON -> listOf(2, 3)
+        TotemTier.RARE -> listOf(3, 3)
+        TotemTier.LEGENDARY -> listOf(4, 5)
     }
 
     override fun getLore(tier: TotemTier): List<Component> {
         val values = getValues(tier)
-        return TotemSettings.formatLore(LORE_FORMAT, values)
+
+        return listOf(
+            TextComponent.create("You are accompanied by ${values[0]} invincible wolfs.", LORE_COLOR),
+            TextComponent.create("Your wolfs gains permanent Strength ${RomanUtil.toRoman(values[1])}.", LORE_COLOR),
+        )
     }
 }

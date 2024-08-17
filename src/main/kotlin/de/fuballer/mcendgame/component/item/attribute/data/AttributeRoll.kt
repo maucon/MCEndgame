@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.item.attribute.data
 
 import kotlin.math.roundToInt
 
-interface AttributeRoll<T> {
+sealed interface AttributeRoll<T> {
     val bounds: AttributeBounds<*>
 
     fun getRoll(): T

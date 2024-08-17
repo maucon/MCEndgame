@@ -26,13 +26,16 @@ object TotemSettings {
     val CANNOT_CHANGE_TOTEM_MESSAGE = TextComponent.error("You cannot change totems whilst inside a dungeon")
 
     private val LORE_NUMBER_FORMAT = DecimalFormat("0.#")
-    private val LORE_COLOR = NamedTextColor.DARK_GREEN
+    val LORE_COLOR: NamedTextColor = NamedTextColor.DARK_GREEN
 
-    fun formatLore(loreFormat: String, values: List<Double>): List<Component> {
+    fun formatLore(loreFormat: String, values: List<Double>): Component {
         val formattedValues = values.map { LORE_NUMBER_FORMAT.format(it) }
         val lore = String.format(loreFormat, *formattedValues.toTypedArray())
 
-        return lore.split("\\")
+        val loreComponents = lore.split("\\")
             .map { TextComponent.create(it, LORE_COLOR) }
+            .toTypedArray()
+
+        return Component.textOfChildren(*loreComponents)
     }
 }

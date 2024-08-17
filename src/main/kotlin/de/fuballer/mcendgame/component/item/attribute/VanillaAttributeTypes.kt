@@ -23,6 +23,9 @@ object VanillaAttributeTypes { // should always only have one double roll
     @Order(4)
     val MOVEMENT_SPEED = VanillaAttributeType(Attribute.GENERIC_MOVEMENT_SPEED, AttributeModifier.Operation.ADD_NUMBER) { "${PRECISE.formatDouble(it[0], 100)} Movement Speed" }
 
+    @Order(4)
+    val MOVEMENT_SPEED_INCREASE = VanillaAttributeType(Attribute.GENERIC_MOVEMENT_SPEED, AttributeModifier.Operation.ADD_SCALAR) { "${SIMPLE.formatDouble(it[0], 100)}% Movement Speed" }
+
     @Order(5)
     val ATTACK_DAMAGE = VanillaAttributeType(Attribute.GENERIC_ATTACK_DAMAGE, AttributeModifier.Operation.ADD_NUMBER) { "${SIMPLE.formatDouble(it[0])} Attack Damage" }
 

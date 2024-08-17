@@ -22,7 +22,7 @@ object RomanUtil {
     fun toRoman(attribute: AttributeRoll<*>) =
         toRoman(attribute.getRoll() as Int)
 
-    private fun toRoman(number: Int): String {
+    fun toRoman(number: Int): String {
         val roman = StringBuilder()
         var remaining = number
 

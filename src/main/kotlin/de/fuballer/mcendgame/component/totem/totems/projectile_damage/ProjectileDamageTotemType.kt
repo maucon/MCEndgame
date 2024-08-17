@@ -1,28 +1,22 @@
 package de.fuballer.mcendgame.component.totem.totems.projectile_damage
 
-import de.fuballer.mcendgame.component.totem.TotemSettings
+import de.fuballer.mcendgame.component.item.attribute.CustomAttributeTypes
+import de.fuballer.mcendgame.component.item.attribute.data.AttributeRoll
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleBounds
+import de.fuballer.mcendgame.component.item.attribute.data.DoubleRoll
+import de.fuballer.mcendgame.component.totem.data.AttributeTotemType
 import de.fuballer.mcendgame.component.totem.data.TotemTier
-import de.fuballer.mcendgame.component.totem.data.TotemType
 import de.fuballer.mcendgame.util.PluginUtil
-import net.kyori.adventure.text.Component
-import org.bukkit.NamespacedKey
 
-object ProjectileDamageTotemType : TotemType {
-    private const val LORE_FORMAT = "Your Projectiles deal %s%% increased Damage."
-    override val key: NamespacedKey = PluginUtil.createNamespacedKey("projectile_damage")
+object ProjectileDamageTotemType : AttributeTotemType {
+    override val key = PluginUtil.createNamespacedKey("projectile_damage")
     override val displayName = "Totem of Impact"
+    override val attributeType = CustomAttributeTypes.INCREASED_PROJECTILE_DAMAGE
 
-    override fun getValues(tier: TotemTier) = when (tier) {
-        TotemTier.COMMON -> listOf(0.1)
-        TotemTier.UNCOMMON -> listOf(0.2)
-        TotemTier.RARE -> listOf(0.3)
-        TotemTier.LEGENDARY -> listOf(0.45)
-    }
-
-    override fun getLore(tier: TotemTier): List<Component> {
-        val (increasedDamage) = getValues(tier)
-        val values = listOf(increasedDamage * 100)
-
-        return TotemSettings.formatLore(LORE_FORMAT, values)
+    override fun getAttributeRollsByTier(tier: TotemTier): List<AttributeRoll<*>> = when (tier) {
+        TotemTier.COMMON -> listOf(DoubleRoll(DoubleBounds(0.1), 1.0))
+        TotemTier.UNCOMMON -> listOf(DoubleRoll(DoubleBounds(0.2), 1.0))
+        TotemTier.RARE -> listOf(DoubleRoll(DoubleBounds(0.3), 1.0))
+        TotemTier.LEGENDARY -> listOf(DoubleRoll(DoubleBounds(0.45), 1.0))
     }
 }

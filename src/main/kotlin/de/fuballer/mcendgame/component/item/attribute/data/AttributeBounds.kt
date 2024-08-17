@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.component.item.attribute.data
 
 import kotlin.random.Random
 
-interface AttributeBounds<T : AttributeRoll<*>> {
+sealed interface AttributeBounds<T : AttributeRoll<*>> {
     fun roll(percentRoll: Double): T
 }
 

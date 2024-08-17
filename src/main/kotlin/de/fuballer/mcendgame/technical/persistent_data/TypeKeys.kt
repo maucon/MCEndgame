@@ -31,6 +31,7 @@ object TypeKeys {
     val MODIFIERS = TypeKey(createNamespacedKey("modifiers"), PersistentList(PersistentModifier))
     val IS_FORCED_VEHICLE = TypeKey(createNamespacedKey("is_forced_vehicle"), PersistentDataType.BOOLEAN)
     val HIT_COUNT_BASED_HEALTH = TypeKey(createNamespacedKey("hit_count_based_health"), PersistentDataType.INTEGER)
+    val CUSTOM_ENTITY_ATTRIBUTES = TypeKey(createNamespacedKey("custom_entity_attributes"), PersistentList(PersistentCustomAttribute))
 
     // player
     val LAST_MAP_DEVICE = TypeKey(createNamespacedKey("last_map_device"), PersistentUUID)
