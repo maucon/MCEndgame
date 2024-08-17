@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.component.totem
 
 import de.fuballer.mcendgame.util.TextComponent
-import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
@@ -27,15 +26,4 @@ object TotemSettings {
 
     private val LORE_NUMBER_FORMAT = DecimalFormat("0.#")
     val LORE_COLOR: NamedTextColor = NamedTextColor.DARK_GREEN
-
-    fun formatLore(loreFormat: String, values: List<Double>): Component {
-        val formattedValues = values.map { LORE_NUMBER_FORMAT.format(it) }
-        val lore = String.format(loreFormat, *formattedValues.toTypedArray())
-
-        val loreComponents = lore.split("\\")
-            .map { TextComponent.create(it, LORE_COLOR) }
-            .toTypedArray()
-
-        return Component.textOfChildren(*loreComponents)
-    }
 }
