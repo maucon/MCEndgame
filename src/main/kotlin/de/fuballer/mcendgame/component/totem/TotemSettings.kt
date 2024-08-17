@@ -5,7 +5,6 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryType
-import java.text.DecimalFormat
 
 object TotemSettings {
     const val COMMAND_NAME = "dungeon-totems"
@@ -24,6 +23,5 @@ object TotemSettings {
     val TOTEM_WINDOW_TITLE = TextComponent.create("Totems")
     val CANNOT_CHANGE_TOTEM_MESSAGE = TextComponent.error("You cannot change totems whilst inside a dungeon")
 
-    private val LORE_NUMBER_FORMAT = DecimalFormat("0.#")
     val LORE_COLOR: NamedTextColor = NamedTextColor.DARK_GREEN
 }
