@@ -22,10 +22,6 @@ object WolfCompanionTotemType : TotemType {
 
     override fun getLore(tier: TotemTier): List<Component> {
         val values = getValues(tier)
-
-        return listOf(
-            TextComponent.create("You are accompanied by ${values[0]} invincible wolfs.", LORE_COLOR),
-            TextComponent.create("Your wolfs gains permanent Strength ${RomanUtil.toRoman(values[1])}.", LORE_COLOR),
-        )
+        return listOf(TextComponent.create(" Summon ${values[0]} Wolfs with Strength ${RomanUtil.toRoman(values[1])}", LORE_COLOR))
     }
 }

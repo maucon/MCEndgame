@@ -19,6 +19,7 @@ data class Totem(
         itemMeta.displayName(nameComponent)
 
         val lore = mutableListOf<Component>()
+        lore.addAll(TotemSettings.TOTEM_ITEM_EFFECT_PREFIX)
         lore.addAll(type.getLore(tier))
         lore.addAll(TotemSettings.TOTEM_ITEM_DUNGEON_DISCLAIMER)
 
