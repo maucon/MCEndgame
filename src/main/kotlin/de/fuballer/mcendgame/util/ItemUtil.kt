@@ -4,10 +4,10 @@ import de.fuballer.mcendgame.component.crafting.corruption.CorruptionSettings
 import de.fuballer.mcendgame.component.item.attribute.AttributeSorter
 import de.fuballer.mcendgame.component.item.attribute.data.BaseAttribute
 import de.fuballer.mcendgame.component.item.attribute.data.CustomAttribute
-import de.fuballer.mcendgame.component.item.attribute.data.DoubleRoll
 import de.fuballer.mcendgame.component.item.attribute.data.VanillaAttributeType
 import de.fuballer.mcendgame.component.item.custom_item.CustomItemType
 import de.fuballer.mcendgame.component.item.equipment.Equipment
+import de.fuballer.mcendgame.util.extension.AttributeRollExtension.getFirstAsDouble
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomAttributes
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.getCustomItemType
 import de.fuballer.mcendgame.util.extension.ItemStackExtension.isUnmodifiable
@@ -123,11 +123,11 @@ object ItemUtil {
             .filter { it.type is VanillaAttributeType }
             .forEach {
                 val type = it.type as VanillaAttributeType
-                val roll = it.attributeRolls[0] as DoubleRoll // vanilla attributes always have one double roll
+                val roll = it.attributeRolls.getFirstAsDouble() // vanilla attributes always have one double roll
                 addAttribute(
                     itemMeta,
                     type.attribute,
-                    roll.getRoll(),
+                    roll,
                     it.type.scaleType,
                     slot
                 )

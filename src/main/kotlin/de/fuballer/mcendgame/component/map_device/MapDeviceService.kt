@@ -33,7 +33,12 @@ class MapDeviceService(
 ) : Listener, LifeCycleListener {
     override fun terminate() {
         mapDeviceRepo.findAll()
-            .forEach { closeDungeon(it) }
+            .forEach { entity ->
+                entity.portals.forEach { it.close() }
+                entity.portals.clear()
+
+                mapDeviceRepo.save(entity)
+            }
     }
 
     @EventHandler

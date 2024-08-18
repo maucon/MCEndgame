@@ -8,6 +8,6 @@ enum class TotemTier(
 ) {
     COMMON(1, NamedTextColor.WHITE),
     UNCOMMON(2, NamedTextColor.GREEN),
-    RARE(3, NamedTextColor.BLUE),
+    RARE(3, NamedTextColor.AQUA),
     LEGENDARY(4, NamedTextColor.GOLD)
 }

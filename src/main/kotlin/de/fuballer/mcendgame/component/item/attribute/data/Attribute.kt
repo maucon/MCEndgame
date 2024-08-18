@@ -32,7 +32,8 @@ data class RollableCustomAttribute(
 
 data class CustomAttribute(
     val type: AttributeType,
-    val attributeRolls: List<AttributeRoll<*>>
+    val attributeRolls: List<AttributeRoll<*>>,
+    val source: Any? = null
 ) {
     fun getLore() = type.lore(attributeRolls)
 }

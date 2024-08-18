@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.component.item.attribute.data
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 
-abstract class AttributeType(
+sealed class AttributeType(
     val lore: (List<AttributeRoll<*>>) -> String
 )
 
