@@ -48,6 +48,11 @@ class HealthReservationEffectService : Listener {
         event.cancel()
     }
 
+    private fun getFinalHealAmount(entity: LivingEntity, amount: Double): Double {
+        val unreservedHealth = getUnreservedHealth(entity)
+        return min(max(unreservedHealth - entity.health, 0.0), amount)
+    }
+
     private fun getUnreservedHealth(entity: LivingEntity): Double {
         val maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value
 
@@ -56,10 +61,5 @@ class HealthReservationEffectService : Listener {
         val unreservedHealthPercentage = 1 - healthReservationAttributes.sumOf { it.attributeRolls.getFirstAsDouble() }
 
         return maxHealth * unreservedHealthPercentage
-    }
-
-    private fun getFinalHealAmount(entity: LivingEntity, amount: Double): Double {
-        val unreservedHealth = getUnreservedHealth(entity)
-        return min(max(unreservedHealth - entity.health, 0.0), amount)
     }
 }
