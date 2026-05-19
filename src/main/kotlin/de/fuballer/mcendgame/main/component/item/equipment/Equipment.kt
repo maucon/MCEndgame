@@ -34,6 +34,7 @@ interface Equipment {
                 putAll(Bow.entries.associateBy { it.item })
                 putAll(Horn.entries.associateBy { it.item })
                 putAll(Shield.entries.associateBy { it.item })
+                putAll(Mace.entries.associateBy { it.item })
                 putAll(Miscellaneous.entries.associateBy { it.item })
             }
 

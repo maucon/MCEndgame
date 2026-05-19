@@ -32,6 +32,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment.forBothHands(Sword.NIGHTREAVER)),
         RandomOption(100, TaggedEquipment.forBothHands(Sword.RADIANT_DAWN)),
         RandomOption(100, TaggedEquipment.forBothHands(Axe.FATESPLITTER)),
+        //RandomOption(100, TaggedEquipment.forBothHands(Mace.GRAVEBREAKER)), drop from bonecrusher boss with aspect of TODO
 
         RandomOption(100, TaggedEquipment(Helmet.ICEBORNE, EquipmentSlot.HEAD)),
         RandomOption(100, TaggedEquipment(Helmet.EMBERCHANT, EquipmentSlot.HEAD)),
@@ -201,9 +202,9 @@ object EquipmentGenerationSettings {
     private val BOWS = listOf(
         SortableRandomOption(100, 0, Bow.BOW)
     )
-    private val SPECIAL_WEAPONS = listOf(
+    private val SPECIAL_WEAPONS: List<SortableRandomOption<out Equipment>> = listOf(
         SortableRandomOption(100, 0, Miscellaneous.TRIDENT),
-        SortableRandomOption(50, 0, Miscellaneous.MACE)
+        SortableRandomOption(50, 0, Mace.MACE)
     )
 
     const val OFFHAND_ITEM_PROBABILITY = 0.35
