@@ -72,9 +72,17 @@ class CustomItemTagProvider(
             .add(Items.SHIELD)
             .add(CustomToolItems.GRUDGEBEARER)
 
+        valueLookupBuilder(CustomTags.MACE)
+            .add(Items.MACE)
+            .add(CustomToolItems.GRAVEBREAKER)
+
+        valueLookupBuilder(ItemTags.MACE_ENCHANTABLE)
+            .forceAddTag(CustomTags.MACE)
+
         valueLookupBuilder(ItemTags.DURABILITY_ENCHANTABLE)
             .forceAddTag(CustomTags.BOW)
             .forceAddTag(CustomTags.SHIELD)
+            .forceAddTag(CustomTags.MACE)
 
         valueLookupBuilder(ItemTags.DYEABLE)
             .add(CustomArmorItems.SUEDE_HELMET)

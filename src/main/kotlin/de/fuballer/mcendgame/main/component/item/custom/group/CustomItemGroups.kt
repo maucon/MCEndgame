@@ -104,6 +104,7 @@ object CustomItemGroups {
             itemGroup.add(CustomMiscItems.MOLTEN_ROAR.defaultStack)
             itemGroup.add(CustomMiscItems.FRIGID_CRY.defaultStack)
             itemGroup.add(CustomToolItems.GRUDGEBEARER.defaultStack)
+            itemGroup.add(CustomToolItems.GRAVEBREAKER.defaultStack)
         }
         ItemGroupEvents.modifyEntriesEvent(ASPECTS_KEY).register { itemGroup ->
             itemGroup.add(AspectItems.ASPECT_OF_TYRANNY.defaultStack)
