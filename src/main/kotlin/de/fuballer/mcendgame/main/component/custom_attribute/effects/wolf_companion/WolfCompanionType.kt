@@ -36,15 +36,15 @@ enum class WolfCompanionType(
     ),
     INCITING(
         "Inciting", WolfVariants.SPOTTED, DyeColor.RED, 1.0,
-        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.STRENGTH, 1, 199, 15)),
+        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.STRENGTH, 0, 199, 15)),
     ),
     HASTING(
         "Hasting", WolfVariants.STRIPED, DyeColor.YELLOW, 0.9,
-        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.SPEED, 1, 199, 15)),
+        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.SPEED, 0, 199, 15)),
     ),
     REJUVENATING(
         "Rejuvenating", WolfVariants.WOODS, DyeColor.GREEN, 1.0,
-        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.REGENERATION, 1, 199, 15)),
+        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.REGENERATION, 0, 199, 15)),
     ),
     SCORCHING(
         "Scorching", WolfVariants.RUSTY, DyeColor.ORANGE, 0.95,

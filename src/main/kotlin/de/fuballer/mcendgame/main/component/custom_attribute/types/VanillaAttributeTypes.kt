@@ -84,6 +84,15 @@ object VanillaAttributeTypes {
         AttributeAffinities.BENEFICIAL,
         SignBasedKeywords.INCREASED
     )
+    val MORE_ATTACK_SPEED = VanillaAttributeType(
+        EntityAttributes.ATTACK_SPEED,
+        EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
+        "more_attack_speed",
+        AttributeFormats.PERCENT_ROLL,
+        AttributeFormats.PERCENT_BOUNDS,
+        AttributeAffinities.BENEFICIAL,
+        SignBasedKeywords.MORE
+    )
 
     // MISC
     val INCREASED_MOVEMENT_SPEED = VanillaAttributeType(

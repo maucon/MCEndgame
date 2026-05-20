@@ -1,7 +1,9 @@
 package de.fuballer.mcendgame.main.component.item.custom.tool.item
 
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
+import de.fuballer.mcendgame.main.component.custom_attribute.data.IntBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
+import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesMaceItem
 import net.minecraft.component.type.AttributeModifierSlot
@@ -30,7 +32,9 @@ class Gravebreaker(
     }
 
     override fun getCustomAttributes() = listOf(
-        RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 0, DoubleBounds(1.0, 3.0)),
+        RollableCustomAttribute(CustomAttributeTypes.MORE_ATTACK_DAMAGE_PER_ARMOR, 0, DoubleBounds(0.03, 0.04)),
+        RollableCustomAttribute(CustomAttributeTypes.GAIN_ENEMY_ARMOR_ON_KILL, 0, DoubleBounds(0.08, 0.12), IntBounds(10)),
+        RollableCustomAttribute(VanillaAttributeTypes.MORE_ATTACK_SPEED, 0, DoubleBounds(-0.25, -0.2)),
     )
 
     override fun getAttributeModifierSlot() = AttributeModifierSlot.MAINHAND

@@ -24,6 +24,13 @@ object CustomAttributeTypes {
     val PROJECTILE_DODGE = CustomAttributeType("projectile_dodge", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
     val DODGED_PROJECTILE_REFLECT = CustomAttributeType("dodged_projectile_reflect", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
     val MORE_DAMAGE_TAKEN = CustomAttributeType("more_damage_taken", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
+    val GAIN_ENEMY_ARMOR_ON_KILL =
+        CustomAttributeType(
+            "gain_enemy_armor_on_kill",
+            AttributeFormats.PERCENT_AND_INT_ROLL,
+            AttributeFormats.PERCENT_AND_INT_BOUNDS,
+            AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL
+        )
 
     // OFFENSE
     val ELEMENTAL_DAMAGE = CustomAttributeType("elemental_damage", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
@@ -42,7 +49,8 @@ object CustomAttributeTypes {
         CustomAttributeType("more_backstab_damage", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
     val CRITICAL_DAMAGE_MULTIPLIER =
         CustomAttributeType("critical_damage_multiplier", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
-
+    val MORE_ATTACK_DAMAGE_PER_ARMOR =
+        CustomAttributeType("more_attack_damage_per_armor", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
 
     // BOW
     val BOW_PULL_TICKS = CustomAttributeType("bow_pull_ticks", AttributeFormats.SIGNED_INT_ROLL, AttributeFormats.INT_BOUNDS, AttributeAffinities.DETRIMENTAL)

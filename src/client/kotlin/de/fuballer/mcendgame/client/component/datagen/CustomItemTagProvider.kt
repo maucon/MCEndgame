@@ -79,6 +79,9 @@ class CustomItemTagProvider(
         valueLookupBuilder(ItemTags.MACE_ENCHANTABLE)
             .forceAddTag(CustomTags.MACE)
 
+        valueLookupBuilder(ItemTags.WEAPON_ENCHANTABLE)
+            .forceAddTag(CustomTags.MACE)
+
         valueLookupBuilder(ItemTags.DURABILITY_ENCHANTABLE)
             .forceAddTag(CustomTags.BOW)
             .forceAddTag(CustomTags.SHIELD)
