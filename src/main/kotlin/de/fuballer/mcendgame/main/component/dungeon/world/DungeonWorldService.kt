@@ -63,6 +63,11 @@ class DungeonWorldService(
         return dungeonWorld
     }
 
+    fun createTraining(
+        opener: PlayerEntity,
+        dungeonExitPos: GlobalPos,
+    ) = create(1, opener, mapOf(), DungeonType.TRAINING, dungeonExitPos)
+
     private fun deleteEmptyWorlds() {
         log.info("Checking for empty worlds")
 

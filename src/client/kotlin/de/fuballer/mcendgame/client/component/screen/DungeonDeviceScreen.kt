@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.client.component.screen
 
 import com.mojang.logging.LogUtils
 import de.fuballer.mcendgame.main.component.block.blocks.dungeon_device.DungeonDeviceScreenHandler
+import de.fuballer.mcendgame.main.component.block.blocks.dungeon_device.networking.DungeonDeviceTrainingPayload
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.dungeon.enemy.EnemyLevelScalingSettings
 import de.fuballer.mcendgame.main.component.dungeon.level.DungeonLevelSettings
@@ -56,6 +57,8 @@ private val FILTER_BUTTON_TEXTURES = ButtonTextures(IdentifierUtil.default("dung
 private val FILTER_BUTTON_TOOLTIP_TEXT = Text.translatable("container.mcendgame.dungeon_device.filter_tooltip")
 private val KILLER_BUTTON_TEXTURES = ButtonTextures(IdentifierUtil.default("dungeon_device/killer"), IdentifierUtil.default("dungeon_device/killer_highlighted"))
 private val KILLER_BUTTON_TOOLTIP_TEXT = Text.translatable("container.mcendgame.dungeon_device.killer_tooltip")
+private val TRAINING_BUTTON_TEXTURES = ButtonTextures(IdentifierUtil.default("dungeon_device/killer"), IdentifierUtil.default("dungeon_device/killer_highlighted"))
+private val TRAINING_BUTTON_TOOLTIP_TEXT = Text.translatable("container.mcendgame.dungeon_device.training_tooltip")
 
 @Environment(EnvType.CLIENT)
 class DungeonDeviceScreen(
@@ -126,6 +129,16 @@ class DungeonDeviceScreen(
             }.apply {
                 setTooltip(Tooltip.of(KILLER_BUTTON_TOOLTIP_TEXT))
             }
+        )
+        addDrawableChild(
+            TexturedButtonWidget(
+                commandButtonsX,
+                commandButtonsY + 3 * (18 + COMMAND_BUTTONS_OFFSET),
+                20,
+                18,
+                TRAINING_BUTTON_TEXTURES,
+                ::onCreateTrainingDungeonButtonPress
+            ).apply { setTooltip(Tooltip.of(TRAINING_BUTTON_TOOLTIP_TEXT)) }
         )
 
         initLevelScalingDetails(playerDungeonLevel.level)
@@ -322,5 +335,12 @@ class DungeonDeviceScreen(
         ClientPlayNetworking.send(handler.payload)
         close()
         log.info("Dungeon opened by ${inventory.player.gameProfile.name}")
+    }
+
+    private fun onCreateTrainingDungeonButtonPress(button: ButtonWidget) {
+        val payload = DungeonDeviceTrainingPayload.from(handler.payload)
+        ClientPlayNetworking.send(payload)
+        close()
+        log.info("Training dungeon opened by ${inventory.player.gameProfile.name}")
     }
 }

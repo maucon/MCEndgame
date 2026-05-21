@@ -25,6 +25,15 @@ enum class DungeonType(
     val biome: RegistryKey<Biome>,
     val applyMisc: (List<LivingEntity>) -> Unit = {},
 ) {
+    TRAINING(
+        listOf(
+            RandomOption(1, DungeonLayoutType.TRAINING),
+        ),
+        listOf(),
+        listOf(),
+        bossCount = 0,
+        biome = BiomeKeys.PLAINS,
+    ),
     STRONGHOLD(
         listOf(
             RandomOption(1, DungeonLayoutType.STRONGHOLD),

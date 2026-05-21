@@ -14,7 +14,7 @@ class DungeonDeviceScreenHandler(
     syncId: Int,
     playerInventory: PlayerInventory,
     private val inventory: Inventory = SimpleInventory(DungeonDeviceSettings.INVENTORY_SIZE),
-    val payload: DungeonDevicePayload = DungeonDevicePayload.Companion.EMPTY
+    val payload: DungeonDevicePayload = DungeonDevicePayload.EMPTY
 ) : ScreenHandler(CustomScreenHandlerTypes.DUNGEON_DEVICE, syncId) {
     init {
         checkSize(inventory, DungeonDeviceSettings.INVENTORY_SIZE)

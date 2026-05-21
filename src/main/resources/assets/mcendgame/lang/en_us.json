@@ -160,6 +160,7 @@
   "container.mcendgame.dungeon_device.totems_tooltip": "Dungeon Totems",
   "container.mcendgame.dungeon_device.filter_tooltip": "Dungeon Filter",
   "container.mcendgame.dungeon_device.killer_tooltip": "Latest Killer",
+  "container.mcendgame.dungeon_device.training_tooltip": "Training",
   "container.mcendgame.dungeon_device.progress_tooltip": "Progress: %s/%s",
 
   "block.mcendgame.crystal_forge": "Crystal Forge",

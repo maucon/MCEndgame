@@ -37,6 +37,7 @@ class DungeonSeedService {
 
     @EventSubscriber(sync = true)
     fun on(event: DungeonGeneratedEvent) {
+        if (event.isTraining) return
         event.player.getDungeonSeed()?.hasBeenUsed = true
     }
 }

@@ -11,12 +11,14 @@ import de.fuballer.mcendgame.main.configuration.RuntimeConfig
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGeneratedEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.OpenDungeonButtonPressedEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.OpenTrainingDungeonButtonPressedEvent
 import de.fuballer.mcendgame.main.util.extension.BlockPosExtension.toVec3d
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.toCenter
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getDungeonBossSpawnPosition
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.LazyEntityReference
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.Vec3d
@@ -52,7 +54,16 @@ class DungeonPortalService(
 
     @EventSubscriber(sync = true)
     fun on(event: OpenDungeonButtonPressedEvent) {
-        val id = event.blockEntity.pos.hashCode()
+        clearOldPortalsOnOpenDungeon(event.blockEntity)
+    }
+
+    @EventSubscriber(sync = true)
+    fun on(event: OpenTrainingDungeonButtonPressedEvent) {
+        clearOldPortalsOnOpenDungeon(event.blockEntity)
+    }
+
+    fun clearOldPortalsOnOpenDungeon(blockEntity: BlockEntity) {
+        val id = blockEntity.pos.hashCode()
         val entity = dungeonPortalRepo.findById(id) ?: return
         clearPortalsAndDeleteEntity(entity)
     }
