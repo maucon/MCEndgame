@@ -106,6 +106,20 @@ object CustomAttributeTypes {
     val ARMOR_WHILE_WITHERED = CustomAttributeType("armor_while_withered", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
     val WITHER_DAMAGE_IMMUNITY = CustomAttributeType("wither_damage_immunity", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.EMPTY)
 
+    // COMPANION
+    val WOLF_COMPANION = CustomAttributeType("wolf_companion", AttributeFormats.STRING_ROLL, AttributeFormats.STRING_SHOW_ALL_OPTIONS, AttributeAffinities.BENEFICIAL)
+
+    val SPIDERLING_COMPANIONS = CustomAttributeType("spiderling_companions", AttributeFormats.INT_ROLL, AttributeFormats.INT_BOUNDS, AttributeAffinities.BENEFICIAL)
+
+    val COMPANION_ATTACK_DAMAGE = CustomAttributeType("companion_attack_damage", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val INCREASED_COMPANION_DAMAGE = CustomAttributeType(
+        "increased_companion_damage",
+        AttributeFormats.SIGNED_PERCENT_ROLL,
+        AttributeFormats.PERCENT_BOUNDS,
+        AttributeAffinities.BENEFICIAL,
+        SignBasedKeywords.INCREASED
+    )
+
     // MISC
     val INCREASED_DAMAGE_AGAINST_FULL_HEALTH = CustomAttributeType(
         "increased_damage_against_full_health", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL,
@@ -158,10 +172,6 @@ object CustomAttributeTypes {
 
     val FURY_ON_KILL = CustomAttributeType("fury_on_kill", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.EMPTY)
     val RESILIENCE_ON_DAMAGE_TAKEN = CustomAttributeType("resilience_on_damage_taken", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.EMPTY)
-
-    val WOLF_COMPANION = CustomAttributeType("wolf_companion", AttributeFormats.STRING_ROLL, AttributeFormats.STRING_SHOW_ALL_OPTIONS, AttributeAffinities.BENEFICIAL)
-
-    val SPIDERLING_COMPANIONS = CustomAttributeType("spiderling_companions", AttributeFormats.INT_ROLL, AttributeFormats.INT_BOUNDS, AttributeAffinities.BENEFICIAL)
 
     val GHOSTLY_APPEARANCE = CustomAttributeType("ghostly_appearance", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.EMPTY)
 

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.custom_attribute.effects.spiderlings
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.companion.spiderling_companions
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asIntRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
@@ -26,7 +26,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.TypeFilter
 
 @Injectable
-class SpiderlingsService {
+class SpiderlingCompanionsService {
     @Initializer
     fun onPlayerDisconnect() = ServerPlayConnectionEvents.DISCONNECT.register { handler, _ ->
         removeSpiderlings(handler.player)

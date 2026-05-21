@@ -24,7 +24,7 @@ object KineticAttackDamageCalculator : DamageCalculator {
     ): Float {
         val attacker = source.attacker as? LivingEntity ?: return originalDamage
 
-        val baseDamage = attacker.getAttributeBaseValue(EntityAttributes.ATTACK_DAMAGE)
+        val baseDamage = DamageUtil.getAttackDamageBaseValue(event, attacker)
         val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
         val damageMultiplier = attacker.weaponStack?.get(DataComponentTypes.KINETIC_WEAPON)?.damageMultiplier()!!
 

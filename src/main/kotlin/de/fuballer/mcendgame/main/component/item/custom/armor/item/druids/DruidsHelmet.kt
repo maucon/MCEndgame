@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.main.component.item.custom.armor.item.druids
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.StringBounds
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.wolf_companion.WolfCompanionType
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.companion.wolf_companion.WolfCompanionType
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
