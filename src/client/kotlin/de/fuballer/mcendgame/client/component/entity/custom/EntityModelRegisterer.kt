@@ -16,6 +16,8 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.scarred_one
 import de.fuballer.mcendgame.client.component.entity.custom.entities.spiderling.SpiderlingRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.swamp_golem.SwampGolemEntityModel
 import de.fuballer.mcendgame.client.component.entity.custom.entities.swamp_golem.SwampGolemRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.training_dummy.TrainingDummyEntityModel
+import de.fuballer.mcendgame.client.component.entity.custom.entities.training_dummy.TrainingDummyRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.webhook.WebhookRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.webshot.WebshotEntityModel
 import de.fuballer.mcendgame.client.component.entity.custom.entities.webshot.WebshotRenderer
@@ -25,6 +27,7 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
 import net.minecraft.client.render.entity.EntityRendererFactories
+import net.minecraft.client.render.entity.model.EntityModelLayers
 
 @Injectable
 object EntityModelRegisterer {
@@ -36,10 +39,7 @@ object EntityModelRegisterer {
         )
         EntityRendererFactories.register(CustomEntities.SWAMP_GOLEM, ::SwampGolemRenderer)
 
-        EntityModelLayerRegistry.registerModelLayer(
-            ArachneEntityModel.ARACHNE,
-            ArachneEntityModel::getTexturedModelData
-        )
+        EntityModelLayerRegistry.registerModelLayer(ArachneEntityModel.ARACHNE, ArachneEntityModel::getTexturedModelData)
         EntityRendererFactories.register(CustomEntities.ARACHNE, ::ArachneRenderer)
 
         EntityModelLayerRegistry.registerModelLayer(
@@ -51,6 +51,9 @@ object EntityModelRegisterer {
         EntityRendererFactories.register(CustomEntities.WEBHOOK, ::WebhookRenderer)
 
         EntityRendererFactories.register(CustomEntities.SPIDERLING, ::SpiderlingRenderer)
+
+        EntityModelLayerRegistry.registerModelLayer(TrainingDummyEntityModel.TRAINING_DUMMY, TrainingDummyEntityModel::getTexturedModelData)
+        EntityRendererFactories.register(CustomEntities.TRAINING_DUMMY) { context -> TrainingDummyRenderer(context, EntityModelLayers.ARMOR_STAND_EQUIPMENT) }
 
         EntityRendererFactories.register(CustomEntities.BONECRUSHER) { state -> BonecrusherRenderer<BonecrusherRenderState>(state) }
         EntityRendererFactories.register(CustomEntities.ELF_DUELIST) { state -> ElfDuelistRenderer<ElfDuelistRenderState>(state) }
