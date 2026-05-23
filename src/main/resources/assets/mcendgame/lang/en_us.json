@@ -342,5 +342,11 @@
 
   "error.mcendgame.invalid_totem_tier": "Maximum tier of this totem is %s!",
 
-  "death.attack.elemental": "%s fell to the elemental power of %s"
+  "death.attack.elemental": "%s fell to the elemental power of %s",
+
+  "training_dummy.last_damage" : "Last %s",
+  "training_dummy.highest_damage" : "Highest %s",
+  "training_dummy.damage_sum" : "Sum %s",
+  "training_dummy.damage_per_second" : "Dps %s",
+  "training_dummy.damage_duration" : "Time %ss"
 }
