@@ -57,7 +57,7 @@ private val FILTER_BUTTON_TEXTURES = ButtonTextures(IdentifierUtil.default("dung
 private val FILTER_BUTTON_TOOLTIP_TEXT = Text.translatable("container.mcendgame.dungeon_device.filter_tooltip")
 private val KILLER_BUTTON_TEXTURES = ButtonTextures(IdentifierUtil.default("dungeon_device/killer"), IdentifierUtil.default("dungeon_device/killer_highlighted"))
 private val KILLER_BUTTON_TOOLTIP_TEXT = Text.translatable("container.mcendgame.dungeon_device.killer_tooltip")
-private val TRAINING_BUTTON_TEXTURES = ButtonTextures(IdentifierUtil.default("dungeon_device/killer"), IdentifierUtil.default("dungeon_device/killer_highlighted"))
+private val TRAINING_BUTTON_TEXTURES = ButtonTextures(IdentifierUtil.default("dungeon_device/training"), IdentifierUtil.default("dungeon_device/training_highlighted"))
 private val TRAINING_BUTTON_TOOLTIP_TEXT = Text.translatable("container.mcendgame.dungeon_device.training_tooltip")
 
 @Environment(EnvType.CLIENT)
