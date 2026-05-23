@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.dungeon.generation
 
+import de.fuballer.mcendgame.main.component.dungeon.enemy.training.TrainingDummyGenerationService
 import de.fuballer.mcendgame.main.component.dungeon.generation.builder.DungeonBuilderService
 import de.fuballer.mcendgame.main.component.dungeon.generation.layout.DungeonLayoutType
 import de.fuballer.mcendgame.main.component.dungeon.world.DungeonWorldService
@@ -17,6 +18,7 @@ import kotlin.random.Random
 class TrainingDungeonGenerationService(
     private val dungeonWorldService: DungeonWorldService,
     private val dungeonBuilderService: DungeonBuilderService,
+    private val trainingDummyGenerationService: TrainingDummyGenerationService,
 ) {
     @EventSubscriber(sync = true)
     fun on(event: OpenTrainingDungeonButtonPressedEvent) {
@@ -35,8 +37,7 @@ class TrainingDungeonGenerationService(
             val dungeonWorld = dungeonWorldService.createTraining(player, dungeonDeviceGlobalPos)
 
             dungeonBuilderService.build(dungeonWorld, layout.rooms)
-
-            //enemyGenerationService.generate(dungeonWorld, dungeonLevel, enemyTypes, applyMisc, layout.enemySpawnPos)
+            trainingDummyGenerationService.generate(dungeonWorld, layout.bossSpawnPos, layout.spawnPos) // using same marker as boss for now
 
             val dungeonGeneratedEvent = DungeonGeneratedEvent(player, originWorld, dungeonWorld, layout.spawnPos, dungeonDevicePos, isTraining = true)
             EventGateway.publish(dungeonGeneratedEvent)

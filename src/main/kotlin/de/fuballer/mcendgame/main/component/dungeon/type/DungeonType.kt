@@ -25,15 +25,6 @@ enum class DungeonType(
     val biome: RegistryKey<Biome>,
     val applyMisc: (List<LivingEntity>) -> Unit = {},
 ) {
-    TRAINING(
-        listOf(
-            RandomOption(1, DungeonLayoutType.TRAINING),
-        ),
-        listOf(),
-        listOf(),
-        bossCount = 0,
-        biome = BiomeKeys.PLAINS,
-    ),
     STRONGHOLD(
         listOf(
             RandomOption(1, DungeonLayoutType.STRONGHOLD),
@@ -79,6 +70,15 @@ enum class DungeonType(
         bossCount = 3,
         biome = BiomeKeys.NETHER_WASTES,
         { enemies -> enemies.forEach { it.addStatusEffect(PotionEffect.FIRE_RESISTANCE.getEffectInstance(false)) } },
+    ),
+    TRAINING(
+        listOf(
+            RandomOption(1, DungeonLayoutType.TRAINING),
+        ),
+        listOf(),
+        listOf(),
+        bossCount = 0,
+        biome = BiomeKeys.PLAINS,
     );
 
     fun roll(random: Random): RolledDungeonType =

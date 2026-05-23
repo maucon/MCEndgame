@@ -16,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
 class TrainingDummyEntity(
@@ -79,6 +80,7 @@ class TrainingDummyEntity(
         if (!dataTracker.get(DAMAGE_ACTIVE)) {
             dataTracker.set(DAMAGE_ACTIVE, true)
             damageStartAge = age
+            dataTracker.set(HIGHEST_DAMAGE, 0f)
             dataTracker.set(DAMAGE_SUM, 0f)
             dataTracker.set(DAMAGE_DURATION, 0)
             dataTracker.set(DAMAGE_PER_SECOND, 0f)
@@ -97,11 +99,13 @@ class TrainingDummyEntity(
 
     override fun isPushable() = false
 
-    override fun pushAway(entity: Entity) {
-    }
+    override fun pushAway(entity: Entity) {}
 
-    override fun takeKnockback(strength: Double, x: Double, z: Double) {
-    }
+    override fun takeKnockback(strength: Double, x: Double, z: Double) {}
+
+    override fun setVelocity(velocity: Vec3d) {}
+
+    override fun isPushedByFluids() = false
 
     override fun interact(player: PlayerEntity, hand: Hand): ActionResult {
         if (hand != Hand.MAIN_HAND) return super.interact(player, hand)

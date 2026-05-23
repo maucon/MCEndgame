@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.main.component.dungeon.seed
 
 import de.fuballer.mcendgame.main.component.dungeon.completion.DungeonCompletedEvent
-import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGeneratedEvent
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.clearDungeonSeed
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getDungeonSeed
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.setDungeonSeed
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getOpener
+import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.entity.player.PlayerEntity
@@ -19,7 +19,7 @@ class DungeonSeedService {
         if (playerSeed != null) return playerSeed
 
         val seed = Random.nextLong()
-        val type = DungeonType.entries[Random.nextInt(DungeonType.entries.size)]
+        val type = RandomUtil.pickOne(DungeonSeedSettings.DUNGEON_TYPES).option
 
         val newSeed = PlayerDungeonSeed(seed, type)
         player.setDungeonSeed(newSeed)

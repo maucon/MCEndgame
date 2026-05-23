@@ -12,6 +12,6 @@ object TrainingRoomTypes {
     @EventSubscriber(sync = true)
     fun on(event: ServerStartedEvent) {
         val templateManager = event.server.structureTemplateManager
-        ROOM = RoomTypeLoader.load(templateManager, "dungeon/stronghold/start")
+        ROOM = RoomTypeLoader.load(templateManager, "dungeon/training/training")
     }
 }
