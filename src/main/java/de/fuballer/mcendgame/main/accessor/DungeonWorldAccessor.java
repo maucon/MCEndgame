@@ -8,6 +8,10 @@ import net.minecraft.util.math.GlobalPos;
 import java.util.Map;
 
 public interface DungeonWorldAccessor {
+    boolean mcendgame$isTraining();
+
+    void mcendgame$setTraining();
+
     boolean mcendgame$isCompleted();
 
     void mcendgame$setCompleted(boolean completed);

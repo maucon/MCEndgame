@@ -18,6 +18,8 @@ import java.util.Map;
 @Mixin(ServerWorld.class)
 public class DungeonWorldMixin implements DungeonWorldAccessor {
     @Unique
+    private boolean isTraining = false;
+    @Unique
     private boolean isCompleted = false;
     @Unique
     private int level = 0;
@@ -35,6 +37,16 @@ public class DungeonWorldMixin implements DungeonWorldAccessor {
     private DungeonType dungeonType = DungeonType.STRONGHOLD;
     @Unique
     private GlobalPos dungeonExitPos = new GlobalPos(World.OVERWORLD, new BlockPos(0, 0, 0));
+
+    @Override
+    public boolean mcendgame$isTraining() {
+        return isTraining;
+    }
+
+    @Override
+    public void mcendgame$setTraining() {
+        isTraining = true;
+    }
 
     @Override
     public boolean mcendgame$isCompleted() {
