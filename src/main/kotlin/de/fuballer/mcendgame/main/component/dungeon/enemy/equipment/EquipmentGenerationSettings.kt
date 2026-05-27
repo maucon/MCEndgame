@@ -60,6 +60,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment(Boots.WITHER_ROSE_BOOTS, EquipmentSlot.FEET)),
         RandomOption(100, TaggedEquipment(Boots.SUEDE_BOOTS, EquipmentSlot.FEET)),
         RandomOption(100, TaggedEquipment(Boots.MOONSHADOW, EquipmentSlot.FEET)),
+        //RandomOption(100, TaggedEquipment(Boots.EMBERREIGN, EquipmentSlot.FEET)), drop from beakburn boss with aspect of TODO
         //RandomOption(100, TaggedEquipment(Boots.GEISTERGALOSCHEN, EquipmentSlot.FEET)), drops from final boss with aspect of ghosts
 
         RandomOption(100, TaggedEquipment.forRangedWeapon(Bow.WINDSTRING)),

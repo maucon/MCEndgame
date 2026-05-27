@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.Dru
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsHelmetModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsLeggingsModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.emberchant.EmberchantModel
+import de.fuballer.mcendgame.client.component.item.custom.armor.model.emberreign.EmberreignModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.geistergaloschen.GeistergaloschenModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.gilded_tempest.GildedTempestModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.iceborne.IceborneModel
@@ -164,6 +165,10 @@ class CustomHumanoidArmorFeatureRenderer<S : BipedEntityRenderState, M : BipedEn
             { BroodmotherModel(ctx.getPart(BroodmotherModel.MODEL_LAYER)) },
             IdentifierUtil.default("textures/entity/equipment/custom_humanoid/broodmother.png"),
             emissiveTexture = IdentifierUtil.default("textures/entity/equipment/custom_humanoid/broodmother_emissive.png"),
+        )
+        texturedArmorModels[CustomArmorItems.EMBERREIGN] = TexturedArmorModel(
+            { EmberreignModel(ctx.getPart(EmberreignModel.MODEL_LAYER)) },
+            IdentifierUtil.default("textures/entity/equipment/custom_humanoid/emberreign.png"),
         )
     }
 

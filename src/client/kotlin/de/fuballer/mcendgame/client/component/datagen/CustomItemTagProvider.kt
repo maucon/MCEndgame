@@ -58,6 +58,7 @@ class CustomItemTagProvider(
             .add(CustomArmorItems.MOONSHADOW)
             .add(CustomArmorItems.SUEDE_BOOTS)
             .add(CustomArmorItems.WITHER_ROSE_BOOTS)
+            .add(CustomArmorItems.EMBERREIGN)
 
         valueLookupBuilder(CustomTags.BOW)
             .add(Items.BOW)

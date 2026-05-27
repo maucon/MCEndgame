@@ -9,6 +9,7 @@ import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.Druids
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsHelmet
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsLeggings
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.emberchant.Emberchant
+import de.fuballer.mcendgame.main.component.item.custom.armor.item.emberreign.Emberreign
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.geistergaloschen.Geistergaloschen
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.gilded_tempest.GildedTempest
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.iceborne.Iceborne
@@ -55,4 +56,5 @@ object CustomArmorItems {
     val GILDED_TEMPEST = UniqueItemRegistry.registerArmorItem(::GildedTempest, GildedTempestArmorMaterial, EquipmentType.LEGGINGS, "gilded_tempest")
     val WINDSTRIDER = UniqueItemRegistry.registerArmorItem(::Windstrider, WindstriderArmorMaterial, EquipmentType.LEGGINGS, "windstrider")
     val BROODMOTHER = UniqueItemRegistry.registerArmorItem(::Broodmother, BroodmotherArmorMaterial, EquipmentType.CHESTPLATE, "broodmother")
+    val EMBERREIGN = UniqueItemRegistry.registerArmorItem(::Emberreign, EmberreignArmorMaterial, EquipmentType.BOOTS, "emberreign")
 }
