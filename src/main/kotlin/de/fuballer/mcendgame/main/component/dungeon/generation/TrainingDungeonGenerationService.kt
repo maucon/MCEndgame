@@ -31,7 +31,7 @@ class TrainingDungeonGenerationService(
 
         val mapType = DungeonLayoutType.TRAINING
         val layoutGenerator = mapType.layoutGeneratorProvider()
-        val layout = layoutGenerator.generateDungeon(random, 1, 1)
+        val layout = layoutGenerator.generateDungeon(random, 1, 1, 0)
 
         RuntimeConfig.SERVER.execute {
             val dungeonWorld = dungeonWorldService.createTraining(player, dungeonDeviceGlobalPos)

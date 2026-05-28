@@ -32,7 +32,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment.forBothHands(Sword.NIGHTREAVER)),
         RandomOption(100, TaggedEquipment.forBothHands(Sword.RADIANT_DAWN)),
         RandomOption(100, TaggedEquipment.forBothHands(Axe.FATESPLITTER)),
-        //RandomOption(100, TaggedEquipment.forBothHands(Mace.GRAVEBREAKER)), drop from bonecrusher boss with aspect of TODO
+        //RandomOption(100, TaggedEquipment.forBothHands(Mace.GRAVEBREAKER)), drops from bonecrusher boss
 
         RandomOption(100, TaggedEquipment(Helmet.ICEBORNE, EquipmentSlot.HEAD)),
         RandomOption(100, TaggedEquipment(Helmet.EMBERCHANT, EquipmentSlot.HEAD)),
@@ -46,7 +46,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment(Chestplate.WITHER_ROSE_CHESTPLATE, EquipmentSlot.CHEST)),
         RandomOption(100, TaggedEquipment(Chestplate.SUEDE_CHESTPLATE, EquipmentSlot.CHEST)),
         RandomOption(100, TaggedEquipment(Chestplate.VOIDWEAVER, EquipmentSlot.CHEST)),
-        //RandomOption(100, TaggedEquipment(Chestplate.BROODMOTHER, EquipmentSlot.CHEST)), drop from arachne boss with aspect of TODO
+        //RandomOption(100, TaggedEquipment(Chestplate.BROODMOTHER, EquipmentSlot.CHEST)), drops from arachne boss
 
         RandomOption(100, TaggedEquipment(Leggings.LAMIAS_GIFT, EquipmentSlot.LEGS)),
         RandomOption(100, TaggedEquipment(Leggings.DRUIDS_LEGGINGS, EquipmentSlot.LEGS)),
@@ -54,13 +54,13 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment(Leggings.SUEDE_LEGGINGS, EquipmentSlot.LEGS)),
         RandomOption(100, TaggedEquipment(Leggings.STONEWARD, EquipmentSlot.LEGS)),
         RandomOption(100, TaggedEquipment(Leggings.GILDED_TEMPEST, EquipmentSlot.LEGS)),
-        //RandomOption(100, TaggedEquipment(Leggings.WINDSTRIDER, EquipmentSlot.LEGS)), drop from elf duelist boss with aspect of TODO
+        //RandomOption(100, TaggedEquipment(Leggings.WINDSTRIDER, EquipmentSlot.LEGS)), drops from elf duelist boss
 
         RandomOption(100, TaggedEquipment(Boots.DRUIDS_BOOTS, EquipmentSlot.FEET)),
         RandomOption(100, TaggedEquipment(Boots.WITHER_ROSE_BOOTS, EquipmentSlot.FEET)),
         RandomOption(100, TaggedEquipment(Boots.SUEDE_BOOTS, EquipmentSlot.FEET)),
         RandomOption(100, TaggedEquipment(Boots.MOONSHADOW, EquipmentSlot.FEET)),
-        //RandomOption(100, TaggedEquipment(Boots.EMBERREIGN, EquipmentSlot.FEET)), drop from beakburn boss with aspect of TODO
+        //RandomOption(100, TaggedEquipment(Boots.EMBERREIGN, EquipmentSlot.FEET)), drops from beakburn boss
         //RandomOption(100, TaggedEquipment(Boots.GEISTERGALOSCHEN, EquipmentSlot.FEET)), drops from final boss with aspect of ghosts
 
         RandomOption(100, TaggedEquipment.forRangedWeapon(Bow.WINDSTRING)),

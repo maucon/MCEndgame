@@ -60,7 +60,7 @@ class LootService {
     }
 
     @EventSubscriber(sync = true)
-    fun on(event: DungeonBossDeathEvent) {
+    fun dropBossCrystals(event: DungeonBossDeathEvent) {
         val serverWorld = event.world as? ServerWorld ?: return
 
         val level = serverWorld.getDungeonLevel()
@@ -75,6 +75,22 @@ class LootService {
         val itemStacks = crystalItems.map { it.defaultStack }
 
         RuntimeConfig.SERVER.execute { itemStacks.forEach { bossEntity.dropStack(serverWorld, it) } }
+    }
+
+    @EventSubscriber(sync = true)
+    fun dropBossUniques(event: DungeonBossDeathEvent) {
+        val serverWorld = event.world as? ServerWorld ?: return
+        val boss = event.bossEntity
+
+        val type = event.bossEntity.type
+        val possibleUniques = LootSettings.BOSS_UNIQUES[type] ?: return
+        possibleUniques.forEach {
+            if (Random.nextDouble() > it.value) return@forEach
+            val item = it.key
+            val itemStack = if (item is UniqueAttributesItemInterface) item.getRolledStack(item) else item.defaultStack
+
+            boss.dropStack(serverWorld, itemStack)
+        }
     }
 
     private fun getMagicFindFactor(entity: LivingEntity?): Double {

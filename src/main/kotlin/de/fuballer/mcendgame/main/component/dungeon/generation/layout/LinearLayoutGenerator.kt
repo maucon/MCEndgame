@@ -12,7 +12,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-private fun calculateComplexityLimit() = 125
 private fun calculateBranchComplexityLimit() = 5
 private fun calculateBranchingPoints(count: Int): List<Double> {
     val branchOffset = 1.0 / count
@@ -39,11 +38,12 @@ class LinearLayoutGenerator(
         random: Random,
         dungeonLevel: Int,
         bossCount: Int,
+        enemyCount: Int,
     ): Layout {
         this.random = random
 
         branchingPoints = calculateBranchingPoints(bossCount)
-        complexityLimit = calculateComplexityLimit()
+        complexityLimit = enemyCount
         branchComplexityLimit = calculateBranchComplexityLimit()
 
         val startRoom = PlaceableRoom(startRoomType, Vec3i.ZERO, 0)

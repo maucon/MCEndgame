@@ -1,7 +1,10 @@
 package de.fuballer.mcendgame.main.component.dungeon.loot
 
+import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
+import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
+import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItems
 import de.fuballer.mcendgame.main.util.random.LevelRestrictedRandomOption
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import kotlin.random.Random
@@ -40,5 +43,21 @@ object LootSettings {
         LevelRestrictedRandomOption(5, tier = 0, requiredLevel = 4, CrystalItems.REFORGE_CRYSTAL),
         LevelRestrictedRandomOption(3, tier = 0, requiredLevel = 6, CrystalItems.CORRUPTION_CRYSTAL),
         LevelRestrictedRandomOption(2, tier = 0, requiredLevel = 8, CrystalItems.SACRIFICIAL_CRYSTAL),
+    )
+
+    // unaffected by increased loot
+    val BOSS_UNIQUES = mapOf(
+        CustomEntities.BEAKBURN to mapOf(
+            CustomArmorItems.EMBERREIGN to 0.05,
+        ),
+        CustomEntities.BONECRUSHER to mapOf(
+            CustomToolItems.GRAVEBREAKER to 0.05,
+        ),
+        CustomEntities.ELF_DUELIST to mapOf(
+            CustomArmorItems.WINDSTRIDER to 0.05,
+        ),
+        CustomEntities.ARACHNE to mapOf(
+            CustomArmorItems.BROODMOTHER to 0.05,
+        ),
     )
 }

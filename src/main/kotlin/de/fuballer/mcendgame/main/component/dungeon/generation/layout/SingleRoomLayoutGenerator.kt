@@ -10,7 +10,12 @@ import kotlin.random.Random
 class SingleRoomLayoutGenerator(
     private val roomType: RoomType,
 ) : LayoutGenerator {
-    override fun generateDungeon(random: Random, dungeonLevel: Int, bossCount: Int): Layout {
+    override fun generateDungeon(
+        random: Random,
+        dungeonLevel: Int,
+        bossCount: Int,
+        enemyCount: Int,
+    ): Layout {
         val room = PlaceableRoom(roomType, Vec3i.ZERO, 0)
         val startPos = requireNotNull(roomType.markerPoints.startPos) { "Start room '${roomType.path}' is missing markerPoints.startPos" }
         val spawnPos = SpawnPosition(startPos, -90.0)
