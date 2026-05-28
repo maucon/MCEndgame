@@ -263,6 +263,14 @@ object CustomAttributeTypes {
         SignBasedKeywords.MORE,
     )
 
+    val BURN_ENEMY_ON_WALK =
+        CustomAttributeType(
+            "burn_enemy_on_walk",
+            AttributeFormats.DOUBLE_AND_INT_AND_PERCENT_ROLL,
+            AttributeFormats.DOUBLE_AND_INT_AND_PERCENT_BOUNDS,
+            AttributeAffinities.TRIPLE_BENEFICIAL,
+        )
+
     val SLOWNESS_ON_HIT = CustomAttributeType("slowness_on_hit", AttributeFormats.TWO_INT_ROLL, AttributeFormats.TWO_INT_BOUNDS, AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL)
     val STRENGTH_ON_KILL = CustomAttributeType("strength_on_kill", AttributeFormats.TWO_INT_ROLL, AttributeFormats.TWO_INT_BOUNDS, AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL)
     val SPEED_ON_KILL = CustomAttributeType("speed_on_kill", AttributeFormats.TWO_INT_ROLL, AttributeFormats.TWO_INT_BOUNDS, AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL)

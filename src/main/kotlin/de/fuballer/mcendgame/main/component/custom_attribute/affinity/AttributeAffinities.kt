@@ -7,4 +7,5 @@ object AttributeAffinities {
     val NEUTRAL = listOf(SimpleAttributeAffinity(Affinity.NEUTRAL))
     val BENEFICIAL_CONDITIONAL_BENEFICIAL = listOf(SimpleAttributeAffinity(Affinity.BENEFICIAL), ConditionalAttributeAffinity(Affinity.BENEFICIAL, 0))
     val BENEFICIAL_CONDITIONAL_DETRIMENTAL = listOf(SimpleAttributeAffinity(Affinity.BENEFICIAL), ConditionalAttributeAffinity(Affinity.DETRIMENTAL, 0))
+    val TRIPLE_BENEFICIAL = listOf(SimpleAttributeAffinity(Affinity.BENEFICIAL), SimpleAttributeAffinity(Affinity.BENEFICIAL), SimpleAttributeAffinity(Affinity.BENEFICIAL))
 }

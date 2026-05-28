@@ -278,6 +278,7 @@
   "attribute.mcendgame.increased_movement_speed_on_kill": "%s%% %s Movement Speed for %ss on Kill",
   "attribute.mcendgame.stealth": " Stealth",
   "attribute.mcendgame.more_damage_against_isolated": " %s%% %s Damage against Isolated Targets",
+  "attribute.mcendgame.burn_enemy_on_walk": " Every %s Blocks walked burn a random Enemy within %s Blocks for %s%% Elemental Damage",
   "attribute.mcendgame.stacking_more_attack_speed_on_melee_hit": " Gain Stacking %s%% %s Attack Speed on Melee Hit for %ss",
   "attribute.mcendgame.heal_nearby_allies_on_melee_hit": " Heal Allies within %s Blocks for %s Health on Melee Hit",
   "attribute.mcendgame.increased_healing_per_elemental_damage": "%s%% %s Healing per Elemental Damage",
