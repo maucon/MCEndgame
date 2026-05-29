@@ -27,7 +27,7 @@ class DungeonLeaveService {
         val oldWorld = oldPlayer.entityWorld
         if (!oldWorld.isDungeonWorld()) return@register
 
-        newPlayer.setDungeonExitLocation(oldPlayer.getDungeonExitLocation())
+        oldPlayer.getDungeonExitLocation()?.let { newPlayer.setDungeonExitLocation(it) }
         teleportToDungeonExitPos(newPlayer, oldWorld)
     }
 
