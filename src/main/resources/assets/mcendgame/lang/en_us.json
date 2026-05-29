@@ -346,9 +346,9 @@
 
   "death.attack.elemental": "%s fell to the elemental power of %s",
 
-  "training_dummy.last_damage" : "Last %s",
-  "training_dummy.highest_damage" : "Highest %s",
-  "training_dummy.damage_sum" : "Sum %s",
-  "training_dummy.damage_per_second" : "Dps %s",
-  "training_dummy.damage_duration" : "Time %ss"
+  "training_dummy.damage_per_second" : "DPS ",
+  "training_dummy.last_damage" : "Last ",
+  "training_dummy.highest_damage" : "Best ",
+  "training_dummy.damage_sum" : "Total ",
+  "training_dummy.damage_duration" : "Time "
 }

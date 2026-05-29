@@ -11,6 +11,7 @@ import net.minecraft.client.render.entity.model.EquipmentModelData
 import net.minecraft.client.render.state.CameraRenderState
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.Text
+import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Vec3d
 import java.text.DecimalFormat
@@ -76,11 +77,40 @@ class TrainingDummyRenderer(
 
         val key = "training_dummy."
         val texts = listOf(
-            Text.translatable("${key}last_damage", FORMAT.format(state.lastDamage)),
-            Text.translatable("${key}highest_damage", FORMAT.format(state.highestDamage)),
-            Text.translatable("${key}damage_sum", FORMAT.format(state.damageSum)),
-            Text.translatable("${key}damage_per_second", FORMAT.format(state.damagePerSecond)),
-            Text.translatable("${key}damage_duration", FORMAT.format(state.damageDuration / 20f)),
+            Text.empty()
+                .append(Text.translatable("${key}damage_per_second").formatted(Formatting.DARK_RED, Formatting.BOLD))
+                .append(
+                    Text.literal(FORMAT.format(state.damagePerSecond))
+                        .formatted(Formatting.RED, Formatting.BOLD)
+                ),
+
+            Text.empty()
+                .append(Text.translatable("${key}last_damage").formatted(Formatting.GRAY))
+                .append(
+                    Text.literal(FORMAT.format(state.lastDamage))
+                        .formatted(Formatting.WHITE)
+                ),
+
+            Text.empty()
+                .append(Text.translatable("${key}highest_damage").formatted(Formatting.GRAY))
+                .append(
+                    Text.literal(FORMAT.format(state.highestDamage))
+                        .formatted(Formatting.GOLD)
+                ),
+
+            Text.empty()
+                .append(Text.translatable("${key}damage_sum").formatted(Formatting.GRAY))
+                .append(
+                    Text.literal(FORMAT.format(state.damageSum))
+                        .formatted(Formatting.WHITE)
+                ),
+
+            Text.empty()
+                .append(Text.translatable("${key}damage_duration").formatted(Formatting.GRAY))
+                .append(
+                    Text.literal("${FORMAT.format(state.damageDuration / 20f)}s")
+                        .formatted(Formatting.AQUA)
+                ),
         )
 
         texts.forEachIndexed { index, text ->
