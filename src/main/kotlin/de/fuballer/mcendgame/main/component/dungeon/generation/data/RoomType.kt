@@ -8,7 +8,8 @@ data class RoomType(
     val template: StructureTemplate,
     val markerPoints: RoomMarkerPoints,
     val size: Vec3i = template.size,
-    val extensions: List<RoomTemplateExtension> = listOf() // only extend in positive dimensions
+    val extensions: List<RoomTemplateExtension> = listOf(), // only extend in positive dimensions
+    val mirrored: Boolean = false
 ) {
     fun isLinear() = markerPoints.doors.size == 2
     fun getComplexity() = markerPoints.monsterPos.size + 1

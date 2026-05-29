@@ -10,6 +10,8 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.property.Properties
 import net.minecraft.structure.StructurePlacementData
 import net.minecraft.structure.StructureTemplate
+import net.minecraft.util.BlockMirror
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3i
 
 @Injectable
@@ -20,12 +22,12 @@ class DungeonBuilderService {
     ) {
         for (room in rooms) {
             val rotDeg = room.rotation90 * 90.0
-            placeTemplate(world, room.type.template, room.position, rotDeg)
+            placeTemplate(world, room.type.template, room.position, rotDeg, room.type.mirrored)
 
             for (extension in room.type.extensions) {
                 val rotatedOffset = extension.offset.rotateY90(room.rotation90)
                 val position = rotatedOffset.add(room.position)
-                placeTemplate(world, extension.template, position, rotDeg)
+                placeTemplate(world, extension.template, position, rotDeg, room.type.mirrored)
             }
 
             placeBlocks(world, room.position, room.rotation90, room.extraBlocks)
@@ -36,13 +38,24 @@ class DungeonBuilderService {
         world: ServerWorld,
         template: StructureTemplate,
         position: Vec3i,
-        rotation: Double // in degree
+        rotation: Double, // in degree
+        mirrored: Boolean
     ) {
+        val blockRotation = RotationUtil.getAsRotation(rotation)
         val structurePlacementData = StructurePlacementData()
             .addProcessor(IgnoreMarkerStructureProcessor())
             .setRotation(RotationUtil.getAsRotation(rotation))
+            .setMirror(if (mirrored) BlockMirror.FRONT_BACK else BlockMirror.NONE)
+
+        val offset = if (mirrored) {
+            BlockPos(template.size.x - 1, 0, 0).rotate(blockRotation)
+        } else {
+            BlockPos.ORIGIN
+        }
 
         val pos = position.toBlockPos()
+            .add(offset)
+
         template.place(world, pos, pos, structurePlacementData, world.random, 2)
     }
 

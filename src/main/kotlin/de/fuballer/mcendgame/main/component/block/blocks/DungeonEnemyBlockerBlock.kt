@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.EntityShapeContext
 import net.minecraft.block.ShapeContext
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.mob.MobEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.function.BooleanBiFunction
 import net.minecraft.util.math.BlockPos
@@ -33,7 +34,7 @@ class DungeonEnemyBlockerBlock(
         val entityContext = context as? EntityShapeContext ?: return VoxelShapes.empty()
         val entity = entityContext.entity as? LivingEntity ?: return VoxelShapes.empty()
 
-        if (!entity.isDungeonEnemy() || entity.isDungeonBoss()) return VoxelShapes.empty()
+        if (!entity.isDungeonEnemy() || (entity.isDungeonBoss() && (entity as? MobEntity)?.isAiDisabled != true)) return VoxelShapes.empty()
         if (entity.entityWorld.time - entity.getLastDamageTime() <= DAMAGE_TAKEN_TIME) return VoxelShapes.empty()
 
         val blockShape = VoxelShapes.fullCube()

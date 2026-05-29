@@ -25,6 +25,7 @@ import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.entry.RegistryEntry
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerType
+import net.minecraft.sound.SoundEvent
 import net.minecraft.util.Rarity
 import net.minecraft.util.math.BlockPos
 
@@ -77,4 +78,14 @@ object RegistryUtil {
 
     fun registerTotemItem(factory: (Item.Settings) -> Item, name: String, rarity: Rarity = Rarity.UNCOMMON) =
         registerItem(factory, Item.Settings().rarity(rarity).maxCount(1), name) as TotemItem
+
+    fun registerSoundEvent(name: String): SoundEvent {
+        val id = IdentifierUtil.default(name)
+        return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id))
+    }
+
+    fun registerSoundEventReference(name: String): RegistryEntry.Reference<SoundEvent> {
+        val id = IdentifierUtil.default(name)
+        return Registry.registerReference(Registries.SOUND_EVENT, id, SoundEvent.of(id))
+    }
 }

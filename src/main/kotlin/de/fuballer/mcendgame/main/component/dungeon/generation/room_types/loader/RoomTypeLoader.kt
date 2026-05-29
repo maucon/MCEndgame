@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.dungeon.generation.room_types
+package de.fuballer.mcendgame.main.component.dungeon.generation.room_types.loader
 
 import de.fuballer.mcendgame.main.component.dungeon.generation.DungeonGenerationSettings
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.*
@@ -26,10 +26,9 @@ object RoomTypeLoader {
             return RoomType(path, template, markerPoints)
         }
 
-        val extensions =
-            extensionPaths.keys.stream()
-                .map { RoomTemplateExtension(loadTemplate(templateManager, it), extensionPaths[it]!!) }
-                .toList()
+        val extensions = extensionPaths.keys.stream()
+            .map { RoomTemplateExtension(loadTemplate(templateManager, it), extensionPaths[it]!!) }
+            .toList()
 
         val size = getTotalSize(template, extensions)
 
@@ -37,6 +36,24 @@ object RoomTypeLoader {
         extensions.forEach { markerPoints.add(getMarkers(it.template, it.offset, size)) }
 
         return RoomType(path, template, markerPoints, size, extensions)
+    }
+
+    fun loadWithMirrored(
+        templateManager: StructureTemplateManager,
+        path: String,
+    ): List<RoomType> {
+        val original = load(templateManager, path)
+        val size = original.size
+
+        val mirrored = RoomType(
+            path = original.path,
+            template = original.template,
+            markerPoints = MirrorUtil.mirrorMarkerPoints(original.markerPoints, size),
+            size = original.size,
+            mirrored = true
+        )
+
+        return listOf(original, mirrored)
     }
 
     private fun loadTemplate(
@@ -67,7 +84,7 @@ object RoomTypeLoader {
         template: StructureTemplate,
         offset: Vec3i = Vec3i.ZERO,
         size: Vec3i? = null,
-    ): RoomMarkerPoints { // FIXME
+    ): RoomMarkerPoints {
         val startPosMarkerInfos = getMarkerInfos(template, DungeonGenerationSettings.START_POS_MARKER)
         val startPos = if (startPosMarkerInfos.isEmpty()) null else startPosMarkerInfos.first().pos.add(offset)
 

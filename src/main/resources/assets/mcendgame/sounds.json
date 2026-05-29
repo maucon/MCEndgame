@@ -1,0 +1,10 @@
+{
+  "desert_dungeon_music": {
+    "sounds": [
+      {
+        "name": "mcendgame:music/desert_dungeon_music",
+        "stream": true
+      }
+    ]
+  }
+}

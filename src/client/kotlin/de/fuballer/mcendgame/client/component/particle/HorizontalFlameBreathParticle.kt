@@ -23,6 +23,7 @@ class HorizontalFlameBreathParticle(
 ) : BillboardParticle(clientWorld, x, y, z, 0.0, 0.0, 0.0, sprite) {
     init {
         maxAge = 40
+        collidesWithWorld = false
 
         val randomAngle = Math.toRadians(Random.nextDouble() * spreadAngle - spreadAngle / 2)
         val direction = Vec3d(directionX, directionY, directionZ).rotateY(randomAngle.toFloat()).normalize()

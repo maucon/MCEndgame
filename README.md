@@ -26,6 +26,8 @@
 **MCEndgame** is a Minecraft Fabric mod that enhances the endgame experience by introducing new layers of progression, challenging dungeons, powerful custom gear, and a deep itemization
 system.
 
+[Watch the Trailer](https://www.youtube.com/watch?v=R2MLI5XDsfM)
+
 ### Features
 
 - Procedurally generated **dungeons** with adaptive difficulty scaling

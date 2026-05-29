@@ -78,6 +78,14 @@ class CustomBlockTagProvider(
             .add(Blocks.HANGING_ROOTS)
             .add(Blocks.LILY_PAD)
             .add(Blocks.BAMBOO_SAPLING)
+            .add(Blocks.DEAD_BUSH)
+            .add(Blocks.REDSTONE_WIRE)
+
+        valueLookupBuilder(CustomTags.DUNGEON_INTERACTABLE)
+            .add(CustomBlocks.TOTEM_STATUE)
+            .forceAddTag(BlockTags.BUTTONS)
+            .add(Blocks.REDSTONE_WIRE)
+            .add(Blocks.LEVER)
 
         valueLookupBuilder(CustomTags.PHASING_BLOCKING)
             .add(Blocks.BARRIER)
