@@ -45,6 +45,7 @@
     "goal.TrackTargetGoalMobAccessor",
     "item.ImmuneItemEntityMixin",
     "item.ItemStackDamageMixin",
+    "item.ServerPlayNetworkHandlerCreativeCopyMixin",
     "item.bow.BowItemDrawSpeedMixin",
     "knockback.LivingEntityKnockbackCommandMixin",
     "knockback.PlayerEntityKnockbackCommandMixin",

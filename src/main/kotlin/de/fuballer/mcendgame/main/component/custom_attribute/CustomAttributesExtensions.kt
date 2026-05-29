@@ -22,6 +22,7 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.attribute.EntityAttributeModifier
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
+import java.util.*
 import kotlin.math.max
 
 @Injectable
@@ -63,6 +64,13 @@ object CustomAttributesExtensions {
     fun ItemStack.getCustomAttributes(): List<CustomAttribute> {
         return get(COMPONENT_TYPE)
             ?: return emptyList()
+    }
+
+    fun ItemStack.rerollCustomAttributeIds() {
+        val attributes = getCustomAttributes()
+        if (attributes.isEmpty()) return
+
+        updateCustomAttributes(attributes.map { it.copy(id = UUID.randomUUID()) })
     }
 
     fun LivingEntity.getAllCustomAttributes(): Map<CustomAttributeType, List<CustomAttribute>> {
