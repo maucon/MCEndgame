@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
+import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.dungeon.enemy.potion_effect.PotionEffect
 import net.minecraft.component.type.AttributeModifierSlot
@@ -102,6 +103,7 @@ object TrainingDummyGenerationSettings {
                             listOf(
                                 CustomAttribute(VanillaAttributeTypes.ARMOR, 0, DoubleRoll(DoubleBounds(1.5))),
                                 CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 0, DoubleRoll(DoubleBounds(2.0))),
+                                CustomAttribute(CustomAttributeTypes.WARD, 0, DoubleRoll(DoubleBounds(2.0))),
                             ),
                             AttributeModifierSlot.ANY,
                         )
@@ -112,6 +114,7 @@ object TrainingDummyGenerationSettings {
                             listOf(
                                 CustomAttribute(VanillaAttributeTypes.ARMOR, 0, DoubleRoll(DoubleBounds(2.0))),
                                 CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 0, DoubleRoll(DoubleBounds(3.0))),
+                                CustomAttribute(CustomAttributeTypes.WARD, 0, DoubleRoll(DoubleBounds(3.0))),
                             ),
                             AttributeModifierSlot.ANY,
                         )
@@ -122,6 +125,7 @@ object TrainingDummyGenerationSettings {
                             listOf(
                                 CustomAttribute(VanillaAttributeTypes.ARMOR, 0, DoubleRoll(DoubleBounds(1.75))),
                                 CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 0, DoubleRoll(DoubleBounds(2.5))),
+                                CustomAttribute(CustomAttributeTypes.WARD, 0, DoubleRoll(DoubleBounds(2.5))),
                             ),
                             AttributeModifierSlot.ANY,
                         )
@@ -132,6 +136,7 @@ object TrainingDummyGenerationSettings {
                             listOf(
                                 CustomAttribute(VanillaAttributeTypes.ARMOR, 0, DoubleRoll(DoubleBounds(1.5))),
                                 CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 0, DoubleRoll(DoubleBounds(2.0))),
+                                CustomAttribute(CustomAttributeTypes.WARD, 0, DoubleRoll(DoubleBounds(2.0))),
                             ),
                             AttributeModifierSlot.ANY,
                         )

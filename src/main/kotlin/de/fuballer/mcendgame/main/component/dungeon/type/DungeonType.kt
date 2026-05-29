@@ -26,7 +26,7 @@ enum class DungeonType(
     val bossCount: Int,
     val biome: RegistryKey<Biome>,
     val applyMisc: (List<LivingEntity>) -> Unit = {},
-) {
+) { // Note: dungeon seed uses ordinal to save dungeon type
     STRONGHOLD(
         listOf(
             RandomOption(1, DungeonLayoutType.STRONGHOLD),
@@ -94,6 +94,7 @@ enum class DungeonType(
             RandomOption(1, ElfDuelistBossStats),
             RandomOption(1, BeakburnBossStats),
         ),
+        enemyCount = 125,
         bossCount = 3,
         biome = CustomBiomes.DESERT_DUNGEON,
     ),

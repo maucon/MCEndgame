@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.component.stats
 import com.mojang.logging.LogUtils
 import de.fuballer.mcendgame.main.component.dungeon.completion.DungeonCompletedEvent
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneDespawnEvent
+import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
 import de.fuballer.mcendgame.main.component.item.custom.crystal.item.*
 import de.fuballer.mcendgame.main.messaging.crystals.CrystalForgeUsedEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemyDeathEvent
@@ -90,6 +91,7 @@ class CustomStatsService {
 
         if (!damaged.isDungeonEnemy()) return
         if (!damaged.entityWorld.isDungeonWorld()) return
+        if (damaged is TrainingDummyEntity) return
         val player = event.damageSource.attacker as? ServerPlayerEntity ?: return
 
         player.increaseStat(CustomStats.DUNGEON_DAMAGE_DEALT, (event.amount * 10).toInt())

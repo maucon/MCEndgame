@@ -7,6 +7,6 @@ object DungeonSeedSettings {
     val DUNGEON_TYPES = listOf(
         RandomOption(1, DungeonType.STRONGHOLD),
         RandomOption(1, DungeonType.NETHER),
-        // TODO add desert after rebase
+        RandomOption(1, DungeonType.DESERT),
     )
 }

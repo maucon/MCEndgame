@@ -37,7 +37,7 @@ class TrainingDungeonGenerationService(
             val dungeonWorld = dungeonWorldService.createTraining(player, dungeonDeviceGlobalPos)
 
             dungeonBuilderService.build(dungeonWorld, layout.rooms)
-            trainingDummyGenerationService.generate(dungeonWorld, layout.bossSpawnPos, layout.spawnPos) // using same marker as boss for now
+            trainingDummyGenerationService.generate(dungeonWorld, layout.bossSpawnPos) // using same marker as boss for now
 
             val dungeonGeneratedEvent = DungeonGeneratedEvent(player, originWorld, dungeonWorld, layout.spawnPos, dungeonDevicePos, isTraining = true)
             EventGateway.publish(dungeonGeneratedEvent)
