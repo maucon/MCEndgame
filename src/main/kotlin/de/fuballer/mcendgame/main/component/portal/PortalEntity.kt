@@ -84,7 +84,9 @@ class PortalEntity(
         if (entityWorld.isClient) return ActionResult.PASS
         if (hand != Hand.MAIN_HAND) return ActionResult.PASS
 
-        val event = PortalUsedEvent(player, teleportLocation)
+        val sourceTeleportLocation = (entityWorld as? ServerWorld)
+            ?.let { TeleportLocation(it, this.pos, player.pitch, player.yaw) }
+        val event = PortalUsedEvent(player, sourceTeleportLocation, teleportLocation)
         EventGateway.publish(event)
 
         if (singleUse) {

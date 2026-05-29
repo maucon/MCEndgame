@@ -71,6 +71,7 @@
     "phasing.LivingEntityBlockPhasingMixin",
     "phasing.LivingEntityEntityPhasingMixin",
     "player.PlayerEntityDungeonLevelMixin",
+    "player.PlayerEntityDungeonExitMixin",
     "player.PlayerEntityDungeonSeedMixin",
     "player.PlayerEntityInsideDungeonMixin",
     "projectile.PersistentProjectileEntityDamageMixin",

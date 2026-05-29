@@ -5,5 +5,6 @@ import net.minecraft.entity.player.PlayerEntity
 
 data class PortalUsedEvent(
     val player: PlayerEntity,
+    val sourceTeleportLocation: TeleportLocation?,
     val teleportLocation: TeleportLocation?
 )

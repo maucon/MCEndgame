@@ -5,6 +5,9 @@ import de.fuballer.mcendgame.main.messaging.misc.PlayerAfterDimensionChangeEvent
 import de.fuballer.mcendgame.main.util.extension.BlockPosExtension.toVec3d
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.isInsideDungeon
+import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getDungeonExitLocation
+import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.clearDungeonExitLocation
+import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.setDungeonExitLocation
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.setInsideDungeon
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonExitPos
 import de.maucon.mauconframework.di.annotation.Injectable
@@ -24,6 +27,7 @@ class DungeonLeaveService {
         val oldWorld = oldPlayer.entityWorld
         if (!oldWorld.isDungeonWorld()) return@register
 
+        newPlayer.setDungeonExitLocation(oldPlayer.getDungeonExitLocation())
         teleportToDungeonExitPos(newPlayer, oldWorld)
     }
 
@@ -49,6 +53,24 @@ class DungeonLeaveService {
         player: PlayerEntity,
         dungeonWorld: ServerWorld,
     ): Boolean {
+        val dungeonExitLocation = player.getDungeonExitLocation()
+        if (dungeonExitLocation != null) {
+            val targetWorld = RuntimeConfig.SERVER.getWorld(dungeonExitLocation.world.registryKey)
+            if (targetWorld != null) {
+                val teleportTarget = TeleportTarget(
+                    targetWorld,
+                    dungeonExitLocation.coordinates,
+                    Vec3d.ZERO,
+                    dungeonExitLocation.yRot,
+                    dungeonExitLocation.xRot,
+                ) {}
+
+                player.teleportTo(teleportTarget)
+                player.clearDungeonExitLocation()
+                return true
+            }
+        }
+
         val exitPos = dungeonWorld.getDungeonExitPos()
         val targetWorld = RuntimeConfig.SERVER.getWorld(exitPos.dimension) ?: return false
 
