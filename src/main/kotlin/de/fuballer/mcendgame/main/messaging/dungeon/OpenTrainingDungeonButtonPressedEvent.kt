@@ -8,7 +8,6 @@ import net.minecraft.server.network.ServerPlayerEntity
  * only server-side
  */
 data class OpenTrainingDungeonButtonPressedEvent(
-    val blockEntity: BlockEntity,
-    val player: ServerPlayerEntity,
     val dungeonDeviceBlockEntity: DungeonDeviceBlockEntity,
+    val player: ServerPlayerEntity,
 )

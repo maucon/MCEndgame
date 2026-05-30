@@ -18,6 +18,7 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
+import kotlin.math.max
 
 class TrainingDummyEntity(
     type: EntityType<out TrainingDummyEntity>,
@@ -65,7 +66,7 @@ class TrainingDummyEntity(
         if (!dataTracker.get(DAMAGE_ACTIVE)) return
         if (age - lastDamageAge > DAMAGE_TIME_OUT) dataTracker.set(DAMAGE_ACTIVE, false)
 
-        var duration = age - damageStartAge
+        var duration = max(age - damageStartAge, 1)
         if (!dataTracker.get(DAMAGE_ACTIVE)) duration -= DAMAGE_TIME_OUT
         dataTracker.set(DAMAGE_DURATION, duration)
 
@@ -74,7 +75,10 @@ class TrainingDummyEntity(
 
     override fun setHealth(health: Float) {
         val damage = this.health - health
-        if (damage > 1000000) super.setHealth(health) // high number to keep /kill working
+        if (damage > 1000000) { // high number to keep /kill working
+            super.setHealth(health)
+            return
+        }
         if (damage <= 0) return
 
         if (!dataTracker.get(DAMAGE_ACTIVE)) {

@@ -10,7 +10,6 @@ import net.minecraft.server.world.ServerWorld
  * only server-side
  */
 data class OpenDungeonButtonPressedEvent(
-    val blockEntity: BlockEntity,
-    val player: ServerPlayerEntity,
     val dungeonDeviceBlockEntity: DungeonDeviceBlockEntity,
+    val player: ServerPlayerEntity,
 )

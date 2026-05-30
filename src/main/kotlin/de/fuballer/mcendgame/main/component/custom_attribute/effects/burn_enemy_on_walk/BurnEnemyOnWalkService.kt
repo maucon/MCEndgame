@@ -16,6 +16,7 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.registry.tag.FluidTags
 import net.minecraft.server.world.ServerWorld
 import java.util.*
+import kotlin.math.max
 
 @Injectable
 class BurnEnemyOnWalkService(
@@ -27,6 +28,9 @@ class BurnEnemyOnWalkService(
     fun register() {
         ServerTickEvents.END_WORLD_TICK.register { world ->
             updateEntities(world)
+
+            val time = world.time
+            if (time % 20 == 0L) cleanOldData(time)
         }
     }
 
@@ -77,7 +81,8 @@ class BurnEnemyOnWalkService(
         if (entity.isClimbing) return
 
         val distanceSum = data.distance + movedDistance
-        val distanceTrigger = attribute.rolls[0].asDoubleRoll().getValue()
+        var distanceTrigger = attribute.rolls[0].asDoubleRoll().getValue()
+        distanceTrigger = max(distanceTrigger, 0.01) // infinite trigger & mod 0 protection
         val triggerTimes = (distanceSum / distanceTrigger).toInt()
         data.distance = distanceSum % distanceTrigger
         if (triggerTimes == 0) return
@@ -119,5 +124,12 @@ class BurnEnemyOnWalkService(
             target.setOnFireFor(BurnEnemyOnWalkSettings.BURN_DURATION)
             target.dealElementalSpellDamage(elementalPercent, entity)
         }
+    }
+
+    private fun cleanOldData(currentTime: Long) {
+        walkData.entries.removeIf {
+            currentTime - it.value.lastUpdatedWorldTime > 200
+        }
+        println(walkData.size)
     }
 }

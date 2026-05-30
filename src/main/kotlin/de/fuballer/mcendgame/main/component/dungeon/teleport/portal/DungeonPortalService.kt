@@ -54,12 +54,12 @@ class DungeonPortalService(
 
     @EventSubscriber(sync = true)
     fun on(event: OpenDungeonButtonPressedEvent) {
-        clearOldPortalsOnOpenDungeon(event.blockEntity)
+        clearOldPortalsOnOpenDungeon(event.dungeonDeviceBlockEntity)
     }
 
     @EventSubscriber(sync = true)
     fun on(event: OpenTrainingDungeonButtonPressedEvent) {
-        clearOldPortalsOnOpenDungeon(event.blockEntity)
+        clearOldPortalsOnOpenDungeon(event.dungeonDeviceBlockEntity)
     }
 
     fun clearOldPortalsOnOpenDungeon(blockEntity: BlockEntity) {

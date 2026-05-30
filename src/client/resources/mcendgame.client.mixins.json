@@ -10,6 +10,7 @@
     "ghostly_appearance.GeoEntityRendererGhostlyMixin",
     "ghostly_appearance.LivingEntityRendererGhostlyMixin",
     "ghostly_appearance.LivingEntityRenderStateGhostlyMixin",
+    "living_entity.LivingEntityCapeDataMixin",
     "living_entity.LivingEntityRendererMixin",
     "living_entity.LivingEntityRendererWebbedMixin",
     "living_entity.LivingEntityRenderStateMixin",
@@ -30,8 +31,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "living_entity.LivingEntityCapeDataMixin"
-  ]
+  }
 }

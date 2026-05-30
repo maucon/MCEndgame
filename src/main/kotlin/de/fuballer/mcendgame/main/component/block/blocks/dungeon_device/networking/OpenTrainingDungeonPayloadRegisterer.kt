@@ -19,9 +19,9 @@ class OpenTrainingDungeonPayloadRegisterer {
             val blockEntity = RuntimeConfig.SERVER.getWorld(payload.worldKey)?.getBlockEntity(payload.pos) ?: return@registerGlobalReceiver
             val playerEntity = RuntimeConfig.SERVER.playerManager.getPlayer(payload.playerId) ?: return@registerGlobalReceiver
 
-            val dungeonDeviceEntity = blockEntity as DungeonDeviceBlockEntity
+            val dungeonDeviceEntity = blockEntity as? DungeonDeviceBlockEntity ?: return@registerGlobalReceiver
 
-            EventGateway.publish(OpenTrainingDungeonButtonPressedEvent(blockEntity, playerEntity, dungeonDeviceEntity))
+            EventGateway.publish(OpenTrainingDungeonButtonPressedEvent(dungeonDeviceEntity, playerEntity))
         }
     }
 }
