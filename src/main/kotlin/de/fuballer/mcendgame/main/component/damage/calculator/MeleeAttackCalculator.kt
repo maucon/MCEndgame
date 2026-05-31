@@ -22,7 +22,7 @@ object MeleeAttackCalculator : DamageCalculator {
     ): Float {
         val attacker = source.attacker as? LivingEntity ?: return originalDamage
 
-        val baseDamage = calculateBaseAttackDamage(attacker, source)
+        val baseDamage = calculateBaseAttackDamage(event, attacker, source)
         val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
         val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
         val critMulti = calculateCriticalMultiplier(event)
@@ -50,10 +50,12 @@ object MeleeAttackCalculator : DamageCalculator {
     }
 
     private fun calculateBaseAttackDamage(
+        event: DamageCalculationCommand,
         attacker: LivingEntity,
         source: DamageSource
     ): Double {
-        var baseDamage = if (attacker.isUsingRiptide) 8.0 else attacker.getAttributeValue(EntityAttributes.ATTACK_DAMAGE)
+        var baseDamage = if (attacker.isUsingRiptide) 8.0
+        else DamageUtil.getAttackDamageBaseValue(event, attacker)
 
         if (source.type.isOf(CustomDamageTypes.SWEEPING)) {
             val sweepingRatio = attacker.getAttributeValue(EntityAttributes.SWEEPING_DAMAGE_RATIO)

@@ -16,6 +16,16 @@ import net.minecraft.util.math.GlobalPos
 import java.util.function.Predicate
 
 object WorldMixinExtension {
+    fun ServerWorld.setTrainingDungeon() {
+        val accessor = this as DungeonWorldAccessor
+        accessor.`mcendgame$setTraining`()
+    }
+
+    fun ServerWorld.isTrainingDungeon(): Boolean {
+        val accessor = this as DungeonWorldAccessor
+        return accessor.`mcendgame$isTraining`()
+    }
+
     fun ServerWorld.setDungeonCompleted(completed: Boolean = true) {
         val accessor = this as DungeonWorldAccessor
         accessor.`mcendgame$setCompleted`(completed)

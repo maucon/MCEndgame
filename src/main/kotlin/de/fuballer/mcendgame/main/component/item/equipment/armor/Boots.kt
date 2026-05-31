@@ -51,6 +51,9 @@ enum class Boots(
     ),
     GEISTERGALOSCHEN(
         CustomArmorItems.GEISTERGALOSCHEN,
+    ),
+    EMBERREIGN(
+        CustomArmorItems.EMBERREIGN,
     );
 
     override val slot = AttributeModifierSlot.FEET

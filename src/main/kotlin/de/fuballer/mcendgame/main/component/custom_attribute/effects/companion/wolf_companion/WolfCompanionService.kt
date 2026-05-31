@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.custom_attribute.effects.wolf_companion
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.companion.wolf_companion
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asStringRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes

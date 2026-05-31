@@ -9,4 +9,5 @@ data class TexturedArmorModel<T : Model<*>>(
     val colorAbleTexture: Identifier? = null,
     val defaultColor: Int = -1,
     val translucentTexture: Identifier? = null,
+    val emissiveTexture: Identifier? = null,
 )

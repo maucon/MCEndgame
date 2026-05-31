@@ -6,7 +6,6 @@ import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
 import de.fuballer.mcendgame.main.util.extension.DamageTypeExtension.isOf
 import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.damage.DamageSource
 
 object PierceAttackDamageCalculator : DamageCalculator {
@@ -20,7 +19,7 @@ object PierceAttackDamageCalculator : DamageCalculator {
     ): Float {
         val attacker = source.attacker as? LivingEntity ?: return originalDamage
 
-        val baseDamage = attacker.getAttributeValue(EntityAttributes.ATTACK_DAMAGE)
+        val baseDamage = DamageUtil.getAttackDamageBaseValue(event, attacker)
         val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
         val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
 

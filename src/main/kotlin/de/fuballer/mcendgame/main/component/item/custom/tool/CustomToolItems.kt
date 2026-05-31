@@ -6,8 +6,11 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.component.DataComponentTypes
 import net.minecraft.component.type.BlocksAttacksComponent
 import net.minecraft.component.type.UseCooldownComponent
+import net.minecraft.component.type.WeaponComponent
 import net.minecraft.item.Item
+import net.minecraft.item.MaceItem
 import net.minecraft.registry.tag.DamageTypeTags
+import net.minecraft.registry.tag.ItemTags
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.Identifier
 import java.util.*
@@ -81,5 +84,16 @@ object CustomToolItems {
             )
             .component(DataComponentTypes.BREAK_SOUND, SoundEvents.ITEM_SHIELD_BREAK),
         "grudgebearer"
+    )
+    val GRAVEBREAKER = UniqueItemRegistry.registerToolItem(
+        ::Gravebreaker,
+        Item.Settings()
+            .maxDamage(500)
+            .component(DataComponentTypes.TOOL, MaceItem.createToolComponent())
+            .repairable(ItemTags.STONE_TOOL_MATERIALS)
+            .attributeModifiers(Gravebreaker.createAttributeModifiers())
+            .enchantable(15)
+            .component(DataComponentTypes.WEAPON, WeaponComponent(1)),
+        "gravebreaker"
     )
 }

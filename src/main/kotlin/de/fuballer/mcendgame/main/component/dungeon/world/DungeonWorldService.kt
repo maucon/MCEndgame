@@ -13,6 +13,7 @@ import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setDu
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setDungeonLevel
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setDungeonType
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setOpener
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setTrainingDungeon
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.di.annotation.Logging
 import de.maucon.mauconframework.event.EventGateway
@@ -46,6 +47,7 @@ class DungeonWorldService(
         affectingAspects: Map<AspectItem, Int>,
         dungeonType: DungeonType,
         dungeonExitPos: GlobalPos,
+        training: Boolean = false,
     ): ServerWorld {
         val dungeonWorld = RuntimeConfig.FANTASY
             .openTemporaryWorld(DungeonWorldSettings.generateIdentifier(), DungeonWorldSettings.getWorldConfig(dungeonType.biome))
@@ -56,12 +58,19 @@ class DungeonWorldService(
         dungeonWorld.setDungeonAspects(affectingAspects)
         dungeonWorld.setDungeonType(dungeonType)
         dungeonWorld.setDungeonExitPos(dungeonExitPos)
+        if (training) dungeonWorld.setTrainingDungeon()
 
         val entity = DungeonWorldEntity(dungeonWorld)
         dungeonWorldRepo.save(entity)
 
         return dungeonWorld
     }
+
+    fun createTraining(
+        opener: PlayerEntity,
+        dungeonExitPos: GlobalPos,
+    ) = create(1, opener, mapOf(), DungeonType.TRAINING, dungeonExitPos, training = true)
+
 
     private fun deleteEmptyWorlds() {
         log.info("Checking for empty worlds")

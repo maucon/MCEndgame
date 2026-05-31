@@ -13,5 +13,6 @@ data class DungeonGeneratedEvent(
     val originWorld: ServerWorld,
     val dungeonWorld: ServerWorld,
     val startPos: SpawnPosition,
-    val dungeonDevicePos: BlockPos
+    val dungeonDevicePos: BlockPos,
+    val isTraining: Boolean = false,
 )

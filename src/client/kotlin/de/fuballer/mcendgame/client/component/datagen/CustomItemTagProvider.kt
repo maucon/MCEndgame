@@ -41,6 +41,7 @@ class CustomItemTagProvider(
             .add(CustomArmorItems.SUEDE_CHESTPLATE)
             .add(CustomArmorItems.VOIDWEAVER)
             .add(CustomArmorItems.WITHER_ROSE_CHESTPLATE)
+            .add(CustomArmorItems.BROODMOTHER)
 
         valueLookupBuilder(ItemTags.LEG_ARMOR)
             .add(CustomArmorItems.LAMIAS_GIFT)
@@ -49,6 +50,7 @@ class CustomItemTagProvider(
             .add(CustomArmorItems.WITHER_ROSE_LEGGINGS)
             .add(CustomArmorItems.STONEWARD)
             .add(CustomArmorItems.GILDED_TEMPEST)
+            .add(CustomArmorItems.WINDSTRIDER)
 
         valueLookupBuilder(ItemTags.FOOT_ARMOR)
             .add(CustomArmorItems.DRUIDS_BOOTS)
@@ -56,6 +58,7 @@ class CustomItemTagProvider(
             .add(CustomArmorItems.MOONSHADOW)
             .add(CustomArmorItems.SUEDE_BOOTS)
             .add(CustomArmorItems.WITHER_ROSE_BOOTS)
+            .add(CustomArmorItems.EMBERREIGN)
 
         valueLookupBuilder(CustomTags.BOW)
             .add(Items.BOW)
@@ -70,9 +73,20 @@ class CustomItemTagProvider(
             .add(Items.SHIELD)
             .add(CustomToolItems.GRUDGEBEARER)
 
+        valueLookupBuilder(CustomTags.MACE)
+            .add(Items.MACE)
+            .add(CustomToolItems.GRAVEBREAKER)
+
+        valueLookupBuilder(ItemTags.MACE_ENCHANTABLE)
+            .forceAddTag(CustomTags.MACE)
+
+        valueLookupBuilder(ItemTags.WEAPON_ENCHANTABLE)
+            .forceAddTag(CustomTags.MACE)
+
         valueLookupBuilder(ItemTags.DURABILITY_ENCHANTABLE)
             .forceAddTag(CustomTags.BOW)
             .forceAddTag(CustomTags.SHIELD)
+            .forceAddTag(CustomTags.MACE)
 
         valueLookupBuilder(ItemTags.DYEABLE)
             .add(CustomArmorItems.SUEDE_HELMET)
@@ -101,6 +115,11 @@ class CustomItemTagProvider(
             .add(Items.NETHERITE_AXE)
             .add(Items.NETHERITE_SHOVEL)
             .add(Items.NETHERITE_HOE)
+
+
+        valueLookupBuilder(CustomTags.REPAIRS_SPIDER_ARMOR)
+            .add(Items.SPIDER_EYE)
+            .add(Items.FERMENTED_SPIDER_EYE)
 
         valueLookupBuilder(CustomTags.DUNGEON_DROP_DISABLED)
             .add(Items.TRIDENT)

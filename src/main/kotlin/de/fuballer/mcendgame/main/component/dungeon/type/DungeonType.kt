@@ -22,10 +22,11 @@ enum class DungeonType(
     private val mapTypes: List<RandomOption<DungeonLayoutType>>,
     private val entityTypes: List<RandomOption<EntityTypeStats>>,
     private val bossEntityTypes: List<RandomOption<EntityTypeStats>>,
+    val enemyCount: Int,
     val bossCount: Int,
     val biome: RegistryKey<Biome>,
     val applyMisc: (List<LivingEntity>) -> Unit = {},
-) {
+) { // Note: dungeon seed uses ordinal to save dungeon type
     STRONGHOLD(
         listOf(
             RandomOption(1, DungeonLayoutType.STRONGHOLD),
@@ -46,6 +47,7 @@ enum class DungeonType(
             RandomOption(1, ElfDuelistBossStats),
             RandomOption(1, BeakburnBossStats),
         ),
+        enemyCount = 125,
         bossCount = 3,
         biome = BiomeKeys.PLAINS,
     ),
@@ -68,6 +70,7 @@ enum class DungeonType(
             RandomOption(1, ElfDuelistBossStats),
             RandomOption(1, BeakburnBossStats),
         ),
+        enemyCount = 125,
         bossCount = 3,
         biome = BiomeKeys.NETHER_WASTES,
         { enemies -> enemies.forEach { it.addStatusEffect(PotionEffect.FIRE_RESISTANCE.getEffectInstance(false)) } },
@@ -91,8 +94,19 @@ enum class DungeonType(
             RandomOption(1, ElfDuelistBossStats),
             RandomOption(1, BeakburnBossStats),
         ),
+        enemyCount = 125,
         bossCount = 3,
         biome = CustomBiomes.DESERT_DUNGEON,
+    ),
+    TRAINING(
+        listOf(
+            RandomOption(1, DungeonLayoutType.TRAINING),
+        ),
+        listOf(),
+        listOf(),
+        enemyCount = 0,
+        bossCount = 0,
+        biome = BiomeKeys.PLAINS,
     );
 
     fun roll(random: Random): RolledDungeonType =

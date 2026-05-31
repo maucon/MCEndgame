@@ -23,6 +23,12 @@ object CustomParticleTypes {
         { _ -> HorizontalFlameBreathParticleEffect.CODEC },
         { _ -> HorizontalFlameBreathParticleEffect.PACKET_CODEC },
     )
+    val MOVE_TO_TARGET_FLAME = registerComplex<MoveToTargetFlameParticleEffect>(
+        "move_to_target_flame",
+        false,
+        { _ -> MoveToTargetFlameParticleEffect.CODEC },
+        { _ -> MoveToTargetFlameParticleEffect.PACKET_CODEC },
+    )
 
     private fun registerSimple(name: String): SimpleParticleType =
         Registry.register(Registries.PARTICLE_TYPE, IdentifierUtil.default(name), FabricParticleTypes.simple())

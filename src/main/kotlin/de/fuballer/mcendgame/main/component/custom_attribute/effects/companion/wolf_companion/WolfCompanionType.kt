@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.custom_attribute.effects.wolf_companion
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.companion.wolf_companion
 
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.data.AuraStatusEffect
 import de.fuballer.mcendgame.main.component.status_effect.CustomStatusEffects
@@ -36,15 +36,15 @@ enum class WolfCompanionType(
     ),
     INCITING(
         "Inciting", WolfVariants.SPOTTED, DyeColor.RED, 1.0,
-        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.STRENGTH, 1, 199, 15)),
+        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.STRENGTH, 0, 199, 15)),
     ),
     HASTING(
         "Hasting", WolfVariants.STRIPED, DyeColor.YELLOW, 0.9,
-        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.SPEED, 1, 199, 15)),
+        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.SPEED, 0, 199, 15)),
     ),
     REJUVENATING(
         "Rejuvenating", WolfVariants.WOODS, DyeColor.GREEN, 1.0,
-        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.REGENERATION, 1, 199, 15)),
+        allyAuraStatusEffects = listOf(AuraStatusEffect(StatusEffects.REGENERATION, 0, 199, 15)),
     ),
     SCORCHING(
         "Scorching", WolfVariants.RUSTY, DyeColor.ORANGE, 0.95,
@@ -54,8 +54,8 @@ enum class WolfCompanionType(
     );
 
     companion object {
-        fun getNames() = WolfCompanionType.entries.map { it.displayName }
+        fun getNames() = entries.map { it.displayName }
 
-        fun getByName(name: String) = WolfCompanionType.entries.firstOrNull { it.displayName == name }
+        fun getByName(name: String) = entries.firstOrNull { it.displayName == name }
     }
 }

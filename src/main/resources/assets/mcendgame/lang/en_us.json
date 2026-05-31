@@ -21,6 +21,9 @@
   "item.mcendgame.voidweaver": "Voidweaver",
   "item.mcendgame.abyssal_mask": "Abyssal Mask",
   "item.mcendgame.gilded_tempest": "Gilded Tempest",
+  "item.mcendgame.windstrider": "Windstrider",
+  "item.mcendgame.broodmother": "Broodmother",
+  "item.mcendgame.emberreign": "Emberreign",
 
   "item.mcendgame.bloodharvest": "Bloodharvest",
   "item.mcendgame.twinfire": "Twinfire",
@@ -32,6 +35,7 @@
   "item.mcendgame.hailstorm": "Hailstorm",
   "item.mcendgame.dusk_piercer": "Dusk Piercer",
   "item.mcendgame.grudgebearer": "Grudgebearer",
+  "item.mcendgame.gravebreaker": "Gravebreaker",
 
   "item.mcendgame.verdant_echo": "Verdant Echo",
   "item.mcendgame.molten_roar": "Molten Roar",
@@ -157,6 +161,7 @@
   "container.mcendgame.dungeon_device.totems_tooltip": "Dungeon Totems",
   "container.mcendgame.dungeon_device.filter_tooltip": "Dungeon Filter",
   "container.mcendgame.dungeon_device.killer_tooltip": "Latest Killer",
+  "container.mcendgame.dungeon_device.training_tooltip": "Training",
   "container.mcendgame.dungeon_device.progress_tooltip": "Progress: %s/%s",
 
   "block.mcendgame.crystal_forge": "Crystal Forge",
@@ -190,8 +195,10 @@
   "attribute.mcendgame.attack_damage": "%s Attack Damage",
   "attribute.mcendgame.increased_attack_damage": "%s%% %s Attack Damage",
   "attribute.mcendgame.increased_attack_speed": "%s%% %s Attack Speed",
+  "attribute.mcendgame.more_attack_speed": " %s%% %s Attack Speed",
   "attribute.mcendgame.increased_movement_speed": "%s%% %s Movement Speed",
   "attribute.mcendgame.more_movement_speed": " %s%% %s Movement Speed",
+  "attribute.mcendgame.increased_jump_strength": "%s%% %s Jump Strength",
   "attribute.mcendgame.luck": "%s Luck",
   "attribute.mcendgame.increased_scale": "%s%% %s Size",
   "attribute.mcendgame.more_scale": " %s%% %s Size",
@@ -201,12 +208,15 @@
   "attribute.mcendgame.dodge": " %s%% Dodge",
   "attribute.mcendgame.dodge_per_max_heart_below_ten": " %s%% Dodge per Max Heart below Ten",
   "attribute.mcendgame.dodge_if_not_dodged_in_last_seconds": " %s%% Dodge if you haven't Dodged in the last %ss",
+  "attribute.mcendgame.dodged_projectile_reflect": " Dodged Projectiles are Reflected",
   "attribute.mcendgame.projectile_dodge": " %s%% Projectile Dodge",
   "attribute.mcendgame.more_damage_taken": " %s%% %s Damage taken",
   "attribute.mcendgame.elemental_damage": "%s Elemental Damage",
   "attribute.mcendgame.increased_damage": "%s%% %s Damage",
   "attribute.mcendgame.more_damage": " %s%% %s Damage",
   "attribute.mcendgame.more_damage_per_missing_heart": " %s%% %s Damage per missing Heart",
+  "attribute.mcendgame.more_attack_damage_per_armor": " %s%% %s Attack Damage per Armor",
+  "attribute.mcendgame.gain_enemy_armor_on_kill": " Gain %s%% of Enemy Armor for %ss on Kill",
   "attribute.mcendgame.increased_elemental_damage": "%s%% %s Elemental Damage",
   "attribute.mcendgame.increased_projectile_damage": "%s%% %s Projectile Damage",
   "attribute.mcendgame.more_projectile_damage": " %s%% %s Projectile Damage",
@@ -238,6 +248,9 @@
   "attribute.mcendgame.fury_on_kill": " Gain a Stack of Fury on Kill",
   "attribute.mcendgame.resilience_on_damage_taken": " Gain a Stack of Resilience when taking Damage",
   "attribute.mcendgame.wolf_companion": " %s Wolf Companion",
+  "attribute.mcendgame.spiderling_companions": " %s Spiderling Companions",
+  "attribute.mcendgame.companion_attack_damage": "%s Companion Attack Damage",
+  "attribute.mcendgame.increased_companion_damage": "%s%% %s Companion Damage",
   "attribute.mcendgame.bow_pull_ticks": "%s Bow Draw Ticks",
   "attribute.mcendgame.additional_arrows": "%s additional Arrows",
   "attribute.mcendgame.pierce_all": " Arrows Pierce all Targets",
@@ -265,6 +278,7 @@
   "attribute.mcendgame.increased_movement_speed_on_kill": "%s%% %s Movement Speed for %ss on Kill",
   "attribute.mcendgame.stealth": " Stealth",
   "attribute.mcendgame.more_damage_against_isolated": " %s%% %s Damage against Isolated Targets",
+  "attribute.mcendgame.burn_enemy_on_walk": " Every %s Blocks walked burn a random Enemy within %s Blocks for %s%% Elemental Damage",
   "attribute.mcendgame.stacking_more_attack_speed_on_melee_hit": " Gain Stacking %s%% %s Attack Speed on Melee Hit for %ss",
   "attribute.mcendgame.heal_nearby_allies_on_melee_hit": " Heal Allies within %s Blocks for %s Health on Melee Hit",
   "attribute.mcendgame.increased_healing_per_elemental_damage": "%s%% %s Healing per Elemental Damage",
@@ -293,6 +307,8 @@
   "entity.mcendgame.bonecrusher": "Bonecrusher",
   "entity.mcendgame.beakburn": "Beakburn",
   "entity.mcendgame.scarred_one": "Scarred One",
+  "entity.mcendgame.spiderling": "Spiderling",
+  "entity.mcendgame.training_dummy": "Training Dummy",
 
   "block.mcendgame.decaying_cobweb": "Decaying Cobweb",
   "block.mcendgame.totem_statue": "Totem Statue",
@@ -328,5 +344,11 @@
 
   "error.mcendgame.invalid_totem_tier": "Maximum tier of this totem is %s!",
 
-  "death.attack.elemental": "%s fell to the elemental power of %s"
+  "death.attack.elemental": "%s fell to the elemental power of %s",
+
+  "training_dummy.damage_per_second" : "DPS ",
+  "training_dummy.last_damage" : "Last ",
+  "training_dummy.highest_damage" : "Best ",
+  "training_dummy.damage_sum" : "Total ",
+  "training_dummy.damage_duration" : "Time "
 }

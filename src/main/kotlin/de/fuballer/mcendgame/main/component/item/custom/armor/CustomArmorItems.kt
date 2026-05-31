@@ -3,11 +3,13 @@ package de.fuballer.mcendgame.main.component.item.custom.armor
 import de.fuballer.mcendgame.main.component.item.custom.UniqueItemRegistry
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.abyssal_mask.AbyssalMask
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.bound_abyss.BoundAbyss
+import de.fuballer.mcendgame.main.component.item.custom.armor.item.broodmother.Broodmother
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsBoots
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsChestplate
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsHelmet
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsLeggings
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.emberchant.Emberchant
+import de.fuballer.mcendgame.main.component.item.custom.armor.item.emberreign.Emberreign
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.geistergaloschen.Geistergaloschen
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.gilded_tempest.GildedTempest
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.iceborne.Iceborne
@@ -19,6 +21,7 @@ import de.fuballer.mcendgame.main.component.item.custom.armor.item.suede.SuedeCh
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.suede.SuedeHelmet
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.suede.SuedeLeggings
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.voidweaver.Voidweaver
+import de.fuballer.mcendgame.main.component.item.custom.armor.item.windstrider.Windstrider
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.wither_rose.WitherRoseBoots
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.wither_rose.WitherRoseChestplate
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.wither_rose.WitherRoseHelmet
@@ -51,4 +54,7 @@ object CustomArmorItems {
     val VOIDWEAVER = UniqueItemRegistry.registerArmorItem(::Voidweaver, VoidweaverArmorMaterial, EquipmentType.CHESTPLATE, "voidweaver")
     val ABYSSAL_MASK = UniqueItemRegistry.registerArmorItem(::AbyssalMask, AbyssalMaskArmorMaterial, EquipmentType.HELMET, "abyssal_mask")
     val GILDED_TEMPEST = UniqueItemRegistry.registerArmorItem(::GildedTempest, GildedTempestArmorMaterial, EquipmentType.LEGGINGS, "gilded_tempest")
+    val WINDSTRIDER = UniqueItemRegistry.registerArmorItem(::Windstrider, WindstriderArmorMaterial, EquipmentType.LEGGINGS, "windstrider")
+    val BROODMOTHER = UniqueItemRegistry.registerArmorItem(::Broodmother, BroodmotherArmorMaterial, EquipmentType.CHESTPLATE, "broodmother")
+    val EMBERREIGN = UniqueItemRegistry.registerArmorItem(::Emberreign, EmberreignArmorMaterial, EquipmentType.BOOTS, "emberreign")
 }

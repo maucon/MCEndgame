@@ -5,6 +5,8 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.hasBlockPhasing
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
+import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
+import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.ItemWithCape
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.messaging.misc.GainStatusEffectCommand
 import de.fuballer.mcendgame.main.util.extension.Vec3dExtension.angleDeg
@@ -13,6 +15,7 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDu
 import de.maucon.mauconframework.command.CommandGateway
 import net.minecraft.component.DataComponentTypes
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.Tameable
 import net.minecraft.entity.decoration.ArmorStandEntity
@@ -45,9 +48,15 @@ object EntityExtension {
     fun LivingEntity.isEnemy(entity: Entity): Boolean {
         if (this == entity) return false
 
-        if (this.isOrIsTameableOf(PlayerEntity::class.java) && entity.isOrIsTameableOf(Monster::class.java)) return true
-        if (this.isOrIsTameableOf(Monster::class.java) && entity.isOrIsTameableOf(PlayerEntity::class.java)) return true
+        if (this.isOrIsTameableOf(PlayerEntity::class.java) && entity.isPlayerEnemy()) return true
+        if (this.isPlayerEnemy() && entity.isOrIsTameableOf(PlayerEntity::class.java)) return true
 
+        return false
+    }
+
+    private fun Entity.isPlayerEnemy(): Boolean {
+        if (isOrIsTameableOf(Monster::class.java)) return true
+        if (this is TrainingDummyEntity) return true
         return false
     }
 
@@ -202,5 +211,15 @@ object EntityExtension {
                 serverPlayerEntity.networkHandler.sendPacket(EntityVelocityUpdateS2CPacket(id, newVelocity))
             }
         }
+    }
+
+    fun LivingEntity.needsCapeData(): Boolean {
+        if (getEquippedStack(EquipmentSlot.CHEST)?.item is ItemWithCape) return true
+        if (getEquippedStack(EquipmentSlot.HEAD)?.item is ItemWithCape) return true
+        if (getEquippedStack(EquipmentSlot.LEGS)?.item is ItemWithCape) return true
+        if (getEquippedStack(EquipmentSlot.FEET)?.item is ItemWithCape) return true
+        if (getEquippedStack(EquipmentSlot.MAINHAND)?.item is ItemWithCape) return true
+        if (getEquippedStack(EquipmentSlot.OFFHAND)?.item is ItemWithCape) return true
+        return false
     }
 }

@@ -54,6 +54,9 @@ enum class Leggings(
     ),
     GILDED_TEMPEST(
         CustomArmorItems.GILDED_TEMPEST,
+    ),
+    WINDSTRIDER(
+        CustomArmorItems.WINDSTRIDER,
     );
 
     override val slot = AttributeModifierSlot.LEGS

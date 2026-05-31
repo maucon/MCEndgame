@@ -2,11 +2,13 @@ package de.fuballer.mcendgame.client.component.item.custom.armor
 
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.abyssal_mask.AbyssalMaskModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.bound_abyss.BoundAbyssModel
+import de.fuballer.mcendgame.client.component.item.custom.armor.model.broodmother.BroodmotherModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsBootsModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsChestplateModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsHelmetModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsLeggingsModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.emberchant.EmberchantModel
+import de.fuballer.mcendgame.client.component.item.custom.armor.model.emberreign.EmberreignModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.geistergaloschen.GeistergaloschenModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.gilded_tempest.GildedTempestModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.iceborne.IceborneModel
@@ -18,6 +20,7 @@ import de.fuballer.mcendgame.client.component.item.custom.armor.model.suede.Sued
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.suede.SuedeHelmetModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.suede.SuedeLeggingsModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.voidweaver.VoidweaverModel
+import de.fuballer.mcendgame.client.component.item.custom.armor.model.windstrider.WindstriderModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.wither_rose.WitherRoseBootsModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.wither_rose.WitherRoseChestplateModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.wither_rose.WitherRoseHelmetModel
@@ -117,6 +120,18 @@ object ArmorModelRegisterer {
         EntityModelLayerRegistry.registerModelLayer(
             GildedTempestModel.MODEL_LAYER,
             GildedTempestModel.Companion::getTexturedModelData
+        )
+        EntityModelLayerRegistry.registerModelLayer(
+            WindstriderModel.MODEL_LAYER,
+            WindstriderModel.Companion::getTexturedModelData
+        )
+        EntityModelLayerRegistry.registerModelLayer(
+            BroodmotherModel.MODEL_LAYER,
+            BroodmotherModel.Companion::getTexturedModelData
+        )
+        EntityModelLayerRegistry.registerModelLayer(
+            EmberreignModel.MODEL_LAYER,
+            EmberreignModel.Companion::getTexturedModelData
         )
     }
 }

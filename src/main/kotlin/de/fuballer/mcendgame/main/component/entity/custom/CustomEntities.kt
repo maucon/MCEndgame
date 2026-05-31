@@ -5,7 +5,9 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.Beak
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.spiderling.SpiderlingEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.swamp_golem.SwampGolemEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.webhook.WebhookEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.webshot.WebshotEntity
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
@@ -67,12 +69,26 @@ object CustomEntities {
             .dimensions(1.6f, 2.5f)
             .eyeHeight(2.0f)
             .maxTrackingRange(8)
-			.notAllowedInPeaceful()
+            .notAllowedInPeaceful()
     )
     val SCARRED_ONE = RegistryUtil.registerEntity(
         "scarred_one",
         EntityType.Builder.create({ type, world -> ScarredOneEntity(type, world) }, SpawnGroup.MISC)
             .dimensions(0.6f, 1.95f)
+            .maxTrackingRange(10)
+    )
+    val SPIDERLING = RegistryUtil.registerEntity(
+        "spiderling",
+        EntityType.Builder.create({ type, world -> SpiderlingEntity(type, world) }, SpawnGroup.MISC)
+            .dimensions(0.7f, 0.45f)
+            .eyeHeight(0.325f)
+            .maxTrackingRange(8)
+    )
+    val TRAINING_DUMMY = RegistryUtil.registerEntity(
+        "training_dummy",
+        EntityType.Builder.create({ type, world -> TrainingDummyEntity(type, world) }, SpawnGroup.MISC)
+            .dimensions(0.5F, 1.975F)
+            .eyeHeight(1.7775F)
             .maxTrackingRange(10)
     )
 }

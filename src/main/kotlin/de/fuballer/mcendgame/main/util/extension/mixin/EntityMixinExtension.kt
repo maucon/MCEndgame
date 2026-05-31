@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.util.extension.mixin
 import de.fuballer.mcendgame.main.accessor.*
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.data.AuraStatusEffect
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
+import de.fuballer.mcendgame.main.mixin.living_entity.LivingEntityAccessor
 import de.fuballer.mcendgame.main.mixin.living_entity.LivingEntityLastDamageTimeAccessorMixin
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
@@ -10,6 +11,7 @@ import net.minecraft.entity.attribute.EntityAttribute
 import net.minecraft.entity.attribute.EntityAttributeModifier
 import net.minecraft.registry.entry.RegistryEntry
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.Box
 import net.minecraft.util.math.Vec3i
 import java.util.*
 
@@ -153,4 +155,6 @@ object EntityMixinExtension {
         val accessor = this as LivingEntityWorldAttributesAccessor
         accessor.`mcendgame$resetWorldAttributesUpdate`()
     }
+
+    fun LivingEntity.getHitbox(): Box = (this as LivingEntityAccessor).`mcendgame$invokeGetHitbox`()
 }

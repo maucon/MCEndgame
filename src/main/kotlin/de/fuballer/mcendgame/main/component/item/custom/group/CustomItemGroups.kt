@@ -87,6 +87,9 @@ object CustomItemGroups {
             itemGroup.add(CustomArmorItems.VOIDWEAVER.defaultStack)
             itemGroup.add(CustomArmorItems.ABYSSAL_MASK.defaultStack)
             itemGroup.add(CustomArmorItems.GILDED_TEMPEST.defaultStack)
+            itemGroup.add(CustomArmorItems.WINDSTRIDER.defaultStack)
+            itemGroup.add(CustomArmorItems.BROODMOTHER.defaultStack)
+            itemGroup.add(CustomArmorItems.EMBERREIGN.defaultStack)
         }
         ItemGroupEvents.modifyEntriesEvent(CUSTOM_TOOLS_KEY).register { itemGroup ->
             itemGroup.add(CustomToolItems.BLOODHARVEST.defaultStack)
@@ -94,6 +97,7 @@ object CustomItemGroups {
             itemGroup.add(CustomToolItems.FATESPLITTER.defaultStack)
             itemGroup.add(CustomToolItems.SERPENTS_FANG.defaultStack)
             itemGroup.add(CustomToolItems.NIGHTREAVER.defaultStack)
+            itemGroup.add(CustomToolItems.GRAVEBREAKER.defaultStack)
             itemGroup.add(CustomToolItems.RADIANT_DAWN.defaultStack)
             itemGroup.add(CustomToolItems.WINDSTRING.defaultStack)
             itemGroup.add(CustomToolItems.HAILSTORM.defaultStack)

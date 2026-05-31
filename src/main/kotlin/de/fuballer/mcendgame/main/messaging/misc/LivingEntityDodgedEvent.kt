@@ -5,5 +5,6 @@ import net.minecraft.entity.LivingEntity
 
 data class LivingEntityDodgedEvent(
     val entity: LivingEntity,
+    val source: Entity?,
     val attacker: Entity?,
 )

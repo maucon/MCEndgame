@@ -12,5 +12,6 @@ class CustomParticleFactoryRegisterer {
         ParticleFactoryRegistry.getInstance().register(CustomParticleTypes.FLAME_PILLAR, FlamePillarParticle::Factory)
         ParticleFactoryRegistry.getInstance().register(CustomParticleTypes.SMOKE_PILLAR, SmokePillarParticle::Factory)
         ParticleFactoryRegistry.getInstance().register(CustomParticleTypes.HORIZONTAL_FLAME_BREATH, HorizontalFlameBreathParticle::Factory)
+        ParticleFactoryRegistry.getInstance().register(CustomParticleTypes.MOVE_TO_TARGET_FLAME, MoveToTargetFlameParticle::Factory)
     }
 }

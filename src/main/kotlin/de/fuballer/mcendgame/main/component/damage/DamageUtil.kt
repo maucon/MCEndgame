@@ -2,6 +2,8 @@ package de.fuballer.mcendgame.main.component.damage
 
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.attribute.EntityAttributeModifier
+import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.MathHelper
@@ -19,7 +21,8 @@ object DamageUtil {
         var damageReduction = effectiveArmor / 25.0f
         val itemStack = damageSource.weaponStack
         if (itemStack != null && armorWearer.entityWorld is ServerWorld) {
-            damageReduction = MathHelper.clamp(EnchantmentHelper.getArmorEffectiveness(armorWearer.entityWorld as ServerWorld, itemStack, armorWearer, damageSource, damageReduction), 0.0f, 1.0f)
+            damageReduction =
+                MathHelper.clamp(EnchantmentHelper.getArmorEffectiveness(armorWearer.entityWorld as ServerWorld, itemStack, armorWearer, damageSource, damageReduction), 0.0f, 1.0f)
         }
 
         val damageMultiplier = 1.0f - damageReduction
@@ -51,7 +54,8 @@ object DamageUtil {
 
         val itemStack = damageSource.weaponStack
         if (itemStack != null && armorWearer.entityWorld is ServerWorld) {
-            damageReduction = MathHelper.clamp(EnchantmentHelper.getArmorEffectiveness(armorWearer.entityWorld as ServerWorld, itemStack, armorWearer, damageSource, damageReduction), 0.0f, 1.0f)
+            damageReduction =
+                MathHelper.clamp(EnchantmentHelper.getArmorEffectiveness(armorWearer.entityWorld as ServerWorld, itemStack, armorWearer, damageSource, damageReduction), 0.0f, 1.0f)
         }
 
         val damageMultiplier = 1.0f - damageReduction
@@ -66,6 +70,11 @@ object DamageUtil {
 
         var moreDamage = event.moreDamage.fold(1.0) { a, b -> a * (b + 1) }
         moreDamage *= event.moreAttackDamage.fold(1.0) { a, b -> a * (b + 1) }
+
+        (event.damager as? LivingEntity)?.let { attacker ->
+            damageIncrease += getAttackDamageModifierValues(attacker, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE).sum()
+            moreDamage *= getAttackDamageModifierValues(attacker, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL).fold(1.0) { a, b -> a * (b + 1) }
+        }
 
         return damageIncrease * moreDamage
     }
@@ -97,4 +106,18 @@ object DamageUtil {
     ): Double {
         return EnchantmentHelper.getDamage(attacker.entityWorld as ServerWorld, attacker.weaponStack, attacked, source, 0.0F).toDouble()
     }
+
+    fun getAttackDamageBaseValue(
+        event: DamageCalculationCommand,
+        livingEntity: LivingEntity,
+    ) = livingEntity.getAttributeBaseValue(EntityAttributes.ATTACK_DAMAGE) +
+            getAttackDamageModifierValues(livingEntity, EntityAttributeModifier.Operation.ADD_VALUE).sum() +
+            event.attackDamage.sum()
+
+    fun getAttackDamageModifierValues(
+        livingEntity: LivingEntity,
+        operation: EntityAttributeModifier.Operation,
+    ) = livingEntity.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE)?.let { instance ->
+        instance.modifiers.filter { it.operation == operation }.map { it.value }
+    } ?: listOf()
 }

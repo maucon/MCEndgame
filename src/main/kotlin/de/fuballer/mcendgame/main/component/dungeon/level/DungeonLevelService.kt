@@ -7,9 +7,11 @@ import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtensio
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.setDungeonLevel
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonAspects
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.isTrainingDungeon
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
+import net.minecraft.server.world.ServerWorld
 import kotlin.math.max
 
 @Injectable
@@ -19,7 +21,7 @@ class DungeonLevelService {
         if (event.isClient) return
 
         val player = event.player
-
+        if ((player.entityWorld as ServerWorld).isTrainingDungeon()) return
         val playerDungeonLevel = player.getDungeonLevel()
 
         playerDungeonLevel.level = max(playerDungeonLevel.level - 1, 1)
