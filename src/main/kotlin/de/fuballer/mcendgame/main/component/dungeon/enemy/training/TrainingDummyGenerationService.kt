@@ -13,6 +13,7 @@ class TrainingDummyGenerationService {
         dungeonWorld: ServerWorld,
         spawnPositions: List<SpawnPosition>,
     ) {
+        val server = dungeonWorld.server ?: return
         spawnPositions.forEachIndexed { index, spawnPos ->
             val entity = CustomEntities.TRAINING_DUMMY.spawn(
                 dungeonWorld,
@@ -32,7 +33,6 @@ class TrainingDummyGenerationService {
                 0F
             )
 
-            val server = dungeonWorld.server ?: return
             TrainingDummyGenerationSettings.getLoadout(index, server).apply(entity)
             entity.setDungeonEnemy(true)
         }

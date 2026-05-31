@@ -130,6 +130,5 @@ class BurnEnemyOnWalkService(
         walkData.entries.removeIf {
             currentTime - it.value.lastUpdatedWorldTime > 200
         }
-        println(walkData.size)
     }
 }

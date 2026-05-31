@@ -13,6 +13,7 @@ import de.fuballer.mcendgame.main.messaging.misc.PlayerAfterDimensionChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerBeforeDimensionChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerEntityDeathEvent
 import de.fuballer.mcendgame.main.util.extension.SlotExtension.isOrIsChildOf
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCompanion
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setCompanion
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
@@ -102,7 +103,7 @@ class SpiderlingCompanionsService {
     ) {
         val world = player.entityWorld as? ServerWorld ?: return
         val spiderlings = world.getEntitiesByType(TypeFilter.instanceOf(SpiderlingEntity::class.java)) { spiderling ->
-            spiderling.owner == player
+            spiderling.owner == player && spiderling.isCompanion()
         }
 
         spiderlings.forEach {
