@@ -6,12 +6,13 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.entities.spiderling.SpiderlingEntity
-import de.fuballer.mcendgame.main.configuration.RuntimeConfig
+import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
 import de.fuballer.mcendgame.main.messaging.dungeon.WorldAttributeChangedEvent
 import de.fuballer.mcendgame.main.messaging.misc.EquipmentChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerAfterDimensionChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerBeforeDimensionChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerEntityDeathEvent
+import de.fuballer.mcendgame.main.messaging.server.ServerEndTickEvent
 import de.fuballer.mcendgame.main.util.extension.SlotExtension.isOrIsChildOf
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCompanion
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setCompanion
@@ -25,9 +26,14 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.TypeFilter
+import java.util.*
 
 @Injectable
-class SpiderlingCompanionsService {
+class SpiderlingCompanionsService(
+    val scheduler: Scheduler
+) {
+    val toSummon: MutableSet<UUID> = mutableSetOf()
+
     @Initializer
     fun onPlayerDisconnect() = ServerPlayConnectionEvents.DISCONNECT.register { handler, _ ->
         removeSpiderlings(handler.player)
@@ -40,7 +46,7 @@ class SpiderlingCompanionsService {
 
     @EventSubscriber(sync = true)
     fun on(event: PlayerAfterDimensionChangeEvent) {
-        summonSpiderlings(event.player)
+        toSummon += event.player.uuid
     }
 
     @EventSubscriber(sync = true)
@@ -55,14 +61,26 @@ class SpiderlingCompanionsService {
         val attributeSlot = AttributeModifierSlot.forEquipmentSlot(event.slot)
         if (!hasApplicableAttribute(event.oldStack, attributeSlot) && !hasApplicableAttribute(event.newStack, attributeSlot)) return
 
-        resummonSpiderlings(player)
+        toSummon += player.uuid
     }
 
     @EventSubscriber(sync = true)
     fun on(event: WorldAttributeChangedEvent) {
         if (event.attribute.type != CustomAttributeTypes.SPIDERLING_COMPANIONS) return
-        event.world.players.forEach {
-            resummonSpiderlings(it)
+
+        toSummon.addAll(event.world.players.map { it.uuid })
+    }
+
+    @EventSubscriber(sync = true)
+    fun on(event: ServerEndTickEvent) {
+        val iterator = toSummon.iterator()
+        while (iterator.hasNext()) {
+            val uuid = iterator.next()
+            iterator.remove()
+
+            event.server.playerManager.getPlayer(uuid)?.let {
+                resummonSpiderlings(it)
+            }
         }
     }
 
@@ -95,7 +113,7 @@ class SpiderlingCompanionsService {
         spiderling.setCompanion()
         spiderling.isInvulnerable = true
 
-        RuntimeConfig.SERVER.execute { world.spawnEntity(spiderling) }
+        world.spawnEntity(spiderling)
     }
 
     private fun removeSpiderlings(

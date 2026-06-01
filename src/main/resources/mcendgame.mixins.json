@@ -80,6 +80,7 @@
     "projectile.ProjectileEntityAccessor",
     "server_player_entity.ServerPlayerEntityAccessor",
     "server_player_entity.ServerPlayerEntityDeathNBTCopyMixin",
+    "server_player_entity.ServerPlayerEntityRespawnMixin",
     "server_player_entity.ServerPlayerEntityTeleportCommandMixin",
     "shield.BlocksAttackComponentDisableShieldsMixin",
     "skeleton.AbstractSkeletonEntityBowMixin",

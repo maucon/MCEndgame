@@ -10,6 +10,7 @@ import de.fuballer.mcendgame.main.messaging.misc.EquipmentChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerAfterDimensionChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerBeforeDimensionChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerEntityDeathEvent
+import de.fuballer.mcendgame.main.messaging.server.ServerEndTickEvent
 import de.fuballer.mcendgame.main.util.extension.SlotExtension.isOrIsChildOf
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.addAllyAuraStatusEffect
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.addEnemyAuraStatusEffect
@@ -34,9 +35,12 @@ import net.minecraft.registry.Registry
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.TypeFilter
+import java.util.*
 
 @Injectable
 class WolfCompanionService {
+    val toSummon: MutableSet<UUID> = mutableSetOf()
+
     @Initializer
     fun onPlayerDisconnect() = ServerPlayConnectionEvents.DISCONNECT.register { handler, _ ->
         removeWolfCompanions(handler.player)
@@ -49,7 +53,7 @@ class WolfCompanionService {
 
     @EventSubscriber(sync = true)
     fun on(event: PlayerAfterDimensionChangeEvent) {
-        summonWolfCompanions(event.player, event.newWorld)
+        toSummon += event.player.uuid
     }
 
     @EventSubscriber(sync = true)
@@ -66,14 +70,26 @@ class WolfCompanionService {
         val attributeSlot = AttributeModifierSlot.forEquipmentSlot(event.slot)
         if (!hasApplicableAttribute(event.oldStack, attributeSlot) && !hasApplicableAttribute(event.newStack, attributeSlot)) return
 
-        resummonWolfCompanions(player)
+        toSummon += player.uuid
     }
 
     @EventSubscriber(sync = true)
     fun on(event: WorldAttributeChangedEvent) {
         if (event.attribute.type != CustomAttributeTypes.WOLF_COMPANION) return
-        event.world.players.forEach {
-            resummonWolfCompanions(it)
+
+        toSummon.addAll(event.world.players.map { it.uuid })
+    }
+
+    @EventSubscriber(sync = true)
+    fun on(event: ServerEndTickEvent) {
+        val iterator = toSummon.iterator()
+        while (iterator.hasNext()) {
+            val uuid = iterator.next()
+            iterator.remove()
+
+            event.server.playerManager.getPlayer(uuid)?.let {
+                resummonWolfCompanions(it)
+            }
         }
     }
 
