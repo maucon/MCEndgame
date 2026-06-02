@@ -22,13 +22,6 @@ import net.minecraft.world.WorldProperties
 
 @Injectable
 class DungeonLeaveService {
-//    @Initializer
-//    fun afterPlayerRespawn() = ServerPlayerEvents.AFTER_RESPAWN.register { oldPlayer, newPlayer, alive ->
-//        val oldWorld = oldPlayer.entityWorld
-//        if (!oldWorld.isDungeonWorld()) return@register
-//        teleportToDungeonExitPos(newPlayer, oldWorld)
-//    }
-
     @Initializer
     fun onPlayerJoin() = ServerPlayConnectionEvents.JOIN.register { handler, _, _ ->
         val player = handler.player
