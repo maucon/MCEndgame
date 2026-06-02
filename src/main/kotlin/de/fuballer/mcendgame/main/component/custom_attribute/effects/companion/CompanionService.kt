@@ -30,7 +30,6 @@ import net.minecraft.entity.passive.TameableEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.TypeFilter
 import java.util.*
 
@@ -116,7 +115,7 @@ class CompanionService {
         removeCompanions(player, type.entityClass)
         summonAllOfType(player, type)
     }
-    
+
     fun removeCompanions(player: ServerPlayerEntity) {
         CompanionType.entries.forEach { removeCompanions(player, it.entityClass) }
     }
@@ -125,7 +124,7 @@ class CompanionService {
         player: ServerPlayerEntity,
         type: Class<out TameableEntity>,
     ) {
-        val world = player.entityWorld as? ServerWorld ?: return
+        val world = player.entityWorld ?: return
 
         val companions = world.getEntitiesByType(TypeFilter.instanceOf(type)) {
             it.isCompanion() && it.owner == player
@@ -159,7 +158,7 @@ class CompanionService {
         attribute: CustomAttribute,
     ) {
         val world = player.entityWorld
-        val companion = type.entityType.create(world, SpawnReason.MOB_SUMMONED) as? TameableEntity ?: return
+        val companion = type.entityType.create(world, SpawnReason.MOB_SUMMONED) ?: return
 
         companion.setPosition(player.entityPos)
         companion.setTamedBy(player)
