@@ -10,6 +10,7 @@ import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.setTar
 import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.setTargetY
 import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.setTargetZ
 import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.setUpdateCountdownTicks
+import net.minecraft.block.BlockState
 import net.minecraft.component.DataComponentTypes
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
@@ -17,11 +18,16 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.ai.goal.*
 import net.minecraft.entity.attribute.DefaultAttributeContainer
 import net.minecraft.entity.attribute.EntityAttributes
+import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.passive.PassiveEntity
 import net.minecraft.entity.passive.TameableEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.sound.SoundCategory
+import net.minecraft.sound.SoundEvent
+import net.minecraft.sound.SoundEvents
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import kotlin.math.max
 
@@ -34,7 +40,7 @@ class SpiderlingEntity(
 
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createLivingAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 35.0)
+                .add(EntityAttributes.FOLLOW_RANGE, 24.0)
                 .add(EntityAttributes.MOVEMENT_SPEED, 0.4)
                 .add(EntityAttributes.ATTACK_DAMAGE, 3.0)
                 .add(EntityAttributes.ATTACK_KNOCKBACK, 0.3)
@@ -104,9 +110,6 @@ class SpiderlingEntity(
         goalSelector.add(4, WanderAroundGoal(this, 1.0))
         goalSelector.add(5, LookAtEntityGoal(this, PlayerEntity::class.java, 8.0f))
         goalSelector.add(5, LookAroundGoal(this))
-
-        targetSelector.add(1, TrackOwnerAttackerGoal(this))
-        targetSelector.add(2, AttackWithOwnerGoal(this))
     }
 
     override fun isBreedingItem(item: ItemStack) = false
@@ -132,5 +135,17 @@ class SpiderlingEntity(
 
     override fun pushAway(entity: Entity) {
         if (entity is SpiderlingEntity) super.pushAway(entity)
+    }
+
+    override fun getSoundCategory() = SoundCategory.NEUTRAL
+
+    override fun getAmbientSound(): SoundEvent = SoundEvents.ENTITY_SPIDER_AMBIENT
+
+    override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.ENTITY_SPIDER_HURT
+
+    override fun getDeathSound(): SoundEvent = SoundEvents.ENTITY_SPIDER_DEATH
+
+    override fun playStepSound(pos: BlockPos, state: BlockState) {
+        playSound(SoundEvents.ENTITY_SPIDER_STEP, 0.15f, 1.0f)
     }
 }

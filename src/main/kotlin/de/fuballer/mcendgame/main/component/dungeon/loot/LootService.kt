@@ -20,6 +20,7 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.passive.TameableEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import kotlin.random.Random
@@ -96,7 +97,9 @@ class LootService {
     private fun getMagicFindFactor(entity: LivingEntity?): Double {
         if (entity == null) return 1.0
 
-        val magicFindCommand = MagicFindCommand(entity)
+        val magicFindEntity = if (entity !is TameableEntity) entity else entity.owner ?: entity
+
+        val magicFindCommand = MagicFindCommand(magicFindEntity)
         val cmd = CommandGateway.apply(magicFindCommand)
 
         return LootSettings.calculateMagicFindDropProbabilityFactor(cmd.magicFind)

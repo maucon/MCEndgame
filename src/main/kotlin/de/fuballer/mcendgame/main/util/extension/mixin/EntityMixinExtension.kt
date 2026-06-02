@@ -5,10 +5,13 @@ import de.fuballer.mcendgame.main.component.custom_attribute.effects.data.AuraSt
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
 import de.fuballer.mcendgame.main.mixin.living_entity.LivingEntityAccessor
 import de.fuballer.mcendgame.main.mixin.living_entity.LivingEntityLastDamageTimeAccessorMixin
+import de.fuballer.mcendgame.main.mixin.mob_entity.MobEntityAccessor
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.ai.goal.GoalSelector
 import net.minecraft.entity.attribute.EntityAttribute
 import net.minecraft.entity.attribute.EntityAttributeModifier
+import net.minecraft.entity.mob.MobEntity
 import net.minecraft.registry.entry.RegistryEntry
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Box
@@ -157,4 +160,6 @@ object EntityMixinExtension {
     }
 
     fun LivingEntity.getHitbox(): Box = (this as LivingEntityAccessor).`mcendgame$invokeGetHitbox`()
+
+    fun MobEntity.getTargetSelector(): GoalSelector = (this as MobEntityAccessor).`mcendgame$getTargetSelector`()
 }
