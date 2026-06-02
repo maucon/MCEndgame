@@ -35,7 +35,7 @@ import java.util.*
 
 @Injectable
 class CompanionService {
-    val toSummon: MutableMap<UUID, MutableSet<CompanionType>> = mutableMapOf()
+    private val toSummon: MutableMap<UUID, MutableSet<CompanionType>> = mutableMapOf()
 
     @Initializer
     fun onPlayerDisconnect() = ServerPlayConnectionEvents.DISCONNECT.register { handler, _ ->
