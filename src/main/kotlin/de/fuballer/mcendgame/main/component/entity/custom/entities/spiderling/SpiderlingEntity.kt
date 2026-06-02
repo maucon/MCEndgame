@@ -40,7 +40,7 @@ class SpiderlingEntity(
 
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createLivingAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 35.0)
+                .add(EntityAttributes.FOLLOW_RANGE, 24.0)
                 .add(EntityAttributes.MOVEMENT_SPEED, 0.4)
                 .add(EntityAttributes.ATTACK_DAMAGE, 3.0)
                 .add(EntityAttributes.ATTACK_KNOCKBACK, 0.3)
@@ -110,9 +110,6 @@ class SpiderlingEntity(
         goalSelector.add(4, WanderAroundGoal(this, 1.0))
         goalSelector.add(5, LookAtEntityGoal(this, PlayerEntity::class.java, 8.0f))
         goalSelector.add(5, LookAroundGoal(this))
-
-        targetSelector.add(1, TrackOwnerAttackerGoal(this))
-        targetSelector.add(2, AttackWithOwnerGoal(this))
     }
 
     override fun isBreedingItem(item: ItemStack) = false

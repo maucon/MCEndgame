@@ -67,6 +67,7 @@
     "living_entity.LivingEntityWebbedMixin",
     "living_entity.LivingEntityWitherDamageImmunityMixin",
     "living_entity.LivingEntityWorldAttributesMixin",
+    "mob_entity.MobEntityAccessor",
     "mob_entity.MobEntityTargetCommandMixin",
     "phasing.AbstractBlockStateBlockPhasingMixin",
     "phasing.EntityBlockPhasingMixin",
