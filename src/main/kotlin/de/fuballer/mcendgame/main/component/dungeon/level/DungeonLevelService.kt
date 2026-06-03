@@ -25,6 +25,11 @@ class DungeonLevelService {
         if ((player.entityWorld as ServerWorld).isTrainingDungeon()) return
         val playerDungeonLevel = player.getDungeonLevel()
 
+        if (playerDungeonLevel.locked && playerDungeonLevel.level <= DungeonLevelSettings.getClientSetLevelLimit(playerDungeonLevel.highestReached)) {
+            player.sendMessage(DungeonLevelSettings.REGRESS_LOCKED_MESSAGE, false)
+            return
+        }
+
         playerDungeonLevel.level = max(playerDungeonLevel.level - 1, 1)
         playerDungeonLevel.levelProgress = 0
 
@@ -45,7 +50,7 @@ class DungeonLevelService {
             val playerDungeonLevel = player.getDungeonLevel()
 
             if (playerDungeonLevel.locked) {
-                player.sendMessage(DungeonLevelSettings.LOCKED_MESSAGE, false)
+                player.sendMessage(DungeonLevelSettings.COMPLETION_LOCKED_MESSAGE, false)
                 return@forEach
             }
 

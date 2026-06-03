@@ -13,9 +13,14 @@ object DungeonLevelSettings {
     private val DUNGEON_COMPLETED_PREFIX: MutableText = Text.translatable("text.mcendgame.dungeon_level.dungeon_completed")
         .formatted(Formatting.GOLD, Formatting.BOLD)
 
-    val LOCKED_MESSAGE: Text = DUNGEON_COMPLETED_PREFIX.copy().append(
+    val COMPLETION_LOCKED_MESSAGE: Text = DUNGEON_COMPLETED_PREFIX.copy().append(
         Text.translatable("text.mcendgame.dungeon_level.locked")
             .styled { style -> style.withBold(false).withColor(Formatting.RED) }
+    )
+
+    val REGRESS_LOCKED_MESSAGE: Text = Text.translatable("text.mcendgame.dungeon_level.dungeon_death").formatted(Formatting.RED, Formatting.BOLD).append(
+        Text.translatable("text.mcendgame.dungeon_level.locked")
+            .styled { style -> style.withBold(false).withColor(Formatting.GRAY) }
     )
 
     val NO_PROGRESS_MESSAGE: Text = DUNGEON_COMPLETED_PREFIX.copy().append(
