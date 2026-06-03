@@ -7,18 +7,27 @@ import net.minecraft.network.codec.PacketCodec
 import net.minecraft.network.codec.PacketCodecs
 import net.minecraft.storage.ReadView
 import net.minecraft.storage.WriteView
+import kotlin.math.max
 
 private const val DUNGEON_LEVEL_NBT = "PlayerDungeonLevel"
 
 data class PlayerDungeonLevel(
     var level: Int = 1,
     var levelProgress: Int = 0,
+    var highestReached: Int = level,
+    var locked: Boolean = false,
 ) {
+    init {
+        highestReached = max(level, highestReached)
+    }
+
     companion object {
         val PACKET_CODEC: PacketCodec<RegistryByteBuf, PlayerDungeonLevel> =
             PacketCodec.tuple(
                 PacketCodecs.VAR_INT, PlayerDungeonLevel::level,
                 PacketCodecs.VAR_INT, PlayerDungeonLevel::levelProgress,
+                PacketCodecs.VAR_INT, PlayerDungeonLevel::highestReached,
+                PacketCodecs.BOOLEAN, PlayerDungeonLevel::locked,
                 ::PlayerDungeonLevel
             )
 
@@ -26,7 +35,11 @@ data class PlayerDungeonLevel(
             instance.group(
                 Codec.INT.fieldOf("level").forGetter(PlayerDungeonLevel::level),
                 Codec.INT.fieldOf("level_progress").forGetter(PlayerDungeonLevel::levelProgress),
-            ).apply(instance, ::PlayerDungeonLevel)
+                Codec.INT.optionalFieldOf("highest_reached", 1).forGetter(PlayerDungeonLevel::highestReached),
+                Codec.BOOL.optionalFieldOf("locked", false).forGetter(PlayerDungeonLevel::locked),
+            ).apply(instance) { level, progress, highest, locked ->
+                PlayerDungeonLevel(level, progress, max(level, highest), locked)
+            }
         }
 
 
@@ -34,6 +47,6 @@ data class PlayerDungeonLevel(
             view.put(DUNGEON_LEVEL_NBT, CODEC, dungeonLevel)
         }
 
-        fun read(view: ReadView): PlayerDungeonLevel = view.read<PlayerDungeonLevel>(DUNGEON_LEVEL_NBT, CODEC).orElseGet { PlayerDungeonLevel() }
+        fun read(view: ReadView): PlayerDungeonLevel = view.read(DUNGEON_LEVEL_NBT, CODEC).orElseGet { PlayerDungeonLevel() }
     }
 }
