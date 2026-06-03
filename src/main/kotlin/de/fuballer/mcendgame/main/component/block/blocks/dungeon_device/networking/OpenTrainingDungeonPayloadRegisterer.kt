@@ -15,9 +15,9 @@ class OpenTrainingDungeonPayloadRegisterer {
     fun register() {
         PayloadTypeRegistry.playC2S().register(DungeonDeviceTrainingPayload.ID, DungeonDeviceTrainingPayload.CODEC)
 
-        ServerPlayNetworking.registerGlobalReceiver(DungeonDeviceTrainingPayload.ID) { payload, _ ->
+        ServerPlayNetworking.registerGlobalReceiver(DungeonDeviceTrainingPayload.ID) { payload, context ->
             val blockEntity = RuntimeConfig.SERVER.getWorld(payload.worldKey)?.getBlockEntity(payload.pos) ?: return@registerGlobalReceiver
-            val playerEntity = RuntimeConfig.SERVER.playerManager.getPlayer(payload.playerId) ?: return@registerGlobalReceiver
+            val playerEntity = context.player()
 
             val dungeonDeviceEntity = blockEntity as? DungeonDeviceBlockEntity ?: return@registerGlobalReceiver
 

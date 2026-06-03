@@ -82,8 +82,9 @@ class DungeonLevelCommand {
         }
 
         players.forEach {
-            val highestReached = highestReached ?: it.getDungeonLevel().highestReached
-            val dungeonLevel = PlayerDungeonLevel(level, progress, highestReached)
+            val current = it.getDungeonLevel()
+            val highestReached = highestReached ?: current.highestReached
+            val dungeonLevel = PlayerDungeonLevel(level, progress, highestReached, current.locked)
             it.setDungeonLevel(dungeonLevel)
         }
 

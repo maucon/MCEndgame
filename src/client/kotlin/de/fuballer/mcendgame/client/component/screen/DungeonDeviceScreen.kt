@@ -126,8 +126,7 @@ class DungeonDeviceScreen(
         increaseLevelButton = ButtonWidget.builder(LEVEL_INCREASE_TEXT) {
             playerDungeonLevel.level = min(playerDungeonLevel.level + 1, DungeonLevelSettings.getClientSetLevelLimit(playerDungeonLevel.highestReached))
             playerDungeonLevel.levelProgress = 0
-            updateLevelButtons()
-            sendUpdateDungeonLevelPayload()
+            updateDungeonLevel()
         }
             .dimensions(levelButtonsX, plusButtonY, LEVEL_BUTTONS_SIZE, LEVEL_BUTTONS_SIZE)
             .build()
@@ -135,16 +134,14 @@ class DungeonDeviceScreen(
         decreaseLevelButton = ButtonWidget.builder(LEVEL_DECREASE_TEXT) {
             playerDungeonLevel.level = max(playerDungeonLevel.level - 1, 1)
             playerDungeonLevel.levelProgress = 0
-            updateLevelButtons()
-            sendUpdateDungeonLevelPayload()
+            updateDungeonLevel()
         }
             .dimensions(levelButtonsX, minusButtonY, LEVEL_BUTTONS_SIZE, LEVEL_BUTTONS_SIZE)
             .build()
 
         lockLevelButton = ButtonWidget.builder(Text.empty()) {
             playerDungeonLevel.locked = !playerDungeonLevel.locked
-            updateLevelButtons()
-            sendUpdateDungeonLevelPayload()
+            updateDungeonLevel()
         }
             .dimensions(levelButtonsX, lockButtonY, LEVEL_BUTTONS_SIZE, LEVEL_BUTTONS_SIZE)
             .build()
@@ -202,6 +199,12 @@ class DungeonDeviceScreen(
         )
 
         initLevelScalingDetails(playerDungeonLevel.level)
+    }
+
+    private fun updateDungeonLevel() {
+        updateLevelButtons()
+        initLevelScalingDetails(playerDungeonLevel.level)
+        sendUpdateDungeonLevelPayload()
     }
 
     private fun updateLevelButtons() {

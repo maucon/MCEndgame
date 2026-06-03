@@ -35,9 +35,11 @@ data class PlayerDungeonLevel(
             instance.group(
                 Codec.INT.fieldOf("level").forGetter(PlayerDungeonLevel::level),
                 Codec.INT.fieldOf("level_progress").forGetter(PlayerDungeonLevel::levelProgress),
-                Codec.INT.fieldOf("highest_reached").forGetter(PlayerDungeonLevel::highestReached),
-                Codec.BOOL.fieldOf("locked").forGetter(PlayerDungeonLevel::locked),
-            ).apply(instance, ::PlayerDungeonLevel)
+                Codec.INT.optionalFieldOf("highest_reached", 1).forGetter(PlayerDungeonLevel::highestReached),
+                Codec.BOOL.optionalFieldOf("locked", false).forGetter(PlayerDungeonLevel::locked),
+            ).apply(instance) { level, progress, highest, locked ->
+                PlayerDungeonLevel(level, progress, max(level, highest), locked)
+            }
         }
 
 
