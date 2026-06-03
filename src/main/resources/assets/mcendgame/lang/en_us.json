@@ -156,6 +156,14 @@
   "block.mcendgame.dungeon_device": "Dungeon Device",
   "container.mcendgame.dungeon_device.title": "Dungeon Device",
   "container.mcendgame.dungeon_device.open": "Open",
+  "container.mcendgame.dungeon_device.level_increase_tooltip": "Increase Dungeon Level",
+  "container.mcendgame.dungeon_device.level_increase_tooltip_limit": "Limit Reached (%s, %s%% of %s)",
+  "container.mcendgame.dungeon_device.level_decrease_tooltip": "Decrease Dungeon Level",
+  "container.mcendgame.dungeon_device.level_decrease_above_increase_limit_tooltip": "You can not increase back to this level",
+  "container.mcendgame.dungeon_device.level_unlock_tooltip": "Click to Unlock",
+  "container.mcendgame.dungeon_device.level_lock_tooltip": "Click to Lock",
+  "container.mcendgame.dungeon_device.level_lock_explanation_tooltip": "Disables Dungeon Progress",
+  "container.mcendgame.dungeon_device.level_unlock_explanation_tooltip": "Enables Dungeon Progress",
   "container.mcendgame.dungeon_device.enemy_attributes": "Enemy Attributes",
   "container.mcendgame.dungeon_device.boss_attributes": "Boss Attributes",
   "container.mcendgame.dungeon_device.totems_tooltip": "Dungeon Totems",
@@ -323,6 +331,7 @@
 
   "text.mcendgame.dungeon_level.dungeon_completed": "Dungeon completed!",
   "text.mcendgame.dungeon_level.dungeon_death": "You died!",
+  "text.mcendgame.dungeon_level.locked": " Dungeon level is locked!",
   "text.mcendgame.dungeon_level.no_progress": " Dungeon level is too low to grant progress!",
   "text.mcendgame.dungeon_level.progress": " You are now Level: %s, Progress %s/%s",
   "text.mcendgame.dungeon_level.regress": " You are now Level: %s",
@@ -337,8 +346,8 @@
   "error.mcendgame.teleport.failed": "Destination location invalid! Closing portal.",
 
   "commands.mcendgame.set_dungeon_level.no_player": "No player found!",
-  "commands.mcendgame.set_dungeon_level.success.single": "Set dungeon level for %s! (Level: %s, Progress: %s)",
-  "commands.mcendgame.set_dungeon_level.success.multiple": "Set dungeon level for %s players! (Level: %s, Progress: %s)",
+  "commands.mcendgame.set_dungeon_level.success.single": "Set dungeon level for %s! (Level: %s, Progress: %s, Highest: %s)",
+  "commands.mcendgame.set_dungeon_level.success.multiple": "Set dungeon level for %s players! (Level: %s, Progress: %s, Highest: %s)",
 
   "commands.mcendgame.killer.no_killer": "No killer found for %s!",
 

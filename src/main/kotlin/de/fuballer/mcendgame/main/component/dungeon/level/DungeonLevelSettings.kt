@@ -6,9 +6,17 @@ import net.minecraft.util.Formatting
 
 object DungeonLevelSettings {
     const val LEVEL_INCREASE_THRESHOLD = 3
+    const val CLIENT_SET_LEVEL_LIMIT_PERCENTAGE = 0.75 // percentage of highest reached
+
+    fun getClientSetLevelLimit(highestReached: Int) = (highestReached * CLIENT_SET_LEVEL_LIMIT_PERCENTAGE).toInt()
 
     private val DUNGEON_COMPLETED_PREFIX: MutableText = Text.translatable("text.mcendgame.dungeon_level.dungeon_completed")
         .formatted(Formatting.GOLD, Formatting.BOLD)
+
+    val LOCKED_MESSAGE: Text = DUNGEON_COMPLETED_PREFIX.copy().append(
+        Text.translatable("text.mcendgame.dungeon_level.locked")
+            .styled { style -> style.withBold(false).withColor(Formatting.RED) }
+    )
 
     val NO_PROGRESS_MESSAGE: Text = DUNGEON_COMPLETED_PREFIX.copy().append(
         Text.translatable("text.mcendgame.dungeon_level.no_progress")

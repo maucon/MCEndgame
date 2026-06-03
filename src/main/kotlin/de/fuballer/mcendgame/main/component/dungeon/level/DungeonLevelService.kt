@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.dungeon.level
 
 import de.fuballer.mcendgame.main.component.dungeon.completion.DungeonCompletedEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.ClientDungeonLevelUpdateEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonPlayerDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonPlayerIncreaseProgressCommand
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getDungeonLevel
@@ -43,18 +44,43 @@ class DungeonLevelService {
         event.players.forEach { player ->
             val playerDungeonLevel = player.getDungeonLevel()
 
+            if (playerDungeonLevel.locked) {
+                player.sendMessage(DungeonLevelSettings.LOCKED_MESSAGE, false)
+                return@forEach
+            }
+
             if (playerDungeonLevel.level > dungeonLevel) {
                 player.sendMessage(DungeonLevelSettings.NO_PROGRESS_MESSAGE, false)
-
                 return@forEach
             }
 
             val helpLevelProgress = (playerDungeonLevel.levelProgress + cmd.progressGranted)
             playerDungeonLevel.level += helpLevelProgress / DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD
             playerDungeonLevel.levelProgress = helpLevelProgress % DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD
+            playerDungeonLevel.highestReached = max(playerDungeonLevel.highestReached, playerDungeonLevel.level)
 
             player.setDungeonLevel(playerDungeonLevel)
             player.sendMessage(DungeonLevelSettings.getProgressMessage(playerDungeonLevel.level, playerDungeonLevel.levelProgress), false)
         }
+    }
+
+    @EventSubscriber(sync = true)
+    fun on(event: ClientDungeonLevelUpdateEvent) {
+        val player = event.playerEntity
+        val clientLevel = event.dungeonLevel
+        val serverLevel = player.getDungeonLevel()
+
+        val cL = clientLevel.level
+        if (cL != serverLevel.level
+            && cL >= 1
+            && cL <= DungeonLevelSettings.getClientSetLevelLimit(serverLevel.highestReached)
+        ) {
+            serverLevel.level = cL
+            serverLevel.levelProgress = 0
+        }
+
+        serverLevel.locked = clientLevel.locked
+
+        player.setDungeonLevel(serverLevel)
     }
 }
