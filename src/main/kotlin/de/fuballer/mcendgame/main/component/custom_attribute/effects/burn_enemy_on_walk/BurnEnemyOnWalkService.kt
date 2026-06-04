@@ -26,7 +26,7 @@ class BurnEnemyOnWalkService(
 
     @Initializer
     fun register() {
-        ServerTickEvents.END_WORLD_TICK.register { world ->
+        ServerTickEvents.END_LEVEL_TICK.register { world ->
             updateEntities(world)
 
             val time = world.gameTime

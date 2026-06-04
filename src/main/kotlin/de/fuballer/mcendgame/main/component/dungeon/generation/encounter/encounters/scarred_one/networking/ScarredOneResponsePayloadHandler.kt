@@ -12,7 +12,7 @@ class ScarredOneResponsePayloadHandler(
 ) {
     @Initializer
     fun register() {
-        PayloadTypeRegistry.playC2S().register(ScarredOneResponsePayload.ID, ScarredOneResponsePayload.CODEC)
+        PayloadTypeRegistry.serverboundPlay().register(ScarredOneResponsePayload.ID, ScarredOneResponsePayload.CODEC)
 
         ServerPlayNetworking.registerGlobalReceiver(ScarredOneResponsePayload.ID) { payload, context ->
             scarredOneEncounterService.response(context.player(), payload.accept, payload.uuid)

@@ -13,7 +13,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 class OpenDungeonPayloadRegisterer {
     @Initializer
     fun register() {
-        PayloadTypeRegistry.playC2S().register(DungeonDevicePayload.ID, DungeonDevicePayload.CODEC)
+        PayloadTypeRegistry.serverboundPlay().register(DungeonDevicePayload.ID, DungeonDevicePayload.CODEC)
 
         ServerPlayNetworking.registerGlobalReceiver(DungeonDevicePayload.ID) { openDungeonPayload, context ->
             val blockEntity = RuntimeConfig.SERVER.getLevel(openDungeonPayload.worldKey)?.getBlockEntity(openDungeonPayload.pos) ?: return@registerGlobalReceiver

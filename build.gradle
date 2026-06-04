@@ -1,9 +1,6 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    id 'fabric-loom' version "${loom_version}"
-    id 'maven-publish'
-    id "org.jetbrains.kotlin.jvm" version "2.3.21"
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+    id "org.jetbrains.kotlin.jvm" version "${kotlin_version}"
 }
 
 version = mod_version
@@ -30,15 +27,12 @@ repositories {
                 url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
             }
         }
-        filter {
-            includeGroup('software.bernie.geckolib')
-        }
+        filter { includeGroupAndSubgroups('com.geckolib') }
     }
 }
 
 loom {
     log4jConfigs.from(file("src/main/resources/log4j.xml"))
-
     accessWidenerPath = file("src/main/resources/mcendgame.accesswidener")
 
     splitEnvironmentSourceSets()
@@ -59,14 +53,13 @@ fabricApi {
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
 
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    modImplementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
+    implementation "net.fabricmc:fabric-loader:${loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    implementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
 
-    modImplementation "xyz.nucleoid:fantasy:0.7.0+1.21.11"
-    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:5.4.4"
+    implementation "xyz.nucleoid:fantasy:0.8.0+${minecraft_version}"
+    implementation "com.geckolib:geckolib-fabric-${minecraft_version}:5.5.1"
     implementation "de.maucon:maucon-framework:2.0.1"
 
     include "de.maucon:maucon-framework:2.0.1"
@@ -86,20 +79,14 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
-}
-
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = 21
-    }
+    it.options.release = 25
 }
 
 java {
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {

@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 object CrystalForgePayloadRegisterer {
     @Initializer
     fun register() {
-        PayloadTypeRegistry.playC2S().register(CrystalForgePayload.ID, CrystalForgePayload.CODEC)
+        PayloadTypeRegistry.serverboundPlay().register(CrystalForgePayload.ID, CrystalForgePayload.CODEC)
 
         ServerPlayNetworking.registerGlobalReceiver(CrystalForgePayload.ID) { _, context ->
             val player = context.player()

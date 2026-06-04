@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.interfaces
 
+import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
@@ -9,7 +10,6 @@ import de.fuballer.mcendgame.main.util.random.RandomUtil
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Mob
-import software.bernie.geckolib.animatable.GeoEntity
 
 interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
     var attackPose: AttackPose

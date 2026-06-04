@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.world.Difficulty
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.gamerules.GameRules
-import xyz.nucleoid.fantasy.RuntimeWorldConfig
+import xyz.nucleoid.fantasy.RuntimeLevelConfig
 import xyz.nucleoid.fantasy.util.VoidChunkGenerator
 import java.util.*
 
@@ -17,11 +17,11 @@ object DungeonWorldSettings {
 
     fun getWorldConfig(
         biome: ResourceKey<Biome>,
-    ): RuntimeWorldConfig = RuntimeWorldConfig()
+    ): RuntimeLevelConfig = RuntimeLevelConfig()
         .setDimensionType(CustomDimensions.DUNGEON)
         .setDifficulty(Difficulty.HARD)
         .setGenerator(VoidChunkGenerator(RuntimeConfig.SERVER, biome))
-        .setTimeOfDay(18000L)
+        .setGameTime(18000L)
         .setGameRule(GameRules.KEEP_INVENTORY, true)
         .setGameRule(GameRules.MOB_GRIEFING, false)
         .setGameRule(GameRules.SPAWN_MOBS, false)

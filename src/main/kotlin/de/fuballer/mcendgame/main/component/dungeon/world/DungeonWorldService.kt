@@ -50,8 +50,8 @@ class DungeonWorldService(
         training: Boolean = false,
     ): ServerLevel {
         val dungeonWorld = RuntimeConfig.FANTASY
-            .openTemporaryWorld(DungeonWorldSettings.generateIdentifier(), DungeonWorldSettings.getWorldConfig(dungeonType.biome))
-            .asWorld()
+            .openTemporaryLevel(DungeonWorldSettings.generateIdentifier(), DungeonWorldSettings.getWorldConfig(dungeonType.biome))
+            .asLevel()
 
         dungeonWorld.setDungeonLevel(dungeonLevel)
         dungeonWorld.setOpener(opener)
@@ -94,7 +94,7 @@ class DungeonWorldService(
     }
 
     private fun deleteWorld(entity: DungeonWorldEntity) {
-        RuntimeConfig.FANTASY.tickDeleteWorld(entity.world)
+        RuntimeConfig.FANTASY.tickDeleteLevel(entity.world)
         dungeonWorldRepo.delete(entity)
 
         val event = DungeonWorldClosedEvent(entity.world)

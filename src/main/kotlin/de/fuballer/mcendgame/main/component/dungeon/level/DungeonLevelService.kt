@@ -26,7 +26,7 @@ class DungeonLevelService {
         val playerDungeonLevel = player.getDungeonLevel()
 
         if (playerDungeonLevel.locked && playerDungeonLevel.level <= DungeonLevelSettings.getClientSetLevelLimit(playerDungeonLevel.highestReached)) {
-            player.displayClientMessage(DungeonLevelSettings.REGRESS_LOCKED_MESSAGE, false)
+            player.sendSystemMessage(DungeonLevelSettings.REGRESS_LOCKED_MESSAGE)
             return
         }
 
@@ -34,7 +34,7 @@ class DungeonLevelService {
         playerDungeonLevel.levelProgress = 0
 
         player.setDungeonLevel(playerDungeonLevel)
-        player.displayClientMessage(DungeonLevelSettings.getRegressMessage(playerDungeonLevel.level, playerDungeonLevel.levelProgress), false)
+        player.sendSystemMessage(DungeonLevelSettings.getRegressMessage(playerDungeonLevel.level, playerDungeonLevel.levelProgress))
     }
 
     @EventSubscriber(sync = true)
@@ -50,12 +50,12 @@ class DungeonLevelService {
             val playerDungeonLevel = player.getDungeonLevel()
 
             if (playerDungeonLevel.locked) {
-                player.displayClientMessage(DungeonLevelSettings.COMPLETION_LOCKED_MESSAGE, false)
+                player.sendSystemMessage(DungeonLevelSettings.COMPLETION_LOCKED_MESSAGE)
                 return@forEach
             }
 
             if (playerDungeonLevel.level > dungeonLevel) {
-                player.displayClientMessage(DungeonLevelSettings.NO_PROGRESS_MESSAGE, false)
+                player.sendSystemMessage(DungeonLevelSettings.NO_PROGRESS_MESSAGE)
                 return@forEach
             }
 
@@ -65,7 +65,7 @@ class DungeonLevelService {
             playerDungeonLevel.highestReached = max(playerDungeonLevel.highestReached, playerDungeonLevel.level)
 
             player.setDungeonLevel(playerDungeonLevel)
-            player.displayClientMessage(DungeonLevelSettings.getProgressMessage(playerDungeonLevel.level, playerDungeonLevel.levelProgress), false)
+            player.sendSystemMessage(DungeonLevelSettings.getProgressMessage(playerDungeonLevel.level, playerDungeonLevel.levelProgress))
         }
     }
 

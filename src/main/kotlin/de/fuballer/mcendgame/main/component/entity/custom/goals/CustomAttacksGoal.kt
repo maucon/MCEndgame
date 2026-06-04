@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.component.entity.custom.goals
 
+import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import net.minecraft.world.entity.Mob
-import software.bernie.geckolib.animatable.GeoEntity
 
 class CustomAttacksGoal<T>(
     private val attacker: T,

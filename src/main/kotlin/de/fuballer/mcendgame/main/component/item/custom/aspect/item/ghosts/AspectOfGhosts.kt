@@ -20,7 +20,7 @@ class AspectOfGhosts(
     override val description = mutableListOf(
         Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ghosts_0", FORCED_DUNGEON_LEVEL),
         Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ghosts_1"),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ghosts_2", CustomArmorItems.GEISTERGALOSCHEN.name)
+        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ghosts_2", CustomArmorItems.GEISTERGALOSCHEN.defaultInstance.itemName)
     )
     override val disabledAspects = listOf(AspectItems.ASPECT_OF_IMPATIENCE)
 }

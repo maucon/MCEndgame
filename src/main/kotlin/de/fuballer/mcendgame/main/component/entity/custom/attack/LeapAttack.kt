@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack
 
+import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.LeapAttackDamageInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
@@ -9,7 +10,6 @@ import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.phys.Vec3
-import software.bernie.geckolib.animatable.GeoEntity
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt

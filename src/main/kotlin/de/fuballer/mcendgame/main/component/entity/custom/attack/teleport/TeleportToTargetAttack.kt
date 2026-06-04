@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.teleport
 
+import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
@@ -9,7 +10,6 @@ import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
 import de.maucon.mauconframework.event.EventGateway
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
-import software.bernie.geckolib.animatable.GeoEntity
 
 class TeleportToTargetAttack<T>(
     animationData: AttackAnimationData,

@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack
 
+import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
@@ -8,7 +9,6 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMo
 import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
-import software.bernie.geckolib.animatable.GeoEntity
 
 open class Attack<T>(
     val animationData: AttackAnimationData,

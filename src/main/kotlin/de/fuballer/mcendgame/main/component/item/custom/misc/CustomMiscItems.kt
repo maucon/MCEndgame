@@ -8,6 +8,7 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.Instruments
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.InstrumentComponent
 
 @Injectable

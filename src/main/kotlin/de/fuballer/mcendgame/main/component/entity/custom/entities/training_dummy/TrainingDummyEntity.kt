@@ -111,12 +111,16 @@ class TrainingDummyEntity(
 
     override fun isPushedByFluid() = false
 
-    override fun interact(player: Player, hand: InteractionHand): InteractionResult {
-        if (hand != InteractionHand.MAIN_HAND) return super.interact(player, hand)
-        if (level() !is ServerLevel) return super.interact(player, hand)
+    override fun interact(
+        player: Player,
+        hand: InteractionHand,
+        location: Vec3
+    ): InteractionResult {
+        if (hand != InteractionHand.MAIN_HAND) return super.interact(player, hand, location)
+        if (level() !is ServerLevel) return super.interact(player, hand, location)
 
         val stack = player.getItemInHand(hand)
-        if (!stack.isEmpty) return super.interact(player, hand)
+        if (!stack.isEmpty) return super.interact(player, hand, location)
 
         val killerEntity = KillerEntity.of(player, this)
         val killerEntityPayload = KillerEntityPayload(killerEntity)

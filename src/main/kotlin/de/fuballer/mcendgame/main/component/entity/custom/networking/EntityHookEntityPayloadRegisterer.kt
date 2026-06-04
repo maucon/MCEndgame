@@ -8,6 +8,6 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 class EntityHookEntityPayloadRegisterer {
     @Initializer(priority = 0)
     fun register() {
-        PayloadTypeRegistry.playS2C().register(EntityHookEntityPayload.ID, EntityHookEntityPayload.CODEC)
+        PayloadTypeRegistry.clientboundPlay().register(EntityHookEntityPayload.ID, EntityHookEntityPayload.CODEC)
     }
 }

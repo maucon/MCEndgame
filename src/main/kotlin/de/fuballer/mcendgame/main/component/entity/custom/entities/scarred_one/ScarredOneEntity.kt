@@ -1,5 +1,9 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one
 
+import com.geckolib.animatable.GeoEntity
+import com.geckolib.animatable.instance.AnimatableInstanceCache
+import com.geckolib.animatable.manager.AnimatableManager
+import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encounters.scarred_one.data.RolledScarredOneEffect
 import de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encounters.scarred_one.messaging.ScarredOneInteractEvent
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.addCustomAttribute
@@ -19,10 +23,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
-import software.bernie.geckolib.animatable.GeoEntity
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache
-import software.bernie.geckolib.animatable.manager.AnimatableManager
-import software.bernie.geckolib.util.GeckoLibUtil
+import net.minecraft.world.phys.Vec3
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.random.Random
 
@@ -78,7 +79,8 @@ class ScarredOneEntity(
 
     override fun interact(
         player: Player,
-        hand: InteractionHand
+        hand: InteractionHand,
+        location: Vec3
     ): InteractionResult {
         val world = level() as? ServerLevel ?: return InteractionResult.PASS
         val serverPlayer = player as? ServerPlayer ?: return InteractionResult.PASS
