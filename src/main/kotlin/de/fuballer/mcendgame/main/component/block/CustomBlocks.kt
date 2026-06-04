@@ -7,67 +7,67 @@ import de.fuballer.mcendgame.main.component.block.blocks.dungeon_device.DungeonD
 import de.fuballer.mcendgame.main.component.block.blocks.totem_statue.TotemStatueBlock
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.block.AbstractBlock.Settings
-import net.minecraft.block.Blocks
-import net.minecraft.block.MapColor
-import net.minecraft.block.piston.PistonBehavior
-import net.minecraft.sound.BlockSoundGroup
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.SoundType
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties
+import net.minecraft.world.level.material.MapColor
+import net.minecraft.world.level.material.PushReaction
 
 @Injectable
 object CustomBlocks {
     val DUNGEON_DEVICE = RegistryUtil.registerBlock(
         ::DungeonDeviceBlock,
-        Settings.create()
-            .resistance(1200F)
-            .hardness(10F)
-            .requiresTool(),
+        Properties.of()
+            .explosionResistance(1200F)
+            .destroyTime(10F)
+            .requiresCorrectToolForDrops(),
         DungeonDeviceBlock.ID,
     )
 
     val DECAYING_COBWEB = RegistryUtil.registerBlock(
         ::DecayingCobwebBlock,
-        Settings.create()
-            .mapColor(MapColor.WHITE_GRAY)
-            .sounds(BlockSoundGroup.COBWEB)
-            .solid()
+        Properties.of()
+            .mapColor(MapColor.WOOL)
+            .sound(SoundType.COBWEB)
+            .forceSolidOn()
             .noCollision()
-            .requiresTool()
-            .dropsNothing()
+            .requiresCorrectToolForDrops()
+            .noLootTable()
             .strength(4.0f)
-            .pistonBehavior(PistonBehavior.DESTROY),
+            .pushReaction(PushReaction.DESTROY),
         DecayingCobwebBlock.ID,
     )
 
     val CRYSTAL_FORGE = RegistryUtil.registerBlock(
         ::CrystalForgeBlock,
-        Settings.create()
-            .resistance(1200F)
-            .hardness(10F)
-            .requiresTool()
-            .nonOpaque(),
+        Properties.of()
+            .explosionResistance(1200F)
+            .destroyTime(10F)
+            .requiresCorrectToolForDrops()
+            .noOcclusion(),
         CrystalForgeBlock.ID,
     )
 
     val TOTEM_STATUE = RegistryUtil.registerBlock(
         ::TotemStatueBlock,
-        Settings.create()
-            .resistance(1200F)
-            .hardness(10F)
-            .requiresTool()
-            .nonOpaque(),
+        Properties.of()
+            .explosionResistance(1200F)
+            .destroyTime(10F)
+            .requiresCorrectToolForDrops()
+            .noOcclusion(),
         TotemStatueBlock.ID,
     )
 
     val DUNGEON_ENEMY_BLOCKER = RegistryUtil.registerBlock(
         ::DungeonEnemyBlockerBlock,
-        Settings.create()
+        Properties.of()
             .strength(-1.0F, 3600000.8F)
-			.mapColor(MapColor.CLEAR)
-			.dropsNothing()
-			.nonOpaque()
-			.allowsSpawning(Blocks::never)
-			.noBlockBreakParticles()
-			.pistonBehavior(PistonBehavior.BLOCK),
+            .mapColor(MapColor.NONE)
+            .noLootTable()
+            .noOcclusion()
+            .isValidSpawn(Blocks::never)
+            .noTerrainParticles()
+            .pushReaction(PushReaction.BLOCK),
         DungeonEnemyBlockerBlock.ID
     )
 }

@@ -4,23 +4,23 @@ import de.fuballer.mcendgame.main.component.inventory.EmptySpriteSlot
 import de.fuballer.mcendgame.main.component.killer.db.KillerEntity
 import de.fuballer.mcendgame.main.component.killer.networking.KillerEntityPayload
 import de.fuballer.mcendgame.main.component.screen.CustomScreenHandlerTypes
-import net.minecraft.entity.EquipmentSlot
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.SimpleInventory
-import net.minecraft.item.ItemStack
-import net.minecraft.screen.PlayerScreenHandler
-import net.minecraft.screen.ScreenHandler
-import net.minecraft.screen.slot.SlotActionType
-import net.minecraft.util.Identifier
+import net.minecraft.resources.Identifier
+import net.minecraft.world.SimpleContainer
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.InventoryMenu
+import net.minecraft.world.item.ItemStack
 
 private val SLOT_SPRITES = listOf(
-    PlayerScreenHandler.EMPTY_HELMET_SLOT_TEXTURE,
-    PlayerScreenHandler.EMPTY_CHESTPLATE_SLOT_TEXTURE,
-    PlayerScreenHandler.EMPTY_LEGGINGS_SLOT_TEXTURE,
-    PlayerScreenHandler.EMPTY_BOOTS_SLOT_TEXTURE,
-    Identifier.ofVanilla("container/slot/sword"),
-    PlayerScreenHandler.EMPTY_OFF_HAND_SLOT_TEXTURE,
+    InventoryMenu.EMPTY_ARMOR_SLOT_HELMET,
+    InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE,
+    InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS,
+    InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS,
+    Identifier.withDefaultNamespace("container/slot/sword"),
+    InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD,
 )
 
 private val EQUIPMENT_SLOTS = mapOf(
@@ -34,11 +34,11 @@ private val EQUIPMENT_SLOTS = mapOf(
 
 class KillerScreenHandler(
     syncId: Int,
-    playerInventory: PlayerInventory,
+    playerInventory: Inventory,
     payload: KillerEntityPayload,
-) : ScreenHandler(CustomScreenHandlerTypes.KILLER, syncId) {
+) : AbstractContainerMenu(CustomScreenHandlerTypes.KILLER, syncId) {
     var killerEntity: KillerEntity? = null
-    private val killerInventory = SimpleInventory(6)
+    private val killerInventory = SimpleContainer(6)
 
     init {
         for (armorSlot in 0..3) {
@@ -52,20 +52,20 @@ class KillerScreenHandler(
 
         payload.killerEntity.equipment.forEach {
             val slot = EQUIPMENT_SLOTS[it.key] ?: return@forEach
-            killerInventory.setStack(slot, it.value)
+            killerInventory.setItem(slot, it.value)
         }
     }
 
-    override fun onSlotClick(
+    override fun clicked(
         slotIndex: Int,
         button: Int,
-        actionType: SlotActionType,
-        player: PlayerEntity
+        actionType: ClickType,
+        player: Player
     ) {
     }
 
-    override fun canUse(player: PlayerEntity) = killerInventory.canPlayerUse(player)
+    override fun stillValid(player: Player) = killerInventory.stillValid(player)
 
     // only gets called in onSlotClick which is overridden
-    override fun quickMove(player: PlayerEntity, slot: Int): ItemStack = ItemStack.EMPTY
+    override fun quickMoveStack(player: Player, slot: Int): ItemStack = ItemStack.EMPTY
 }

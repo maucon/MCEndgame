@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.main.accessor;
 
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute;
 import de.fuballer.mcendgame.main.component.world.VanillaTypeWorldAttributeInstance;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
 import java.util.function.Predicate;

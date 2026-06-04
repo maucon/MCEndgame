@@ -4,13 +4,13 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttributeType;
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes;
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,39 +27,39 @@ public abstract class LivingEntityAttributeWhileWitheredMixin {
     @Inject(method = "tick", at = @At("HEAD"))
     void tick(CallbackInfo ci) {
         var entity = (LivingEntity) (Object) this;
-        if (entity.getEntityWorld().isClient()) return;
+        if (entity.level().isClientSide()) return;
 
-        if (entity.age % 10 != 0) return;
+        if (entity.tickCount % 10 != 0) return;
 
-        var isWithered = entity.hasStatusEffect(StatusEffects.WITHER);
+        var isWithered = entity.hasEffect(MobEffects.WITHER);
         tickAttributeWhileWithered(
                 isWithered,
-                EntityAttributes.ATTACK_DAMAGE,
+                Attributes.ATTACK_DAMAGE,
                 CustomAttributeTypes.INSTANCE.getINCREASED_ATTACK_DAMAGE_WHILE_WITHERED(),
                 entity,
                 increaseAttributeModifierIdentifier,
-                EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                AttributeModifier.Operation.ADD_MULTIPLIED_BASE
         );
         tickAttributeWhileWithered(
                 isWithered,
-                EntityAttributes.ARMOR,
+                Attributes.ARMOR,
                 CustomAttributeTypes.INSTANCE.getARMOR_WHILE_WITHERED(),
                 entity,
                 flatAttributeModifierIdentifier,
-                EntityAttributeModifier.Operation.ADD_VALUE
+                AttributeModifier.Operation.ADD_VALUE
         );
     }
 
     @Unique
     private void tickAttributeWhileWithered(
             boolean isWithered,
-            RegistryEntry<EntityAttribute> vanillaAttribute,
+            Holder<Attribute> vanillaAttribute,
             CustomAttributeType customAttribute,
             LivingEntity entity,
             Identifier identifier,
-            EntityAttributeModifier.Operation operation
+            AttributeModifier.Operation operation
     ) {
-        var attributeInstance = entity.getAttributeInstance(vanillaAttribute);
+        var attributeInstance = entity.getAttribute(vanillaAttribute);
         if (attributeInstance == null) return;
 
         if (!isWithered) {
@@ -79,15 +79,15 @@ public abstract class LivingEntityAttributeWhileWitheredMixin {
                 .sum();
 
         var existingModifier = attributeInstance.getModifier(identifier);
-        if (existingModifier != null && Math.abs(existingModifier.value() - sum) < 0.001) return;
+        if (existingModifier != null && Math.abs(existingModifier.amount() - sum) < 0.001) return;
 
-        var modifier = new EntityAttributeModifier(
+        var modifier = new AttributeModifier(
                 identifier,
                 sum,
                 operation
         );
 
         attributeInstance.removeModifier(identifier);
-        attributeInstance.addTemporaryModifier(modifier);
+        attributeInstance.addTransientModifier(modifier);
     }
 }

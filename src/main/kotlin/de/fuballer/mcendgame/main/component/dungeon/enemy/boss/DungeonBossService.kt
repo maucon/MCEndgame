@@ -11,15 +11,15 @@ import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.incre
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventGateway
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.player.Player
 
 @Injectable
 object DungeonBossService {
     @EventSubscriber(sync = true)
     fun on(event: DungeonBossDeathEvent) {
-        val world = event.world as? ServerWorld ?: return
+        val world = event.world as? ServerLevel ?: return
         world.increaseBossesKilled()
 
         if (world.getBossesKilled() < world.getTotalBossCount()) return
@@ -30,18 +30,18 @@ object DungeonBossService {
     @EventSubscriber(sync = true)
     fun on(event: LivingEntityDamagedEvent) {
         if (!event.damaged.isDungeonBoss()) return
-        val mobEntity = event.damaged as? MobEntity ?: return
-        if (!mobEntity.isAiDisabled) return
+        val mobEntity = event.damaged as? Mob ?: return
+        if (!mobEntity.isNoAi) return
 
-        val player = event.damageSource.attacker as? PlayerEntity
+        val player = event.damageSource.entity as? Player
         activateBoss(mobEntity, player)
     }
 
     fun activateBoss(
-        boss: MobEntity,
-        activatedBy: PlayerEntity? = null,
+        boss: Mob,
+        activatedBy: Player? = null,
     ) {
-        boss.isAiDisabled = false
+        boss.setNoAi(false)
         enhanceBoss(boss)
 
         if (activatedBy == null) return
@@ -49,8 +49,8 @@ object DungeonBossService {
         boss.target = activatedBy
     }
 
-    fun enhanceBoss(boss: MobEntity) {
-        val world = boss.entityWorld as? ServerWorld ?: return
+    fun enhanceBoss(boss: Mob) {
+        val world = boss.level() as? ServerLevel ?: return
         val killedBosses = world.getBossesKilled()
         if (killedBosses == 0) return
 

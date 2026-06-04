@@ -15,20 +15,20 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAble
 import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundInstance
 import de.fuballer.mcendgame.main.util.extension.Vec3dExtension.getYaw
 import de.fuballer.mcendgame.main.util.random.RandomOption
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.ProjectileDeflection
-import net.minecraft.entity.ai.goal.ActiveTargetGoal
-import net.minecraft.entity.ai.goal.RevengeGoal
-import net.minecraft.entity.ai.goal.SwimGoal
-import net.minecraft.entity.attribute.DefaultAttributeContainer
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.mob.Monster
-import net.minecraft.entity.mob.PathAwareEntity
-import net.minecraft.entity.passive.VillagerEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.projectile.ProjectileEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.world.World
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.PathfinderMob
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.FloatGoal
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.npc.villager.Villager
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.ProjectileDeflection
+import net.minecraft.world.level.Level
 import software.bernie.geckolib.animatable.GeoAnimatable
 import software.bernie.geckolib.animatable.GeoEntity
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache
@@ -44,8 +44,8 @@ import kotlin.math.sin
 
 class ElfDuelistEntity(
     type: EntityType<out ElfDuelistEntity>,
-    world: World,
-) : PathAwareEntity(type, world), GeoEntity, DisableAbleGoalsMob, BlockAbleMovementMob<ElfDuelistEntity>, Monster, CustomAttacksMob<ElfDuelistEntity> {
+    world: Level,
+) : PathfinderMob(type, world), GeoEntity, DisableAbleGoalsMob, BlockAbleMovementMob<ElfDuelistEntity>, Enemy, CustomAttacksMob<ElfDuelistEntity> {
     companion object {
         private const val ARROW_DEFLECT_ANGLE = 100.0
         private const val ARROW_DEFLECT_PROBABILITY = 0.5
@@ -376,16 +376,16 @@ class ElfDuelistEntity(
             RandomOption(1, BACKFLIP_ATTACK),
         )
 
-        fun createAttributes(): DefaultAttributeContainer.Builder {
+        fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 35.0)
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.3)
-                .add(EntityAttributes.ATTACK_DAMAGE, 3.0)
-                .add(EntityAttributes.ATTACK_KNOCKBACK, 0.3)
-                .add(EntityAttributes.ARMOR, 0.0)
-                .add(EntityAttributes.MOVEMENT_EFFICIENCY, 0.85)
-                .add(EntityAttributes.SAFE_FALL_DISTANCE, 10.0)
-                .add(EntityAttributes.FALL_DAMAGE_MULTIPLIER, 0.1)
+                .add(Attributes.FOLLOW_RANGE, 35.0)
+                .add(Attributes.MOVEMENT_SPEED, 0.3)
+                .add(Attributes.ATTACK_DAMAGE, 3.0)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.3)
+                .add(Attributes.ARMOR, 0.0)
+                .add(Attributes.MOVEMENT_EFFICIENCY, 0.85)
+                .add(Attributes.SAFE_FALL_DISTANCE, 10.0)
+                .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.1)
         }
     }
 
@@ -443,15 +443,15 @@ class ElfDuelistEntity(
         )
     }
 
-    fun getLimbSwingCycle(tickProgress: Float) = sin(limbAnimator.getAnimationProgress(tickProgress) / 1.5)
-    fun getLimbSwingAmplitude(tickProgress: Float) = limbAnimator.getAmplitude(tickProgress).toDouble()
+    fun getLimbSwingCycle(tickProgress: Float) = sin(walkAnimation.position(tickProgress) / 1.5)
+    fun getLimbSwingAmplitude(tickProgress: Float) = walkAnimation.speed(tickProgress).toDouble()
 
     fun getLean(tickProgress: Float) = getLimbSwingAmplitude(tickProgress) * if (target == null) 0.5 else 1.0
 
     private val attackGoal = CustomAttacksGoal(this)
     private val stayInMeleeRangeGoal = StayInRangeGoal(this, 1.0, 2.5)
     private val wanderGoal = DisableAbleWanderAroundFarGoal(this, 0.7)
-    private val lookAtPlayerGoal = DisableAbleLookAtEntityGoal(this, PlayerEntity::class.java, 8F)
+    private val lookAtPlayerGoal = DisableAbleLookAtEntityGoal(this, Player::class.java, 8F)
     private val lookAroundGoal = DisableAbleLookAroundGoal(this)
 
     init {
@@ -459,20 +459,20 @@ class ElfDuelistEntity(
     }
 
     private fun initDynamicGoals() {
-        goalSelector.add(2, attackGoal)
-        goalSelector.add(3, stayInMeleeRangeGoal)
-        goalSelector.add(4, wanderGoal)
-        goalSelector.add(5, lookAtPlayerGoal)
-        goalSelector.add(5, lookAroundGoal)
+        goalSelector.addGoal(2, attackGoal)
+        goalSelector.addGoal(3, stayInMeleeRangeGoal)
+        goalSelector.addGoal(4, wanderGoal)
+        goalSelector.addGoal(5, lookAtPlayerGoal)
+        goalSelector.addGoal(5, lookAroundGoal)
     }
 
-    override fun initGoals() {
-        goalSelector.add(0, SwimGoal(this))
-        goalSelector.add(1, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { e -> e is PlayerEntity || e is VillagerEntity }))
+    override fun registerGoals() {
+        goalSelector.addGoal(0, FloatGoal(this))
+        goalSelector.addGoal(1, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { e -> e is Player || e is Villager }))
 
-        targetSelector.add(0, RevengeGoal(this))
-        targetSelector.add(1, ActiveTargetGoal(this, PlayerEntity::class.java, true))
-        targetSelector.add(2, ActiveTargetGoal(this, VillagerEntity::class.java, true))
+        targetSelector.addGoal(0, HurtByTargetGoal(this))
+        targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, true))
+        targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Villager::class.java, true))
     }
 
     override fun updateGoals() {
@@ -486,7 +486,7 @@ class ElfDuelistEntity(
 
     override fun tick() {
         super.tick()
-        val world = entityWorld as? ServerWorld ?: return
+        val world = level() as? ServerLevel ?: return
         tickBlockedMovement()
         tickAttacks(world, this)
         tickEars()
@@ -498,14 +498,14 @@ class ElfDuelistEntity(
         else triggerAnim(EAR_ANIM_CONTROLLED_ID, EAR_TWITCH_RIGHT_ID)
     }
 
-    override fun getProjectileDeflection(
-        projectile: ProjectileEntity
+    override fun deflection(
+        projectile: Projectile
     ): ProjectileDeflection {
         if (!canAttack()) return ProjectileDeflection.NONE
 
-        val distanceVector = projectile.entityPos.subtract(entityPos)
+        val distanceVector = projectile.position().subtract(position())
         val yawToProj = distanceVector.getYaw()
-        val yawDifference = abs(bodyYaw - yawToProj) % 360
+        val yawDifference = abs(yBodyRot - yawToProj) % 360
         val angle = min(yawDifference, 360 - yawDifference)
         if (angle > ARROW_DEFLECT_ANGLE) return ProjectileDeflection.NONE
 
@@ -514,6 +514,6 @@ class ElfDuelistEntity(
         val attack = getRandomAttack(this, true) ?: return ProjectileDeflection.NONE
         attack(this, attack)
 
-        return ProjectileDeflection.SIMPLE
+        return ProjectileDeflection.REVERSE
     }
 }

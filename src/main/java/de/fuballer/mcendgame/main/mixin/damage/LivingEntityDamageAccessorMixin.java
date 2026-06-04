@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.mixin.damage;
 
 import de.fuballer.mcendgame.main.accessor.LivingEntityDamageAccessor;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -11,13 +11,13 @@ public abstract class LivingEntityDamageAccessorMixin implements LivingEntityDam
     @Shadow
     private DamageSource lastDamageSource;
     @Shadow
-    private long lastDamageTime;
+    private long lastDamageStamp;
 
     @Shadow
-    protected abstract void playThornsSound(DamageSource damageSource);
+    protected abstract void playSecondaryHurtSound(DamageSource damageSource);
 
     @Shadow
-    protected abstract boolean tryUseDeathProtector(DamageSource source);
+    protected abstract boolean checkTotemDeathProtection(DamageSource source);
 
     @Override
     public void mcendgame$setLastDamageSource(DamageSource damageSource) {
@@ -26,16 +26,16 @@ public abstract class LivingEntityDamageAccessorMixin implements LivingEntityDam
 
     @Override
     public void mcendgame$setLastDamageTime(long time) {
-        this.lastDamageTime = time;
+        this.lastDamageStamp = time;
     }
 
     @Override
     public void mcendgame$playThornsSound(DamageSource damageSource) {
-        this.playThornsSound(damageSource);
+        this.playSecondaryHurtSound(damageSource);
     }
 
     @Override
     public boolean mcendgame$tryUseDeathProtector(DamageSource source) {
-        return this.tryUseDeathProtector(source);
+        return this.checkTotemDeathProtection(source);
     }
 }

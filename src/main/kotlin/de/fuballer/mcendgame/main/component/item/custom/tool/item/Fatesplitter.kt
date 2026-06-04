@@ -5,10 +5,10 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
-import net.minecraft.component.type.AttributeModifierSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
 
 class Fatesplitter(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 0, DoubleBounds(2.0, 4.0)),
@@ -16,5 +16,5 @@ class Fatesplitter(
         RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_PER_MISSING_HEART, 0, DoubleBounds(0.03, 0.04)),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.MAINHAND
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.MAINHAND
 }

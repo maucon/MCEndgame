@@ -4,8 +4,8 @@ import de.fuballer.mcendgame.client.component.datagen.*
 import de.fuballer.mcendgame.main.component.biome.CustomBiomes
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
-import net.minecraft.registry.RegistryBuilder
-import net.minecraft.registry.RegistryKeys
+import net.minecraft.core.RegistrySetBuilder
+import net.minecraft.core.registries.Registries
 
 object MCEndgameDataGenerator : DataGeneratorEntrypoint {
     override fun onInitializeDataGenerator(fabricDataGenerator: FabricDataGenerator) {
@@ -23,7 +23,7 @@ object MCEndgameDataGenerator : DataGeneratorEntrypoint {
         pack.addProvider { dataOutput, registryLookUp -> CustomWorldGeneratorProvider(dataOutput, registryLookUp) }
     }
 
-    override fun buildRegistry(registryBuilder: RegistryBuilder) {
-        registryBuilder.addRegistry(RegistryKeys.BIOME, CustomBiomes::bootstrap)
+    override fun buildRegistry(registryBuilder: RegistrySetBuilder) {
+        registryBuilder.add(Registries.BIOME, CustomBiomes::bootstrap)
     }
 }

@@ -18,8 +18,8 @@ import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDu
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.item.ItemStack
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.item.ItemStack
 import kotlin.math.pow
 import kotlin.random.Random
 
@@ -43,11 +43,11 @@ object AspectOfGhostsService {
 
     @EventSubscriber(sync = true)
     fun on(event: DungeonEnemyDeathEvent) {
-        val serverWorld = event.world as? ServerWorld ?: return
+        val serverWorld = event.world as? ServerLevel ?: return
         if (!event.enemyEntity.dropsAspectOfGhosts()) return
 
-        val stack = AspectItems.ASPECT_OF_GHOSTS.defaultStack
-        RuntimeConfig.SERVER.execute { event.enemyEntity.dropStack(serverWorld, stack) }
+        val stack = AspectItems.ASPECT_OF_GHOSTS.defaultInstance
+        RuntimeConfig.SERVER.execute { event.enemyEntity.spawnAtLocation(serverWorld, stack) }
     }
 
     @CommandHandler
@@ -64,11 +64,11 @@ object AspectOfGhostsService {
 
     @EventSubscriber(sync = true)
     fun onDungeonBossDeath(event: DungeonFinalBossDeathEvent) {
-        val serverWorld = event.world as? ServerWorld ?: return
+        val serverWorld = event.world as? ServerLevel ?: return
         if (!serverWorld.getDungeonAspects().contains(AspectItems.ASPECT_OF_GHOSTS)) return
 
         val item = CustomArmorItems.GEISTERGALOSCHEN
         val stack = if (item is UniqueAttributesItemInterface) item.getRolledStack(item) else ItemStack(item)
-        RuntimeConfig.SERVER.execute { event.bossEntity.dropStack(serverWorld, stack) }
+        RuntimeConfig.SERVER.execute { event.bossEntity.spawnAtLocation(serverWorld, stack) }
     }
 }

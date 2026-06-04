@@ -9,12 +9,12 @@ import de.fuballer.mcendgame.main.component.item.equipment.enchantment.Equipment
 import de.fuballer.mcendgame.main.component.item.equipment.tool.*
 import de.fuballer.mcendgame.main.util.random.LevelRestrictedRandomOption
 import de.fuballer.mcendgame.main.util.random.RandomOption
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.item.Item
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.item.Item
 
 interface Equipment {
     val item: Item
-    val slot: AttributeModifierSlot
+    val slot: EquipmentSlotGroup
 
     val rollableEnchants: List<RandomOption<EquipmentEnchantment>>
     val rollableCustomAttributes: List<RandomOption<List<LevelRestrictedRandomOption<RollableCustomAttribute>>>>

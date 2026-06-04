@@ -8,21 +8,21 @@ import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectGenericIncreasedDamageCommand
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.effect.StatusEffects
+import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.LivingEntity
 
 @Injectable
 class AttributesWhileWitheredService {
     @CommandHandler
     fun on(cmd: DamageCalculationCommand) {
         val damager = cmd.damager as? LivingEntity ?: return
-        if (!damager.hasStatusEffect(StatusEffects.WITHER)) return
+        if (!damager.hasEffect(MobEffects.WITHER)) return
         cmd.increasedDamage.addAll(getDoubleValues(cmd.damagerAttributes, CustomAttributeTypes.INCREASED_DAMAGE_WHILE_WITHERED))
     }
 
     @CommandHandler
     fun on(cmd: CollectGenericIncreasedDamageCommand) {
-        if (!cmd.entity.hasStatusEffect(StatusEffects.WITHER)) return
+        if (!cmd.entity.hasEffect(MobEffects.WITHER)) return
         cmd.increased.addAll(getDoubleValues(cmd.attributes, CustomAttributeTypes.INCREASED_DAMAGE_WHILE_WITHERED))
     }
 

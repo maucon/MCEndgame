@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encoun
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItems
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
-import net.minecraft.item.ItemStack
+import net.minecraft.world.item.ItemStack
 import kotlin.random.Random
 
 object TotemEncounterSettings {

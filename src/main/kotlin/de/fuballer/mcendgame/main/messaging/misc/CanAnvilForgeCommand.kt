@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.messaging.misc
 
-import net.minecraft.item.ItemStack
+import net.minecraft.world.item.ItemStack
 
 data class CanAnvilForgeCommand(
     val stack0: ItemStack,

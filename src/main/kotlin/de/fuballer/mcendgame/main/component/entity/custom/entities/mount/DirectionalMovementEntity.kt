@@ -2,21 +2,21 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.mount
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.arachne.ArachneEntity
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomPosesEntity
-import net.minecraft.entity.AnimationState
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.data.DataTracker
-import net.minecraft.entity.data.TrackedData
-import net.minecraft.entity.data.TrackedDataHandlerRegistry
-import net.minecraft.entity.mob.PathAwareEntity
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.world.entity.AnimationState
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.PathfinderMob
+import net.minecraft.world.level.Level
+import net.minecraft.world.phys.Vec3
 import kotlin.math.PI
 import kotlin.math.abs
 
 abstract class DirectionalMovementEntity(
     type: EntityType<out ArachneEntity>,
-    world: World,
-) : PathAwareEntity(type, world) {
+    world: Level,
+) : PathfinderMob(type, world) {
     val idleAnimationState = AnimationState()
     val walkAnimationState = AnimationState()
     val walkBWAnimationState = AnimationState()
@@ -24,21 +24,21 @@ abstract class DirectionalMovementEntity(
     val walkRightAnimationState = AnimationState()
 
     companion object {
-        val MOVEMENT_POSE: TrackedData<CustomPosesEntity.CustomPose> =
-            DataTracker.registerData(DirectionalMovementEntity::class.java, CustomPosesEntity.CUSTOM_POSE_TDH)
-        val ANIMATION_MOVEMENT_SPEED: TrackedData<Float> =
-            DataTracker.registerData(DirectionalMovementEntity::class.java, TrackedDataHandlerRegistry.FLOAT)
+        val MOVEMENT_POSE: EntityDataAccessor<CustomPosesEntity.CustomPose> =
+            SynchedEntityData.defineId(DirectionalMovementEntity::class.java, CustomPosesEntity.CUSTOM_POSE_TDH)
+        val ANIMATION_MOVEMENT_SPEED: EntityDataAccessor<Float> =
+            SynchedEntityData.defineId(DirectionalMovementEntity::class.java, EntityDataSerializers.FLOAT)
     }
 
-    override fun initDataTracker(builder: DataTracker.Builder) {
-        super.initDataTracker(builder)
-        builder.add(MOVEMENT_POSE, CustomPosesEntity.CustomPose.IDLING)
-        builder.add(ANIMATION_MOVEMENT_SPEED, 0F)
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(MOVEMENT_POSE, CustomPosesEntity.CustomPose.IDLING)
+        builder.define(ANIMATION_MOVEMENT_SPEED, 0F)
     }
 
-    override fun onTrackedDataSet(data: TrackedData<*>) {
-        if (data == MOVEMENT_POSE && entityWorld.isClient) {
-            when (dataTracker.get(MOVEMENT_POSE)) {
+    override fun onSyncedDataUpdated(data: EntityDataAccessor<*>) {
+        if (data == MOVEMENT_POSE && level().isClientSide) {
+            when (entityData.get(MOVEMENT_POSE)) {
                 CustomPosesEntity.CustomPose.IDLING -> startMovementAnimation(idleAnimationState)
                 CustomPosesEntity.CustomPose.WALKING -> startMovementAnimation(walkAnimationState)
                 CustomPosesEntity.CustomPose.WALKING_BW -> startMovementAnimation(walkBWAnimationState)
@@ -48,7 +48,7 @@ abstract class DirectionalMovementEntity(
                 else -> {}
             }
         }
-        super.onTrackedDataSet(data)
+        super.onSyncedDataUpdated(data)
     }
 
     private fun stopMovementAnimations() {
@@ -60,9 +60,9 @@ abstract class DirectionalMovementEntity(
     }
 
     open fun startMovementAnimation(animationState: AnimationState) {
-        if (animationState.isRunning) return
+        if (animationState.isStarted) return
         stopMovementAnimations()
-        animationState.start(age)
+        animationState.start(tickCount)
     }
 
     override fun tick() {
@@ -71,14 +71,14 @@ abstract class DirectionalMovementEntity(
     }
 
     open fun updateMovementState() {
-        if (entityWorld.isClient) return
+        if (level().isClientSide) return
 
         updateMovementPose()
         updateAnimationMovementSpeed()
     }
 
     open fun updateMovementPose() {
-        val currentPose = dataTracker.get(MOVEMENT_POSE)
+        val currentPose = entityData.get(MOVEMENT_POSE)
         val newPose = when (getRelativeMovementDirection()) {
             MovementDirection.NONE -> CustomPosesEntity.CustomPose.IDLING
             MovementDirection.FORWARD -> CustomPosesEntity.CustomPose.WALKING
@@ -88,17 +88,17 @@ abstract class DirectionalMovementEntity(
         }
         if (currentPose == newPose) return
 
-        dataTracker.set(MOVEMENT_POSE, newPose)
+        entityData.set(MOVEMENT_POSE, newPose)
     }
 
     private fun updateAnimationMovementSpeed() {
-        val currentMovementSpeed = dataTracker.get(ANIMATION_MOVEMENT_SPEED)
-        var newMovementSpeed = movementSpeed
+        val currentMovementSpeed = entityData.get(ANIMATION_MOVEMENT_SPEED)
+        val newMovementSpeed = speed
         if (abs(currentMovementSpeed - newMovementSpeed) < 0.01) return
-        dataTracker.set(ANIMATION_MOVEMENT_SPEED, newMovementSpeed)
+        entityData.set(ANIMATION_MOVEMENT_SPEED, newMovementSpeed)
     }
 
-    private fun getRelativeMovement(): Vec3d = movement.rotateY(bodyYaw / 180F * PI.toFloat())
+    private fun getRelativeMovement(): Vec3 = knownMovement.yRot(yBodyRot / 180F * PI.toFloat())
 
     private fun getRelativeMovementDirection(): MovementDirection {
         val relativeMovement = getRelativeMovement()

@@ -8,11 +8,11 @@ import de.fuballer.mcendgame.main.util.extension.ServerCommandSourceExtension.is
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
-import net.minecraft.item.Item
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.text.Text
-import net.minecraft.util.Colors
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.network.chat.Component
+import net.minecraft.util.CommonColors
+import net.minecraft.world.item.Item
 
 @Injectable
 class GiveTotemItemCommand {
@@ -25,14 +25,14 @@ class GiveTotemItemCommand {
     @Initializer
     fun register() = CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _, _ ->
         dispatcher.register(
-            CommandManager.literal(NAME)
+            Commands.literal(NAME)
                 .requires {  it.isModerator() }
                 .then(
-                    CommandManager.argument(TOTEM_ITEM_ARGUMENT, TotemItemArgumentType())
+                    Commands.argument(TOTEM_ITEM_ARGUMENT, TotemItemArgumentType())
                         .suggests(TotemItemSuggestionProvider())
                         .executes { giveTotemItem(it, false) }
                         .then(
-                            CommandManager.argument(TIER_ARGUMENT, IntegerArgumentType.integer(0))
+                            Commands.argument(TIER_ARGUMENT, IntegerArgumentType.integer(0))
                                 .executes { giveTotemItem(it, true) }
                         )
                 )
@@ -40,7 +40,7 @@ class GiveTotemItemCommand {
     })
 
     private fun giveTotemItem(
-        context: CommandContext<ServerCommandSource>,
+        context: CommandContext<CommandSourceStack>,
         hasSpecifiedTier: Boolean,
     ): Int {
         val player = context.source.player ?: return 0
@@ -49,12 +49,12 @@ class GiveTotemItemCommand {
 
         val tier = if (hasSpecifiedTier) context.getArgument(TIER_ARGUMENT, Int::class.java) else 0
         if (totemItem.maxTier < tier) {
-            player.sendMessage(Text.translatable("error.mcendgame.invalid_totem_tier", totemItem.maxTier).withColor(Colors.LIGHT_RED))
+            player.sendSystemMessage(Component.translatable("error.mcendgame.invalid_totem_tier", totemItem.maxTier).withColor(CommonColors.SOFT_RED))
             return 0
         }
 
         val stack = totemItem.getStack(tier)
-        player.giveItemStack(stack)
+        player.addItem(stack)
 
         return Command.SINGLE_SUCCESS
     }

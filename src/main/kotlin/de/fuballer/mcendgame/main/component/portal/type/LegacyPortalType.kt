@@ -10,6 +10,6 @@ class LegacyPortalType : PortalType() {
     override fun getId() = ID
 
     override fun tickAnimation(portalEntity: PortalEntity) {
-        idleAnimationState.startIfNotRunning(portalEntity.age)
+        idleAnimationState.startIfStopped(portalEntity.tickCount)
     }
 }

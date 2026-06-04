@@ -4,24 +4,24 @@ import de.fuballer.mcendgame.main.component.custom_attribute.AttributeFormats
 import de.fuballer.mcendgame.main.component.custom_attribute.affinity.AttributeAffinities
 import de.fuballer.mcendgame.main.component.custom_attribute.data.VanillaAttributeType
 import de.fuballer.mcendgame.main.component.custom_attribute.sign_based_keyword.SignBasedKeywords
-import net.minecraft.entity.attribute.EntityAttributeModifier
-import net.minecraft.entity.attribute.EntityAttributes
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.attributes.Attributes
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.memberProperties
 
 object VanillaAttributeTypes {
     // DEFENSE
     val ARMOR = VanillaAttributeType(
-        EntityAttributes.ARMOR,
-        EntityAttributeModifier.Operation.ADD_VALUE,
+        Attributes.ARMOR,
+        AttributeModifier.Operation.ADD_VALUE,
         "armor",
         AttributeFormats.SIGNED_DOUBLE_ROLL,
         AttributeFormats.DOUBLE_BOUNDS,
         AttributeAffinities.BENEFICIAL
     )
     val ARMOR_TOUGHNESS = VanillaAttributeType(
-        EntityAttributes.ARMOR_TOUGHNESS,
-        EntityAttributeModifier.Operation.ADD_VALUE,
+        Attributes.ARMOR_TOUGHNESS,
+        AttributeModifier.Operation.ADD_VALUE,
         "armor_toughness",
         AttributeFormats.SIGNED_DOUBLE_ROLL,
         AttributeFormats.DOUBLE_BOUNDS,
@@ -29,8 +29,8 @@ object VanillaAttributeTypes {
     )
     val MAX_HEALTH =
         VanillaAttributeType(
-            EntityAttributes.MAX_HEALTH,
-            EntityAttributeModifier.Operation.ADD_VALUE,
+            Attributes.MAX_HEALTH,
+            AttributeModifier.Operation.ADD_VALUE,
             "max_health",
             AttributeFormats.SIGNED_DOUBLE_ROLL,
             AttributeFormats.DOUBLE_BOUNDS,
@@ -38,8 +38,8 @@ object VanillaAttributeTypes {
         )
     val INCREASED_MAX_HEALTH =
         VanillaAttributeType(
-            EntityAttributes.MAX_HEALTH,
-            EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE,
+            Attributes.MAX_HEALTH,
+            AttributeModifier.Operation.ADD_MULTIPLIED_BASE,
             "increased_max_health",
             AttributeFormats.SIGNED_PERCENT_ROLL,
             AttributeFormats.PERCENT_BOUNDS,
@@ -48,8 +48,8 @@ object VanillaAttributeTypes {
         )
     val MORE_MAX_HEALTH =
         VanillaAttributeType(
-            EntityAttributes.MAX_HEALTH,
-            EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
+            Attributes.MAX_HEALTH,
+            AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
             "more_max_health",
             AttributeFormats.PERCENT_ROLL,
             AttributeFormats.PERCENT_BOUNDS,
@@ -59,16 +59,16 @@ object VanillaAttributeTypes {
 
     // OFFENSE
     val ATTACK_DAMAGE = VanillaAttributeType(
-        EntityAttributes.ATTACK_DAMAGE,
-        EntityAttributeModifier.Operation.ADD_VALUE,
+        Attributes.ATTACK_DAMAGE,
+        AttributeModifier.Operation.ADD_VALUE,
         "attack_damage",
         AttributeFormats.SIGNED_DOUBLE_ROLL,
         AttributeFormats.DOUBLE_BOUNDS,
         AttributeAffinities.BENEFICIAL
     )
     val INCREASED_ATTACK_DAMAGE = VanillaAttributeType(
-        EntityAttributes.ATTACK_DAMAGE,
-        EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE,
+        Attributes.ATTACK_DAMAGE,
+        AttributeModifier.Operation.ADD_MULTIPLIED_BASE,
         "increased_attack_damage",
         AttributeFormats.SIGNED_PERCENT_ROLL,
         AttributeFormats.PERCENT_BOUNDS,
@@ -76,8 +76,8 @@ object VanillaAttributeTypes {
         SignBasedKeywords.INCREASED
     )
     val INCREASED_ATTACK_SPEED = VanillaAttributeType(
-        EntityAttributes.ATTACK_SPEED,
-        EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE,
+        Attributes.ATTACK_SPEED,
+        AttributeModifier.Operation.ADD_MULTIPLIED_BASE,
         "increased_attack_speed",
         AttributeFormats.SIGNED_PERCENT_ROLL,
         AttributeFormats.PERCENT_BOUNDS,
@@ -85,8 +85,8 @@ object VanillaAttributeTypes {
         SignBasedKeywords.INCREASED
     )
     val MORE_ATTACK_SPEED = VanillaAttributeType(
-        EntityAttributes.ATTACK_SPEED,
-        EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
+        Attributes.ATTACK_SPEED,
+        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
         "more_attack_speed",
         AttributeFormats.PERCENT_ROLL,
         AttributeFormats.PERCENT_BOUNDS,
@@ -96,8 +96,8 @@ object VanillaAttributeTypes {
 
     // MISC
     val INCREASED_MOVEMENT_SPEED = VanillaAttributeType(
-        EntityAttributes.MOVEMENT_SPEED,
-        EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE,
+        Attributes.MOVEMENT_SPEED,
+        AttributeModifier.Operation.ADD_MULTIPLIED_BASE,
         "increased_movement_speed",
         AttributeFormats.SIGNED_PERCENT_ROLL,
         AttributeFormats.PERCENT_BOUNDS,
@@ -105,8 +105,8 @@ object VanillaAttributeTypes {
         SignBasedKeywords.INCREASED
     )
     val MORE_MOVEMENT_SPEED = VanillaAttributeType(
-        EntityAttributes.MOVEMENT_SPEED,
-        EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
+        Attributes.MOVEMENT_SPEED,
+        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
         "more_movement_speed",
         AttributeFormats.PERCENT_ROLL,
         AttributeFormats.PERCENT_BOUNDS,
@@ -114,8 +114,8 @@ object VanillaAttributeTypes {
         SignBasedKeywords.MORE
     )
     val INCREASED_JUMP_STRENGTH = VanillaAttributeType(
-        EntityAttributes.JUMP_STRENGTH,
-        EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE,
+        Attributes.JUMP_STRENGTH,
+        AttributeModifier.Operation.ADD_MULTIPLIED_BASE,
         "increased_jump_strength",
         AttributeFormats.SIGNED_PERCENT_ROLL,
         AttributeFormats.PERCENT_BOUNDS,
@@ -123,16 +123,16 @@ object VanillaAttributeTypes {
         SignBasedKeywords.INCREASED
     )
     val LUCK = VanillaAttributeType(
-        EntityAttributes.LUCK,
-        EntityAttributeModifier.Operation.ADD_VALUE,
+        Attributes.LUCK,
+        AttributeModifier.Operation.ADD_VALUE,
         "luck",
         AttributeFormats.SIGNED_DOUBLE_ROLL,
         AttributeFormats.DOUBLE_BOUNDS,
         AttributeAffinities.BENEFICIAL
     )
     val INCREASED_SCALE = VanillaAttributeType(
-        EntityAttributes.SCALE,
-        EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE,
+        Attributes.SCALE,
+        AttributeModifier.Operation.ADD_MULTIPLIED_BASE,
         "increased_scale",
         AttributeFormats.SIGNED_PERCENT_ROLL,
         AttributeFormats.PERCENT_BOUNDS,
@@ -140,8 +140,8 @@ object VanillaAttributeTypes {
         SignBasedKeywords.INCREASED
     )
     val MORE_SCALE = VanillaAttributeType(
-        EntityAttributes.SCALE,
-        EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
+        Attributes.SCALE,
+        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
         "more_scale",
         AttributeFormats.PERCENT_ROLL,
         AttributeFormats.PERCENT_BOUNDS,
@@ -149,8 +149,8 @@ object VanillaAttributeTypes {
         SignBasedKeywords.MORE
     )
     val INCREASED_ENTITY_INTERACTION_RANGE = VanillaAttributeType(
-        EntityAttributes.ENTITY_INTERACTION_RANGE,
-        EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE,
+        Attributes.ENTITY_INTERACTION_RANGE,
+        AttributeModifier.Operation.ADD_MULTIPLIED_BASE,
         "increased_entity_interaction_range",
         AttributeFormats.SIGNED_PERCENT_ROLL,
         AttributeFormats.PERCENT_BOUNDS,

@@ -13,23 +13,23 @@ import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.component.ComponentType
-import net.minecraft.component.DataComponentTypes
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.component.type.AttributeModifiersComponent
-import net.minecraft.entity.EquipmentSlot
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributeModifier
-import net.minecraft.item.ItemStack
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.core.component.DataComponentType
+import net.minecraft.core.component.DataComponents
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.ItemAttributeModifiers
 import kotlin.math.max
 
 @Injectable
 object CustomAttributesExtensions {
-    private val COMPONENT_TYPE: ComponentType<List<CustomAttribute>> =
+    private val COMPONENT_TYPE: DataComponentType<List<CustomAttribute>> =
         RegistryUtil.registerDataComponentType(
-            ComponentType.builder<List<CustomAttribute>>()
-                .codec(CustomAttribute.CODEC.listOf())
+            DataComponentType.builder<List<CustomAttribute>>()
+                .persistent(CustomAttribute.CODEC.listOf())
                 .build(),
             "custom_attributes"
         )
@@ -37,26 +37,26 @@ object CustomAttributesExtensions {
     //TODO #86 change how attributes slots are handled
     fun ItemStack.setCustomAttributes(
         customAttributes: List<CustomAttribute>,
-        slot: AttributeModifierSlot,
+        slot: EquipmentSlotGroup,
     ) {
         set(COMPONENT_TYPE, customAttributes)
 
-        val attributeModifierComponent = getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT)
+        val attributeModifierComponent = getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY)
 
-        val attributeComponentBuilder = AttributeModifiersComponent.builder()
+        val attributeComponentBuilder = ItemAttributeModifiers.builder()
         addNonModAttributes(attributeModifierComponent, attributeComponentBuilder)
         addVanillaTypeAttributes(customAttributes, attributeComponentBuilder, slot)
 
-        set(DataComponentTypes.ATTRIBUTE_MODIFIERS, attributeComponentBuilder.build())
+        set(DataComponents.ATTRIBUTE_MODIFIERS, attributeComponentBuilder.build())
     }
 
     /**
-     * Automatically uses the slot of given attributes or defaults to [AttributeModifierSlot.ANY] if empty
+     * Automatically uses the slot of given attributes or defaults to [EquipmentSlotGroup.ANY] if empty
      */
     fun ItemStack.updateCustomAttributes(
         customAttributes: List<CustomAttribute>,
     ) {
-        val slot = if (customAttributes.isEmpty()) AttributeModifierSlot.ANY else customAttributes[0].slot
+        val slot = if (customAttributes.isEmpty()) EquipmentSlotGroup.ANY else customAttributes[0].slot
         return setCustomAttributes(customAttributes, slot)
     }
 
@@ -84,24 +84,24 @@ object CustomAttributesExtensions {
     private fun LivingEntity.getCustomAttributesOfItems(): List<CustomAttribute> {
         val customAttributes = mutableListOf<CustomAttribute>()
 
-        val feetItem = this.getEquippedStack(EquipmentSlot.FEET)
-        val feetAttributes = feetItem.getCustomAttributes().filter { AttributeModifierSlot.FEET.isOrIsChildOf(it.slot) }
+        val feetItem = this.getItemBySlot(EquipmentSlot.FEET)
+        val feetAttributes = feetItem.getCustomAttributes().filter { EquipmentSlotGroup.FEET.isOrIsChildOf(it.slot) }
         customAttributes.addAll(feetAttributes)
-        val legsItem = this.getEquippedStack(EquipmentSlot.LEGS)
-        val legsAttributes = legsItem.getCustomAttributes().filter { AttributeModifierSlot.LEGS.isOrIsChildOf(it.slot) }
+        val legsItem = this.getItemBySlot(EquipmentSlot.LEGS)
+        val legsAttributes = legsItem.getCustomAttributes().filter { EquipmentSlotGroup.LEGS.isOrIsChildOf(it.slot) }
         customAttributes.addAll(legsAttributes)
-        val chestItem = this.getEquippedStack(EquipmentSlot.CHEST)
-        val chestAttributes = chestItem.getCustomAttributes().filter { AttributeModifierSlot.CHEST.isOrIsChildOf(it.slot) }
+        val chestItem = this.getItemBySlot(EquipmentSlot.CHEST)
+        val chestAttributes = chestItem.getCustomAttributes().filter { EquipmentSlotGroup.CHEST.isOrIsChildOf(it.slot) }
         customAttributes.addAll(chestAttributes)
-        val headItem = this.getEquippedStack(EquipmentSlot.HEAD)
-        val headAttributes = headItem.getCustomAttributes().filter { AttributeModifierSlot.HEAD.isOrIsChildOf(it.slot) }
+        val headItem = this.getItemBySlot(EquipmentSlot.HEAD)
+        val headAttributes = headItem.getCustomAttributes().filter { EquipmentSlotGroup.HEAD.isOrIsChildOf(it.slot) }
         customAttributes.addAll(headAttributes)
 
-        val mainHandItem = this.getEquippedStack(EquipmentSlot.MAINHAND)
-        val mainHandAttributes = mainHandItem.getCustomAttributes().filter { AttributeModifierSlot.MAINHAND.isOrIsChildOf(it.slot) }
+        val mainHandItem = this.getItemBySlot(EquipmentSlot.MAINHAND)
+        val mainHandAttributes = mainHandItem.getCustomAttributes().filter { EquipmentSlotGroup.MAINHAND.isOrIsChildOf(it.slot) }
         customAttributes.addAll(mainHandAttributes)
-        val offHandItem = this.getEquippedStack(EquipmentSlot.OFFHAND)
-        val offHandAttributes = offHandItem.getCustomAttributes().filter { AttributeModifierSlot.OFFHAND.isOrIsChildOf(it.slot) }
+        val offHandItem = this.getItemBySlot(EquipmentSlot.OFFHAND)
+        val offHandAttributes = offHandItem.getCustomAttributes().filter { EquipmentSlotGroup.OFFHAND.isOrIsChildOf(it.slot) }
         customAttributes.addAll(offHandAttributes)
 
         return customAttributes.filter { it.type is CustomAttributeType }
@@ -118,7 +118,7 @@ object CustomAttributesExtensions {
     fun AttributeBounds<*>.asStringBounds() = this as StringBounds
     fun AttributeBounds<*>.asIntBounds() = this as IntBounds
 
-    private fun addNonModAttributes(attributeModifierComponent: AttributeModifiersComponent, builder: AttributeModifiersComponent.Builder) {
+    private fun addNonModAttributes(attributeModifierComponent: ItemAttributeModifiers, builder: ItemAttributeModifiers.Builder) {
         for (modifier in attributeModifierComponent.modifiers) {
             if (modifier.modifier.id.namespace == MCEndgame.MOD_ID) continue
             builder.add(modifier.attribute, modifier.modifier, modifier.slot)
@@ -127,15 +127,15 @@ object CustomAttributesExtensions {
 
     private fun addVanillaTypeAttributes(
         customAttributes: List<CustomAttribute>,
-        builder: AttributeModifiersComponent.Builder,
-        slot: AttributeModifierSlot
+        builder: ItemAttributeModifiers.Builder,
+        slot: EquipmentSlotGroup
     ) {
         customAttributes
             .filter { it.type is VanillaAttributeType }
             .forEach {
                 val vanillaAttributeType = it.type as VanillaAttributeType
                 val attribute = vanillaAttributeType.attribute
-                val modifier = EntityAttributeModifier(IdentifierUtil.defaultCustomAttribute(it), it.rolls[0].asDoubleRoll().getValue(), vanillaAttributeType.scaleType)
+                val modifier = AttributeModifier(IdentifierUtil.defaultCustomAttribute(it), it.rolls[0].asDoubleRoll().getValue(), vanillaAttributeType.scaleType)
                 builder.add(attribute, modifier, slot)
             }
     }
@@ -155,9 +155,9 @@ object CustomAttributesExtensions {
 
         val type = customAttribute.type
         if (type !is VanillaAttributeType) return
-        val attributeInstance = getAttributeInstance(type.attribute) ?: return
-        val modifier = EntityAttributeModifier(IdentifierUtil.defaultCustomAttribute(customAttribute), customAttribute.rolls[0].asDoubleRoll().getValue(), type.scaleType)
-        attributeInstance.addPersistentModifier(modifier)
+        val attributeInstance = getAttribute(type.attribute) ?: return
+        val modifier = AttributeModifier(IdentifierUtil.defaultCustomAttribute(customAttribute), customAttribute.rolls[0].asDoubleRoll().getValue(), type.scaleType)
+        attributeInstance.addPermanentModifier(modifier)
     }
 
     fun LivingEntity.addCustomAttributes(customAttributes: List<CustomAttribute>) {
@@ -169,5 +169,5 @@ object CustomAttributesExtensions {
         return accessor.`mcendgame$getCustomAttributes`()
     }
 
-    fun LivingEntity.getCustomAttributesFromWorld(): List<CustomAttribute> = (entityWorld as? ServerWorld)?.getCustomTypeAttributes(this) ?: listOf()
+    fun LivingEntity.getCustomAttributesFromWorld(): List<CustomAttribute> = (level() as? ServerLevel)?.getCustomTypeAttributes(this) ?: listOf()
 }

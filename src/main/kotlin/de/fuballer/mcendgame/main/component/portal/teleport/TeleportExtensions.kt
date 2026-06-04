@@ -1,20 +1,20 @@
 package de.fuballer.mcendgame.main.component.portal.teleport
 
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.TeleportTarget
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.portal.TeleportTransition
+import net.minecraft.world.phys.Vec3
 
 object TeleportExtensions {
-    fun PlayerEntity.teleportTo(teleportLocation: TeleportLocation): Boolean {
-        val worldKey = teleportLocation.world.registryKey
-        val world = RuntimeConfig.SERVER.getWorld(worldKey) ?: return false
+    fun Player.teleportTo(teleportLocation: TeleportLocation): Boolean {
+        val worldKey = teleportLocation.world.dimension()
+        val world = RuntimeConfig.SERVER.getLevel(worldKey) ?: return false
 
-        val result = teleportTo(
-            TeleportTarget(
+        val result = teleport(
+            TeleportTransition(
                 world,
                 teleportLocation.coordinates,
-                Vec3d.ZERO,
+                Vec3.ZERO,
                 teleportLocation.yRot,
                 teleportLocation.xRot
             ) { }

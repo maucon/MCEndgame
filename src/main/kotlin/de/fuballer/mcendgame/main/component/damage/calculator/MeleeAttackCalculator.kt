@@ -6,13 +6,13 @@ import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
 import de.fuballer.mcendgame.main.util.extension.DamageTypeExtension.isOf
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getAttackCooldownMultiplier
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.player.Player
 
 object MeleeAttackCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.source is LivingEntity
+    override fun isActive(source: DamageSource) = source.directEntity is LivingEntity
 
     override fun calculateAttackDamage(
         originalDamage: Float,
@@ -20,7 +20,7 @@ object MeleeAttackCalculator : DamageCalculator {
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
     ): Float {
-        val attacker = source.attacker as? LivingEntity ?: return originalDamage
+        val attacker = source.entity as? LivingEntity ?: return originalDamage
 
         val baseDamage = calculateBaseAttackDamage(event, attacker, source)
         val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
@@ -38,7 +38,7 @@ object MeleeAttackCalculator : DamageCalculator {
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
     ): Float {
-        if (source.attacker !is LivingEntity) return 0.0F
+        if (source.entity !is LivingEntity) return 0.0F
 
         val baseDamage = calculateBaseElementalDamage(event)
         val damageMulti = DamageUtil.calculateElementalDamageMultiplier(event)
@@ -54,11 +54,11 @@ object MeleeAttackCalculator : DamageCalculator {
         attacker: LivingEntity,
         source: DamageSource
     ): Double {
-        var baseDamage = if (attacker.isUsingRiptide) 8.0
+        var baseDamage = if (attacker.isAutoSpinAttack) 8.0
         else DamageUtil.getAttackDamageBaseValue(event, attacker)
 
-        if (source.type.isOf(CustomDamageTypes.SWEEPING)) {
-            val sweepingRatio = attacker.getAttributeValue(EntityAttributes.SWEEPING_DAMAGE_RATIO)
+        if (source.type().isOf(CustomDamageTypes.SWEEPING)) {
+            val sweepingRatio = attacker.getAttributeValue(Attributes.SWEEPING_DAMAGE_RATIO)
             baseDamage = 1.0 + sweepingRatio * baseDamage
         }
 
@@ -71,7 +71,7 @@ object MeleeAttackCalculator : DamageCalculator {
     }
 
     private fun getAttackCooldown(source: DamageSource): Double {
-        val sourceEntity = source.source as? PlayerEntity ?: return 1.0
+        val sourceEntity = source.directEntity as? Player ?: return 1.0
         return sourceEntity.getAttackCooldownMultiplier().toDouble()
     }
 

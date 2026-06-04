@@ -2,76 +2,80 @@ package de.fuballer.mcendgame.main.component.block.blocks.totem_statue
 
 import com.mojang.serialization.MapCodec
 import de.fuballer.mcendgame.main.component.block.CustomBlockEntityTypes
-import net.minecraft.block.*
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.block.entity.BlockEntityTicker
-import net.minecraft.block.entity.BlockEntityType
-import net.minecraft.entity.ai.pathing.NavigationType
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemPlacementContext
-import net.minecraft.state.StateManager
-import net.minecraft.state.property.Properties
-import net.minecraft.util.ActionResult
-import net.minecraft.util.hit.BlockHitResult
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.RotationPropertyHelper
-import net.minecraft.util.shape.VoxelShape
-import net.minecraft.world.BlockView
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.RenderShape
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityTicker
+import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.block.state.properties.RotationSegment
+import net.minecraft.world.level.pathfinder.PathComputationType
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.VoxelShape
 
 class TotemStatueBlock(
-    settings: Settings
-) : BlockWithEntity(settings) {
+    settings: Properties
+) : BaseEntityBlock(settings) {
     companion object {
         const val ID = "totem_statue"
 
-        private val SHAPE = createColumnShape(8.0, 0.0, 15.0)
+        private val SHAPE = column(8.0, 0.0, 15.0)
     }
 
     init {
-        defaultState = stateManager.getDefaultState().with(Properties.ROTATION, 0)
+        registerDefaultState(stateDefinition.any().setValue(BlockStateProperties.ROTATION_16, 0))
     }
 
-    override fun getPlacementState(ctx: ItemPlacementContext): BlockState =
-        defaultState.with(Properties.ROTATION, RotationPropertyHelper.fromYaw(ctx.playerYaw))
+    override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState =
+        defaultBlockState().setValue(BlockStateProperties.ROTATION_16, RotationSegment.convertToSegment(ctx.rotation))
 
-    override fun onUse(
+    override fun useWithoutItem(
         state: BlockState,
-        world: World,
+        world: Level,
         pos: BlockPos,
-        player: PlayerEntity,
+        player: Player,
         hit: BlockHitResult,
-    ): ActionResult {
-        if (world.isClient) return ActionResult.SUCCESS
+    ): InteractionResult {
+        if (world.isClientSide) return InteractionResult.SUCCESS
 
-        val blockEntity = world.getBlockEntity(pos) as? TotemStatueBlockEntity ?: return ActionResult.SUCCESS
+        val blockEntity = world.getBlockEntity(pos) as? TotemStatueBlockEntity ?: return InteractionResult.SUCCESS
         blockEntity.tryActivate(player)
 
-        return ActionResult.SUCCESS
+        return InteractionResult.SUCCESS
     }
 
-    override fun canPathfindThrough(state: BlockState, type: NavigationType) = false
+    override fun isPathfindable(state: BlockState, type: PathComputationType) = false
 
-    override fun getOutlineShape(
+    override fun getShape(
         state: BlockState,
-        world: BlockView,
+        world: BlockGetter,
         pos: BlockPos,
-        context: ShapeContext,
+        context: CollisionContext,
     ): VoxelShape = SHAPE
 
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-        builder.add(Properties.ROTATION)
+    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
+        builder.add(BlockStateProperties.ROTATION_16)
     }
 
-    override fun getCodec(): MapCodec<out BlockWithEntity> = createCodec(::TotemStatueBlock)
+    override fun codec(): MapCodec<out BaseEntityBlock> = simpleCodec(::TotemStatueBlock)
 
-    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = TotemStatueBlockEntity(pos, state)
+    override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = TotemStatueBlockEntity(pos, state)
 
-    override fun getRenderType(state: BlockState) = BlockRenderType.INVISIBLE
+    override fun getRenderShape(state: BlockState) = RenderShape.INVISIBLE
 
-    override fun <T : BlockEntity> getTicker(world: World, state: BlockState, type: BlockEntityType<T>): BlockEntityTicker<T>? {
-        return validateTicker(type, CustomBlockEntityTypes.TOTEM_STATUE) { worldx, pos, state, blockEntity ->
-            TotemStatueBlockEntity.tick(worldx, pos, state, blockEntity)
+    override fun <T : BlockEntity> getTicker(world: Level, state: BlockState, type: BlockEntityType<T>): BlockEntityTicker<T>? {
+        return createTickerHelper(type, CustomBlockEntityTypes.TOTEM_STATUE) { worldx, _, _, blockEntity ->
+            TotemStatueBlockEntity.tick(worldx, blockEntity)
         }
     }
 }

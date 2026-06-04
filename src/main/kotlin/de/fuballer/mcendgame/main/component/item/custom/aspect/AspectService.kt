@@ -1,13 +1,13 @@
 package de.fuballer.mcendgame.main.component.item.custom.aspect
 
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.item.ItemStack
-import net.minecraft.util.collection.DefaultedList
+import net.minecraft.core.NonNullList
+import net.minecraft.world.item.ItemStack
 
 @Injectable
 class AspectService {
     fun getAffectingAspects(
-        affectingItemStacks: DefaultedList<ItemStack>,
+        affectingItemStacks: NonNullList<ItemStack>,
     ): Map<AspectItem, Int> {
         val aspectItemStacks = affectingItemStacks
             .filter { it.item is AspectItem }
@@ -22,7 +22,7 @@ class AspectService {
             if (disabledAspects.contains(item)) return@forEach
             if ((affectingAspects[item] ?: 0) >= item.limit) return@forEach
 
-            it.decrement(1)
+            it.shrink(1)
 
             disabledAspects.addAll(item.disabledAspects)
 

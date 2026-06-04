@@ -10,20 +10,20 @@ import de.fuballer.mcendgame.main.component.particle.HorizontalFlameBreathPartic
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvents
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Vec3d
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-private val HORIZONTAL_VECTOR = Vec3d(1.0, 0.0, 1.0)
+private val HORIZONTAL_VECTOR = Vec3(1.0, 0.0, 1.0)
 private val NO_AD_ATTRIBUTE = CustomAttribute(CustomAttributeTypes.NO_ATTACK_DAMAGE)
 
 @Injectable
@@ -33,13 +33,13 @@ class FlameBreathAttackService(
     @EventSubscriber(sync = true)
     fun on(event: FlameBreathAttackEvent) {
         val attacker = event.attacker
-        val world = event.attacker.entityWorld as? ServerWorld ?: return
+        val world = event.attacker.level() as? ServerLevel ?: return
 
         val direction = getDirection(attacker, event.target)
         val horizontalDirection = direction.multiply(HORIZONTAL_VECTOR).normalize()
-        val horizontalOffset = horizontalDirection.multiply(attacker.width * event.entityWidthOffsetFactor)
-        val verticalOffset = Vec3d(0.0, attacker.height * event.entityHeightOffsetFactor, 0.0)
-        val originPoint = attacker.entityPos.add(horizontalOffset).add(verticalOffset)
+        val horizontalOffset = horizontalDirection.scale(attacker.bbWidth * event.entityWidthOffsetFactor)
+        val verticalOffset = Vec3(0.0, attacker.bbHeight * event.entityHeightOffsetFactor, 0.0)
+        val originPoint = attacker.position().add(horizontalOffset).add(verticalOffset)
 
         createParticles(world, attacker, originPoint, horizontalDirection, event.delay, event.duration, event.angle)
         playSound(world, originPoint, event.delay, event.duration)
@@ -49,23 +49,23 @@ class FlameBreathAttackService(
     private fun getDirection(
         attacker: Entity,
         target: Entity?,
-    ): Vec3d {
-        if (target == null) return attacker.rotationVector.multiply(HORIZONTAL_VECTOR).normalize()
-        return target.entityPos.subtract(attacker.entityPos).multiply(HORIZONTAL_VECTOR).normalize()
+    ): Vec3 {
+        if (target == null) return attacker.lookAngle.multiply(HORIZONTAL_VECTOR).normalize()
+        return target.position().subtract(attacker.position()).multiply(HORIZONTAL_VECTOR).normalize()
     }
 
     private fun createParticles(
-        world: ServerWorld,
+        world: ServerLevel,
         attacker: Entity,
-        originPoint: Vec3d,
-        direction: Vec3d,
+        originPoint: Vec3,
+        direction: Vec3,
         delay: Int,
         duration: Int,
         angle: Double,
     ) {
         scheduler.repeatingForDuration(delay, 1, duration) {
             if (!attacker.isAlive) return@repeatingForDuration
-            world.spawnParticles(
+            world.sendParticles(
                 HorizontalFlameBreathParticleEffect(direction.x, direction.y, direction.z, angle),
                 originPoint.x,
                 originPoint.y,
@@ -80,8 +80,8 @@ class FlameBreathAttackService(
     }
 
     private fun playSound(
-        world: ServerWorld,
-        originPoint: Vec3d,
+        world: ServerLevel,
+        originPoint: Vec3,
         delay: Int,
         duration: Int,
     ) {
@@ -91,8 +91,8 @@ class FlameBreathAttackService(
                 originPoint.x,
                 originPoint.y,
                 originPoint.z,
-                SoundEvents.ENTITY_BREEZE_IDLE_GROUND,
-                SoundCategory.HOSTILE,
+                SoundEvents.BREEZE_IDLE_GROUND,
+                SoundSource.HOSTILE,
                 0.4F + 0.1F * Random.nextFloat(),
                 0.2F + 0.2F * Random.nextFloat()
             )
@@ -103,8 +103,8 @@ class FlameBreathAttackService(
                 originPoint.x,
                 originPoint.y,
                 originPoint.z,
-                SoundEvents.ENTITY_BLAZE_BURN,
-                SoundCategory.HOSTILE,
+                SoundEvents.BLAZE_BURN,
+                SoundSource.HOSTILE,
                 0.4F + 0.1F * Random.nextFloat(),
                 0.8F + 0.3F * Random.nextFloat()
             )
@@ -112,11 +112,11 @@ class FlameBreathAttackService(
     }
 
     private fun dealDamage(
-        world: ServerWorld,
+        world: ServerLevel,
         attacker: Entity,
         damageConversion: Double,
-        originPoint: Vec3d,
-        direction: Vec3d,
+        originPoint: Vec3,
+        direction: Vec3,
         delay: Int,
         duration: Int,
         angle: Double,
@@ -139,7 +139,7 @@ class FlameBreathAttackService(
             val minDistance = speed * ticksSinceStop
             val minDistanceSquared = minDistance * minDistance
 
-            val box = Box(
+            val box = AABB(
                 originPoint.x - maxDistance,
                 originPoint.y - 1.0,
                 originPoint.z - maxDistance,
@@ -148,17 +148,17 @@ class FlameBreathAttackService(
                 originPoint.z + maxDistance
             )
 
-            val entities = world.getEntitiesByClass(LivingEntity::class.java, box) {
-                val squaredDistance = it.squaredDistanceTo(originPoint)
+            val entities = world.getEntitiesOfClass(LivingEntity::class.java, box) {
+                val squaredDistance = it.distanceToSqr(originPoint)
                 it != attacker && squaredDistance <= maxDistanceSquared && squaredDistance >= minDistanceSquared
             }
 
-            val attackDamage = if (attacker is LivingEntity) attacker.getAttributeValue(EntityAttributes.ATTACK_DAMAGE) else 1.0
+            val attackDamage = if (attacker is LivingEntity) attacker.getAttributeValue(Attributes.ATTACK_DAMAGE) else 1.0
             val elementalDamage = attackDamage * damageConversion
             for (entity in entities) {
-                val directionVectorToEntity = entity.entityPos.subtract(originPoint).multiply(HORIZONTAL_VECTOR).normalize()
+                val directionVectorToEntity = entity.position().subtract(originPoint).multiply(HORIZONTAL_VECTOR).normalize()
 
-                val dotProduct = direction.dotProduct(directionVectorToEntity)
+                val dotProduct = direction.dot(directionVectorToEntity)
                 if (dotProduct >= cosThreshold) {
                     entity.dealDamage(
                         attacker,
@@ -168,7 +168,7 @@ class FlameBreathAttackService(
                         ),
                         CustomDamageTypes.SPELL
                     )
-                    entity.setOnFireForTicks(80)
+                    entity.igniteForTicks(80)
                 }
             }
         }

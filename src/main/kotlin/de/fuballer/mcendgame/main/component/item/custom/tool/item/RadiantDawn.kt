@@ -6,10 +6,10 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
-import net.minecraft.component.type.AttributeModifierSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
 
 class RadiantDawn(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.HEAL_NEARBY_ALLIES_ON_MELEE_HIT, 0, IntBounds(10, 10), DoubleBounds(0.8, 1.2)),
@@ -18,5 +18,5 @@ class RadiantDawn(
         RollableCustomAttribute(VanillaAttributeTypes.INCREASED_ENTITY_INTERACTION_RANGE, 0, DoubleBounds(0.15, 0.15)),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.MAINHAND
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.MAINHAND
 }

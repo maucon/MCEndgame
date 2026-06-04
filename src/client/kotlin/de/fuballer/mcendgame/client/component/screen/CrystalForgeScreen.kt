@@ -7,34 +7,34 @@ import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
 import de.fuballer.mcendgame.main.util.ColorUtil
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-import net.minecraft.client.gl.RenderPipelines
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.ingame.HandledScreen
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.gui.widget.TextWidget
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.screen.slot.Slot
-import net.minecraft.text.Text
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.gui.components.StringWidget
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.network.chat.Component
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.inventory.Slot
 import java.awt.Color
 import kotlin.math.pow
 import kotlin.math.sin
 
 private val TEXTURE = IdentifierUtil.default("textures/gui/container/crystal_forge.png")
-private val FORGE_BUTTON_TEXT = Text.translatable("${CrystalForgeSettings.CONTAINER_BASE_KEY}forge_button")
+private val FORGE_BUTTON_TEXT = Component.translatable("${CrystalForgeSettings.CONTAINER_BASE_KEY}forge_button")
 
 private const val FORGE_ANIMATION_DURATION = 10.0
 
 class CrystalForgeScreen(
     handler: CrystalForgeScreenHandler,
-    inventory: PlayerInventory,
-    title: Text,
-) : HandledScreen<CrystalForgeScreenHandler>(handler, inventory, title) {
-    private val forgeButton = ButtonWidget
+    inventory: Inventory,
+    title: Component,
+) : AbstractContainerScreen<CrystalForgeScreenHandler>(handler, inventory, title) {
+    private val forgeButton = Button
         .builder(FORGE_BUTTON_TEXT, ::onForgeButtonPress)
         .size(36, 12)
         .build()
 
-    private lateinit var forgeErrorText: TextWidget
+    private lateinit var forgeErrorText: StringWidget
 
     private var forgeAnimationTime = -1F
     private var forgeAnimationColor = Color.WHITE
@@ -46,25 +46,25 @@ class CrystalForgeScreen(
     override fun init() {
         super.init()
 
-        val backgroundX = (width - backgroundWidth) / 2
-        val backgroundY = (height - backgroundHeight) / 2
+        val backgroundX = (width - imageWidth) / 2
+        val backgroundY = (height - imageHeight) / 2
 
         forgeButton.setPosition(backgroundX + 70, backgroundY + 62)
-        addDrawableChild(forgeButton)
+        addRenderableWidget(forgeButton)
 
-        forgeErrorText = TextWidget(
+        forgeErrorText = StringWidget(
             backgroundX + 3,
             backgroundY - 10,
             200,
             10,
-            Text.empty(),
-            textRenderer
+            Component.empty(),
+            font
         )
-        addDrawableChild(forgeErrorText)
+        addRenderableWidget(forgeErrorText)
 
-        val toForgeSlot: Slot = handler.slots[0]
-        val toForgeSlotX = (width - backgroundWidth) / 2 + toForgeSlot.x
-        val toForgeSlotY = (height - backgroundHeight) / 2 + toForgeSlot.y
+        val toForgeSlot: Slot = menu.slots[0]
+        val toForgeSlotX = (width - imageWidth) / 2 + toForgeSlot.x
+        val toForgeSlotY = (height - imageHeight) / 2 + toForgeSlot.y
         forgeAnimationX1 = toForgeSlotX - 2
         forgeAnimationY1 = toForgeSlotY - 2
         forgeAnimationX2 = toForgeSlotX + 18
@@ -72,42 +72,42 @@ class CrystalForgeScreen(
     }
 
     override fun render(
-        context: DrawContext,
+        context: GuiGraphics,
         mouseX: Int,
         mouseY: Int,
         deltaTicks: Float
     ) {
         super.render(context, mouseX, mouseY, deltaTicks)
-        drawMouseoverTooltip(context, mouseX, mouseY)
+        renderTooltip(context, mouseX, mouseY)
     }
 
-    override fun drawBackground(
-        context: DrawContext,
+    override fun renderBg(
+        context: GuiGraphics,
         deltaTicks: Float,
         mouseX: Int,
         mouseY: Int,
     ) {
-        val textureX = (width - backgroundWidth) / 2
-        val textureY = (height - backgroundHeight) / 2
+        val textureX = (width - imageWidth) / 2
+        val textureY = (height - imageHeight) / 2
 
-        context.drawTexture(
+        context.blit(
             RenderPipelines.GUI_TEXTURED,
             TEXTURE,
             textureX,
             textureY,
             0.0f,
             0.0f,
-            backgroundWidth,
-            backgroundHeight,
-            backgroundWidth,
-            backgroundHeight,
+            imageWidth,
+            imageHeight,
+            imageWidth,
+            imageHeight,
         )
 
         drawForgeAnimation(context, deltaTicks)
     }
 
     private fun drawForgeAnimation(
-        context: DrawContext,
+        context: GuiGraphics,
         deltaTicks: Float,
     ) {
         if (forgeAnimationTime >= 0) {
@@ -130,9 +130,9 @@ class CrystalForgeScreen(
         }
     }
 
-    private fun onForgeButtonPress(button: ButtonWidget) {
-        val toForgeStack = handler.slots[0].stack
-        val crystalStack = handler.slots[1].stack
+    private fun onForgeButtonPress(button: Button) {
+        val toForgeStack = menu.slots[0].item
+        val crystalStack = menu.slots[1].item
 
         val crystalItem = crystalStack.item
         if (crystalItem !is CrystalItem) {
@@ -144,7 +144,7 @@ class CrystalForgeScreen(
         if (cannotForgeReason != null) {
             forgeErrorText.message = cannotForgeReason
         } else {
-            forgeErrorText.message = Text.empty()
+            forgeErrorText.message = Component.empty()
             ClientPlayNetworking.send(CrystalForgePayload())
 
             forgeAnimationTime = 0F

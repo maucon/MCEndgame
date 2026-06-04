@@ -7,8 +7,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_conditi
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.TeleportAttackMob
 import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
 import de.maucon.mauconframework.event.EventGateway
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 import software.bernie.geckolib.animatable.GeoEntity
 
 class TeleportToTargetAttack<T>(
@@ -21,7 +21,7 @@ class TeleportToTargetAttack<T>(
     val choseLocationDelayTicks: Int,
     sounds: List<DelayedSoundData> = listOf(),
     blockMovementDuration: Int = 0,
-) : Attack<T>(animationData, totalDuration, cooldown, trigger, damage, sounds, blockMovementDuration) where T : MobEntity, T : GeoEntity {
+) : Attack<T>(animationData, totalDuration, cooldown, trigger, damage, sounds, blockMovementDuration) where T : Mob, T : GeoEntity {
     constructor(
         animationData: AttackAnimationData,
         totalDuration: Int,

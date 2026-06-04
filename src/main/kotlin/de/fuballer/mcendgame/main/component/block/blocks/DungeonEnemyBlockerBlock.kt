@@ -3,21 +3,17 @@ package de.fuballer.mcendgame.main.component.block.blocks
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getLastDamageTime
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonBoss
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
-import net.minecraft.block.BarrierBlock
-import net.minecraft.block.BlockState
-import net.minecraft.block.EntityShapeContext
-import net.minecraft.block.ShapeContext
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.util.function.BooleanBiFunction
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.shape.VoxelShape
-import net.minecraft.util.shape.VoxelShapes
-import net.minecraft.world.BlockView
+import net.minecraft.core.BlockPos
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.block.BarrierBlock
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.shapes.*
 
 class DungeonEnemyBlockerBlock(
-    settings: Settings,
+    settings: Properties,
 ) : BarrierBlock(settings) {
     companion object {
         const val ID = "dungeon_enemy_blocker"
@@ -27,32 +23,32 @@ class DungeonEnemyBlockerBlock(
 
     override fun getCollisionShape(
         state: BlockState,
-        world: BlockView,
+        world: BlockGetter,
         pos: BlockPos,
-        context: ShapeContext,
+        context: CollisionContext,
     ): VoxelShape {
-        val entityContext = context as? EntityShapeContext ?: return VoxelShapes.empty()
-        val entity = entityContext.entity as? LivingEntity ?: return VoxelShapes.empty()
+        val entityContext = context as? EntityCollisionContext ?: return Shapes.empty()
+        val entity = entityContext.entity as? LivingEntity ?: return Shapes.empty()
 
-        if (!entity.isDungeonEnemy() || (entity.isDungeonBoss() && (entity as? MobEntity)?.isAiDisabled != true)) return VoxelShapes.empty()
-        if (entity.entityWorld.time - entity.getLastDamageTime() <= DAMAGE_TAKEN_TIME) return VoxelShapes.empty()
+        if (!entity.isDungeonEnemy() || (entity.isDungeonBoss() && (entity as? Mob)?.isNoAi != true)) return Shapes.empty()
+        if (entity.level().gameTime - entity.getLastDamageTime() <= DAMAGE_TAKEN_TIME) return Shapes.empty()
 
-        val blockShape = VoxelShapes.fullCube()
-        val offsetShape = blockShape.offset(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
-        if (VoxelShapes.matchesAnywhere(offsetShape, VoxelShapes.cuboid(entity.boundingBox), BooleanBiFunction.AND)) return VoxelShapes.empty()
+        val blockShape = Shapes.block()
+        val offsetShape = blockShape.move(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
+        if (Shapes.joinIsNotEmpty(offsetShape, Shapes.create(entity.boundingBox), BooleanOp.AND)) return Shapes.empty()
 
         return blockShape
     }
 
-    override fun getOutlineShape(
+    override fun getShape(
         state: BlockState,
-        world: BlockView,
+        world: BlockGetter,
         pos: BlockPos,
-        context: ShapeContext
+        context: CollisionContext
     ): VoxelShape {
-        val entityContext = context as? EntityShapeContext ?: return VoxelShapes.empty()
-        val player = entityContext.entity as? PlayerEntity ?: return VoxelShapes.empty()
-        if (!player.isCreative) return VoxelShapes.empty()
-        return VoxelShapes.fullCube()
+        val entityContext = context as? EntityCollisionContext ?: return Shapes.empty()
+        val player = entityContext.entity as? Player ?: return Shapes.empty()
+        if (!player.isCreative) return Shapes.empty()
+        return Shapes.block()
     }
 }

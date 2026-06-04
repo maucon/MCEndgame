@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.main.accessor;
 
 import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType;
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.GlobalPos;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Map;
 
@@ -28,9 +28,9 @@ public interface DungeonWorldAccessor {
 
     void mcendgame$increaseBossesKilled();
 
-    void mcendgame$setOpener(PlayerEntity opener);
+    void mcendgame$setOpener(Player opener);
 
-    PlayerEntity mcendgame$getOpener();
+    Player mcendgame$getOpener();
 
     void mcendgame$setAspects(Map<AspectItem, Integer> aspects);
 

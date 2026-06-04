@@ -1,21 +1,21 @@
 package de.fuballer.mcendgame.client.component.screen
 
-import net.minecraft.client.font.TextRenderer
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.widget.TextWidget
-import net.minecraft.text.Text
+import net.minecraft.client.gui.Font
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.StringWidget
+import net.minecraft.network.chat.Component
 
 class ScalableTextWidget(
     x: Int,
     y: Int,
     width: Int,
     height: Int,
-    text: Text,
-    textRenderer: TextRenderer,
+    text: Component,
+    textRenderer: Font,
     private val scale: Float,
-) : TextWidget(x, y, width, height, text, textRenderer) {
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, deltaTicks: Float) {
-        val matrices = context.matrices
+) : StringWidget(x, y, width, height, text, textRenderer) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, deltaTicks: Float) {
+        val matrices = context.pose()
 
         matrices.pushMatrix()
         matrices.translate(x * (1 - scale), y * (1 - scale))

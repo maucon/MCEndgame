@@ -6,10 +6,10 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
-import net.minecraft.component.type.AttributeModifierSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
 
 class DruidsChestplate(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH, 0, DoubleBounds(1.0, 3.0)),
@@ -17,5 +17,5 @@ class DruidsChestplate(
         RollableCustomAttribute(CustomAttributeTypes.RESILIENCE_ON_DAMAGE_TAKEN, 0, IntBounds(0, 0)),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.CHEST
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.CHEST
 }

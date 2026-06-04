@@ -2,22 +2,21 @@ package de.fuballer.mcendgame.main.component.dungeon.loot.drop.effect
 
 import de.fuballer.mcendgame.main.component.dungeon.loot.drop.ItemColor
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setForcedGlowColor
-import net.minecraft.entity.Entity
-import net.minecraft.entity.ItemEntity
-import net.minecraft.particle.ParticleEffect
-import net.minecraft.particle.SimpleParticleType
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvent
+import net.minecraft.core.particles.ParticleOptions
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.item.ItemEntity
 import org.joml.Vector3d
 import kotlin.random.Random
 
 class DungeonDropEffect(
     val sound: SoundEvent? = null,
-    val particleType: ParticleEffect? = null,
+    val particleType: ParticleOptions? = null,
     val glowColor: ItemColor? = null,
 ) {
-    private var soundCategory = SoundCategory.MASTER
+    private var soundCategory = SoundSource.MASTER
     private var volume = 1F
     private var pitch = 1F
     private var pitchVariance = 0.05F
@@ -26,16 +25,16 @@ class DungeonDropEffect(
     private var particleSpeed = 1.0
     private var particleOffset = Vector3d(0.0, 0.0, 0.0)
 
-    private var additionalEffects: ((ItemEntity, ServerWorld) -> Unit)? = null
+    private var additionalEffects: ((ItemEntity, ServerLevel) -> Unit)? = null
 
     fun apply(
         itemEntity: ItemEntity,
-        world: ServerWorld,
+        world: ServerLevel,
     ) {
         playSound(itemEntity, world)
         spawnParticles(itemEntity, world)
         if (glowColor != null) {
-            itemEntity.isGlowing = true
+            itemEntity.setGlowingTag(true)
             itemEntity.setForcedGlowColor(glowColor.intColor)
         }
         additionalEffects?.invoke(itemEntity, world)
@@ -43,13 +42,13 @@ class DungeonDropEffect(
 
     private fun spawnParticles(
         itemEntity: Entity,
-        world: ServerWorld,
+        world: ServerLevel,
     ) {
         if (particleType == null) return
-        world.spawnParticles(
+        world.sendParticles(
             particleType,
             itemEntity.x,
-            itemEntity.y + itemEntity.height / 2,
+            itemEntity.y + itemEntity.bbHeight / 2,
             itemEntity.z,
             particleCount,
             particleOffset.x,
@@ -61,12 +60,12 @@ class DungeonDropEffect(
 
     private fun playSound(
         itemEntity: ItemEntity,
-        world: ServerWorld,
+        world: ServerLevel,
     ) {
         if (sound == null) return
         world.playSound(
             itemEntity,
-            itemEntity.blockPos,
+            itemEntity.blockPosition(),
             sound,
             soundCategory,
             volume,
@@ -74,7 +73,7 @@ class DungeonDropEffect(
         )
     }
 
-    fun withSoundCategory(category: SoundCategory): DungeonDropEffect {
+    fun withSoundCategory(category: SoundSource): DungeonDropEffect {
         soundCategory = category
         return this
     }
@@ -109,7 +108,7 @@ class DungeonDropEffect(
         return this
     }
 
-    fun withAdditionalEffects(effects: (ItemEntity, ServerWorld) -> Unit): DungeonDropEffect {
+    fun withAdditionalEffects(effects: (ItemEntity, ServerLevel) -> Unit): DungeonDropEffect {
         additionalEffects = effects
         return this
     }

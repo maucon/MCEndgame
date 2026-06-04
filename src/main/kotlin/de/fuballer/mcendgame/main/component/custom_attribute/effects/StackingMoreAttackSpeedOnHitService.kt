@@ -11,10 +11,10 @@ import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtensio
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil.defaultJava
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributeModifier
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.player.Player
 import java.util.*
 
 @Injectable
@@ -23,10 +23,10 @@ class StackingMoreAttackSpeedOnHitService {
 
     @EventSubscriber(sync = true)
     fun on(event: LivingEntityDamagedEvent) {
-        if (!event.damageSource.isIn(CustomTags.MELEE_ATTACK)) return
+        if (!event.damageSource.`is`(CustomTags.MELEE_ATTACK)) return
 
-        val attacker = event.damageSource.attacker as? LivingEntity ?: return
-        val attackCooldownMultiplier = (attacker as? PlayerEntity)?.getAttackCooldownMultiplier() ?: 1F
+        val attacker = event.damageSource.entity as? LivingEntity ?: return
+        val attackCooldownMultiplier = (attacker as? Player)?.getAttackCooldownMultiplier() ?: 1F
 
         val attributes = attacker.getAllCustomAttributes()[CustomAttributeTypes.STACKING_MORE_ATTACK_SPEED_ON_MELEE_HIT] ?: return
         attributes.forEach { attribute ->
@@ -35,11 +35,11 @@ class StackingMoreAttackSpeedOnHitService {
             val identifier = defaultJava(attributeModifierIdentifierBase + attribute.id + "_" + UUID.randomUUID())
 
             attacker.addTemporaryAttributeModifier(
-                EntityAttributes.ATTACK_SPEED,
+                Attributes.ATTACK_SPEED,
                 identifier,
                 duration,
                 moreAttackSpeed,
-                EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
             )
         }
     }

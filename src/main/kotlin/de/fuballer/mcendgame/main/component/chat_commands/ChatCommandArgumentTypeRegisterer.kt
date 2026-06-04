@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry
-import net.minecraft.command.argument.serialize.ConstantArgumentSerializer
+import net.minecraft.commands.synchronization.SingletonArgumentInfo
 
 @Injectable
 object ChatCommandArgumentTypeRegisterer {
@@ -15,12 +15,12 @@ object ChatCommandArgumentTypeRegisterer {
         ArgumentTypeRegistry.registerArgumentType(
             IdentifierUtil.default("unique_item"),
             UniqueItemArgumentType::class.java,
-            ConstantArgumentSerializer.of(::UniqueItemArgumentType)
+            SingletonArgumentInfo.contextFree(::UniqueItemArgumentType)
         )
         ArgumentTypeRegistry.registerArgumentType(
             IdentifierUtil.default("totem_item"),
             TotemItemArgumentType::class.java,
-            ConstantArgumentSerializer.of(::TotemItemArgumentType)
+            SingletonArgumentInfo.contextFree(::TotemItemArgumentType)
         )
     }
 }

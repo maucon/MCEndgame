@@ -4,10 +4,10 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
-import net.minecraft.component.type.AttributeModifierSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
 
 class Iceborne(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.STRONGER_HORNS, 0),
@@ -15,5 +15,5 @@ class Iceborne(
         RollableCustomAttribute(CustomAttributeTypes.MORE_HORN_COOLDOWN, 0, DoubleBounds(-0.3, -0.2)),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.HEAD
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.HEAD
 }

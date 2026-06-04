@@ -10,9 +10,9 @@ import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectGenericIncr
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCompanion
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.passive.TameableEntity
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.TamableAnimal
 
 @Injectable
 class CompanionDamageService {
@@ -41,7 +41,7 @@ class CompanionDamageService {
     private fun getOwnerAttributes(companion: Entity?): Map<CustomAttributeType, List<CustomAttribute>> {
         if (companion !is LivingEntity
             || !companion.isCompanion()
-            || companion !is TameableEntity
+            || companion !is TamableAnimal
         ) return mapOf()
 
         val owner = companion.owner ?: return mapOf()

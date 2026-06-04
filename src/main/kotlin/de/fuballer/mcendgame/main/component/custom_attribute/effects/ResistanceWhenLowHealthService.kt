@@ -8,8 +8,8 @@ import de.fuballer.mcendgame.main.messaging.misc.ServerLivingEntitiesEveryFiveTi
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.applyPeriodicEffectIfTicksPassed
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.effect.StatusEffects
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 
 @Injectable
 class ResistanceWhenLowHealthService {
@@ -21,7 +21,7 @@ class ResistanceWhenLowHealthService {
             val attributes = entity.getAllCustomAttributes()[CustomAttributeTypes.RESISTANCE_WHEN_LOW_HEALTH] ?: return@forEach
             val duration = attributes.maxOf { it.rolls[0].asIntRoll().getValue() } * 20
 
-            val effectInstance = StatusEffectInstance(StatusEffects.RESISTANCE, duration, 0, false, true, true)
+            val effectInstance = MobEffectInstance(MobEffects.RESISTANCE, duration, 0, false, true, true)
             entity.applyPeriodicEffectIfTicksPassed(effectInstance)
         }
     }

@@ -5,26 +5,26 @@ import de.fuballer.mcendgame.main.component.custom_attribute.effects.data.AuraSt
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
 import de.fuballer.mcendgame.main.mixin.living_entity.LivingEntityAccessor
 import de.fuballer.mcendgame.main.mixin.living_entity.LivingEntityLastDamageTimeAccessorMixin
-import de.fuballer.mcendgame.main.mixin.mob_entity.MobEntityAccessor
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.goal.GoalSelector
-import net.minecraft.entity.attribute.EntityAttribute
-import net.minecraft.entity.attribute.EntityAttributeModifier
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.registry.entry.RegistryEntry
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Vec3i
+import de.fuballer.mcendgame.main.mixin.mob_entity.MobAccessor
+import net.minecraft.core.Holder
+import net.minecraft.core.Vec3i
+import net.minecraft.resources.Identifier
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.attributes.Attribute
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.goal.GoalSelector
+import net.minecraft.world.phys.AABB
 import java.util.*
 
 object EntityMixinExtension {
     fun LivingEntity.addTemporaryAttributeModifier(
-        type: RegistryEntry<EntityAttribute?>?,
-        identifier: Identifier?,
+        type: Holder<Attribute>,
+        identifier: Identifier,
         ticks: Int,
         value: Double,
-        operation: EntityAttributeModifier.Operation?
+        operation: AttributeModifier.Operation?
     ) {
         val accessor = this as LivingEntityTemporaryAttributeModifierAccessor
         accessor.`mcendgame$addTemporaryAttributeModifier`(type, identifier, ticks, value, operation)
@@ -132,7 +132,7 @@ object EntityMixinExtension {
 
     fun LivingEntity.getLastDamageTime(): Long {
         val accessor = this as LivingEntityLastDamageTimeAccessorMixin
-        return accessor.lastDamageTime
+        return accessor.lastDamageStamp
     }
 
     fun LivingEntity.setDungeonBossSpawnPosition(spawnPosition: SpawnPosition) {
@@ -159,7 +159,7 @@ object EntityMixinExtension {
         accessor.`mcendgame$resetWorldAttributesUpdate`()
     }
 
-    fun LivingEntity.getHitbox(): Box = (this as LivingEntityAccessor).`mcendgame$invokeGetHitbox`()
+    fun LivingEntity.getHitbox(): AABB = (this as LivingEntityAccessor).`mcendgame$invokeGetHitbox`()
 
-    fun MobEntity.getTargetSelector(): GoalSelector = (this as MobEntityAccessor).`mcendgame$getTargetSelector`()
+    fun Mob.getTargetSelector(): GoalSelector = (this as MobAccessor).`mcendgame$getTargetSelector`()
 }

@@ -6,8 +6,8 @@ import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.rotateY90
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.stepTowardsZero
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
-import net.minecraft.block.Blocks
-import net.minecraft.util.math.Vec3i
+import net.minecraft.core.Vec3i
+import net.minecraft.world.level.block.Blocks
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
@@ -369,5 +369,5 @@ class LinearLayoutGenerator(
         relativePos: Vec3i,
         rotation90: Int,
         offset: Vec3i,
-    ) = relativePos.rotateY90(rotation90).add(offset)
+    ) = relativePos.rotateY90(rotation90).offset(offset)
 }

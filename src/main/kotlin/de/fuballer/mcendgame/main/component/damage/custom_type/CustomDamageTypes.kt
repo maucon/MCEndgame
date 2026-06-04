@@ -2,31 +2,31 @@ package de.fuballer.mcendgame.main.component.damage.custom_type
 
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.Entity
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.damage.DamageType
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.world.World
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.level.Level
 
 @Injectable
 object CustomDamageTypes {
-    val SWEEPING: RegistryKey<DamageType> = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default("sweeping"))
-    val SPELL: RegistryKey<DamageType> = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default("spell"))
-    val GENERIC_ATTACK: RegistryKey<DamageType> = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default("generic_attack"))
-    val GENERIC_ATTACK_UNBLOCKABLE: RegistryKey<DamageType> = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default("generic_attack_unblockable"))
-    val PIERCE_ATTACK: RegistryKey<DamageType> = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default("pierce_attack"))
-    val KINETIC_ATTACK: RegistryKey<DamageType> = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default("kinetic_attack"))
+    val SWEEPING: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("sweeping"))
+    val SPELL: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("spell"))
+    val GENERIC_ATTACK: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("generic_attack"))
+    val GENERIC_ATTACK_UNBLOCKABLE: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("generic_attack_unblockable"))
+    val PIERCE_ATTACK: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("pierce_attack"))
+    val KINETIC_ATTACK: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("kinetic_attack"))
 
     fun of(
-        world: World,
-        key: RegistryKey<DamageType>,
+        world: Level,
+        key: ResourceKey<DamageType>,
         attacker: Entity,
         source: Entity? = attacker
     ): DamageSource {
-        val damageType = world.registryManager
-            .getOrThrow(RegistryKeys.DAMAGE_TYPE)
-            .getEntry(key.value)
+        val damageType = world.registryAccess()
+            .lookupOrThrow(Registries.DAMAGE_TYPE)
+            .get(key.identifier())
             .get()
 
         return DamageSource(damageType, source, attacker)

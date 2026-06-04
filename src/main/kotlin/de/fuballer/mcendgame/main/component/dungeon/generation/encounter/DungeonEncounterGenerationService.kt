@@ -8,13 +8,13 @@ import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventGateway
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
 import kotlin.random.Random
 
 @Injectable
 class DungeonEncounterGenerationService {
     fun generate(
-        world: ServerWorld,
+        world: ServerLevel,
         playerSeed: PlayerDungeonSeed,
         dungeonLevel: Int,
         encounterLocations: List<EncounterLocation>,

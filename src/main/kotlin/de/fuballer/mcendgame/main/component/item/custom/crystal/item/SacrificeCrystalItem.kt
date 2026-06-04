@@ -6,9 +6,9 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.data.AttributeRoll
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItemInterface
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
-import net.minecraft.item.ItemStack
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.world.item.ItemStack
 import java.awt.Color
 
 private val TIER_BASED_ENHANCE_VALUES = mapOf(
@@ -20,13 +20,13 @@ private val TIER_BASED_ENHANCE_VALUES = mapOf(
 private fun getTierBasedEnhanceValue(tier: Int) = TIER_BASED_ENHANCE_VALUES[tier] ?: 0.0
 
 class SacrificeCrystalItem(
-    settings: Settings,
+    settings: Properties,
 ) : CrystalItem(settings) {
     override val forgeColor = Color(232, 40, 40)
 
-    override val description: MutableText = Text.translatable(DESCRIPTION_BASE_KEY + "sacrifice")
+    override val description: MutableComponent = Component.translatable(DESCRIPTION_BASE_KEY + "sacrifice")
 
-    override fun canForge(stack: ItemStack): MutableText? {
+    override fun canForge(stack: ItemStack): MutableComponent? {
         val cannotForgeReason = super.canForge(stack)
         if (cannotForgeReason != null) return cannotForgeReason
 

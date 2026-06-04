@@ -1,31 +1,31 @@
 package de.fuballer.mcendgame.main.component.item_filter
 
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.SimpleInventory
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.screen.ScreenHandler
-import net.minecraft.screen.ScreenHandlerType
-import net.minecraft.screen.slot.Slot
-import net.minecraft.screen.slot.SlotActionType
+import net.minecraft.world.SimpleContainer
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.MenuType
+import net.minecraft.world.inventory.Slot
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 
 class ItemFilterScreenHandler(
     syncId: Int,
-    private val playerInventory: PlayerInventory,
+    private val playerInventory: Inventory,
     filterItems: Set<Item>,
     private val itemFilterService: ItemFilterService,
-) : ScreenHandler(ScreenHandlerType.GENERIC_9X6, syncId) {
-    private val filterInventory = SimpleInventory(9 * 6)
+) : AbstractContainerMenu(MenuType.GENERIC_9x6, syncId) {
+    private val filterInventory = SimpleContainer(9 * 6)
 
     init {
-        filterInventory.onOpen(playerInventory.player)
+        filterInventory.startOpen(playerInventory.player)
 
         addFilterSlots()
         addFilterItems(filterItems)
 
         val topOffset = 18 + 6 * 18 + 13
-        addPlayerSlots(playerInventory, 8, topOffset)
+        addStandardInventorySlots(playerInventory, 8, topOffset)
     }
 
     private fun addFilterSlots() {
@@ -40,55 +40,55 @@ class ItemFilterScreenHandler(
         filterItems: Set<Item>
     ) {
         for ((index, item) in filterItems.withIndex()) {
-            if (index >= filterInventory.size()) break
-            setStackInSlot(index, 0, ItemStack(item))
+            if (index >= filterInventory.containerSize) break
+            setItem(index, 0, ItemStack(item))
         }
     }
 
-    override fun onSlotClick(
+    override fun clicked(
         slotIndex: Int,
         button: Int,
-        actionType: SlotActionType,
-        player: PlayerEntity
+        actionType: ClickType,
+        player: Player
     ) {
         offhandSwapLogic(slotIndex, button, actionType)
 
         if (slotIndex < 0 || slotIndex >= slots.size) return
-        if (actionType != SlotActionType.PICKUP && actionType != SlotActionType.PICKUP_ALL && actionType != SlotActionType.QUICK_MOVE) return
+        if (actionType != ClickType.PICKUP && actionType != ClickType.PICKUP_ALL && actionType != ClickType.QUICK_MOVE) return
 
         val slot = slots[slotIndex]
-        val clickedStack = slot.stack
+        val clickedStack = slot.item
         if (clickedStack.isEmpty) return
 
-        if (slot.inventory == playerInventory) {
+        if (slot.container == playerInventory) {
             addItemToFilter(clickedStack.item)
             return
         }
 
-        if (slot.inventory == filterInventory) {
-            filterInventory.setStack(slot.index, ItemStack.EMPTY)
+        if (slot.container == filterInventory) {
+            filterInventory.setItem(slot.containerSlot, ItemStack.EMPTY)
         }
     }
 
     private fun offhandSwapLogic(
         slotIndex: Int,
         button: Int,
-        actionType: SlotActionType,
+        actionType: ClickType,
     ) {
-        if (actionType != SlotActionType.SWAP || button != 40) return
+        if (actionType != ClickType.SWAP || button != 40) return
 
-        val offhandItem = playerInventory.getStack(button)
-        val clickedItem = slots[slotIndex].stack
+        val offhandItem = playerInventory.getItem(button)
+        val clickedItem = slots[slotIndex].item
 
         if (offhandItem.isEmpty) {
-            playerInventory.setStack(button, clickedItem)
-            slots[slotIndex].stack = ItemStack.EMPTY
+            playerInventory.setItem(button, clickedItem)
+            slots[slotIndex].setByPlayer(ItemStack.EMPTY)
         } else if (clickedItem.isEmpty) {
-            playerInventory.setStack(button, ItemStack.EMPTY)
-            slots[slotIndex].stack = offhandItem
+            playerInventory.setItem(button, ItemStack.EMPTY)
+            slots[slotIndex].setByPlayer(offhandItem)
         } else {
-            playerInventory.setStack(button, clickedItem)
-            slots[slotIndex].stack = offhandItem
+            playerInventory.setItem(button, clickedItem)
+            slots[slotIndex].setByPlayer(offhandItem)
         }
     }
 
@@ -98,28 +98,28 @@ class ItemFilterScreenHandler(
     }
 
     private fun containsItem(item: Item): Boolean {
-        for (index in 0 until filterInventory.size()) {
-            val stack = filterInventory.getStack(index)
-            if (stack.isOf(item)) return true
+        for (index in 0 until filterInventory.containerSize) {
+            val stack = filterInventory.getItem(index)
+            if (stack.`is`(item)) return true
         }
         return false
     }
 
     private fun addToFilterInventory(item: Item) {
-        for (index in 0 until filterInventory.size()) {
-            if (!filterInventory.getStack(index).isEmpty) continue
-            filterInventory.setStack(index, ItemStack(item))
+        for (index in 0 until filterInventory.containerSize) {
+            if (!filterInventory.getItem(index).isEmpty) continue
+            filterInventory.setItem(index, ItemStack(item))
             return
         }
     }
 
-    override fun onClosed(player: PlayerEntity) {
-        super.onClosed(player)
+    override fun removed(player: Player) {
+        super.removed(player)
         itemFilterService.saveItemFilter(player, filterInventory)
     }
 
-    override fun canUse(player: PlayerEntity) = filterInventory.canPlayerUse(player)
+    override fun stillValid(player: Player) = filterInventory.stillValid(player)
 
     // only gets called in onSlotClick which is overridden
-    override fun quickMove(player: PlayerEntity, slot: Int): ItemStack = ItemStack.EMPTY
+    override fun quickMoveStack(player: Player, slot: Int): ItemStack = ItemStack.EMPTY
 }

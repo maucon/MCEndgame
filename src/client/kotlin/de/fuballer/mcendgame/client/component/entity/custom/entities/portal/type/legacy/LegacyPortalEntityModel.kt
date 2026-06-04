@@ -2,9 +2,14 @@ package de.fuballer.mcendgame.client.component.entity.custom.entities.portal.typ
 
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.PortalRenderState
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.model.*
-import net.minecraft.client.render.entity.model.EntityModel
-import net.minecraft.client.render.entity.model.EntityModelLayer
+import net.minecraft.client.model.EntityModel
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.model.geom.PartPose
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.CubeListBuilder
+import net.minecraft.client.model.geom.builders.LayerDefinition
+import net.minecraft.client.model.geom.builders.MeshDefinition
 
 class LegacyPortalEntityModel(
     modelPart: ModelPart,
@@ -12,17 +17,17 @@ class LegacyPortalEntityModel(
     private val portal: ModelPart = root.getChild("portal")
 
     companion object {
-        val PORTAL = EntityModelLayer(IdentifierUtil.default("legacy_portal"), "main")
+        val PORTAL = ModelLayerLocation(IdentifierUtil.default("legacy_portal"), "main")
 
-        fun getTexturedModelData(): TexturedModelData {
-            val modelData = ModelData()
+        fun getTexturedModelData(): LayerDefinition {
+            val modelData = MeshDefinition()
             val modelPartData = modelData.root
-            val portal = modelPartData.addChild(
+            val portal = modelPartData.addOrReplaceChild(
                 "portal",
-                ModelPartBuilder.create().uv(0, 0).cuboid(-8.0f, -16.0f, 0.0f, 16.0f, 32.0f, 0.0f, Dilation(0.0f)),
-                ModelTransform.origin(0.0f, 8.0f, 0.0f)
+                CubeListBuilder.create().texOffs(0, 0).addBox(-8.0f, -16.0f, 0.0f, 16.0f, 32.0f, 0.0f, CubeDeformation(0.0f)),
+                PartPose.offset(0.0f, 8.0f, 0.0f)
             )
-            return TexturedModelData.of(modelData, 32, 32)
+            return LayerDefinition.create(modelData, 32, 32)
         }
     }
 }

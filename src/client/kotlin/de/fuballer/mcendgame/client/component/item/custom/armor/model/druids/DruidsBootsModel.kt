@@ -2,61 +2,66 @@ package de.fuballer.mcendgame.client.component.item.custom.armor.model.druids
 
 import de.fuballer.mcendgame.client.component.item.custom.ModelPartDataExtension.createEmptyChild
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.model.*
-import net.minecraft.client.render.entity.model.BipedEntityModel
-import net.minecraft.client.render.entity.model.EntityModelLayer
-import net.minecraft.client.render.entity.model.EntityModelPartNames
-import net.minecraft.client.render.entity.state.BipedEntityRenderState
+import net.minecraft.client.model.HumanoidModel
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.model.geom.PartNames
+import net.minecraft.client.model.geom.PartPose
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.CubeListBuilder
+import net.minecraft.client.model.geom.builders.LayerDefinition
+import net.minecraft.client.model.geom.builders.MeshDefinition
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState
 
-class DruidsBootsModel<S : BipedEntityRenderState>(
+class DruidsBootsModel<S : HumanoidRenderState>(
     root: ModelPart
-) : BipedEntityModel<S>(root) {
+) : HumanoidModel<S>(root) {
     companion object {
-        val MODEL_LAYER = EntityModelLayer(IdentifierUtil.default("druids_boots"), "main")
+        val MODEL_LAYER = ModelLayerLocation(IdentifierUtil.default("druids_boots"), "main")
 
-        fun getTexturedModelData(): TexturedModelData {
-            val modelData = ModelData()
+        fun getTexturedModelData(): LayerDefinition {
+            val modelData = MeshDefinition()
             val modelPartData = modelData.root
 
-            val head = modelPartData.createEmptyChild(EntityModelPartNames.HEAD)
-            val hat = head.createEmptyChild(EntityModelPartNames.HAT)
-            val body = modelPartData.createEmptyChild(EntityModelPartNames.BODY)
-            val left_arm = modelPartData.createEmptyChild(EntityModelPartNames.LEFT_ARM)
-            val right_arm = modelPartData.createEmptyChild(EntityModelPartNames.RIGHT_ARM)
+            val head = modelPartData.createEmptyChild(PartNames.HEAD)
+            val hat = head.createEmptyChild(PartNames.HAT)
+            val body = modelPartData.createEmptyChild(PartNames.BODY)
+            val left_arm = modelPartData.createEmptyChild(PartNames.LEFT_ARM)
+            val right_arm = modelPartData.createEmptyChild(PartNames.RIGHT_ARM)
 
-            val left_leg = modelPartData.addChild(EntityModelPartNames.LEFT_LEG, ModelPartBuilder.create(), ModelTransform.origin(2.0f, 12.0f, 0.0f))
+            val left_leg = modelPartData.addOrReplaceChild(PartNames.LEFT_LEG, CubeListBuilder.create(), PartPose.offset(2.0f, 12.0f, 0.0f))
 
-            val left_boot = left_leg.addChild(
+            val left_boot = left_leg.addOrReplaceChild(
                 "left_boot",
-                ModelPartBuilder.create().uv(22, 19).cuboid(-2.5f, 9.35f, -2.5f, 5.0f, 3.0f, 5.0f, Dilation(0.25f))
-                    .uv(24, 10).cuboid(-2.0f, 6.0f, -2.0f, 4.0f, 5.0f, 4.0f, Dilation(0.55f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(22, 19).addBox(-2.5f, 9.35f, -2.5f, 5.0f, 3.0f, 5.0f, CubeDeformation(0.25f))
+                    .texOffs(24, 10).addBox(-2.0f, 6.0f, -2.0f, 4.0f, 5.0f, 4.0f, CubeDeformation(0.55f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val left_boot_top = left_boot.addChild(
+            val left_boot_top = left_boot.addOrReplaceChild(
                 "left_boot_top",
-                ModelPartBuilder.create().uv(22, 0).cuboid(-2.5f, -5.25f, 0.25f, 5.0f, 5.0f, 5.0f, Dilation(0.25f)),
-                ModelTransform.of(0.0f, 6.5f, -2.6f, 0.0873f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(22, 0).addBox(-2.5f, -5.25f, 0.25f, 5.0f, 5.0f, 5.0f, CubeDeformation(0.25f)),
+                PartPose.offsetAndRotation(0.0f, 6.5f, -2.6f, 0.0873f, 0.0f, 0.0f)
             )
 
             val right_leg =
-                modelPartData.addChild(EntityModelPartNames.RIGHT_LEG, ModelPartBuilder.create(), ModelTransform.origin(-2.0f, 12.0f, 0.0f))
+                modelPartData.addOrReplaceChild(PartNames.RIGHT_LEG, CubeListBuilder.create(), PartPose.offset(-2.0f, 12.0f, 0.0f))
 
-            val right_boot = right_leg.addChild(
+            val right_boot = right_leg.addOrReplaceChild(
                 "right_boot",
-                ModelPartBuilder.create().uv(0, 19).cuboid(-2.5f, 9.35f, -2.5f, 5.0f, 3.0f, 5.0f, Dilation(0.25f))
-                    .uv(2, 10).cuboid(-2.0f, 6.0f, -2.0f, 4.0f, 5.0f, 4.0f, Dilation(0.55f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(0, 19).addBox(-2.5f, 9.35f, -2.5f, 5.0f, 3.0f, 5.0f, CubeDeformation(0.25f))
+                    .texOffs(2, 10).addBox(-2.0f, 6.0f, -2.0f, 4.0f, 5.0f, 4.0f, CubeDeformation(0.55f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val right_boot_top = right_boot.addChild(
+            val right_boot_top = right_boot.addOrReplaceChild(
                 "right_boot_top",
-                ModelPartBuilder.create().uv(0, 0).cuboid(-2.5f, -5.25f, 0.25f, 5.0f, 5.0f, 5.0f, Dilation(0.25f)),
-                ModelTransform.of(0.0f, 6.5f, -2.6f, 0.0873f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(0, 0).addBox(-2.5f, -5.25f, 0.25f, 5.0f, 5.0f, 5.0f, CubeDeformation(0.25f)),
+                PartPose.offsetAndRotation(0.0f, 6.5f, -2.6f, 0.0873f, 0.0f, 0.0f)
             )
-            return TexturedModelData.of(modelData, 128, 128)
+            return LayerDefinition.create(modelData, 128, 128)
         }
     }
 
-    override fun setAngles(renderState: S) {}
+    override fun setupAnim(renderState: S) {}
 }

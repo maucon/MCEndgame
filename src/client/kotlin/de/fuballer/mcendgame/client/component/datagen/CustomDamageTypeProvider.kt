@@ -4,8 +4,8 @@ import com.google.gson.JsonObject
 import de.fuballer.mcendgame.main.MCEndgame
 import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.minecraft.data.CachedOutput
 import net.minecraft.data.DataProvider
-import net.minecraft.data.DataWriter
 import java.util.concurrent.CompletableFuture
 
 class CustomDamageTypeProvider(
@@ -13,25 +13,25 @@ class CustomDamageTypeProvider(
 ) : DataProvider {
     override fun getName() = "${MCEndgame.MOD_ID} Damage Type Provider"
 
-    override fun run(writer: DataWriter): CompletableFuture<*> {
+    override fun run(writer: CachedOutput): CompletableFuture<*> {
         val damageTypes = listOf(
             generateDamageTypeJSON()
-                .let { DataProvider.writeToPath(writer, it, getPath(CustomDamageTypes.SWEEPING.value.path)) },
+                .let { DataProvider.saveStable(writer, it, getPath(CustomDamageTypes.SWEEPING.identifier().path)) },
 
-            generateDamageTypeJSON(CustomDamageTypes.SPELL.value.path)
-                .let { DataProvider.writeToPath(writer, it, getPath(CustomDamageTypes.SPELL.value.path)) },
-
-            generateDamageTypeJSON()
-                .let { DataProvider.writeToPath(writer, it, getPath(CustomDamageTypes.GENERIC_ATTACK.value.path)) },
+            generateDamageTypeJSON(CustomDamageTypes.SPELL.identifier().path)
+                .let { DataProvider.saveStable(writer, it, getPath(CustomDamageTypes.SPELL.identifier().path)) },
 
             generateDamageTypeJSON()
-                .let { DataProvider.writeToPath(writer, it, getPath(CustomDamageTypes.GENERIC_ATTACK_UNBLOCKABLE.value.path)) },
+                .let { DataProvider.saveStable(writer, it, getPath(CustomDamageTypes.GENERIC_ATTACK.identifier().path)) },
 
             generateDamageTypeJSON()
-                .let { DataProvider.writeToPath(writer, it, getPath(CustomDamageTypes.PIERCE_ATTACK.value.path)) },
+                .let { DataProvider.saveStable(writer, it, getPath(CustomDamageTypes.GENERIC_ATTACK_UNBLOCKABLE.identifier().path)) },
 
             generateDamageTypeJSON()
-                .let { DataProvider.writeToPath(writer, it, getPath(CustomDamageTypes.KINETIC_ATTACK.value.path)) },
+                .let { DataProvider.saveStable(writer, it, getPath(CustomDamageTypes.PIERCE_ATTACK.identifier().path)) },
+
+            generateDamageTypeJSON()
+                .let { DataProvider.saveStable(writer, it, getPath(CustomDamageTypes.KINETIC_ATTACK.identifier().path)) },
         ).toTypedArray()
 
         return CompletableFuture.allOf(*damageTypes)
@@ -51,5 +51,5 @@ class CustomDamageTypeProvider(
         addProperty("effects", soundEffects)
     }
 
-    private fun getPath(name: String) = dataOutput.path.resolve("data/${MCEndgame.MOD_ID}/damage_type/$name.json")
+    private fun getPath(name: String) = dataOutput.outputFolder.resolve("data/${MCEndgame.MOD_ID}/damage_type/$name.json")
 }

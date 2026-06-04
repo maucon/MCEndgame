@@ -14,7 +14,7 @@ object CrystalForgePayloadRegisterer {
 
         ServerPlayNetworking.registerGlobalReceiver(CrystalForgePayload.ID) { _, context ->
             val player = context.player()
-            val screenHandler = player.currentScreenHandler as? CrystalForgeScreenHandler ?: return@registerGlobalReceiver
+            val screenHandler = player.containerMenu as? CrystalForgeScreenHandler ?: return@registerGlobalReceiver
             screenHandler.forge()
         }
     }

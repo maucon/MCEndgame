@@ -5,11 +5,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import io.netty.buffer.ByteBuf
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricTrackedDataRegistry
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.entity.data.TrackedDataHandler
-import net.minecraft.network.codec.PacketCodec
-import net.minecraft.network.codec.PacketCodecs
-import net.minecraft.util.Uuids
+import net.minecraft.core.UUIDUtil
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.network.syncher.EntityDataSerializer
+import net.minecraft.world.entity.EquipmentSlotGroup
 import java.util.*
 import kotlin.random.Random
 
@@ -24,7 +24,7 @@ data class RollableCustomAttribute(
         vararg bounds: AttributeBounds<*>
     ) : this(type, tier, bounds.toList())
 
-    fun roll(percentRolls: List<Double>, slot: AttributeModifierSlot): CustomAttribute {
+    fun roll(percentRolls: List<Double>, slot: EquipmentSlotGroup): CustomAttribute {
         require(bounds.size == percentRolls.size) { "number of percentRolls must be equal to the number of bounds" }
         val attributeRolls = bounds.zip(percentRolls)
             .map { (attributeBounds, percentRoll) -> attributeBounds.roll(percentRoll) }
@@ -32,7 +32,7 @@ data class RollableCustomAttribute(
         return CustomAttribute(type, tier, attributeRolls, slot)
     }
 
-    fun roll(slot: AttributeModifierSlot = AttributeModifierSlot.ANY): CustomAttribute {
+    fun roll(slot: EquipmentSlotGroup = EquipmentSlotGroup.ANY): CustomAttribute {
         val percentageRolls = mutableListOf<Double>()
         repeat(bounds.size) {
             percentageRolls.add(Random.nextDouble())
@@ -45,14 +45,14 @@ data class CustomAttribute(
     val type: AttributeType,
     val tier: Int = 0,
     val rolls: List<AttributeRoll<*>> = listOf(),
-    val slot: AttributeModifierSlot = AttributeModifierSlot.ANY,
+    val slot: EquipmentSlotGroup = EquipmentSlotGroup.ANY,
     val id: UUID = UUID.randomUUID(),
 ) {
     constructor(
         type: AttributeType,
         tier: Int = 0,
         roll: AttributeRoll<*>,
-        slot: AttributeModifierSlot = AttributeModifierSlot.ANY,
+        slot: EquipmentSlotGroup = EquipmentSlotGroup.ANY,
         id: UUID = UUID.randomUUID(),
     ) : this(type, tier, listOf(roll), slot, id)
 
@@ -63,17 +63,17 @@ data class CustomAttribute(
                     AttributeType.CODEC.fieldOf("type").forGetter(CustomAttribute::type),
                     Codec.INT.fieldOf("tier").forGetter(CustomAttribute::tier),
                     AttributeRoll.CODEC.listOf().fieldOf("rolls").forGetter(CustomAttribute::rolls),
-                    AttributeModifierSlot.CODEC.fieldOf("slot").forGetter(CustomAttribute::slot),
-                    Uuids.CODEC.optionalFieldOf("id").forGetter { Optional.of(it.id) },
+                    EquipmentSlotGroup.CODEC.fieldOf("slot").forGetter(CustomAttribute::slot),
+                    UUIDUtil.AUTHLIB_CODEC.optionalFieldOf("id").forGetter { Optional.of(it.id) },
                 ).apply(instance) { type, tier, rolls, slot, idOpt ->
                     CustomAttribute(type, tier, rolls, slot, idOpt.orElseGet { UUID.randomUUID() })
                 }
             }
 
-        val PACKET_CODEC: PacketCodec<ByteBuf, CustomAttribute> = PacketCodecs.codec(CODEC)
-        val LIST_PACKET_CODEC: PacketCodec<ByteBuf, List<CustomAttribute>> = PACKET_CODEC.collect(PacketCodecs.toList())
+        val PACKET_CODEC: StreamCodec<ByteBuf, CustomAttribute> = ByteBufCodecs.fromCodec(CODEC)
+        val LIST_PACKET_CODEC: StreamCodec<ByteBuf, List<CustomAttribute>> = PACKET_CODEC.apply(ByteBufCodecs.list())
 
-        val LIST_TRACKED_DATA_HANDLER: TrackedDataHandler<List<CustomAttribute>> = TrackedDataHandler.create(LIST_PACKET_CODEC)
+        val LIST_TRACKED_DATA_HANDLER: EntityDataSerializer<List<CustomAttribute>> = EntityDataSerializer.forValueType(LIST_PACKET_CODEC)
             .also { FabricTrackedDataRegistry.register(IdentifierUtil.default("custom_attribute_list_data_tracker"), it) }
     }
 

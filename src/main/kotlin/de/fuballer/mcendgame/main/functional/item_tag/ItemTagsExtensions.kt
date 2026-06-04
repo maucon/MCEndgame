@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.functional.item_tag
 
-import net.minecraft.item.ItemStack
+import net.minecraft.world.item.ItemStack
 
 object ItemTagsExtensions {
     fun ItemStack.addItemTag(itemTag: ItemTag) {

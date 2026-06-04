@@ -5,11 +5,11 @@ import de.fuballer.mcendgame.main.component.damage.DamageUtil
 import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
 import de.fuballer.mcendgame.main.util.extension.DamageTypeExtension.isOf
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.damage.DamageSource
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.LivingEntity
 
 object SpellDamageCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.type.isOf(CustomDamageTypes.SPELL)
+    override fun isActive(source: DamageSource) = source.type().isOf(CustomDamageTypes.SPELL)
 
     override fun calculateAttackDamage(
         originalDamage: Float,

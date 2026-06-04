@@ -7,9 +7,9 @@ import de.fuballer.mcendgame.main.component.world.VanillaTypeWorldAttributeInsta
 import de.fuballer.mcendgame.main.component.world.WorldAttributeAction;
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension;
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,11 +23,11 @@ public class LivingEntityWorldAttributesMixin implements LivingEntityWorldAttrib
 
     @Inject(
             method = "tick",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;sendEquipmentChanges()V")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;detectEquipmentUpdates()V")
     )
     void updateWorldAttributes(CallbackInfo ci) {
         var entity = (LivingEntity) (Object) this;
-        if (!(entity.getEntityWorld() instanceof ServerWorld world)) return;
+        if (!(entity.level() instanceof ServerLevel world)) return;
 
         var latestUpdate = WorldMixinExtension.INSTANCE.getAttributeUpdateCount(world);
         if (latestUpdate <= appliedWorldAttributesUpdate) return;
@@ -38,19 +38,19 @@ public class LivingEntityWorldAttributesMixin implements LivingEntityWorldAttrib
 
             var updateAttribute = updateInstance.getAttribute();
             var type = (VanillaAttributeType) updateAttribute.getType();
-            var attributeInstance = entity.getAttributeInstance(type.getAttribute());
+            var attributeInstance = entity.getAttribute(type.getAttribute());
             if (attributeInstance == null) continue;
 
             var identifier = IdentifierUtil.INSTANCE.defaultCustomAttribute(updateAttribute);
 
             if (updateInstance.getAction() == WorldAttributeAction.ADD) {
                 if (attributeInstance.hasModifier(identifier)) continue;
-                var modifier = new EntityAttributeModifier(
+                var modifier = new AttributeModifier(
                         identifier,
                         ((DoubleRoll) updateAttribute.getRolls().getFirst()).getValue(),
                         type.getScaleType()
                 );
-                attributeInstance.addTemporaryModifier(modifier);
+                attributeInstance.addTransientModifier(modifier);
             } else {
                 attributeInstance.removeModifier(identifier);
             }

@@ -14,10 +14,10 @@ import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.attributes.Attributes
 import kotlin.random.Random
 
 @Injectable
@@ -26,7 +26,7 @@ class EnemyGenerationService(
     private val potionEffectService: PotionEffectService,
 ) {
     fun generate(
-        dungeonWorld: ServerWorld,
+        dungeonWorld: ServerLevel,
         level: Int,
         enemyTypes: List<RandomOption<EntityTypeStats>>,
         applyMisc: (List<LivingEntity>) -> Unit,
@@ -81,7 +81,7 @@ class EnemyGenerationService(
     }
 
     private fun spawnEnemy(
-        dungeonWorld: ServerWorld,
+        dungeonWorld: ServerLevel,
         level: Int,
         types: List<RandomOption<EntityTypeStats>>,
         location: SpawnPosition,
@@ -97,7 +97,7 @@ class EnemyGenerationService(
         val enemyEntity = EntityUtil.spawnEntityWithStats(dungeonWorld, type, location)
 
         enemyEntity.setDungeonEnemy()
-        enemyEntity.setPersistent()
+        enemyEntity.setPersistenceRequired()
 
         if (isLootGoblin) enemyEntity.setLootGoblin()
 
@@ -113,7 +113,7 @@ class EnemyGenerationService(
             enemyEntity,
             type,
             level,
-            dungeonWorld.server!!,
+            dungeonWorld.server,
             isLootGoblin,
             random,
             generateEnemiesCommand,
@@ -126,22 +126,22 @@ class EnemyGenerationService(
         return enemyEntity
     }
 
-    private fun applyEliteEffects(entity: MobEntity): Boolean {
-        val healthAttributeInstance = entity.getAttributeInstance(EntityAttributes.MAX_HEALTH)
+    private fun applyEliteEffects(entity: Mob): Boolean {
+        val healthAttributeInstance = entity.getAttribute(Attributes.MAX_HEALTH)
         val newMaxHealth = healthAttributeInstance?.baseValue!! * EnemyGenerationSettings.ELITE_HEALTH_FACTOR
         healthAttributeInstance.baseValue = newMaxHealth
 
-        entity.addStatusEffect(EnemyGenerationSettings.getEliteStatusEffect())
+        entity.addEffect(EnemyGenerationSettings.getEliteStatusEffect())
 
         return true
     }
 
     private fun setScale(
-        entity: MobEntity,
+        entity: Mob,
         isElite: Boolean,
         random: Random,
     ) {
         val scale = if (isElite) EnemyGenerationSettings.ELITE_SCALE else EnemyGenerationSettings.getRandomScale(random)
-        entity.getAttributeInstance(EntityAttributes.SCALE)?.baseValue = scale
+        entity.getAttribute(Attributes.SCALE)?.baseValue = scale
     }
 }

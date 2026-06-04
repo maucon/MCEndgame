@@ -2,106 +2,115 @@ package de.fuballer.mcendgame.client.component.item.custom.armor.model.wither_ro
 
 import de.fuballer.mcendgame.client.component.item.custom.ModelPartDataExtension.createEmptyChild
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.model.*
-import net.minecraft.client.render.entity.model.BipedEntityModel
-import net.minecraft.client.render.entity.model.EntityModelLayer
-import net.minecraft.client.render.entity.model.EntityModelPartNames
-import net.minecraft.client.render.entity.state.BipedEntityRenderState
+import net.minecraft.client.model.HumanoidModel
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.model.geom.PartNames
+import net.minecraft.client.model.geom.PartPose
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.CubeListBuilder
+import net.minecraft.client.model.geom.builders.LayerDefinition
+import net.minecraft.client.model.geom.builders.MeshDefinition
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState
 
-class WitherRoseLeggingsModel<S : BipedEntityRenderState>(
+class WitherRoseLeggingsModel<S : HumanoidRenderState>(
     root: ModelPart,
-) : BipedEntityModel<S>(root) {
+) : HumanoidModel<S>(root) {
     companion object {
-        val MODEL_LAYER = EntityModelLayer(IdentifierUtil.default("wither_rose_leggings"), "main")
+        val MODEL_LAYER = ModelLayerLocation(IdentifierUtil.default("wither_rose_leggings"), "main")
 
-        fun getTexturedModelData(): TexturedModelData {
-            val modelData = ModelData()
+        fun getTexturedModelData(): LayerDefinition {
+            val modelData = MeshDefinition()
             val modelPartData = modelData.root
 
-            val head = modelPartData.createEmptyChild(EntityModelPartNames.HEAD)
-            val hat = head.createEmptyChild(EntityModelPartNames.HAT)
-            val left_arm = modelPartData.createEmptyChild(EntityModelPartNames.LEFT_ARM)
-            val right_arm = modelPartData.createEmptyChild(EntityModelPartNames.RIGHT_ARM)
+            val head = modelPartData.createEmptyChild(PartNames.HEAD)
+            val hat = head.createEmptyChild(PartNames.HAT)
+            val left_arm = modelPartData.createEmptyChild(PartNames.LEFT_ARM)
+            val right_arm = modelPartData.createEmptyChild(PartNames.RIGHT_ARM)
 
-            val body = modelPartData.addChild(EntityModelPartNames.BODY, ModelPartBuilder.create(), ModelTransform.origin(0.0f, 0.0f, 0.0f))
+            val body = modelPartData.addOrReplaceChild(PartNames.BODY, CubeListBuilder.create(), PartPose.offset(0.0f, 0.0f, 0.0f))
 
             val leggings_waist =
-                body.addChild("leggings_waist", ModelPartBuilder.create().uv(9, 92).cuboid(-4.0f, 8.0f, -2.0f, 8.0f, 4.0f, 4.0f, Dilation(0.05f)), ModelTransform.origin(0.0f, 0.0f, 0.0f))
+                body.addOrReplaceChild(
+                    "leggings_waist",
+                    CubeListBuilder.create().texOffs(9, 92).addBox(-4.0f, 8.0f, -2.0f, 8.0f, 4.0f, 4.0f, CubeDeformation(0.05f)),
+                    PartPose.offset(0.0f, 0.0f, 0.0f)
+                )
 
-            val skirt = leggings_waist.addChild("skirt", ModelPartBuilder.create(), ModelTransform.origin(0.0f, 0.25f, 0.0f))
+            val skirt = leggings_waist.addOrReplaceChild("skirt", CubeListBuilder.create(), PartPose.offset(0.0f, 0.25f, 0.0f))
 
-            val skirtBackRight = skirt.addChild(
+            val skirtBackRight = skirt.addOrReplaceChild(
                 "skirtBackRight",
-                ModelPartBuilder.create().uv(0, 79).cuboid(0.0f, 0.0f, 0.0f, 4.0f, 12.0f, 0.0f, Dilation(0.0f)),
-                ModelTransform.of(-4.25f, 8.0f, 3.1f, 0.0872f, -0.0038f, 0.0435f)
+                CubeListBuilder.create().texOffs(0, 79).addBox(0.0f, 0.0f, 0.0f, 4.0f, 12.0f, 0.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(-4.25f, 8.0f, 3.1f, 0.0872f, -0.0038f, 0.0435f)
             )
 
-            val skirtBackLeft = skirt.addChild(
+            val skirtBackLeft = skirt.addOrReplaceChild(
                 "skirtBackLeft",
-                ModelPartBuilder.create().uv(43, 79).cuboid(-4.0f, 0.0f, 0.0f, 4.0f, 12.0f, 0.0f, Dilation(0.0f)),
-                ModelTransform.of(4.25f, 8.0f, 3.1f, 0.0872f, 0.0038f, -0.0435f)
+                CubeListBuilder.create().texOffs(43, 79).addBox(-4.0f, 0.0f, 0.0f, 4.0f, 12.0f, 0.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(4.25f, 8.0f, 3.1f, 0.0872f, 0.0038f, -0.0435f)
             )
 
-            val skirtLeft = skirt.addChild(
+            val skirtLeft = skirt.addOrReplaceChild(
                 "skirtLeft",
-                ModelPartBuilder.create().uv(34, 75).cuboid(0.0f, 0.0f, 0.0f, 0.0f, 12.0f, 4.0f, Dilation(0.0f)),
-                ModelTransform.of(5.1f, 8.0f, -2.0f, 0.0436f, 0.0f, -0.0436f)
+                CubeListBuilder.create().texOffs(34, 75).addBox(0.0f, 0.0f, 0.0f, 0.0f, 12.0f, 4.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(5.1f, 8.0f, -2.0f, 0.0436f, 0.0f, -0.0436f)
             )
 
-            val skirtRight = skirt.addChild(
+            val skirtRight = skirt.addOrReplaceChild(
                 "skirtRight",
-                ModelPartBuilder.create().uv(9, 75).cuboid(0.0f, 0.0f, 0.0f, 0.0f, 12.0f, 4.0f, Dilation(0.0f)),
-                ModelTransform.of(-5.1f, 8.0f, -2.0f, 0.0436f, 0.0f, 0.0436f)
+                CubeListBuilder.create().texOffs(9, 75).addBox(0.0f, 0.0f, 0.0f, 0.0f, 12.0f, 4.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(-5.1f, 8.0f, -2.0f, 0.0436f, 0.0f, 0.0436f)
             )
 
-            val skirtFrontRight = skirt.addChild(
+            val skirtFrontRight = skirt.addOrReplaceChild(
                 "skirtFrontRight",
-                ModelPartBuilder.create().uv(18, 79).cuboid(0.0f, 0.0f, 0.0f, 2.0f, 12.0f, 0.0f, Dilation(0.0f)),
-                ModelTransform.of(-4.25f, 8.0f, -3.1f, -0.0436f, 0.0019f, 0.0436f)
+                CubeListBuilder.create().texOffs(18, 79).addBox(0.0f, 0.0f, 0.0f, 2.0f, 12.0f, 0.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(-4.25f, 8.0f, -3.1f, -0.0436f, 0.0019f, 0.0436f)
             )
 
-            val skirtFrontLeft = skirt.addChild(
+            val skirtFrontLeft = skirt.addOrReplaceChild(
                 "skirtFrontLeft",
-                ModelPartBuilder.create().uv(23, 86).cuboid(-5.0f, 0.0f, 0.0f, 5.0f, 5.0f, 0.0f, Dilation(0.0f)),
-                ModelTransform.of(4.25f, 8.0f, -3.1f, -0.0436f, -0.0019f, -0.0436f)
+                CubeListBuilder.create().texOffs(23, 86).addBox(-5.0f, 0.0f, 0.0f, 5.0f, 5.0f, 0.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(4.25f, 8.0f, -3.1f, -0.0436f, -0.0019f, -0.0436f)
             )
 
-            val beltLeft = skirt.addChild(
+            val beltLeft = skirt.addOrReplaceChild(
                 "beltLeft",
-                ModelPartBuilder.create().uv(25, 66).cuboid(-6.75f, -0.25f, -3.45f, 7.0f, 3.0f, 7.0f, Dilation(-0.25f)),
-                ModelTransform.of(5.25f, 7.25f, 0.0f, 0.0f, 0.0f, -0.0873f)
+                CubeListBuilder.create().texOffs(25, 66).addBox(-6.75f, -0.25f, -3.45f, 7.0f, 3.0f, 7.0f, CubeDeformation(-0.25f)),
+                PartPose.offsetAndRotation(5.25f, 7.25f, 0.0f, 0.0f, 0.0f, -0.0873f)
             )
 
-            val beltRight = skirt.addChild(
+            val beltRight = skirt.addOrReplaceChild(
                 "beltRight",
-                ModelPartBuilder.create().uv(0, 68).cuboid(-0.25f, -0.25f, -3.5f, 5.0f, 3.0f, 7.0f, Dilation(-0.25f)),
-                ModelTransform.of(-5.25f, 7.25f, 0.0f, 0.0f, 0.0f, 0.1309f)
+                CubeListBuilder.create().texOffs(0, 68).addBox(-0.25f, -0.25f, -3.5f, 5.0f, 3.0f, 7.0f, CubeDeformation(-0.25f)),
+                PartPose.offsetAndRotation(-5.25f, 7.25f, 0.0f, 0.0f, 0.0f, 0.1309f)
             )
 
-            val beltFront = skirt.addChild(
+            val beltFront = skirt.addOrReplaceChild(
                 "beltFront",
-                ModelPartBuilder.create().uv(24, 76).cuboid(-1.5f, -0.5f, -0.5f, 3.0f, 8.0f, 1.0f, Dilation(-0.5f)),
-                ModelTransform.of(-1.0f, 7.6f, -3.35f, -0.0436f, 0.0019f, 0.0436f)
+                CubeListBuilder.create().texOffs(24, 76).addBox(-1.5f, -0.5f, -0.5f, 3.0f, 8.0f, 1.0f, CubeDeformation(-0.5f)),
+                PartPose.offsetAndRotation(-1.0f, 7.6f, -3.35f, -0.0436f, 0.0019f, 0.0436f)
             )
 
-            val left_leg = modelPartData.addChild(EntityModelPartNames.LEFT_LEG, ModelPartBuilder.create(), ModelTransform.origin(2.0f, 12.0f, 0.0f))
+            val left_leg = modelPartData.addOrReplaceChild(PartNames.LEFT_LEG, CubeListBuilder.create(), PartPose.offset(2.0f, 12.0f, 0.0f))
 
-            val left_leggings = left_leg.addChild(
+            val left_leggings = left_leg.addOrReplaceChild(
                 "left_leggings",
-                ModelPartBuilder.create().uv(22, 101).cuboid(-2.0f, 0.0f, -2.0f, 4.0f, 10.0f, 4.0f, Dilation(0.05f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(22, 101).addBox(-2.0f, 0.0f, -2.0f, 4.0f, 10.0f, 4.0f, CubeDeformation(0.05f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val right_leg = modelPartData.addChild(EntityModelPartNames.RIGHT_LEG, ModelPartBuilder.create(), ModelTransform.origin(-2.0f, 12.0f, 0.0f))
+            val right_leg = modelPartData.addOrReplaceChild(PartNames.RIGHT_LEG, CubeListBuilder.create(), PartPose.offset(-2.0f, 12.0f, 0.0f))
 
-            val right_leggings = right_leg.addChild(
+            val right_leggings = right_leg.addOrReplaceChild(
                 "right_leggings",
-                ModelPartBuilder.create().uv(4, 101).cuboid(-2.0f, 0.0f, -2.0f, 4.0f, 10.0f, 4.0f, Dilation(0.05f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(4, 101).addBox(-2.0f, 0.0f, -2.0f, 4.0f, 10.0f, 4.0f, CubeDeformation(0.05f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
-            return TexturedModelData.of(modelData, 128, 128)
+            return LayerDefinition.create(modelData, 128, 128)
         }
     }
 
-    override fun setAngles(renderState: S) {}
+    override fun setupAnim(renderState: S) {}
 }

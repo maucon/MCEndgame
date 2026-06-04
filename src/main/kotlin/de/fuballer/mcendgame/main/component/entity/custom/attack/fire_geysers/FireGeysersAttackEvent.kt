@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.fire_geysers
 
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 data class FireGeysersAttackEvent(
     val attacker: Entity,

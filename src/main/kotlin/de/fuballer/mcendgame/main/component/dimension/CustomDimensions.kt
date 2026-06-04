@@ -2,13 +2,13 @@ package de.fuballer.mcendgame.main.component.dimension
 
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.world.dimension.DimensionType
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
+import net.minecraft.world.level.dimension.DimensionType
 
 @Injectable
 object CustomDimensions {
-    val DUNGEON: RegistryKey<DimensionType> = of("dungeon")
+    val DUNGEON: ResourceKey<DimensionType> = of("dungeon")
 
-    private fun of(id: String) = RegistryKey.of(RegistryKeys.DIMENSION_TYPE, IdentifierUtil.default(id))
+    private fun of(id: String) = ResourceKey.create(Registries.DIMENSION_TYPE, IdentifierUtil.default(id))
 }

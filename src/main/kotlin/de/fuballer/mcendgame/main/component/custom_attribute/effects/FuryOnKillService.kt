@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.main.component.status_effect.CustomStatusEffects
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDeathEvent
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.effect.StatusEffectInstance
+import net.minecraft.world.effect.MobEffectInstance
 import kotlin.math.min
 
 @Injectable
@@ -16,9 +16,9 @@ class FuryOnKillService {
         val killer = event.killer ?: return
         val attributes = killer.getAllCustomAttributes()[CustomAttributeTypes.FURY_ON_KILL] ?: return
 
-        val currentFury = killer.getStatusEffect(CustomStatusEffects.FURY)?.amplifier ?: -1
+        val currentFury = killer.getEffect(CustomStatusEffects.FURY)?.amplifier ?: -1
         val newFury = min(currentFury + attributes.size, 9)
 
-        killer.addStatusEffect(StatusEffectInstance(CustomStatusEffects.FURY, 199, newFury, false, true, true))
+        killer.addEffect(MobEffectInstance(CustomStatusEffects.FURY, 199, newFury, false, true, true))
     }
 }

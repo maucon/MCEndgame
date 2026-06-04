@@ -5,20 +5,20 @@ import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.event.player.UseItemCallback
-import net.minecraft.util.ActionResult
+import net.minecraft.world.InteractionResult
 
 @Injectable
 class UseItemRegisterer {
     @Initializer
     fun init() {
         UseItemCallback.EVENT.register { player, world, hand ->
-            if (!world.isDungeonWorld()) return@register ActionResult.PASS
-            if (player.isCreative) return@register ActionResult.PASS
+            if (!world.isDungeonWorld()) return@register InteractionResult.PASS
+            if (player.isCreative) return@register InteractionResult.PASS
 
-            val stack = player.getStackInHand(hand)
-            if (stack.isIn(CustomTags.DUNGEON_DISABLED)) return@register ActionResult.FAIL
+            val stack = player.getItemInHand(hand)
+            if (stack.`is`(CustomTags.DUNGEON_DISABLED)) return@register InteractionResult.FAIL
 
-            ActionResult.PASS
+            InteractionResult.PASS
         }
     }
 }

@@ -5,20 +5,20 @@ import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesHornItem
 import de.fuballer.mcendgame.main.component.item.custom.misc.horn.command.HornUseCommand
 import de.fuballer.mcendgame.main.component.status_effect.CustomStatusEffects
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isAlly
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.text.Text
-import net.minecraft.world.World
+import net.minecraft.network.chat.Component
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.Level
 
 class MoltenRoar(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesHornItem(settings) {
     override val id = "molten_roar"
 
     override val description = listOf(
-        Text.translatable(DESCRIPTION_KEY + id),
+        Component.translatable(DESCRIPTION_KEY + id),
     )
 
     override val baseCooldown = 600
@@ -27,16 +27,16 @@ class MoltenRoar(
 
     override fun getCustomAttributes(): List<RollableCustomAttribute> = listOf()
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.HAND
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.HAND
 
-    override fun onUse(world: World, user: PlayerEntity, cmd: HornUseCommand) {
-        val nearbyAllies = world.getEntitiesByClass(LivingEntity::class.java, user.boundingBox.expand(range)) { user.isAlly(it) && user.distanceTo(it) <= range }
+    override fun onUse(world: Level, user: Player, cmd: HornUseCommand) {
+        val nearbyAllies = world.getEntitiesOfClass(LivingEntity::class.java, user.boundingBox.inflate(range)) { user.isAlly(it) && user.distanceTo(it) <= range }
 
         val duration = (baseDuration * cmd.getDurationFactor()).toInt()
         val amplifier = if (cmd.isStronger) 1 else 0
         nearbyAllies.forEach {
-            val effectInstance = StatusEffectInstance(CustomStatusEffects.MOLTEN_ROAR, duration, amplifier, false, true, true)
-            it.addStatusEffect(effectInstance)
+            val effectInstance = MobEffectInstance(CustomStatusEffects.MOLTEN_ROAR, duration, amplifier, false, true, true)
+            it.addEffect(effectInstance)
         }
     }
 }

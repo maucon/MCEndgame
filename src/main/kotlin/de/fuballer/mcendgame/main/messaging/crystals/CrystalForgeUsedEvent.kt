@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.main.messaging.crystals
 
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.Item
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.Item
 
 data class CrystalForgeUsedEvent(
-    val player: PlayerEntity,
+    val player: Player,
     val crystal: Item,
 )

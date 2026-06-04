@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.main.component.dungeon.generation.data.Layout
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.PlaceableRoom
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.RoomType
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
-import net.minecraft.util.math.Vec3i
+import net.minecraft.core.Vec3i
 import kotlin.random.Random
 
 class SingleRoomLayoutGenerator(

@@ -4,17 +4,17 @@ import de.fuballer.mcendgame.main.component.block.blocks.crystalforge.CrystalFor
 import de.fuballer.mcendgame.main.component.corruption.CorruptionExtensions.isCorrupted
 import de.fuballer.mcendgame.main.component.dungeon.loot.drop.ItemColor
 import de.fuballer.mcendgame.main.util.extension.ItemStackExtension.isForgeable
-import net.minecraft.component.DataComponentTypes
-import net.minecraft.component.type.LoreComponent
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.Formatting
+import net.minecraft.ChatFormatting
+import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.ItemLore
 import java.awt.Color
 
 abstract class CrystalItem(
-    settings: Settings,
+    settings: Properties,
 ) : Item(settings) {
     companion object {
         const val DESCRIPTION_BASE_KEY = "item.mcendgame.crystal.description."
@@ -22,21 +22,21 @@ abstract class CrystalItem(
 
     abstract val forgeColor: Color
 
-    abstract val description: MutableText
+    abstract val description: MutableComponent
 
-    override fun getDefaultStack(): ItemStack {
-        val stack = super.getDefaultStack()
+    override fun getDefaultInstance(): ItemStack {
+        val stack = super.defaultInstance
 
-        val list = mutableListOf<Text>()
-        list.add(description.styled { style -> style.withItalic(false).withColor(Formatting.GRAY) })
-        stack.set(DataComponentTypes.LORE, LoreComponent(list))
+        val list = mutableListOf<Component>()
+        list.add(description.withStyle { style -> style.withItalic(false).withColor(ChatFormatting.GRAY) })
+        stack.set(DataComponents.LORE, ItemLore(list))
 
         return stack
     }
 
-    override fun getName(stack: ItemStack): MutableText = super.getName(stack).copy().withColor(ItemColor.CRYSTAL.intColor)
+    override fun getName(stack: ItemStack): MutableComponent = super.getName(stack).copy().withColor(ItemColor.CRYSTAL.intColor)
 
-    open fun canForge(stack: ItemStack): MutableText? {
+    open fun canForge(stack: ItemStack): MutableComponent? {
         if (stack.isEmpty) return CrystalForgeSettings.getForgeErrorText("no_item")
         if (!stack.isForgeable()) return CrystalForgeSettings.getForgeErrorText("item_not_forgeable")
         if (stack.isCorrupted()) return CrystalForgeSettings.getForgeErrorText("item_corrupted")

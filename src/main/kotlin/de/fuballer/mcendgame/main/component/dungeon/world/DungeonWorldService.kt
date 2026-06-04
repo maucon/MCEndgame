@@ -18,9 +18,9 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.di.annotation.Logging
 import de.maucon.mauconframework.event.EventGateway
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.GlobalPos
+import net.minecraft.core.GlobalPos
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.player.Player
 import org.slf4j.Logger
 import java.time.Instant
 
@@ -43,12 +43,12 @@ class DungeonWorldService(
 
     fun create(
         dungeonLevel: Int,
-        opener: PlayerEntity,
+        opener: Player,
         affectingAspects: Map<AspectItem, Int>,
         dungeonType: DungeonType,
         dungeonExitPos: GlobalPos,
         training: Boolean = false,
-    ): ServerWorld {
+    ): ServerLevel {
         val dungeonWorld = RuntimeConfig.FANTASY
             .openTemporaryWorld(DungeonWorldSettings.generateIdentifier(), DungeonWorldSettings.getWorldConfig(dungeonType.biome))
             .asWorld()
@@ -67,7 +67,7 @@ class DungeonWorldService(
     }
 
     fun createTraining(
-        opener: PlayerEntity,
+        opener: Player,
         dungeonExitPos: GlobalPos,
     ) = create(1, opener, mapOf(), DungeonType.TRAINING, dungeonExitPos, training = true)
 
@@ -82,13 +82,13 @@ class DungeonWorldService(
             }
             .filter { it.emptySince.plusSeconds(DungeonWorldSettings.MAX_EMPTY_TIME) < Instant.now() }
             .forEach {
-                log.warn("Dungeon world '${it.world.registryKey.value}' was empty for too long, deleting it!")
+                log.warn("Dungeon world '${it.world.dimension().identifier()}' was empty for too long, deleting it!")
                 deleteWorld(it)
             }
     }
 
     private fun updateDeleteTimer(entity: DungeonWorldEntity) {
-        if (entity.world.players.isNotEmpty()) {
+        if (entity.world.players().isNotEmpty()) {
             entity.emptySince = Instant.now()
         }
     }

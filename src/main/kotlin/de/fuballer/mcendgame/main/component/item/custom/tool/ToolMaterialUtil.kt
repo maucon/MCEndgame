@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.main.component.item.custom.tool
 
-import net.minecraft.block.Block
-import net.minecraft.item.Item
-import net.minecraft.item.ToolMaterial
-import net.minecraft.registry.tag.TagKey
+import net.minecraft.tags.TagKey
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ToolMaterial
+import net.minecraft.world.level.block.Block
 
 object ToolMaterialUtil {
     fun of(

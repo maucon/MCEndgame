@@ -1,18 +1,18 @@
 package de.fuballer.mcendgame.client.component.entity.custom.feature.isolated
 
-import net.minecraft.client.render.command.OrderedRenderCommandQueue
-import net.minecraft.client.render.entity.feature.FeatureRenderer
-import net.minecraft.client.render.entity.feature.FeatureRendererContext
-import net.minecraft.client.render.entity.model.EntityModel
-import net.minecraft.client.render.entity.state.LivingEntityRenderState
-import net.minecraft.client.util.math.MatrixStack
+import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.model.EntityModel
+import net.minecraft.client.renderer.SubmitNodeCollector
+import net.minecraft.client.renderer.entity.RenderLayerParent
+import net.minecraft.client.renderer.entity.layers.RenderLayer
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 
 class IsolatedFeatureRenderer<T : LivingEntityRenderState, M : EntityModel<T>>(
-    featureContext: FeatureRendererContext<T, M>,
-) : FeatureRenderer<T, M>(featureContext) {
-    override fun render(
-        matrices: MatrixStack,
-        queue: OrderedRenderCommandQueue,
+    featureContext: RenderLayerParent<T, M>,
+) : RenderLayer<T, M>(featureContext) {
+    override fun submit(
+        matrices: PoseStack,
+        queue: SubmitNodeCollector,
         light: Int,
         state: T,
         limbAngle: Float,

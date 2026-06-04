@@ -4,14 +4,13 @@ import de.fuballer.mcendgame.client.accessor.LivingEntityRenderStateGhostlyAcces
 import de.fuballer.mcendgame.client.component.render.CustomRenderLayers;
 import de.fuballer.mcendgame.client.component.render.ghostly.GhostlySettings;
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions;
-import de.fuballer.mcendgame.main.util.ColorUtil;
-import net.minecraft.client.item.ItemModelManager;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.entity.state.EntityRenderState;
-import net.minecraft.client.render.entity.state.LivingEntityRenderState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,7 +28,7 @@ public class GeoEntityRendererGhostlyMixin<T extends Entity & GeoAnimatable, R e
             LivingEntity entity,
             LivingEntityRenderState renderState,
             float partialTick,
-            ItemModelManager itemModelResolver,
+            ItemModelResolver itemModelResolver,
             CallbackInfo ci
     ) {
         if (!(renderState instanceof LivingEntityRenderStateGhostlyAccessor accessor)) return;
@@ -39,11 +38,11 @@ public class GeoEntityRendererGhostlyMixin<T extends Entity & GeoAnimatable, R e
     }
 
     @Inject(
-            method = "getRenderType(Lnet/minecraft/client/render/entity/state/EntityRenderState;Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/render/RenderLayer;",
+            method = "getRenderType(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;",
             at = @At("HEAD"),
             cancellable = true
     )
-    void modifyRenderLayer(R renderState, Identifier texture, CallbackInfoReturnable<RenderLayer> cir) {
+    void modifyRenderLayer(R renderState, Identifier texture, CallbackInfoReturnable<RenderType> cir) {
         if (!(renderState instanceof LivingEntityRenderStateGhostlyAccessor accessor)) return;
         if (!accessor.mcendgame$isGhostly()) return;
 
@@ -52,8 +51,9 @@ public class GeoEntityRendererGhostlyMixin<T extends Entity & GeoAnimatable, R e
     }
 
     @ModifyVariable(
-            method = "getRenderColor(Lnet/minecraft/entity/Entity;Ljava/lang/Void;F)I",
-            at = @At("STORE")
+            method = "getRenderColor(Lnet/minecraft/world/entity/Entity;Ljava/lang/Void;F)I",
+            at = @At("STORE"),
+            name = "color"
     )
     int modifyRenderColor(int color, T animatable) {
         if (!(animatable instanceof LivingEntity livingEntity)) return color;

@@ -2,13 +2,13 @@ package de.fuballer.mcendgame.main.component.damage.calculator
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.mob.BlazeEntity
-import net.minecraft.entity.projectile.thrown.SnowballEntity
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.monster.Blaze
+import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball
 
 object SnowballCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.source is SnowballEntity
+    override fun isActive(source: DamageSource) = source.directEntity is Snowball
 
     override fun calculateAttackDamage(
         originalDamage: Float,
@@ -16,7 +16,7 @@ object SnowballCalculator : DamageCalculator {
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
     ): Float {
-        if (attacked is BlazeEntity) return 3.0f
+        if (attacked is Blaze) return 3.0f
         return 0.0f
     }
 

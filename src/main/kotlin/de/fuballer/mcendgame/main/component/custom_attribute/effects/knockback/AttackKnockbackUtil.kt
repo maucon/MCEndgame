@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.main.component.custom_attribute.effects.knockback
 
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityKnockbackLivingEntityCommand
 import de.maucon.mauconframework.command.CommandGateway
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
 
 object AttackKnockbackUtil {
     fun LivingEntity.takeKnockbackFrom(
@@ -12,11 +12,11 @@ object AttackKnockbackUtil {
         x: Double,
         z: Double,
     ) {
-        if (attacker !is LivingEntity) return takeKnockback(strength, x, z)
+        if (attacker !is LivingEntity) return knockback(strength, x, z)
 
         val command = LivingEntityKnockbackLivingEntityCommand(this, attacker, strength)
         val cmd = CommandGateway.apply(command)
 
-        takeKnockback(cmd.strength, x, z)
+        knockback(cmd.strength, x, z)
     }
 }

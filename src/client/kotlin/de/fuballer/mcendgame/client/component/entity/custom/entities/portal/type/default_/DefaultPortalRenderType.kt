@@ -4,11 +4,11 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.Port
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.PortalRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type.PortalRenderType
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.RenderLayers
-import net.minecraft.client.render.entity.EntityRendererFactory
-import net.minecraft.client.render.entity.model.EntityModel
-import net.minecraft.util.Identifier
+import net.minecraft.client.model.EntityModel
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.client.renderer.rendertype.RenderTypes
+import net.minecraft.resources.Identifier
 
 class DefaultPortalRenderType : PortalRenderType {
     companion object {
@@ -31,11 +31,11 @@ class DefaultPortalRenderType : PortalRenderType {
         return 0.2f
     }
 
-    override fun getModel(context: EntityRendererFactory.Context): EntityModel<PortalRenderState> {
-        return DefaultPortalEntityModel(context.getPart(DefaultPortalEntityModel.PORTAL))
+    override fun getModel(context: EntityRendererProvider.Context): EntityModel<PortalRenderState> {
+        return DefaultPortalEntityModel(context.bakeLayer(DefaultPortalEntityModel.PORTAL))
     }
 
-    override fun getRenderLayer(renderer: PortalRenderer, state: PortalRenderState, showBody: Boolean, translucent: Boolean, showOutline: Boolean): RenderLayer {
-        return RenderLayers.entityTranslucent(getTexture(state.age), false)
+    override fun getRenderLayer(renderer: PortalRenderer, state: PortalRenderState, showBody: Boolean, translucent: Boolean, showOutline: Boolean): RenderType {
+        return RenderTypes.entityTranslucent(getTexture(state.ageInTicks), false)
     }
 }

@@ -5,9 +5,9 @@ import com.mojang.serialization.JsonOps
 import de.fuballer.mcendgame.main.messaging.server.ServerStartingEvent
 import de.maucon.mauconframework.di.annotation.Configuration
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.registry.RegistryOps
+import net.minecraft.resources.RegistryOps
 import net.minecraft.server.MinecraftServer
-import net.minecraft.util.WorldSavePath
+import net.minecraft.world.level.storage.LevelResource
 import xyz.nucleoid.fantasy.Fantasy
 import java.nio.file.Path
 
@@ -23,7 +23,7 @@ object RuntimeConfig {
         val server = event.server
         this.SERVER = server
         this.FANTASY = Fantasy.get(server)
-        this.WORLD_SAVE_PATH = server.getSavePath(WorldSavePath.ROOT)
-        this.REGISTRY_OPS = RegistryOps.of(JsonOps.INSTANCE, server.registryManager)
+        this.WORLD_SAVE_PATH = server.getWorldPath(LevelResource.ROOT)
+        this.REGISTRY_OPS = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess())
     }
 }

@@ -6,26 +6,26 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesMaceItem
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.component.type.AttributeModifiersComponent
-import net.minecraft.entity.attribute.EntityAttributeModifier
-import net.minecraft.entity.attribute.EntityAttributes
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.item.component.ItemAttributeModifiers
 
 class Gravebreaker(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesMaceItem(settings) {
     companion object {
-        fun createAttributeModifiers(): AttributeModifiersComponent {
-            return AttributeModifiersComponent.builder()
+        fun createAttributeModifiers(): ItemAttributeModifiers {
+            return ItemAttributeModifiers.builder()
                 .add(
-                    EntityAttributes.ATTACK_DAMAGE,
-                    EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, 5.0, EntityAttributeModifier.Operation.ADD_VALUE),
-                    AttributeModifierSlot.MAINHAND
+                    Attributes.ATTACK_DAMAGE,
+                    AttributeModifier(BASE_ATTACK_DAMAGE_ID, 5.0, AttributeModifier.Operation.ADD_VALUE),
+                    EquipmentSlotGroup.MAINHAND
                 )
                 .add(
-                    EntityAttributes.ATTACK_SPEED,
-                    EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, -3.4, EntityAttributeModifier.Operation.ADD_VALUE),
-                    AttributeModifierSlot.MAINHAND
+                    Attributes.ATTACK_SPEED,
+                    AttributeModifier(BASE_ATTACK_SPEED_ID, -3.4, AttributeModifier.Operation.ADD_VALUE),
+                    EquipmentSlotGroup.MAINHAND
                 )
                 .build()
         }
@@ -37,5 +37,5 @@ class Gravebreaker(
         RollableCustomAttribute(VanillaAttributeTypes.MORE_ATTACK_SPEED, 0, DoubleBounds(-0.25, -0.2)),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.MAINHAND
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.MAINHAND
 }

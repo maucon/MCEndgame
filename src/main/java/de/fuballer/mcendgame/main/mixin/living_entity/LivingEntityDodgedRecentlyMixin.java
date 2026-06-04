@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.mixin.living_entity;
 
 import de.fuballer.mcendgame.main.accessor.LivingEntityDodgedRecentlyAccessor;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -13,12 +13,12 @@ public class LivingEntityDodgedRecentlyMixin implements LivingEntityDodgedRecent
     @Override
     public void mcendgame$updateDodge() {
         var entity = (LivingEntity) (Object) this;
-        lastDodgeAge = entity.age;
+        lastDodgeAge = entity.tickCount;
     }
 
     @Override
     public boolean mcendgame$hasDodged(int ticks) {
         var entity = (LivingEntity) (Object) this;
-        return (entity.age - lastDodgeAge) <= ticks;
+        return (entity.tickCount - lastDodgeAge) <= ticks;
     }
 }

@@ -6,23 +6,23 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
-import net.minecraft.item.BlockItem
-import net.minecraft.util.ActionResult
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.item.BlockItem
 
 @Injectable
 class DungeonBlocksService {
     @Initializer
     fun onBlockUse() {
         UseBlockCallback.EVENT.register { player, world, hand, hitResult ->
-            if (!world.isDungeonWorld()) return@register ActionResult.PASS
-            if (player.isCreative) return@register ActionResult.PASS
+            if (!world.isDungeonWorld()) return@register InteractionResult.PASS
+            if (player.isCreative) return@register InteractionResult.PASS
 
-            val stack = player.getStackInHand(hand)
-            if (stack.item is BlockItem) return@register ActionResult.FAIL
+            val stack = player.getItemInHand(hand)
+            if (stack.item is BlockItem) return@register InteractionResult.FAIL
 
-            if (!world.getBlockState(hitResult.blockPos).isIn(CustomTags.DUNGEON_INTERACTABLE)) return@register ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION
+            if (!world.getBlockState(hitResult.blockPos).`is`(CustomTags.DUNGEON_INTERACTABLE)) return@register InteractionResult.TRY_WITH_EMPTY_HAND
 
-            ActionResult.PASS
+            InteractionResult.PASS
         }
     }
 
@@ -32,7 +32,7 @@ class DungeonBlocksService {
             if (!world.isDungeonWorld()) return@register true
             if (player.isCreative) return@register true
 
-            blockState.isIn(CustomTags.DUNGEON_BREAKABLE)
+            blockState.`is`(CustomTags.DUNGEON_BREAKABLE)
         }
     }
 }

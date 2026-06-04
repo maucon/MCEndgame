@@ -3,8 +3,8 @@ package de.fuballer.mcendgame.main.component.damage.calculator
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.damage.DamageSource
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.LivingEntity
 
 /**
  * Used when no other specific calculator is used

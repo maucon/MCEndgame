@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.main.messaging.misc
 
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.world.TeleportTarget
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.portal.TeleportTransition
 
 data class PlayerBeforeDimensionChangeEvent(
-    val player: PlayerEntity,
-    val world: ServerWorld,
-    val target: TeleportTarget,
+    val player: Player,
+    val world: ServerLevel,
+    val target: TeleportTransition,
 )

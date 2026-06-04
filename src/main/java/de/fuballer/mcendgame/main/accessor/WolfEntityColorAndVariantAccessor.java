@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.main.accessor;
 
-import net.minecraft.entity.passive.WolfVariant;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.DyeColor;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.animal.wolf.WolfVariant;
+import net.minecraft.world.item.DyeColor;
 
 public interface WolfEntityColorAndVariantAccessor {
-    void mcendgame$callSetVariant(RegistryEntry<WolfVariant> variant);
+    void mcendgame$callSetVariant(Holder<WolfVariant> variant);
 
     void mcendgame$callSetCollarColor(DyeColor color);
 }

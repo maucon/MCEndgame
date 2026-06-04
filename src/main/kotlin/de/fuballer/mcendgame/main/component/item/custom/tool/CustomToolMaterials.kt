@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.component.item.custom.tool
 
-import net.minecraft.registry.tag.BlockTags
-import net.minecraft.registry.tag.ItemTags
+import net.minecraft.tags.BlockTags
+import net.minecraft.tags.ItemTags
 
 object CustomToolMaterials {
     val BLOODHARVEST = ToolMaterialUtil.of(

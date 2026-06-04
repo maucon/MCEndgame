@@ -23,18 +23,18 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
-import net.minecraft.entity.ItemEntity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.projectile.ArrowEntity
-import net.minecraft.entity.projectile.SpectralArrowEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.projectile.arrow.Arrow
+import net.minecraft.world.entity.projectile.arrow.SpectralArrow
 
 @Injectable
 object EventMapper {
     @EventSubscriber(sync = true)
     fun onPlayerDeath(event: LivingEntityDeathEvent) {
-        val player = event.entity as? PlayerEntity ?: return
+        val player = event.entity as? Player ?: return
         val playerDeathEvent = PlayerEntityDeathEvent(event.isClient, event.world, player, event.killer)
         EventGateway.publish(playerDeathEvent)
     }
@@ -42,7 +42,7 @@ object EventMapper {
     @EventSubscriber(sync = true)
     fun onDungeonPlayerDeath(event: PlayerEntityDeathEvent) {
         val player = event.player
-        if (!player.entityWorld.isDungeonWorld()) return
+        if (!player.level().isDungeonWorld()) return
 
         val dungeonPlayerDeathEvent = DungeonPlayerDeathEvent(event.isClient, player, event.killer)
         EventGateway.publish(dungeonPlayerDeathEvent)
@@ -51,7 +51,7 @@ object EventMapper {
     @EventSubscriber(sync = true)
     fun onDungeonEntityDeath(event: LivingEntityDeathEvent) {
         val entity = event.entity
-        if (!entity.entityWorld.isDungeonWorld()) return
+        if (!entity.level().isDungeonWorld()) return
 
         val dungeonEntityDeathEvent = DungeonEntityDeathEvent(event.isClient, event.world, event.entity, event.killer)
         EventGateway.publish(dungeonEntityDeathEvent)
@@ -68,7 +68,7 @@ object EventMapper {
 
     @EventSubscriber(sync = true)
     fun onDungeonBossDeath(event: DungeonEnemyDeathEvent) {
-        val bossEntity = event.enemyEntity as? MobEntity ?: return
+        val bossEntity = event.enemyEntity as? Mob ?: return
         if (!bossEntity.isDungeonBoss()) return
 
         val dungeonBossDeathEvent = DungeonBossDeathEvent(event.isClient, event.world, bossEntity, event.killer)
@@ -133,7 +133,7 @@ object EventMapper {
 
     @Initializer
     fun onArrowShotByLivingEntity() = ServerEntityEvents.ENTITY_LOAD.register { entity, world ->
-        if (entity !is ArrowEntity && entity !is SpectralArrowEntity) return@register
+        if (entity !is Arrow && entity !is SpectralArrow) return@register
         val owner = entity.owner as? LivingEntity ?: return@register
 
         val event = EntityShotArrowEvent.of(entity, owner)
@@ -158,8 +158,8 @@ object EventMapper {
 
     @Initializer
     fun onLivingEntityEndTick() = ServerTickEvents.END_WORLD_TICK.register { world ->
-        if (world.time % 5 != 0L) return@register
-        val event = ServerLivingEntitiesEveryFiveTicksEvent(world.iterateEntities().filterIsInstance<LivingEntity>(), world)
+        if (world.gameTime % 5 != 0L) return@register
+        val event = ServerLivingEntitiesEveryFiveTicksEvent(world.allEntities.filterIsInstance<LivingEntity>(), world)
         EventGateway.publish(event)
     }
 }

@@ -6,16 +6,16 @@ import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setDu
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventGateway
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
 
 @Injectable
 class DungeonCompletionService {
     @EventSubscriber(sync = true)
     fun on(event: DungeonBossDeathEvent) {
         val dungeonWorld = event.world
-        if (dungeonWorld !is ServerWorld) return
+        if (dungeonWorld !is ServerLevel) return
 
-        val players = dungeonWorld.players.toList()
+        val players = dungeonWorld.players().toList()
 
         if (dungeonWorld.isDungeonCompleted()) return
         dungeonWorld.setDungeonCompleted()

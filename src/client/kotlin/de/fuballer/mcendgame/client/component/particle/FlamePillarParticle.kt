@@ -1,26 +1,27 @@
 package de.fuballer.mcendgame.client.component.particle
 
-import net.minecraft.client.particle.AbstractSlowingParticle
+import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.particle.Particle
-import net.minecraft.client.particle.ParticleFactory
-import net.minecraft.client.particle.SpriteProvider
-import net.minecraft.client.texture.Sprite
-import net.minecraft.client.world.ClientWorld
-import net.minecraft.particle.SimpleParticleType
+import net.minecraft.client.particle.ParticleProvider
+import net.minecraft.client.particle.RisingParticle
+import net.minecraft.client.particle.SpriteSet
+import net.minecraft.client.renderer.texture.TextureAtlasSprite
+import net.minecraft.core.particles.SimpleParticleType
+import net.minecraft.util.RandomSource
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
 class FlamePillarParticle(
-    clientWorld: ClientWorld,
+    clientWorld: ClientLevel,
     x: Double,
     y: Double,
     z: Double,
     velocityX: Double,
     velocityY: Double,
     velocityZ: Double,
-    sprite: Sprite,
-) : AbstractSlowingParticle(clientWorld, x, y, z, velocityX, velocityY, velocityZ, sprite) {
+    sprite: TextureAtlasSprite,
+) : RisingParticle(clientWorld, x, y, z, velocityX, velocityY, velocityZ, sprite) {
     private var centerX = x
     private var centerZ = z
     private var angle = 6.28319 * Random.nextDouble()
@@ -28,7 +29,7 @@ class FlamePillarParticle(
     private var yVelocity = 0.2
 
     init {
-        maxAge = 50
+        lifetime = 50
     }
 
     override fun tick() {
@@ -43,31 +44,31 @@ class FlamePillarParticle(
 
         x = centerX + offsetX
         z = centerZ + offsetZ
-        velocityY = yVelocity
+        yd = yVelocity
     }
 
-    override fun getSize(tickProgress: Float): Float {
-        val lifespanPercent = (age + tickProgress) / maxAge
-        return scale * (1.0f - lifespanPercent * lifespanPercent * 0.5f)
+    override fun getQuadSize(tickProgress: Float): Float {
+        val lifespanPercent = (age + tickProgress) / lifetime
+        return quadSize * (1.0f - lifespanPercent * lifespanPercent * 0.5f)
     }
 
-    override fun getRenderType(): RenderType = RenderType.PARTICLE_ATLAS_OPAQUE
+    override fun getLayer(): Layer = Layer.OPAQUE
 
     class Factory(
-        private val spriteProvider: SpriteProvider,
-    ) : ParticleFactory<SimpleParticleType> {
+        private val spriteProvider: SpriteSet,
+    ) : ParticleProvider<SimpleParticleType> {
         override fun createParticle(
             simpleParticleType: SimpleParticleType,
-            clientWorld: ClientWorld,
+            clientWorld: ClientLevel,
             x: Double,
             y: Double,
             z: Double,
             velocityX: Double,
             velocityY: Double,
             velocityZ: Double,
-            random: net.minecraft.util.math.random.Random,
+            random: RandomSource,
         ): Particle {
-            return FlamePillarParticle(clientWorld, x, y, z, velocityX, velocityY, velocityZ, spriteProvider.getSprite(random))
+            return FlamePillarParticle(clientWorld, x, y, z, velocityX, velocityY, velocityZ, spriteProvider.get(random))
         }
     }
 }

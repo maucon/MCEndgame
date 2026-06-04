@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.component.portal.type
 
 import de.fuballer.mcendgame.main.component.portal.PortalEntity
-import net.minecraft.entity.AnimationState
+import net.minecraft.world.entity.AnimationState
 
 private val PORTAL_TYPES = mapOf(
     LegacyPortalType.ID to { LegacyPortalType() }

@@ -2,20 +2,20 @@ package de.fuballer.mcendgame.client.component.render
 
 import com.mojang.blaze3d.pipeline.BlendFunction
 import com.mojang.blaze3d.pipeline.RenderPipeline
+import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
-import net.minecraft.client.gl.RenderPipelines
-import net.minecraft.client.render.VertexFormats
+import net.minecraft.client.renderer.RenderPipelines
 
 object CustomRenderPipelines {
     val LINK_PIPELINE: RenderPipeline = RenderPipelines.register(
-        RenderPipeline.builder(RenderPipelines.TRANSFORMS_PROJECTION_FOG_SNIPPET)
+        RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
             .withLocation("pipeline/link")
             .withVertexShader("core/position_color")
             .withFragmentShader("core/position_color")
             .withCull(false)
             .withBlend(BlendFunction.TRANSLUCENT)
             .withDepthWrite(true)
-            .withVertexFormat(VertexFormats.POSITION_COLOR_LIGHT, VertexFormat.DrawMode.TRIANGLE_STRIP)
+            .withVertexFormat(DefaultVertexFormat.POSITION_COLOR_LIGHTMAP, VertexFormat.Mode.TRIANGLE_STRIP)
             .build()
     )
 

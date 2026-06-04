@@ -26,8 +26,8 @@ import de.fuballer.mcendgame.main.component.portal.Portals
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
-import net.minecraft.client.render.entity.EntityRendererFactories
-import net.minecraft.client.render.entity.model.EntityModelLayers
+import net.minecraft.client.model.geom.ModelLayers
+import net.minecraft.client.renderer.entity.EntityRenderers
 
 @Injectable
 object EntityModelRegisterer {
@@ -37,29 +37,29 @@ object EntityModelRegisterer {
             SwampGolemEntityModel.SWAMP_GOLEM,
             SwampGolemEntityModel::getTexturedModelData
         )
-        EntityRendererFactories.register(CustomEntities.SWAMP_GOLEM, ::SwampGolemRenderer)
+        EntityRenderers.register(CustomEntities.SWAMP_GOLEM, ::SwampGolemRenderer)
 
         EntityModelLayerRegistry.registerModelLayer(ArachneEntityModel.ARACHNE, ArachneEntityModel::getTexturedModelData)
-        EntityRendererFactories.register(CustomEntities.ARACHNE, ::ArachneRenderer)
+        EntityRenderers.register(CustomEntities.ARACHNE, ::ArachneRenderer)
 
         EntityModelLayerRegistry.registerModelLayer(
             WebshotEntityModel.WEBSHOT,
             WebshotEntityModel::getTexturedModelData
         )
-        EntityRendererFactories.register(CustomEntities.WEBSHOT, ::WebshotRenderer)
+        EntityRenderers.register(CustomEntities.WEBSHOT, ::WebshotRenderer)
 
-        EntityRendererFactories.register(CustomEntities.WEBHOOK, ::WebhookRenderer)
+        EntityRenderers.register(CustomEntities.WEBHOOK, ::WebhookRenderer)
 
-        EntityRendererFactories.register(CustomEntities.SPIDERLING, ::SpiderlingRenderer)
+        EntityRenderers.register(CustomEntities.SPIDERLING, ::SpiderlingRenderer)
 
         EntityModelLayerRegistry.registerModelLayer(TrainingDummyEntityModel.TRAINING_DUMMY, TrainingDummyEntityModel::getTexturedModelData)
-        EntityRendererFactories.register(CustomEntities.TRAINING_DUMMY) { context -> TrainingDummyRenderer(context, EntityModelLayers.ARMOR_STAND_EQUIPMENT) }
+        EntityRenderers.register(CustomEntities.TRAINING_DUMMY) { context -> TrainingDummyRenderer(context, ModelLayers.ARMOR_STAND_ARMOR) }
 
-        EntityRendererFactories.register(CustomEntities.BONECRUSHER) { state -> BonecrusherRenderer<BonecrusherRenderState>(state) }
-        EntityRendererFactories.register(CustomEntities.ELF_DUELIST) { state -> ElfDuelistRenderer<ElfDuelistRenderState>(state) }
-        EntityRendererFactories.register(CustomEntities.BEAKBURN) { state -> BeakburnRenderer<BeakburnRenderState>(state) }
+        EntityRenderers.register(CustomEntities.BONECRUSHER) { state -> BonecrusherRenderer<BonecrusherRenderState>(state) }
+        EntityRenderers.register(CustomEntities.ELF_DUELIST) { state -> ElfDuelistRenderer<ElfDuelistRenderState>(state) }
+        EntityRenderers.register(CustomEntities.BEAKBURN) { state -> BeakburnRenderer<BeakburnRenderState>(state) }
 
-        EntityRendererFactories.register(CustomEntities.SCARRED_ONE) { state -> ScarredOneRenderer<ScarredOneRenderState>(state) }
+        EntityRenderers.register(CustomEntities.SCARRED_ONE) { state -> ScarredOneRenderer<ScarredOneRenderState>(state) }
 
         EntityModelLayerRegistry.registerModelLayer(
             DefaultPortalEntityModel.PORTAL,
@@ -69,6 +69,6 @@ object EntityModelRegisterer {
             LegacyPortalEntityModel.PORTAL,
             LegacyPortalEntityModel::getTexturedModelData
         )
-        EntityRendererFactories.register(Portals.ENTITY_TYPE, ::PortalRenderer)
+        EntityRenderers.register(Portals.ENTITY_TYPE, ::PortalRenderer)
     }
 }

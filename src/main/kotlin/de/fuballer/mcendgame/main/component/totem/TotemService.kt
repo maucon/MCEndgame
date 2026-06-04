@@ -14,47 +14,47 @@ import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.attribute.EntityAttribute
-import net.minecraft.entity.attribute.EntityAttributeModifier
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.inventory.Inventory
-import net.minecraft.registry.entry.RegistryEntry
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.core.Holder
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.Identifier
+import net.minecraft.world.Container
+import net.minecraft.world.SimpleMenuProvider
+import net.minecraft.world.entity.ai.attributes.Attribute
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.player.Player
 
 @Injectable
 class TotemService(
     private val playerTotemsRepository: PlayerTotemsRepository,
     private val playerTotemVanillaAttributesRepository: PlayerTotemVanillaAttributesRepository,
 ) {
-    fun openInventory(player: PlayerEntity) {
+    fun openInventory(player: Player) {
         val playerTotems = getPlayerTotems(player)
 
-        val screenHandlerFactory = SimpleNamedScreenHandlerFactory({ syncId, inventory, _ ->
+        val screenHandlerFactory = SimpleMenuProvider({ syncId, inventory, _ ->
             TotemScreenHandler(syncId, inventory, playerTotems, this)
-        }, Text.translatable("container.mcendgame.totem.title"))
+        }, Component.translatable("container.mcendgame.totem.title"))
 
-        player.openHandledScreen(screenHandlerFactory)
+        player.openMenu(screenHandlerFactory)
     }
 
-    private fun getPlayerTotems(player: PlayerEntity) = playerTotemsRepository.findById(player.uuid)?.totems ?: listOf()
+    private fun getPlayerTotems(player: Player) = playerTotemsRepository.findById(player.uuid)?.totems ?: listOf()
 
-    fun savePlayerTotems(player: PlayerEntity, inventory: Inventory) {
+    fun savePlayerTotems(player: Player, inventory: Container) {
         val entity = PlayerTotemsEntity(player.uuid, inventory.toList())
         playerTotemsRepository.save(entity)
     }
 
     @CommandHandler
     fun on(cmd: CollectCustomAttributesCommand) {
-        val player = cmd.entity as? PlayerEntity ?: return
-        if (!player.entityWorld.isDungeonWorld()) return
+        val player = cmd.entity as? Player ?: return
+        if (!player.level().isDungeonWorld()) return
 
         val attributes = getPlayerTotemAttributes(player)
         cmd.customAttributes.addAll(attributes)
     }
 
-    private fun getPlayerTotemAttributes(player: PlayerEntity) = getPlayerTotems(player).flatMap { it.getCustomAttributes() }
+    private fun getPlayerTotemAttributes(player: Player) = getPlayerTotems(player).flatMap { it.getCustomAttributes() }
 
     @EventSubscriber(sync = true)
     fun on(event: PlayerAfterDimensionChangeEvent) {
@@ -63,27 +63,27 @@ class TotemService(
         if (event.newWorld.isDungeonWorld()) addTotemVanillaAttributes(player)
     }
 
-    private fun removeTotemVanillaAttributes(player: PlayerEntity) {
+    private fun removeTotemVanillaAttributes(player: Player) {
         val entity = playerTotemVanillaAttributesRepository.findById(player.uuid) ?: return
         entity.attributes.forEach { (type, identifier) ->
-            val instance = player.getAttributeInstance(type)
+            val instance = player.getAttribute(type)
             instance?.removeModifier(identifier)
         }
     }
 
-    private fun addTotemVanillaAttributes(player: PlayerEntity) {
-        val attributes = mutableListOf<Pair<RegistryEntry<EntityAttribute>, Identifier>>()
+    private fun addTotemVanillaAttributes(player: Player) {
+        val attributes = mutableListOf<Pair<Holder<Attribute>, Identifier>>()
 
         getPlayerTotemAttributes(player)
             .filter { it.type is VanillaAttributeType }
             .forEach {
                 val vanillaAttributeType = it.type as VanillaAttributeType
                 val identifier = IdentifierUtil.defaultRandom()
-                val modifier = EntityAttributeModifier(identifier, it.rolls[0].asDoubleRoll().getValue(), vanillaAttributeType.scaleType)
+                val modifier = AttributeModifier(identifier, it.rolls[0].asDoubleRoll().getValue(), vanillaAttributeType.scaleType)
 
                 val type = vanillaAttributeType.attribute
-                val instance = player.getAttributeInstance(type)
-                instance?.addTemporaryModifier(modifier)
+                val instance = player.getAttribute(type)
+                instance?.addTransientModifier(modifier)
 
                 attributes.add(Pair(type, identifier))
             }

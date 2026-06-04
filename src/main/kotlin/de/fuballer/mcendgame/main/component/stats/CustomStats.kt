@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.component.stats
 
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.stat.StatFormatter
+import net.minecraft.stats.StatFormatter
 
 @Injectable
 object CustomStats {

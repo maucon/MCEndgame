@@ -1,16 +1,16 @@
 package de.fuballer.mcendgame.main.component.entity.custom.goals
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.pathing.Path
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.predicate.entity.EntityPredicates
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.entity.EntitySelector
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.pathfinder.Path
+import net.minecraft.world.phys.Vec3
 import java.util.*
 import kotlin.math.max
 
 class StayInRangeGoal(
-    private val entity: MobEntity,
+    private val entity: Mob,
     private val moveSpeedFactor: Double,
     maxDistance: Double,
 ) : DisableAbleGoal() {
@@ -22,40 +22,40 @@ class StayInRangeGoal(
     private var targetZ = 0.0
 
     init {
-        setControls(EnumSet.of(Control.MOVE, Control.LOOK))
+        setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK))
     }
 
-    override fun canStart(): Boolean {
+    override fun canUse(): Boolean {
         if (isDisabled) return false
         val target = entity.target ?: return false
         if (!target.isAlive) return false
 
-        path = entity.navigation.findPathTo(target, 0)
-        return path != null || entity.squaredDistanceTo(target) < squaredMaxDistance
+        path = entity.navigation.createPath(target, 0)
+        return path != null || entity.distanceToSqr(target) < squaredMaxDistance
     }
 
-    override fun shouldContinue(): Boolean {
+    override fun canContinueToUse(): Boolean {
         if (isDisabled) return false
         val target = entity.target ?: return false
         if (!target.isAlive) return false
 
-        if (!entity.isInPositionTargetRange(target.blockPos)) return false
-        return target !is PlayerEntity || (!target.isSpectator && !target.isCreative)
+        if (!entity.isWithinHome(target.blockPosition())) return false
+        return target !is Player || (!target.isSpectator && !target.isCreative)
     }
 
     override fun start() {
-        entity.navigation.startMovingAlong(path, moveSpeedFactor)
-        entity.isAttacking = true
+        entity.navigation.moveTo(path, moveSpeedFactor)
+        entity.setAggressive(true)
         updateCountdownTicks = 0
     }
 
     override fun stop() {
-        val target = entity.target
-        if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(target)) {
+        val target = entity.target ?: return
+        if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target)) {
             entity.target = null
         }
 
-        entity.isAttacking = false
+        entity.setAggressive(false)
         entity.navigation.stop()
     }
 
@@ -67,11 +67,11 @@ class StayInRangeGoal(
     private fun update(
         target: LivingEntity
     ) {
-        entity.lookControl.lookAt(target, 30.0f, 30.0f)
+        entity.lookControl.setLookAt(target, 30.0f, 30.0f)
 
         updateCountdownTicks = max(updateCountdownTicks - 1, 0)
 
-        val squaredDistance = entity.squaredDistanceTo(target)
+        val squaredDistance = entity.distanceToSqr(target)
         if (squaredDistance < squaredMaxDistance) {
             entity.navigation.stop()
         }
@@ -86,24 +86,24 @@ class StayInRangeGoal(
 
         updateCountdownTicks += (squaredDistance / 20).toInt()
 
-        if (!entity.navigation.startMovingTo(target, moveSpeedFactor)) {
+        if (!entity.navigation.moveTo(target, moveSpeedFactor)) {
             updateCountdownTicks += 15
         }
 
-        updateCountdownTicks = getTickCount(updateCountdownTicks)
+        updateCountdownTicks = adjustedTickDelay(updateCountdownTicks)
     }
 
     private fun shouldUpdateMovement(
         target: LivingEntity
     ): Boolean {
         if (updateCountdownTicks > 0) return false
-        if (!entity.visibilityCache.canSee(target)) return false
+        if (!entity.sensing.hasLineOfSight(target)) return false
 
 
         if (targetX == 0.0 && targetY == 0.0 && targetZ == 0.0) return true
-        val isInRange = entity.squaredDistanceTo(target) < squaredMaxDistance
-        if (target.entityPos.squaredDistanceTo(Vec3d(targetX, targetY, targetZ)) > 1 && !isInRange) return true
-        if (entity.navigation.isIdle && !isInRange) return true
+        val isInRange = entity.distanceToSqr(target) < squaredMaxDistance
+        if (target.position().distanceToSqr(Vec3(targetX, targetY, targetZ)) > 1 && !isInRange) return true
+        if (entity.navigation.isDone && !isInRange) return true
 
         return false
     }

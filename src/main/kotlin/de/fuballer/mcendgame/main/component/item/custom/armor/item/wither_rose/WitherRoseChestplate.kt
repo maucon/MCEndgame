@@ -5,10 +5,10 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
-import net.minecraft.component.type.AttributeModifierSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
 
 class WitherRoseChestplate(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.WITHER_DAMAGE_IMMUNITY, 0),
@@ -18,5 +18,5 @@ class WitherRoseChestplate(
         RollableCustomAttribute(VanillaAttributeTypes.INCREASED_SCALE, 0, DoubleBounds(0.05, 0.15)),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.CHEST
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.CHEST
 }

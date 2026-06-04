@@ -10,8 +10,7 @@ import de.fuballer.mcendgame.main.messaging.dungeon.OpenTrainingDungeonButtonPre
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventGateway
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.GlobalPos
+import net.minecraft.core.GlobalPos
 import kotlin.random.Random
 
 @Injectable
@@ -23,9 +22,9 @@ class TrainingDungeonGenerationService(
     @EventSubscriber(sync = true)
     fun on(event: OpenTrainingDungeonButtonPressedEvent) {
         val player = event.player
-        val originWorld = player.entityWorld
-        val dungeonDevicePos = event.dungeonDeviceBlockEntity.pos
-        val dungeonDeviceGlobalPos = GlobalPos(originWorld.registryKey, dungeonDevicePos)
+        val originWorld = player.level()
+        val dungeonDevicePos = event.dungeonDeviceBlockEntity.blockPos
+        val dungeonDeviceGlobalPos = GlobalPos(originWorld.dimension(), dungeonDevicePos)
 
         val random = Random.Default
 

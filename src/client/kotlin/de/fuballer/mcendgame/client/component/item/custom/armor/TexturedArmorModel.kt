@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.client.component.item.custom.armor
 
 import net.minecraft.client.model.Model
-import net.minecraft.util.Identifier
+import net.minecraft.resources.Identifier
 
 data class TexturedArmorModel<T : Model<*>>(
     val modelProvider: () -> T,

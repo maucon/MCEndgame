@@ -1,74 +1,74 @@
 package de.fuballer.mcendgame.main.component.block.blocks.crystalforge
 
-import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.block.HorizontalFacingBlock
-import net.minecraft.block.ShapeContext
-import net.minecraft.entity.ai.pathing.NavigationType
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemPlacementContext
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory
-import net.minecraft.state.StateManager
-import net.minecraft.text.Text
-import net.minecraft.util.ActionResult
-import net.minecraft.util.hit.BlockHitResult
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.util.shape.VoxelShapes
-import net.minecraft.world.BlockView
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.network.chat.Component
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.SimpleMenuProvider
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.HorizontalDirectionalBlock
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.pathfinder.PathComputationType
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.Shapes
 
 class CrystalForgeBlock(
-    settings: Settings
+    settings: Properties
 ) : Block(settings) {
     companion object {
         const val ID = "crystal_forge"
 
-        private val SHAPES_BY_AXIS = VoxelShapes.createHorizontalAxisShapeMap(
-            VoxelShapes.union(
-                createColumnShape(12.0, 0.0, 4.0),
-                createColumnShape(8.0, 10.0, 4.0, 5.0),
-                createColumnShape(4.0, 8.0, 5.0, 10.0),
-                createColumnShape(10.0, 16.0, 10.0, 16.0)
+        private val SHAPES_BY_AXIS = Shapes.rotateHorizontalAxis(
+            Shapes.or(
+                column(12.0, 0.0, 4.0),
+                column(8.0, 10.0, 4.0, 5.0),
+                column(4.0, 8.0, 5.0, 10.0),
+                column(10.0, 16.0, 10.0, 16.0)
             )
         )
     }
 
     init {
-        defaultState = stateManager.getDefaultState().with(HorizontalFacingBlock.FACING, Direction.NORTH)
+        registerDefaultState(stateDefinition.any().setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH))
     }
 
-    override fun getPlacementState(ctx: ItemPlacementContext): BlockState? =
-        defaultState.with(HorizontalFacingBlock.FACING, ctx.horizontalPlayerFacing.rotateYClockwise())
+    override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState =
+        defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, ctx.horizontalDirection.clockWise)
 
-    override fun onUse(
+    override fun useWithoutItem(
         state: BlockState,
-        world: World,
+        world: Level,
         pos: BlockPos,
-        player: PlayerEntity,
+        player: Player,
         hit: BlockHitResult,
-    ): ActionResult {
-        if (world.isClient) return ActionResult.SUCCESS
+    ): InteractionResult {
+        if (world.isClientSide) return InteractionResult.SUCCESS
 
-        val screenHandlerFactory = SimpleNamedScreenHandlerFactory(
+        val screenHandlerFactory = SimpleMenuProvider(
             { syncId, inventory, _ -> CrystalForgeScreenHandler(syncId, inventory) },
-            Text.translatable("${CrystalForgeSettings.CONTAINER_BASE_KEY}title")
+            Component.translatable("${CrystalForgeSettings.CONTAINER_BASE_KEY}title")
         )
-        player.openHandledScreen(screenHandlerFactory)
+        player.openMenu(screenHandlerFactory)
 
-        return ActionResult.SUCCESS
+        return InteractionResult.SUCCESS
     }
 
-    override fun getOutlineShape(
+    override fun getShape(
         state: BlockState,
-        world: BlockView,
+        world: BlockGetter,
         pos: BlockPos,
-        context: ShapeContext,
-    ) = SHAPES_BY_AXIS[(state.get(HorizontalFacingBlock.FACING) as Direction).axis]!!
+        context: CollisionContext,
+    ) = SHAPES_BY_AXIS[state.getValue(HorizontalDirectionalBlock.FACING).axis]!!
 
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
-        builder.add(HorizontalFacingBlock.FACING)
+    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
+        builder.add(HorizontalDirectionalBlock.FACING)
     }
 
-    override fun canPathfindThrough(state: BlockState, type: NavigationType) = false
+    override fun isPathfindable(state: BlockState, type: PathComputationType) = false
 }

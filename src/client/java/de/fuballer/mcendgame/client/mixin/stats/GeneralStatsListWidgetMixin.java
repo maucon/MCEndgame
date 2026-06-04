@@ -2,14 +2,14 @@ package de.fuballer.mcendgame.client.mixin.stats;
 
 import de.fuballer.mcendgame.main.MCEndgame;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.client.gui.screen.StatsScreen;
-import net.minecraft.stat.Stat;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.achievement.StatsScreen;
+import net.minecraft.resources.Identifier;
+import net.minecraft.stats.Stat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(StatsScreen.GeneralStatsListWidget.class)
+@Mixin(StatsScreen.GeneralStatisticsList.class)
 public class GeneralStatsListWidgetMixin {
     @ModifyVariable(
             method = "<init>",

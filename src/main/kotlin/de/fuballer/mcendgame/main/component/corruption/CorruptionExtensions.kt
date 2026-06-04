@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.main.functional.item_tag.ItemTag
 import de.fuballer.mcendgame.main.functional.item_tag.ItemTagsExtensions.addItemTag
 import de.fuballer.mcendgame.main.functional.item_tag.ItemTagsExtensions.hasItemTag
 import de.fuballer.mcendgame.main.functional.item_tag.ItemTagsExtensions.removeItemTag
-import net.minecraft.item.ItemStack
+import net.minecraft.world.item.ItemStack
 
 object CorruptionExtensions {
     fun ItemStack.setCorrupted() = addItemTag(ItemTag.CORRUPTED)

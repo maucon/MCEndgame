@@ -3,16 +3,16 @@ package de.fuballer.mcendgame.client.component.datagen
 import de.fuballer.mcendgame.main.component.block.CustomBlocks
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider
-import net.minecraft.registry.RegistryWrapper
+import net.minecraft.core.HolderLookup
 import java.util.concurrent.CompletableFuture
 
 class CustomLootTableProvider(
     dataOutput: FabricDataOutput,
-    registryLookup: CompletableFuture<RegistryWrapper.WrapperLookup>,
+    registryLookup: CompletableFuture<HolderLookup.Provider>,
 ) : FabricBlockLootTableProvider(dataOutput, registryLookup) {
     override fun generate() {
-        addDrop(CustomBlocks.DUNGEON_DEVICE)
-        addDrop(CustomBlocks.CRYSTAL_FORGE)
-        addDrop(CustomBlocks.TOTEM_STATUE)
+        dropSelf(CustomBlocks.DUNGEON_DEVICE)
+        dropSelf(CustomBlocks.CRYSTAL_FORGE)
+        dropSelf(CustomBlocks.TOTEM_STATUE)
     }
 }

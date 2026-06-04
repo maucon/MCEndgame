@@ -3,33 +3,33 @@ package de.fuballer.mcendgame.main.component.particle
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.codec.PacketCodec
-import net.minecraft.network.codec.PacketCodecs
-import net.minecraft.particle.ParticleEffect
-import net.minecraft.particle.ParticleType
-import net.minecraft.util.Uuids
+import net.minecraft.core.UUIDUtil
+import net.minecraft.core.particles.ParticleOptions
+import net.minecraft.core.particles.ParticleType
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
 import java.util.*
 import java.util.function.Function
 
 class MoveToTargetFlameParticleEffect(
     val targetEntityId: UUID,
     val duration: Int,
-) : ParticleEffect {
+) : ParticleOptions {
     companion object {
         val CODEC: MapCodec<MoveToTargetFlameParticleEffect> = RecordCodecBuilder.mapCodec(
             Function { instance ->
                 instance.group(
-                    Uuids.CODEC.fieldOf("target_entity_id").forGetter(Function { particleEffect -> particleEffect.targetEntityId }),
+                    UUIDUtil.AUTHLIB_CODEC.fieldOf("target_entity_id").forGetter(Function { particleEffect -> particleEffect.targetEntityId }),
                     Codec.INT.fieldOf("duration").forGetter(Function { particleEffect -> particleEffect.duration }),
                 ).apply(instance, ::MoveToTargetFlameParticleEffect)
             }
         )
 
-        val PACKET_CODEC: PacketCodec<RegistryByteBuf, MoveToTargetFlameParticleEffect> =
-            PacketCodec.tuple(
-                Uuids.PACKET_CODEC, { it.targetEntityId },
-                PacketCodecs.INTEGER, { it.duration },
+        val PACKET_CODEC: StreamCodec<RegistryFriendlyByteBuf, MoveToTargetFlameParticleEffect> =
+            StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC, { it.targetEntityId },
+                ByteBufCodecs.INT, { it.duration },
                 ::MoveToTargetFlameParticleEffect
             )
     }

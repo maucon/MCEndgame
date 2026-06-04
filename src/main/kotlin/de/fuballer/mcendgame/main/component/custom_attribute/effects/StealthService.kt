@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.main.messaging.misc.MobEntityTargetCommand
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isBehind
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 @Injectable
 class StealthService {

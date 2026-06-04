@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.mixin.phasing;
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +20,7 @@ public class LivingEntityEntityPhasingMixin {
     }
 
     @Inject(
-            method = "tickCramming",
+            method = "pushEntities",
             at = @At(value = "HEAD"),
             cancellable = true)
     void tickCramming(CallbackInfo ci) {

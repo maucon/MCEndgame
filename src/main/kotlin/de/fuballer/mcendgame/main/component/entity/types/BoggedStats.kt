@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.main.component.entity.types
 
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.mob.BoggedEntity
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.monster.skeleton.Bogged
 
 object BoggedStats : EntityTypeStats {
-    override val type: EntityType<BoggedEntity> = EntityType.BOGGED
+    override val type: EntityType<Bogged> = EntityType.BOGGED
 
     override val canHaveWeapons = true
     override val isRanged = true

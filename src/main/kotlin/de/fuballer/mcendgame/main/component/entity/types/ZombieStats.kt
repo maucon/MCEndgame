@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.main.component.entity.types
 
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
-import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.mob.ZombieEntity
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.monster.zombie.Zombie
 
 object ZombieStats : EntityTypeStats {
-    override val type: EntityType<ZombieEntity> = EntityType.ZOMBIE
+    override val type: EntityType<Zombie> = EntityType.ZOMBIE
 
     override val canHaveWeapons = true
     override val isRanged = false
@@ -19,7 +19,7 @@ object ZombieStats : EntityTypeStats {
     override val knockbackResistance = 0.0
 
     override fun applyMisc(entity: Entity) {
-        val zombieEntity = entity as? ZombieEntity ?: return
+        val zombieEntity = entity as? Zombie ?: return
         zombieEntity.isBaby = false
     }
 }

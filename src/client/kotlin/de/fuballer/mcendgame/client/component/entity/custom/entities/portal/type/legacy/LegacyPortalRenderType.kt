@@ -3,9 +3,9 @@ package de.fuballer.mcendgame.client.component.entity.custom.entities.portal.typ
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.PortalRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type.PortalRenderType
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.render.entity.EntityRendererFactory
-import net.minecraft.client.render.entity.model.EntityModel
-import net.minecraft.util.Identifier
+import net.minecraft.client.model.EntityModel
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.resources.Identifier
 
 class LegacyPortalRenderType : PortalRenderType {
     companion object {
@@ -22,7 +22,7 @@ class LegacyPortalRenderType : PortalRenderType {
         return 0.3f
     }
 
-    override fun getModel(context: EntityRendererFactory.Context): EntityModel<PortalRenderState> {
-        return LegacyPortalEntityModel(context.getPart(LegacyPortalEntityModel.PORTAL))
+    override fun getModel(context: EntityRendererProvider.Context): EntityModel<PortalRenderState> {
+        return LegacyPortalEntityModel(context.bakeLayer(LegacyPortalEntityModel.PORTAL))
     }
 }

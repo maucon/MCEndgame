@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.messaging.misc
 
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 data class LivingEntityHealthRecoveryCommand(
     val entity: LivingEntity,

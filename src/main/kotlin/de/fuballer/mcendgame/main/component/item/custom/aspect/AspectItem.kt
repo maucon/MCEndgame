@@ -1,16 +1,16 @@
 package de.fuballer.mcendgame.main.component.item.custom.aspect
 
 import de.fuballer.mcendgame.main.component.dungeon.loot.drop.ItemColor
-import net.minecraft.component.DataComponentTypes
-import net.minecraft.component.type.LoreComponent
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.Formatting
+import net.minecraft.ChatFormatting
+import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.ItemLore
 
 abstract class AspectItem(
-    settings: Settings,
+    settings: Properties,
 ) : Item(settings) {
     companion object {
         const val TRANSLATABLE_BASE_KEY = "item.mcendgame.aspect."
@@ -20,23 +20,23 @@ abstract class AspectItem(
     abstract val tier: Int
     abstract val limit: Int
 
-    abstract val description: List<MutableText>
+    abstract val description: List<MutableComponent>
 
     abstract val disabledAspects: List<AspectItem>
 
-    override fun getDefaultStack(): ItemStack {
-        val stack = super.getDefaultStack()
+    override fun getDefaultInstance(): ItemStack {
+        val stack = super.defaultInstance
 
-        val list = mutableListOf<Text>()
+        val list = mutableListOf<Component>()
         description.forEach {
-            list.add(it.styled { style -> style.withItalic(false).withColor(Formatting.GRAY) })
+            list.add(it.withStyle { style -> style.withItalic(false).withColor(ChatFormatting.GRAY) })
         }
-        list.add(Text.translatable(TRANSLATABLE_BASE_KEY + "limit", limit).styled { style -> style.withItalic(false).withColor(Formatting.DARK_GRAY) })
+        list.add(Component.translatable(TRANSLATABLE_BASE_KEY + "limit", limit).withStyle { style -> style.withItalic(false).withColor(ChatFormatting.DARK_GRAY) })
 
-        stack.set(DataComponentTypes.LORE, LoreComponent(list))
+        stack.set(DataComponents.LORE, ItemLore(list))
 
         return stack
     }
 
-    override fun getName(stack: ItemStack): MutableText = super.getName(stack).copy().withColor(ItemColor.ASPECT.intColor)
+    override fun getName(stack: ItemStack): MutableComponent = super.getName(stack).copy().withColor(ItemColor.ASPECT.intColor)
 }

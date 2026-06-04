@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.client.accessor;
 
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HideBipedBoneArmor;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
@@ -15,9 +15,9 @@ public interface BipedEntityRenderStateAccessor {
 
     Set<EquipmentSlot> mcendgame$getHiddenArmor();
 
-    void mcendgame$setVelocity(Vec3d velocity);
+    void mcendgame$setVelocity(Vec3 velocity);
 
-    Vec3d mcendgame$getVelocity();
+    Vec3 mcendgame$getVelocity();
 
     void mcendgame$setCapeVerticalLift(float verticalLift);
 

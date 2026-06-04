@@ -1,30 +1,30 @@
 package de.fuballer.mcendgame.client.component.render
 
-import net.minecraft.client.render.OutputTarget
-import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.RenderSetup
-import net.minecraft.util.Identifier
+import net.minecraft.client.renderer.rendertype.OutputTarget
+import net.minecraft.client.renderer.rendertype.RenderSetup
+import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.resources.Identifier
 import net.minecraft.util.Util
 import java.util.function.Function
 
 object CustomRenderLayers {
-    val LINK: RenderLayer = RenderLayer.of(
+    val LINK: RenderType = RenderType.create(
         "link",
         RenderSetup.builder(CustomRenderPipelines.LINK_PIPELINE)
             .useLightmap()
-            .build()
+            .createRenderSetup()
     )
 
     fun ghostly(texture: Identifier) = GHOSTLY.apply(texture)
-    val GHOSTLY: Function<Identifier, RenderLayer> = Util.memoize<Identifier, RenderLayer> { texture ->
+    val GHOSTLY: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.GHOSTLY_PIPELINE)
-            .texture("Sampler0", texture)
-            .outputTarget(OutputTarget.MAIN_TARGET)
+            .withTexture("Sampler0", texture)
+            .setOutputTarget(OutputTarget.MAIN_TARGET)
             .useLightmap()
             .useOverlay()
-            .translucent()
-            .outlineMode(RenderSetup.OutlineMode.AFFECTS_OUTLINE)
-            .build()
-        RenderLayer.of("ghostly", renderSetup)
+            .sortOnUpload()
+            .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+            .createRenderSetup()
+        RenderType.create("ghostly", renderSetup)
     }
 }

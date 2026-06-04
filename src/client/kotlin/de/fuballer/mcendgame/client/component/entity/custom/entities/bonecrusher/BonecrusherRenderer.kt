@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrushe
 
 import de.fuballer.mcendgame.client.component.entity.custom.feature.isolated.IsolatedGeoLayer
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
-import net.minecraft.client.render.entity.EntityRendererFactory
-import net.minecraft.client.render.entity.state.LivingEntityRenderState
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import software.bernie.geckolib.constant.DataTickets
 import software.bernie.geckolib.renderer.GeoEntityRenderer
 import software.bernie.geckolib.renderer.base.BoneSnapshots
@@ -12,7 +12,7 @@ import software.bernie.geckolib.renderer.base.RenderPassInfo
 import kotlin.math.PI
 
 class BonecrusherRenderer<R>(
-    context: EntityRendererFactory.Context
+    context: EntityRendererProvider.Context
 ) : GeoEntityRenderer<BonecrusherEntity, R>(context, BonecrusherModel()) where R : LivingEntityRenderState, R : GeoRenderState {
     init {
         withRenderLayer(IsolatedGeoLayer(this))

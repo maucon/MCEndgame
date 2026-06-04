@@ -2,11 +2,11 @@ package de.fuballer.mcendgame.main.component.dungeon.level
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.codec.PacketCodec
-import net.minecraft.network.codec.PacketCodecs
-import net.minecraft.storage.ReadView
-import net.minecraft.storage.WriteView
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import kotlin.math.max
 
 private const val DUNGEON_LEVEL_NBT = "PlayerDungeonLevel"
@@ -22,12 +22,12 @@ data class PlayerDungeonLevel(
     }
 
     companion object {
-        val PACKET_CODEC: PacketCodec<RegistryByteBuf, PlayerDungeonLevel> =
-            PacketCodec.tuple(
-                PacketCodecs.VAR_INT, PlayerDungeonLevel::level,
-                PacketCodecs.VAR_INT, PlayerDungeonLevel::levelProgress,
-                PacketCodecs.VAR_INT, PlayerDungeonLevel::highestReached,
-                PacketCodecs.BOOLEAN, PlayerDungeonLevel::locked,
+        val PACKET_CODEC: StreamCodec<RegistryFriendlyByteBuf, PlayerDungeonLevel> =
+            StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, PlayerDungeonLevel::level,
+                ByteBufCodecs.VAR_INT, PlayerDungeonLevel::levelProgress,
+                ByteBufCodecs.VAR_INT, PlayerDungeonLevel::highestReached,
+                ByteBufCodecs.BOOL, PlayerDungeonLevel::locked,
                 ::PlayerDungeonLevel
             )
 
@@ -43,10 +43,10 @@ data class PlayerDungeonLevel(
         }
 
 
-        fun write(dungeonLevel: PlayerDungeonLevel, view: WriteView) {
-            view.put(DUNGEON_LEVEL_NBT, CODEC, dungeonLevel)
+        fun write(dungeonLevel: PlayerDungeonLevel, view: ValueOutput) {
+            view.store(DUNGEON_LEVEL_NBT, CODEC, dungeonLevel)
         }
 
-        fun read(view: ReadView): PlayerDungeonLevel = view.read(DUNGEON_LEVEL_NBT, CODEC).orElseGet { PlayerDungeonLevel() }
+        fun read(view: ValueInput): PlayerDungeonLevel = view.read(DUNGEON_LEVEL_NBT, CODEC).orElseGet { PlayerDungeonLevel() }
     }
 }

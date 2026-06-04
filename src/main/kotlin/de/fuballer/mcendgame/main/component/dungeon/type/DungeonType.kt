@@ -12,10 +12,10 @@ import de.fuballer.mcendgame.main.component.entity.types.boss.BonecrusherBossSta
 import de.fuballer.mcendgame.main.component.entity.types.boss.ElfDuelistBossStats
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
-import net.minecraft.entity.LivingEntity
-import net.minecraft.registry.RegistryKey
-import net.minecraft.world.biome.Biome
-import net.minecraft.world.biome.BiomeKeys
+import net.minecraft.resources.ResourceKey
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.biome.Biomes
 import kotlin.random.Random
 
 enum class DungeonType(
@@ -24,7 +24,7 @@ enum class DungeonType(
     private val bossEntityTypes: List<RandomOption<EntityTypeStats>>,
     val enemyCount: Int,
     val bossCount: Int,
-    val biome: RegistryKey<Biome>,
+    val biome: ResourceKey<Biome>,
     val applyMisc: (List<LivingEntity>) -> Unit = {},
 ) { // Note: dungeon seed uses ordinal to save dungeon type
     STRONGHOLD(
@@ -49,7 +49,7 @@ enum class DungeonType(
         ),
         enemyCount = 125,
         bossCount = 3,
-        biome = BiomeKeys.PLAINS,
+        biome = Biomes.PLAINS,
     ),
     NETHER(
         listOf(
@@ -72,8 +72,8 @@ enum class DungeonType(
         ),
         enemyCount = 125,
         bossCount = 3,
-        biome = BiomeKeys.NETHER_WASTES,
-        { enemies -> enemies.forEach { it.addStatusEffect(PotionEffect.FIRE_RESISTANCE.getEffectInstance(false)) } },
+        biome = Biomes.NETHER_WASTES,
+        { enemies -> enemies.forEach { it.addEffect(PotionEffect.FIRE_RESISTANCE.getEffectInstance(false)) } },
     ),
     DESERT(
         listOf(
@@ -106,7 +106,7 @@ enum class DungeonType(
         listOf(),
         enemyCount = 0,
         bossCount = 0,
-        biome = BiomeKeys.PLAINS,
+        biome = Biomes.PLAINS,
     );
 
     fun roll(random: Random): RolledDungeonType =

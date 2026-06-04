@@ -6,11 +6,11 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HidePlayerModelPartArmor
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.entity.player.PlayerModelPart
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.player.PlayerModelPart
 
 class Voidweaver(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings), HidePlayerModelPartArmor {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.LINK_NEARBY_ENEMIES, 0, IntBounds(4, 5)),
@@ -20,7 +20,7 @@ class Voidweaver(
         RollableCustomAttribute(CustomAttributeTypes.WARD, 0, DoubleBounds(2.0, 3.0)),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.CHEST
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.CHEST
 
     override val hiddenPlayerModelParts = listOf(
         PlayerModelPart.LEFT_SLEEVE,

@@ -7,9 +7,9 @@ import de.fuballer.mcendgame.main.component.custom_attribute.sign_based_keyword.
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.util.minecraft.CodecUtil
-import net.minecraft.entity.attribute.EntityAttribute
-import net.minecraft.entity.attribute.EntityAttributeModifier
-import net.minecraft.registry.entry.RegistryEntry
+import net.minecraft.core.Holder
+import net.minecraft.world.entity.ai.attributes.Attribute
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
 
 sealed class AttributeType(
     val key: String,
@@ -24,8 +24,8 @@ sealed class AttributeType(
 }
 
 class VanillaAttributeType(
-    val attribute: RegistryEntry<EntityAttribute>,
-    val scaleType: EntityAttributeModifier.Operation,
+    val attribute: Holder<Attribute>,
+    val scaleType: AttributeModifier.Operation,
     key: String,
     formatRolls: (List<AttributeRoll<*>>) -> List<String>,
     formatBounds: (List<AttributeBounds<*>>) -> List<String>,

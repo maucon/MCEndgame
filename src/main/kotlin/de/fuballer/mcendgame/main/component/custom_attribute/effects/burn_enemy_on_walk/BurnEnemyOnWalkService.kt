@@ -12,9 +12,9 @@ import de.fuballer.mcendgame.main.util.extension.EntityExtension.isEnemy
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import net.minecraft.entity.LivingEntity
-import net.minecraft.registry.tag.FluidTags
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.tags.FluidTags
+import net.minecraft.world.entity.LivingEntity
 import java.util.*
 import kotlin.math.max
 
@@ -29,13 +29,13 @@ class BurnEnemyOnWalkService(
         ServerTickEvents.END_WORLD_TICK.register { world ->
             updateEntities(world)
 
-            val time = world.time
+            val time = world.gameTime
             if (time % 20 == 0L) cleanOldData(time)
         }
     }
 
-    private fun updateEntities(world: ServerWorld) {
-        world.iterateEntities().forEach { entity ->
+    private fun updateEntities(world: ServerLevel) {
+        world.allEntities.forEach { entity ->
             if (entity !is LivingEntity) return@forEach
             val attributes = entity.getAllCustomAttributes()[CustomAttributeTypes.BURN_ENEMY_ON_WALK] ?: return@forEach
             updateAttributes(entity, world, attributes)
@@ -44,7 +44,7 @@ class BurnEnemyOnWalkService(
 
     private fun updateAttributes(
         entity: LivingEntity,
-        world: ServerWorld,
+        world: ServerLevel,
         attributes: List<CustomAttribute>,
     ) {
         attributes.forEach { updateAttribute(entity, world, it) }
@@ -52,11 +52,11 @@ class BurnEnemyOnWalkService(
 
     private fun updateAttribute(
         entity: LivingEntity,
-        world: ServerWorld,
+        world: ServerLevel,
         attribute: CustomAttribute,
     ) {
-        val currentPos = entity.entityPos
-        val currentTime = world.time
+        val currentPos = entity.position()
+        val currentTime = world.gameTime
 
         val id = attribute.id
         if (!walkData.contains(id)) {
@@ -72,13 +72,13 @@ class BurnEnemyOnWalkService(
         if (movedDistance <= 0.0) return
         if (movedDistance > 5.0) return // ignore teleports
 
-        if (!entity.isOnGround) return
-        if (entity.hasVehicle()) return
+        if (!entity.onGround()) return
+        if (entity.isPassenger) return
         if (entity.isSwimming) return
-        if (entity.isGliding) return
-        if (entity.isSubmergedIn(FluidTags.WATER)) return
-        if (entity.isTouchingWater) return
-        if (entity.isClimbing) return
+        if (entity.isFallFlying) return
+        if (entity.isEyeInFluid(FluidTags.WATER)) return
+        if (entity.isInWater) return
+        if (entity.onClimbable()) return
 
         val distanceSum = data.distance + movedDistance
         var distanceTrigger = attribute.rolls[0].asDoubleRoll().getValue()
@@ -94,20 +94,20 @@ class BurnEnemyOnWalkService(
 
     private fun burnEnemy(
         entity: LivingEntity,
-        world: ServerWorld,
+        world: ServerLevel,
         range: Int,
         elementalPercent: Double,
     ) {
-        val enemiesInRange = world.getEntitiesByClass(
+        val enemiesInRange = world.getEntitiesOfClass(
             LivingEntity::class.java,
-            entity.boundingBox.expand(range.toDouble())
+            entity.boundingBox.inflate(range.toDouble())
         ) { it != entity && it.isAlive && it.isEnemy(entity) }
 
         val target = enemiesInRange.randomOrNull() ?: return
         val distance = target.distanceTo(entity)
         val sparkTravelTime = BurnEnemyOnWalkSettings.getSparkTravelTime(distance)
 
-        world.spawnParticles(
+        world.sendParticles(
             MoveToTargetFlameParticleEffect(target.uuid, sparkTravelTime),
             entity.x,
             entity.y,
@@ -120,8 +120,8 @@ class BurnEnemyOnWalkService(
         )
 
         scheduler.delayed(sparkTravelTime) {
-            if (target.isDead) return@delayed
-            target.setOnFireFor(BurnEnemyOnWalkSettings.BURN_DURATION)
+            if (target.isDeadOrDying) return@delayed
+            target.igniteForSeconds(BurnEnemyOnWalkSettings.BURN_DURATION)
             target.dealElementalSpellDamage(elementalPercent, entity)
         }
     }

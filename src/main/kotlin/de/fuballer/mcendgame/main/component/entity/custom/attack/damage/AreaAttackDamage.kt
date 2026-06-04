@@ -3,18 +3,18 @@ package de.fuballer.mcendgame.main.component.entity.custom.attack.damage
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.knockback.AttackKnockbackUtil.takeKnockbackFrom
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealGenericAttackDamage
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setShieldsCooldown
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.PlayerLikeEntity
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.particle.ParticleTypes
-import net.minecraft.particle.SimpleParticleType
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvent
-import net.minecraft.sound.SoundEvents
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Vec3d
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.core.particles.SimpleParticleType
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.Avatar
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -35,19 +35,19 @@ class AreaAttackDamage(
 
     private var playSound: Boolean = false
     private var soundRequiresHit: Boolean = true
-    private var sound: SoundEvent = SoundEvents.ENTITY_GENERIC_EXPLODE.value()
+    private var sound: SoundEvent = SoundEvents.GENERIC_EXPLODE.value()
     private var pitch: Float = 1F
     private var volume: Float = 1F
 
-    override fun apply(world: ServerWorld, damager: MobEntity, target: LivingEntity?): Boolean {
-        val forward = damager.getRotationVector(damager.pitch, damager.bodyYaw).horizontal.normalize()
-        val sideways = forward.crossProduct(Vec3d(0.0, 1.0, 0.0))
+    override fun apply(world: ServerLevel, damager: Mob, target: LivingEntity?): Boolean {
+        val forward = damager.calculateViewVector(damager.xRot, damager.yBodyRot).horizontal().normalize()
+        val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
 
         val scale = getScale(damager)
 
         val targets = getTargets(world, damager, scale).filter {
-            area.contains(it.entityPos.subtract(damager.entityPos), forward, sideways, scale)
-                    || area.contains(it.entityPos.add(0.0, it.height.toDouble(), 0.0).subtract(damager.entityPos), forward, sideways, scale)
+            area.contains(it.position().subtract(damager.position()), forward, sideways, scale)
+                    || area.contains(it.position().add(0.0, it.bbHeight.toDouble(), 0.0).subtract(damager.position()), forward, sideways, scale)
         }
 
         val slamCenter = area.getCenter(damager, scale, forward, sideways)
@@ -63,30 +63,30 @@ class AreaAttackDamage(
         return true
     }
 
-    private fun getScale(damager: MobEntity) = if (applyScale) damager.getAttributeValue(EntityAttributes.SCALE) else 1.0
+    private fun getScale(damager: Mob) = if (applyScale) damager.getAttributeValue(Attributes.SCALE) else 1.0
 
     private fun getTargets(
-        world: ServerWorld,
+        world: ServerLevel,
         damager: LivingEntity,
         scale: Double,
     ): List<LivingEntity> {
         val box = area.getAxisAlignedBox(damager, scale)
-        return world.getEntitiesByClass(LivingEntity::class.java, box) { it != damager }
+        return world.getEntitiesOfClass(LivingEntity::class.java, box) { it != damager }
     }
 
     private fun dealDamage(
         targets: List<LivingEntity>,
-        damager: MobEntity,
+        damager: Mob,
         scale: Double,
-        forward: Vec3d,
-        slamCenter: Vec3d,
+        forward: Vec3,
+        slamCenter: Vec3,
     ) {
         val damage = getDamage(damager)
         val knockback = getKnockback(damager)
 
         targets.forEach {
             it.dealGenericAttackDamage(damage, damager, blockable)
-            if (disableBlockingShield > 0 && it is PlayerLikeEntity && it.isBlocking) it.setShieldsCooldown(disableBlockingShield)
+            if (disableBlockingShield > 0 && it is Avatar && it.isBlocking) it.setShieldsCooldown(disableBlockingShield)
             applyKnockback(it, damager, knockback, scale, forward, slamCenter)
         }
     }
@@ -96,22 +96,22 @@ class AreaAttackDamage(
         damager: LivingEntity,
         knockback: Double,
         scale: Double,
-        forward: Vec3d,
-        slamCenter: Vec3d,
+        forward: Vec3,
+        slamCenter: Vec3,
     ) {
         val knockBackStrength = knockback * if (applyScale) scale else 1.0
-        target.velocityDirty = true
+        target.needsSync = true
 
         when (knockbackType) {
             KnockbackType.FACING -> target.takeKnockbackFrom(damager, knockBackStrength, -forward.x, -forward.z)
 
             KnockbackType.AREA_CENTER -> {
-                val knockbackDirection = target.entityPos.subtract(slamCenter).normalize()
+                val knockbackDirection = target.position().subtract(slamCenter).normalize()
                 target.takeKnockbackFrom(damager, knockBackStrength, -knockbackDirection.x, -knockbackDirection.z)
             }
 
             KnockbackType.DAMAGER_CENTER -> {
-                val knockbackDirection = target.entityPos.subtract(damager.entityPos).normalize()
+                val knockbackDirection = target.position().subtract(damager.position()).normalize()
                 target.takeKnockbackFrom(damager, knockBackStrength, -knockbackDirection.x, -knockbackDirection.z)
             }
         }
@@ -133,10 +133,10 @@ class AreaAttackDamage(
     }
 
     private fun createParticles(
-        world: ServerWorld,
-        slamCenter: Vec3d,
-        forward: Vec3d,
-        sideways: Vec3d,
+        world: ServerLevel,
+        slamCenter: Vec3,
+        forward: Vec3,
+        sideways: Vec3,
         scale: Double,
     ) {
         val scaledParticleCount = (particleCount * scale).toInt()
@@ -144,17 +144,17 @@ class AreaAttackDamage(
     }
 
     private fun createParticle(
-        world: ServerWorld,
-        slamCenter: Vec3d,
-        forward: Vec3d,
-        sideways: Vec3d,
+        world: ServerLevel,
+        slamCenter: Vec3,
+        forward: Vec3,
+        sideways: Vec3,
         scale: Double,
     ) {
         val forwardRandomOffset = area.getRandomForwardPos(scale)
         val sidewaysRandomOffset = area.getRandomSidewaysPos(scale)
 
-        val particlePos = slamCenter.add(forward.multiply(forwardRandomOffset)).add(sideways.multiply(sidewaysRandomOffset))
-        world.spawnParticles(particleType, particlePos.x, particlePos.y + particleHeightOffset, particlePos.z, 1, 0.0, 0.0, 0.0, particleSpeed)
+        val particlePos = slamCenter.add(forward.scale(forwardRandomOffset)).add(sideways.scale(sidewaysRandomOffset))
+        world.sendParticles(particleType, particlePos.x, particlePos.y + particleHeightOffset, particlePos.z, 1, 0.0, 0.0, 0.0, particleSpeed)
     }
 
     fun setSound(
@@ -173,8 +173,8 @@ class AreaAttackDamage(
     }
 
     private fun playSound(
-        world: ServerWorld,
-        slamCenter: Vec3d,
+        world: ServerLevel,
+        slamCenter: Vec3,
         scale: Double,
     ) {
         val scaledVolume = min(volume * scale.toFloat(), 2F)
@@ -185,7 +185,7 @@ class AreaAttackDamage(
             slamCenter.y,
             slamCenter.z,
             sound,
-            SoundCategory.HOSTILE,
+            SoundSource.HOSTILE,
             scaledVolume,
             pitch
         )
@@ -202,13 +202,13 @@ class AreaAttackDamage(
         private val heightOffset: Double = 0.0, // positive -> up
     ) {
         fun contains(
-            relativePos: Vec3d,
-            forward: Vec3d,
-            sideways: Vec3d,
+            relativePos: Vec3,
+            forward: Vec3,
+            sideways: Vec3,
             scale: Double,
         ): Boolean {
-            val forwardDistance = relativePos.dotProduct(forward)
-            val sidewaysDistance = relativePos.dotProduct(sideways)
+            val forwardDistance = relativePos.dot(forward)
+            val sidewaysDistance = relativePos.dot(sideways)
             val heightDistance = relativePos.y
 
             val maxForward = (forwardRange + forwardOffset) * scale
@@ -229,16 +229,16 @@ class AreaAttackDamage(
         fun getCenter(
             damager: LivingEntity,
             scale: Double,
-            forward: Vec3d,
-            sideways: Vec3d,
-        ): Vec3d {
-            var center = damager.entityPos
+            forward: Vec3,
+            sideways: Vec3,
+        ): Vec3 {
+            var center = damager.position()
 
             val forwardCenter = (forwardOffset + forwardRange / 2) * scale
-            center = center.add(forward.multiply(forwardCenter))
+            center = center.add(forward.scale(forwardCenter))
 
             val sidewaysCenter = sideOffset * scale
-            center = center.add(sideways.multiply(sidewaysCenter))
+            center = center.add(sideways.scale(sidewaysCenter))
 
             return center
         }
@@ -246,12 +246,12 @@ class AreaAttackDamage(
         fun getAxisAlignedBox(
             damager: LivingEntity,
             scale: Double,
-        ): Box {
+        ): AABB {
             val hD = getMaxHorizontalDistance(scale)
             val x = damager.x
             val y = damager.y + heightOffset
             val z = damager.z
-            return Box(x - hD, y - heightRange - 3, z - hD, x + hD, y + heightRange, z + hD) // -3 accounts for height of most mobs
+            return AABB(x - hD, y - heightRange - 3, z - hD, x + hD, y + heightRange, z + hD) // -3 accounts for height of most mobs
         }
 
         private fun getMaxHorizontalDistance(scale: Double): Double {

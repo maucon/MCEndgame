@@ -1,23 +1,28 @@
 package de.fuballer.mcendgame.client.component.item.custom.armor.model.bound_abyss
 
+import com.mojang.blaze3d.vertex.VertexConsumer
 import de.fuballer.mcendgame.client.component.item.custom.ModelPartDataExtension.createEmptyChild
 import de.fuballer.mcendgame.client.component.item.custom.armor.CustomVertexConsumer
 import de.fuballer.mcendgame.client.util.EntityRenderStateMixinExtension.getLowHealthTicks
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.model.*
-import net.minecraft.client.render.VertexConsumer
-import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.entity.model.BipedEntityModel
-import net.minecraft.client.render.entity.model.EntityModelLayer
-import net.minecraft.client.render.entity.model.EntityModelPartNames
-import net.minecraft.client.render.entity.state.BipedEntityRenderState
-import net.minecraft.client.render.entity.state.EntityRenderState
-import net.minecraft.client.render.entity.state.LivingEntityRenderState
+import net.minecraft.client.model.HumanoidModel
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.model.geom.PartNames
+import net.minecraft.client.model.geom.PartPose
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.CubeListBuilder
+import net.minecraft.client.model.geom.builders.LayerDefinition
+import net.minecraft.client.model.geom.builders.MeshDefinition
+import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.entity.state.EntityRenderState
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import org.joml.Vector3f
 
-class BoundAbyssModel<S : BipedEntityRenderState>(
+class BoundAbyssModel<S : HumanoidRenderState>(
     root: ModelPart
-) : BipedEntityModel<S>(root), CustomVertexConsumer {
+) : HumanoidModel<S>(root), CustomVertexConsumer {
     private val shoulderPadLeft: ModelPart
     private val vambraceLeft: ModelPart
     private val shoulderPadRight: ModelPart
@@ -37,7 +42,7 @@ class BoundAbyssModel<S : BipedEntityRenderState>(
 
     override fun getVertexConsumer(
         renderState: EntityRenderState,
-        provider: VertexConsumerProvider,
+        provider: MultiBufferSource,
         default: VertexConsumer,
     ): VertexConsumer {
         if (renderState !is LivingEntityRenderState) return default
@@ -47,109 +52,109 @@ class BoundAbyssModel<S : BipedEntityRenderState>(
     }
 
     companion object {
-        val MODEL_LAYER = EntityModelLayer(IdentifierUtil.default("bound_abyss"), "main")
+        val MODEL_LAYER = ModelLayerLocation(IdentifierUtil.default("bound_abyss"), "main")
 
-        fun getTexturedModelData(): TexturedModelData {
-            val modelData = ModelData()
+        fun getTexturedModelData(): LayerDefinition {
+            val modelData = MeshDefinition()
             val modelPartData = modelData.root
 
-            val head = modelPartData.createEmptyChild(EntityModelPartNames.HEAD)
-            val hat = head.createEmptyChild(EntityModelPartNames.HAT)
-            val right_leg = modelPartData.createEmptyChild(EntityModelPartNames.RIGHT_LEG)
-            val left_leg = modelPartData.createEmptyChild(EntityModelPartNames.LEFT_LEG)
+            val head = modelPartData.createEmptyChild(PartNames.HEAD)
+            val hat = head.createEmptyChild(PartNames.HAT)
+            val right_leg = modelPartData.createEmptyChild(PartNames.RIGHT_LEG)
+            val left_leg = modelPartData.createEmptyChild(PartNames.LEFT_LEG)
 
-            val body = modelPartData.addChild("body", ModelPartBuilder.create(), ModelTransform.origin(0.0f, 0.0f, 0.0f))
+            val body = modelPartData.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0f, 0.0f, 0.0f))
 
-            val chestplateBody = body.addChild(
+            val chestplateBody = body.addOrReplaceChild(
                 "chestplateBody",
-                ModelPartBuilder.create().uv(18, 35).cuboid(-4.5f, -24.5f, -2.5f, 9.0f, 14.0f, 5.0f, Dilation(0.25f))
-                    .uv(16, 22).cuboid(-5.0f, -24.85f, -3.0f, 10.0f, 7.0f, 6.0f, Dilation(0.0f)),
-                ModelTransform.origin(0.0f, 24.0f, 0.0f)
+                CubeListBuilder.create().texOffs(18, 35).addBox(-4.5f, -24.5f, -2.5f, 9.0f, 14.0f, 5.0f, CubeDeformation(0.25f))
+                    .texOffs(16, 22).addBox(-5.0f, -24.85f, -3.0f, 10.0f, 7.0f, 6.0f, CubeDeformation(0.0f)),
+                PartPose.offset(0.0f, 24.0f, 0.0f)
             )
 
-            val belt = chestplateBody.addChild(
+            val belt = chestplateBody.addOrReplaceChild(
                 "belt",
-                ModelPartBuilder.create().uv(14, 54).cuboid(-5.5f, -2.0f, -3.5f, 11.0f, 3.0f, 7.0f, Dilation(-0.5f)),
-                ModelTransform.of(0.0f, -15.25f, 0.0f, 0.0f, 0.0f, -0.0873f)
+                CubeListBuilder.create().texOffs(14, 54).addBox(-5.5f, -2.0f, -3.5f, 11.0f, 3.0f, 7.0f, CubeDeformation(-0.5f)),
+                PartPose.offsetAndRotation(0.0f, -15.25f, 0.0f, 0.0f, 0.0f, -0.0873f)
             )
 
             val left_arm =
-                modelPartData.addChild("left_arm", ModelPartBuilder.create(), ModelTransform.origin(5.0f, 2.0f, 0.0f))
+                modelPartData.addOrReplaceChild("left_arm", CubeListBuilder.create(), PartPose.offset(5.0f, 2.0f, 0.0f))
 
-            val chestplateArmLeft = left_arm.addChild(
+            val chestplateArmLeft = left_arm.addOrReplaceChild(
                 "chestplateArmLeft",
-                ModelPartBuilder.create(),
-                ModelTransform.origin(-5.0f, 22.0f, 0.0f)
+                CubeListBuilder.create(),
+                PartPose.offset(-5.0f, 22.0f, 0.0f)
             )
 
-            val shoulderPadLeft = chestplateArmLeft.addChild(
+            val shoulderPadLeft = chestplateArmLeft.addOrReplaceChild(
                 "shoulderPadLeft",
-                ModelPartBuilder.create().uv(44, 18).cuboid(-3.0f, -2.0f, -2.5f, 5.0f, 5.0f, 5.0f, Dilation(0.0f)),
-                ModelTransform.of(7.0f, -23.0f, 0.0f, 0.0436f, 0.0436f, 0.1309f)
+                CubeListBuilder.create().texOffs(44, 18).addBox(-3.0f, -2.0f, -2.5f, 5.0f, 5.0f, 5.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(7.0f, -23.0f, 0.0f, 0.0436f, 0.0436f, 0.1309f)
             )
 
-            val sleeveLeft = chestplateArmLeft.addChild(
+            val sleeveLeft = chestplateArmLeft.addOrReplaceChild(
                 "sleeveLeft",
-                ModelPartBuilder.create().uv(48, 30).cuboid(4.0f, -24.0f, -2.0f, 4.0f, 12.0f, 4.0f, Dilation(0.35f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(48, 30).addBox(4.0f, -24.0f, -2.0f, 4.0f, 12.0f, 4.0f, CubeDeformation(0.35f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val vambraceLeft = sleeveLeft.addChild(
+            val vambraceLeft = sleeveLeft.addOrReplaceChild(
                 "vambraceLeft",
-                ModelPartBuilder.create().uv(48, 46).cuboid(4.0f, -18.0f, -2.0f, 4.0f, 6.0f, 4.0f, Dilation(0.5f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(48, 46).addBox(4.0f, -18.0f, -2.0f, 4.0f, 6.0f, 4.0f, CubeDeformation(0.5f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
             val right_arm =
-                modelPartData.addChild("right_arm", ModelPartBuilder.create(), ModelTransform.origin(-5.0f, 2.0f, 0.0f))
+                modelPartData.addOrReplaceChild("right_arm", CubeListBuilder.create(), PartPose.offset(-5.0f, 2.0f, 0.0f))
 
-            val chestplateArmRight = right_arm.addChild(
+            val chestplateArmRight = right_arm.addOrReplaceChild(
                 "chestplateArmRight",
-                ModelPartBuilder.create(),
-                ModelTransform.origin(5.0f, 22.0f, 0.0f)
+                CubeListBuilder.create(),
+                PartPose.offset(5.0f, 22.0f, 0.0f)
             )
 
-            val shoulderPadRight = chestplateArmRight.addChild(
+            val shoulderPadRight = chestplateArmRight.addOrReplaceChild(
                 "shoulderPadRight",
-                ModelPartBuilder.create().uv(0, 18).cuboid(-2.0f, -2.0f, -2.5f, 5.0f, 5.0f, 5.0f, Dilation(0.0f)),
-                ModelTransform.of(-7.0f, -23.0f, 0.0f, 0.0436f, -0.0436f, -0.1309f)
+                CubeListBuilder.create().texOffs(0, 18).addBox(-2.0f, -2.0f, -2.5f, 5.0f, 5.0f, 5.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(-7.0f, -23.0f, 0.0f, 0.0436f, -0.0436f, -0.1309f)
             )
 
-            val sleeveRight = chestplateArmRight.addChild(
+            val sleeveRight = chestplateArmRight.addOrReplaceChild(
                 "sleeveRight",
-                ModelPartBuilder.create().uv(0, 30).cuboid(-8.0f, -24.0f, -2.0f, 4.0f, 12.0f, 4.0f, Dilation(0.35f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(0, 30).addBox(-8.0f, -24.0f, -2.0f, 4.0f, 12.0f, 4.0f, CubeDeformation(0.35f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val vambraceRight = sleeveRight.addChild(
+            val vambraceRight = sleeveRight.addOrReplaceChild(
                 "vambraceRight",
-                ModelPartBuilder.create().uv(0, 46).cuboid(-8.0f, -18.0f, -2.0f, 4.0f, 6.0f, 4.0f, Dilation(0.5f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(0, 46).addBox(-8.0f, -18.0f, -2.0f, 4.0f, 6.0f, 4.0f, CubeDeformation(0.5f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            return TexturedModelData.of(modelData, 64, 64)
+            return LayerDefinition.create(modelData, 64, 64)
         }
     }
 
-    override fun setAngles(renderState: S) {
+    override fun setupAnim(renderState: S) {
         resetNotCopiedTransforms()
         setLowHealthAngles(renderState)
     }
 
     private fun resetNotCopiedTransforms() {
-        shoulderPadLeft.resetTransform()
-        shoulderPadRight.resetTransform()
-        vambraceLeft.resetTransform()
-        vambraceRight.resetTransform()
+        shoulderPadLeft.resetPose()
+        shoulderPadRight.resetPose()
+        vambraceLeft.resetPose()
+        vambraceRight.resetPose()
     }
 
     private fun setLowHealthAngles(renderState: S) {
         val lowHealthTicks20 = renderState.getLowHealthTicks()
         val openPercent = lowHealthTicks20 / 20F
 
-        shoulderPadLeft.moveOrigin(Vector3f(openPercent * 1.5F, openPercent * -0.8F, 0F))
-        shoulderPadRight.moveOrigin(Vector3f(openPercent * -1.5F, openPercent * -0.8F, 0F))
-        vambraceLeft.moveOrigin(Vector3f(openPercent * 1.2F, 0F, 0F))
-        vambraceRight.moveOrigin(Vector3f(openPercent * -1.2F, 0F, 0F))
+        shoulderPadLeft.offsetPos(Vector3f(openPercent * 1.5F, openPercent * -0.8F, 0F))
+        shoulderPadRight.offsetPos(Vector3f(openPercent * -1.5F, openPercent * -0.8F, 0F))
+        vambraceLeft.offsetPos(Vector3f(openPercent * 1.2F, 0F, 0F))
+        vambraceRight.offsetPos(Vector3f(openPercent * -1.2F, 0F, 0F))
     }
 }

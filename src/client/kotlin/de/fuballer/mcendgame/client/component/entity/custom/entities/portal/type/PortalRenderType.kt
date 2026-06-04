@@ -4,17 +4,17 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.Port
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.PortalRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type.default_.DefaultPortalRenderType
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type.legacy.LegacyPortalRenderType
-import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.entity.EntityRendererFactory
-import net.minecraft.client.render.entity.model.EntityModel
-import net.minecraft.util.Identifier
+import net.minecraft.client.model.EntityModel
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.resources.Identifier
 
 interface PortalRenderType {
     fun getId(): String
     fun getTexture(age: Float): Identifier
     fun getShadowRadius(): Float
-    fun getModel(context: EntityRendererFactory.Context): EntityModel<PortalRenderState>
-    fun getRenderLayer(renderer: PortalRenderer, state: PortalRenderState, showBody: Boolean, translucent: Boolean, showOutline: Boolean): RenderLayer? = null
+    fun getModel(context: EntityRendererProvider.Context): EntityModel<PortalRenderState>
+    fun getRenderLayer(renderer: PortalRenderer, state: PortalRenderState, showBody: Boolean, translucent: Boolean, showOutline: Boolean): RenderType? = null
 
     companion object {
         private val PORTAL_TYPES = mapOf(

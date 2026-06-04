@@ -3,13 +3,13 @@ package de.fuballer.mcendgame.main.component.damage.calculator
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
 import de.fuballer.mcendgame.main.util.extension.DamageTypeExtension.isOf
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.damage.DamageTypes
-import net.minecraft.entity.mob.GuardianEntity
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.monster.Guardian
 
 object GuardianThornsCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.source is GuardianEntity && source.type.isOf(DamageTypes.THORNS)
+    override fun isActive(source: DamageSource) = source.directEntity is Guardian && source.type().isOf(DamageTypes.THORNS)
 
     override fun calculateAttackDamage(
         originalDamage: Float,

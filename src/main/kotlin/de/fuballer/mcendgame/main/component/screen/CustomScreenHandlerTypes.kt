@@ -11,8 +11,8 @@ import de.fuballer.mcendgame.main.component.totem.TotemScreenHandler
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType
-import net.minecraft.resource.featuretoggle.FeatureFlags
-import net.minecraft.screen.ScreenHandlerType
+import net.minecraft.world.flag.FeatureFlags
+import net.minecraft.world.inventory.MenuType
 
 @Injectable
 object CustomScreenHandlerTypes {
@@ -26,13 +26,13 @@ object CustomScreenHandlerTypes {
         KillerEntityPayload.CODEC,
     ).also { RegistryUtil.registerScreenHandler("killer", it) }
 
-    val CRYSTAL_FORGE = ScreenHandlerType(
+    val CRYSTAL_FORGE = MenuType(
         ::CrystalForgeScreenHandler,
-        FeatureFlags.VANILLA_FEATURES,
+        FeatureFlags.VANILLA_SET,
     ).also { RegistryUtil.registerScreenHandler(CrystalForgeBlock.ID, it) }
 
-    val TOTEM = ScreenHandlerType(
+    val TOTEM = MenuType(
         ::TotemScreenHandler,
-        FeatureFlags.VANILLA_FEATURES,
+        FeatureFlags.VANILLA_SET,
     ).also { RegistryUtil.registerScreenHandler("totem", it) }
 }

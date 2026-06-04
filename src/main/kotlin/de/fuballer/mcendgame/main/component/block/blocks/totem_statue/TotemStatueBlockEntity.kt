@@ -9,26 +9,26 @@ import de.fuballer.mcendgame.main.messaging.totem_encounter.TotemEncounterActiva
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.event.EventGateway
-import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.entity.ItemEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.listener.ClientPlayPacketListener
-import net.minecraft.network.packet.Packet
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
-import net.minecraft.particle.ParticleTypes
-import net.minecraft.registry.RegistryWrapper
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvents
-import net.minecraft.storage.ReadView
-import net.minecraft.storage.WriteView
-import net.minecraft.util.Uuids
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3i
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.core.HolderLookup
+import net.minecraft.core.UUIDUtil
+import net.minecraft.core.Vec3i
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.protocol.Packet
+import net.minecraft.network.protocol.game.ClientGamePacketListener
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import java.util.*
 
 private const val DATA_KEY = "totem_statue_data"
@@ -40,7 +40,7 @@ private const val ACTIVE_PARTICLE_CYCLE = 10
 private const val AMBIENT_SOUND_DELAY = 20
 private const val AMBIENT_SOUND_CYCLE = 50
 
-private val SOUND_CATEGORY = SoundCategory.BLOCKS
+private val SOUND_CATEGORY = SoundSource.BLOCKS
 
 private const val COMPLETION_CHECK_CYCLE = 5
 
@@ -60,7 +60,7 @@ class TotemStatueBlockEntity(
             val CODEC: Codec<TotemStatueBlockEntityData> = RecordCodecBuilder.create { instance ->
                 instance.group(
                     Codec.INT.fieldOf("active_ticks").forGetter(TotemStatueBlockEntityData::activeTicks),
-                    Uuids.CODEC.listOf().fieldOf("active_enemies").forGetter(TotemStatueBlockEntityData::activeEnemies),
+                    UUIDUtil.AUTHLIB_CODEC.listOf().fieldOf("active_enemies").forGetter(TotemStatueBlockEntityData::activeEnemies),
                 ).apply(instance) { activeTicks, activeEnemies ->
                     TotemStatueBlockEntityData(activeTicks, activeEnemies.toMutableList())
                 }
@@ -76,15 +76,13 @@ class TotemStatueBlockEntity(
             (-NEARBY..NEARBY).flatMap { x -> (-NEARBY..NEARBY).map { z -> Vec3i(x, 0, z) } }.filter { it.x != 0 || it.z != 0 }
 
         fun tick(
-            world: World,
-            blockPos: BlockPos,
-            state: BlockState,
+            world: Level,
             entity: TotemStatueBlockEntity,
         ) {
             if (!entity.isActive()) return
             entity.activeTicks++
 
-            val serverWorld = world as? ServerWorld ?: return
+            val serverWorld = world as? ServerLevel ?: return
             val ticks = entity.activeTicks
             when (ticks) {
                 1 -> entity.playActivationEffects(serverWorld)
@@ -103,15 +101,15 @@ class TotemStatueBlockEntity(
 
     fun isActive() = activeTicks >= 0
 
-    fun tryActivate(player: PlayerEntity) {
+    fun tryActivate(player: Player) {
         if (isActive()) return
         activeTicks = 0
         sync()
         activate(player)
     }
 
-    private fun activate(player: PlayerEntity) {
-        val serverWorld = world as? ServerWorld ?: return
+    private fun activate(player: Player) {
+        val serverWorld = level as? ServerLevel ?: return
         val level = serverWorld.getDungeonLevel()
         val enemyCount = TotemEncounterSettings.getEnemyCount(level)
         spawnPositions = getNearbyBlockPos(enemyCount)
@@ -121,14 +119,14 @@ class TotemStatueBlockEntity(
     }
 
     private fun getNearbyBlockPos(count: Int): List<BlockPos> {
-        val nearbyBlockPos = NEARBY_BLOCKS_OFFSET.map { pos.add(it) }
+        val nearbyBlockPos = NEARBY_BLOCKS_OFFSET.map { worldPosition.offset(it) }
         val validNearbyBlockPos = nearbyBlockPos.filter {
-            if (world!!.getBlockState(it).isSolidBlock(world, it)) return@filter false
-            val upPos = it.add(0, 1, 0)
-            return@filter !world!!.getBlockState(upPos).isSolidBlock(world, upPos)
+            if (level!!.getBlockState(it).isRedstoneConductor(level!!, it)) return@filter false
+            val upPos = it.offset(0, 1, 0)
+            return@filter !level!!.getBlockState(upPos).isRedstoneConductor(level!!, upPos)
         }
 
-        val fullListCount = (count / validNearbyBlockPos.size).toInt()
+        val fullListCount = count / validNearbyBlockPos.size
         val chosenBlockPos = List(fullListCount) { validNearbyBlockPos }.flatten().toMutableList()
 
         val remaining = count % validNearbyBlockPos.size
@@ -138,26 +136,26 @@ class TotemStatueBlockEntity(
         return chosenBlockPos
     }
 
-    private fun playActivationEffects(world: ServerWorld) {
-        world.spawnParticles(ParticleTypes.REVERSE_PORTAL, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 35, 0.0, 0.0, 0.0, 0.1)
-        world.playSound(null, pos, SoundEvents.ENTITY_EVOKER_PREPARE_SUMMON, SOUND_CATEGORY, 1.5F, 1F)
+    private fun playActivationEffects(world: ServerLevel) {
+        world.sendParticles(ParticleTypes.REVERSE_PORTAL, worldPosition.x + 0.5, worldPosition.y + 0.5, worldPosition.z + 0.5, 35, 0.0, 0.0, 0.0, 0.1)
+        world.playSound(null, worldPosition, SoundEvents.EVOKER_PREPARE_SUMMON, SOUND_CATEGORY, 1.5F, 1F)
     }
 
-    private fun createActiveParticles(world: ServerWorld) =
-        world.spawnParticles(ParticleTypes.END_ROD, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 1, 0.0, 0.0, 0.0, 0.1)
+    private fun createActiveParticles(world: ServerLevel) =
+        world.sendParticles(ParticleTypes.END_ROD, worldPosition.x + 0.5, worldPosition.y + 0.5, worldPosition.z + 0.5, 1, 0.0, 0.0, 0.0, 0.1)
 
-    private fun playActiveAmbientSound(world: ServerWorld) =
-        world.playSound(null, pos, SoundEvents.BLOCK_BEACON_AMBIENT, SOUND_CATEGORY, 2F, 1F)
+    private fun playActiveAmbientSound(world: ServerLevel) =
+        world.playSound(null, worldPosition, SoundEvents.BEACON_AMBIENT, SOUND_CATEGORY, 2F, 1F)
 
-    private fun createSpawnPreparationParticles(world: ServerWorld) {
-        spawnPositions.forEach { world.spawnParticles(ParticleTypes.PORTAL, it.x + 0.5, it.y + 0.5, it.z + 0.5, 15, 0.0, 0.0, 0.0, 0.7) }
-        world.playSound(null, pos, SoundEvents.BLOCK_PORTAL_TRIGGER, SOUND_CATEGORY, 0.75F, 1.5F)
+    private fun createSpawnPreparationParticles(world: ServerLevel) {
+        spawnPositions.forEach { world.sendParticles(ParticleTypes.PORTAL, it.x + 0.5, it.y + 0.5, it.z + 0.5, 15, 0.0, 0.0, 0.0, 0.7) }
+        world.playSound(null, worldPosition, SoundEvents.PORTAL_TRIGGER, SOUND_CATEGORY, 0.75F, 1.5F)
     }
 
-    private fun spawnEnemies(world: ServerWorld) {
+    private fun spawnEnemies(world: ServerLevel) {
         spawnPositions.forEach {
-            world.spawnParticles(ParticleTypes.CLOUD, it.x + 0.5, it.y + 0.5, it.z + 0.5, 10, 0.1, 0.1, 0.1, 0.04)
-            world.playSound(null, pos, SoundEvents.ENTITY_ZOMBIE_INFECT, SOUND_CATEGORY, 1.2F, 1F)
+            world.sendParticles(ParticleTypes.CLOUD, it.x + 0.5, it.y + 0.5, it.z + 0.5, 10, 0.1, 0.1, 0.1, 0.04)
+            world.playSound(null, worldPosition, SoundEvents.ZOMBIE_INFECT, SOUND_CATEGORY, 1.2F, 1F)
         }
 
         val command = TotemStatueSpawnEnemiesCommand(world, spawnPositions)
@@ -166,7 +164,7 @@ class TotemStatueBlockEntity(
         activeEnemies.addAll(cmd.enemies.map { it.uuid })
     }
 
-    private fun checkCompleted(world: ServerWorld) {
+    private fun checkCompleted(world: ServerLevel) {
         if (activeTicks <= SPAWN_DELAY) return
 
         activeEnemies.removeAll { uuid -> world.getEntity(uuid)?.isAlive != true }
@@ -175,24 +173,24 @@ class TotemStatueBlockEntity(
         complete(world)
     }
 
-    private fun complete(world: ServerWorld) {
-        world.spawnParticles(ParticleTypes.CLOUD, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 20, 0.1, 0.1, 0.1, 0.1)
-        world.playSound(null, pos, SoundEvents.ITEM_TOTEM_USE, SOUND_CATEGORY, 1F, 1F)
+    private fun complete(world: ServerLevel) {
+        world.sendParticles(ParticleTypes.CLOUD, worldPosition.x + 0.5, worldPosition.y + 0.5, worldPosition.z + 0.5, 20, 0.1, 0.1, 0.1, 0.1)
+        world.playSound(null, worldPosition, SoundEvents.TOTEM_USE, SOUND_CATEGORY, 1F, 1F)
 
-        world.setBlockState(pos, Blocks.AIR.defaultState)
+        world.setBlockAndUpdate(worldPosition, Blocks.AIR.defaultBlockState())
 
         val stack = TotemEncounterSettings.getTotemReward(world.getDungeonLevel())
-        val itemEntity = ItemEntity(world, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, stack)
-        RuntimeConfig.SERVER.execute { world.spawnEntity(itemEntity) }
+        val itemEntity = ItemEntity(world, worldPosition.x + 0.5, worldPosition.y + 0.5, worldPosition.z + 0.5, stack)
+        RuntimeConfig.SERVER.execute { world.addFreshEntity(itemEntity) }
     }
 
-    override fun writeData(view: WriteView) {
-        super.writeData(view)
-        view.put(DATA_KEY, TotemStatueBlockEntityData.CODEC, TotemStatueBlockEntityData(activeTicks, activeEnemies))
+    override fun saveAdditional(view: ValueOutput) {
+        super.saveAdditional(view)
+        view.store(DATA_KEY, TotemStatueBlockEntityData.CODEC, TotemStatueBlockEntityData(activeTicks, activeEnemies))
     }
 
-    override fun readData(view: ReadView) {
-        super.readData(view)
+    override fun loadAdditional(view: ValueInput) {
+        super.loadAdditional(view)
 
         val data = view.read<TotemStatueBlockEntityData>(DATA_KEY, TotemStatueBlockEntityData.CODEC)
             .orElseGet { TotemStatueBlockEntityData() }
@@ -200,12 +198,12 @@ class TotemStatueBlockEntity(
         activeEnemies = data.activeEnemies
     }
 
-    override fun toUpdatePacket(): Packet<ClientPlayPacketListener> = BlockEntityUpdateS2CPacket.create(this)
+    override fun getUpdatePacket(): Packet<ClientGamePacketListener> = ClientboundBlockEntityDataPacket.create(this)
 
-    override fun toInitialChunkDataNbt(registries: RegistryWrapper.WrapperLookup): NbtCompound = createNbt(registries)
+    override fun getUpdateTag(registries: HolderLookup.Provider): CompoundTag = saveWithoutMetadata(registries)
 
     private fun sync() {
-        val serverWorld = world as? ServerWorld ?: return
-        serverWorld.chunkManager.markForUpdate(pos)
+        val serverWorld = level as? ServerLevel ?: return
+        serverWorld.chunkSource.blockChanged(worldPosition)
     }
 }

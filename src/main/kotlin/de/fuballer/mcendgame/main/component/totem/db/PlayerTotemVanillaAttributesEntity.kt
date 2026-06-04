@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.main.component.totem.db
 
 import de.maucon.mauconframework.stereotype.Entity
-import net.minecraft.entity.attribute.EntityAttribute
-import net.minecraft.registry.entry.RegistryEntry
-import net.minecraft.util.Identifier
+import net.minecraft.core.Holder
+import net.minecraft.resources.Identifier
+import net.minecraft.world.entity.ai.attributes.Attribute
 import java.util.*
 
 class PlayerTotemVanillaAttributesEntity(
     override var id: UUID,
-    var attributes: List<Pair<RegistryEntry<EntityAttribute>, Identifier>> = listOf(),
+    var attributes: List<Pair<Holder<Attribute>, Identifier>> = listOf(),
 ) : Entity<UUID>

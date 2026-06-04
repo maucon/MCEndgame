@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.sound
 
-import net.minecraft.entity.Entity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.Entity
 
 data class DelayedSoundInstance(
     val soundData: DelayedSoundData,
@@ -9,7 +9,7 @@ data class DelayedSoundInstance(
     var age = 0
 
     fun tick(
-        world: ServerWorld,
+        world: ServerLevel,
         entity: Entity,
     ): Boolean {
         if (shouldCancel(entity)) return true

@@ -9,8 +9,8 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.addT
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil.defaultJava
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.attribute.EntityAttributeModifier
-import net.minecraft.entity.attribute.EntityAttributes
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.attributes.Attributes
 
 @Injectable
 class IncreasedMovementSpeedOnKillService {
@@ -28,11 +28,11 @@ class IncreasedMovementSpeedOnKillService {
             val identifier = defaultJava(attributeModifierIdentifierBase + customAttribute.id)
 
             killer.addTemporaryAttributeModifier(
-                EntityAttributes.MOVEMENT_SPEED,
+                Attributes.MOVEMENT_SPEED,
                 identifier,
                 duration,
                 movementSpeed,
-                EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                AttributeModifier.Operation.ADD_MULTIPLIED_BASE
             )
         }
     }

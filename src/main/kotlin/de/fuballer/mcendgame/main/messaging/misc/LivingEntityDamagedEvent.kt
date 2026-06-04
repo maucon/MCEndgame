@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.messaging.misc
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.damage.DamageSource
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.LivingEntity
 
 data class LivingEntityDamagedEvent(
     val damaged: LivingEntity,

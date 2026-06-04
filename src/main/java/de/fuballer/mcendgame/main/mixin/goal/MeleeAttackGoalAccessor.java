@@ -1,35 +1,35 @@
 package de.fuballer.mcendgame.main.mixin.goal;
 
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(MeleeAttackGoal.class)
 public interface MeleeAttackGoalAccessor {
-    @Accessor("updateCountdownTicks")
-    void mcendgame$setUpdateCountdownTicks(int ticks);
+    @Accessor("ticksUntilNextPathRecalculation")
+    void mcendgame$setTicksUntilNextPathRecalculation(int ticks);
 
-    @Accessor("updateCountdownTicks")
-    int mcendgame$getUpdateCountdownTicks();
+    @Accessor("ticksUntilNextPathRecalculation")
+    int mcendgame$getTicksUntilNextPathRecalculation();
 
-    @Accessor("targetX")
-    void mcendgame$setTargetX(double ticks);
+    @Accessor("pathedTargetX")
+    void mcendgame$setPathedTargetX(double ticks);
 
-    @Accessor("targetX")
-    double mcendgame$getTargetX();
+    @Accessor("pathedTargetX")
+    double mcendgame$getPathedTargetX();
 
-    @Accessor("targetY")
-    void mcendgame$setTargetY(double ticks);
+    @Accessor("pathedTargetY")
+    void mcendgame$setPathedTargetY(double ticks);
 
-    @Accessor("targetY")
-    double mcendgame$getTargetY();
+    @Accessor("pathedTargetY")
+    double mcendgame$getPathedTargetY();
 
-    @Accessor("targetZ")
-    void mcendgame$setTargetZ(double ticks);
+    @Accessor("pathedTargetZ")
+    void mcendgame$setPathedTargetZ(double ticks);
 
-    @Accessor("targetZ")
-    double mcendgame$getTargetZ();
+    @Accessor("pathedTargetZ")
+    double mcendgame$getPathedTargetZ();
 
-    @Accessor("cooldown")
-    void mcendgame$setCooldown(int cooldown);
+    @Accessor("ticksUntilNextAttack")
+    void mcendgame$setTicksUntilNextAttack(int cooldown);
 }

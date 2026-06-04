@@ -12,17 +12,17 @@ import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil;
 import io.netty.buffer.ByteBuf;
 import kotlin.Pair;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricTrackedDataRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandler;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,22 +35,22 @@ import java.util.stream.Collectors;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLinkAttributeAccessor {
     @Unique
-    private static PacketCodec<ByteBuf, UUID> UUID_PACKET_CODEC = PacketCodecs.STRING.xmap(UUID::fromString, UUID::toString);
+    private static final StreamCodec<ByteBuf, UUID> UUID_PACKET_CODEC = ByteBufCodecs.STRING_UTF8.map(UUID::fromString, UUID::toString);
     @Unique
-    private static final PacketCodec<ByteBuf, Pair<UUID, Long>> UUID_LONG_PAIR_PACKET_CODEC =
-            PacketCodec.tuple(
+    private static final StreamCodec<ByteBuf, Pair<UUID, Long>> UUID_LONG_PAIR_PACKET_CODEC =
+            StreamCodec.composite(
                     UUID_PACKET_CODEC,
                     Pair::getFirst,
-                    PacketCodecs.VAR_LONG,
+                    ByteBufCodecs.VAR_LONG,
                     Pair::getSecond,
                     Pair::new
             );
     @Unique
-    private static PacketCodec<ByteBuf, List<Pair<UUID, Long>>> UUID_LONG_PAIR_LIST_PACKET_CODEC
-            = UUID_LONG_PAIR_PACKET_CODEC.collect(PacketCodecs.toList());
+    private static final StreamCodec<ByteBuf, List<Pair<UUID, Long>>> UUID_LONG_PAIR_LIST_PACKET_CODEC
+            = UUID_LONG_PAIR_PACKET_CODEC.apply(ByteBufCodecs.list());
     @Unique
-    private static TrackedDataHandler<List<Pair<UUID, Long>>> UUID_LONG_PAIR_LIST_TRACKED_DATA_HANDLER
-            = TrackedDataHandler.create(UUID_LONG_PAIR_LIST_PACKET_CODEC);
+    private static final EntityDataSerializer<List<Pair<UUID, Long>>> UUID_LONG_PAIR_LIST_TRACKED_DATA_HANDLER
+            = EntityDataSerializer.forValueType(UUID_LONG_PAIR_LIST_PACKET_CODEC);
 
     @Unique
     private HashSet<UUID> linkedBy = new HashSet<>();
@@ -60,18 +60,18 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
     }
 
     @Unique
-    private static final TrackedData<List<Pair<UUID, Long>>> LINKED_ENTITIES =
-            DataTracker.registerData(LivingEntity.class, UUID_LONG_PAIR_LIST_TRACKED_DATA_HANDLER);
+    private static final EntityDataAccessor<List<Pair<UUID, Long>>> LINKED_ENTITIES =
+            SynchedEntityData.defineId(LivingEntity.class, UUID_LONG_PAIR_LIST_TRACKED_DATA_HANDLER);
 
-    @Inject(method = "initDataTracker", at = @At("TAIL"))
-    private void initDataTracker(DataTracker.Builder builder, CallbackInfo ci) {
-        builder.add(LINKED_ENTITIES, new ArrayList<>());
+    @Inject(method = "defineSynchedData", at = @At("TAIL"))
+    private void initDataTracker(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(LINKED_ENTITIES, new ArrayList<>());
     }
 
     @Unique
     public Map<UUID, Long> getLinkedEntitiesMap() {
         return ((LivingEntity) (Object) this)
-                .getDataTracker()
+                .getEntityData()
                 .get(LINKED_ENTITIES)
                 .stream()
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
@@ -82,16 +82,16 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
         var list = map.entrySet().stream()
                 .map(e -> new Pair<>(e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
-        ((LivingEntity) (Object) this).getDataTracker().set(LINKED_ENTITIES, list);
+        ((LivingEntity) (Object) this).getEntityData().set(LINKED_ENTITIES, list);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     void tick(CallbackInfo ci) {
         var entity = (LivingEntity) (Object) this;
-        if (entity.getEntityWorld().isClient()) return;
+        if (entity.level().isClientSide()) return;
 
-        if (entity.age % LinkSettings.LINK_UPDATE_INTERVAL == 0) updateLinkedEntities(entity);
-        if (entity.age % LinkSettings.LINK_DAMAGE_INTERVAL == 0) damageLinkedEntities(entity);
+        if (entity.tickCount % LinkSettings.LINK_UPDATE_INTERVAL == 0) updateLinkedEntities(entity);
+        if (entity.tickCount % LinkSettings.LINK_DAMAGE_INTERVAL == 0) damageLinkedEntities(entity);
     }
 
     @Unique
@@ -110,12 +110,12 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
             return;
         }
 
-        var world = (ServerWorld) entity.getEntityWorld();
+        var world = (ServerLevel) entity.level();
 
         var paddedDistance = distance + LinkSettings.LINK_DISTANCE_BREAK_PADDING;
         var enemiesInPaddedRange = getEnemiesInRange(world, entity, paddedDistance);
         var enemyUuidsInPaddedRange = new HashMap<UUID, Float>(enemiesInPaddedRange.size());
-        enemiesInPaddedRange.forEach((e, d) -> enemyUuidsInPaddedRange.put(e.getUuid(), d));
+        enemiesInPaddedRange.forEach((e, d) -> enemyUuidsInPaddedRange.put(e.getUUID(), d));
 
         var oldLinkedEntities = getLinkedEntitiesMap();
         var updatedLinkedEntities = new HashMap<>(oldLinkedEntities);
@@ -123,7 +123,7 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
 
         var unlinkedEntities = new HashSet<>(oldLinkedEntities.keySet());
         unlinkedEntities.removeAll(updatedLinkedEntities.keySet());
-        var linkOriginUuid = entity.getUuid();
+        var linkOriginUuid = entity.getUUID();
         for (UUID unlinkedUuid : unlinkedEntities) {
             var unlinkedEntity = world.getEntity(unlinkedUuid);
             if (unlinkedEntity == null || !unlinkedEntity.isAlive()) continue;
@@ -135,7 +135,7 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
             if (dist <= distance) enemyUuidsInNonPaddedRange.add(uuid);
         });
 
-        var currentTime = world.getTime();
+        var currentTime = world.getGameTime();
         enemyUuidsInNonPaddedRange.forEach(uuid -> {
             if (updatedLinkedEntities.putIfAbsent(uuid, currentTime) == null) {
                 var linkedEntity = world.getEntity(uuid);
@@ -150,11 +150,11 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
 
     @Unique
     private Map<Entity, Float> getEnemiesInRange(
-            ServerWorld world,
+            ServerLevel world,
             LivingEntity entity,
             Float distance
     ) {
-        return world.getOtherEntities(entity, entity.getBoundingBox().expand(distance))
+        return world.getEntities(entity, entity.getBoundingBox().inflate(distance))
                 .stream()
                 .filter(Entity::isAlive)
                 .filter(e -> EntityExtension.INSTANCE.isEnemy(entity, e))
@@ -168,17 +168,17 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
     private boolean canLink(
             Entity entity1,
             Entity entity2,
-            ServerWorld world
+            ServerLevel world
     ) {
-        var vec1 = new Vec3d(entity1.getX(), entity1.getY() + entity1.getHeight() * LinkSettings.LINK_CONNECTION_HEIGHT, entity1.getZ());
-        var vec2 = new Vec3d(entity2.getX(), entity2.getY() + entity2.getHeight() * LinkSettings.LINK_CONNECTION_HEIGHT, entity2.getZ());
-        var context = new RaycastContext(vec1, vec2, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity1);
-        return world.raycast(context).getType() == HitResult.Type.MISS;
+        var vec1 = new Vec3(entity1.getX(), entity1.getY() + entity1.getBbHeight() * LinkSettings.LINK_CONNECTION_HEIGHT, entity1.getZ());
+        var vec2 = new Vec3(entity2.getX(), entity2.getY() + entity2.getBbHeight() * LinkSettings.LINK_CONNECTION_HEIGHT, entity2.getZ());
+        var context = new ClipContext(vec1, vec2, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity1);
+        return world.clip(context).getType() == HitResult.Type.MISS;
     }
 
     @Unique
     private void clearLinkedEntities(LivingEntity entity) {
-        entity.getDataTracker().set(LINKED_ENTITIES, new LinkedList<>());
+        entity.getEntityData().set(LINKED_ENTITIES, new LinkedList<>());
     }
 
     @Unique
@@ -188,9 +188,9 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
         if (linkAttributes == null || linkAttributes.isEmpty()) return;
         var sum = linkAttributes.stream().mapToDouble(attribute -> ((DoubleRoll) attribute.getRolls().getFirst()).getValue()).sum();
 
-        var world = (ServerWorld) entity.getEntityWorld();
-        var time = world.getTime();
-        var linkedEntities = entity.getDataTracker().get(LINKED_ENTITIES)
+        var world = (ServerLevel) entity.level();
+        var time = world.getGameTime();
+        var linkedEntities = entity.getEntityData().get(LINKED_ENTITIES)
                 .stream()
                 .map(pair -> new Pair<>(world.getEntity(pair.getFirst()), pair.getSecond()))
                 .filter(pair -> pair.getFirst() != null && pair.getFirst().isAlive())

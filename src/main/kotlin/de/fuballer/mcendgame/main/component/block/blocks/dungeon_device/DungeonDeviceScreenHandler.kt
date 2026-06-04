@@ -2,23 +2,23 @@ package de.fuballer.mcendgame.main.component.block.blocks.dungeon_device
 
 import de.fuballer.mcendgame.main.component.block.blocks.dungeon_device.networking.DungeonDevicePayload
 import de.fuballer.mcendgame.main.component.screen.CustomScreenHandlerTypes
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.Inventory
-import net.minecraft.inventory.SimpleInventory
-import net.minecraft.item.ItemStack
-import net.minecraft.screen.ScreenHandler
-import net.minecraft.screen.slot.Slot
+import net.minecraft.world.Container
+import net.minecraft.world.SimpleContainer
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.Slot
+import net.minecraft.world.item.ItemStack
 
 class DungeonDeviceScreenHandler(
     syncId: Int,
-    playerInventory: PlayerInventory,
-    private val inventory: Inventory = SimpleInventory(DungeonDeviceSettings.INVENTORY_SIZE),
+    playerInventory: Inventory,
+    private val inventory: Container = SimpleContainer(DungeonDeviceSettings.INVENTORY_SIZE),
     val payload: DungeonDevicePayload = DungeonDevicePayload.EMPTY
-) : ScreenHandler(CustomScreenHandlerTypes.DUNGEON_DEVICE, syncId) {
+) : AbstractContainerMenu(CustomScreenHandlerTypes.DUNGEON_DEVICE, syncId) {
     init {
-        checkSize(inventory, DungeonDeviceSettings.INVENTORY_SIZE)
-        inventory.onOpen(playerInventory.player)
+        checkContainerSize(inventory, DungeonDeviceSettings.INVENTORY_SIZE)
+        inventory.startOpen(playerInventory.player)
 
         // Our inventory
         for (row in 0..1) {
@@ -40,27 +40,27 @@ class DungeonDeviceScreenHandler(
         }
     }
 
-    override fun quickMove(player: PlayerEntity, slotIndex: Int): ItemStack {
+    override fun quickMoveStack(player: Player, slotIndex: Int): ItemStack {
         val slot = slots[slotIndex]
-        if (!slot.hasStack()) return ItemStack.EMPTY
+        if (!slot.hasItem()) return ItemStack.EMPTY
 
-        val originalStack = slot.stack
+        val originalStack = slot.item
         val newStack = originalStack.copy()
-        if (slotIndex < inventory.size()) {
-            val itemInserted = !this.insertItem(originalStack, inventory.size(), slots.size, true)
+        if (slotIndex < inventory.containerSize) {
+            val itemInserted = !this.moveItemStackTo(originalStack, inventory.containerSize, slots.size, true)
             if (itemInserted) return ItemStack.EMPTY
-        } else if (!this.insertItem(originalStack, 0, inventory.size(), false)) {
+        } else if (!this.moveItemStackTo(originalStack, 0, inventory.containerSize, false)) {
             return ItemStack.EMPTY
         }
 
         if (originalStack.isEmpty) {
-            slot.stack = ItemStack.EMPTY
+            slot.setByPlayer(ItemStack.EMPTY)
         } else {
-            slot.markDirty()
+            slot.setChanged()
         }
 
-        return newStack!!
+        return newStack
     }
 
-    override fun canUse(player: PlayerEntity) = inventory.canPlayerUse(player)
+    override fun stillValid(player: Player) = inventory.stillValid(player)
 }

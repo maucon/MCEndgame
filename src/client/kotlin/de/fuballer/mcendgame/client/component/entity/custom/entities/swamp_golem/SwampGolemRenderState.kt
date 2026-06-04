@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.swamp_golem
 
-import net.minecraft.client.render.entity.state.LivingEntityRenderState
-import net.minecraft.entity.AnimationState
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import net.minecraft.world.entity.AnimationState
 import software.bernie.geckolib.constant.dataticket.DataTicket
 
 class SwampGolemRenderState : LivingEntityRenderState() {

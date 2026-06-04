@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.component.dungeon.enemy.equipment.data
 
 import de.fuballer.mcendgame.main.component.item.equipment.Equipment
-import net.minecraft.entity.EquipmentSlot
+import net.minecraft.world.entity.EquipmentSlot
 
 data class TaggedEquipment(
     val equipment: Equipment,

@@ -1,36 +1,36 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.training_dummy
 
+import com.mojang.blaze3d.vertex.PoseStack
 import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.render.command.OrderedRenderCommandQueue
-import net.minecraft.client.render.entity.BipedEntityRenderer
-import net.minecraft.client.render.entity.EntityRendererFactory
-import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer
-import net.minecraft.client.render.entity.model.EntityModelLayer
-import net.minecraft.client.render.entity.model.EquipmentModelData
-import net.minecraft.client.render.state.CameraRenderState
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.Text
-import net.minecraft.util.Formatting
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.Vec3d
+import net.minecraft.ChatFormatting
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.renderer.SubmitNodeCollector
+import net.minecraft.client.renderer.entity.ArmorModelSet
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer
+import net.minecraft.client.renderer.state.CameraRenderState
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.Identifier
+import net.minecraft.world.phys.Vec3
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
 
 class TrainingDummyRenderer(
-    context: EntityRendererFactory.Context,
-    equipmentModelData: EquipmentModelData<EntityModelLayer>,
-) : BipedEntityRenderer<TrainingDummyEntity, TrainingDummyRenderState, TrainingDummyEntityModel>(
+    context: EntityRendererProvider.Context,
+    equipmentModelData: ArmorModelSet<ModelLayerLocation>,
+) : HumanoidMobRenderer<TrainingDummyEntity, TrainingDummyRenderState, TrainingDummyEntityModel>(
     context,
-    TrainingDummyEntityModel(context.getPart(TrainingDummyEntityModel.TRAINING_DUMMY)),
+    TrainingDummyEntityModel(context.bakeLayer(TrainingDummyEntityModel.TRAINING_DUMMY)),
     0.0f,
 ) {
     init {
-        addFeature(
-            ArmorFeatureRenderer(
+        addLayer(
+            HumanoidArmorLayer(
                 this,
-                EquipmentModelData.mapToEntityModel(equipmentModelData, context.entityModels, ::TrainingDummyEntityModel),
+                ArmorModelSet.bake(equipmentModelData, context.modelSet, ::TrainingDummyEntityModel),
                 context.equipmentRenderer,
             )
         )
@@ -49,73 +49,73 @@ class TrainingDummyRenderer(
         }
     }
 
-    override fun getTexture(state: TrainingDummyRenderState) = TEXTURE
+    override fun getTextureLocation(state: TrainingDummyRenderState) = TEXTURE
 
     override fun createRenderState() = TrainingDummyRenderState()
 
-    override fun updateRenderState(dummy: TrainingDummyEntity, state: TrainingDummyRenderState, tickDelta: Float) {
-        super.updateRenderState(dummy, state, tickDelta)
+    override fun extractRenderState(dummy: TrainingDummyEntity, state: TrainingDummyRenderState, tickDelta: Float) {
+        super.extractRenderState(dummy, state, tickDelta)
 
-        if (!dummy.dataTracker.get(TrainingDummyEntity.DAMAGE_ACTIVE)) return
+        if (!dummy.entityData.get(TrainingDummyEntity.DAMAGE_ACTIVE)) return
         state.damageActive = true
-        state.lastDamage = dummy.dataTracker.get(TrainingDummyEntity.LAST_DAMAGE)
-        state.highestDamage = dummy.dataTracker.get(TrainingDummyEntity.HIGHEST_DAMAGE)
-        state.damageSum = dummy.dataTracker.get(TrainingDummyEntity.DAMAGE_SUM)
-        state.damagePerSecond = dummy.dataTracker.get(TrainingDummyEntity.DAMAGE_PER_SECOND)
-        state.damageDuration = dummy.dataTracker.get(TrainingDummyEntity.DAMAGE_DURATION) + tickDelta
+        state.lastDamage = dummy.entityData.get(TrainingDummyEntity.LAST_DAMAGE)
+        state.highestDamage = dummy.entityData.get(TrainingDummyEntity.HIGHEST_DAMAGE)
+        state.damageSum = dummy.entityData.get(TrainingDummyEntity.DAMAGE_SUM)
+        state.damagePerSecond = dummy.entityData.get(TrainingDummyEntity.DAMAGE_PER_SECOND)
+        state.damageDuration = dummy.entityData.get(TrainingDummyEntity.DAMAGE_DURATION) + tickDelta
     }
 
-    override fun render(
+    override fun submit(
         state: TrainingDummyRenderState,
-        matrices: MatrixStack,
-        queue: OrderedRenderCommandQueue,
+        matrices: PoseStack,
+        queue: SubmitNodeCollector,
         cameraRenderState: CameraRenderState
     ) {
-        super.render(state, matrices, queue, cameraRenderState)
+        super.submit(state, matrices, queue, cameraRenderState)
 
         if (!state.damageActive) return
 
         val key = "training_dummy."
         val texts = listOf(
-            Text.empty()
-                .append(Text.translatable("${key}damage_per_second").formatted(Formatting.DARK_RED, Formatting.BOLD))
+            Component.empty()
+                .append(Component.translatable("${key}damage_per_second").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD))
                 .append(
-                    Text.literal(FORMAT.format(state.damagePerSecond))
-                        .formatted(Formatting.RED, Formatting.BOLD)
+                    Component.literal(FORMAT.format(state.damagePerSecond))
+                        .withStyle(ChatFormatting.RED, ChatFormatting.BOLD)
                 ),
 
-            Text.empty()
-                .append(Text.translatable("${key}last_damage").formatted(Formatting.GRAY))
+            Component.empty()
+                .append(Component.translatable("${key}last_damage").withStyle(ChatFormatting.GRAY))
                 .append(
-                    Text.literal(FORMAT.format(state.lastDamage))
-                        .formatted(Formatting.WHITE)
+                    Component.literal(FORMAT.format(state.lastDamage))
+                        .withStyle(ChatFormatting.WHITE)
                 ),
 
-            Text.empty()
-                .append(Text.translatable("${key}highest_damage").formatted(Formatting.GRAY))
+            Component.empty()
+                .append(Component.translatable("${key}highest_damage").withStyle(ChatFormatting.GRAY))
                 .append(
-                    Text.literal(FORMAT.format(state.highestDamage))
-                        .formatted(Formatting.GOLD)
+                    Component.literal(FORMAT.format(state.highestDamage))
+                        .withStyle(ChatFormatting.GOLD)
                 ),
 
-            Text.empty()
-                .append(Text.translatable("${key}damage_sum").formatted(Formatting.GRAY))
+            Component.empty()
+                .append(Component.translatable("${key}damage_sum").withStyle(ChatFormatting.GRAY))
                 .append(
-                    Text.literal(FORMAT.format(state.damageSum))
-                        .formatted(Formatting.WHITE)
+                    Component.literal(FORMAT.format(state.damageSum))
+                        .withStyle(ChatFormatting.WHITE)
                 ),
 
-            Text.empty()
-                .append(Text.translatable("${key}damage_duration").formatted(Formatting.GRAY))
+            Component.empty()
+                .append(Component.translatable("${key}damage_duration").withStyle(ChatFormatting.GRAY))
                 .append(
-                    Text.literal("${FORMAT.format(state.damageDuration / 20f)}s")
-                        .formatted(Formatting.AQUA)
+                    Component.literal("${FORMAT.format(state.damageDuration / 20f)}s")
+                        .withStyle(ChatFormatting.AQUA)
                 ),
         )
 
         texts.forEachIndexed { index, text ->
-            val labelPos = Vec3d(0.0, state.height + TEXT_OFFSET + (texts.size - index) * TEXT_SPACING, 0.0)
-            queue.submitLabel(matrices, labelPos, 0, text, true, state.light, state.squaredDistanceToCamera, cameraRenderState)
+            val labelPos = Vec3(0.0, state.boundingBoxHeight + TEXT_OFFSET + (texts.size - index) * TEXT_SPACING, 0.0)
+            queue.submitNameTag(matrices, labelPos, 0, text, true, state.lightCoords, state.distanceToCameraSq, cameraRenderState)
         }
     }
 }

@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.component.dungeon.level
 
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.Formatting
+import net.minecraft.ChatFormatting
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 
 object DungeonLevelSettings {
     const val LEVEL_INCREASE_THRESHOLD = 3
@@ -10,33 +10,33 @@ object DungeonLevelSettings {
 
     fun getClientSetLevelLimit(highestReached: Int) = (highestReached * CLIENT_SET_LEVEL_LIMIT_PERCENTAGE).toInt()
 
-    private val DUNGEON_COMPLETED_PREFIX: MutableText = Text.translatable("text.mcendgame.dungeon_level.dungeon_completed")
-        .formatted(Formatting.GOLD, Formatting.BOLD)
+    private val DUNGEON_COMPLETED_PREFIX: MutableComponent = Component.translatable("text.mcendgame.dungeon_level.dungeon_completed")
+        .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
 
-    val COMPLETION_LOCKED_MESSAGE: Text = DUNGEON_COMPLETED_PREFIX.copy().append(
-        Text.translatable("text.mcendgame.dungeon_level.locked")
-            .styled { style -> style.withBold(false).withColor(Formatting.RED) }
+    val COMPLETION_LOCKED_MESSAGE: Component = DUNGEON_COMPLETED_PREFIX.copy().append(
+        Component.translatable("text.mcendgame.dungeon_level.locked")
+            .withStyle { style -> style.withBold(false).withColor(ChatFormatting.RED) }
     )
 
-    val REGRESS_LOCKED_MESSAGE: Text = Text.translatable("text.mcendgame.dungeon_level.dungeon_death").formatted(Formatting.RED, Formatting.BOLD).append(
-        Text.translatable("text.mcendgame.dungeon_level.locked")
-            .styled { style -> style.withBold(false).withColor(Formatting.GRAY) }
+    val REGRESS_LOCKED_MESSAGE: Component = Component.translatable("text.mcendgame.dungeon_level.dungeon_death").withStyle(ChatFormatting.RED, ChatFormatting.BOLD).append(
+        Component.translatable("text.mcendgame.dungeon_level.locked")
+            .withStyle { style -> style.withBold(false).withColor(ChatFormatting.GRAY) }
     )
 
-    val NO_PROGRESS_MESSAGE: Text = DUNGEON_COMPLETED_PREFIX.copy().append(
-        Text.translatable("text.mcendgame.dungeon_level.no_progress")
-            .styled { style -> style.withBold(false).withColor(Formatting.RED) }
+    val NO_PROGRESS_MESSAGE: Component = DUNGEON_COMPLETED_PREFIX.copy().append(
+        Component.translatable("text.mcendgame.dungeon_level.no_progress")
+            .withStyle { style -> style.withBold(false).withColor(ChatFormatting.RED) }
     )
 
-    fun getRegressMessage(level: Int, progress: Int): Text =
-        Text.translatable("text.mcendgame.dungeon_level.dungeon_death").formatted(Formatting.RED, Formatting.BOLD)
+    fun getRegressMessage(level: Int, progress: Int): Component =
+        Component.translatable("text.mcendgame.dungeon_level.dungeon_death").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)
             .append(
-                Text.translatable("text.mcendgame.dungeon_level.regress", level, progress, LEVEL_INCREASE_THRESHOLD)
-                    .styled { style -> style.withBold(false).withColor(Formatting.AQUA) }
+                Component.translatable("text.mcendgame.dungeon_level.regress", level, progress, LEVEL_INCREASE_THRESHOLD)
+                    .withStyle { style -> style.withBold(false).withColor(ChatFormatting.AQUA) }
             )
 
-    fun getProgressMessage(level: Int, progress: Int): Text = DUNGEON_COMPLETED_PREFIX.copy().append(
-        Text.translatable("text.mcendgame.dungeon_level.progress", level, progress, LEVEL_INCREASE_THRESHOLD)
-            .styled { style -> style.withBold(false).withColor(Formatting.AQUA) }
+    fun getProgressMessage(level: Int, progress: Int): Component = DUNGEON_COMPLETED_PREFIX.copy().append(
+        Component.translatable("text.mcendgame.dungeon_level.progress", level, progress, LEVEL_INCREASE_THRESHOLD)
+            .withStyle { style -> style.withBold(false).withColor(ChatFormatting.AQUA) }
     )
 }

@@ -16,41 +16,37 @@ import de.maucon.mauconframework.command.CommandGateway
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gl.RenderPipelines
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.ScreenRect
-import net.minecraft.client.gui.screen.ButtonTextures
-import net.minecraft.client.gui.screen.ingame.HandledScreen
-import net.minecraft.client.gui.tooltip.Tooltip
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.gui.widget.TextWidget
-import net.minecraft.client.gui.widget.TexturedButtonWidget
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.text.Text
-import net.minecraft.util.Colors
-import net.minecraft.util.Formatting
+import net.minecraft.ChatFormatting
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.*
+import net.minecraft.client.gui.navigation.ScreenRectangle
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.network.chat.Component
+import net.minecraft.util.CommonColors
+import net.minecraft.world.entity.player.Inventory
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 
 private val TEXTURE = IdentifierUtil.default("textures/gui/container/dungeon_device.png")
 
-private val OPEN_DUNGEON_BUTTON_TEXT = Text.translatable("container.mcendgame.dungeon_device.open")
+private val OPEN_DUNGEON_BUTTON_TEXT = Component.translatable("container.mcendgame.dungeon_device.open")
 
-private val LEVEL_INCREASE_TEXT = Text.literal("+")
-private val LEVEL_INCREASE_TOOLTIP = Text.translatable("container.mcendgame.dungeon_device.level_increase_tooltip")
+private val LEVEL_INCREASE_TEXT = Component.literal("+")
+private val LEVEL_INCREASE_TOOLTIP = Component.translatable("container.mcendgame.dungeon_device.level_increase_tooltip")
 private const val LEVEL_INCREASE_LIMIT_TOOLTIP_KEY = "container.mcendgame.dungeon_device.level_increase_tooltip_limit"
-private val LEVEL_DECREASE_TEXT = Text.literal("-")
-private val LEVEL_DECREASE_TOOLTIP = Text.translatable("container.mcendgame.dungeon_device.level_decrease_tooltip")
-private val LEVEL_DECREASE_ABOVE_INCREASE_LIMIT_TOOLTIP = Text.translatable("container.mcendgame.dungeon_device.level_decrease_above_increase_limit_tooltip")
-    .styled { style -> style.withBold(false).withColor(Formatting.RED) }
-private val LEVEL_LOCKED_TEXT = Text.literal("🔒")
-private val LEVEL_UNLOCKED_TEXT = Text.literal("\uD83D\uDD13")
-private val LEVEL_UNLOCK_TOOLTIP = Text.translatable("container.mcendgame.dungeon_device.level_unlock_tooltip")
-private val LEVEL_LOCK_TOOLTIP = Text.translatable("container.mcendgame.dungeon_device.level_lock_tooltip")
-private val LEVEL_LOCK_EXPLANATION_TOOLTIP = Text.translatable("container.mcendgame.dungeon_device.level_lock_explanation_tooltip")
-private val LEVEL_UNLOCK_EXPLANATION_TOOLTIP = Text.translatable("container.mcendgame.dungeon_device.level_unlock_explanation_tooltip")
+private val LEVEL_DECREASE_TEXT = Component.literal("-")
+private val LEVEL_DECREASE_TOOLTIP = Component.translatable("container.mcendgame.dungeon_device.level_decrease_tooltip")
+private val LEVEL_DECREASE_ABOVE_INCREASE_LIMIT_TOOLTIP = Component.translatable("container.mcendgame.dungeon_device.level_decrease_above_increase_limit_tooltip")
+    .withStyle { style -> style.withBold(false).withColor(ChatFormatting.RED) }
+private val LEVEL_LOCKED_TEXT = Component.literal("🔒")
+private val LEVEL_UNLOCKED_TEXT = Component.literal("\uD83D\uDD13")
+private val LEVEL_UNLOCK_TOOLTIP = Component.translatable("container.mcendgame.dungeon_device.level_unlock_tooltip")
+private val LEVEL_LOCK_TOOLTIP = Component.translatable("container.mcendgame.dungeon_device.level_lock_tooltip")
+private val LEVEL_LOCK_EXPLANATION_TOOLTIP = Component.translatable("container.mcendgame.dungeon_device.level_lock_explanation_tooltip")
+private val LEVEL_UNLOCK_EXPLANATION_TOOLTIP = Component.translatable("container.mcendgame.dungeon_device.level_unlock_explanation_tooltip")
 private val PROGRESS_TEXTURE = IdentifierUtil.default("textures/gui/sprites/dungeon_device/progress.png")
 
 private const val LEVEL_BUTTONS_SIZE = 12
@@ -63,8 +59,8 @@ private const val LEVEL_TEXT_Y_OFFSET = 35
 private const val LEVEL_TEXT_SCALING = 0.95f
 
 private val ATTRIBUTE_PANEL_TEXTURE = IdentifierUtil.default("textures/gui/container/dungeon_device_attribute_panel.png")
-private val ENEMY_ATTRIBUTES_TEXT = Text.translatable("container.mcendgame.dungeon_device.enemy_attributes")
-private val BOSS_ATTRIBUTES_TEXT = Text.translatable("container.mcendgame.dungeon_device.boss_attributes")
+private val ENEMY_ATTRIBUTES_TEXT = Component.translatable("container.mcendgame.dungeon_device.enemy_attributes")
+private val BOSS_ATTRIBUTES_TEXT = Component.translatable("container.mcendgame.dungeon_device.boss_attributes")
 private const val ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH = 4
 private const val ATTRIBUTE_PANEL_MAX_WIDTH = 150
 private const val ATTRIBUTE_HEADER_WIDGET_HEIGHT = 10
@@ -74,90 +70,90 @@ private const val ATTRIBUTE_TEXT_WIDGET_Y_OFFSET = 10
 
 private const val SHOW_ATTRIBUTES_BUTTON_WIDTH = 10
 private const val SHOW_ATTRIBUTES_BUTTON_HEIGHT = 20
-private val SHOW_ATTRIBUTES_BUTTON_TEXT = Text.literal(">")
-private val HIDE_ATTRIBUTES_BUTTON_TEXT = Text.literal("<")
+private val SHOW_ATTRIBUTES_BUTTON_TEXT = Component.literal(">")
+private val HIDE_ATTRIBUTES_BUTTON_TEXT = Component.literal("<")
 
 private const val COMMAND_BUTTONS_OFFSET = 2
-private val TOTEMS_BUTTON_TEXTURES = ButtonTextures(IdentifierUtil.default("dungeon_device/totems"), IdentifierUtil.default("dungeon_device/totems_highlighted"))
-private val TOTEMS_BUTTON_TOOLTIP_TEXT = Text.translatable("container.mcendgame.dungeon_device.totems_tooltip")
-private val FILTER_BUTTON_TEXTURES = ButtonTextures(IdentifierUtil.default("dungeon_device/filter"), IdentifierUtil.default("dungeon_device/filter_highlighted"))
-private val FILTER_BUTTON_TOOLTIP_TEXT = Text.translatable("container.mcendgame.dungeon_device.filter_tooltip")
-private val KILLER_BUTTON_TEXTURES = ButtonTextures(IdentifierUtil.default("dungeon_device/killer"), IdentifierUtil.default("dungeon_device/killer_highlighted"))
-private val KILLER_BUTTON_TOOLTIP_TEXT = Text.translatable("container.mcendgame.dungeon_device.killer_tooltip")
-private val TRAINING_BUTTON_TEXTURES = ButtonTextures(IdentifierUtil.default("dungeon_device/training"), IdentifierUtil.default("dungeon_device/training_highlighted"))
-private val TRAINING_BUTTON_TOOLTIP_TEXT = Text.translatable("container.mcendgame.dungeon_device.training_tooltip")
+private val TOTEMS_BUTTON_TEXTURES = WidgetSprites(IdentifierUtil.default("dungeon_device/totems"), IdentifierUtil.default("dungeon_device/totems_highlighted"))
+private val TOTEMS_BUTTON_TOOLTIP_TEXT = Component.translatable("container.mcendgame.dungeon_device.totems_tooltip")
+private val FILTER_BUTTON_TEXTURES = WidgetSprites(IdentifierUtil.default("dungeon_device/filter"), IdentifierUtil.default("dungeon_device/filter_highlighted"))
+private val FILTER_BUTTON_TOOLTIP_TEXT = Component.translatable("container.mcendgame.dungeon_device.filter_tooltip")
+private val KILLER_BUTTON_TEXTURES = WidgetSprites(IdentifierUtil.default("dungeon_device/killer"), IdentifierUtil.default("dungeon_device/killer_highlighted"))
+private val KILLER_BUTTON_TOOLTIP_TEXT = Component.translatable("container.mcendgame.dungeon_device.killer_tooltip")
+private val TRAINING_BUTTON_TEXTURES = WidgetSprites(IdentifierUtil.default("dungeon_device/training"), IdentifierUtil.default("dungeon_device/training_highlighted"))
+private val TRAINING_BUTTON_TOOLTIP_TEXT = Component.translatable("container.mcendgame.dungeon_device.training_tooltip")
 
 @Environment(EnvType.CLIENT)
 class DungeonDeviceScreen(
     handler: DungeonDeviceScreenHandler,
-    private val inventory: PlayerInventory,
-    title: Text,
-) : HandledScreen<DungeonDeviceScreenHandler>(handler, inventory, title) {
+    private val inventory: Inventory,
+    title: Component,
+) : AbstractContainerScreen<DungeonDeviceScreenHandler>(handler, inventory, title) {
     private val log = LogUtils.getLogger()
     private var showLevelAttributes = false
-    private var levelScalingTextWidgets = mutableListOf<TextWidget>()
+    private var levelScalingTextWidgets = mutableListOf<StringWidget>()
 
     val playerDungeonLevel = handler.payload.playerDungeonLevel
 
-    private val createDungeonButton = ButtonWidget
+    private val createDungeonButton = Button
         .builder(OPEN_DUNGEON_BUTTON_TEXT, ::onCreateDungeonButtonPress)
         .size(36, 12)
         .build()
 
-    private lateinit var increaseLevelButton: ButtonWidget
-    private lateinit var decreaseLevelButton: ButtonWidget
-    private lateinit var lockLevelButton: ButtonWidget
+    private lateinit var increaseLevelButton: Button
+    private lateinit var decreaseLevelButton: Button
+    private lateinit var lockLevelButton: Button
 
     override fun init() {
         super.init()
-        titleX = (backgroundWidth - textRenderer.getWidth(title)) / 2
+        titleLabelX = (imageWidth - font.width(title)) / 2
 
-        val basePanelX = (width - backgroundWidth) / 2
-        val basePanelY = (height - backgroundHeight) / 2
+        val basePanelX = (width - imageWidth) / 2
+        val basePanelY = (height - imageHeight) / 2
 
         createDungeonButton.setPosition(basePanelX + 70, basePanelY + 62)
-        addDrawableChild(createDungeonButton)
+        addRenderableWidget(createDungeonButton)
 
         val levelButtonsX = basePanelX + LEVEL_BUTTONS_X_OFFSET
         val plusButtonY = basePanelY + LEVEL_BUTTONS_Y_OFFSET
         val minusButtonY = plusButtonY + LEVEL_BUTTONS_SIZE + LEVEL_BUTTONS_Y_SPACING
         val lockButtonY = minusButtonY + LEVEL_BUTTONS_SIZE + LEVEL_BUTTONS_Y_SPACING
 
-        increaseLevelButton = ButtonWidget.builder(LEVEL_INCREASE_TEXT) {
+        increaseLevelButton = Button.builder(LEVEL_INCREASE_TEXT) {
             playerDungeonLevel.level = min(playerDungeonLevel.level + 1, DungeonLevelSettings.getClientSetLevelLimit(playerDungeonLevel.highestReached))
             playerDungeonLevel.levelProgress = 0
             updateDungeonLevel()
         }
-            .dimensions(levelButtonsX, plusButtonY, LEVEL_BUTTONS_SIZE, LEVEL_BUTTONS_SIZE)
+            .bounds(levelButtonsX, plusButtonY, LEVEL_BUTTONS_SIZE, LEVEL_BUTTONS_SIZE)
             .build()
 
-        decreaseLevelButton = ButtonWidget.builder(LEVEL_DECREASE_TEXT) {
+        decreaseLevelButton = Button.builder(LEVEL_DECREASE_TEXT) {
             playerDungeonLevel.level = max(playerDungeonLevel.level - 1, 1)
             playerDungeonLevel.levelProgress = 0
             updateDungeonLevel()
         }
-            .dimensions(levelButtonsX, minusButtonY, LEVEL_BUTTONS_SIZE, LEVEL_BUTTONS_SIZE)
+            .bounds(levelButtonsX, minusButtonY, LEVEL_BUTTONS_SIZE, LEVEL_BUTTONS_SIZE)
             .build()
 
-        lockLevelButton = ButtonWidget.builder(Text.empty()) {
+        lockLevelButton = Button.builder(Component.empty()) {
             playerDungeonLevel.locked = !playerDungeonLevel.locked
             updateDungeonLevel()
         }
-            .dimensions(levelButtonsX, lockButtonY, LEVEL_BUTTONS_SIZE, LEVEL_BUTTONS_SIZE)
+            .bounds(levelButtonsX, lockButtonY, LEVEL_BUTTONS_SIZE, LEVEL_BUTTONS_SIZE)
             .build()
 
         updateLevelButtons()
 
-        addDrawableChild(increaseLevelButton)
-        addDrawableChild(decreaseLevelButton)
-        addDrawableChild(lockLevelButton)
+        addRenderableWidget(increaseLevelButton)
+        addRenderableWidget(decreaseLevelButton)
+        addRenderableWidget(lockLevelButton)
 
-        addDrawableChild(
-            ButtonWidget.builder(SHOW_ATTRIBUTES_BUTTON_TEXT) { toggleButton ->
+        addRenderableWidget(
+            Button.builder(SHOW_ATTRIBUTES_BUTTON_TEXT) { toggleButton ->
                 showLevelAttributes = !showLevelAttributes
                 toggleButton.x = getToggleButtonX()
                 toggleButton.message = if (showLevelAttributes) HIDE_ATTRIBUTES_BUTTON_TEXT else SHOW_ATTRIBUTES_BUTTON_TEXT
-            }.dimensions(
+            }.bounds(
                 getToggleButtonX(),
                 (height - SHOW_ATTRIBUTES_BUTTON_HEIGHT) / 2,
                 SHOW_ATTRIBUTES_BUTTON_WIDTH,
@@ -166,36 +162,36 @@ class DungeonDeviceScreen(
         )
 
         val commandButtonsX = basePanelX - 20 - COMMAND_BUTTONS_OFFSET
-        addDrawableChild(
-            TexturedButtonWidget(commandButtonsX, basePanelY, 20, 18, TOTEMS_BUTTON_TEXTURES) { button ->
-                MinecraftClient.getInstance().networkHandler?.sendChatCommand(TotemCommand.NAME)
+        addRenderableWidget(
+            ImageButton(commandButtonsX, basePanelY, 20, 18, TOTEMS_BUTTON_TEXTURES) { button ->
+                Minecraft.getInstance().connection?.sendCommand(TotemCommand.NAME)
             }.apply {
-                setTooltip(Tooltip.of(TOTEMS_BUTTON_TOOLTIP_TEXT))
+                setTooltip(Tooltip.create(TOTEMS_BUTTON_TOOLTIP_TEXT))
             }
         )
-        addDrawableChild(
-            TexturedButtonWidget(commandButtonsX, basePanelY + (18 + COMMAND_BUTTONS_OFFSET), 20, 18, FILTER_BUTTON_TEXTURES) { button ->
-                MinecraftClient.getInstance().networkHandler?.sendChatCommand(ItemFilterCommand.NAME)
+        addRenderableWidget(
+            ImageButton(commandButtonsX, basePanelY + (18 + COMMAND_BUTTONS_OFFSET), 20, 18, FILTER_BUTTON_TEXTURES) { button ->
+                Minecraft.getInstance().connection?.sendCommand(ItemFilterCommand.NAME)
             }.apply {
-                setTooltip(Tooltip.of(FILTER_BUTTON_TOOLTIP_TEXT))
+                setTooltip(Tooltip.create(FILTER_BUTTON_TOOLTIP_TEXT))
             }
         )
-        addDrawableChild(
-            TexturedButtonWidget(commandButtonsX, basePanelY + 2 * (18 + COMMAND_BUTTONS_OFFSET), 20, 18, KILLER_BUTTON_TEXTURES) { button ->
-                MinecraftClient.getInstance().networkHandler?.sendChatCommand(KillerCommand.NAME)
+        addRenderableWidget(
+            ImageButton(commandButtonsX, basePanelY + 2 * (18 + COMMAND_BUTTONS_OFFSET), 20, 18, KILLER_BUTTON_TEXTURES) { button ->
+                Minecraft.getInstance().connection?.sendCommand(KillerCommand.NAME)
             }.apply {
-                setTooltip(Tooltip.of(KILLER_BUTTON_TOOLTIP_TEXT))
+                setTooltip(Tooltip.create(KILLER_BUTTON_TOOLTIP_TEXT))
             }
         )
-        addDrawableChild(
-            TexturedButtonWidget(
+        addRenderableWidget(
+            ImageButton(
                 commandButtonsX,
                 basePanelY + 3 * (18 + COMMAND_BUTTONS_OFFSET),
                 20,
                 18,
                 TRAINING_BUTTON_TEXTURES,
                 ::onCreateTrainingDungeonButtonPress
-            ).apply { setTooltip(Tooltip.of(TRAINING_BUTTON_TOOLTIP_TEXT)) }
+            ).apply { setTooltip(Tooltip.create(TRAINING_BUTTON_TOOLTIP_TEXT)) }
         )
 
         initLevelScalingDetails(playerDungeonLevel.level)
@@ -215,24 +211,24 @@ class DungeonDeviceScreen(
         // INCREASE BUTTON
         val increaseBlocked = playerLevel + 1 > increaseLimit
         val increaseTooltipText = LEVEL_INCREASE_TOOLTIP.copy()
-        if (increaseBlocked) increaseTooltipText.append(Text.literal("\n"))
+        if (increaseBlocked) increaseTooltipText.append(Component.literal("\n"))
             .append(
-                Text.translatable(
+                Component.translatable(
                     LEVEL_INCREASE_LIMIT_TOOLTIP_KEY,
                     increaseLimit,
                     (DungeonLevelSettings.CLIENT_SET_LEVEL_LIMIT_PERCENTAGE * 100).toInt(),
                     highestReached,
-                ).styled { style -> style.withBold(false).withColor(Formatting.DARK_GRAY) }
+                ).withStyle { style -> style.withBold(false).withColor(ChatFormatting.DARK_GRAY) }
             )
-        increaseLevelButton.setTooltip(Tooltip.of(increaseTooltipText))
+        increaseLevelButton.setTooltip(Tooltip.create(increaseTooltipText))
 
         increaseLevelButton.active = !increaseBlocked
 
         // DECREASE BUTTON
         val decreaseTooltipText = LEVEL_DECREASE_TOOLTIP.copy()
-        if (playerLevel > increaseLimit) decreaseTooltipText.append(Text.literal("\n"))
-            .append(LEVEL_DECREASE_ABOVE_INCREASE_LIMIT_TOOLTIP.styled { style -> style.withBold(false).withColor(Formatting.RED) })
-        decreaseLevelButton.setTooltip(Tooltip.of(decreaseTooltipText))
+        if (playerLevel > increaseLimit) decreaseTooltipText.append(Component.literal("\n"))
+            .append(LEVEL_DECREASE_ABOVE_INCREASE_LIMIT_TOOLTIP.withStyle { style -> style.withBold(false).withColor(ChatFormatting.RED) })
+        decreaseLevelButton.setTooltip(Tooltip.create(decreaseTooltipText))
 
         decreaseLevelButton.active = playerLevel > 1
 
@@ -243,12 +239,12 @@ class DungeonDeviceScreen(
 
         val lockTooltipText = if (locked) LEVEL_UNLOCK_TOOLTIP.copy() else LEVEL_LOCK_TOOLTIP.copy()
         val lockExplanationText = if (locked) LEVEL_UNLOCK_EXPLANATION_TOOLTIP else LEVEL_LOCK_EXPLANATION_TOOLTIP
-        lockTooltipText.append("\n").append(lockExplanationText.styled { style -> style.withBold(false).withColor(Formatting.DARK_GRAY) })
-        lockLevelButton.setTooltip(Tooltip.of(lockTooltipText))
+        lockTooltipText.append("\n").append(lockExplanationText.withStyle { style -> style.withBold(false).withColor(ChatFormatting.DARK_GRAY) })
+        lockLevelButton.setTooltip(Tooltip.create(lockTooltipText))
     }
 
     private fun getToggleButtonX(): Int {
-        val hiddenX = (width + backgroundWidth) / 2
+        val hiddenX = (width + imageWidth) / 2
         if (!showLevelAttributes) return hiddenX
         return min(width - SHOW_ATTRIBUTES_BUTTON_WIDTH - 5, hiddenX + ATTRIBUTE_PANEL_MAX_WIDTH)
     }
@@ -256,8 +252,8 @@ class DungeonDeviceScreen(
     private fun initLevelScalingDetails(dungeonLevel: Int) {
         levelScalingTextWidgets = mutableListOf()
 
-        val x = (width + backgroundWidth) / 2 + 6
-        var y = (height - backgroundHeight) / 2 + 6
+        val x = (width + imageWidth) / 2 + 6
+        var y = (height - imageHeight) / 2 + 6
         val width = getLevelScalingTextWidgetWidth()
 
         val enemyAttributes = EnemyLevelScalingSettings.getEnemyLevelAttributes(dungeonLevel)
@@ -276,19 +272,19 @@ class DungeonDeviceScreen(
     }
 
     private fun getLevelScalingTextWidgetWidth(): Int {
-        val xStart = (width + backgroundWidth) / 2 + 5
+        val xStart = (width + imageWidth) / 2 + 5
         val widgetWidth = ((width - SHOW_ATTRIBUTES_BUTTON_WIDTH - 10) - xStart)
         return min(widgetWidth, ATTRIBUTE_PANEL_MAX_WIDTH - 10)
     }
 
     private fun initLevelScalingHeader(
-        text: Text,
+        text: Component,
         x: Int,
         y: Int,
         width: Int,
     ): Int {
         levelScalingTextWidgets.add(
-            ScalableTextWidget(x, y, width, ATTRIBUTE_HEADER_WIDGET_HEIGHT, text, textRenderer, 1f)
+            ScalableTextWidget(x, y, width, ATTRIBUTE_HEADER_WIDGET_HEIGHT, text, font, 1f)
         )
         return ATTRIBUTE_HEADER_WIDGET_HEIGHT
     }
@@ -314,7 +310,7 @@ class DungeonDeviceScreen(
                     widgetWidth,
                     ATTRIBUTE_TEXT_WIDGET_HEIGHT,
                     text,
-                    textRenderer,
+                    font,
                     ATTRIBUTE_TEXT_WIDGET_SCALE
                 )
             )
@@ -323,68 +319,68 @@ class DungeonDeviceScreen(
         return (attributes.size - 1) * ATTRIBUTE_TEXT_WIDGET_Y_OFFSET + ceil(ATTRIBUTE_TEXT_WIDGET_HEIGHT * ATTRIBUTE_TEXT_WIDGET_SCALE).toInt()
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         super.render(context, mouseX, mouseY, delta)
         if (showLevelAttributes) renderAttributesPanel(context, mouseX, mouseY, delta)
 
-        context.matrices.pushMatrix()
-        context.matrices.scale(LEVEL_TEXT_SCALING, LEVEL_TEXT_SCALING, context.matrices)
+        context.pose().pushMatrix()
+        context.pose().scale(LEVEL_TEXT_SCALING, LEVEL_TEXT_SCALING, context.pose())
 
-        context.drawText(
-            textRenderer,
-            Text.translatable(
+        context.drawString(
+            font,
+            Component.translatable(
                 "text.mcendgame.dungeon.device.level",
                 playerDungeonLevel.level
             ),
-            (((width - backgroundWidth) / 2 + LEVEL_TEXT_X_OFFSET) / LEVEL_TEXT_SCALING).toInt(),
-            (((height - backgroundHeight) / 2 + LEVEL_TEXT_Y_OFFSET) / LEVEL_TEXT_SCALING).toInt(),
-            Colors.WHITE,
+            (((width - imageWidth) / 2 + LEVEL_TEXT_X_OFFSET) / LEVEL_TEXT_SCALING).toInt(),
+            (((height - imageHeight) / 2 + LEVEL_TEXT_Y_OFFSET) / LEVEL_TEXT_SCALING).toInt(),
+            CommonColors.WHITE,
             true
         )
 
-        context.matrices.popMatrix()
+        context.pose().popMatrix()
 
         val progressScreenRect = getProgressScreenRect()
-        context.drawTexture(
+        context.blit(
             RenderPipelines.GUI_TEXTURED,
             PROGRESS_TEXTURE,
-            progressScreenRect.left, progressScreenRect.top,
+            progressScreenRect.left(), progressScreenRect.top(),
             0F, 8F * playerDungeonLevel.levelProgress,
             progressScreenRect.width, progressScreenRect.height,
             30, 24,
         )
 
-        drawMouseoverTooltip(context, mouseX, mouseY)
+        renderTooltip(context, mouseX, mouseY)
     }
 
-    override fun drawBackground(context: DrawContext, delta: Float, mouseX: Int, mouseY: Int) {
-        val textureX = (width - backgroundWidth) / 2
-        val textureY = (height - backgroundHeight) / 2
+    override fun renderBg(context: GuiGraphics, delta: Float, mouseX: Int, mouseY: Int) {
+        val textureX = (width - imageWidth) / 2
+        val textureY = (height - imageHeight) / 2
 
-        context.drawTexture(
+        context.blit(
             RenderPipelines.GUI_TEXTURED,
             TEXTURE,
             textureX,
             textureY,
             0.0f,
             0.0f,
-            backgroundWidth,
-            backgroundHeight,
+            imageWidth,
+            imageHeight,
             256,
             256
         )
     }
 
-    override fun drawMouseoverTooltip(drawContext: DrawContext, mouseX: Int, mouseY: Int) {
-        super.drawMouseoverTooltip(drawContext, mouseX, mouseY)
+    override fun renderTooltip(drawContext: GuiGraphics, mouseX: Int, mouseY: Int) {
+        super.renderTooltip(drawContext, mouseX, mouseY)
 
         val progressScreenRect = getProgressScreenRect()
-        if (mouseX < progressScreenRect.left || mouseX > progressScreenRect.right ||
-            mouseY < progressScreenRect.top || mouseY > progressScreenRect.bottom
+        if (mouseX < progressScreenRect.left() || mouseX > progressScreenRect.right() ||
+            mouseY < progressScreenRect.top() || mouseY > progressScreenRect.bottom()
         ) return
-        drawContext.drawTooltip(
-            this.textRenderer,
-            Text.translatable(
+        drawContext.setTooltipForNextFrame(
+            this.font,
+            Component.translatable(
                 "container.mcendgame.dungeon_device.progress_tooltip",
                 playerDungeonLevel.levelProgress,
                 DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD
@@ -394,27 +390,27 @@ class DungeonDeviceScreen(
         )
     }
 
-    private fun getProgressScreenRect() = ScreenRect(
-        (width - backgroundWidth) / 2 + LEVEL_TEXT_X_OFFSET,
-        (height - backgroundHeight) / 2 + LEVEL_TEXT_Y_OFFSET + 10,
+    private fun getProgressScreenRect() = ScreenRectangle(
+        (width - imageWidth) / 2 + LEVEL_TEXT_X_OFFSET,
+        (height - imageHeight) / 2 + LEVEL_TEXT_Y_OFFSET + 10,
         30,
         8,
     )
 
     private fun renderAttributesPanel(
-        context: DrawContext,
+        context: GuiGraphics,
         mouseX: Int,
         mouseY: Int,
         delta: Float,
     ) {
-        val x1 = (width + backgroundWidth) / 2
-        val y1 = (height - backgroundHeight) / 2
+        val x1 = (width + imageWidth) / 2
+        val y1 = (height - imageHeight) / 2
         var x2 = width - SHOW_ATTRIBUTES_BUTTON_WIDTH - 5
 
         val w = min(x2 - x1, ATTRIBUTE_PANEL_MAX_WIDTH)
         x2 = x1 + w
 
-        context.drawTexture(
+        context.blit(
             RenderPipelines.GUI_TEXTURED,
             ATTRIBUTE_PANEL_TEXTURE,
             x1,
@@ -422,12 +418,12 @@ class DungeonDeviceScreen(
             0f,
             0f,
             ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH,
-            backgroundHeight,
+            imageHeight,
             256,
             256
         )
 
-        context.drawTexture(
+        context.blit(
             RenderPipelines.GUI_TEXTURED,
             ATTRIBUTE_PANEL_TEXTURE,
             x1 + ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH,
@@ -435,12 +431,12 @@ class DungeonDeviceScreen(
             ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH.toFloat(),
             0f,
             w - 2 * ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH,
-            backgroundHeight,
+            imageHeight,
             256,
             256
         )
 
-        context.drawTexture(
+        context.blit(
             RenderPipelines.GUI_TEXTURED,
             ATTRIBUTE_PANEL_TEXTURE,
             x2 - ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH,
@@ -448,7 +444,7 @@ class DungeonDeviceScreen(
             176f - ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH,
             0f,
             ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH,
-            backgroundHeight,
+            imageHeight,
             256,
             256
         )
@@ -456,16 +452,16 @@ class DungeonDeviceScreen(
         levelScalingTextWidgets.forEach { it.render(context, mouseX, mouseY, delta) }
     }
 
-    private fun onCreateDungeonButtonPress(button: ButtonWidget) {
-        ClientPlayNetworking.send(handler.payload)
-        close()
+    private fun onCreateDungeonButtonPress(button: Button) {
+        ClientPlayNetworking.send(menu.payload)
+        onClose()
         log.info("Dungeon opened by ${inventory.player.gameProfile.name}")
     }
 
-    private fun onCreateTrainingDungeonButtonPress(button: ButtonWidget) {
-        val payload = DungeonDeviceTrainingPayload.from(handler.payload)
+    private fun onCreateTrainingDungeonButtonPress(button: Button) {
+        val payload = DungeonDeviceTrainingPayload.from(menu.payload)
         ClientPlayNetworking.send(payload)
-        close()
+        onClose()
         log.info("Training dungeon opened by ${inventory.player.gameProfile.name}")
     }
 

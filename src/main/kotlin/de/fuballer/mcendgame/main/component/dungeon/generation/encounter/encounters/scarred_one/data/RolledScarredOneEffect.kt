@@ -7,9 +7,9 @@ import de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encount
 import de.fuballer.mcendgame.main.messaging.misc.GetCustomAttributesTextsCommand
 import de.maucon.mauconframework.command.CommandGateway
 import io.netty.buffer.ByteBuf
-import net.minecraft.network.codec.PacketCodec
-import net.minecraft.network.codec.PacketCodecs
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
 
 data class RolledScarredOneEffect(
     val attribute: CustomAttribute,
@@ -29,8 +29,8 @@ data class RolledScarredOneEffect(
             }
         val LIST_CODEC: Codec<List<RolledScarredOneEffect>> = Codec.list(CODEC)
 
-        val PACKET_CODEC: PacketCodec<ByteBuf, RolledScarredOneEffect> = PacketCodecs.codec(CODEC)
+        val PACKET_CODEC: StreamCodec<ByteBuf, RolledScarredOneEffect> = ByteBufCodecs.fromCodec(CODEC)
     }
 
-    fun getAttribute(): Text = CommandGateway.apply(GetCustomAttributesTextsCommand(attribute)).texts.firstOrNull() ?: Text.empty()
+    fun getAttribute(): Component = CommandGateway.apply(GetCustomAttributesTextsCommand(attribute)).texts.firstOrNull() ?: Component.empty()
 }

@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.main.component.entity.types.boss
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
-import net.minecraft.entity.EntityType
+import net.minecraft.world.entity.EntityType
 
 object BonecrusherBossStats : EntityTypeStats {
     override val type: EntityType<BonecrusherEntity> = CustomEntities.BONECRUSHER

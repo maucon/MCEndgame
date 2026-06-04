@@ -6,8 +6,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnim
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 import software.bernie.geckolib.animatable.GeoEntity
 
 open class Attack<T>(
@@ -18,7 +18,7 @@ open class Attack<T>(
     private val damage: List<DelayedAttackDamage>,
     private val sounds: List<DelayedSoundData> = listOf(),
     private val blockMovementDuration: Int = 0,
-) where T : MobEntity, T : GeoEntity {
+) where T : Mob, T : GeoEntity {
     constructor(
         animationData: AttackAnimationData,
         totalDuration: Int,
@@ -38,7 +38,7 @@ open class Attack<T>(
     )
 
     open fun canStart(
-        attacker: MobEntity,
+        attacker: Mob,
         target: LivingEntity?,
     ) = trigger.doesTrigger(attacker, target)
 

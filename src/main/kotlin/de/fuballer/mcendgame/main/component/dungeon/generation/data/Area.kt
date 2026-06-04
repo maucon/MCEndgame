@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.component.dungeon.generation.data
 
-import net.minecraft.util.math.Vec3i
+import net.minecraft.core.Vec3i
 
 data class Area(
     var pos1: Vec3i, //pos1 < pos2

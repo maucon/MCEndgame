@@ -2,11 +2,11 @@ package de.fuballer.mcendgame.main.component.tags
 
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.block.Block
-import net.minecraft.entity.damage.DamageType
-import net.minecraft.item.Item
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.registry.tag.TagKey
+import net.minecraft.core.registries.Registries
+import net.minecraft.tags.TagKey
+import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.block.Block
 
 @Injectable
 object CustomTags {
@@ -29,7 +29,7 @@ object CustomTags {
     val MELEE_ATTACK: TagKey<DamageType> = createDamageTypeTag("melee_attack")
     val BLOCK_PHASING_IMMUNE: TagKey<DamageType> = createDamageTypeTag("block_phasing_immune")
 
-    private fun createItemTag(id: String) = TagKey.of(RegistryKeys.ITEM, IdentifierUtil.default(id))
-    private fun createBlockTag(id: String) = TagKey.of(RegistryKeys.BLOCK, IdentifierUtil.default(id))
-    private fun createDamageTypeTag(id: String) = TagKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default(id))
+    private fun createItemTag(id: String) = TagKey.create(Registries.ITEM, IdentifierUtil.default(id))
+    private fun createBlockTag(id: String) = TagKey.create(Registries.BLOCK, IdentifierUtil.default(id))
+    private fun createDamageTypeTag(id: String) = TagKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default(id))
 }

@@ -3,8 +3,8 @@ package de.fuballer.mcendgame.main.component.dungeon.enemy
 import de.fuballer.mcendgame.main.component.dungeon.enemy.potion_effect.PotionEffect
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.SortableRandomOption
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.effect.StatusEffects
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 import kotlin.math.pow
 import kotlin.random.Random
 
@@ -56,7 +56,7 @@ object EnemyGenerationSettings {
     const val ELITE_SCALE = 1.35
     const val ELITE_HEALTH_FACTOR = 2.5
     fun randomElite(random: Random) = random.nextDouble() < ELITE_PROBABILITY
-    fun getEliteStatusEffect() = StatusEffectInstance(StatusEffects.RAID_OMEN, StatusEffectInstance.INFINITE, 0, false, true)
+    fun getEliteStatusEffect() = MobEffectInstance(MobEffects.RAID_OMEN, MobEffectInstance.INFINITE_DURATION, 0, false, true)
 
     fun getRandomScale(random: Random) = 1.0 + 0.2 * random.nextDouble().pow(3) * if (random.nextBoolean()) 1 else -1
 }

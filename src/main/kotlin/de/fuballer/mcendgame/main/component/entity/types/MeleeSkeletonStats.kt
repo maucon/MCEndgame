@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.main.component.entity.types
 
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.mob.SkeletonEntity
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.monster.skeleton.Skeleton
 
 object MeleeSkeletonStats : EntityTypeStats {
-    override val type: EntityType<SkeletonEntity> = EntityType.SKELETON
+    override val type: EntityType<Skeleton> = EntityType.SKELETON
 
     override val canHaveWeapons = true
     override val isRanged = false

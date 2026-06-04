@@ -13,7 +13,7 @@ class Scheduler(
     @EventSubscriber(sync = true)
     fun on(event: ServerEndTickEvent) {
         taskRepo.findAll().forEach { task ->
-            val tickDifference = event.server.ticks - task.startTick
+            val tickDifference = event.server.tickCount - task.startTick
             if (tickDifference < 0) return@forEach
 
             if (task.period == NOT_REPEATING) {
@@ -40,7 +40,7 @@ class Scheduler(
     fun repeating(delay: Int, period: Int, runnable: (Int) -> Unit): UUID {
         require(period > 0)
 
-        val startTick = RuntimeConfig.SERVER.ticks + delay
+        val startTick = RuntimeConfig.SERVER.tickCount + delay
         val task = Task(runnable, startTick, period)
 
         return taskRepo.save(task).id
@@ -53,7 +53,7 @@ class Scheduler(
     fun repeatingForDuration(delay: Int, period: Int, duration: Int, runnable: (Int) -> Unit): UUID {
         require(period > 0)
 
-        val startTick = RuntimeConfig.SERVER.ticks + delay
+        val startTick = RuntimeConfig.SERVER.tickCount + delay
         val task = Task(runnable, startTick, period, duration)
 
         return taskRepo.save(task).id
@@ -61,7 +61,7 @@ class Scheduler(
 
 
     fun delayed(delay: Int, runnable: (Int) -> Unit): UUID {
-        val startTick = RuntimeConfig.SERVER.ticks + delay
+        val startTick = RuntimeConfig.SERVER.tickCount + delay
         val task = Task(runnable, startTick)
 
         return taskRepo.save(task).id

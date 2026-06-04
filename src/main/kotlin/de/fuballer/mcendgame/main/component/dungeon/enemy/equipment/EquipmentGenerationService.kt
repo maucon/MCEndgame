@@ -11,13 +11,13 @@ import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.fuballer.mcendgame.main.util.random.SortableRandomOption
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.component.DataComponentTypes
-import net.minecraft.entity.EquipmentSlot
-import net.minecraft.entity.LivingEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.item.equipment.trim.ArmorTrim
-import net.minecraft.registry.RegistryKeys
+import net.minecraft.core.component.DataComponents
+import net.minecraft.core.registries.Registries
 import net.minecraft.server.MinecraftServer
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.equipment.trim.ArmorTrim
 import kotlin.random.Random
 
 @Injectable
@@ -43,26 +43,26 @@ class EquipmentGenerationService(
 
         if (type.canHaveWeapons) {
             createEquipment(level, EquipmentSlot.MAINHAND, server, random, equipmentData, type.isRanged)?.also {
-                entity.equipStack(EquipmentSlot.MAINHAND, it)
+                entity.setItemSlot(EquipmentSlot.MAINHAND, it)
             }
             createEquipment(level, EquipmentSlot.OFFHAND, server, random, equipmentData)?.also {
-                entity.equipStack(EquipmentSlot.OFFHAND, it)
+                entity.setItemSlot(EquipmentSlot.OFFHAND, it)
             }
         }
 
         if (!type.canHaveArmor) return
 
         createEquipment(level, EquipmentSlot.HEAD, server, random, equipmentData)?.also {
-            entity.equipStack(EquipmentSlot.HEAD, it)
+            entity.setItemSlot(EquipmentSlot.HEAD, it)
         }
         createEquipment(level, EquipmentSlot.CHEST, server, random, equipmentData)?.also {
-            entity.equipStack(EquipmentSlot.CHEST, it)
+            entity.setItemSlot(EquipmentSlot.CHEST, it)
         }
         createEquipment(level, EquipmentSlot.LEGS, server, random, equipmentData)?.also {
-            entity.equipStack(EquipmentSlot.LEGS, it)
+            entity.setItemSlot(EquipmentSlot.LEGS, it)
         }
         createEquipment(level, EquipmentSlot.FEET, server, random, equipmentData)?.also {
-            entity.equipStack(EquipmentSlot.FEET, it)
+            entity.setItemSlot(EquipmentSlot.FEET, it)
         }
     }
 
@@ -143,7 +143,7 @@ class EquipmentGenerationService(
         val equipmentOptions = EquipmentGenerationSettings.ARMORSLOT_EQUIPMENT_MAP[slot] ?: return null
         val stack = createEquipmentSortable(level, equipmentOptions, server, random, data) ?: return null
 
-        stack.set(DataComponentTypes.TRIM, data.armorTrim)
+        stack.set(DataComponents.TRIM, data.armorTrim)
         return stack
     }
 
@@ -192,8 +192,8 @@ class EquipmentGenerationService(
         server: MinecraftServer,
         random: Random
     ): ArmorTrim {
-        val materialRegistry = server.registryManager.getOrThrow(RegistryKeys.TRIM_MATERIAL)
-        val patternRegistry = server.registryManager.getOrThrow(RegistryKeys.TRIM_PATTERN)
+        val materialRegistry = server.registryAccess().lookupOrThrow(Registries.TRIM_MATERIAL)
+        val patternRegistry = server.registryAccess().lookupOrThrow(Registries.TRIM_PATTERN)
 
         val materialKey = RandomUtil.pickOne(EquipmentGenerationSettings.LOOT_GOBLIN_ARMOR_TRIM_MATERIALS, random).option
         val material = materialRegistry.getOrThrow(materialKey)

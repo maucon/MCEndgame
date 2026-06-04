@@ -11,12 +11,12 @@ import de.fuballer.mcendgame.main.component.item.equipment.tool.*
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.fuballer.mcendgame.main.util.random.SortableRandomOption
-import net.minecraft.entity.EquipmentSlot
-import net.minecraft.item.equipment.trim.ArmorTrimMaterial
-import net.minecraft.item.equipment.trim.ArmorTrimMaterials
-import net.minecraft.item.equipment.trim.ArmorTrimPattern
-import net.minecraft.item.equipment.trim.ArmorTrimPatterns
-import net.minecraft.registry.RegistryKey
+import net.minecraft.resources.ResourceKey
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.equipment.trim.TrimMaterial
+import net.minecraft.world.item.equipment.trim.TrimMaterials
+import net.minecraft.world.item.equipment.trim.TrimPattern
+import net.minecraft.world.item.equipment.trim.TrimPatterns
 import kotlin.random.Random
 
 object EquipmentGenerationSettings {
@@ -235,38 +235,38 @@ object EquipmentGenerationSettings {
         RandomOption(9, Shield.SHIELD),
     )
 
-    val LOOT_GOBLIN_ARMOR_TRIM_MATERIALS = listOf<RandomOption<RegistryKey<ArmorTrimMaterial>>>(
-        RandomOption(1, ArmorTrimMaterials.NETHERITE),
-        RandomOption(3, ArmorTrimMaterials.DIAMOND),
-        RandomOption(5, ArmorTrimMaterials.EMERALD),
-        RandomOption(5, ArmorTrimMaterials.AMETHYST),
-        RandomOption(5, ArmorTrimMaterials.QUARTZ),
-        RandomOption(5, ArmorTrimMaterials.RESIN),
-        RandomOption(8, ArmorTrimMaterials.GOLD),
-        RandomOption(8, ArmorTrimMaterials.IRON),
-        RandomOption(8, ArmorTrimMaterials.COPPER),
-        RandomOption(8, ArmorTrimMaterials.REDSTONE),
-        RandomOption(8, ArmorTrimMaterials.LAPIS),
+    val LOOT_GOBLIN_ARMOR_TRIM_MATERIALS = listOf<RandomOption<ResourceKey<TrimMaterial>>>(
+        RandomOption(1, TrimMaterials.NETHERITE),
+        RandomOption(3, TrimMaterials.DIAMOND),
+        RandomOption(5, TrimMaterials.EMERALD),
+        RandomOption(5, TrimMaterials.AMETHYST),
+        RandomOption(5, TrimMaterials.QUARTZ),
+        RandomOption(5, TrimMaterials.RESIN),
+        RandomOption(8, TrimMaterials.GOLD),
+        RandomOption(8, TrimMaterials.IRON),
+        RandomOption(8, TrimMaterials.COPPER),
+        RandomOption(8, TrimMaterials.REDSTONE),
+        RandomOption(8, TrimMaterials.LAPIS),
     )
 
-    val LOOT_GOBLIN_ARMOR_TRIM_PATTERNS = listOf<RandomOption<RegistryKey<ArmorTrimPattern>>>(
-        RandomOption(1, ArmorTrimPatterns.SILENCE), //Ancient City chest 1.2%
-        RandomOption(3, ArmorTrimPatterns.WARD),  //Ancient City chest 5%
-        RandomOption(5, ArmorTrimPatterns.VEX), //Woodland Mansion chest 50%
-        RandomOption(5, ArmorTrimPatterns.BOLT), //Vault 6.3%
-        RandomOption(7, ArmorTrimPatterns.FLOW), //Ominous Vault 22.5%
-        RandomOption(8, ArmorTrimPatterns.SNOUT), //Bastion Remnant chest 8.3%
-        RandomOption(8, ArmorTrimPatterns.WILD), //Jungle Temple chest 33.3%
-        RandomOption(10, ArmorTrimPatterns.EYE), //Stronghold altar chest 10%, library chest 100%
-        RandomOption(15, ArmorTrimPatterns.SPIRE), //End city chest 6.7%
-        RandomOption(15, ArmorTrimPatterns.TIDE), //Elder Guardian 20%
-        RandomOption(15, ArmorTrimPatterns.RIB), //Nether Fortress chest 6.7%
-        RandomOption(15, ArmorTrimPatterns.DUNE), //Desert Temple 14.3%
-        RandomOption(15, ArmorTrimPatterns.WAYFINDER), //Suspicious gravel 8.3%
-        RandomOption(15, ArmorTrimPatterns.SHAPER), //Suspicious gravel 8.3%
-        RandomOption(15, ArmorTrimPatterns.RAISER), //Suspicious gravel 8.3%
-        RandomOption(15, ArmorTrimPatterns.HOST), //Suspicious gravel 8.3%
-        RandomOption(20, ArmorTrimPatterns.SENTRY), //Outpost chest 25%
-        RandomOption(25, ArmorTrimPatterns.COAST), //Shipwreck chest 16.7%
+    val LOOT_GOBLIN_ARMOR_TRIM_PATTERNS = listOf<RandomOption<ResourceKey<TrimPattern>>>(
+        RandomOption(1, TrimPatterns.SILENCE), //Ancient City chest 1.2%
+        RandomOption(3, TrimPatterns.WARD),  //Ancient City chest 5%
+        RandomOption(5, TrimPatterns.VEX), //Woodland Mansion chest 50%
+        RandomOption(5, TrimPatterns.BOLT), //Vault 6.3%
+        RandomOption(7, TrimPatterns.FLOW), //Ominous Vault 22.5%
+        RandomOption(8, TrimPatterns.SNOUT), //Bastion Remnant chest 8.3%
+        RandomOption(8, TrimPatterns.WILD), //Jungle Temple chest 33.3%
+        RandomOption(10, TrimPatterns.EYE), //Stronghold altar chest 10%, library chest 100%
+        RandomOption(15, TrimPatterns.SPIRE), //End city chest 6.7%
+        RandomOption(15, TrimPatterns.TIDE), //Elder Guardian 20%
+        RandomOption(15, TrimPatterns.RIB), //Nether Fortress chest 6.7%
+        RandomOption(15, TrimPatterns.DUNE), //Desert Temple 14.3%
+        RandomOption(15, TrimPatterns.WAYFINDER), //Suspicious gravel 8.3%
+        RandomOption(15, TrimPatterns.SHAPER), //Suspicious gravel 8.3%
+        RandomOption(15, TrimPatterns.RAISER), //Suspicious gravel 8.3%
+        RandomOption(15, TrimPatterns.HOST), //Suspicious gravel 8.3%
+        RandomOption(20, TrimPatterns.SENTRY), //Outpost chest 25%
+        RandomOption(25, TrimPatterns.COAST), //Shipwreck chest 16.7%
     )
 }

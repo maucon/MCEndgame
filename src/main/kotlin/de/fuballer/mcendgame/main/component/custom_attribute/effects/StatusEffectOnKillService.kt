@@ -6,13 +6,13 @@ import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttribu
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDeathEvent
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.effect.StatusEffects
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 
 private val EFFECTS = mapOf(
-    CustomAttributeTypes.STRENGTH_ON_KILL to StatusEffects.STRENGTH,
-    CustomAttributeTypes.SPEED_ON_KILL to StatusEffects.SPEED,
-    CustomAttributeTypes.HASTE_ON_KILL to StatusEffects.HASTE,
+    CustomAttributeTypes.STRENGTH_ON_KILL to MobEffects.STRENGTH,
+    CustomAttributeTypes.SPEED_ON_KILL to MobEffects.SPEED,
+    CustomAttributeTypes.HASTE_ON_KILL to MobEffects.HASTE,
 )
 
 @Injectable
@@ -25,8 +25,8 @@ class StatusEffectOnKillService {
             killer.getAllCustomAttributes()[attribute]?.forEach {
                 val duration = it.rolls[1].asIntRoll().getValue() * 20
                 val amplifier = it.rolls[0].asIntRoll().getValue() - 1
-                val effectInstance = StatusEffectInstance(effect, duration, amplifier, false, true, true)
-                killer.addStatusEffect(effectInstance)
+                val effectInstance = MobEffectInstance(effect, duration, amplifier, false, true, true)
+                killer.addEffect(effectInstance)
             }
         }
     }

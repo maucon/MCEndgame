@@ -1,27 +1,27 @@
 package de.fuballer.mcendgame.main.component.item.custom.armor.materials
 
 import de.fuballer.mcendgame.main.util.minecraft.RegistryKeyUtil
-import net.minecraft.item.equipment.ArmorMaterial
-import net.minecraft.item.equipment.EquipmentAsset
-import net.minecraft.item.equipment.EquipmentType
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.tag.ItemTags
-import net.minecraft.sound.SoundEvents
+import net.minecraft.resources.ResourceKey
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.ItemTags
+import net.minecraft.world.item.equipment.ArmorMaterial
+import net.minecraft.world.item.equipment.ArmorType
+import net.minecraft.world.item.equipment.EquipmentAsset
 
 object DruidsArmorMaterial : CustomArmorMaterial {
     override val baseDurability = 37
-    override val registryKey: RegistryKey<EquipmentAsset> = RegistryKeyUtil.createEquipmentAssetKey("druids")
+    override val registryKey: ResourceKey<EquipmentAsset> = RegistryKeyUtil.createEquipmentAssetKey("druids")
 
     override val instance = ArmorMaterial(
         baseDurability,
         mapOf(
-            EquipmentType.BOOTS to 3,
-            EquipmentType.LEGGINGS to 6,
-            EquipmentType.CHESTPLATE to 8,
-            EquipmentType.HELMET to 3,
+            ArmorType.BOOTS to 3,
+            ArmorType.LEGGINGS to 6,
+            ArmorType.CHESTPLATE to 8,
+            ArmorType.HELMET to 3,
         ),
         15,
-        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC,
+        SoundEvents.ARMOR_EQUIP_GENERIC,
         3.0f,
         0.1f,
         ItemTags.REPAIRS_NETHERITE_ARMOR,

@@ -6,11 +6,11 @@ import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttribu
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HidePlayerModelPartArmor
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.entity.player.PlayerModelPart
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.player.PlayerModelPart
 
 class WitherRoseLeggings(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings), HidePlayerModelPartArmor {
     override val hiddenPlayerModelParts = listOf(
         PlayerModelPart.LEFT_PANTS_LEG,
@@ -22,5 +22,5 @@ class WitherRoseLeggings(
         RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN_PER_MAX_HEALTH_ABOVE_TWENTY, 0, DoubleBounds(-0.01, -0.01)),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.LEGS
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.LEGS
 }

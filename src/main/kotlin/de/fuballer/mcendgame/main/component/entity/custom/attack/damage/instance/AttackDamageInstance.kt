@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance
 
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AttackDamage
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 
 open class AttackDamageInstance(
     private var minDelay: Int,
@@ -15,8 +15,8 @@ open class AttackDamageInstance(
 
     // returns if the damage is applied, expired or cancelled
     fun tick(
-        world: ServerWorld,
-        damager: MobEntity,
+        world: ServerLevel,
+        damager: Mob,
     ): Boolean {
         if (shouldCancel(damager)) return true
 
@@ -27,5 +27,5 @@ open class AttackDamageInstance(
         return damage.apply(world, damager, target)
     }
 
-    open fun shouldCancel(damager: MobEntity) = false
+    open fun shouldCancel(damager: Mob) = false
 }

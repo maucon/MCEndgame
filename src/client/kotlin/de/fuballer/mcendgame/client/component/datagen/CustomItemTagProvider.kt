@@ -7,16 +7,16 @@ import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItems
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider
-import net.minecraft.item.Items
-import net.minecraft.registry.RegistryWrapper
-import net.minecraft.registry.tag.ItemTags
+import net.minecraft.core.HolderLookup
+import net.minecraft.tags.ItemTags
+import net.minecraft.world.item.Items
 import java.util.concurrent.CompletableFuture
 
 class CustomItemTagProvider(
     dataOutput: FabricDataOutput,
-    registryLookup: CompletableFuture<RegistryWrapper.WrapperLookup>,
+    registryLookup: CompletableFuture<HolderLookup.Provider>,
 ) : FabricTagProvider.ItemTagProvider(dataOutput, registryLookup) {
-    override fun configure(wrapperLookup: RegistryWrapper.WrapperLookup) {
+    override fun addTags(wrapperLookup: HolderLookup.Provider) {
         valueLookupBuilder(ItemTags.SWORDS)
             .add(CustomToolItems.TWINFIRE)
             .add(CustomToolItems.BLOODHARVEST)

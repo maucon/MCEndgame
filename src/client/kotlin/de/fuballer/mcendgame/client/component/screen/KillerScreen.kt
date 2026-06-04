@@ -5,18 +5,18 @@ import de.fuballer.mcendgame.main.component.killer.KillerScreenHandler
 import de.fuballer.mcendgame.main.component.killer.db.KillerEntity
 import de.fuballer.mcendgame.main.util.ColorUtil
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gl.RenderPipelines
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.ingame.HandledScreen
-import net.minecraft.client.gui.screen.ingame.InventoryScreen
-import net.minecraft.client.network.OtherClientPlayerEntity
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.SpawnReason
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.registry.Registries
-import net.minecraft.text.Text
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.client.gui.screens.inventory.InventoryScreen
+import net.minecraft.client.player.RemotePlayer
+import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.Component
+import net.minecraft.world.entity.EntitySpawnReason
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Inventory
 import kotlin.jvm.optionals.getOrNull
 
 private val TEXTURE = IdentifierUtil.default("textures/gui/container/killer.png")
@@ -30,21 +30,21 @@ private const val ENTITY_BASE_SIZE = 75
 
 class KillerScreen(
     handler: KillerScreenHandler,
-    inventory: PlayerInventory,
-    title: Text,
-) : HandledScreen<KillerScreenHandler>(handler, inventory, title) {
+    inventory: Inventory,
+    title: Component,
+) : AbstractContainerScreen<KillerScreenHandler>(handler, inventory, title) {
     val statusEffectsDisplay = CustomStatusEffectsDisplay(this)
     var killer: LivingEntity? = null
-    var trimmedTitle: Text? = null
+    var trimmedTitle: Component? = null
 
     init {
-        backgroundWidth = 111
-        backgroundHeight = 136
+        imageWidth = 111
+        imageHeight = 136
 
         statusEffectsDisplay.backgroundHeight = 24
         statusEffectsDisplay.smallWidth = 24
         statusEffectsDisplay.yOffsetPerEffect =
-            { effectCount -> if (effectCount <= 4) 25 else (backgroundHeight - statusEffectsDisplay.backgroundHeight) / (effectCount - 1) }
+            { effectCount -> if (effectCount <= 4) 25 else (imageHeight - statusEffectsDisplay.backgroundHeight) / (effectCount - 1) }
         statusEffectsDisplay.spriteXOffset = { 3 }
         statusEffectsDisplay.spriteYOffset = 3
         statusEffectsDisplay.descriptionTextYOffset = 8
@@ -57,86 +57,86 @@ class KillerScreen(
     private fun getKillerEntityAsLivingEntity(
         killerEntity: KillerEntity,
     ): LivingEntity? {
-        val type = Registries.ENTITY_TYPE.get(killerEntity.type) ?: return null
-        val world = MinecraftClient.getInstance().world!!
+        val type = BuiltInRegistries.ENTITY_TYPE.getValue(killerEntity.type) ?: return null
+        val world = Minecraft.getInstance().level!!
 
         var livingEntity: LivingEntity
         if (type != EntityType.PLAYER) {
-            livingEntity = type.create(world, SpawnReason.COMMAND) as LivingEntity
+            livingEntity = type.create(world, EntitySpawnReason.COMMAND) as LivingEntity
         } else {
             val name = killerEntity.displayName.getOrNull()?.string ?: ""
             val profile = GameProfile(killerEntity.killerUUID, name)
-            livingEntity = OtherClientPlayerEntity(world, profile)
+            livingEntity = RemotePlayer(world, profile)
         }
 
-        killerEntity.equipment.forEach { livingEntity.equipStack(it.key, it.value) }
-        killerEntity.statusEffects.forEach { livingEntity.addStatusEffect(it) }
+        killerEntity.equipment.forEach { livingEntity.setItemSlot(it.key, it.value) }
+        killerEntity.statusEffects.forEach { livingEntity.addEffect(it) }
 
         return livingEntity
     }
 
     override fun render(
-        context: DrawContext,
+        context: GuiGraphics,
         mouseX: Int,
         mouseY: Int,
         deltaTicks: Float
     ) {
         super.render(context, mouseX, mouseY, deltaTicks)
-        val effects = handler.killerEntity?.statusEffects ?: listOf()
+        val effects = menu.killerEntity?.statusEffects ?: listOf()
         statusEffectsDisplay.drawStatusEffects(
             context,
-            x + backgroundWidth + 1,
-            y,
+            leftPos + imageWidth + 1,
+            topPos,
             mouseX,
             mouseY,
             effects,
         )
-        drawMouseoverTooltip(context, mouseX, mouseY)
+        renderTooltip(context, mouseX, mouseY)
     }
 
-    override fun drawBackground(
-        context: DrawContext,
+    override fun renderBg(
+        context: GuiGraphics,
         deltaTicks: Float,
         mouseX: Int,
         mouseY: Int
     ) {
-        val textureX = (width - backgroundWidth) / 2
-        val textureY = (height - backgroundHeight) / 2
+        val textureX = (width - imageWidth) / 2
+        val textureY = (height - imageHeight) / 2
 
-        context.drawTexture(
+        context.blit(
             RenderPipelines.GUI_TEXTURED,
             TEXTURE,
             textureX,
             textureY,
             0.0f,
             0.0f,
-            backgroundWidth,
-            backgroundHeight,
-            backgroundWidth,
-            backgroundHeight,
+            imageWidth,
+            imageHeight,
+            imageWidth,
+            imageHeight,
         )
 
         drawKillerEntity(context, mouseX, mouseY)
     }
 
     private fun drawKillerEntity(
-        context: DrawContext,
+        context: GuiGraphics,
         mouseX: Int,
         mouseY: Int,
     ) {
         val livingKiller = killer ?: return
-        val killerRatio = livingKiller.width / livingKiller.height
+        val killerRatio = livingKiller.bbWidth / livingKiller.bbHeight
 
         val sizeFactor =
-            1.0 / if (killerRatio > ENTITY_DRAW_PANEL_RATIO) livingKiller.width / ENTITY_DRAW_PANEL_RATIO.toFloat() else livingKiller.height
+            1.0 / if (killerRatio > ENTITY_DRAW_PANEL_RATIO) livingKiller.bbWidth / ENTITY_DRAW_PANEL_RATIO.toFloat() else livingKiller.bbHeight
         val size = (ENTITY_BASE_SIZE * sizeFactor).toInt()
 
-        InventoryScreen.drawEntity(
+        InventoryScreen.renderEntityInInventoryFollowsMouse(
             context,
-            x + ENTITY_DRAW_PANEL_X,
-            y + ENTITY_DRAW_PANEL_Y,
-            x + ENTITY_DRAW_PANEL_X + ENTITY_DRAW_PANEL_WIDTH,
-            y + ENTITY_DRAW_PANEL_Y + ENTITY_DRAW_PANEL_HEIGHT,
+            leftPos + ENTITY_DRAW_PANEL_X,
+            topPos + ENTITY_DRAW_PANEL_Y,
+            leftPos + ENTITY_DRAW_PANEL_X + ENTITY_DRAW_PANEL_WIDTH,
+            topPos + ENTITY_DRAW_PANEL_Y + ENTITY_DRAW_PANEL_HEIGHT,
             size,
             0.0625F,
             mouseX.toFloat(),
@@ -145,27 +145,27 @@ class KillerScreen(
         )
     }
 
-    override fun drawForeground(
-        context: DrawContext,
+    override fun renderLabels(
+        context: GuiGraphics,
         mouseX: Int,
         mouseY: Int
     ) {
         if (trimmedTitle == null) trimTitle()
-        context.drawText(textRenderer, trimmedTitle!!, titleX, titleY, TITLE_COLOR, false)
+        context.drawString(font, trimmedTitle!!, titleLabelX, titleLabelY, TITLE_COLOR, false)
     }
 
     private fun trimTitle() {
         val literal = title.string
-        val maxWidth = backgroundWidth - titleX * 2
-        val baseWidth = textRenderer.getWidth(literal)
+        val maxWidth = imageWidth - titleLabelX * 2
+        val baseWidth = font.width(literal)
         if (baseWidth <= maxWidth) {
             trimmedTitle = title
             return
         }
 
         val ellipsis = "..."
-        val trimmedMaxWidth = maxWidth - textRenderer.getWidth(ellipsis)
-        val trimmed = textRenderer.trimToWidth(literal, trimmedMaxWidth)
-        trimmedTitle = Text.literal(trimmed + ellipsis)
+        val trimmedMaxWidth = maxWidth - font.width(ellipsis)
+        val trimmed = font.plainSubstrByWidth(literal, trimmedMaxWidth)
+        trimmedTitle = Component.literal(trimmed + ellipsis)
     }
 }

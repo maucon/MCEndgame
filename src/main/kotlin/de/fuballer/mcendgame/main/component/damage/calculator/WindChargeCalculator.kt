@@ -2,12 +2,12 @@ package de.fuballer.mcendgame.main.component.damage.calculator
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.projectile.AbstractWindChargeEntity
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.AbstractWindCharge
 
 object WindChargeCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.source is AbstractWindChargeEntity
+    override fun isActive(source: DamageSource) = source.directEntity is AbstractWindCharge
 
     override fun calculateAttackDamage(
         originalDamage: Float,

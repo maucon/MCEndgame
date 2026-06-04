@@ -6,14 +6,14 @@ import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttribu
 import de.fuballer.mcendgame.main.messaging.misc.MagicFindCommand
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.effect.StatusEffects
+import net.minecraft.world.effect.MobEffects
 
 @Injectable
 class MagicFindWhilePoisonedService {
     @CommandHandler
     fun on(cmd: MagicFindCommand) {
         val entity = cmd.entity
-        if (!entity.hasStatusEffect(StatusEffects.POISON)) return
+        if (!entity.hasEffect(MobEffects.POISON)) return
 
         val attributes = entity.getAllCustomAttributes()[CustomAttributeTypes.MAGIC_FIND_WHILE_POISONED] ?: return
         cmd.magicFind += attributes.sumOf { it.rolls[0].asIntRoll().getValue() }

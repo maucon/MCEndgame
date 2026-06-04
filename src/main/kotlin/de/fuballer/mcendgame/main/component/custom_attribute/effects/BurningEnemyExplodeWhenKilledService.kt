@@ -9,19 +9,19 @@ import de.fuballer.mcendgame.main.util.extension.EntityExtension.centerPos
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isValidSecondaryTarget
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.particle.ParticleTypes
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvents
-import net.minecraft.util.math.Vec3d
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.phys.Vec3
 
 @Injectable
 class BurningEnemyExplodeWhenKilledService {
     @EventSubscriber(sync = true)
     fun on(event: LivingEntityDeathEvent) {
-        val serverWorld = event.world as? ServerWorld ?: return
+        val serverWorld = event.world as? ServerLevel ?: return
 
         val entity = event.entity
         if (!entity.isOnFire) return
@@ -35,7 +35,7 @@ class BurningEnemyExplodeWhenKilledService {
     }
 
     private fun explode(
-        world: ServerWorld,
+        world: ServerLevel,
         killed: LivingEntity,
         killer: LivingEntity,
         damagePercentage: Double,
@@ -48,16 +48,16 @@ class BurningEnemyExplodeWhenKilledService {
     }
 
     private fun getNearbyTargets(
-        world: ServerWorld,
+        world: ServerLevel,
         killed: LivingEntity,
         killer: LivingEntity,
-    ) = world.getOtherEntities(killed, killed.boundingBox.expand(5.0)) { it.isValidSecondaryTarget(killed, killer) }
+    ) = world.getEntities(killed, killed.boundingBox.inflate(5.0)) { it.isValidSecondaryTarget(killed, killer) }
 
     private fun createParticles(
-        world: ServerWorld,
-        pos: Vec3d,
+        world: ServerLevel,
+        pos: Vec3,
     ) {
-        world.spawnParticles(
+        world.sendParticles(
             ParticleTypes.FLAME,
             pos.x,
             pos.y,
@@ -71,17 +71,17 @@ class BurningEnemyExplodeWhenKilledService {
     }
 
     private fun playSound(
-        world: ServerWorld,
+        world: ServerLevel,
         source: Entity,
-        pos: Vec3d,
+        pos: Vec3,
     ) {
         world.playSound(
             source,
             pos.x,
             pos.y,
             pos.z,
-            SoundEvents.ENTITY_FIREWORK_ROCKET_BLAST,
-            SoundCategory.PLAYERS,
+            SoundEvents.FIREWORK_ROCKET_BLAST,
+            SoundSource.PLAYERS,
             0.5F,
             1.0F
         )

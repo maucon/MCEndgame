@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 
 class DistanceTriggerCondition(
     private val minDistance: Double,
@@ -12,10 +12,10 @@ class DistanceTriggerCondition(
     constructor(maxDistance: Double) : this(0.0, maxDistance)
 
     override fun doesTrigger(
-        attacker: MobEntity,
+        attacker: Mob,
         target: LivingEntity?,
     ): Boolean {
         if (target == null) return false
-        return attacker.squaredDistanceTo(target) in squaredMinDistance..squaredMaxDistance
+        return attacker.distanceToSqr(target) in squaredMinDistance..squaredMaxDistance
     }
 }

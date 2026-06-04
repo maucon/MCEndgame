@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.client.component.render.link
 
+import com.mojang.blaze3d.vertex.VertexConsumer
 import de.fuballer.mcendgame.client.component.entity.custom.data.EntityConnectionPointData
 import de.fuballer.mcendgame.client.component.entity.custom.data.MultipleEntityConnectionData
 import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
@@ -9,17 +10,16 @@ import de.fuballer.mcendgame.main.component.custom_attribute.effects.link.LinkSe
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.network.ClientPlayerEntity
-import net.minecraft.client.render.LightmapTextureManager
-import net.minecraft.client.render.VertexConsumer
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.MathHelper
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.LightType
-import net.minecraft.world.World
+import net.minecraft.client.Minecraft
+import net.minecraft.client.player.LocalPlayer
+import net.minecraft.client.renderer.LightTexture
+import net.minecraft.core.BlockPos
+import net.minecraft.util.Mth
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.LightLayer
+import net.minecraft.world.phys.Vec3
 import org.joml.Matrix4f
 import java.util.*
 import kotlin.math.abs
@@ -31,14 +31,14 @@ class LinkRenderService {
     @CommandHandler
     fun on(cmd: AfterEntitiesRenderCommand) {
         val context = cmd.context
-        val client = MinecraftClient.getInstance()
-        val cameraPos = context.gameRenderer().camera.cameraPos ?: return
-        val tickDelta = client.renderTickCounter.getTickProgress(false)
+        val client = Minecraft.getInstance()
+        val cameraPos = context.gameRenderer().mainCamera.position()
+        val tickDelta = client.deltaTracker.getGameTimeDeltaPartialTick(false)
 
         val player = client.player
-        val firstPerson = client.options.perspective.isFirstPerson
+        val firstPerson = client.options.cameraType.isFirstPerson
 
-        val entities = client.world?.entities?.filterIsInstance<LivingEntity>() ?: return
+        val entities = client.level?.entitiesForRendering()?.filterIsInstance<LivingEntity>() ?: return
         entities.forEach { renderPotentialLinks(it, tickDelta, context, cameraPos, player, firstPerson) }
     }
 
@@ -46,25 +46,25 @@ class LinkRenderService {
         entity: LivingEntity,
         tickDelta: Float,
         context: WorldRenderContext,
-        cameraPos: Vec3d,
-        player: ClientPlayerEntity?,
+        cameraPos: Vec3,
+        player: LocalPlayer?,
         firstPerson: Boolean,
     ) {
         val data = getLinkData(entity, tickDelta) ?: return
 
         if (firstPerson && entity == player) {
-            val yawRadians = Math.toRadians(player.getLerpedYaw(tickDelta).toDouble())
-            val yawVector = Vec3d(-sin(yawRadians), 0.0, cos(yawRadians)).normalize()
-            val offsetStrength = abs(player.getLerpedPitch(tickDelta)) / 90
-            val linkOriginOffset = yawVector.multiply(-0.5 * offsetStrength)
+            val yawRadians = Math.toRadians(player.getYRot(tickDelta).toDouble())
+            val yawVector = Vec3(-sin(yawRadians), 0.0, cos(yawRadians)).normalize()
+            val offsetStrength = abs(player.getXRot(tickDelta)) / 90
+            val linkOriginOffset = yawVector.scale(-0.5 * offsetStrength)
             data.originEntity.pos = data.originEntity.pos.add(linkOriginOffset)
             data.offset = data.offset.add(linkOriginOffset)
         }
 
-        val cameraOffset = entity.getLerpedPos(tickDelta).subtract(cameraPos)
+        val cameraOffset = entity.getPosition(tickDelta).subtract(cameraPos)
         data.offset = data.offset.add(cameraOffset)
 
-        val age = entity.age + tickDelta
+        val age = entity.tickCount + tickDelta
 
         renderLinks(context, data, age)
     }
@@ -74,9 +74,9 @@ class LinkRenderService {
         if (linkedEntities.isEmpty()) return null
 
         val data = MultipleEntityConnectionData()
-        data.offset = Vec3d(0.0, entity.height * LinkSettings.LINK_CONNECTION_HEIGHT, 0.0)
-        data.originEntity = getMainEntityConnectionPoint(entity, tickDelta, entity.entityWorld)
-        data.connectedEntities = getLinkedEntitiesConnectionPoints(linkedEntities, tickDelta, entity.entityWorld)
+        data.offset = Vec3(0.0, entity.bbHeight * LinkSettings.LINK_CONNECTION_HEIGHT, 0.0)
+        data.originEntity = getMainEntityConnectionPoint(entity, tickDelta, entity.level())
+        data.connectedEntities = getLinkedEntitiesConnectionPoints(linkedEntities, tickDelta, entity.level())
 
         return data
     }
@@ -84,14 +84,14 @@ class LinkRenderService {
     private fun getMainEntityConnectionPoint(
         entity: Entity,
         tickDelta: Float,
-        world: World,
+        world: Level,
     ): EntityConnectionPointData {
         val entityData = EntityConnectionPointData()
-        entityData.pos = entity.getLerpedPos(tickDelta).add(0.0, entity.height * LinkSettings.LINK_CONNECTION_HEIGHT, 0.0)
+        entityData.pos = entity.getPosition(tickDelta).add(0.0, entity.bbHeight * LinkSettings.LINK_CONNECTION_HEIGHT, 0.0)
 
-        val blockPos = BlockPos.ofFloored(entity.getCameraPosVec(tickDelta))
-        entityData.blockLight = world.getLightLevel(LightType.BLOCK, blockPos)
-        entityData.skyLight = world.getLightLevel(LightType.SKY, blockPos)
+        val blockPos = BlockPos.containing(entity.getEyePosition(tickDelta))
+        entityData.blockLight = world.getBrightness(LightLayer.BLOCK, blockPos)
+        entityData.skyLight = world.getBrightness(LightLayer.SKY, blockPos)
 
         return entityData
     }
@@ -99,11 +99,11 @@ class LinkRenderService {
     private fun getLinkedEntitiesConnectionPoints(
         entities: Map<UUID, Long>,
         tickDelta: Float,
-        world: World,
+        world: Level,
     ): List<EntityConnectionPointData> {
         val data = mutableListOf<EntityConnectionPointData>()
 
-        val currentTime = world.time
+        val currentTime = world.gameTime
         for ((uuid, connectionTime) in entities) {
             val entity = world.getEntity(uuid) ?: continue
 
@@ -122,17 +122,17 @@ class LinkRenderService {
         age: Float,
     ) {
         val matrixStack = context.matrices()
-        matrixStack.push()
+        matrixStack.pushPose()
         matrixStack.translate(data.offset)
 
         val queue = context.commandQueue()
-        queue.submitCustom(matrixStack, CustomRenderLayers.LINK) { entry, vertexConsumer ->
+        queue.submitCustomGeometry(matrixStack, CustomRenderLayers.LINK) { entry, vertexConsumer ->
             data.connectedEntities.forEach {
-                renderLink(entry.positionMatrix, vertexConsumer, data.originEntity, it, age)
+                renderLink(entry.pose(), vertexConsumer, data.originEntity, it, age)
             }
         }
 
-        matrixStack.pop()
+        matrixStack.popPose()
     }
 
     private fun renderLink(
@@ -145,10 +145,10 @@ class LinkRenderService {
         val targetDistanceVector = linked.pos.subtract(origin.pos)
         val targetDistance = targetDistanceVector.length()
         val distancePercent = (linked.connectionDuration.toDouble() / LinkSettings.getLinkConnectingTime(targetDistance)).coerceAtMost(1.0)
-        val linkDistance = targetDistanceVector.multiply(distancePercent)
+        val linkDistance = targetDistanceVector.scale(distancePercent)
         val segmentCount = linkDistance.length() / LinkSettings.LINK_RENDER_SEGMENT_LENGTH
 
-        val perpendicularVector = linkDistance.horizontal.rotateY(Math.toRadians(90.0).toFloat()).normalize()
+        val perpendicularVector = linkDistance.horizontal().yRot(Math.toRadians(90.0).toFloat()).normalize()
 
         val linkLength = linkDistance.length()
 
@@ -156,7 +156,7 @@ class LinkRenderService {
         for (i in 0..segmentCount.toInt() + 1) {
             var vertexDistance = i * LinkSettings.LINK_RENDER_SEGMENT_LENGTH
             if (i > segmentCount + 1) vertexDistance -= LinkSettings.LINK_RENDER_SEGMENT_LENGTH * (1 - segmentCount % 1)
-            var vertexPos = linkDistance.multiply(vertexDistance / linkLength)
+            var vertexPos = linkDistance.scale(vertexDistance / linkLength)
 
             val vertexTargetDistancePercentage = vertexDistance / targetDistanceVector.length()
             val flatteningSineStrength = sin(Math.PI * vertexTargetDistancePercentage)
@@ -165,21 +165,21 @@ class LinkRenderService {
             val verticalOffset = flattenedSine * LinkSettings.LINK_RENDER_SINE_VERTICAL_STRENGTH
             vertexPos = vertexPos.add(0.0, verticalOffset, 0.0)
             val horizontalOffset = flattenedSine * LinkSettings.LINK_RENDER_SINE_HORIZONTAL_STRENGTH
-            vertexPos = vertexPos.add(perpendicularVector.multiply(horizontalOffset))
+            vertexPos = vertexPos.add(perpendicularVector.scale(horizontalOffset))
 
             val thicknessFactor = 1 + (abs(flattenedSine) * LinkSettings.LINK_RENDER_MAX_THICKNESS_FACTOR)
 
             val distancePercentage = vertexDistance / targetDistance
             val color = LinkSettings.getColor(distancePercentage)
 
-            val blockLight = MathHelper.lerp(distancePercentage.toFloat(), origin.blockLight, linked.blockLight)
-            val skyLight = MathHelper.lerp(distancePercentage.toFloat(), origin.skyLight, linked.skyLight)
-            val light = LightmapTextureManager.pack(blockLight, skyLight)
+            val blockLight = Mth.lerpInt(distancePercentage.toFloat(), origin.blockLight, linked.blockLight)
+            val skyLight = Mth.lerpInt(distancePercentage.toFloat(), origin.skyLight, linked.skyLight)
+            val light = LightTexture.pack(blockLight, skyLight)
 
             vertexData.add(LinkVertexData(vertexPos, color, light, thicknessFactor))
         }
 
-        val widthOffset = perpendicularVector.multiply(LinkSettings.LINK_RENDER_SEGMENT_WIDTH)
+        val widthOffset = perpendicularVector.scale(LinkSettings.LINK_RENDER_SEGMENT_WIDTH)
 
         vertexData.forEach { data -> addVertices(vertexConsumer, matrix, data, widthOffset, false) }
         vertexData.reversed().forEach { data -> addVertices(vertexConsumer, matrix, data, widthOffset, true) }
@@ -189,7 +189,7 @@ class LinkRenderService {
         vertexConsumer: VertexConsumer,
         matrix: Matrix4f,
         data: LinkVertexData,
-        widthOffset: Vec3d,
+        widthOffset: Vec3,
         reverse: Boolean,
     ) {
         val pos = data.pos
@@ -198,14 +198,14 @@ class LinkRenderService {
 
         val thickness = data.thicknessFactor
         val heightOffset = (if (reverse) LinkSettings.LINK_RENDER_SEGMENT_WIDTH else -LinkSettings.LINK_RENDER_SEGMENT_WIDTH) * thickness
-        val scaledWidthOffset = widthOffset.multiply(thickness)
+        val scaledWidthOffset = widthOffset.scale(thickness)
 
         val vec1 = pos.add(scaledWidthOffset).add(0.0, heightOffset, 0.0)
-        vertexConsumer.vertex(matrix, vec1.x.toFloat(), vec1.y.toFloat(), vec1.z.toFloat())
-            .color(color).light(light)
+        vertexConsumer.addVertex(matrix, vec1.x.toFloat(), vec1.y.toFloat(), vec1.z.toFloat())
+            .setColor(color).setLight(light)
 
         val vec2 = pos.subtract(scaledWidthOffset).subtract(0.0, heightOffset, 0.0)
-        vertexConsumer.vertex(matrix, vec2.x.toFloat(), vec2.y.toFloat(), vec2.z.toFloat())
-            .color(color).light(light)
+        vertexConsumer.addVertex(matrix, vec2.x.toFloat(), vec2.y.toFloat(), vec2.z.toFloat())
+            .setColor(color).setLight(light)
     }
 }

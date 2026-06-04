@@ -13,8 +13,8 @@ import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDu
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.block.Blocks
-import net.minecraft.state.property.Properties
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.state.properties.BlockStateProperties
 
 @Injectable
 class TotemEncounterService(
@@ -36,13 +36,13 @@ class TotemEncounterService(
 
         positions.forEach { encounterLocation ->
             val loc = encounterLocation.location
-            val wallState = Blocks.POLISHED_TUFF_WALL.defaultState
-            event.world.setBlockState(loc.toBlockPos(), wallState)
+            val wallState = Blocks.POLISHED_TUFF_WALL.defaultBlockState()
+            event.world.setBlockAndUpdate(loc.toBlockPos(), wallState)
 
             val rotation = encounterLocation.getRotation16()
-            val totemState = CustomBlocks.TOTEM_STATUE.defaultState
-                .with(Properties.ROTATION, rotation)
-            event.world.setBlockState(loc.add(0, 1, 0).toBlockPos(), totemState)
+            val totemState = CustomBlocks.TOTEM_STATUE.defaultBlockState()
+                .setValue(BlockStateProperties.ROTATION_16, rotation)
+            event.world.setBlockAndUpdate(loc.offset(0, 1, 0).toBlockPos(), totemState)
         }
     }
 

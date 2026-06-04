@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttributeType
 import de.maucon.mauconframework.command.CommandGateway
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 data class CollectElementalDamageCommand(
     override val entity: LivingEntity,

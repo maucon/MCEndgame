@@ -6,15 +6,15 @@ import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.item.tooltip.TooltipType
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.TooltipFlag
 
 @Injectable
 object CommandMapper {
     @Initializer
-    fun onItemTooltip() = ItemTooltipCallback.EVENT.register { itemStack: ItemStack, context: Item.TooltipContext, tooltipType: TooltipType, texts: MutableList<Text> ->
+    fun onItemTooltip() = ItemTooltipCallback.EVENT.register { itemStack: ItemStack, context: Item.TooltipContext, tooltipType: TooltipFlag, texts: MutableList<Component> ->
         val cmd = RenderItemTooltipCommand(itemStack, context, tooltipType, texts)
         CommandGateway.apply(cmd)
     }

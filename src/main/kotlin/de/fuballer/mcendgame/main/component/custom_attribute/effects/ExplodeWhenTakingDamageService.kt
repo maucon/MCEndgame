@@ -9,11 +9,11 @@ import de.fuballer.mcendgame.main.util.extension.EntityExtension.centerPos
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isEnemy
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.LivingEntity
-import net.minecraft.particle.ParticleTypes
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvents
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.LivingEntity
 
 @Injectable
 class ExplodeWhenTakingDamageService {
@@ -22,17 +22,17 @@ class ExplodeWhenTakingDamageService {
         if (event.amount <= 0) return
 
         val damaged = event.damaged
-        val serverWorld = damaged.entityWorld as? ServerWorld ?: return
+        val serverWorld = damaged.level() as? ServerLevel ?: return
         val attributes = damaged.getAllCustomAttributes()[CustomAttributeTypes.EXPLODE_WHEN_TAKING_DAMAGE] ?: return
 
-        if (damaged.hurtTime != damaged.maxHurtTime) return
+        if (damaged.hurtTime != damaged.hurtDuration) return
 
         val damagePercentage = attributes.sumOf { it.rolls[0].asDoubleRoll().getValue() }
         explode(serverWorld, damaged, damagePercentage)
     }
 
     private fun explode(
-        world: ServerWorld,
+        world: ServerLevel,
         damaged: LivingEntity,
         damagePercentage: Double,
     ) {
@@ -44,16 +44,16 @@ class ExplodeWhenTakingDamageService {
     }
 
     private fun getNearbyEnemies(
-        world: ServerWorld,
+        world: ServerLevel,
         damaged: LivingEntity,
-    ) = world.getOtherEntities(damaged, damaged.boundingBox.expand(5.0)) { damaged.isEnemy(it) }
+    ) = world.getEntities(damaged, damaged.boundingBox.inflate(5.0)) { damaged.isEnemy(it) }
 
     private fun createParticles(
-        world: ServerWorld,
+        world: ServerLevel,
         damaged: LivingEntity,
     ) {
         val pos = damaged.centerPos()
-        world.spawnParticles(
+        world.sendParticles(
             ParticleTypes.EXPLOSION,
             pos.x,
             pos.y,
@@ -67,7 +67,7 @@ class ExplodeWhenTakingDamageService {
     }
 
     private fun playSound(
-        world: ServerWorld,
+        world: ServerLevel,
         damaged: LivingEntity,
     ) {
         val pos = damaged.centerPos()
@@ -76,8 +76,8 @@ class ExplodeWhenTakingDamageService {
             pos.x,
             pos.y,
             pos.z,
-            SoundEvents.ENTITY_GENERIC_EXPLODE,
-            SoundCategory.PLAYERS,
+            SoundEvents.GENERIC_EXPLODE,
+            SoundSource.PLAYERS,
             0.35F,
             1.0F,
         )

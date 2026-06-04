@@ -2,98 +2,103 @@ package de.fuballer.mcendgame.client.component.item.custom.armor.model.druids
 
 import de.fuballer.mcendgame.client.component.item.custom.ModelPartDataExtension.createEmptyChild
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.model.*
-import net.minecraft.client.render.entity.model.BipedEntityModel
-import net.minecraft.client.render.entity.model.EntityModelLayer
-import net.minecraft.client.render.entity.model.EntityModelPartNames
-import net.minecraft.client.render.entity.state.BipedEntityRenderState
+import net.minecraft.client.model.HumanoidModel
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.model.geom.PartNames
+import net.minecraft.client.model.geom.PartPose
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.CubeListBuilder
+import net.minecraft.client.model.geom.builders.LayerDefinition
+import net.minecraft.client.model.geom.builders.MeshDefinition
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState
 
-class DruidsChestplateModel<S : BipedEntityRenderState>(
+class DruidsChestplateModel<S : HumanoidRenderState>(
     root: ModelPart
-) : BipedEntityModel<S>(root) {
+) : HumanoidModel<S>(root) {
     companion object {
-        val MODEL_LAYER = EntityModelLayer(IdentifierUtil.default("druids_chestplate"), "main")
+        val MODEL_LAYER = ModelLayerLocation(IdentifierUtil.default("druids_chestplate"), "main")
 
-        fun getTexturedModelData(): TexturedModelData {
-            val modelData = ModelData()
+        fun getTexturedModelData(): LayerDefinition {
+            val modelData = MeshDefinition()
             val modelPartData = modelData.root
 
-            val head = modelPartData.createEmptyChild(EntityModelPartNames.HEAD)
-            val hat = head.createEmptyChild(EntityModelPartNames.HAT)
-            val right_leg = modelPartData.createEmptyChild(EntityModelPartNames.RIGHT_LEG)
-            val left_leg = modelPartData.createEmptyChild(EntityModelPartNames.LEFT_LEG)
+            val head = modelPartData.createEmptyChild(PartNames.HEAD)
+            val hat = head.createEmptyChild(PartNames.HAT)
+            val right_leg = modelPartData.createEmptyChild(PartNames.RIGHT_LEG)
+            val left_leg = modelPartData.createEmptyChild(PartNames.LEFT_LEG)
 
-            val body = modelPartData.createEmptyChild(EntityModelPartNames.BODY)
+            val body = modelPartData.createEmptyChild(PartNames.BODY)
 
             val chestplate =
-                body.addChild("chestplate", ModelPartBuilder.create(), ModelTransform.origin(0.0f, 0.0f, 0.0f))
+                body.addOrReplaceChild("chestplate", CubeListBuilder.create(), PartPose.offset(0.0f, 0.0f, 0.0f))
 
-            val chestplate_armor = chestplate.addChild(
+            val chestplate_armor = chestplate.addOrReplaceChild(
                 "chestplate_armor",
-                ModelPartBuilder.create().uv(40, 89).cuboid(-4.5f, -0.25f, -2.75f, 9.0f, 5.0f, 5.0f, Dilation(0.5f))
-                    .uv(44, 105).cuboid(-4.5f, 4.0f, 1.2f, 9.0f, 2.0f, 1.0f, Dilation(0.5f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(40, 89).addBox(-4.5f, -0.25f, -2.75f, 9.0f, 5.0f, 5.0f, CubeDeformation(0.5f))
+                    .texOffs(44, 105).addBox(-4.5f, 4.0f, 1.2f, 9.0f, 2.0f, 1.0f, CubeDeformation(0.5f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val armor_bottom_front = chestplate_armor.addChild(
+            val armor_bottom_front = chestplate_armor.addOrReplaceChild(
                 "armor_bottom_front",
-                ModelPartBuilder.create().uv(44, 99).cuboid(-4.5f, 0.5f, 0.5f, 9.0f, 5.0f, 1.0f, Dilation(0.5f)),
-                ModelTransform.of(0.0f, 5.25f, -3.25f, 0.0873f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(44, 99).addBox(-4.5f, 0.5f, 0.5f, 9.0f, 5.0f, 1.0f, CubeDeformation(0.5f)),
+                PartPose.offsetAndRotation(0.0f, 5.25f, -3.25f, 0.0873f, 0.0f, 0.0f)
             )
 
-            val chestplate_base = chestplate.addChild(
+            val chestplate_base = chestplate.addOrReplaceChild(
                 "chestplate_base",
-                ModelPartBuilder.create().uv(41, 108).cuboid(-4.5f, -0.3f, -2.75f, 9.0f, 6.0f, 5.0f, Dilation(0.3f))
-                    .uv(42, 119).cuboid(-4.0f, 6.1f, -2.0f, 8.0f, 5.0f, 4.0f, Dilation(0.51f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(41, 108).addBox(-4.5f, -0.3f, -2.75f, 9.0f, 6.0f, 5.0f, CubeDeformation(0.3f))
+                    .texOffs(42, 119).addBox(-4.0f, 6.1f, -2.0f, 8.0f, 5.0f, 4.0f, CubeDeformation(0.51f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
             val left_arm =
-                modelPartData.addChild(
-                    EntityModelPartNames.LEFT_ARM,
-                    ModelPartBuilder.create(),
-                    ModelTransform.origin(5.0f, 2.0f, 0.0f)
+                modelPartData.addOrReplaceChild(
+                    PartNames.LEFT_ARM,
+                    CubeListBuilder.create(),
+                    PartPose.offset(5.0f, 2.0f, 0.0f)
                 )
 
-            val chestplate_left_arm = left_arm.addChild(
+            val chestplate_left_arm = left_arm.addOrReplaceChild(
                 "chestplate_left_arm",
-                ModelPartBuilder.create().uv(68, 91).cuboid(-1.0f, -2.0f, -2.0f, 4.0f, 6.0f, 4.0f, Dilation(0.4f))
-                    .uv(68, 101).cuboid(-1.0f, 4.0f, -2.0f, 4.0f, 6.0f, 4.0f, Dilation(0.26f))
-                    .uv(84, 101).cuboid(-1.5f, 4.0f, -2.5f, 5.0f, 2.0f, 5.0f, Dilation(-0.15f))
-                    .uv(84, 108).cuboid(-1.5f, 6.55f, -2.5f, 5.0f, 4.0f, 5.0f, Dilation(-0.15f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(68, 91).addBox(-1.0f, -2.0f, -2.0f, 4.0f, 6.0f, 4.0f, CubeDeformation(0.4f))
+                    .texOffs(68, 101).addBox(-1.0f, 4.0f, -2.0f, 4.0f, 6.0f, 4.0f, CubeDeformation(0.26f))
+                    .texOffs(84, 101).addBox(-1.5f, 4.0f, -2.5f, 5.0f, 2.0f, 5.0f, CubeDeformation(-0.15f))
+                    .texOffs(84, 108).addBox(-1.5f, 6.55f, -2.5f, 5.0f, 4.0f, 5.0f, CubeDeformation(-0.15f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val shoulderpad_left = chestplate_left_arm.addChild(
+            val shoulderpad_left = chestplate_left_arm.addOrReplaceChild(
                 "shoulderpad_left",
-                ModelPartBuilder.create().uv(84, 93).cuboid(0.0f, 0.5f, -2.0f, 3.0f, 4.0f, 4.0f, Dilation(0.5f)),
-                ModelTransform.of(0.5f, -3.0f, 0.1f, 0.0f, 0.0436f, 0.0873f)
+                CubeListBuilder.create().texOffs(84, 93).addBox(0.0f, 0.5f, -2.0f, 3.0f, 4.0f, 4.0f, CubeDeformation(0.5f)),
+                PartPose.offsetAndRotation(0.5f, -3.0f, 0.1f, 0.0f, 0.0436f, 0.0873f)
             )
 
             val right_arm =
-                modelPartData.addChild(
-                    EntityModelPartNames.RIGHT_ARM,
-                    ModelPartBuilder.create(),
-                    ModelTransform.origin(-5.0f, 2.0f, 0.0f)
+                modelPartData.addOrReplaceChild(
+                    PartNames.RIGHT_ARM,
+                    CubeListBuilder.create(),
+                    PartPose.offset(-5.0f, 2.0f, 0.0f)
                 )
 
-            val chestplate_right_arm = right_arm.addChild(
+            val chestplate_right_arm = right_arm.addOrReplaceChild(
                 "chestplate_right_arm",
-                ModelPartBuilder.create().uv(24, 91).cuboid(-3.0f, -2.0f, -2.0f, 4.0f, 6.0f, 4.0f, Dilation(0.4f))
-                    .uv(24, 101).cuboid(-3.0f, 4.0f, -2.0f, 4.0f, 6.0f, 4.0f, Dilation(0.26f))
-                    .uv(4, 101).cuboid(-3.5f, 4.0f, -2.5f, 5.0f, 2.0f, 5.0f, Dilation(-0.15f))
-                    .uv(4, 108).cuboid(-3.5f, 6.55f, -2.5f, 5.0f, 4.0f, 5.0f, Dilation(-0.15f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(24, 91).addBox(-3.0f, -2.0f, -2.0f, 4.0f, 6.0f, 4.0f, CubeDeformation(0.4f))
+                    .texOffs(24, 101).addBox(-3.0f, 4.0f, -2.0f, 4.0f, 6.0f, 4.0f, CubeDeformation(0.26f))
+                    .texOffs(4, 101).addBox(-3.5f, 4.0f, -2.5f, 5.0f, 2.0f, 5.0f, CubeDeformation(-0.15f))
+                    .texOffs(4, 108).addBox(-3.5f, 6.55f, -2.5f, 5.0f, 4.0f, 5.0f, CubeDeformation(-0.15f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val shoulderpad_right = chestplate_right_arm.addChild(
+            val shoulderpad_right = chestplate_right_arm.addOrReplaceChild(
                 "shoulderpad_right",
-                ModelPartBuilder.create().uv(10, 93).cuboid(-3.0f, 0.5f, -2.0f, 3.0f, 4.0f, 4.0f, Dilation(0.5f)),
-                ModelTransform.of(-0.5f, -3.0f, 0.1f, 0.0f, -0.0436f, -0.0873f)
+                CubeListBuilder.create().texOffs(10, 93).addBox(-3.0f, 0.5f, -2.0f, 3.0f, 4.0f, 4.0f, CubeDeformation(0.5f)),
+                PartPose.offsetAndRotation(-0.5f, -3.0f, 0.1f, 0.0f, -0.0436f, -0.0873f)
             )
-            return TexturedModelData.of(modelData, 128, 128)
+            return LayerDefinition.create(modelData, 128, 128)
         }
     }
 
-    override fun setAngles(renderState: S) {}
+    override fun setupAnim(renderState: S) {}
 }

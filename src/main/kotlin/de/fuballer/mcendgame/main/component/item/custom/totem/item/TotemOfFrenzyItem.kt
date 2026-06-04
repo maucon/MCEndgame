@@ -8,7 +8,7 @@ import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItem
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemType
 
 class TotemOfFrenzyItem(
-    settings: Settings,
+    settings: Properties,
 ) : TotemItem(settings) {
     override val maxTier = 2
     override val type = TotemType.BASIC

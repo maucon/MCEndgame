@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.main.component.entity.types
 
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.mob.StrayEntity
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.monster.skeleton.Stray
 
 object StrayStats : EntityTypeStats {
-    override val type: EntityType<StrayEntity> = EntityType.STRAY
+    override val type: EntityType<Stray> = EntityType.STRAY
 
     override val canHaveWeapons = true
     override val isRanged = true

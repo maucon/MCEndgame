@@ -3,16 +3,13 @@ package de.fuballer.mcendgame.main.mixin.living_entity;
 import de.fuballer.mcendgame.main.accessor.LivingEntityAuraAccessor;
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.data.AuraStatusEffect;
 import de.fuballer.mcendgame.main.util.extension.EntityExtension;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.world.World;
+import net.minecraft.core.Holder;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,10 +29,10 @@ public class LivingEntityAuraMixin implements LivingEntityAuraAccessor {
     private static final String ENEMY_AURA_STATUS_EFFECTS_NBT = "enemyAuraStatusEffects";
 
     @Unique
-    private final HashMap<RegistryEntry<StatusEffect>, AuraStatusEffect> allyAuraStatusEffects = new HashMap<>();
+    private final HashMap<Holder<MobEffect>, AuraStatusEffect> allyAuraStatusEffects = new HashMap<>();
 
     @Unique
-    private final HashMap<RegistryEntry<StatusEffect>, AuraStatusEffect> enemyAuraStatusEffects = new HashMap<>();
+    private final HashMap<Holder<MobEffect>, AuraStatusEffect> enemyAuraStatusEffects = new HashMap<>();
 
     @Override
     public void mcendgame$addAllyAuraStatusEffect(AuraStatusEffect effect) {
@@ -56,9 +53,9 @@ public class LivingEntityAuraMixin implements LivingEntityAuraAccessor {
     @Inject(method = "tick", at = @At("HEAD"))
     void tick(CallbackInfo ci) {
         var entity = (LivingEntity) (Object) this;
-        var world = entity.getEntityWorld();
-        if (world.isClient()) return;
-        if (entity.age % 10 != 0) return;
+        var world = entity.level();
+        if (world.isClientSide()) return;
+        if (entity.tickCount % 10 != 0) return;
 
         applyAuraStatusEffects(entity, world, allyAuraStatusEffects, true);
         applyAuraStatusEffects(entity, world, enemyAuraStatusEffects, false);
@@ -67,8 +64,8 @@ public class LivingEntityAuraMixin implements LivingEntityAuraAccessor {
     @Unique
     void applyAuraStatusEffects(
             LivingEntity entity,
-            World world,
-            HashMap<RegistryEntry<StatusEffect>, AuraStatusEffect> effects,
+            Level world,
+            HashMap<Holder<MobEffect>, AuraStatusEffect> effects,
             boolean ally
     ) {
         if (effects.isEmpty()) return;
@@ -82,9 +79,9 @@ public class LivingEntityAuraMixin implements LivingEntityAuraAccessor {
             if (range != prevRange) {
                 prevRange = range;
 
-                affectedEntities = (ArrayList<LivingEntity>) world.getEntitiesByType(
-                        TypeFilter.instanceOf(LivingEntity.class),
-                        entity.getBoundingBox().expand(range),
+                affectedEntities = (ArrayList<LivingEntity>) world.getEntities(
+                        EntityTypeTest.forClass(LivingEntity.class),
+                        entity.getBoundingBox().inflate(range),
                         nearbyEntity ->
                                 ally ? EntityExtension.INSTANCE.isAlly(entity, nearbyEntity)
                                         : EntityExtension.INSTANCE.isEnemy(entity, nearbyEntity)
@@ -98,18 +95,18 @@ public class LivingEntityAuraMixin implements LivingEntityAuraAccessor {
         }
     }
 
-    @Inject(method = "writeCustomData", at = @At("TAIL"))
-    void writeNBT(WriteView view, CallbackInfo ci) {
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    void writeNBT(ValueOutput view, CallbackInfo ci) {
         if (!allyAuraStatusEffects.isEmpty()) {
-            view.put(ALLY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf(), List.copyOf(allyAuraStatusEffects.values()));
+            view.store(ALLY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf(), List.copyOf(allyAuraStatusEffects.values()));
         }
         if (!enemyAuraStatusEffects.isEmpty()) {
-            view.put(ENEMY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf(), List.copyOf(enemyAuraStatusEffects.values()));
+            view.store(ENEMY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf(), List.copyOf(enemyAuraStatusEffects.values()));
         }
     }
 
-    @Inject(method = "readCustomData", at = @At("TAIL"))
-    void readNBT(ReadView view, CallbackInfo ci) {
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    void readNBT(ValueInput view, CallbackInfo ci) {
         List<AuraStatusEffect> allyEffects = view.read(ALLY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf()).orElse(List.of());
         allyAuraStatusEffects.clear();
         for (AuraStatusEffect auraStatusEffect : allyEffects) {

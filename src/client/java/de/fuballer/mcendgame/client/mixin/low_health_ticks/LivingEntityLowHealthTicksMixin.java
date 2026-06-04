@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.client.mixin.low_health_ticks;
 
 import de.fuballer.mcendgame.client.accessor.LivingEntityLowHealthTicksAccessor;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,7 +13,7 @@ public class LivingEntityLowHealthTicksMixin implements LivingEntityLowHealthTic
     @Unique
     public int lowHealthTicks20 = 0; // capped at 20
 
-    @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;pop()V"))
+    @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V"))
     public void baseTick(
             CallbackInfo ci
     ) {
@@ -21,7 +21,7 @@ public class LivingEntityLowHealthTicksMixin implements LivingEntityLowHealthTic
 
         double percentHealth = entity.getHealth() / entity.getMaxHealth();
         boolean lowHealth = percentHealth < 0.5; //TODO settings or util class
-        lowHealthTicks20 = Math.max(Math.min(lowHealthTicks20 + (lowHealth ? 1 : -1), 20), 0);
+        lowHealthTicks20 = Math.clamp(lowHealthTicks20 + (lowHealth ? 1 : -1), 0, 20);
     }
 
     @Override

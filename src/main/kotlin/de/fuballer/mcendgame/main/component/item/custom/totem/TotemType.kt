@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.component.item.custom.totem
 
 import de.fuballer.mcendgame.main.component.dungeon.loot.drop.ItemColor
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 
 private const val TRANSLATABLE_BASE_KEY = "item.mcendgame.totem.type."
 
@@ -14,5 +14,5 @@ enum class TotemType(
     EFFECT("effect", ItemColor.TOTEM_EFFECT),
     ULTIMATE("ultimate", ItemColor.TOTEM_ULTIMATE);
 
-    fun getLore(): MutableText = Text.translatable("$TRANSLATABLE_BASE_KEY$id")
+    fun getLore(): MutableComponent = Component.translatable("$TRANSLATABLE_BASE_KEY$id")
 }
