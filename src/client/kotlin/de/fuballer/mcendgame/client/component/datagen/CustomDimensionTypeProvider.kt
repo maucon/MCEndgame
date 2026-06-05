@@ -41,6 +41,7 @@ class CustomDimensionTypeProvider(
         piglinSafe: Boolean = false,
         respawnAnchorWorks: Boolean = false,
         ultrawarm: Boolean = false,
+        hasEnderDragonFight: Boolean = false,
         musicDefault: String = "minecraft:music.game",
         musicCreative: String = "minecraft:music.creative",
         musicMinDelay: Int = 0,
@@ -85,6 +86,7 @@ class CustomDimensionTypeProvider(
         addProperty("piglin_safe", piglinSafe)
         addProperty("respawn_anchor_works", respawnAnchorWorks)
         addProperty("ultrawarm", ultrawarm)
+        addProperty("has_ender_dragon_fight", hasEnderDragonFight)
     }
 
     private fun getPath(name: String) = packOutput.outputFolder.resolve("data/${MCEndgame.MOD_ID}/dimension_type/$name.json")

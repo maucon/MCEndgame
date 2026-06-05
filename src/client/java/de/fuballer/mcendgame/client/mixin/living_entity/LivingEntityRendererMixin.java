@@ -14,17 +14,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class LivingEntityRendererMixin {
     @Inject(at = @At("TAIL"), method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V")
     public void updateRenderState(
-            LivingEntity livingEntity,
-            LivingEntityRenderState livingEntityRenderState,
-            float f,
+            LivingEntity entity,
+            LivingEntityRenderState state,
+            float partialTicks,
             CallbackInfo ci
     ) {
-        if (!(livingEntityRenderState instanceof LivingEntityRenderStateAccessor livingEntityRenderStateAccessor)) return;
+        if (!(state instanceof LivingEntityRenderStateAccessor livingEntityRenderStateAccessor)) return;
 
-        livingEntityRenderStateAccessor.mcendgame$setHealth(livingEntity.getHealth());
-        livingEntityRenderStateAccessor.mcendgame$setMaxHealth(livingEntity.getMaxHealth());
+        livingEntityRenderStateAccessor.mcendgame$setHealth(entity.getHealth());
+        livingEntityRenderStateAccessor.mcendgame$setMaxHealth(entity.getMaxHealth());
 
-        if (livingEntity instanceof LivingEntityLowHealthTicksAccessor livingEntityLowHealthTicksAccessor) {
+        if (entity instanceof LivingEntityLowHealthTicksAccessor livingEntityLowHealthTicksAccessor) {
             livingEntityRenderStateAccessor.mcendgame$setLowHealthTicks20(livingEntityLowHealthTicksAccessor.mcendgame$getLowHealthTicks20());
         }
     }

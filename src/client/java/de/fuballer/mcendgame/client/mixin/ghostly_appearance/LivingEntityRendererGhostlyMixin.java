@@ -29,14 +29,14 @@ public abstract class LivingEntityRendererGhostlyMixin<T extends LivingEntity, S
             at = @At("TAIL")
     )
     public void updateRenderState(
-            LivingEntity livingEntity,
-            LivingEntityRenderState livingEntityRenderState,
-            float f,
+            LivingEntity entity,
+            LivingEntityRenderState state,
+            float partialTicks,
             CallbackInfo ci
     ) {
-        if (!(livingEntityRenderState instanceof LivingEntityRenderStateGhostlyAccessor accessor)) return;
+        if (!(state instanceof LivingEntityRenderStateGhostlyAccessor accessor)) return;
 
-        var ghostly = CustomAttributesExtensions.INSTANCE.isGhostly(livingEntity);
+        var ghostly = CustomAttributesExtensions.INSTANCE.isGhostly(entity);
         accessor.mcendgame$setGhostly(ghostly);
     }
 
@@ -52,13 +52,13 @@ public abstract class LivingEntityRendererGhostlyMixin<T extends LivingEntity, S
     }
 
     @ModifyVariable(
-            method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
+            method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
             at = @At(value = "STORE"),
-            ordinal = 2
+            name = "tintedColor"
     )
-    private int modifyColor(int original, S state) {
-        if (!(state instanceof LivingEntityRenderStateGhostlyAccessor accessor)) return original;
-        if (!accessor.mcendgame$isGhostly()) return original;
+    private int modifyColor(int tintedColor, S state) {
+        if (!(state instanceof LivingEntityRenderStateGhostlyAccessor accessor)) return tintedColor;
+        if (!accessor.mcendgame$isGhostly()) return tintedColor;
 
         return GhostlySettings.INSTANCE.getCOLOR();
     }
