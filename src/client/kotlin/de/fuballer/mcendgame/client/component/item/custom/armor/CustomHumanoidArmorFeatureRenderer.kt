@@ -34,7 +34,6 @@ import de.fuballer.mcendgame.main.util.ColorUtil
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.client.model.HumanoidModel
 import net.minecraft.client.model.Model
-import net.minecraft.client.renderer.LightTexture
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.RenderLayerParent
@@ -43,6 +42,7 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.util.LightCoordsUtil
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
@@ -236,7 +236,7 @@ class CustomHumanoidArmorFeatureRenderer<S : HumanoidRenderState, M : HumanoidMo
                 RenderTypes.eyes(texturedArmorModel.emissiveTexture),
                 matrices,
                 queue,
-                LightTexture.FULL_BRIGHT,
+                LightCoordsUtil.FULL_BRIGHT,
                 itemStack.hasFoil(),
             )
         }

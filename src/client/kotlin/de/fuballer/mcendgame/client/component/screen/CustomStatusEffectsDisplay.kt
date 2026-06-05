@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.client.component.screen
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.CommonComponents
@@ -41,7 +41,7 @@ class CustomStatusEffectsDisplay(
     var yOffsetPerEffect: (Int) -> Int = { effectCount -> if (effectCount <= 5) 33 else 132 / (effectCount - 1) }
 
     fun drawStatusEffects(
-        context: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         x: Int,
         y: Int,
         mouseX: Int,
@@ -58,19 +58,19 @@ class CustomStatusEffectsDisplay(
         val sortedEffects = statusEffects.sortedBy { it }
         var effectY = y
         sortedEffects.forEach {
-            drawStatusEffectBackground(context, x, effectY, wide, it.isAmbient)
-            drawStatusEffectSprite(context, x, effectY, it, wide)
+            drawStatusEffectBackground(graphics, x, effectY, wide, it.isAmbient)
+            drawStatusEffectSprite(graphics, x, effectY, it, wide)
 
-            if (wide) drawStatusEffectDescription(context, x, effectY, it)
+            if (wide) drawStatusEffectDescription(graphics, x, effectY, it)
             effectY += yOffsetPerEffect
         }
 
         if (wide || !enableTooltip) return
-        drawTooltip(context, sortedEffects, x, y, mouseX, mouseY, yOffsetPerEffect)
+        drawTooltip(graphics, sortedEffects, x, y, mouseX, mouseY, yOffsetPerEffect)
     }
 
     private fun drawTooltip(
-        context: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         effects: Iterable<MobEffectInstance>,
         x: Int,
         y: Int,
@@ -93,17 +93,17 @@ class CustomStatusEffectsDisplay(
         val tooltip = mutableListOf(getStatusEffectDescription(hoveredStatusEffectInstance))
         if (renderDurationText) tooltip.add(MobEffectUtil.formatDuration(hoveredStatusEffectInstance, 1.0F, client.level!!.tickRateManager().tickrate()))
 
-        context.setTooltipForNextFrame(parent.font, tooltip, Optional.empty(), mouseX, mouseY)
+        graphics.setTooltipForNextFrame(parent.font, tooltip, Optional.empty(), mouseX, mouseY)
     }
 
     private fun drawStatusEffectBackground(
-        context: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         x: Int,
         yBase: Int,
         wide: Boolean,
         ambient: Boolean,
     ) {
-        context.blitSprite(
+        graphics.blitSprite(
             RenderPipelines.GUI_TEXTURED,
             if (ambient) AMBIENT_EFFECT_BACKGROUND_TEXTURE else EFFECT_BACKGROUND_TEXTURE,
             x,
@@ -114,28 +114,28 @@ class CustomStatusEffectsDisplay(
     }
 
     private fun drawStatusEffectSprite(
-        context: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         x: Int,
         yBase: Int,
         statusEffect: MobEffectInstance,
         wide: Boolean,
     ) {
         val sprite = Gui.getMobEffectSprite(statusEffect.effect)
-        context.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x + spriteXOffset(wide), yBase + spriteYOffset, spriteSize, spriteSize)
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x + spriteXOffset(wide), yBase + spriteYOffset, spriteSize, spriteSize)
     }
 
     private fun drawStatusEffectDescription(
-        context: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         x: Int,
         yBase: Int,
         statusEffect: MobEffectInstance,
     ) {
         val descriptionText = getStatusEffectDescription(statusEffect)
-        context.drawString(parent.font, descriptionText, x + textXOffset, yBase + descriptionTextYOffset, descriptionTextColor)
+        graphics.text(parent.font, descriptionText, x + textXOffset, yBase + descriptionTextYOffset, descriptionTextColor)
 
         if (renderDurationText) {
             val durationText = MobEffectUtil.formatDuration(statusEffect, 1.0F, client.level!!.tickRateManager().tickrate())
-            context.drawString(parent.font, durationText, x + textXOffset, yBase + durationTextYOffset, durationTextColor)
+            graphics.text(parent.font, durationText, x + textXOffset, yBase + durationTextYOffset, durationTextColor)
         }
     }
 

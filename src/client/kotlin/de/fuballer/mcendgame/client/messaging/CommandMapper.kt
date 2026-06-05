@@ -4,8 +4,8 @@ import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -20,14 +20,14 @@ object CommandMapper {
     }
 
     @Initializer
-    fun onLivingEntityFeatureRendererRegistration() = LivingEntityFeatureRendererRegistrationCallback.EVENT.register { type, renderer, registrationHelper, context ->
+    fun onLivingEntityFeatureRendererRegistration() = LivingEntityRenderLayerRegistrationCallback.EVENT.register { type, renderer, registrationHelper, context ->
         val cmd = RegisterLivingEntityFeatureRendererCommand(type, renderer, registrationHelper, context)
         CommandGateway.apply(cmd)
     }
 
     @Initializer
-    fun afterEntitiesRendered() = WorldRenderEvents.AFTER_ENTITIES.register { context ->
-        val cmd = AfterEntitiesRenderCommand(context)
+    fun afterEntitiesRendered() = LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES.register { context ->
+        val cmd = AfterTranslucentFeatureRenderCommand(context)
         CommandGateway.apply(cmd)
     }
 }

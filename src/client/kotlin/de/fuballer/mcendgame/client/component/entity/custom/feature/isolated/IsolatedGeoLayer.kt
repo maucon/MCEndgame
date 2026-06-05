@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.client.component.entity.custom.feature.isolated
 
+import com.geckolib.animatable.GeoAnimatable
+import com.geckolib.renderer.base.GeoRenderState
+import com.geckolib.renderer.base.GeoRenderer
+import com.geckolib.renderer.base.RenderPassInfo
+import com.geckolib.renderer.layer.GeoRenderLayer
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
-import software.bernie.geckolib.animatable.GeoAnimatable
-import software.bernie.geckolib.renderer.base.GeoRenderState
-import software.bernie.geckolib.renderer.base.GeoRenderer
-import software.bernie.geckolib.renderer.base.RenderPassInfo
-import software.bernie.geckolib.renderer.layer.GeoRenderLayer
 
 class IsolatedGeoLayer<T : GeoAnimatable, O : Any, R : GeoRenderState>(
     renderer: GeoRenderer<T, O, R>,

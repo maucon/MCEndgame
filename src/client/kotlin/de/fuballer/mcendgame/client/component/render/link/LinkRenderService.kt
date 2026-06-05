@@ -4,16 +4,16 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import de.fuballer.mcendgame.client.component.entity.custom.data.EntityConnectionPointData
 import de.fuballer.mcendgame.client.component.entity.custom.data.MultipleEntityConnectionData
 import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
-import de.fuballer.mcendgame.client.messaging.AfterEntitiesRenderCommand
+import de.fuballer.mcendgame.client.messaging.AfterTranslucentFeatureRenderCommand
 import de.fuballer.mcendgame.main.accessor.LivingEntityLinkAttributeAccessor
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.link.LinkSettings
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.LocalPlayer
-import net.minecraft.client.renderer.LightTexture
 import net.minecraft.core.BlockPos
+import net.minecraft.util.LightCoordsUtil
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
@@ -29,7 +29,7 @@ import kotlin.math.sin
 @Injectable
 class LinkRenderService {
     @CommandHandler
-    fun on(cmd: AfterEntitiesRenderCommand) {
+    fun on(cmd: AfterTranslucentFeatureRenderCommand) {
         val context = cmd.context
         val client = Minecraft.getInstance()
         val cameraPos = context.gameRenderer().mainCamera.position()
@@ -45,7 +45,7 @@ class LinkRenderService {
     private fun renderPotentialLinks(
         entity: LivingEntity,
         tickDelta: Float,
-        context: WorldRenderContext,
+        context: LevelRenderContext,
         cameraPos: Vec3,
         player: LocalPlayer?,
         firstPerson: Boolean,
@@ -117,22 +117,22 @@ class LinkRenderService {
     }
 
     private fun renderLinks(
-        context: WorldRenderContext,
+        context: LevelRenderContext,
         data: MultipleEntityConnectionData,
         age: Float,
     ) {
-        val matrixStack = context.matrices()
-        matrixStack.pushPose()
-        matrixStack.translate(data.offset)
+        val poseStack = context.poseStack()
 
-        val queue = context.commandQueue()
-        queue.submitCustomGeometry(matrixStack, CustomRenderLayers.LINK) { entry, vertexConsumer ->
+        poseStack.pushPose()
+        poseStack.translate(data.offset)
+
+        context.submitNodeCollector().submitCustomGeometry(poseStack, CustomRenderLayers.LINK) { entry, vertexConsumer ->
             data.connectedEntities.forEach {
                 renderLink(entry.pose(), vertexConsumer, data.originEntity, it, age)
             }
         }
 
-        matrixStack.popPose()
+        poseStack.popPose()
     }
 
     private fun renderLink(
@@ -174,7 +174,7 @@ class LinkRenderService {
 
             val blockLight = Mth.lerpInt(distancePercentage.toFloat(), origin.blockLight, linked.blockLight)
             val skyLight = Mth.lerpInt(distancePercentage.toFloat(), origin.skyLight, linked.skyLight)
-            val light = LightTexture.pack(blockLight, skyLight)
+            val light = LightCoordsUtil.pack(blockLight, skyLight)
 
             vertexData.add(LinkVertexData(vertexPos, color, light, thicknessFactor))
         }

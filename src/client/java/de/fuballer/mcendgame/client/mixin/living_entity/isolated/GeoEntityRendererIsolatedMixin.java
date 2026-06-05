@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.client.mixin.living_entity.isolated;
 
+import com.geckolib.renderer.GeoEntityRenderer;
 import de.fuballer.mcendgame.client.accessor.LivingEntityRenderStateIsolatedAccessor;
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributeUtil;
 import net.minecraft.client.Minecraft;
@@ -12,7 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 @Mixin(GeoEntityRenderer.class)
 public class GeoEntityRendererIsolatedMixin {

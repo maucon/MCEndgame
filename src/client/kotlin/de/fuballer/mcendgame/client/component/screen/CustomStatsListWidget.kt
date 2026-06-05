@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.main.component.stats.CustomStatsRegistry
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
@@ -33,9 +33,9 @@ class CustomStatsListWidget(
 
     override fun getRowWidth(): Int = 280
 
-    override fun renderListBackground(context: GuiGraphics) {}
+    override fun extractListBackground(graphics: GuiGraphicsExtractor) {}
 
-    override fun renderListSeparators(context: GuiGraphics) {}
+    override fun extractListSeparators(graphics: GuiGraphicsExtractor) {}
 
     @Environment(EnvType.CLIENT)
     inner class Entry(
@@ -49,12 +49,12 @@ class CustomStatsListWidget(
 
         private fun getFormatted(): String = stat.format(value)
 
-        override fun renderContent(
-            context: GuiGraphics,
+        override fun extractContent(
+            graphics: GuiGraphicsExtractor,
             mouseX: Int,
             mouseY: Int,
             hovered: Boolean,
-            deltaTicks: Float,
+            tickDelta: Float
         ) {
             val textRenderer = minecraft.font
             val y = contentYMiddle - textRenderer.lineHeight / 2
@@ -62,11 +62,11 @@ class CustomStatsListWidget(
             val color = if (index % 2 == 0) -1 else -4539718 // white / gray alternating
 
             // Draw stat name on the left
-            context.drawString(textRenderer, displayName, contentX + 2, y, color)
+            graphics.text(textRenderer, displayName, contentX + 2, y, color)
 
             // Draw stat value on the right
             val formatted = getFormatted()
-            context.drawString(
+            graphics.text(
                 textRenderer,
                 formatted,
                 contentRight - textRenderer.width(formatted) - 4,

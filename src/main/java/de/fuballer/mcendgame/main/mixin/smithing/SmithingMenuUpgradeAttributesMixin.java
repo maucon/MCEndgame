@@ -7,10 +7,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SmithingRecipe;
 import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.item.crafting.SmithingTransformRecipe;
-import net.minecraft.world.level.Level;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,24 +17,20 @@ import java.util.Optional;
 
 @Mixin(SmithingMenu.class)
 public class SmithingMenuUpgradeAttributesMixin {
-    @Shadow
-    @Final
-    private Level level;
-
     @Inject(
             method = "createResult",
             at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresentOrElse(Ljava/util/function/Consumer;Ljava/lang/Runnable;)V"),
             cancellable = true)
     void updateResult(
             CallbackInfo ci,
-            @Local SmithingRecipeInput originalRecipeInput,
-            @Local Optional<RecipeHolder<SmithingRecipe>> optional
+            @Local(name = "input") SmithingRecipeInput input,
+            @Local(name = "foundRecipe") Optional<RecipeHolder<SmithingRecipe>> foundRecipe
     ) {
-        if (optional.isEmpty()) return;
-        var recipeEntry = optional.get();
+        if (foundRecipe.isEmpty()) return;
+        var recipeEntry = foundRecipe.get();
         if (!(recipeEntry.value() instanceof SmithingTransformRecipe recipe)) return;
 
-        var inputStack = originalRecipeInput.base();
+        var inputStack = input.base();
         var attributes = CustomAttributesExtensions.INSTANCE.getCustomAttributes(inputStack);
         if (attributes.isEmpty()) return;
 
@@ -45,10 +38,10 @@ public class SmithingMenuUpgradeAttributesMixin {
         CustomAttributesExtensions.INSTANCE.updateCustomAttributes(inputCopy, new ArrayList<>());
         var slot = attributes.getFirst().getSlot();
 
-        var template = originalRecipeInput.template();
-        var recipeInput = new SmithingRecipeInput(template, inputCopy, originalRecipeInput.addition());
+        var template = input.template();
+        var recipeInput = new SmithingRecipeInput(template, inputCopy, input.addition());
 
-        var resultStack = recipe.assemble(recipeInput, level.registryAccess());
+        var resultStack = recipe.assemble(recipeInput);
         CustomAttributesExtensions.INSTANCE.setCustomAttributes(resultStack, attributes, slot);
 
         var accessor = (ItemCombinerMenuAccessor) this;

@@ -3,13 +3,13 @@ package de.fuballer.mcendgame.client.component.datagen
 import com.google.gson.JsonObject
 import de.fuballer.mcendgame.main.MCEndgame
 import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
 import net.minecraft.data.CachedOutput
 import net.minecraft.data.DataProvider
 import java.util.concurrent.CompletableFuture
 
 class CustomDamageTypeProvider(
-    val dataOutput: FabricDataOutput,
+    val packOutput: FabricPackOutput,
 ) : DataProvider {
     override fun getName() = "${MCEndgame.MOD_ID} Damage Type Provider"
 
@@ -51,5 +51,5 @@ class CustomDamageTypeProvider(
         addProperty("effects", soundEffects)
     }
 
-    private fun getPath(name: String) = dataOutput.outputFolder.resolve("data/${MCEndgame.MOD_ID}/damage_type/$name.json")
+    private fun getPath(name: String) = packOutput.outputFolder.resolve("data/${MCEndgame.MOD_ID}/damage_type/$name.json")
 }

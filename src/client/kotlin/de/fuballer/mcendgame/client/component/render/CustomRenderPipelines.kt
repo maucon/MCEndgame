@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.client.component.render
 
-import com.mojang.blaze3d.pipeline.BlendFunction
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
@@ -13,8 +12,8 @@ object CustomRenderPipelines {
             .withVertexShader("core/position_color")
             .withFragmentShader("core/position_color")
             .withCull(false)
-            .withBlend(BlendFunction.TRANSLUCENT)
-            .withDepthWrite(true)
+            //.withBlend(BlendFunction.TRANSLUCENT) TODO: remove if it works without
+            //.withDepthWrite(true)
             .withVertexFormat(DefaultVertexFormat.POSITION_COLOR_LIGHTMAP, VertexFormat.Mode.TRIANGLE_STRIP)
             .build()
     )
@@ -25,9 +24,9 @@ object CustomRenderPipelines {
             .withShaderDefine("ALPHA_CUTOUT", 0.1f)
             .withShaderDefine("PER_FACE_LIGHTING")
             .withSampler("Sampler1")
-            .withBlend(BlendFunction.TRANSLUCENT)
+            //.withBlend(BlendFunction.TRANSLUCENT) TODO: remove if it works without
             .withCull(false)
-            .withDepthWrite(true)
+            //.withDepthWrite(true)
             .build()
     )
 }

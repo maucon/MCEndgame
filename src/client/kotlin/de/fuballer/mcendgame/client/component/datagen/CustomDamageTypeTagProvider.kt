@@ -3,8 +3,8 @@ package de.fuballer.mcendgame.client.component.datagen
 import de.fuballer.mcendgame.main.MCEndgame
 import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
 import de.fuballer.mcendgame.main.component.tags.CustomTags
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.Registries
 import net.minecraft.tags.DamageTypeTags
@@ -13,10 +13,10 @@ import net.minecraft.world.damagesource.DamageTypes
 import java.util.concurrent.CompletableFuture
 
 class CustomDamageTypeTagProvider(
-    output: FabricDataOutput,
+    packOutput: FabricPackOutput,
     registriesFuture: CompletableFuture<HolderLookup.Provider>
-) : FabricTagProvider<DamageType>(output, Registries.DAMAGE_TYPE, registriesFuture) {
-    override fun getName() = "${MCEndgame.MOD_ID}DamageTypeTagProvider"
+) : FabricTagsProvider<DamageType>(packOutput, Registries.DAMAGE_TYPE, registriesFuture) {
+    override fun getName() = "${MCEndgame.MOD_ID}DamageTypeTagsProvider"
 
     override fun addTags(arg: HolderLookup.Provider) {
         getOrCreateRawBuilder(DamageTypeTags.NO_KNOCKBACK)

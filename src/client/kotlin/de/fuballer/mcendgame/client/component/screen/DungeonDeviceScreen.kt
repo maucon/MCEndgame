@@ -18,7 +18,7 @@ import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.*
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
@@ -319,14 +319,14 @@ class DungeonDeviceScreen(
         return (attributes.size - 1) * ATTRIBUTE_TEXT_WIDGET_Y_OFFSET + ceil(ATTRIBUTE_TEXT_WIDGET_HEIGHT * ATTRIBUTE_TEXT_WIDGET_SCALE).toInt()
     }
 
-    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        super.render(context, mouseX, mouseY, delta)
-        if (showLevelAttributes) renderAttributesPanel(context, mouseX, mouseY, delta)
+    override fun extractContents(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+        super.extractContents(graphics, mouseX, mouseY, delta)
+        if (showLevelAttributes) renderAttributesPanel(graphics, mouseX, mouseY, delta)
 
-        context.pose().pushMatrix()
-        context.pose().scale(LEVEL_TEXT_SCALING, LEVEL_TEXT_SCALING, context.pose())
+        graphics.pose().pushMatrix()
+        graphics.pose().scale(LEVEL_TEXT_SCALING, LEVEL_TEXT_SCALING, graphics.pose())
 
-        context.drawString(
+        graphics.text(
             font,
             Component.translatable(
                 "text.mcendgame.dungeon.device.level",
@@ -338,10 +338,10 @@ class DungeonDeviceScreen(
             true
         )
 
-        context.pose().popMatrix()
+        graphics.pose().popMatrix()
 
         val progressScreenRect = getProgressScreenRect()
-        context.blit(
+        graphics.blit(
             RenderPipelines.GUI_TEXTURED,
             PROGRESS_TEXTURE,
             progressScreenRect.left(), progressScreenRect.top(),
@@ -350,14 +350,14 @@ class DungeonDeviceScreen(
             30, 24,
         )
 
-        renderTooltip(context, mouseX, mouseY)
+        extractTooltip(graphics, mouseX, mouseY)
     }
 
-    override fun renderBg(context: GuiGraphics, delta: Float, mouseX: Int, mouseY: Int) {
+    override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val textureX = (width - imageWidth) / 2
         val textureY = (height - imageHeight) / 2
 
-        context.blit(
+        graphics.blit(
             RenderPipelines.GUI_TEXTURED,
             TEXTURE,
             textureX,
@@ -371,14 +371,14 @@ class DungeonDeviceScreen(
         )
     }
 
-    override fun renderTooltip(drawContext: GuiGraphics, mouseX: Int, mouseY: Int) {
-        super.renderTooltip(drawContext, mouseX, mouseY)
+    override fun extractTooltip(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
+        super.extractTooltip(graphics, mouseX, mouseY)
 
         val progressScreenRect = getProgressScreenRect()
         if (mouseX < progressScreenRect.left() || mouseX > progressScreenRect.right() ||
             mouseY < progressScreenRect.top() || mouseY > progressScreenRect.bottom()
         ) return
-        drawContext.setTooltipForNextFrame(
+        graphics.setTooltipForNextFrame(
             this.font,
             Component.translatable(
                 "container.mcendgame.dungeon_device.progress_tooltip",
@@ -398,7 +398,7 @@ class DungeonDeviceScreen(
     )
 
     private fun renderAttributesPanel(
-        context: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
         delta: Float,
@@ -410,7 +410,7 @@ class DungeonDeviceScreen(
         val w = min(x2 - x1, ATTRIBUTE_PANEL_MAX_WIDTH)
         x2 = x1 + w
 
-        context.blit(
+        graphics.blit(
             RenderPipelines.GUI_TEXTURED,
             ATTRIBUTE_PANEL_TEXTURE,
             x1,
@@ -423,7 +423,7 @@ class DungeonDeviceScreen(
             256
         )
 
-        context.blit(
+        graphics.blit(
             RenderPipelines.GUI_TEXTURED,
             ATTRIBUTE_PANEL_TEXTURE,
             x1 + ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH,
@@ -436,7 +436,7 @@ class DungeonDeviceScreen(
             256
         )
 
-        context.blit(
+        graphics.blit(
             RenderPipelines.GUI_TEXTURED,
             ATTRIBUTE_PANEL_TEXTURE,
             x2 - ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH,
@@ -449,7 +449,7 @@ class DungeonDeviceScreen(
             256
         )
 
-        levelScalingTextWidgets.forEach { it.render(context, mouseX, mouseY, delta) }
+        levelScalingTextWidgets.forEach { it.extractWidgetRenderState(graphics, mouseX, mouseY, delta) }
     }
 
     private fun onCreateDungeonButtonPress(button: Button) {

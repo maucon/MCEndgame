@@ -109,7 +109,7 @@ public abstract class LivingEntityDamageMixin {
         var shieldBlocked = bl;
         ///////////////////////////////////////////////////////////////////////////////////
 
-        if (source.is(DamageTypeTags.IS_FREEZING) && this_.getType().is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES)) {
+        if (source.is(DamageTypeTags.IS_FREEZING) && this_.is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES)) {
             amount *= 5.0f;
             ///////////////////////////////////////////////////////////////////////////////////
             vanillaMoreDamage.add(5.0);

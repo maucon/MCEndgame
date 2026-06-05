@@ -17,7 +17,7 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventGateway
 import de.maucon.mauconframework.event.EventSubscriber
 import de.maucon.mauconframework.initializer.Initializer
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityLevelChangeEvents
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
@@ -100,7 +100,7 @@ object EventMapper {
     }
 
     @Initializer
-    fun afterPlayerChangeWorld() = ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register { entity, oldWorld, newWorld ->
+    fun afterPlayerChangeWorld() = ServerEntityLevelChangeEvents.AFTER_PLAYER_CHANGE_LEVEL.register { entity, oldWorld, newWorld ->
         val event = PlayerAfterDimensionChangeEvent(entity, oldWorld, newWorld)
         EventGateway.publish(event)
     }
@@ -157,7 +157,7 @@ object EventMapper {
     }
 
     @Initializer
-    fun onLivingEntityEndTick() = ServerTickEvents.END_WORLD_TICK.register { world ->
+    fun onLivingEntityEndTick() = ServerTickEvents.END_LEVEL_TICK.register { world ->
         if (world.gameTime % 5 != 0L) return@register
         val event = ServerLivingEntitiesEveryFiveTicksEvent(world.allEntities.filterIsInstance<LivingEntity>(), world)
         EventGateway.publish(event)

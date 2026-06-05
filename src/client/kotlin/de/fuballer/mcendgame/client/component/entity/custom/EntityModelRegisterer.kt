@@ -25,7 +25,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.portal.Portals
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.minecraft.client.model.geom.ModelLayers
 import net.minecraft.client.renderer.entity.EntityRenderers
 
@@ -33,16 +33,16 @@ import net.minecraft.client.renderer.entity.EntityRenderers
 object EntityModelRegisterer {
     @Initializer
     fun register() {
-        EntityModelLayerRegistry.registerModelLayer(
+        ModelLayerRegistry.registerModelLayer(
             SwampGolemEntityModel.SWAMP_GOLEM,
             SwampGolemEntityModel::getTexturedModelData
         )
         EntityRenderers.register(CustomEntities.SWAMP_GOLEM, ::SwampGolemRenderer)
 
-        EntityModelLayerRegistry.registerModelLayer(ArachneEntityModel.ARACHNE, ArachneEntityModel::getTexturedModelData)
+        ModelLayerRegistry.registerModelLayer(ArachneEntityModel.ARACHNE, ArachneEntityModel::getTexturedModelData)
         EntityRenderers.register(CustomEntities.ARACHNE, ::ArachneRenderer)
 
-        EntityModelLayerRegistry.registerModelLayer(
+        ModelLayerRegistry.registerModelLayer(
             WebshotEntityModel.WEBSHOT,
             WebshotEntityModel::getTexturedModelData
         )
@@ -52,7 +52,7 @@ object EntityModelRegisterer {
 
         EntityRenderers.register(CustomEntities.SPIDERLING, ::SpiderlingRenderer)
 
-        EntityModelLayerRegistry.registerModelLayer(TrainingDummyEntityModel.TRAINING_DUMMY, TrainingDummyEntityModel::getTexturedModelData)
+        ModelLayerRegistry.registerModelLayer(TrainingDummyEntityModel.TRAINING_DUMMY, TrainingDummyEntityModel::getTexturedModelData)
         EntityRenderers.register(CustomEntities.TRAINING_DUMMY) { context -> TrainingDummyRenderer(context, ModelLayers.ARMOR_STAND_ARMOR) }
 
         EntityRenderers.register(CustomEntities.BONECRUSHER) { state -> BonecrusherRenderer<BonecrusherRenderState>(state) }
@@ -61,11 +61,11 @@ object EntityModelRegisterer {
 
         EntityRenderers.register(CustomEntities.SCARRED_ONE) { state -> ScarredOneRenderer<ScarredOneRenderState>(state) }
 
-        EntityModelLayerRegistry.registerModelLayer(
+        ModelLayerRegistry.registerModelLayer(
             DefaultPortalEntityModel.PORTAL,
             DefaultPortalEntityModel::getTexturedModelData
         )
-        EntityModelLayerRegistry.registerModelLayer(
+        ModelLayerRegistry.registerModelLayer(
             LegacyPortalEntityModel.PORTAL,
             LegacyPortalEntityModel::getTexturedModelData
         )

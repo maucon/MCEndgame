@@ -10,18 +10,18 @@ import de.fuballer.mcendgame.main.component.killer.networking.KillerEntityPayloa
 import de.fuballer.mcendgame.main.component.totem.TotemScreenHandler
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType
 import net.minecraft.world.flag.FeatureFlags
 import net.minecraft.world.inventory.MenuType
 
 @Injectable
 object CustomScreenHandlerTypes {
-    val DUNGEON_DEVICE = ExtendedScreenHandlerType(
+    val DUNGEON_DEVICE = ExtendedMenuType(
         { syncId, inventory, payload -> DungeonDeviceScreenHandler(syncId, inventory, payload = payload) },
         DungeonDevicePayload.CODEC,
     ).also { RegistryUtil.registerScreenHandler(DungeonDeviceBlock.ID, it) }
 
-    val KILLER = ExtendedScreenHandlerType(
+    val KILLER = ExtendedMenuType(
         { syncId, inventory, payload -> KillerScreenHandler(syncId, inventory, payload = payload) },
         KillerEntityPayload.CODEC,
     ).also { RegistryUtil.registerScreenHandler("killer", it) }

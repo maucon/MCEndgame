@@ -2,17 +2,17 @@ package de.fuballer.mcendgame.client.component.datagen
 
 import de.fuballer.mcendgame.main.component.block.CustomBlocks
 import de.fuballer.mcendgame.main.component.tags.CustomTags
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider
 import net.minecraft.core.HolderLookup
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.level.block.Blocks
 import java.util.concurrent.CompletableFuture
 
 class CustomBlockTagProvider(
-    dataOutput: FabricDataOutput,
+    packOutput: FabricPackOutput,
     registryLookup: CompletableFuture<HolderLookup.Provider>,
-) : FabricTagProvider.BlockTagProvider(dataOutput, registryLookup) {
+) : FabricTagsProvider.BlockTagsProvider(packOutput, registryLookup) {
     override fun addTags(wrapperLookup: HolderLookup.Provider) {
         valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
             .add(CustomBlocks.DUNGEON_DEVICE)

@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.main.component.block.CustomBlockEntityTypes
 import de.fuballer.mcendgame.main.component.block.blocks.dungeon_device.networking.DungeonDevicePayload
 import de.fuballer.mcendgame.main.functional.inventory.ImplementedInventory
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getDungeonLevel
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.core.NonNullList
 import net.minecraft.network.chat.Component
@@ -23,7 +23,7 @@ private val TITLE = Component.translatable("container.mcendgame.dungeon_device.t
 class DungeonDeviceBlockEntity(
     blockPos: BlockPos,
     blockState: BlockState,
-) : BlockEntity(CustomBlockEntityTypes.DUNGEON_DEVICE, blockPos, blockState), ExtendedScreenHandlerFactory<DungeonDevicePayload>, ImplementedInventory {
+) : BlockEntity(CustomBlockEntityTypes.DUNGEON_DEVICE, blockPos, blockState), ExtendedMenuProvider<DungeonDevicePayload>, ImplementedInventory {
     private val inventory = NonNullList.withSize(DungeonDeviceSettings.INVENTORY_SIZE, ItemStack.EMPTY)
 
     override fun getItems(): NonNullList<ItemStack> = inventory
@@ -37,7 +37,7 @@ class DungeonDeviceBlockEntity(
         return DungeonDevicePayload(worldPosition, level!!.dimension(), player.uuid, playerDungeonLevel)
     }
 
-    override fun setChanged() = super<ImplementedInventory>.markDirty(level, worldPosition)
+    override fun setChanged() = super.markDirty(level, worldPosition)
 
     override fun loadAdditional(view: ValueInput) {
         super.loadAdditional(view)

@@ -17,9 +17,9 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
+import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.Items
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.equipment.ArmorType
 import net.minecraft.world.level.block.Block
@@ -31,11 +31,11 @@ import net.minecraft.world.level.block.state.BlockState
 
 object RegistryUtil {
     fun registerItem(factory: (Item.Properties) -> Item, settings: Item.Properties, name: String): Item =
-        Items.registerItem(RegistryKeyUtil.createItemKey(name), factory, settings)
+        Registry.register(BuiltInRegistries.ITEM, RegistryKeyUtil.createItemKey(name), factory(settings))
 
     fun registerBlock(factory: (BlockBehaviour.Properties) -> Block, settings: BlockBehaviour.Properties, name: String): Block =
         Blocks.register(RegistryKeyUtil.createBlockKey(name), factory, settings)
-            .also { Items.registerBlock(it) }
+            .also { Registry.register(BuiltInRegistries.ITEM, RegistryKeyUtil.createItemKey(name), BlockItem(it, Item.Properties())) }
 
     fun <T : BlockEntity> registerBlockEntityType(factory: (BlockPos, BlockState) -> T, block: Block, name: String): BlockEntityType<T> =
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, IdentifierUtil.default(name), FabricBlockEntityTypeBuilder.create(factory, block).build())

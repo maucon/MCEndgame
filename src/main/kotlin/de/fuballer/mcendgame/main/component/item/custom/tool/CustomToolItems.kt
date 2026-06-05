@@ -8,6 +8,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.tags.DamageTypeTags
 import net.minecraft.tags.ItemTags
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.MaceItem
 import net.minecraft.world.item.component.BlocksAttacks
@@ -65,19 +66,19 @@ object CustomToolItems {
     val GRUDGEBEARER = UniqueItemRegistry.registerToolItem(
         ::Grudgebearer,
         Item.Properties()
+            .equippableUnswappable(EquipmentSlot.OFFHAND)
             .durability(336)
-            .component(
-                DataComponents.BLOCKS_ATTACKS,
+            .delayedComponent(DataComponents.BLOCKS_ATTACKS) { context ->
                 BlocksAttacks(
                     0.25F,
                     1.0F,
                     listOf(BlocksAttacks.DamageReduction(90.0F, Optional.empty(), 0.0F, 1.0F)),
                     BlocksAttacks.ItemDamageFunction(3.0F, 1.0F, 1.0F),
-                    Optional.of(DamageTypeTags.BYPASSES_SHIELD),
+                    Optional.of(context.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
                     Optional.of(SoundEvents.SHIELD_BLOCK),
-                    Optional.of(SoundEvents.SHIELD_BREAK),
+                    Optional.of(SoundEvents.SHIELD_BREAK)
                 )
-            )
+            }
             .component(
                 DataComponents.USE_COOLDOWN,
                 UseCooldown(0F, Optional.of(Identifier.fromNamespaceAndPath("minecraft", "shield")))

@@ -4,7 +4,7 @@ import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
-import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.Item
@@ -48,13 +48,13 @@ class ItemFilterScreenHandler(
     override fun clicked(
         slotIndex: Int,
         button: Int,
-        actionType: ClickType,
+        containerInput: ContainerInput,
         player: Player
     ) {
-        offhandSwapLogic(slotIndex, button, actionType)
+        offhandSwapLogic(slotIndex, button, containerInput)
 
         if (slotIndex < 0 || slotIndex >= slots.size) return
-        if (actionType != ClickType.PICKUP && actionType != ClickType.PICKUP_ALL && actionType != ClickType.QUICK_MOVE) return
+        if (containerInput != ContainerInput.PICKUP && containerInput != ContainerInput.PICKUP_ALL && containerInput != ContainerInput.QUICK_MOVE) return
 
         val slot = slots[slotIndex]
         val clickedStack = slot.item
@@ -73,9 +73,9 @@ class ItemFilterScreenHandler(
     private fun offhandSwapLogic(
         slotIndex: Int,
         button: Int,
-        actionType: ClickType,
+        containerInput: ContainerInput,
     ) {
-        if (actionType != ClickType.SWAP || button != 40) return
+        if (containerInput != ContainerInput.SWAP || button != 40) return
 
         val offhandItem = playerInventory.getItem(button)
         val clickedItem = slots[slotIndex].item

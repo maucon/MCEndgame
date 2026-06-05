@@ -11,7 +11,7 @@ import de.fuballer.mcendgame.main.util.extension.EntityExtension;
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil;
 import io.netty.buffer.ByteBuf;
 import kotlin.Pair;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricTrackedDataRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityDataRegistry;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -56,7 +56,7 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
     private HashSet<UUID> linkedBy = new HashSet<>();
 
     static {
-        FabricTrackedDataRegistry.register(IdentifierUtil.INSTANCE.defaultJava("entity_link_attribute_data_tracker"), UUID_LONG_PAIR_LIST_TRACKED_DATA_HANDLER);
+        FabricEntityDataRegistry.register(IdentifierUtil.INSTANCE.defaultJava("entity_link_attribute_data_tracker"), UUID_LONG_PAIR_LIST_TRACKED_DATA_HANDLER);
     }
 
     @Unique

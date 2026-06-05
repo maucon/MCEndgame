@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.swamp_golem
 
+import com.geckolib.constant.dataticket.DataTicket
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.world.entity.AnimationState
-import software.bernie.geckolib.constant.dataticket.DataTicket
 
 class SwampGolemRenderState : LivingEntityRenderState() {
     val slamAnimationState: AnimationState = AnimationState()

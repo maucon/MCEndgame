@@ -7,15 +7,15 @@ import de.fuballer.mcendgame.client.component.entity.custom.data.MultipleEntityC
 import de.fuballer.mcendgame.main.component.entity.custom.entities.arachne.ArachneEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.mount.DirectionalMovementEntity
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.renderer.LightTexture
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.culling.Frustum
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.rendertype.RenderTypes
-import net.minecraft.client.renderer.state.CameraRenderState
+import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.Identifier
+import net.minecraft.util.LightCoordsUtil
 import net.minecraft.util.Mth
 import net.minecraft.world.level.LightLayer
 import net.minecraft.world.phys.Vec3
@@ -180,7 +180,7 @@ class ArachneRenderer(
         val segmentPercent = segmentIndex.toFloat() / 24.0f
         val blockLight = Mth.lerpInt(segmentPercent, leashedEntityBlockLight, leashHolderBlockLight)
         val skyLight = Mth.lerpInt(segmentPercent, leashedEntitySkyLight, leashHolderSkyLight)
-        val light = LightTexture.pack(blockLight, skyLight)
+        val light = LightCoordsUtil.pack(blockLight, skyLight)
 
         val brightnessFactor = if (segmentIndex % 2 == (if (rotated) 1 else 0)) 0.85f else 0.98f
         val red = 0.99f * brightnessFactor

@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes
 
 class WebbedModel(
     modelPart: ModelPart,
-) : Model<WebbedModel.WebbedData>(modelPart, RenderTypes::entityCutoutNoCull) {
+) : Model<WebbedModel.WebbedData>(modelPart, RenderTypes::entityCutout) {
     companion object {
         val WEBBED_LAYER = ModelLayerLocation(IdentifierUtil.default("webbed"), "main")
 

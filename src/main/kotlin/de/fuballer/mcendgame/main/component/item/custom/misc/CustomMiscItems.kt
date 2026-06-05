@@ -8,7 +8,6 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.Instruments
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.InstrumentComponent
 
 @Injectable
@@ -17,21 +16,21 @@ object CustomMiscItems {
         ::VerdantEcho,
         Item.Properties()
             .stacksTo(1)
-            .component(DataComponents.INSTRUMENT, InstrumentComponent(Instruments.DREAM_GOAT_HORN)),
+            .delayedComponent(DataComponents.INSTRUMENT) { context -> InstrumentComponent(context.getOrThrow(Instruments.DREAM_GOAT_HORN)) },
         "verdant_echo",
     )
     val MOLTEN_ROAR = UniqueItemRegistry.registerMiscItem(
         ::MoltenRoar,
         Item.Properties()
             .stacksTo(1)
-            .component(DataComponents.INSTRUMENT, InstrumentComponent(Instruments.SEEK_GOAT_HORN)),
+            .delayedComponent(DataComponents.INSTRUMENT) { context -> InstrumentComponent(context.getOrThrow(Instruments.SEEK_GOAT_HORN)) },
         "molten_roar",
     )
     val FRIGID_CRY = UniqueItemRegistry.registerMiscItem(
         ::FrigidCry,
         Item.Properties()
             .stacksTo(1)
-            .component(DataComponents.INSTRUMENT, InstrumentComponent(Instruments.FEEL_GOAT_HORN)),
+            .delayedComponent(DataComponents.INSTRUMENT) { context -> InstrumentComponent(context.getOrThrow(Instruments.FEEL_GOAT_HORN)) },
         "frigid_cry",
     )
 }

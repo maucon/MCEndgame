@@ -8,7 +8,7 @@ import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
 import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItems
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItems
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
 import net.minecraft.client.color.item.Dye
 import net.minecraft.client.data.models.BlockModelGenerators
 import net.minecraft.client.data.models.ItemModelGenerators
@@ -18,8 +18,8 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 
 class CustomModelProvider(
-    output: FabricDataOutput,
-) : FabricModelProvider(output) {
+    packOutput: FabricPackOutput,
+) : FabricModelProvider(packOutput) {
     override fun generateBlockStateModels(generator: BlockModelGenerators) {
         generator.createCraftingTableLike(CustomBlocks.DUNGEON_DEVICE, CustomBlocks.DUNGEON_DEVICE) { block, _ -> sideTopBottomTextureMap(block) }
         generator.createCrossBlockWithDefaultItem(CustomBlocks.DECAYING_COBWEB, BlockModelGenerators.PlantType.NOT_TINTED)

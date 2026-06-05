@@ -16,7 +16,7 @@ class PortalService {
             ?: false
 
         if (!teleportSuccessful) {
-            player.displayClientMessage(PortalSettings.TELEPORTATION_FAILED_MESSAGE, false)
+            player.sendSystemMessage(PortalSettings.TELEPORTATION_FAILED_MESSAGE)
         }
     }
 }

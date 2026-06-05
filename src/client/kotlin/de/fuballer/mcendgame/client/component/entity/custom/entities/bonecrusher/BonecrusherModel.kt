@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher
 
+import com.geckolib.model.GeoModel
+import com.geckolib.renderer.base.GeoRenderState
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import software.bernie.geckolib.model.GeoModel
-import software.bernie.geckolib.renderer.base.GeoRenderState
 
 class BonecrusherModel : GeoModel<BonecrusherEntity>() {
     companion object {

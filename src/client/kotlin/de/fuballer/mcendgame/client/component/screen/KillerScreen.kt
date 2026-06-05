@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.main.component.killer.db.KillerEntity
 import de.fuballer.mcendgame.main.util.ColorUtil
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.client.player.RemotePlayer
@@ -32,15 +32,13 @@ class KillerScreen(
     handler: KillerScreenHandler,
     inventory: Inventory,
     title: Component,
-) : AbstractContainerScreen<KillerScreenHandler>(handler, inventory, title) {
+) : AbstractContainerScreen<KillerScreenHandler>(handler, inventory, title, 111, 136) {
     val statusEffectsDisplay = CustomStatusEffectsDisplay(this)
     var killer: LivingEntity? = null
     var trimmedTitle: Component? = null
 
-    init {
-        imageWidth = 111
-        imageHeight = 136
 
+    init {
         statusEffectsDisplay.backgroundHeight = 24
         statusEffectsDisplay.smallWidth = 24
         statusEffectsDisplay.yOffsetPerEffect =
@@ -75,35 +73,35 @@ class KillerScreen(
         return livingEntity
     }
 
-    override fun render(
-        context: GuiGraphics,
+    override fun extractContents(
+        graphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
         deltaTicks: Float
     ) {
-        super.render(context, mouseX, mouseY, deltaTicks)
+        super.extractContents(graphics, mouseX, mouseY, deltaTicks)
         val effects = menu.killerEntity?.statusEffects ?: listOf()
         statusEffectsDisplay.drawStatusEffects(
-            context,
+            graphics,
             leftPos + imageWidth + 1,
             topPos,
             mouseX,
             mouseY,
             effects,
         )
-        renderTooltip(context, mouseX, mouseY)
+        extractTooltip(graphics, mouseX, mouseY)
     }
 
-    override fun renderBg(
-        context: GuiGraphics,
-        deltaTicks: Float,
+    override fun extractBackground(
+        graphics: GuiGraphicsExtractor,
         mouseX: Int,
-        mouseY: Int
+        mouseY: Int,
+        deltaTicks: Float,
     ) {
         val textureX = (width - imageWidth) / 2
         val textureY = (height - imageHeight) / 2
 
-        context.blit(
+        graphics.blit(
             RenderPipelines.GUI_TEXTURED,
             TEXTURE,
             textureX,
@@ -116,11 +114,11 @@ class KillerScreen(
             imageHeight,
         )
 
-        drawKillerEntity(context, mouseX, mouseY)
+        drawKillerEntity(graphics, mouseX, mouseY)
     }
 
     private fun drawKillerEntity(
-        context: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
     ) {
@@ -131,8 +129,8 @@ class KillerScreen(
             1.0 / if (killerRatio > ENTITY_DRAW_PANEL_RATIO) livingKiller.bbWidth / ENTITY_DRAW_PANEL_RATIO.toFloat() else livingKiller.bbHeight
         val size = (ENTITY_BASE_SIZE * sizeFactor).toInt()
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
-            context,
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
+            graphics,
             leftPos + ENTITY_DRAW_PANEL_X,
             topPos + ENTITY_DRAW_PANEL_Y,
             leftPos + ENTITY_DRAW_PANEL_X + ENTITY_DRAW_PANEL_WIDTH,
@@ -145,13 +143,13 @@ class KillerScreen(
         )
     }
 
-    override fun renderLabels(
-        context: GuiGraphics,
+    override fun extractLabels(
+        graphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int
     ) {
         if (trimmedTitle == null) trimTitle()
-        context.drawString(font, trimmedTitle!!, titleLabelX, titleLabelY, TITLE_COLOR, false)
+        graphics.text(font, trimmedTitle!!, titleLabelX, titleLabelY, TITLE_COLOR, false)
     }
 
     private fun trimTitle() {

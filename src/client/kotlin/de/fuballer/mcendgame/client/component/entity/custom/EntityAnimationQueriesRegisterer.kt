@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.client.component.entity.custom
 
+import com.geckolib.loading.math.MolangQueries
 import de.fuballer.mcendgame.main.MCEndgame
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
-import software.bernie.geckolib.loading.math.MolangQueries
 
 @Injectable
 class EntityAnimationQueriesRegisterer {

@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encount
 import de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encounters.scarred_one.data.RolledScarredOneEffect
 import de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encounters.scarred_one.networking.ScarredOneResponsePayload
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil
@@ -78,17 +78,17 @@ class ScarredOneScreen(
         backgroundY = (height / 2) - (backgroundHeight / 2)
     }
 
-    override fun render(
-        context: GuiGraphics,
+    override fun extractRenderState(
+        graphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
         delta: Float
     ) {
-        super.render(context, mouseX, mouseY, delta)
+        super.extractRenderState(graphics, mouseX, mouseY, delta)
 
-        TooltipRenderUtil.renderTooltipBackground(context, backgroundX, backgroundY, backgroundWidth, backgroundHeight, null)
+        TooltipRenderUtil.extractTooltipBackground(graphics, backgroundX, backgroundY, backgroundWidth, backgroundHeight, null)
 
-        context.enableScissor(
+        graphics.enableScissor(
             backgroundX,
             backgroundY,
             backgroundX + backgroundWidth,
@@ -101,7 +101,7 @@ class ScarredOneScreen(
 
         effectsTextData.forEach { effect ->
             if (effect.targets != lastTargets || effect.positive != lastPositive) {
-                context.drawString(
+                graphics.text(
                     font,
                     effect.targets.text,
                     backgroundX + BACKGROUND_PADDING,
@@ -115,7 +115,7 @@ class ScarredOneScreen(
                 y += ATTRIBUTE_LINE_OFFSET
             }
 
-            context.drawString(
+            graphics.text(
                 font,
                 effect.text,
                 backgroundX + BACKGROUND_PADDING,
@@ -126,7 +126,7 @@ class ScarredOneScreen(
             y += ATTRIBUTE_LINE_OFFSET
         }
 
-        context.disableScissor()
+        graphics.disableScissor()
     }
 
     private data class EffectTextData(

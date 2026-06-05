@@ -48,7 +48,7 @@ object IsolatedIndicatorRenderer {
         matrices.mulPose(Axis.YN.rotationDegrees(state.bodyRot - camera.yRot()))
         matrices.mulPose(Axis.XP.rotationDegrees(camera.xRot()))
 
-        queue.submitCustomGeometry(matrices, RenderTypes.entityCutoutNoCull(ICON_TEXTURE)) { entry, vertexConsumer ->
+        queue.submitCustomGeometry(matrices, RenderTypes.entityCutout(ICON_TEXTURE)) { entry, vertexConsumer ->
             val matrix = entry.pose()
 
             vertexConsumer.addVertex(matrix, -0.2f, -0.2f, 0f)

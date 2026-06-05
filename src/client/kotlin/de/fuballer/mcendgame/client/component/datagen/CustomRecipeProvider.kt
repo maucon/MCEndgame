@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.client.component.datagen
 
 import de.fuballer.mcendgame.main.component.block.CustomBlocks
 import de.fuballer.mcendgame.main.component.tags.CustomTags
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.recipes.RecipeCategory
@@ -13,9 +13,9 @@ import net.minecraft.world.item.Items
 import java.util.concurrent.CompletableFuture
 
 class CustomRecipeProvider(
-    dataOutput: FabricDataOutput,
+    packOutput: FabricPackOutput,
     registryLookup: CompletableFuture<HolderLookup.Provider>,
-) : FabricRecipeProvider(dataOutput, registryLookup) {
+) : FabricRecipeProvider(packOutput, registryLookup) {
     override fun createRecipeProvider(
         registryLookup: HolderLookup.Provider,
         exporter: RecipeOutput,

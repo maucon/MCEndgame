@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
 import de.fuballer.mcendgame.main.util.ColorUtil
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
@@ -71,26 +71,21 @@ class CrystalForgeScreen(
         forgeAnimationY2 = toForgeSlotY + 18
     }
 
-    override fun render(
-        context: GuiGraphics,
+    override fun extractContents(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, deltaTicks: Float) {
+        super.extractContents(graphics, mouseX, mouseY, deltaTicks)
+        extractTooltip(graphics, mouseX, mouseY)
+    }
+
+    override fun extractBackground(
+        graphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
         deltaTicks: Float
     ) {
-        super.render(context, mouseX, mouseY, deltaTicks)
-        renderTooltip(context, mouseX, mouseY)
-    }
-
-    override fun renderBg(
-        context: GuiGraphics,
-        deltaTicks: Float,
-        mouseX: Int,
-        mouseY: Int,
-    ) {
         val textureX = (width - imageWidth) / 2
         val textureY = (height - imageHeight) / 2
 
-        context.blit(
+        graphics.blit(
             RenderPipelines.GUI_TEXTURED,
             TEXTURE,
             textureX,
@@ -103,11 +98,11 @@ class CrystalForgeScreen(
             imageHeight,
         )
 
-        drawForgeAnimation(context, deltaTicks)
+        drawForgeAnimation(graphics, deltaTicks)
     }
 
     private fun drawForgeAnimation(
-        context: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         deltaTicks: Float,
     ) {
         if (forgeAnimationTime >= 0) {
@@ -116,14 +111,14 @@ class CrystalForgeScreen(
 
             val bgAlpha = (pulse * 100).toInt()
             val bgColor = ColorUtil.rgbaToInt(forgeAnimationColor.red, forgeAnimationColor.green, forgeAnimationColor.blue, bgAlpha)
-            context.fill(forgeAnimationX1 + 1, forgeAnimationY1 + 1, forgeAnimationX2 - 1, forgeAnimationY2 - 1, bgColor)
+            graphics.fill(forgeAnimationX1 + 1, forgeAnimationY1 + 1, forgeAnimationX2 - 1, forgeAnimationY2 - 1, bgColor)
 
             val outlineAlpha = (pulse * 255).toInt()
             val outlineColor = ColorUtil.rgbaToInt(forgeAnimationColor.red, forgeAnimationColor.green, forgeAnimationColor.blue, outlineAlpha)
-            context.fill(forgeAnimationX1, forgeAnimationY1, forgeAnimationX2, forgeAnimationY1 + 1, outlineColor)
-            context.fill(forgeAnimationX1, forgeAnimationY2 - 1, forgeAnimationX2, forgeAnimationY2, outlineColor)
-            context.fill(forgeAnimationX1, forgeAnimationY1 + 1, forgeAnimationX1 + 1, forgeAnimationY2 - 1, outlineColor)
-            context.fill(forgeAnimationX2 - 1, forgeAnimationY1 + 1, forgeAnimationX2, forgeAnimationY2 - 1, outlineColor)
+            graphics.fill(forgeAnimationX1, forgeAnimationY1, forgeAnimationX2, forgeAnimationY1 + 1, outlineColor)
+            graphics.fill(forgeAnimationX1, forgeAnimationY2 - 1, forgeAnimationX2, forgeAnimationY2, outlineColor)
+            graphics.fill(forgeAnimationX1, forgeAnimationY1 + 1, forgeAnimationX1 + 1, forgeAnimationY2 - 1, outlineColor)
+            graphics.fill(forgeAnimationX2 - 1, forgeAnimationY1 + 1, forgeAnimationX2, forgeAnimationY2 - 1, outlineColor)
 
             forgeAnimationTime += deltaTicks
             if (forgeAnimationTime >= FORGE_ANIMATION_DURATION) forgeAnimationTime = -1F

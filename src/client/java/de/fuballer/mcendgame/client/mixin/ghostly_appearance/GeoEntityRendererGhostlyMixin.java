@@ -1,5 +1,8 @@
 package de.fuballer.mcendgame.client.mixin.ghostly_appearance;
 
+import com.geckolib.animatable.GeoAnimatable;
+import com.geckolib.renderer.GeoEntityRenderer;
+import com.geckolib.renderer.base.GeoRenderState;
 import de.fuballer.mcendgame.client.accessor.LivingEntityRenderStateGhostlyAccessor;
 import de.fuballer.mcendgame.client.component.render.CustomRenderLayers;
 import de.fuballer.mcendgame.client.component.render.ghostly.GhostlySettings;
@@ -17,9 +20,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.renderer.base.GeoRenderState;
 
 @Mixin(GeoEntityRenderer.class)
 public class GeoEntityRendererGhostlyMixin<T extends Entity & GeoAnimatable, R extends EntityRenderState & GeoRenderState> {

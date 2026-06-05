@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.LivingEntityRenderer
 import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.state.CameraRenderState
+import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.resources.Identifier
 
 class PortalRenderer(
@@ -23,8 +23,8 @@ class PortalRenderer(
         PortalRenderState()
 
     // do not render the name label
-    override fun submitNameTag(state: PortalRenderState, matrices: PoseStack, queue: SubmitNodeCollector, cameraRenderState: CameraRenderState) {}
-
+    override fun submitNameDisplay(state: PortalRenderState, poseStack: PoseStack, submitNodeCollector: SubmitNodeCollector, camera: CameraRenderState) {}
+    
     override fun getTextureLocation(state: PortalRenderState): Identifier = state.type.getTexture(state.ageInTicks)
 
     override fun getRenderType(state: PortalRenderState, showBody: Boolean, translucent: Boolean, showOutline: Boolean): RenderType? {

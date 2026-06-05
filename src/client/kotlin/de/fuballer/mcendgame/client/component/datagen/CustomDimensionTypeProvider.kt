@@ -2,13 +2,13 @@ package de.fuballer.mcendgame.client.component.datagen
 
 import com.google.gson.JsonObject
 import de.fuballer.mcendgame.main.MCEndgame
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
 import net.minecraft.data.CachedOutput
 import net.minecraft.data.DataProvider
 import java.util.concurrent.CompletableFuture
 
 class CustomDimensionTypeProvider(
-    val dataOutput: FabricDataOutput,
+    val packOutput: FabricPackOutput,
 ) : DataProvider {
     override fun getName() = "${MCEndgame.MOD_ID} Dimension Type Provider"
 
@@ -87,5 +87,5 @@ class CustomDimensionTypeProvider(
         addProperty("ultrawarm", ultrawarm)
     }
 
-    private fun getPath(name: String) = dataOutput.outputFolder.resolve("data/${MCEndgame.MOD_ID}/dimension_type/$name.json")
+    private fun getPath(name: String) = packOutput.outputFolder.resolve("data/${MCEndgame.MOD_ID}/dimension_type/$name.json")
 }

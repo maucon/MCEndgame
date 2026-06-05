@@ -76,7 +76,7 @@ class PortalEntity(
         type.tickAnimation(this)
     }
 
-    override fun interactAt(player: Player, hitPos: Vec3, hand: InteractionHand): InteractionResult {
+    override fun interact(player: Player, hand: InteractionHand, hitPos: Vec3): InteractionResult {
         if (level().isClientSide) return InteractionResult.PASS
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS
 
