@@ -91,8 +91,14 @@ object RegistryUtil {
     fun <T : AbstractContainerMenu> registerScreenHandler(name: String, screenHandlerType: MenuType<T>): MenuType<T> =
         Registry.register(BuiltInRegistries.MENU, IdentifierUtil.default(name), screenHandlerType)
 
-    fun registerItemGroup(key: ResourceKey<CreativeModeTab>, type: CreativeModeTab.Builder): CreativeModeTab =
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, key, type.build())
+    fun registerCreativeModeTab(
+        name: String,
+        type: CreativeModeTab.Builder
+    ): CreativeModeTab = Registry.register(
+        BuiltInRegistries.CREATIVE_MODE_TAB,
+        ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), IdentifierUtil.default(name)),
+        type.build()
+    )
 
     fun registerStatusEffect(name: String, effect: MobEffect): Holder<MobEffect> =
         Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, IdentifierUtil.default(name), effect)
