@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.main.component.item.custom.aspect.item.ghosts
 
-import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
 import net.minecraft.network.chat.Component
@@ -20,7 +19,7 @@ class AspectOfGhosts(
     override val description = mutableListOf(
         Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ghosts_0", FORCED_DUNGEON_LEVEL),
         Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ghosts_1"),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ghosts_2", CustomArmorItems.GEISTERGALOSCHEN.defaultInstance.itemName)
+        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ghosts_2", Component.translatable("item.mcendgame.geistergaloschen"))
     )
     override val disabledAspects = listOf(AspectItems.ASPECT_OF_IMPATIENCE)
 }

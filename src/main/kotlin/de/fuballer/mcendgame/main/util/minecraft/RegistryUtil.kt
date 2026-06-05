@@ -30,12 +30,39 @@ import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
 
 object RegistryUtil {
-    fun registerItem(factory: (Item.Properties) -> Item, settings: Item.Properties, name: String): Item =
-        Registry.register(BuiltInRegistries.ITEM, RegistryKeyUtil.createItemKey(name), factory(settings))
+    fun registerItem(
+        factory: (Item.Properties) -> Item,
+        settings: Item.Properties,
+        name: String
+    ): Item {
+        val key = RegistryKeyUtil.createItemKey(name)
+        return Registry.register(
+            BuiltInRegistries.ITEM,
+            key,
+            factory(settings.setId(key))
+        )
+    }
 
-    fun registerBlock(factory: (BlockBehaviour.Properties) -> Block, settings: BlockBehaviour.Properties, name: String): Block =
-        Blocks.register(RegistryKeyUtil.createBlockKey(name), factory, settings)
-            .also { Registry.register(BuiltInRegistries.ITEM, RegistryKeyUtil.createItemKey(name), BlockItem(it, Item.Properties())) }
+    fun registerBlock(
+        factory: (BlockBehaviour.Properties) -> Block,
+        settings: BlockBehaviour.Properties,
+        name: String
+    ): Block {
+        val blockKey = RegistryKeyUtil.createBlockKey(name)
+        val itemKey = RegistryKeyUtil.createItemKey(name)
+
+        return Blocks.register(
+            blockKey,
+            factory,
+            settings.setId(blockKey)
+        ).also {
+            registerItem(
+                { prop -> BlockItem(it, prop) },
+                Item.Properties().setId(itemKey),
+                name
+            )
+        }
+    }
 
     fun <T : BlockEntity> registerBlockEntityType(factory: (BlockPos, BlockState) -> T, block: Block, name: String): BlockEntityType<T> =
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, IdentifierUtil.default(name), FabricBlockEntityTypeBuilder.create(factory, block).build())
@@ -49,12 +76,17 @@ object RegistryUtil {
     fun <T : Any> registerDataComponentType(componentType: DataComponentType<T>, name: String): DataComponentType<T> =
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, RegistryKeyUtil.createDataComponentTypeKey(name), componentType)
 
-    fun registerArmorItem(factory: (Item.Properties) -> Item, material: CustomArmorMaterial, type: ArmorType, name: String) =
-        registerItem(
-            factory,
-            Item.Properties().humanoidArmor(material.instance, type),
-            name,
-        )
+    fun registerArmorItem(
+        factory: (Item.Properties) -> Item,
+        material: CustomArmorMaterial,
+        type: ArmorType,
+        name: String
+    ) = registerItem(
+        factory,
+        Item.Properties()
+            .humanoidArmor(material.instance, type),
+        name,
+    )
 
     fun <T : AbstractContainerMenu> registerScreenHandler(name: String, screenHandlerType: MenuType<T>): MenuType<T> =
         Registry.register(BuiltInRegistries.MENU, IdentifierUtil.default(name), screenHandlerType)
@@ -65,12 +97,39 @@ object RegistryUtil {
     fun registerStatusEffect(name: String, effect: MobEffect): Holder<MobEffect> =
         Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, IdentifierUtil.default(name), effect)
 
-    fun registerAspectItem(factory: (Item.Properties) -> Item, name: String, rarity: Rarity = Rarity.UNCOMMON) = registerItem(factory, Item.Properties().rarity(rarity), name) as AspectItem
+    fun registerAspectItem(
+        factory: (Item.Properties) -> Item,
+        name: String,
+        rarity: Rarity = Rarity.UNCOMMON
+    ) = registerItem(
+        factory,
+        Item.Properties()
+            .rarity(rarity),
+        name
+    ) as AspectItem
 
-    fun registerCrystalItem(factory: (Item.Properties) -> Item, name: String, rarity: Rarity = Rarity.UNCOMMON) = registerItem(factory, Item.Properties().rarity(rarity), name) as CrystalItem
+    fun registerCrystalItem(
+        factory: (Item.Properties) -> Item,
+        name: String,
+        rarity: Rarity = Rarity.UNCOMMON
+    ) = registerItem(
+        factory,
+        Item.Properties()
+            .rarity(rarity),
+        name
+    ) as CrystalItem
 
-    fun registerTotemItem(factory: (Item.Properties) -> Item, name: String, rarity: Rarity = Rarity.UNCOMMON) =
-        registerItem(factory, Item.Properties().rarity(rarity).stacksTo(1), name) as TotemItem
+    fun registerTotemItem(
+        factory: (Item.Properties) -> Item,
+        name: String,
+        rarity: Rarity = Rarity.UNCOMMON
+    ) = registerItem(
+        factory,
+        Item.Properties()
+            .rarity(rarity)
+            .stacksTo(1),
+        name
+    ) as TotemItem
 
     fun registerSoundEvent(name: String): SoundEvent {
         val id = IdentifierUtil.default(name)
