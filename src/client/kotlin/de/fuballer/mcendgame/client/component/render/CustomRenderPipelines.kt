@@ -1,6 +1,10 @@
 package de.fuballer.mcendgame.client.component.render
 
+import com.mojang.blaze3d.pipeline.BlendFunction
+import com.mojang.blaze3d.pipeline.ColorTargetState
+import com.mojang.blaze3d.pipeline.DepthStencilState
 import com.mojang.blaze3d.pipeline.RenderPipeline
+import com.mojang.blaze3d.platform.CompareOp
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
 import net.minecraft.client.renderer.RenderPipelines
@@ -11,9 +15,9 @@ object CustomRenderPipelines {
             .withLocation("pipeline/link")
             .withVertexShader("core/position_color")
             .withFragmentShader("core/position_color")
+            .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
             .withCull(false)
-            //.withBlend(BlendFunction.TRANSLUCENT) TODO: remove if it works without
-            //.withDepthWrite(true)
+			.withDepthStencilState(DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, true))
             .withVertexFormat(DefaultVertexFormat.POSITION_COLOR_LIGHTMAP, VertexFormat.Mode.TRIANGLE_STRIP)
             .build()
     )
@@ -24,9 +28,9 @@ object CustomRenderPipelines {
             .withShaderDefine("ALPHA_CUTOUT", 0.1f)
             .withShaderDefine("PER_FACE_LIGHTING")
             .withSampler("Sampler1")
-            //.withBlend(BlendFunction.TRANSLUCENT) TODO: remove if it works without
+            .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
             .withCull(false)
-            //.withDepthWrite(true)
+            .withDepthStencilState(DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, true))
             .build()
     )
 }

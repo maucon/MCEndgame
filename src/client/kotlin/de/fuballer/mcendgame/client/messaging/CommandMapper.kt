@@ -26,8 +26,8 @@ object CommandMapper {
     }
 
     @Initializer
-    fun afterEntitiesRendered() = LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES.register { context ->
-        val cmd = AfterTranslucentFeatureRenderCommand(context)
+    fun collectRenderSubmits() = LevelRenderEvents.COLLECT_SUBMITS.register { context ->
+        val cmd = CollectRenderSubmitsCommand(context)
         CommandGateway.apply(cmd)
     }
 }

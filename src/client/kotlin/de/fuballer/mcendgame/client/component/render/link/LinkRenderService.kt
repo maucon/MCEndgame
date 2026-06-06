@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import de.fuballer.mcendgame.client.component.entity.custom.data.EntityConnectionPointData
 import de.fuballer.mcendgame.client.component.entity.custom.data.MultipleEntityConnectionData
 import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
-import de.fuballer.mcendgame.client.messaging.AfterTranslucentFeatureRenderCommand
+import de.fuballer.mcendgame.client.messaging.CollectRenderSubmitsCommand
 import de.fuballer.mcendgame.main.accessor.LivingEntityLinkAttributeAccessor
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.link.LinkSettings
 import de.maucon.mauconframework.command.CommandHandler
@@ -12,6 +12,7 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.LocalPlayer
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.core.BlockPos
 import net.minecraft.util.LightCoordsUtil
 import net.minecraft.util.Mth
@@ -29,8 +30,9 @@ import kotlin.math.sin
 @Injectable
 class LinkRenderService {
     @CommandHandler
-    fun on(cmd: AfterTranslucentFeatureRenderCommand) {
+    fun on(cmd: CollectRenderSubmitsCommand) {
         val context = cmd.context
+
         val client = Minecraft.getInstance()
         val cameraPos = context.gameRenderer().mainCamera.position()
         val tickDelta = client.deltaTracker.getGameTimeDeltaPartialTick(false)
