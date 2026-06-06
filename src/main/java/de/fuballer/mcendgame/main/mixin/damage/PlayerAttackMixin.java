@@ -1,10 +1,9 @@
 package de.fuballer.mcendgame.main.mixin.damage;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import de.fuballer.mcendgame.main.accessor.PlayerEntityMixinAccessor;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,24 +18,26 @@ public abstract class PlayerAttackMixin implements PlayerEntityMixinAccessor {
     @Unique
     private boolean lastAttackWasCritical;
 
-    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getAttackStrengthScale(F)F"))
-    protected void attack(Entity target, CallbackInfo ci) {
+    @Inject(
+            method = "attack",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/player/Player;isSweepAttack(ZZZ)Z"
+            )
+    )
+    private void onCriticalAttackSet(
+            Entity entity,
+            CallbackInfo ci,
+            @Local(name = "criticalAttack") boolean criticalAttack,
+            @Local(name = "attackStrengthScale") float attackStrengthScale
+    ) {
         var player = (Player) (Object) this;
         if (!(player instanceof ServerPlayer)) {
             return;
         }
 
-        // TODO take from minecraft vars
-        lastAttackCharge = player.getAttackStrengthScale(0.5F);
-        lastAttackWasCritical = lastAttackCharge > 0.9F
-                && player.fallDistance > 0.0F
-                && !player.onGround()
-                && !player.onClimbable()
-                && !player.isInWater()
-                && !player.hasEffect(MobEffects.BLINDNESS)
-                && !player.isPassenger()
-                && target instanceof LivingEntity
-                && !player.isSprinting();
+        lastAttackCharge = attackStrengthScale;
+        lastAttackWasCritical = criticalAttack;
     }
 
     @Override

@@ -34,40 +34,50 @@ public abstract class EnderDragonDamageCalculationMixin extends LivingEntity {
     @Shadow
     private EnderDragonPhaseManager phaseManager;
 
-    @Inject(at = @At("HEAD"), method = "hurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/boss/enderdragon/EnderDragonPart;Lnet/minecraft/world/damagesource/DamageSource;F)Z", cancellable = true)
-    protected void damagePart(ServerLevel world, EnderDragonPart part, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(
+            at = @At("HEAD"),
+            method = "hurt(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/boss/enderdragon/EnderDragonPart;Lnet/minecraft/world/damagesource/DamageSource;F)Z",
+            cancellable = true
+    )
+    protected void damagePart(
+            ServerLevel level,
+            EnderDragonPart part,
+            DamageSource source,
+            float damage,
+            CallbackInfoReturnable<Boolean> cir
+    ) {
         if (this.phaseManager.getCurrentPhase().getPhase() == EnderDragonPhase.DYING) {
             cir.setReturnValue(false);
         } else {
-            amount = this.phaseManager.getCurrentPhase().onHurt(source, amount);
+            damage = this.phaseManager.getCurrentPhase().onHurt(source, damage);
 
-            //////////////////////////////////////////////////////////////////////////////////////
+            // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
             boolean damageReduction = false;
-            //////////////////////////////////////////////////////////////////////////////////////
+            // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
             if (part != this.head) {
-                amount = amount / 4.0F + Math.min(amount, 1.0F);
+                damage = damage / 4.0F + Math.min(damage, 1.0F);
 
-                //////////////////////////////////////////////////////////////////////////////////////
+                // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
                 damageReduction = true;
-                //////////////////////////////////////////////////////////////////////////////////////
+                // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             }
 
-            if (amount < 0.01F) {
+            if (damage < 0.01F) {
                 cir.setReturnValue(false);
             } else {
                 if (source.getEntity() instanceof Player || source.is(DamageTypeTags.ALWAYS_HURTS_ENDER_DRAGONS)) {
-                    float f = this.getHealth();
-                    // parentDamage(world, source, amount);
+                    float healthBefore = this.getHealth();
+                    // parentDamage(world, source, damage);
 
-                    //////////////////////////////////////////////////////////////////////////////////////
+                    // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
                     var extendedSource = source instanceof ExtendedDamageSource
                             ? (ExtendedDamageSource) source
                             : new ExtendedDamageSource(source);
 
                     extendedSource.getDamageCalculationConfig().enderDragonDamageReduction(damageReduction);
-                    super.hurtServer(world, extendedSource, amount);
-                    //////////////////////////////////////////////////////////////////////////////////////
+                    super.hurtServer(level, extendedSource, damage);
+                    // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
                     if (this.isDeadOrDying() && !this.phaseManager.getCurrentPhase().isSitting()) {
                         this.setHealth(1.0F);
@@ -75,7 +85,7 @@ public abstract class EnderDragonDamageCalculationMixin extends LivingEntity {
                     }
 
                     if (this.phaseManager.getCurrentPhase().isSitting()) {
-                        this.sittingDamageReceived = this.sittingDamageReceived + f - this.getHealth();
+                        this.sittingDamageReceived = this.sittingDamageReceived + healthBefore - this.getHealth();
                         if (this.sittingDamageReceived > 0.25F * this.getMaxHealth()) {
                             this.sittingDamageReceived = 0.0F;
                             this.phaseManager.setPhase(EnderDragonPhase.TAKEOFF);

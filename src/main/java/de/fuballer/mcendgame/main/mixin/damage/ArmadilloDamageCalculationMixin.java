@@ -23,7 +23,8 @@ public abstract class ArmadilloDamageCalculationMixin extends LivingEntity {
     @ModifyVariable(
             method = "hurtServer",
             at = @At("HEAD"),
-            argsOnly = true
+            argsOnly = true,
+            name = "source"
     )
     private DamageSource onModifyDamageSource(DamageSource source) {
         var extendedSource = source instanceof ExtendedDamageSource

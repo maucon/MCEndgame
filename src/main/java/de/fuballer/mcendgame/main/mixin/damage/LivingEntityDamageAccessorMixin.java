@@ -14,10 +14,10 @@ public abstract class LivingEntityDamageAccessorMixin implements LivingEntityDam
     private long lastDamageStamp;
 
     @Shadow
-    protected abstract void playSecondaryHurtSound(DamageSource damageSource);
+    protected abstract void playSecondaryHurtSound(DamageSource source);
 
     @Shadow
-    protected abstract boolean checkTotemDeathProtection(DamageSource source);
+    protected abstract boolean checkTotemDeathProtection(DamageSource killingDamage);
 
     @Override
     public void mcendgame$setLastDamageSource(DamageSource damageSource) {

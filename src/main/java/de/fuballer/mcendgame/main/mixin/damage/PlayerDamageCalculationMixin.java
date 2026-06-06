@@ -31,8 +31,8 @@ public abstract class PlayerDamageCalculationMixin extends LivingEntity {
     }
 
     @Inject(at = @At("HEAD"), method = "hurtServer", cancellable = true)
-    protected void damage(ServerLevel world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (this.isInvulnerableTo(world, source)) {
+    protected void damage(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (this.isInvulnerableTo(level, source)) {
             cir.setReturnValue(false);
             return;
         }
@@ -49,80 +49,80 @@ public abstract class PlayerDamageCalculationMixin extends LivingEntity {
 
         ((PlayerAccessMixin) this).invokeRemoveEntitiesOnShoulder();
 
-        ///////////////////////////////////////////////////////////////////////////////////
+        // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
         var difficultyScaling = DifficultyScaling.NONE;
-        ///////////////////////////////////////////////////////////////////////////////////
+        // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
         if (source.scalesWithDifficulty()) {
-            if (world.getDifficulty() == Difficulty.PEACEFUL) {
+            if (level.getDifficulty() == Difficulty.PEACEFUL) {
                 cir.setReturnValue(false);
                 return;
             }
 
-            if (world.getDifficulty() == Difficulty.EASY) {
+            if (level.getDifficulty() == Difficulty.EASY) {
                 amount = Math.min(amount / 2.0F + 1.0F, amount);
-                ///////////////////////////////////////////////////////////////////////////////////
+                // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
                 difficultyScaling = DifficultyScaling.EASY;
-                ///////////////////////////////////////////////////////////////////////////////////
+                // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             }
 
-            if (world.getDifficulty() == Difficulty.HARD) {
+            if (level.getDifficulty() == Difficulty.HARD) {
                 amount = amount * 3.0F / 2.0F;
-                ///////////////////////////////////////////////////////////////////////////////////
+                // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
                 difficultyScaling = DifficultyScaling.HARD;
-                ///////////////////////////////////////////////////////////////////////////////////
+                // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             }
         }
 
-        // return amount == 0.0F ? false : super.damage(world, source, amount);
-        ///////////////////////////////////////////////////////////////////////////////////
+        // return dmg == 0.0F ? false : super.damage(world, source, dmg);
+        // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
         var extendedDamageSource = source instanceof ExtendedDamageSource
                 ? (ExtendedDamageSource) source
                 : new ExtendedDamageSource(source);
 
         extendedDamageSource.getDamageCalculationConfig().difficultyScaling(difficultyScaling);
-        cir.setReturnValue(super.hurtServer(world, extendedDamageSource, amount));
-        ///////////////////////////////////////////////////////////////////////////////////
+        cir.setReturnValue(super.hurtServer(level, extendedDamageSource, amount));
+        // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
     }
 
     /**
      * As we calculate all damage increases and also reductions and mitigations in the
      * LivingEntityDamageMixin#damage method we need to remove any kind of mitigation
-     * of this method, except for absorption amount.
+     * of this method, except for absorption dmg.
      */
     @Inject(at = @At("HEAD"), method = "actuallyHurt", cancellable = true)
     protected void applyDamage(
-            ServerLevel world,
+            ServerLevel level,
             DamageSource source,
-            float amount,
+            float dmg,
             CallbackInfo ci
     ) {
         Player this_ = (Player) (Object) this;
 
-        if (this.isInvulnerableTo(world, source)) {
+        if (this.isInvulnerableTo(level, source)) {
             return;
         }
 
-        // amount = this.applyArmorToDamage(source, amount);
-        // float finalDamageAfterMitigation = amount = this.modifyAppliedDamage(source, amount);
-        ///////////////////////////////////////////////////////////////////////////////////
-        var finalDamageAfterMitigation = amount;
-        ///////////////////////////////////////////////////////////////////////////////////
+        // dmg = this.applyArmorToDamage(source, dmg);
+        // float finalDamageAfterMitigation = dmg = this.modifyAppliedDamage(source, dmg);
+        // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+        var finalDamageAfterMitigation = dmg;
+        // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
-        amount = Math.max(amount - this.getAbsorptionAmount(), 0.0f);
-        this.setAbsorptionAmount(this.getAbsorptionAmount() - (finalDamageAfterMitigation - amount));
-        float g = finalDamageAfterMitigation - amount;
-        if (g > 0.0f && g < 3.4028235E37f) {
-            this_.awardStat(Stats.DAMAGE_ABSORBED, Math.round(g * 10.0f));
+        dmg = Math.max(dmg - this.getAbsorptionAmount(), 0.0f);
+        this.setAbsorptionAmount(this.getAbsorptionAmount() - (finalDamageAfterMitigation - dmg));
+        float absorbedDamage = finalDamageAfterMitigation - dmg;
+        if (absorbedDamage > 0.0f && absorbedDamage < 3.4028235E37f) {
+            this_.awardStat(Stats.DAMAGE_ABSORBED, Math.round(absorbedDamage * 10.0f));
         }
-        if (amount == 0.0f) {
+        if (dmg == 0.0f) {
             return;
         }
         this_.causeFoodExhaustion(source.getFoodExhaustion());
-        this.getCombatTracker().recordDamage(source, amount);
-        this.setHealth(this.getHealth() - amount);
-        if (amount < 3.4028235E37f) {
-            this_.awardStat(Stats.DAMAGE_TAKEN, Math.round(amount * 10.0f));
+        this.getCombatTracker().recordDamage(source, dmg);
+        this.setHealth(this.getHealth() - dmg);
+        if (dmg < 3.4028235E37f) {
+            this_.awardStat(Stats.DAMAGE_TAKEN, Math.round(dmg * 10.0f));
         }
         this.gameEvent(GameEvent.ENTITY_DAMAGE);
 
