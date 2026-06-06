@@ -64,8 +64,8 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
             SynchedEntityData.defineId(LivingEntity.class, UUID_LONG_PAIR_LIST_TRACKED_DATA_HANDLER);
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
-    private void initDataTracker(SynchedEntityData.Builder builder, CallbackInfo ci) {
-        builder.define(LINKED_ENTITIES, new ArrayList<>());
+    private void initDataTracker(SynchedEntityData.Builder entityData, CallbackInfo ci) {
+        entityData.define(LINKED_ENTITIES, new ArrayList<>());
     }
 
     @Unique
@@ -178,7 +178,7 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
 
     @Unique
     private void clearLinkedEntities(LivingEntity entity) {
-        entity.getEntityData().set(LINKED_ENTITIES, new LinkedList<>());
+        entity.getEntityData().set(LINKED_ENTITIES, new ArrayList<>());
     }
 
     @Unique

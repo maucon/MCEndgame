@@ -14,21 +14,23 @@ public class LivingEntityEntityPhasingMixin {
     @Inject(
             method = "isPushable",
             at = @At("HEAD"),
-            cancellable = true)
+            cancellable = true
+    )
     void isPushable(CallbackInfoReturnable<Boolean> cir) {
-        if (iSEntityPhasing()) cir.setReturnValue(false);
+        if (isEntityPhasing()) cir.setReturnValue(false);
     }
 
     @Inject(
             method = "pushEntities",
             at = @At(value = "HEAD"),
-            cancellable = true)
+            cancellable = true
+    )
     void tickCramming(CallbackInfo ci) {
-        if (iSEntityPhasing()) ci.cancel();
+        if (isEntityPhasing()) ci.cancel();
     }
 
     @Unique
-    private boolean iSEntityPhasing() {
+    private boolean isEntityPhasing() {
         var livingEntity = (LivingEntity) (Object) this;
         return CustomAttributesExtensions.INSTANCE.hasEntityPhasing(livingEntity);
     }

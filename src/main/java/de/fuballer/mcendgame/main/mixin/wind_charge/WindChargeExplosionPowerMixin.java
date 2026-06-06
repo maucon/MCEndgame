@@ -19,7 +19,7 @@ public class WindChargeExplosionPowerMixin implements WindChargeEntityExplosionP
                     target = "Lnet/minecraft/world/level/Level;explode(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;Lnet/minecraft/world/level/ExplosionDamageCalculator;DDDFZLnet/minecraft/world/level/Level$ExplosionInteraction;Lnet/minecraft/core/particles/ParticleOptions;Lnet/minecraft/core/particles/ParticleOptions;Lnet/minecraft/util/random/WeightedList;Lnet/minecraft/core/Holder;)V"
             )
     )
-    float a(float originalPower) {
+    float getExplosionPower(float originalPower) {
         return Float.isNaN(explosionPower) ? originalPower : explosionPower;
     }
 

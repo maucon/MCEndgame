@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.main.mixin.server_player_entity;
 
 import de.fuballer.mcendgame.main.messaging.misc.PlayerBeforeDimensionChangeEvent;
 import de.maucon.mauconframework.event.EventGateway;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.portal.TeleportTransition;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,11 +15,10 @@ public class ServerPlayerTeleportCommandMixin {
             method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;getLevelData()Lnet/minecraft/world/level/storage/LevelData;")
     )
-    void teleportCrossDimension(TeleportTransition teleportTarget, CallbackInfoReturnable<ServerPlayer> cir) {
+    void teleportCrossDimension(TeleportTransition transition, CallbackInfoReturnable<ServerPlayer> cir) {
         var entity = (ServerPlayer) (Object) this;
-        if (!(entity.level() instanceof ServerLevel world)) return;
 
-        var event = new PlayerBeforeDimensionChangeEvent(entity, world, teleportTarget);
+        var event = new PlayerBeforeDimensionChangeEvent(entity, entity.level(), transition);
         EventGateway.INSTANCE.publish(event);
     }
 }

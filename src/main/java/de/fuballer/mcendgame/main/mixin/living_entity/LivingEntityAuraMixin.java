@@ -96,24 +96,24 @@ public class LivingEntityAuraMixin implements LivingEntityAuraAccessor {
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    void writeNBT(ValueOutput view, CallbackInfo ci) {
+    void writeNBT(ValueOutput output, CallbackInfo ci) {
         if (!allyAuraStatusEffects.isEmpty()) {
-            view.store(ALLY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf(), List.copyOf(allyAuraStatusEffects.values()));
+            output.store(ALLY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf(), List.copyOf(allyAuraStatusEffects.values()));
         }
         if (!enemyAuraStatusEffects.isEmpty()) {
-            view.store(ENEMY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf(), List.copyOf(enemyAuraStatusEffects.values()));
+            output.store(ENEMY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf(), List.copyOf(enemyAuraStatusEffects.values()));
         }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    void readNBT(ValueInput view, CallbackInfo ci) {
-        List<AuraStatusEffect> allyEffects = view.read(ALLY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf()).orElse(List.of());
+    void readNBT(ValueInput input, CallbackInfo ci) {
+        List<AuraStatusEffect> allyEffects = input.read(ALLY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf()).orElse(List.of());
         allyAuraStatusEffects.clear();
         for (AuraStatusEffect auraStatusEffect : allyEffects) {
             allyAuraStatusEffects.put(auraStatusEffect.getType(), auraStatusEffect);
         }
 
-        List<AuraStatusEffect> enemyEffects = view.read(ENEMY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf()).orElse(List.of());
+        List<AuraStatusEffect> enemyEffects = input.read(ENEMY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf()).orElse(List.of());
         enemyAuraStatusEffects.clear();
         for (AuraStatusEffect auraStatusEffect : enemyEffects) {
             enemyAuraStatusEffects.put(auraStatusEffect.getType(), auraStatusEffect);

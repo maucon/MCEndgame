@@ -19,7 +19,7 @@ import java.util.List;
 @Mixin(LivingEntity.class)
 public class LivingEntityCustomAttributesMixin implements LivingEntityCustomAttributesAccessor {
     @Unique
-    private final String CUSTOM_ATTRIBUTES_NBT_KEY = "CustomAttributes";
+    private static final String CUSTOM_ATTRIBUTES_NBT_KEY = "CustomAttributes";
 
     // TODO: #236 don't sync attributes with clients
     @Unique
