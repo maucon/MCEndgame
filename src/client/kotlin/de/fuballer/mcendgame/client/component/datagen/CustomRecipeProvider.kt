@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.client.component.datagen
 
 import de.fuballer.mcendgame.main.component.block.CustomBlocks
+import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider
@@ -40,6 +41,11 @@ class CustomRecipeProvider(
                 .define('a', ItemTags.ANVIL)
                 .unlockedBy("has_crystal", has(CustomTags.CRYSTAL))
                 .save(exporter)
+
+            dyedItem(CustomArmorItems.SUEDE_HELMET, "dyed_armor");
+            dyedItem(CustomArmorItems.SUEDE_CHESTPLATE, "dyed_armor");
+            dyedItem(CustomArmorItems.SUEDE_LEGGINGS, "dyed_armor");
+            dyedItem(CustomArmorItems.SUEDE_BOOTS, "dyed_armor");
         }
     }
 
