@@ -354,6 +354,8 @@ class DungeonDeviceScreen(
     }
 
     override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+        extractTransparentBackground(graphics)
+        
         val textureX = (width - imageWidth) / 2
         val textureY = (height - imageHeight) / 2
 

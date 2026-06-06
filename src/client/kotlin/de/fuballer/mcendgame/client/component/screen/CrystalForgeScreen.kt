@@ -82,6 +82,8 @@ class CrystalForgeScreen(
         mouseY: Int,
         deltaTicks: Float
     ) {
+        extractTransparentBackground(graphics)
+
         val textureX = (width - imageWidth) / 2
         val textureY = (height - imageHeight) / 2
 
