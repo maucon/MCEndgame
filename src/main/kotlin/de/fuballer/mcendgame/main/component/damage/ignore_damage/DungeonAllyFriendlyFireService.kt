@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.main.component.damage.ignore_damage
 
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isAlly
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
-import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 
@@ -12,7 +11,7 @@ class DungeonAllyFriendlyFireService {
     fun on(cmd: IgnoreDamageCommand) {
         if (!cmd.world.isDungeonWorld()) return
 
-        val attacker = cmd.damageSource.attacker ?: return
+        val attacker = cmd.damageSource.entity ?: return
         if (!cmd.entity.isAlly(attacker)) return
 
         cmd.ignoreDamage = true

@@ -4,13 +4,13 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttributeType;
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes;
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,23 +25,23 @@ public abstract class LivingEntityAttributeWhilePoisonedMixin {
     @Inject(method = "tick", at = @At("HEAD"))
     void tick(CallbackInfo ci) {
         var entity = (LivingEntity) (Object) this;
-        if (entity.getEntityWorld().isClient()) return;
+        if (entity.level().isClientSide()) return;
 
-        if (entity.age % 10 != 0) return;
+        if (entity.tickCount % 10 != 0) return;
 
-        var isPoisoned = entity.hasStatusEffect(StatusEffects.POISON);
-        tickAttributeWhilePoisoned(isPoisoned, EntityAttributes.MOVEMENT_SPEED, CustomAttributeTypes.INSTANCE.getINCREASED_MOVEMENT_SPEED_WHILE_POISONED(), entity);
-        tickAttributeWhilePoisoned(isPoisoned, EntityAttributes.ATTACK_DAMAGE, CustomAttributeTypes.INSTANCE.getINCREASED_ATTACK_DAMAGE_WHILE_POISONED(), entity);
+        var isPoisoned = entity.hasEffect(MobEffects.POISON);
+        tickAttributeWhilePoisoned(isPoisoned, Attributes.MOVEMENT_SPEED, CustomAttributeTypes.INSTANCE.getINCREASED_MOVEMENT_SPEED_WHILE_POISONED(), entity);
+        tickAttributeWhilePoisoned(isPoisoned, Attributes.ATTACK_DAMAGE, CustomAttributeTypes.INSTANCE.getINCREASED_ATTACK_DAMAGE_WHILE_POISONED(), entity);
     }
 
     @Unique
     private void tickAttributeWhilePoisoned(
             boolean isPoisoned,
-            RegistryEntry<EntityAttribute> vanillaAttribute,
+            Holder<Attribute> vanillaAttribute,
             CustomAttributeType customAttribute,
             LivingEntity entity
     ) {
-        var attributeInstance = entity.getAttributeInstance(vanillaAttribute);
+        var attributeInstance = entity.getAttribute(vanillaAttribute);
         if (attributeInstance == null) return;
 
         if (!isPoisoned) {
@@ -61,15 +61,15 @@ public abstract class LivingEntityAttributeWhilePoisonedMixin {
                 .sum();
 
         var existingModifier = attributeInstance.getModifier(attributeModifierIdentifier);
-        if (existingModifier != null && Math.abs(existingModifier.value() - sum) < 0.001) return;
+        if (existingModifier != null && Math.abs(existingModifier.amount() - sum) < 0.001) return;
 
-        var modifier = new EntityAttributeModifier(
+        var modifier = new AttributeModifier(
                 attributeModifierIdentifier,
                 sum,
-                EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                AttributeModifier.Operation.ADD_MULTIPLIED_BASE
         );
 
         attributeInstance.removeModifier(attributeModifierIdentifier);
-        attributeInstance.addTemporaryModifier(modifier);
+        attributeInstance.addTransientModifier(modifier);
     }
 }

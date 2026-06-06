@@ -8,9 +8,9 @@ import de.fuballer.mcendgame.main.util.extension.ServerCommandSourceExtension.is
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
-import net.minecraft.item.Item
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.world.item.Item
 
 @Injectable
 class GiveUniqueItemCommand {
@@ -23,14 +23,14 @@ class GiveUniqueItemCommand {
     @Initializer
     fun register() = CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _, _ ->
         dispatcher.register(
-            CommandManager.literal(NAME)
+            Commands.literal(NAME)
                 .requires { it.isModerator() }
                 .then(
-                    CommandManager.argument(UNIQUE_ITEM_ARGUMENT, UniqueItemArgumentType())
+                    Commands.argument(UNIQUE_ITEM_ARGUMENT, UniqueItemArgumentType())
                         .suggests(UniqueItemSuggestionProvider())
                         .executes { giveUniqueItem(it, false) }
                         .then(
-                            CommandManager.argument(DOUBLE_ROLLS_ARGUMENT, StringArgumentType.greedyString())
+                            Commands.argument(DOUBLE_ROLLS_ARGUMENT, StringArgumentType.greedyString())
                                 .executes { giveUniqueItem(it, true) }
                         )
                 )
@@ -38,7 +38,7 @@ class GiveUniqueItemCommand {
     })
 
     private fun giveUniqueItem(
-        context: CommandContext<ServerCommandSource>,
+        context: CommandContext<CommandSourceStack>,
         hasRolls: Boolean
     ): Int {
         val player = context.source.player ?: return 0
@@ -48,7 +48,7 @@ class GiveUniqueItemCommand {
         val rolls = if (!hasRolls) listOf()
         else context.getArgument(DOUBLE_ROLLS_ARGUMENT, String::class.java).split(" ").mapNotNull { it.toDoubleOrNull() }
 
-        player.giveItemStack(uniqueItem.getRolledStack(uniqueItem, rolls))
+        player.addItem(uniqueItem.getRolledStack(uniqueItem, rolls))
 
         return Command.SINGLE_SUCCESS
     }

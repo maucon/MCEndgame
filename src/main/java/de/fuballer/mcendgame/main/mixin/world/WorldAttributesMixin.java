@@ -6,8 +6,8 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.VanillaAttribu
 import de.fuballer.mcendgame.main.component.world.VanillaTypeWorldAttributeInstance;
 import de.fuballer.mcendgame.main.component.world.WorldAttributeAction;
 import de.fuballer.mcendgame.main.component.world.WorldAttributeInstance;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -15,16 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-@Mixin(ServerWorld.class)
+@Mixin(ServerLevel.class)
 public class WorldAttributesMixin implements WorldAttributesAccessor {
     @Unique
     private int worldAttributesUpdate = 0;
 
     @Unique
-    private ArrayList<WorldAttributeInstance> customTypeAttributes = new ArrayList<>();
+    private final ArrayList<WorldAttributeInstance> customTypeAttributes = new ArrayList<>();
 
     @Unique
-    private ArrayList<VanillaTypeWorldAttributeInstance> vanillaTypeAttributesHistory = new ArrayList<>();
+    private final ArrayList<VanillaTypeWorldAttributeInstance> vanillaTypeAttributesHistory = new ArrayList<>();
 
     @Override
     public int mcendgame$getAttributeUpdateCount() {

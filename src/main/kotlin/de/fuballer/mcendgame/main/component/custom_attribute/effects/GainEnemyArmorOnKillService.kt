@@ -9,8 +9,8 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.addT
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil.defaultJava
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.attribute.EntityAttributeModifier
-import net.minecraft.entity.attribute.EntityAttributes
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.attributes.Attributes
 
 @Injectable
 class GainEnemyArmorOnKillService {
@@ -21,18 +21,18 @@ class GainEnemyArmorOnKillService {
         val killer = cmd.killer ?: return
         val attributes = killer.getAllCustomAttributes()[CustomAttributeTypes.GAIN_ENEMY_ARMOR_ON_KILL] ?: return
         val killed = cmd.entity
-        val armor = killed.getAttributeValue(EntityAttributes.ARMOR)
+        val armor = killed.getAttributeValue(Attributes.ARMOR)
         attributes.forEach {
             val armorPercent = it.rolls[0].asDoubleRoll().getValue()
             val duration = it.rolls[1].asIntRoll().getValue() * 20
             val identifier = defaultJava(attributeModifierIdentifierBase + it.id + "_" + killed.id)
 
             killer.addTemporaryAttributeModifier(
-                EntityAttributes.ARMOR,
+                Attributes.ARMOR,
                 identifier,
                 duration,
                 armor * armorPercent,
-                EntityAttributeModifier.Operation.ADD_VALUE
+                AttributeModifier.Operation.ADD_VALUE
             )
         }
     }

@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.main.mixin.dungeon_rules;
 
 import de.fuballer.mcendgame.main.util.extension.WorldExtension;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DecoratedPotBlock;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DecoratedPotBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,10 +19,10 @@ public class DecoratedPotBlockUnbreakableMixin {
             cancellable = true
     )
     void preventBreaking(
-            World world,
+            Level world,
             BlockState state,
             BlockHitResult hit,
-            ProjectileEntity projectile,
+            Projectile projectile,
             CallbackInfo ci
     ) {
         if (WorldExtension.INSTANCE.isDungeonWorld(world)) ci.cancel();

@@ -6,6 +6,6 @@ class DefaultPortalType : PortalType() {
     override fun getId() = "default"
 
     override fun tickAnimation(portalEntity: PortalEntity) {
-        idleAnimationState.startIfNotRunning(portalEntity.age)
+        idleAnimationState.startIfStopped(portalEntity.tickCount)
     }
 }

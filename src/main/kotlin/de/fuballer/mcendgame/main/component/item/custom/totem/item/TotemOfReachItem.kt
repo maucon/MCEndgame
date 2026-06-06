@@ -9,7 +9,7 @@ import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItem
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemType
 
 class TotemOfReachItem(
-    settings: Settings,
+    settings: Properties,
 ) : TotemItem(settings) {
     override val maxTier = 2
     override val type = TotemType.ULTIMATE

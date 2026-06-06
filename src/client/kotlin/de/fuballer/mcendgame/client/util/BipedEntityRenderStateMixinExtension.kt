@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.client.util
 
 import de.fuballer.mcendgame.client.accessor.BipedEntityRenderStateAccessor
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HideBipedBoneArmor
-import net.minecraft.client.render.entity.state.LivingEntityRenderState
-import net.minecraft.entity.EquipmentSlot
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import net.minecraft.world.entity.EquipmentSlot
 
 object BipedEntityRenderStateMixinExtension {
     fun LivingEntityRenderState.setHiddenBones(hiddenBones: Set<HideBipedBoneArmor.BipedBone>) {

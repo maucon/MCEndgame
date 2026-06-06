@@ -20,7 +20,7 @@ class WorldAttributeService {
             .forEach {
                 val attribute = it.attribute
                 val type = attribute.type as? VanillaAttributeType ?: return@forEach
-                val attributeInstance = player.getAttributeInstance(type.attribute) ?: return@forEach
+                val attributeInstance = player.getAttribute(type.attribute) ?: return@forEach
                 val identifier = IdentifierUtil.defaultCustomAttribute(attribute)
                 attributeInstance.removeModifier(identifier)
             }

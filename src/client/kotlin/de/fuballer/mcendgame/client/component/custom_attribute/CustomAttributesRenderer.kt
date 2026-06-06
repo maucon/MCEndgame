@@ -13,14 +13,14 @@ import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.minecraft.client.MinecraftClient
-import net.minecraft.text.Text
-import net.minecraft.util.Formatting
+import net.minecraft.ChatFormatting
+import net.minecraft.client.Minecraft
+import net.minecraft.network.chat.Component
 
 private const val LANGUAGE_KEY_PREFIX = "attribute.mcendgame."
-private val ATTRIBUTE_LINE_COLOR = Formatting.BLUE
-private val ATTRIBUTE_LINE_DETAILS_COLOR = Formatting.DARK_GRAY
-private val TIER_DETAIL_COLOR = Formatting.AQUA
+private val ATTRIBUTE_LINE_COLOR = ChatFormatting.BLUE
+private val ATTRIBUTE_LINE_DETAILS_COLOR = ChatFormatting.DARK_GRAY
+private val TIER_DETAIL_COLOR = ChatFormatting.AQUA
 
 @Injectable
 @Environment(EnvType.CLIENT)
@@ -32,7 +32,7 @@ class CustomAttributesRenderer {
 
         customAttributes
             .reversed()
-            .map { attribute -> buildAttributeLine(attribute, MinecraftClient.getInstance().isShiftPressed) }
+            .map { attribute -> buildAttributeLine(attribute, Minecraft.getInstance().hasShiftDown()) }
             .forEach { cmd.texts.add(1, it) }
     }
 
@@ -41,7 +41,7 @@ class CustomAttributesRenderer {
         cmd.texts = cmd.attributes.map { buildAttributeLine(it, cmd.detailed) }
     }
 
-    private fun buildAttributeLine(attribute: CustomAttribute, detailed: Boolean): Text {
+    private fun buildAttributeLine(attribute: CustomAttribute, detailed: Boolean): Component {
         val type = attribute.type
         val rolls = attribute.rolls
         val signBasedKeywords = type.signBasedKeywords
@@ -51,11 +51,11 @@ class CustomAttributesRenderer {
         if (!detailed) {
             val dominantEnhancementColors = flippedRolls.map { it.getDominantEnhancementColor() }
             val rollTexts = type.formatRolls(flippedRolls).mapIndexed { i, formattedRoll ->
-                Text.literal(formattedRoll).apply { dominantEnhancementColors[i]?.let { formatted(it) } }
+                Component.literal(formattedRoll).apply { dominantEnhancementColors[i]?.let { withStyle(it) } }
             }
             val array = getWithSignBasedKeywords(rollTexts, signBasedKeywords, flipSign).toTypedArray()
-            return Text.translatable("$LANGUAGE_KEY_PREFIX${type.key}", *array)
-                .formatted(ATTRIBUTE_LINE_COLOR)
+            return Component.translatable("$LANGUAGE_KEY_PREFIX${type.key}", *array)
+                .withStyle(ATTRIBUTE_LINE_COLOR)
         }
 
         val notEnhancedRolls = flippedRolls.map(AttributeRoll<*>::getWithoutEnhancement)
@@ -63,31 +63,31 @@ class CustomAttributesRenderer {
         val boundsTexts = getFormattedBoundsTexts(type, flippedRolls)
         val enhancementTexts = getFormattedEnhancementTexts(rolls)
         val formattedRollsWithBounds = formattedRolls.indices.map { i ->
-            Text.literal(formattedRolls[i])
-                .formatted(ATTRIBUTE_LINE_COLOR)
+            Component.literal(formattedRolls[i])
+                .withStyle(ATTRIBUTE_LINE_COLOR)
                 .append(boundsTexts[i])
                 .append(enhancementTexts[i])
         }
         val array = getWithSignBasedKeywords(formattedRollsWithBounds, signBasedKeywords, flipSign).toTypedArray()
 
-        return Text.translatable("$LANGUAGE_KEY_PREFIX${type.key}", *array)
-            .formatted(ATTRIBUTE_LINE_COLOR)
+        return Component.translatable("$LANGUAGE_KEY_PREFIX${type.key}", *array)
+            .withStyle(ATTRIBUTE_LINE_COLOR)
             .append(getFormattedTier(attribute.tier))
     }
 
     private fun getFormattedBoundsTexts(
         type: AttributeType,
         rolls: List<AttributeRoll<*>>,
-    ) = type.formatBounds(rolls.map { it.bounds }).map { Text.literal(it).formatted(ATTRIBUTE_LINE_DETAILS_COLOR) }
+    ) = type.formatBounds(rolls.map { it.bounds }).map { Component.literal(it).withStyle(ATTRIBUTE_LINE_DETAILS_COLOR) }
 
     private fun getFormattedEnhancementTexts(rolls: List<AttributeRoll<*>>) =
         rolls.map { roll ->
             roll.enhancements.entries.map { (type, value) ->
                 val formattedValue = AttributeFormats.formatDoubleSigned(value * 100)
-                Text.literal("($formattedValue%)").formatted(type.color)
+                Component.literal("($formattedValue%)").withStyle(type.color)
             }.reduceOrNull { first, second ->
                 first.append(second)
-            } ?: Text.empty()
+            } ?: Component.empty()
         }
 
     private fun flipRollSigns(rolls: List<AttributeRoll<*>>, flip: List<Boolean>) =
@@ -97,10 +97,10 @@ class CustomAttributesRenderer {
         }
 
     private fun getWithSignBasedKeywords(
-        rolls: List<Text>,
+        rolls: List<Component>,
         keywords: List<SignBasedKeyword?>,
         isNegative: List<Boolean>,
-    ): List<Text> {
+    ): List<Component> {
         if (keywords.isEmpty()) return rolls
 
         val insertedList = rolls.toMutableList()
@@ -118,6 +118,6 @@ class CustomAttributesRenderer {
         return insertedList
     }
 
-    private fun getFormattedTier(tier: Int) = Text.literal(" ${NumberUtil.toRomanNumeral(tier)}")
-        .formatted(TIER_DETAIL_COLOR)
+    private fun getFormattedTier(tier: Int) = Component.literal(" ${NumberUtil.toRomanNumeral(tier)}")
+        .withStyle(TIER_DETAIL_COLOR)
 }

@@ -10,19 +10,18 @@ import de.fuballer.mcendgame.main.component.damage.ignore_damage.IgnoreDamageCom
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDodgedEvent
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.event.EventGateway
-import net.minecraft.enchantment.EnchantmentHelper
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.effect.StatusEffects
-import net.minecraft.registry.tag.DamageTypeTags
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.stat.Stats
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.stats.Stats
+import net.minecraft.tags.DamageTypeTags
+import net.minecraft.world.damagesource.CombatRules
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.item.enchantment.EnchantmentHelper
 import kotlin.math.min
 import kotlin.math.roundToInt
-
-typealias VanillaDamageUtil = net.minecraft.entity.DamageUtil
 
 private val DAMAGE_CALCULATORS = listOf(
     PierceAttackDamageCalculator,
@@ -54,7 +53,7 @@ object DamageService {
 
     fun calculateFinalDamage(
         entity: LivingEntity,
-        world: ServerWorld,
+        world: ServerLevel,
         source: ExtendedDamageSource,
         originalDamage: Float
     ): DamageCalculationResult {
@@ -95,7 +94,7 @@ object DamageService {
         entity: LivingEntity,
         source: ExtendedDamageSource
     ): Boolean {
-        val key = source.typeRegistryEntry.getKey()
+        val key = source.typeHolder().unwrapKey()
         if (key.isEmpty) return false
         if (DodgeSettings.BYPASS_DODGE.contains(key.get())) return false
 
@@ -103,7 +102,7 @@ object DamageService {
             .let { CommandGateway.apply(it) }
 
         if (dodgeCalculationCommand.isDodging) {
-            val dodgeEvent = LivingEntityDodgedEvent(entity, source.source, source.attacker)
+            val dodgeEvent = LivingEntityDodgedEvent(entity, source.directEntity, source.entity)
             EventGateway.publish(dodgeEvent)
             return true
         }
@@ -169,12 +168,12 @@ object DamageService {
         entity: LivingEntity
     ): Float {
         var amount = amount
-        if (source.isIn(DamageTypeTags.BYPASSES_ARMOR)) return amount
+        if (source.`is`(DamageTypeTags.BYPASSES_ARMOR)) return amount
 
-        entity.damageArmor(source, amount)
+        entity.hurtArmor(source, amount)
 
-        val armorToughness = entity.getAttributeValue(EntityAttributes.ARMOR_TOUGHNESS).toFloat()
-        amount = DamageUtil.reduceAttackDamageByArmor(entity, amount, source, entity.armor.toFloat(), armorToughness)
+        val armorToughness = entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS).toFloat()
+        amount = DamageUtil.reduceAttackDamageByArmor(entity, amount, source, entity.armorValue.toFloat(), armorToughness)
 
         return amount
     }
@@ -199,30 +198,30 @@ object DamageService {
     ): Float {
         var amount = amount
 
-        if (!source.isIn(DamageTypeTags.BYPASSES_EFFECTS)) {
-            if (entity.hasStatusEffect(StatusEffects.RESISTANCE) && !source.isIn(DamageTypeTags.BYPASSES_RESISTANCE)) {
-                val resistance = entity.getStatusEffect(StatusEffects.RESISTANCE)!!.amplifier + 1
+        if (!source.`is`(DamageTypeTags.BYPASSES_EFFECTS)) {
+            if (entity.hasEffect(MobEffects.RESISTANCE) && !source.`is`(DamageTypeTags.BYPASSES_RESISTANCE)) {
+                val resistance = entity.getEffect(MobEffects.RESISTANCE)!!.amplifier + 1
 
                 val resistancePercent = resistance * 0.2f
                 val resistedDamage = min(amount * resistancePercent, amount)
                 amount -= resistedDamage
 
                 if (resistedDamage > 0.0f && resistedDamage < 3.4028235E37f) {
-                    if (entity is ServerPlayerEntity) {
-                        entity.increaseStat(Stats.DAMAGE_RESISTED, (resistedDamage * 10.0f).roundToInt())
-                    } else if (source.attacker is ServerPlayerEntity) {
-                        (source.attacker as ServerPlayerEntity).increaseStat(Stats.DAMAGE_DEALT_RESISTED, (resistedDamage * 10.0f).roundToInt())
+                    if (entity is ServerPlayer) {
+                        entity.awardStat(Stats.DAMAGE_RESISTED, (resistedDamage * 10.0f).roundToInt())
+                    } else if (source.entity is ServerPlayer) {
+                        (source.entity as ServerPlayer).awardStat(Stats.DAMAGE_DEALT_RESISTED, (resistedDamage * 10.0f).roundToInt())
                     }
                 }
             }
         }
 
         if (amount <= 0.0f) return 0.0f
-        if (source.isIn(DamageTypeTags.BYPASSES_ENCHANTMENTS)) return amount
-        val serverWorld = entity.entityWorld as? ServerWorld ?: return amount
+        if (source.`is`(DamageTypeTags.BYPASSES_ENCHANTMENTS)) return amount
+        val serverWorld = entity.level() as? ServerLevel ?: return amount
 
-        val protectionAmount = EnchantmentHelper.getProtectionAmount(serverWorld, entity, source)
-        amount = VanillaDamageUtil.getInflictedDamage(amount, protectionAmount)
+        val protectionAmount = EnchantmentHelper.getDamageProtection(serverWorld, entity, source)
+        amount = CombatRules.getDamageAfterMagicAbsorb(amount, protectionAmount)
 
         return amount
     }

@@ -1,22 +1,22 @@
 package de.fuballer.mcendgame.main.component.entity.custom.goals
 
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal
-import net.minecraft.entity.mob.PathAwareEntity
+import net.minecraft.world.entity.PathfinderMob
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal
 
 class DisableAbleWanderAroundFarGoal(
-    pathAwareEntity: PathAwareEntity,
+    pathAwareEntity: PathfinderMob,
     speed: Double,
     probability: Float = 0.001F,
-) : WanderAroundFarGoal(pathAwareEntity, speed, probability) {
+) : WaterAvoidingRandomStrollGoal(pathAwareEntity, speed, probability) {
     var isDisabled = false
 
-    override fun canStart(): Boolean {
+    override fun canUse(): Boolean {
         if (isDisabled) return false
-        return super.canStart()
+        return super.canUse()
     }
 
-    override fun shouldContinue(): Boolean {
+    override fun canContinueToUse(): Boolean {
         if (isDisabled) return false
-        return super.shouldContinue()
+        return super.canContinueToUse()
     }
 }

@@ -7,11 +7,11 @@ import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttribu
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HidePlayerModelPartArmor
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.ItemWithCape
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.entity.player.PlayerModelPart
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.player.PlayerModelPart
 
 class Broodmother(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings), HidePlayerModelPartArmor, ItemWithCape {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.POISON_DAMAGE_IMMUNITY, 0),
@@ -19,7 +19,7 @@ class Broodmother(
         RollableCustomAttribute(CustomAttributeTypes.COMPANION_ATTACK_DAMAGE, 0, DoubleBounds(2.0, 3.0)),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.CHEST
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.CHEST
 
     override val hiddenPlayerModelParts = listOf(
         PlayerModelPart.LEFT_SLEEVE,

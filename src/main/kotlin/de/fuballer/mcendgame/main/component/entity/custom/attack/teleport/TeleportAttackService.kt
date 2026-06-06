@@ -5,11 +5,11 @@ import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.centerPos
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.Entity
-import net.minecraft.particle.ParticleTypes
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.level.Level
+import net.minecraft.world.phys.Vec3
 import kotlin.math.max
 
 private const val PREPARATION_PARTICLE_DURATION = 40 // ticks
@@ -34,13 +34,13 @@ class TeleportAttackService<T>(
     }
 
     private fun choseTeleportPosition(attacker: T, target: Entity) {
-        val world = attacker.entityWorld
-        if (world != target.entityWorld) return
+        val world = attacker.level()
+        if (world != target.level()) return
 
-        var targetPos = target.entityPos
-        val adjustDirection = attacker.entityPos.subtract(targetPos).normalize()
+        var targetPos = target.position()
+        val adjustDirection = attacker.position().subtract(targetPos).normalize()
 
-        targetPos = targetPos.add(adjustDirection.multiply(0.5))
+        targetPos = targetPos.add(adjustDirection.scale(0.5))
         repeat(TARGET_POS_ADJUST_TRIES) {
             if (isTeleportPositionSafe(world, attacker, targetPos)) {
                 attacker.teleportAttackTargetPosition = targetPos
@@ -52,24 +52,24 @@ class TeleportAttackService<T>(
     }
 
     private fun isTeleportPositionSafe(
-        world: World,
+        world: Level,
         entity: Entity,
-        pos: Vec3d,
+        pos: Vec3,
     ): Boolean {
-        val box = entity.boundingBox.offset(pos.subtract(entity.entityPos))
-        return world.isSpaceEmpty(box)
+        val box = entity.boundingBox.move(pos.subtract(entity.position()))
+        return world.noCollision(box)
     }
 
     private fun teleport(attacker: T) {
         val pos = attacker.teleportAttackTargetPosition ?: return
-        attacker.refreshPositionAfterTeleport(pos.x, pos.y, pos.z)
+        attacker.snapTo(pos.x, pos.y, pos.z)
         attacker.teleportAttackTargetPosition = null
     }
 
     private fun createPreparationParticles(attacker: Entity) {
-        val world = attacker.entityWorld as? ServerWorld ?: return
+        val world = attacker.level() as? ServerLevel ?: return
         val pos = attacker.centerPos()
-        world.spawnParticles(
+        world.sendParticles(
             ParticleTypes.PORTAL,
             pos.x,
             pos.y,
@@ -83,9 +83,9 @@ class TeleportAttackService<T>(
     }
 
     private fun createArriveParticles(attacker: Entity) {
-        val world = attacker.entityWorld as? ServerWorld ?: return
+        val world = attacker.level() as? ServerLevel ?: return
         val pos = attacker.centerPos()
-        world.spawnParticles(
+        world.sendParticles(
             ParticleTypes.REVERSE_PORTAL,
             pos.x,
             pos.y,

@@ -9,9 +9,9 @@ import de.fuballer.mcendgame.main.component.item.equipment.Equipment
 import de.fuballer.mcendgame.main.component.item.equipment.enchantment.EquipmentEnchantment
 import de.fuballer.mcendgame.main.util.random.LevelRestrictedRandomOption
 import de.fuballer.mcendgame.main.util.random.RandomOption
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.item.Item
-import net.minecraft.item.Items
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.Items
 
 enum class Bow(
     override val item: Item,
@@ -29,7 +29,7 @@ enum class Bow(
         CustomToolItems.DUSK_PIERCER,
     );
 
-    override val slot = AttributeModifierSlot.MAINHAND
+    override val slot = EquipmentSlotGroup.MAINHAND
 
     override val rollableCustomAttributes = listOf(
         RandomOption(

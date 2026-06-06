@@ -1,27 +1,27 @@
 package de.fuballer.mcendgame.main.component.item.custom.armor.materials
 
 import de.fuballer.mcendgame.main.util.minecraft.RegistryKeyUtil
-import net.minecraft.item.equipment.ArmorMaterial
-import net.minecraft.item.equipment.EquipmentAsset
-import net.minecraft.item.equipment.EquipmentType
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.tag.ItemTags
-import net.minecraft.sound.SoundEvents
+import net.minecraft.resources.ResourceKey
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.ItemTags
+import net.minecraft.world.item.equipment.ArmorMaterial
+import net.minecraft.world.item.equipment.ArmorType
+import net.minecraft.world.item.equipment.EquipmentAsset
 
 object SuedeArmorMaterial : CustomArmorMaterial {
     override val baseDurability = 25
-    override val registryKey: RegistryKey<EquipmentAsset> = RegistryKeyUtil.createEquipmentAssetKey("suede")
+    override val registryKey: ResourceKey<EquipmentAsset> = RegistryKeyUtil.createEquipmentAssetKey("suede")
 
     override val instance = ArmorMaterial(
         baseDurability,
         mapOf(
-            EquipmentType.BOOTS to 2,
-            EquipmentType.LEGGINGS to 5,
-            EquipmentType.CHESTPLATE to 6,
-            EquipmentType.HELMET to 2,
+            ArmorType.BOOTS to 2,
+            ArmorType.LEGGINGS to 5,
+            ArmorType.CHESTPLATE to 6,
+            ArmorType.HELMET to 2,
         ),
         15,
-        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC,
+        SoundEvents.ARMOR_EQUIP_GENERIC,
         1.0f,
         0.0f,
         ItemTags.REPAIRS_LEATHER_ARMOR,

@@ -1,22 +1,22 @@
 package de.fuballer.mcendgame.main.util.extension
 
-import net.minecraft.component.type.AttributeModifierSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
 
 object SlotExtension {
-    fun AttributeModifierSlot.isOrIsChildOf(other: AttributeModifierSlot): Boolean {
+    fun EquipmentSlotGroup.isOrIsChildOf(other: EquipmentSlotGroup): Boolean {
         if (this == other) return true
-        if (other == AttributeModifierSlot.ANY) return true
+        if (other == EquipmentSlotGroup.ANY) return true
 
-        if (other == AttributeModifierSlot.HAND &&
-            (this == AttributeModifierSlot.MAINHAND
-                    || this == AttributeModifierSlot.OFFHAND)
+        if (other == EquipmentSlotGroup.HAND &&
+            (this == EquipmentSlotGroup.MAINHAND
+                    || this == EquipmentSlotGroup.OFFHAND)
         ) return true
 
-        if (other == AttributeModifierSlot.ARMOR &&
-            (this == AttributeModifierSlot.HEAD
-                    || this == AttributeModifierSlot.CHEST
-                    || this == AttributeModifierSlot.LEGS
-                    || this == AttributeModifierSlot.FEET)
+        if (other == EquipmentSlotGroup.ARMOR &&
+            (this == EquipmentSlotGroup.HEAD
+                    || this == EquipmentSlotGroup.CHEST
+                    || this == EquipmentSlotGroup.LEGS
+                    || this == EquipmentSlotGroup.FEET)
         ) return true
 
         return false

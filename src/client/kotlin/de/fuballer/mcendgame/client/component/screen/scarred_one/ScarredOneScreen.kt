@@ -4,12 +4,12 @@ import de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encount
 import de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encounters.scarred_one.data.RolledScarredOneEffect
 import de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encounters.scarred_one.networking.ScarredOneResponsePayload
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.text.Text
-import net.minecraft.util.Colors
+import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil
+import net.minecraft.network.chat.Component
+import net.minecraft.util.CommonColors
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -26,7 +26,7 @@ class ScarredOneScreen(
     val positiveEffects: List<RolledScarredOneEffect>,
     val negativeEffects: List<RolledScarredOneEffect>,
     val uuid: UUID,
-) : Screen(Text.empty()) {
+) : Screen(Component.empty()) {
     private var effectsTextData = listOf<EffectTextData>()
     private var backgroundWidth = 0
     private var backgroundHeight = 0
@@ -40,17 +40,17 @@ class ScarredOneScreen(
 
         setUp()
 
-        addDrawableChild(
-            ButtonWidget.builder(Text.literal("Accept")) {
+        addRenderableWidget(
+            Button.builder(Component.literal("Accept")) {
                 sendResponse(true)
-            }.dimensions(width / 2 + BUTTON_CENTER_GAP / 2, backgroundY + backgroundHeight + BUTTON_Y_PADDING, BUTTON_WIDTH, BUTTON_HEIGHT)
+            }.bounds(width / 2 + BUTTON_CENTER_GAP / 2, backgroundY + backgroundHeight + BUTTON_Y_PADDING, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .build()
         )
 
-        addDrawableChild(
-            ButtonWidget.builder(Text.literal("Decline")) {
+        addRenderableWidget(
+            Button.builder(Component.literal("Decline")) {
                 sendResponse(false)
-            }.dimensions(width / 2 - BUTTON_WIDTH - BUTTON_CENTER_GAP / 2, backgroundY + backgroundHeight + BUTTON_Y_PADDING, BUTTON_WIDTH, BUTTON_HEIGHT)
+            }.bounds(width / 2 - BUTTON_WIDTH - BUTTON_CENTER_GAP / 2, backgroundY + backgroundHeight + BUTTON_Y_PADDING, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .build()
         )
     }
@@ -61,8 +61,8 @@ class ScarredOneScreen(
 
         val targetLines = effectsTextData.distinctBy { it.positive to it.targets }.map { it.targets.text }
 
-        val maxEffectLineWidth = effectsTextData.maxOfOrNull { textRenderer.getWidth(it.text.string) } ?: 0
-        val maxTargetLineWidth = targetLines.maxOfOrNull { textRenderer.getWidth(it.string) } ?: 0
+        val maxEffectLineWidth = effectsTextData.maxOfOrNull { font.width(it.text.string) } ?: 0
+        val maxTargetLineWidth = targetLines.maxOfOrNull { font.width(it.string) } ?: 0
         val maxTextWidth = max(maxEffectLineWidth, maxTargetLineWidth)
         backgroundWidth = maxTextWidth + 2 * BACKGROUND_PADDING
         backgroundX = (width / 2) - (backgroundWidth / 2)
@@ -70,7 +70,7 @@ class ScarredOneScreen(
         val targetLineCount = targetLines.size
         val totalLineCount = effectsTextData.size + targetLineCount
 
-        val textHeight = if (totalLineCount > 0) (totalLineCount - 1) * ATTRIBUTE_LINE_OFFSET + textRenderer.fontHeight else 0
+        val textHeight = if (totalLineCount > 0) (totalLineCount - 1) * ATTRIBUTE_LINE_OFFSET + font.lineHeight else 0
         val totalTextHeight = BACKGROUND_PADDING * 2 + textHeight
         val availableHeight = (height - TOTAL_BUTTON_HEIGHT * 2).coerceAtLeast(0)
         backgroundHeight = min(totalTextHeight, availableHeight)
@@ -78,17 +78,17 @@ class ScarredOneScreen(
         backgroundY = (height / 2) - (backgroundHeight / 2)
     }
 
-    override fun render(
-        context: DrawContext,
+    override fun extractRenderState(
+        graphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
         delta: Float
     ) {
-        super.render(context, mouseX, mouseY, delta)
+        super.extractRenderState(graphics, mouseX, mouseY, delta)
 
-        TooltipBackgroundRenderer.render(context, backgroundX, backgroundY, backgroundWidth, backgroundHeight, null)
+        TooltipRenderUtil.extractTooltipBackground(graphics, backgroundX, backgroundY, backgroundWidth, backgroundHeight, null)
 
-        context.enableScissor(
+        graphics.enableScissor(
             backgroundX,
             backgroundY,
             backgroundX + backgroundWidth,
@@ -101,12 +101,12 @@ class ScarredOneScreen(
 
         effectsTextData.forEach { effect ->
             if (effect.targets != lastTargets || effect.positive != lastPositive) {
-                context.drawText(
-                    textRenderer,
+                graphics.text(
+                    font,
                     effect.targets.text,
                     backgroundX + BACKGROUND_PADDING,
                     y,
-                    if (effect.positive) Colors.GREEN else Colors.RED,
+                    if (effect.positive) CommonColors.GREEN else CommonColors.RED,
                     false
                 )
 
@@ -115,24 +115,24 @@ class ScarredOneScreen(
                 y += ATTRIBUTE_LINE_OFFSET
             }
 
-            context.drawText(
-                textRenderer,
+            graphics.text(
+                font,
                 effect.text,
                 backgroundX + BACKGROUND_PADDING,
                 y,
-                Colors.BLUE, // is overruled by text color anyway
+                CommonColors.BLUE, // is overruled by text color anyway
                 false
             )
             y += ATTRIBUTE_LINE_OFFSET
         }
 
-        context.disableScissor()
+        graphics.disableScissor()
     }
 
     private data class EffectTextData(
         val positive: Boolean,
         val targets: ScarredOneEffectTargetGroup,
-        val text: Text,
+        val text: Component,
     ) {
         constructor(effect: RolledScarredOneEffect, positive: Boolean) : this(positive, effect.targets, effect.getAttribute())
     }
@@ -142,12 +142,12 @@ class ScarredOneScreen(
         return true
     }
 
-    override fun shouldPause(): Boolean = false
+    override fun isPauseScreen(): Boolean = false
 
     fun sendResponse(accept: Boolean) {
         val payload = ScarredOneResponsePayload(accept, uuid)
         ClientPlayNetworking.send(payload)
 
-        close()
+        onClose()
     }
 }

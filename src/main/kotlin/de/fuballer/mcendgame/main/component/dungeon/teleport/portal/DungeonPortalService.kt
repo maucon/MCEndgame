@@ -18,10 +18,10 @@ import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getDungeonBossSpawnPosition
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.entity.LazyEntityReference
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.Vec3d
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.EntityReference
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.phys.Vec3
 
 @Injectable
 class DungeonPortalService(
@@ -30,7 +30,7 @@ class DungeonPortalService(
     @EventSubscriber(sync = true)
     fun on(event: DungeonGeneratedEvent) {
         val startPos = event.startPos
-        val centeredSpawnPos = Vec3d.of(startPos.pos).add(0.5, 0.0, 0.5)
+        val centeredSpawnPos = Vec3.atLowerCornerOf(startPos.pos).add(0.5, 0.0, 0.5)
         val portalType = DefaultPortalType() // TODO get from player
 
         val deviceCenterPos = event.dungeonDevicePos.toVec3d().add(0.5, 0.0, 0.5)
@@ -44,7 +44,7 @@ class DungeonPortalService(
 
         RuntimeConfig.SERVER.execute {
             val portals = createEntryPortals(deviceCenterPos, portalType, event.originWorld, dungeonTeleportLocation)
-                .mapNotNull { LazyEntityReference.of(it) }
+                .mapNotNull { EntityReference.of(it) }
                 .toMutableList()
 
             val entity = DungeonPortalEntity(deviceId, dungeonWorld, leaveLocation, portals)
@@ -63,7 +63,7 @@ class DungeonPortalService(
     }
 
     fun clearOldPortalsOnOpenDungeon(blockEntity: BlockEntity) {
-        val id = blockEntity.pos.hashCode()
+        val id = blockEntity.blockPos.hashCode()
         val entity = dungeonPortalRepo.findById(id) ?: return
         clearPortalsAndDeleteEntity(entity)
     }
@@ -72,7 +72,7 @@ class DungeonPortalService(
     fun on(event: DungeonBossDeathEvent) {
         if (event.isClient) return
 
-        val world = event.world as ServerWorld
+        val world = event.world as ServerLevel
         if (!event.world.isDungeonWorld()) return
 
         val spawnPosition = event.bossEntity.getDungeonBossSpawnPosition()
@@ -91,16 +91,16 @@ class DungeonPortalService(
 
     @EventSubscriber(sync = true)
     fun on(event: DungeonDeviceBrokenEvent) {
-        val id = event.blockEntity.pos.hashCode()
+        val id = event.blockEntity.blockPos.hashCode()
         val entity = dungeonPortalRepo.findById(id) ?: return
         clearPortalsAndDeleteEntity(entity)
     }
 
     private fun spawnLeavePortal(
         leaveLocation: TeleportLocation,
-        spawnPos: Vec3d,
+        spawnPos: Vec3,
         portalType: PortalType,
-        dungeonWorld: ServerWorld
+        dungeonWorld: ServerLevel
     ) {
         val portalLocation = spawnPos.subtract(0.5, 0.0, 0.0)
         RuntimeConfig.SERVER.execute {
@@ -109,13 +109,13 @@ class DungeonPortalService(
     }
 
     private fun createEntryPortals(
-        devicePos: Vec3d,
+        devicePos: Vec3,
         portalType: PortalType,
-        originWorld: ServerWorld,
+        originWorld: ServerLevel,
         dungeonTeleportLocation: TeleportLocation
     ): MutableList<PortalEntity> {
         val angle = Math.toRadians(360.0 / 6).toFloat()
-        var offset = Vec3d(3.0, 0.0, 0.0)
+        var offset = Vec3(3.0, 0.0, 0.0)
 
         val portals = mutableListOf<PortalEntity>()
         repeat(6) {
@@ -123,7 +123,7 @@ class DungeonPortalService(
             val portal = Portals.spawn(originWorld, portalPos, dungeonTeleportLocation, type = portalType, lookAt = devicePos, singleUse = true)
 
             portals.add(portal)
-            offset = offset.rotateY(angle)
+            offset = offset.yRot(angle)
         }
 
         return portals
@@ -133,7 +133,7 @@ class DungeonPortalService(
         val world = dungeonPortalEntity.leaveLocation.world
 
         dungeonPortalEntity.portals.onEach {
-            LazyEntityReference.resolve(it, world, PortalEntity::class.java)?.discard()
+            EntityReference.get(it, world, PortalEntity::class.java)?.discard()
         }.clear()
 
         dungeonPortalRepo.delete(dungeonPortalEntity)

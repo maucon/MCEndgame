@@ -3,12 +3,12 @@ package de.fuballer.mcendgame.main.component.damage.calculator
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.boss.dragon.EnderDragonEntity
-import net.minecraft.entity.damage.DamageSource
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon
 
 object EnderDragonCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.source is EnderDragonEntity
+    override fun isActive(source: DamageSource) = source.directEntity is EnderDragon
 
     override fun calculateAttackDamage(
         originalDamage: Float,

@@ -1,26 +1,32 @@
 package de.fuballer.mcendgame.client.component.entity.custom.feature.webbed
 
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.model.*
-import net.minecraft.client.render.RenderLayers
-import net.minecraft.client.render.entity.model.EntityModelLayer
+import net.minecraft.client.model.Model
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.model.geom.PartPose
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.CubeListBuilder
+import net.minecraft.client.model.geom.builders.LayerDefinition
+import net.minecraft.client.model.geom.builders.MeshDefinition
+import net.minecraft.client.renderer.rendertype.RenderTypes
 
 class WebbedModel(
     modelPart: ModelPart,
-) : Model<WebbedModel.WebbedData>(modelPart, RenderLayers::entityCutoutNoCull) {
+) : Model<WebbedModel.WebbedData>(modelPart, RenderTypes::entityCutout) {
     companion object {
-        val WEBBED_LAYER = EntityModelLayer(IdentifierUtil.default("webbed"), "main")
+        val WEBBED_LAYER = ModelLayerLocation(IdentifierUtil.default("webbed"), "main")
 
-        fun getTexturedModelData(): TexturedModelData {
-            val modelData = ModelData()
+        fun getTexturedModelData(): LayerDefinition {
+            val modelData = MeshDefinition()
             val modelPartData = modelData.root
-            val webbed = modelPartData.addChild(
+            val webbed = modelPartData.addOrReplaceChild(
                 "webbed",
-                ModelPartBuilder.create().uv(0, 0).cuboid(-8.0f, -24.0f, -8.0f, 16.0f, 24.0f, 16.0f, Dilation(0.0f))
-                    .uv(64, 0).cuboid(-8.0f, -24.0f, -8.0f, 16.0f, 24.0f, 16.0f, Dilation(0.5f)),
-                ModelTransform.origin(0.0f, 24.0f, 0.0f)
+                CubeListBuilder.create().texOffs(0, 0).addBox(-8.0f, -24.0f, -8.0f, 16.0f, 24.0f, 16.0f, CubeDeformation(0.0f))
+                    .texOffs(64, 0).addBox(-8.0f, -24.0f, -8.0f, 16.0f, 24.0f, 16.0f, CubeDeformation(0.5f)),
+                PartPose.offset(0.0f, 24.0f, 0.0f)
             )
-            return TexturedModelData.of(modelData, 128, 64)
+            return LayerDefinition.create(modelData, 128, 64)
         }
     }
 

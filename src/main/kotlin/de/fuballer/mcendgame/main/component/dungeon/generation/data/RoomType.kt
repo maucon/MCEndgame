@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.component.dungeon.generation.data
 
-import net.minecraft.structure.StructureTemplate
-import net.minecraft.util.math.Vec3i
+import net.minecraft.core.Vec3i
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate
 
 data class RoomType(
     val path: String, // used for debugging

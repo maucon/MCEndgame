@@ -4,9 +4,9 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.dungeon.loot.drop.ItemColor
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import kotlin.random.Random
 
 interface UniqueAttributesItemInterface {
@@ -14,7 +14,7 @@ interface UniqueAttributesItemInterface {
 
     fun getCustomAttributes(): List<RollableCustomAttribute>
 
-    fun getAttributeModifierSlot(): AttributeModifierSlot
+    fun getAttributeModifierSlot(): EquipmentSlotGroup
 
     private fun getRolledAttributes(
         rolls: List<Double>,

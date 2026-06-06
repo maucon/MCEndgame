@@ -1,10 +1,15 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.arachne
 
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.model.*
-import net.minecraft.client.render.entity.animation.Animation
-import net.minecraft.client.render.entity.model.EntityModel
-import net.minecraft.client.render.entity.model.EntityModelLayer
+import net.minecraft.client.animation.KeyframeAnimation
+import net.minecraft.client.model.EntityModel
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.model.geom.PartPose
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.CubeListBuilder
+import net.minecraft.client.model.geom.builders.LayerDefinition
+import net.minecraft.client.model.geom.builders.MeshDefinition
 
 class ArachneEntityModel(
     modelPart: ModelPart,
@@ -65,439 +70,439 @@ class ArachneEntityModel(
     val armRightLower = armRight.getChild("armRightLower")
     val abdomen = cephalothorax.getChild("abdomen")
 
-    val walkingAnimation: Animation = ArachneAnimations.WALKING.createAnimation(modelPart)
-    val walkingBackwardsAnimation: Animation = ArachneAnimations.WALKING_BACKWARDS.createAnimation(modelPart)
-    val idleAnimation: Animation = ArachneAnimations.IDLE.createAnimation(modelPart)
-    val spitAnimation: Animation = ArachneAnimations.SPIT.createAnimation(modelPart)
-    val attackAnimation: Animation = ArachneAnimations.ATTACK.createAnimation(modelPart)
+    val walkingAnimation: KeyframeAnimation = ArachneAnimations.WALKING.bake(modelPart)
+    val walkingBackwardsAnimation: KeyframeAnimation = ArachneAnimations.WALKING_BACKWARDS.bake(modelPart)
+    val idleAnimation: KeyframeAnimation = ArachneAnimations.IDLE.bake(modelPart)
+    val spitAnimation: KeyframeAnimation = ArachneAnimations.SPIT.bake(modelPart)
+    val attackAnimation: KeyframeAnimation = ArachneAnimations.ATTACK.bake(modelPart)
 
     companion object {
-        val ARACHNE = EntityModelLayer(IdentifierUtil.default("arachne"), "main")
+        val ARACHNE = ModelLayerLocation(IdentifierUtil.default("arachne"), "main")
 
-        fun getTexturedModelData(): TexturedModelData {
-            val modelData = ModelData()
+        fun getTexturedModelData(): LayerDefinition {
+            val modelData = MeshDefinition()
             val modelPartData = modelData.root
             val arachne =
-                modelPartData.addChild("arachne", ModelPartBuilder.create(), ModelTransform.origin(0.0f, 25.0f, -3.0f))
+                modelPartData.addOrReplaceChild("arachne", CubeListBuilder.create(), PartPose.offset(0.0f, 25.0f, -3.0f))
 
-            val cephalothorax = arachne.addChild(
+            val cephalothorax = arachne.addOrReplaceChild(
                 "cephalothorax",
-                ModelPartBuilder.create().uv(110, 118).cuboid(-4.0f, -12.0f, -2.0f, 8.0f, 6.0f, 10.0f, Dilation(0.0f))
-                    .uv(114, 108).cuboid(-3.0f, -13.0f, 0.0f, 6.0f, 1.0f, 8.0f, Dilation(0.0f))
-                    .uv(120, 103).cuboid(-2.5f, -14.0f, 1.0f, 5.0f, 1.0f, 3.0f, Dilation(0.0f))
-                    .uv(122, 98).cuboid(-2.0f, -16.0f, 0.5f, 4.0f, 2.0f, 2.0f, Dilation(0.0f)),
-                ModelTransform.origin(0.0f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(110, 118).addBox(-4.0f, -12.0f, -2.0f, 8.0f, 6.0f, 10.0f, CubeDeformation(0.0f))
+                    .texOffs(114, 108).addBox(-3.0f, -13.0f, 0.0f, 6.0f, 1.0f, 8.0f, CubeDeformation(0.0f))
+                    .texOffs(120, 103).addBox(-2.5f, -14.0f, 1.0f, 5.0f, 1.0f, 3.0f, CubeDeformation(0.0f))
+                    .texOffs(122, 98).addBox(-2.0f, -16.0f, 0.5f, 4.0f, 2.0f, 2.0f, CubeDeformation(0.0f)),
+                PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val legs = cephalothorax.addChild("legs", ModelPartBuilder.create(), ModelTransform.origin(0.0f, 0.0f, 0.0f))
+            val legs = cephalothorax.addOrReplaceChild("legs", CubeListBuilder.create(), PartPose.offset(0.0f, 0.0f, 0.0f))
 
-            val legLeft1 = legs.addChild(
+            val legLeft1 = legs.addOrReplaceChild(
                 "legLeft1",
-                ModelPartBuilder.create().uv(147, 105).cuboid(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.25f))
-                    .uv(147, 110).cuboid(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.3f)),
-                ModelTransform.of(3.0f, -8.0f, -2.0f, 0.0011f, 1.149f, 0.087f)
+                CubeListBuilder.create().texOffs(147, 105).addBox(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.25f))
+                    .texOffs(147, 110).addBox(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.3f)),
+                PartPose.offsetAndRotation(3.0f, -8.0f, -2.0f, 0.0011f, 1.149f, 0.087f)
             )
 
-            val temurLeft1 = legLeft1.addChild(
+            val temurLeft1 = legLeft1.addOrReplaceChild(
                 "temurLeft1",
-                ModelPartBuilder.create().uv(156, 105).cuboid(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.0f))
-                    .uv(156, 110).cuboid(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.05f)),
-                ModelTransform.of(1.0f, 0.0f, 0.0f, 0.0085f, -0.0059f, -1.1775f)
+                CubeListBuilder.create().texOffs(156, 105).addBox(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.0f))
+                    .texOffs(156, 110).addBox(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.05f)),
+                PartPose.offsetAndRotation(1.0f, 0.0f, 0.0f, 0.0085f, -0.0059f, -1.1775f)
             )
 
-            val tibiaLeft1 = temurLeft1.addChild(
+            val tibiaLeft1 = temurLeft1.addOrReplaceChild(
                 "tibiaLeft1",
-                ModelPartBuilder.create().uv(186, 105)
-                    .cuboid(0.1455f, -0.1039f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.25f))
-                    .uv(186, 110).cuboid(0.1455f, -0.1039f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.2f)),
-                ModelTransform.of(12.65f, -1.0f, 0.0f, 0.0f, 0.0f, 1.4835f)
+                CubeListBuilder.create().texOffs(186, 105)
+                    .addBox(0.1455f, -0.1039f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.25f))
+                    .texOffs(186, 110).addBox(0.1455f, -0.1039f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.2f)),
+                PartPose.offsetAndRotation(12.65f, -1.0f, 0.0f, 0.0f, 0.0f, 1.4835f)
             )
 
-            val metatarsusLeft1 = tibiaLeft1.addChild(
+            val metatarsusLeft1 = tibiaLeft1.addOrReplaceChild(
                 "metatarsusLeft1",
-                ModelPartBuilder.create().uv(214, 105)
-                    .cuboid(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.3f))
-                    .uv(214, 110).cuboid(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.25f)),
-                ModelTransform.of(11.8955f, 0.1461f, 0.0f, 0.0048f, 0.0019f, 0.7851f)
+                CubeListBuilder.create().texOffs(214, 105)
+                    .addBox(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.3f))
+                    .texOffs(214, 110).addBox(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.25f)),
+                PartPose.offsetAndRotation(11.8955f, 0.1461f, 0.0f, 0.0048f, 0.0019f, 0.7851f)
             )
 
-            val tarsusLeft1 = metatarsusLeft1.addChild(
+            val tarsusLeft1 = metatarsusLeft1.addOrReplaceChild(
                 "tarsusLeft1",
-                ModelPartBuilder.create().uv(241, 107)
-                    .cuboid(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.1f))
-                    .uv(241, 112).cuboid(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.15f)),
-                ModelTransform.of(10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, 0.2182f)
+                CubeListBuilder.create().texOffs(241, 107)
+                    .addBox(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.1f))
+                    .texOffs(241, 112).addBox(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.15f)),
+                PartPose.offsetAndRotation(10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, 0.2182f)
             )
 
-            val legLeft2 = legs.addChild(
+            val legLeft2 = legs.addOrReplaceChild(
                 "legLeft2",
-                ModelPartBuilder.create().uv(147, 115).cuboid(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.25f))
-                    .uv(147, 120).cuboid(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.3f)),
-                ModelTransform.of(4.0f, -8.0f, 0.0f, 0.0005f, 0.4509f, 0.0863f)
+                CubeListBuilder.create().texOffs(147, 115).addBox(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.25f))
+                    .texOffs(147, 120).addBox(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.3f)),
+                PartPose.offsetAndRotation(4.0f, -8.0f, 0.0f, 0.0005f, 0.4509f, 0.0863f)
             )
 
-            val temurLeft2 = legLeft2.addChild(
+            val temurLeft2 = legLeft2.addOrReplaceChild(
                 "temurLeft2",
-                ModelPartBuilder.create().uv(156, 115).cuboid(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.0f))
-                    .uv(156, 120).cuboid(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.05f)),
-                ModelTransform.of(1.0f, 0.0f, 0.0f, 0.0085f, -0.0059f, -1.1775f)
+                CubeListBuilder.create().texOffs(156, 115).addBox(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.0f))
+                    .texOffs(156, 120).addBox(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.05f)),
+                PartPose.offsetAndRotation(1.0f, 0.0f, 0.0f, 0.0085f, -0.0059f, -1.1775f)
             )
 
-            val tibiaLeft2 = temurLeft2.addChild(
+            val tibiaLeft2 = temurLeft2.addOrReplaceChild(
                 "tibiaLeft2",
-                ModelPartBuilder.create().uv(186, 115)
-                    .cuboid(0.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.25f))
-                    .uv(186, 120).cuboid(0.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.2f)),
-                ModelTransform.of(12.65f, -1.0f, 0.0f, 0.0f, 0.0f, 1.4399f)
+                CubeListBuilder.create().texOffs(186, 115)
+                    .addBox(0.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.25f))
+                    .texOffs(186, 120).addBox(0.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.2f)),
+                PartPose.offsetAndRotation(12.65f, -1.0f, 0.0f, 0.0f, 0.0f, 1.4399f)
             )
 
-            val metatarsusLeft2 = tibiaLeft2.addChild(
+            val metatarsusLeft2 = tibiaLeft2.addOrReplaceChild(
                 "metatarsusLeft2",
-                ModelPartBuilder.create().uv(214, 115)
-                    .cuboid(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.3f))
-                    .uv(214, 120).cuboid(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.25f)),
-                ModelTransform.of(11.8871f, 0.222f, 0.0f, 0.0048f, 0.0019f, 0.7851f)
+                CubeListBuilder.create().texOffs(214, 115)
+                    .addBox(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.3f))
+                    .texOffs(214, 120).addBox(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.25f)),
+                PartPose.offsetAndRotation(11.8871f, 0.222f, 0.0f, 0.0048f, 0.0019f, 0.7851f)
             )
 
-            val tarsusLeft2 = metatarsusLeft2.addChild(
+            val tarsusLeft2 = metatarsusLeft2.addOrReplaceChild(
                 "tarsusLeft2",
-                ModelPartBuilder.create().uv(241, 117)
-                    .cuboid(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.1f))
-                    .uv(241, 122).cuboid(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.15f)),
-                ModelTransform.of(10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, 0.2182f)
+                CubeListBuilder.create().texOffs(241, 117)
+                    .addBox(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.1f))
+                    .texOffs(241, 122).addBox(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.15f)),
+                PartPose.offsetAndRotation(10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, 0.2182f)
             )
 
-            val legLeft3 = legs.addChild(
+            val legLeft3 = legs.addOrReplaceChild(
                 "legLeft3",
-                ModelPartBuilder.create().uv(147, 125).cuboid(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.25f))
-                    .uv(147, 130).cuboid(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.3f)),
-                ModelTransform.of(4.0f, -8.0f, 3.0f, 0.0004f, -0.0727f, 0.086f)
+                CubeListBuilder.create().texOffs(147, 125).addBox(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.25f))
+                    .texOffs(147, 130).addBox(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.3f)),
+                PartPose.offsetAndRotation(4.0f, -8.0f, 3.0f, 0.0004f, -0.0727f, 0.086f)
             )
 
-            val temurLeft3 = legLeft3.addChild(
+            val temurLeft3 = legLeft3.addOrReplaceChild(
                 "temurLeft3",
-                ModelPartBuilder.create().uv(156, 125).cuboid(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.0f))
-                    .uv(156, 130).cuboid(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.05f)),
-                ModelTransform.of(1.0f, 0.0f, 0.0f, 0.0085f, -0.0059f, -1.1775f)
+                CubeListBuilder.create().texOffs(156, 125).addBox(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.0f))
+                    .texOffs(156, 130).addBox(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.05f)),
+                PartPose.offsetAndRotation(1.0f, 0.0f, 0.0f, 0.0085f, -0.0059f, -1.1775f)
             )
 
-            val tibiaLeft3 = temurLeft3.addChild(
+            val tibiaLeft3 = temurLeft3.addOrReplaceChild(
                 "tibiaLeft3",
-                ModelPartBuilder.create().uv(186, 125)
-                    .cuboid(0.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.25f))
-                    .uv(186, 130).cuboid(0.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.2f)),
-                ModelTransform.of(12.65f, -1.0f, 0.0f, 0.0f, 0.0f, 1.4399f)
+                CubeListBuilder.create().texOffs(186, 125)
+                    .addBox(0.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.25f))
+                    .texOffs(186, 130).addBox(0.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.2f)),
+                PartPose.offsetAndRotation(12.65f, -1.0f, 0.0f, 0.0f, 0.0f, 1.4399f)
             )
 
-            val metatarsusLeft3 = tibiaLeft3.addChild(
+            val metatarsusLeft3 = tibiaLeft3.addOrReplaceChild(
                 "metatarsusLeft3",
-                ModelPartBuilder.create().uv(214, 125)
-                    .cuboid(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.3f))
-                    .uv(214, 130).cuboid(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.25f)),
-                ModelTransform.of(11.8871f, 0.222f, 0.0f, 0.0048f, 0.0019f, 0.7851f)
+                CubeListBuilder.create().texOffs(214, 125)
+                    .addBox(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.3f))
+                    .texOffs(214, 130).addBox(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.25f)),
+                PartPose.offsetAndRotation(11.8871f, 0.222f, 0.0f, 0.0048f, 0.0019f, 0.7851f)
             )
 
-            val tarsusLeft3 = metatarsusLeft3.addChild(
+            val tarsusLeft3 = metatarsusLeft3.addOrReplaceChild(
                 "tarsusLeft3",
-                ModelPartBuilder.create().uv(241, 127)
-                    .cuboid(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.1f))
-                    .uv(241, 132).cuboid(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.15f)),
-                ModelTransform.of(10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, 0.2182f)
+                CubeListBuilder.create().texOffs(241, 127)
+                    .addBox(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.1f))
+                    .texOffs(241, 132).addBox(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.15f)),
+                PartPose.offsetAndRotation(10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, 0.2182f)
             )
 
-            val legLeft4 = legs.addChild(
+            val legLeft4 = legs.addOrReplaceChild(
                 "legLeft4",
-                ModelPartBuilder.create().uv(147, 135).cuboid(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.25f))
-                    .uv(147, 140).cuboid(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.3f)),
-                ModelTransform.of(4.0f, -8.0f, 6.0f, 0.0005f, -0.5963f, 0.0857f)
+                CubeListBuilder.create().texOffs(147, 135).addBox(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.25f))
+                    .texOffs(147, 140).addBox(-0.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.3f)),
+                PartPose.offsetAndRotation(4.0f, -8.0f, 6.0f, 0.0005f, -0.5963f, 0.0857f)
             )
 
-            val temurLeft4 = legLeft4.addChild(
+            val temurLeft4 = legLeft4.addOrReplaceChild(
                 "temurLeft4",
-                ModelPartBuilder.create().uv(156, 135).cuboid(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.0f))
-                    .uv(156, 140).cuboid(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.05f)),
-                ModelTransform.of(1.0f, 0.0f, 0.0f, 0.0085f, -0.0059f, -1.1775f)
+                CubeListBuilder.create().texOffs(156, 135).addBox(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.0f))
+                    .texOffs(156, 140).addBox(-0.25f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.05f)),
+                PartPose.offsetAndRotation(1.0f, 0.0f, 0.0f, 0.0085f, -0.0059f, -1.1775f)
             )
 
-            val tibiaLeft4 = temurLeft4.addChild(
+            val tibiaLeft4 = temurLeft4.addOrReplaceChild(
                 "tibiaLeft4",
-                ModelPartBuilder.create().uv(186, 135)
-                    .cuboid(0.1309f, -0.028f, -1.1427f, 12.0f, 2.0f, 2.0f, Dilation(-0.25f))
-                    .uv(186, 140).cuboid(0.1309f, -0.028f, -1.1427f, 12.0f, 2.0f, 2.0f, Dilation(-0.2f)),
-                ModelTransform.of(12.65f, -1.0f, 0.0f, 0.0f, -0.0873f, 1.4399f)
+                CubeListBuilder.create().texOffs(186, 135)
+                    .addBox(0.1309f, -0.028f, -1.1427f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.25f))
+                    .texOffs(186, 140).addBox(0.1309f, -0.028f, -1.1427f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.2f)),
+                PartPose.offsetAndRotation(12.65f, -1.0f, 0.0f, 0.0f, -0.0873f, 1.4399f)
             )
 
-            val metatarsusLeft4 = tibiaLeft4.addChild(
+            val metatarsusLeft4 = tibiaLeft4.addOrReplaceChild(
                 "metatarsusLeft4",
-                ModelPartBuilder.create().uv(214, 135)
-                    .cuboid(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.3f))
-                    .uv(214, 140).cuboid(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.25f)),
-                ModelTransform.of(11.8809f, 0.222f, -0.1427f, 0.0048f, 0.0019f, 0.7851f)
+                CubeListBuilder.create().texOffs(214, 135)
+                    .addBox(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.3f))
+                    .texOffs(214, 140).addBox(-0.2502f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.25f)),
+                PartPose.offsetAndRotation(11.8809f, 0.222f, -0.1427f, 0.0048f, 0.0019f, 0.7851f)
             )
 
-            val tarsusLeft4 = metatarsusLeft4.addChild(
+            val tarsusLeft4 = metatarsusLeft4.addOrReplaceChild(
                 "tarsusLeft4",
-                ModelPartBuilder.create().uv(241, 137)
-                    .cuboid(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.1f))
-                    .uv(241, 142).cuboid(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.15f)),
-                ModelTransform.of(10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, 0.2182f)
+                CubeListBuilder.create().texOffs(241, 137)
+                    .addBox(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.1f))
+                    .texOffs(241, 142).addBox(-0.6299f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.15f)),
+                PartPose.offsetAndRotation(10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, 0.2182f)
             )
 
-            val legRight1 = legs.addChild(
+            val legRight1 = legs.addOrReplaceChild(
                 "legRight1",
-                ModelPartBuilder.create().uv(101, 105).cuboid(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.25f))
-                    .uv(101, 110).cuboid(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.3f)),
-                ModelTransform.of(-3.0f, -8.0f, -2.0f, 0.0011f, -1.149f, -0.087f)
+                CubeListBuilder.create().texOffs(101, 105).addBox(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.25f))
+                    .texOffs(101, 110).addBox(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.3f)),
+                PartPose.offsetAndRotation(-3.0f, -8.0f, -2.0f, 0.0011f, -1.149f, -0.087f)
             )
 
-            val temurRight1 = legRight1.addChild(
+            val temurRight1 = legRight1.addOrReplaceChild(
                 "temurRight1",
-                ModelPartBuilder.create().uv(70, 105).cuboid(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.0f))
-                    .uv(70, 110).cuboid(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.05f)),
-                ModelTransform.of(-1.0f, 0.0f, 0.0f, 0.0085f, 0.0059f, 1.1775f)
+                CubeListBuilder.create().texOffs(70, 105).addBox(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.0f))
+                    .texOffs(70, 110).addBox(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.05f)),
+                PartPose.offsetAndRotation(-1.0f, 0.0f, 0.0f, 0.0085f, 0.0059f, 1.1775f)
             )
 
-            val tibiaRight1 = temurRight1.addChild(
+            val tibiaRight1 = temurRight1.addOrReplaceChild(
                 "tibiaRight1",
-                ModelPartBuilder.create().uv(42, 105)
-                    .cuboid(-12.1455f, -0.1039f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.25f))
-                    .uv(42, 110).cuboid(-12.1455f, -0.1039f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.2f)),
-                ModelTransform.of(-12.65f, -1.0f, 0.0f, 0.0f, 0.0f, -1.4835f)
+                CubeListBuilder.create().texOffs(42, 105)
+                    .addBox(-12.1455f, -0.1039f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.25f))
+                    .texOffs(42, 110).addBox(-12.1455f, -0.1039f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.2f)),
+                PartPose.offsetAndRotation(-12.65f, -1.0f, 0.0f, 0.0f, 0.0f, -1.4835f)
             )
 
-            val metatarsusRight1 = tibiaRight1.addChild(
+            val metatarsusRight1 = tibiaRight1.addOrReplaceChild(
                 "metatarsusRight1",
-                ModelPartBuilder.create().uv(16, 105)
-                    .cuboid(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.3f))
-                    .uv(16, 110).cuboid(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.25f)),
-                ModelTransform.of(-11.8955f, 0.1461f, 0.0f, 0.0048f, -0.0019f, -0.7851f)
+                CubeListBuilder.create().texOffs(16, 105)
+                    .addBox(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.3f))
+                    .texOffs(16, 110).addBox(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.25f)),
+                PartPose.offsetAndRotation(-11.8955f, 0.1461f, 0.0f, 0.0048f, -0.0019f, -0.7851f)
             )
 
-            val tarsusRight1 = metatarsusRight1.addChild(
+            val tarsusRight1 = metatarsusRight1.addOrReplaceChild(
                 "tarsusRight1",
-                ModelPartBuilder.create().uv(1, 107).cuboid(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.1f))
-                    .uv(1, 112).cuboid(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.15f)),
-                ModelTransform.of(-10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, -0.2182f)
+                CubeListBuilder.create().texOffs(1, 107).addBox(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.1f))
+                    .texOffs(1, 112).addBox(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.15f)),
+                PartPose.offsetAndRotation(-10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, -0.2182f)
             )
 
-            val legRight2 = legs.addChild(
+            val legRight2 = legs.addOrReplaceChild(
                 "legRight2",
-                ModelPartBuilder.create().uv(101, 115).cuboid(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.25f))
-                    .uv(101, 120).cuboid(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.3f)),
-                ModelTransform.of(-4.0f, -8.0f, 0.0f, 0.0005f, -0.4509f, -0.0863f)
+                CubeListBuilder.create().texOffs(101, 115).addBox(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.25f))
+                    .texOffs(101, 120).addBox(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.3f)),
+                PartPose.offsetAndRotation(-4.0f, -8.0f, 0.0f, 0.0005f, -0.4509f, -0.0863f)
             )
 
-            val temurRight2 = legRight2.addChild(
+            val temurRight2 = legRight2.addOrReplaceChild(
                 "temurRight2",
-                ModelPartBuilder.create().uv(70, 115).cuboid(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.0f))
-                    .uv(70, 120).cuboid(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.05f)),
-                ModelTransform.of(-1.0f, 0.0f, 0.0f, 0.0085f, 0.0059f, 1.1775f)
+                CubeListBuilder.create().texOffs(70, 115).addBox(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.0f))
+                    .texOffs(70, 120).addBox(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.05f)),
+                PartPose.offsetAndRotation(-1.0f, 0.0f, 0.0f, 0.0085f, 0.0059f, 1.1775f)
             )
 
-            val tibiaRight2 = temurRight2.addChild(
+            val tibiaRight2 = temurRight2.addOrReplaceChild(
                 "tibiaRight2",
-                ModelPartBuilder.create().uv(42, 115)
-                    .cuboid(-12.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.25f))
-                    .uv(42, 120).cuboid(-12.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.2f)),
-                ModelTransform.of(-12.65f, -1.0f, 0.0f, 0.0f, 0.0f, -1.4399f)
+                CubeListBuilder.create().texOffs(42, 115)
+                    .addBox(-12.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.25f))
+                    .texOffs(42, 120).addBox(-12.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.2f)),
+                PartPose.offsetAndRotation(-12.65f, -1.0f, 0.0f, 0.0f, 0.0f, -1.4399f)
             )
 
-            val metatarsusRight2 = tibiaRight2.addChild(
+            val metatarsusRight2 = tibiaRight2.addOrReplaceChild(
                 "metatarsusRight2",
-                ModelPartBuilder.create().uv(16, 115)
-                    .cuboid(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.3f))
-                    .uv(16, 120).cuboid(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.25f)),
-                ModelTransform.of(-11.8871f, 0.222f, 0.0f, 0.0048f, -0.0019f, -0.7851f)
+                CubeListBuilder.create().texOffs(16, 115)
+                    .addBox(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.3f))
+                    .texOffs(16, 120).addBox(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.25f)),
+                PartPose.offsetAndRotation(-11.8871f, 0.222f, 0.0f, 0.0048f, -0.0019f, -0.7851f)
             )
 
-            val tarsusRight2 = metatarsusRight2.addChild(
+            val tarsusRight2 = metatarsusRight2.addOrReplaceChild(
                 "tarsusRight2",
-                ModelPartBuilder.create().uv(1, 117).cuboid(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.1f))
-                    .uv(1, 122).cuboid(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.15f)),
-                ModelTransform.of(-10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, -0.2182f)
+                CubeListBuilder.create().texOffs(1, 117).addBox(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.1f))
+                    .texOffs(1, 122).addBox(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.15f)),
+                PartPose.offsetAndRotation(-10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, -0.2182f)
             )
 
-            val legRight3 = legs.addChild(
+            val legRight3 = legs.addOrReplaceChild(
                 "legRight3",
-                ModelPartBuilder.create().uv(101, 125).cuboid(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.25f))
-                    .uv(101, 130).cuboid(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.3f)),
-                ModelTransform.of(-4.0f, -8.0f, 3.0f, 0.0004f, 0.0727f, -0.086f)
+                CubeListBuilder.create().texOffs(101, 125).addBox(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.25f))
+                    .texOffs(101, 130).addBox(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.3f)),
+                PartPose.offsetAndRotation(-4.0f, -8.0f, 3.0f, 0.0004f, 0.0727f, -0.086f)
             )
 
-            val temurRight3 = legRight3.addChild(
+            val temurRight3 = legRight3.addOrReplaceChild(
                 "temurRight3",
-                ModelPartBuilder.create().uv(70, 125).cuboid(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.0f))
-                    .uv(70, 130).cuboid(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.05f)),
-                ModelTransform.of(-1.0f, 0.0f, 0.0f, 0.0085f, 0.0059f, 1.1775f)
+                CubeListBuilder.create().texOffs(70, 125).addBox(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.0f))
+                    .texOffs(70, 130).addBox(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.05f)),
+                PartPose.offsetAndRotation(-1.0f, 0.0f, 0.0f, 0.0085f, 0.0059f, 1.1775f)
             )
 
-            val tibiaRight3 = temurRight3.addChild(
+            val tibiaRight3 = temurRight3.addOrReplaceChild(
                 "tibiaRight3",
-                ModelPartBuilder.create().uv(42, 125)
-                    .cuboid(-12.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.25f))
-                    .uv(42, 130).cuboid(-12.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, Dilation(-0.2f)),
-                ModelTransform.of(-12.65f, -1.0f, 0.0f, 0.0f, 0.0f, -1.4399f)
+                CubeListBuilder.create().texOffs(42, 125)
+                    .addBox(-12.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.25f))
+                    .texOffs(42, 130).addBox(-12.1371f, -0.028f, -1.0f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.2f)),
+                PartPose.offsetAndRotation(-12.65f, -1.0f, 0.0f, 0.0f, 0.0f, -1.4399f)
             )
 
-            val metatarsusRight3 = tibiaRight3.addChild(
+            val metatarsusRight3 = tibiaRight3.addOrReplaceChild(
                 "metatarsusRight3",
-                ModelPartBuilder.create().uv(16, 125)
-                    .cuboid(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.3f))
-                    .uv(16, 130).cuboid(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.25f)),
-                ModelTransform.of(-11.8871f, 0.222f, 0.0f, 0.0048f, -0.0019f, -0.7851f)
+                CubeListBuilder.create().texOffs(16, 125)
+                    .addBox(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.3f))
+                    .texOffs(16, 130).addBox(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.25f)),
+                PartPose.offsetAndRotation(-11.8871f, 0.222f, 0.0f, 0.0048f, -0.0019f, -0.7851f)
             )
 
-            val tarsusRight3 = metatarsusRight3.addChild(
+            val tarsusRight3 = metatarsusRight3.addOrReplaceChild(
                 "tarsusRight3",
-                ModelPartBuilder.create().uv(1, 127).cuboid(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.1f))
-                    .uv(1, 132).cuboid(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.15f)),
-                ModelTransform.of(-10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, -0.2182f)
+                CubeListBuilder.create().texOffs(1, 127).addBox(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.1f))
+                    .texOffs(1, 132).addBox(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.15f)),
+                PartPose.offsetAndRotation(-10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, -0.2182f)
             )
 
-            val legRight4 = legs.addChild(
+            val legRight4 = legs.addOrReplaceChild(
                 "legRight4",
-                ModelPartBuilder.create().uv(101, 135).cuboid(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.25f))
-                    .uv(101, 140).cuboid(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, Dilation(0.3f)),
-                ModelTransform.of(-4.0f, -8.0f, 6.0f, 0.0005f, 0.5963f, -0.0857f)
+                CubeListBuilder.create().texOffs(101, 135).addBox(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.25f))
+                    .texOffs(101, 140).addBox(-1.5f, -1.0f, -1.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.3f)),
+                PartPose.offsetAndRotation(-4.0f, -8.0f, 6.0f, 0.0005f, 0.5963f, -0.0857f)
             )
 
-            val temurRight4 = legRight4.addChild(
+            val temurRight4 = legRight4.addOrReplaceChild(
                 "temurRight4",
-                ModelPartBuilder.create().uv(70, 135).cuboid(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.0f))
-                    .uv(70, 140).cuboid(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, Dilation(0.05f)),
-                ModelTransform.of(-1.0f, 0.0f, 0.0f, 0.0085f, 0.0059f, 1.1775f)
+                CubeListBuilder.create().texOffs(70, 135).addBox(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.0f))
+                    .texOffs(70, 140).addBox(-12.75f, -1.0f, -1.0f, 13.0f, 2.0f, 2.0f, CubeDeformation(0.05f)),
+                PartPose.offsetAndRotation(-1.0f, 0.0f, 0.0f, 0.0085f, 0.0059f, 1.1775f)
             )
 
-            val tibiaRight4 = temurRight4.addChild(
+            val tibiaRight4 = temurRight4.addOrReplaceChild(
                 "tibiaRight4",
-                ModelPartBuilder.create().uv(42, 135)
-                    .cuboid(-12.1309f, -0.028f, -1.1427f, 12.0f, 2.0f, 2.0f, Dilation(-0.25f))
-                    .uv(42, 140).cuboid(-12.1309f, -0.028f, -1.1427f, 12.0f, 2.0f, 2.0f, Dilation(-0.2f)),
-                ModelTransform.of(-12.65f, -1.0f, 0.0f, 0.0f, 0.0873f, -1.4399f)
+                CubeListBuilder.create().texOffs(42, 135)
+                    .addBox(-12.1309f, -0.028f, -1.1427f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.25f))
+                    .texOffs(42, 140).addBox(-12.1309f, -0.028f, -1.1427f, 12.0f, 2.0f, 2.0f, CubeDeformation(-0.2f)),
+                PartPose.offsetAndRotation(-12.65f, -1.0f, 0.0f, 0.0f, 0.0873f, -1.4399f)
             )
 
-            val metatarsusRight4 = tibiaRight4.addChild(
+            val metatarsusRight4 = tibiaRight4.addOrReplaceChild(
                 "metatarsusRight4",
-                ModelPartBuilder.create().uv(16, 135)
-                    .cuboid(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.3f))
-                    .uv(16, 140).cuboid(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, Dilation(-0.25f)),
-                ModelTransform.of(-11.8809f, 0.222f, -0.1427f, 0.0048f, -0.0019f, -0.7851f)
+                CubeListBuilder.create().texOffs(16, 135)
+                    .addBox(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.3f))
+                    .texOffs(16, 140).addBox(-10.7498f, -0.2929f, -1.0034f, 11.0f, 2.0f, 2.0f, CubeDeformation(-0.25f)),
+                PartPose.offsetAndRotation(-11.8809f, 0.222f, -0.1427f, 0.0048f, -0.0019f, -0.7851f)
             )
 
-            val tarsusRight4 = metatarsusRight4.addChild(
+            val tarsusRight4 = metatarsusRight4.addOrReplaceChild(
                 "tarsusRight4",
-                ModelPartBuilder.create().uv(1, 137).cuboid(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.1f))
-                    .uv(1, 142).cuboid(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, Dilation(0.15f)),
-                ModelTransform.of(-10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, -0.2182f)
+                CubeListBuilder.create().texOffs(1, 137).addBox(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.1f))
+                    .texOffs(1, 142).addBox(-5.3701f, 0.0964f, -0.5f, 6.0f, 1.0f, 1.0f, CubeDeformation(0.15f)),
+                PartPose.offsetAndRotation(-10.4998f, 0.2071f, -0.0034f, 0.0f, 0.0f, -0.2182f)
             )
 
-            val upperbody = cephalothorax.addChild(
+            val upperbody = cephalothorax.addOrReplaceChild(
                 "upperbody",
-                ModelPartBuilder.create().uv(116, 80).cuboid(-4.0f, -5.5f, -2.25f, 8.0f, 5.0f, 4.0f, Dilation(-0.35f))
-                    .uv(116, 90).cuboid(-4.0f, -1.5f, -2.25f, 8.0f, 3.0f, 4.0f, Dilation(0.1f)),
-                ModelTransform.origin(0.0f, -12.5f, 0.25f)
+                CubeListBuilder.create().texOffs(116, 80).addBox(-4.0f, -5.5f, -2.25f, 8.0f, 5.0f, 4.0f, CubeDeformation(-0.35f))
+                    .texOffs(116, 90).addBox(-4.0f, -1.5f, -2.25f, 8.0f, 3.0f, 4.0f, CubeDeformation(0.1f)),
+                PartPose.offset(0.0f, -12.5f, 0.25f)
             )
 
-            val chest = upperbody.addChild(
+            val chest = upperbody.addOrReplaceChild(
                 "chest",
-                ModelPartBuilder.create().uv(116, 49).cuboid(-4.0f, -7.0f, -2.25f, 8.0f, 7.0f, 4.0f, Dilation(0.0f)),
-                ModelTransform.origin(0.0f, -4.5f, -0.25f)
+                CubeListBuilder.create().texOffs(116, 49).addBox(-4.0f, -7.0f, -2.25f, 8.0f, 7.0f, 4.0f, CubeDeformation(0.0f)),
+                PartPose.offset(0.0f, -4.5f, -0.25f)
             )
 
-            val breast = chest.addChild(
+            val breast = chest.addOrReplaceChild(
                 "breast",
-                ModelPartBuilder.create().uv(117, 67).cuboid(-4.0f, -0.5f, -2.0f, 8.0f, 2.0f, 3.0f, Dilation(-0.25f)),
-                ModelTransform.origin(0.0f, -4.0f, -2.25f)
+                CubeListBuilder.create().texOffs(117, 67).addBox(-4.0f, -0.5f, -2.0f, 8.0f, 2.0f, 3.0f, CubeDeformation(-0.25f)),
+                PartPose.offset(0.0f, -4.0f, -2.25f)
             )
 
-            val chestDressLower = breast.addChild(
+            val chestDressLower = breast.addOrReplaceChild(
                 "chestDressLower",
-                ModelPartBuilder.create().uv(118, 73).cuboid(-3.5f, -0.25f, 0.0f, 7.0f, 3.0f, 3.0f, Dilation(0.0f)),
-                ModelTransform.of(0.0f, 1.25f, -1.5f, 0.5236f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(118, 73).addBox(-3.5f, -0.25f, 0.0f, 7.0f, 3.0f, 3.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(0.0f, 1.25f, -1.5f, 0.5236f, 0.0f, 0.0f)
             )
 
-            val breastTop = breast.addChild(
+            val breastTop = breast.addOrReplaceChild(
                 "breastTop",
-                ModelPartBuilder.create(),
-                ModelTransform.of(0.0f, -0.25f, -1.7f, 0.48f, 0.0f, 0.0f)
+                CubeListBuilder.create(),
+                PartPose.offsetAndRotation(0.0f, -0.25f, -1.7f, 0.48f, 0.0f, 0.0f)
             )
 
-            val breastRight_r1 = breastTop.addChild(
+            val breastRight_r1 = breastTop.addOrReplaceChild(
                 "breastRight_r1",
-                ModelPartBuilder.create().uv(115, 61).cuboid(-1.0f, 0.0f, -0.2f, 3.0f, 2.0f, 3.0f, Dilation(0.0f))
-                    .uv(129, 61).cuboid(2.5f, 0.0f, -0.2f, 3.0f, 2.0f, 3.0f, Dilation(0.0f)),
-                ModelTransform.of(-2.25f, 0.0f, 0.2f, 0.2618f, 0.0f, 0.0f)
+                CubeListBuilder.create().texOffs(115, 61).addBox(-1.0f, 0.0f, -0.2f, 3.0f, 2.0f, 3.0f, CubeDeformation(0.0f))
+                    .texOffs(129, 61).addBox(2.5f, 0.0f, -0.2f, 3.0f, 2.0f, 3.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(-2.25f, 0.0f, 0.2f, 0.2618f, 0.0f, 0.0f)
             )
 
-            val neck = chest.addChild(
+            val neck = chest.addOrReplaceChild(
                 "neck",
-                ModelPartBuilder.create().uv(122, 42).cuboid(-1.5f, -2.0f, -1.5f, 3.0f, 3.0f, 3.0f, Dilation(0.0f)),
-                ModelTransform.origin(0.0f, -7.0f, 0.0f)
+                CubeListBuilder.create().texOffs(122, 42).addBox(-1.5f, -2.0f, -1.5f, 3.0f, 3.0f, 3.0f, CubeDeformation(0.0f)),
+                PartPose.offset(0.0f, -7.0f, 0.0f)
             )
 
-            val head = neck.addChild(
+            val head = neck.addOrReplaceChild(
                 "head",
-                ModelPartBuilder.create().uv(112, 25).cuboid(-4.0f, -8.0f, -4.25f, 8.0f, 8.0f, 8.0f, Dilation(0.0f))
-                    .uv(112, 0).cuboid(-4.0f, -8.0f, -4.25f, 8.0f, 16.0f, 8.0f, Dilation(0.15f)),
-                ModelTransform.origin(0.0f, -1.0f, 0.0f)
+                CubeListBuilder.create().texOffs(112, 25).addBox(-4.0f, -8.0f, -4.25f, 8.0f, 8.0f, 8.0f, CubeDeformation(0.0f))
+                    .texOffs(112, 0).addBox(-4.0f, -8.0f, -4.25f, 8.0f, 16.0f, 8.0f, CubeDeformation(0.15f)),
+                PartPose.offset(0.0f, -1.0f, 0.0f)
             )
 
-            val armLeft = chest.addChild(
+            val armLeft = chest.addOrReplaceChild(
                 "armLeft",
-                ModelPartBuilder.create().uv(142, 51).cuboid(0.0f, -0.5f, -1.5f, 3.0f, 6.0f, 3.0f, Dilation(0.0f))
-                    .uv(155, 51).cuboid(0.0f, -0.5f, -1.5f, 3.0f, 6.0f, 3.0f, Dilation(0.1f)),
-                ModelTransform.origin(3.75f, -6.25f, 0.0f)
+                CubeListBuilder.create().texOffs(142, 51).addBox(0.0f, -0.5f, -1.5f, 3.0f, 6.0f, 3.0f, CubeDeformation(0.0f))
+                    .texOffs(155, 51).addBox(0.0f, -0.5f, -1.5f, 3.0f, 6.0f, 3.0f, CubeDeformation(0.1f)),
+                PartPose.offset(3.75f, -6.25f, 0.0f)
             )
 
-            val armLeftLower = armLeft.addChild(
+            val armLeftLower = armLeft.addOrReplaceChild(
                 "armLeftLower",
-                ModelPartBuilder.create().uv(142, 61).cuboid(4.0f, -18.75f, -1.5f, 3.0f, 7.0f, 3.0f, Dilation(-0.25f))
-                    .uv(155, 61).cuboid(4.0f, -18.75f, -1.5f, 3.0f, 7.0f, 3.0f, Dilation(-0.15f)),
-                ModelTransform.origin(-4.0f, 23.25f, 0.0f)
+                CubeListBuilder.create().texOffs(142, 61).addBox(4.0f, -18.75f, -1.5f, 3.0f, 7.0f, 3.0f, CubeDeformation(-0.25f))
+                    .texOffs(155, 61).addBox(4.0f, -18.75f, -1.5f, 3.0f, 7.0f, 3.0f, CubeDeformation(-0.15f)),
+                PartPose.offset(-4.0f, 23.25f, 0.0f)
             )
 
-            val armRight = chest.addChild(
+            val armRight = chest.addOrReplaceChild(
                 "armRight",
-                ModelPartBuilder.create().uv(102, 50).cuboid(-3.0f, -0.5f, -1.5f, 3.0f, 6.0f, 3.0f, Dilation(0.0f))
-                    .uv(89, 50).cuboid(-3.0f, -0.5f, -1.5f, 3.0f, 6.0f, 3.0f, Dilation(0.1f)),
-                ModelTransform.origin(-3.75f, -6.25f, 0.0f)
+                CubeListBuilder.create().texOffs(102, 50).addBox(-3.0f, -0.5f, -1.5f, 3.0f, 6.0f, 3.0f, CubeDeformation(0.0f))
+                    .texOffs(89, 50).addBox(-3.0f, -0.5f, -1.5f, 3.0f, 6.0f, 3.0f, CubeDeformation(0.1f)),
+                PartPose.offset(-3.75f, -6.25f, 0.0f)
             )
 
-            val armRightLower = armRight.addChild(
+            val armRightLower = armRight.addOrReplaceChild(
                 "armRightLower",
-                ModelPartBuilder.create().uv(102, 60).cuboid(-7.0f, -18.75f, -1.5f, 3.0f, 7.0f, 3.0f, Dilation(-0.25f))
-                    .uv(89, 60).cuboid(-7.0f, -18.75f, -1.5f, 3.0f, 7.0f, 3.0f, Dilation(-0.15f)),
-                ModelTransform.origin(4.0f, 23.25f, 0.0f)
+                CubeListBuilder.create().texOffs(102, 60).addBox(-7.0f, -18.75f, -1.5f, 3.0f, 7.0f, 3.0f, CubeDeformation(-0.25f))
+                    .texOffs(89, 60).addBox(-7.0f, -18.75f, -1.5f, 3.0f, 7.0f, 3.0f, CubeDeformation(-0.15f)),
+                PartPose.offset(4.0f, 23.25f, 0.0f)
             )
 
-            val abdomen = cephalothorax.addChild(
+            val abdomen = cephalothorax.addOrReplaceChild(
                 "abdomen",
-                ModelPartBuilder.create().uv(104, 147).cuboid(-6.0f, -5.0f, 0.0f, 12.0f, 9.0f, 12.0f, Dilation(0.0f))
-                    .uv(109, 135).cuboid(-4.5f, -6.0f, 1.0f, 9.0f, 1.0f, 10.0f, Dilation(0.0f))
-                    .uv(109, 169).cuboid(-4.5f, 4.0f, 1.0f, 9.0f, 1.0f, 10.0f, Dilation(0.0f))
-                    .uv(81, 151).cuboid(-7.0f, -4.0f, 1.0f, 1.0f, 7.0f, 10.0f, Dilation(0.0f))
-                    .uv(153, 151).cuboid(6.0f, -4.0f, 1.0f, 1.0f, 7.0f, 10.0f, Dilation(0.0f))
-                    .uv(117, 181).cuboid(-5.0f, -3.75f, 12.0f, 10.0f, 7.0f, 1.0f, Dilation(0.0f))
-                    .uv(119, 190).cuboid(-4.0f, -2.25f, 13.0f, 8.0f, 5.0f, 1.0f, Dilation(0.0f)),
-                ModelTransform.origin(0.0f, -9.0f, 7.0f)
+                CubeListBuilder.create().texOffs(104, 147).addBox(-6.0f, -5.0f, 0.0f, 12.0f, 9.0f, 12.0f, CubeDeformation(0.0f))
+                    .texOffs(109, 135).addBox(-4.5f, -6.0f, 1.0f, 9.0f, 1.0f, 10.0f, CubeDeformation(0.0f))
+                    .texOffs(109, 169).addBox(-4.5f, 4.0f, 1.0f, 9.0f, 1.0f, 10.0f, CubeDeformation(0.0f))
+                    .texOffs(81, 151).addBox(-7.0f, -4.0f, 1.0f, 1.0f, 7.0f, 10.0f, CubeDeformation(0.0f))
+                    .texOffs(153, 151).addBox(6.0f, -4.0f, 1.0f, 1.0f, 7.0f, 10.0f, CubeDeformation(0.0f))
+                    .texOffs(117, 181).addBox(-5.0f, -3.75f, 12.0f, 10.0f, 7.0f, 1.0f, CubeDeformation(0.0f))
+                    .texOffs(119, 190).addBox(-4.0f, -2.25f, 13.0f, 8.0f, 5.0f, 1.0f, CubeDeformation(0.0f)),
+                PartPose.offset(0.0f, -9.0f, 7.0f)
             )
-            return TexturedModelData.of(modelData, 256, 256)
+            return LayerDefinition.create(modelData, 256, 256)
         }
     }
 
-    override fun setAngles(
+    override fun setupAnim(
         renderState: ArachneRenderState,
     ) {
-        super.setAngles(renderState)
+        super.setupAnim(renderState)
 
-        idleAnimation.apply(renderState.idleAnimationState, renderState.age)
+        idleAnimation.apply(renderState.idleAnimationState, renderState.ageInTicks)
 
-        val walkAnimSpeed = renderState.moveSpeed * 6F / renderState.baseScale
-        walkingAnimation.apply(renderState.walkAnimationState, renderState.age, walkAnimSpeed)
-        walkingBackwardsAnimation.apply(renderState.walkBWAnimationState, renderState.age, walkAnimSpeed)
+        val walkAnimSpeed = renderState.moveSpeed * 6F / renderState.scale
+        walkingAnimation.apply(renderState.walkAnimationState, renderState.ageInTicks, walkAnimSpeed)
+        walkingBackwardsAnimation.apply(renderState.walkBWAnimationState, renderState.ageInTicks, walkAnimSpeed)
 
-        spitAnimation.apply(renderState.spitAnimationState, renderState.age)
-        attackAnimation.apply(renderState.meleeAttackAnimationState, renderState.age)
+        spitAnimation.apply(renderState.spitAnimationState, renderState.ageInTicks)
+        attackAnimation.apply(renderState.meleeAttackAnimationState, renderState.ageInTicks)
 
         setHeadAngles(renderState)
     }
@@ -505,8 +510,8 @@ class ArachneEntityModel(
     private fun setHeadAngles(
         renderState: ArachneRenderState,
     ) {
-        head.pitch += Math.toRadians(renderState.pitch.toDouble()).toFloat()
-        head.yaw += Math.toRadians(renderState.relativeHeadYaw.toDouble()).toFloat()
-        head.yaw = Math.clamp(head.yaw, -1F, 1F)
+        head.xRot += Math.toRadians(renderState.xRot.toDouble()).toFloat()
+        head.yRot += Math.toRadians(renderState.yRot.toDouble()).toFloat()
+        head.yRot = Math.clamp(head.yRot, -1F, 1F)
     }
 }

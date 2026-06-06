@@ -5,10 +5,10 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.IntBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesShieldItem
-import net.minecraft.component.type.AttributeModifierSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
 
 class Grudgebearer(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesShieldItem(settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, 0, DoubleBounds(-0.06, -0.04)),
@@ -16,5 +16,5 @@ class Grudgebearer(
         RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE_WHILE_SHIELD_DISABLED, 0, DoubleBounds(0.2, 0.3)),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.HAND
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.HAND
 }

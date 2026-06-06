@@ -7,12 +7,12 @@ import de.fuballer.mcendgame.main.configuration.RuntimeConfig
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDamagedEvent
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.projectile.ProjectileEntity
-import net.minecraft.entity.projectile.WitherSkullEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.Vec3d
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.hurtingprojectile.WitherSkull
+import net.minecraft.world.phys.Vec3
 import kotlin.random.Random
 
 @Injectable
@@ -20,13 +20,13 @@ class ShootWitherSkullWhenHitByProjectileService {
     @EventSubscriber(sync = true)
     fun on(event: LivingEntityDamagedEvent) {
         val damageSource = event.damageSource
-        val projectile = damageSource.source ?: return
-        if (projectile !is ProjectileEntity) return
+        val projectile = damageSource.directEntity ?: return
+        if (projectile !is Projectile) return
 
         val damaged = event.damaged
         val attributes = damaged.getAllCustomAttributes()[CustomAttributeTypes.SHOOT_WITHER_SKULL_WHEN_HIT_BY_PROJECTILE] ?: return
 
-        val attacker = damageSource.attacker
+        val attacker = damageSource.entity
 
         attributes.forEach {
             if (Random.nextDouble() > it.rolls[0].asDoubleRoll().getValue()) return@forEach
@@ -38,17 +38,17 @@ class ShootWitherSkullWhenHitByProjectileService {
         shooter: LivingEntity,
         target: Entity?,
     ) {
-        val world = shooter.entityWorld as? ServerWorld ?: return
+        val world = shooter.level() as? ServerLevel ?: return
 
-        val skull = WitherSkullEntity(world, shooter, Vec3d.ZERO)
-        skull.setPosition(shooter.eyePos)
-        val direction = if (target != null && target !is ProjectileEntity) {
-            target.entityPos.add(0.0, target.height / 2.0, 0.0).subtract(skull.entityPos).normalize()
+        val skull = WitherSkull(world, shooter, Vec3.ZERO)
+        skull.setPos(shooter.eyePosition)
+        val direction = if (target != null && target !is Projectile) {
+            target.position().add(0.0, target.bbHeight / 2.0, 0.0).subtract(skull.position()).normalize()
         } else {
-            shooter.rotationVector
+            shooter.lookAngle
         }.normalize()
-        skull.velocity = direction
+        skull.setDeltaMovement(direction)
 
-        RuntimeConfig.SERVER.execute { world.spawnEntity(skull) }
+        RuntimeConfig.SERVER.execute { world.addFreshEntity(skull) }
     }
 }

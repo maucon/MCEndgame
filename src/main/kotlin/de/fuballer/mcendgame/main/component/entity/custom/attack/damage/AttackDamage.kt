@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.damage
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.attributes.Attributes
 
 abstract class AttackDamage(
     private val damageFactor: Float,
@@ -11,10 +11,10 @@ abstract class AttackDamage(
     val blockable: Boolean = true,
     val disableBlockingShield: Float = 0.0F,
 ) {
-    abstract fun apply(world: ServerWorld, damager: MobEntity, target: LivingEntity?): Boolean
+    abstract fun apply(world: ServerLevel, damager: Mob, target: LivingEntity?): Boolean
 
-    fun getDamage(damager: MobEntity) = damager.getAttributeValue(EntityAttributes.ATTACK_DAMAGE).toFloat() * damageFactor
-    fun getKnockback(damager: MobEntity) = damager.getAttributeValue(EntityAttributes.ATTACK_KNOCKBACK).toFloat() * knockbackFactor
+    fun getDamage(damager: Mob) = damager.getAttributeValue(Attributes.ATTACK_DAMAGE).toFloat() * damageFactor
+    fun getKnockback(damager: Mob) = damager.getAttributeValue(Attributes.ATTACK_KNOCKBACK).toFloat() * knockbackFactor
 
     open fun requiresTarget() = true
 }

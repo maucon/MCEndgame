@@ -8,24 +8,20 @@ import de.fuballer.mcendgame.main.component.portal.type.DefaultPortalType
 import de.fuballer.mcendgame.main.component.portal.type.PortalType
 import de.fuballer.mcendgame.main.messaging.portal.PortalUsedEvent
 import de.maucon.mauconframework.event.EventGateway
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.EquipmentSlot
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.MovementType
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.data.DataTracker
-import net.minecraft.entity.data.TrackedData
-import net.minecraft.entity.data.TrackedDataHandlerRegistry
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.storage.ReadView
-import net.minecraft.storage.WriteView
-import net.minecraft.util.ActionResult
-import net.minecraft.util.Arm
-import net.minecraft.util.Hand
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.*
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.Vec3
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -33,7 +29,7 @@ private const val DATA_KEY = "portal_entity_data"
 
 class PortalEntity(
     entityType: EntityType<out LivingEntity>,
-    world: World,
+    world: Level,
 ) : LivingEntity(entityType, world) {
     private val log = LogUtils.getLogger()
 
@@ -63,11 +59,11 @@ class PortalEntity(
     init {
         this.setNoGravity(true)
         isInvulnerable = true
-        noClip = true
+        noPhysics = true
     }
 
     companion object {
-        val TYPE: TrackedData<String> = DataTracker.registerData(PortalEntity::class.java, TrackedDataHandlerRegistry.STRING)
+        val TYPE: EntityDataAccessor<String> = SynchedEntityData.defineId(PortalEntity::class.java, EntityDataSerializers.STRING)
     }
 
     override fun tick() {
@@ -80,9 +76,9 @@ class PortalEntity(
         type.tickAnimation(this)
     }
 
-    override fun interactAt(player: PlayerEntity, hitPos: Vec3d, hand: Hand): ActionResult {
-        if (entityWorld.isClient) return ActionResult.PASS
-        if (hand != Hand.MAIN_HAND) return ActionResult.PASS
+    override fun interact(player: Player, hand: InteractionHand, hitPos: Vec3): InteractionResult {
+        if (level().isClientSide) return InteractionResult.PASS
+        if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS
 
         val event = PortalUsedEvent(player, teleportLocation)
         EventGateway.publish(event)
@@ -90,33 +86,33 @@ class PortalEntity(
         if (singleUse) {
             remove(RemovalReason.KILLED)
         }
-        return ActionResult.SUCCESS
+        return InteractionResult.SUCCESS
     }
 
-    override fun shouldRenderName(): Boolean = false
+    override fun shouldShowName(): Boolean = false
 
     override fun isOnFire() = false
     override fun canFreeze() = false
 
-    override fun move(type: MovementType, movement: Vec3d) {}
+    override fun move(type: MoverType, movement: Vec3) {}
 
-    override fun getEquippedStack(slot: EquipmentSlot): ItemStack = ItemStack.EMPTY
-    override fun equipStack(slot: EquipmentSlot?, stack: ItemStack) {}
-    override fun getMainArm(): Arm = Arm.RIGHT
+    override fun getItemBySlot(slot: EquipmentSlot): ItemStack = ItemStack.EMPTY
+    override fun setItemSlot(slot: EquipmentSlot, stack: ItemStack) {}
+    override fun getMainArm(): HumanoidArm = HumanoidArm.RIGHT
 
-    override fun damage(world: ServerWorld, source: DamageSource, amount: Float) = false
+    override fun hurtServer(world: ServerLevel, source: DamageSource, amount: Float) = false
 
-    override fun kill(level: ServerWorld) {
+    override fun kill(level: ServerLevel) {
         remove(RemovalReason.KILLED)
     }
 
-    override fun initDataTracker(builder: DataTracker.Builder) {
-        super.initDataTracker(builder)
-        builder.add(TYPE, "default")
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(TYPE, "default")
     }
 
-    override fun readCustomData(view: ReadView) {
-        super.readCustomData(view)
+    override fun readAdditionalSaveData(view: ValueInput) {
+        super.readAdditionalSaveData(view)
 
         if (!view.contains(DATA_KEY)) {
             log.info("Marking outdated portal to be removed: $uuid")
@@ -139,17 +135,17 @@ class PortalEntity(
         }
 
         type = PortalType.getById(data.typeId)
-        dataTracker.set(TYPE, data.typeId)
+        entityData.set(TYPE, data.typeId)
 
-        if (entityWorld.isClient) return
+        if (level().isClientSide) return
 
         singleUse = data.singleUse
         teleportLocation = data.teleportLocation
     }
 
-    override fun writeCustomData(view: WriteView) {
-        super.writeCustomData(view)
+    override fun addAdditionalSaveData(view: ValueOutput) {
+        super.addAdditionalSaveData(view)
 
-        view.put(DATA_KEY, PortalEntityData.CODEC, PortalEntityData(type.getId(), singleUse, teleportLocation))
+        view.store(DATA_KEY, PortalEntityData.CODEC, PortalEntityData(type.getId(), singleUse, teleportLocation))
     }
 }

@@ -4,21 +4,21 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDodgedEvent
-import de.fuballer.mcendgame.main.mixin.projectile.ProjectileEntityAccessor
-import de.fuballer.mcendgame.main.mixin.trident.TridentEntityAccessor
+import de.fuballer.mcendgame.main.mixin.projectile.ProjectileAccessor
+import de.fuballer.mcendgame.main.mixin.trident.ThrownTridentAccessor
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.enchantment.EnchantmentHelper
-import net.minecraft.enchantment.Enchantments
-import net.minecraft.entity.Entity
-import net.minecraft.entity.PlayerLikeEntity
-import net.minecraft.entity.projectile.PersistentProjectileEntity
-import net.minecraft.entity.projectile.ProjectileEntity
-import net.minecraft.entity.projectile.TridentEntity
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvents
+import net.minecraft.core.registries.Registries
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.Avatar
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow
+import net.minecraft.world.entity.projectile.arrow.ThrownTrident
+import net.minecraft.world.item.enchantment.EnchantmentHelper
+import net.minecraft.world.item.enchantment.Enchantments
 import kotlin.random.Random
 
 @Injectable
@@ -27,7 +27,7 @@ class DodgedProjectileReflectService(
 ) {
     @EventSubscriber(sync = true)
     fun on(event: LivingEntityDodgedEvent) {
-        val projectile = event.source as? ProjectileEntity ?: return
+        val projectile = event.source as? Projectile ?: return
 
         val entity = event.entity
         if (!entity.getAllCustomAttributes().contains(CustomAttributeTypes.DODGED_PROJECTILE_REFLECT)) return
@@ -35,40 +35,40 @@ class DodgedProjectileReflectService(
         val attacker = event.attacker
         scheduler.delayed(1) {
             if (!projectile.isAlive) return@delayed
-            val world = projectile.entityWorld as? ServerWorld ?: return@delayed
+            val world = projectile.level() as? ServerLevel ?: return@delayed
 
-            val rawDirection = if (attacker == null) entity.rotationVector else attacker.eyePos.subtract(projectile.entityPos)
-            if (rawDirection.lengthSquared() < 1.0E-6) return@delayed
+            val rawDirection = if (attacker == null) entity.lookAngle else attacker.eyePosition.subtract(projectile.position())
+            if (rawDirection.lengthSqr() < 1.0E-6) return@delayed
             val newDirection = rawDirection.normalize()
 
-            val newVelocity = newDirection.multiply(1.6)
+            val newVelocity = newDirection.scale(1.6)
             val newYaw = (Math.toDegrees(kotlin.math.atan2(newVelocity.z, newVelocity.x)) - 90.0).toFloat()
-            projectile.yaw = newYaw
-            projectile.lastYaw = newYaw
-            projectile.velocity = newVelocity
-            projectile.velocityDirty = true
+            projectile.setYRot(newYaw)
+            projectile.yRotO = newYaw
+            projectile.setDeltaMovement(newVelocity)
+            projectile.needsSync = true
 
             var loyalty = false
-            if (projectile is TridentEntity) {
-                val stack = projectile.itemStack
+            if (projectile is ThrownTrident) {
+                val stack = projectile.pickupItemStackOrigin
 
-                world.registryManager
-                    .getOrThrow(RegistryKeys.ENCHANTMENT)
-                    .getEntry(Enchantments.LOYALTY.value).ifPresent {
-                        loyalty = EnchantmentHelper.getLevel(it, stack) > 0
+                world.registryAccess()
+                    .lookupOrThrow(Registries.ENCHANTMENT)
+                    .get(Enchantments.LOYALTY.identifier()).ifPresent {
+                        loyalty = EnchantmentHelper.getItemEnchantmentLevel(it, stack) > 0
                     }
 
-                (projectile as TridentEntityAccessor).`mcendgame$setDealtDamage`(false)
+                (projectile as ThrownTridentAccessor).`mcendgame$setDealtDamage`(false)
             }
 
             if (!loyalty) projectile.owner = entity
-            (projectile as ProjectileEntityAccessor).`mcendgame$setLeftOwner`(false)
+            (projectile as ProjectileAccessor).`mcendgame$setLeftOwner`(false)
 
-            if (projectile is PersistentProjectileEntity) {
-                if (attacker != null && attacker !is PlayerLikeEntity)
-                    projectile.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY
+            if (projectile is AbstractArrow) {
+                if (attacker != null && attacker !is Avatar)
+                    projectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY
                 else {
-                    projectile.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED
+                    projectile.pickup = AbstractArrow.Pickup.ALLOWED
                 }
             }
 
@@ -78,16 +78,16 @@ class DodgedProjectileReflectService(
 
     private fun playSound(
         entity: Entity,
-        world: ServerWorld,
+        world: ServerLevel,
     ) {
-        val pos = entity.entityPos
-        val soundCategory = if (entity is PlayerLikeEntity) SoundCategory.PLAYERS else SoundCategory.HOSTILE
+        val pos = entity.position()
+        val soundCategory = if (entity is Avatar) SoundSource.PLAYERS else SoundSource.HOSTILE
         world.playSound(
             null,
             pos.x,
             pos.y,
             pos.z,
-            SoundEvents.ENTITY_BREEZE_WIND_BURST,
+            SoundEvents.BREEZE_WIND_CHARGE_BURST,
             soundCategory,
             0.5F,
             0.9F + 0.2F * Random.nextFloat(),

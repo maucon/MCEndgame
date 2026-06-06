@@ -1,23 +1,23 @@
 package de.fuballer.mcendgame.main.component.entity.custom.goals
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.goal.LookAtEntityGoal
-import net.minecraft.entity.mob.MobEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
 
 class DisableAbleLookAtEntityGoal(
-    entity: MobEntity,
+    entity: Mob,
     type: Class<out LivingEntity>,
     range: Float,
-) : LookAtEntityGoal(entity, type, range) {
+) : LookAtPlayerGoal(entity, type, range) {
     var isDisabled = false
 
-    override fun canStart(): Boolean {
+    override fun canUse(): Boolean {
         if (isDisabled) return false
-        return super.canStart()
+        return super.canUse()
     }
 
-    override fun shouldContinue(): Boolean {
+    override fun canContinueToUse(): Boolean {
         if (isDisabled) return false
-        return super.shouldContinue()
+        return super.canContinueToUse()
     }
 }

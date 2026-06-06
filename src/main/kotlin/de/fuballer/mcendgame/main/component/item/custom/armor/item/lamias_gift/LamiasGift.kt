@@ -7,11 +7,11 @@ import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttribu
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HideBipedBoneArmor
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HideOtherArmorArmor
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.entity.EquipmentSlot
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
 
 class LamiasGift(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings), HideBipedBoneArmor, HideOtherArmorArmor {
     override val hiddenBones = listOf(
         HideBipedBoneArmor.BipedBone.LEGS,
@@ -20,7 +20,7 @@ class LamiasGift(
         EquipmentSlot.FEET,
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.LEGS
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.LEGS
 
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.POISON_DAMAGE_IMMUNITY, 0),

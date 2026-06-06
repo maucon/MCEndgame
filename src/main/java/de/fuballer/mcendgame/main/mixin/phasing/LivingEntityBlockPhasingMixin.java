@@ -2,9 +2,9 @@ package de.fuballer.mcendgame.main.mixin.phasing;
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions;
 import de.fuballer.mcendgame.main.component.tags.CustomTags;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,11 +17,11 @@ public class LivingEntityBlockPhasingMixin {
             at = @At("HEAD"),
             cancellable = true)
     void isInvulnerableTo(
-            ServerWorld world,
+            ServerLevel world,
             DamageSource source,
             CallbackInfoReturnable<Boolean> cir
     ) {
-        if (!source.isIn(CustomTags.INSTANCE.getBLOCK_PHASING_IMMUNE())) return;
+        if (!source.is(CustomTags.INSTANCE.getBLOCK_PHASING_IMMUNE())) return;
 
         var livingEntity = (LivingEntity) (Object) this;
         if (!CustomAttributesExtensions.INSTANCE.hasBlockPhasing(livingEntity)) return;

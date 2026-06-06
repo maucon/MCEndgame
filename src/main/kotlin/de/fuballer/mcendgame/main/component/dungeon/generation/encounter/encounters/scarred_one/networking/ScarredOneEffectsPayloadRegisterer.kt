@@ -8,6 +8,6 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 object ScarredOneEffectsPayloadRegisterer {
     @Initializer(priority = 0) // before ScarredOneEffectsPayloadHandler.register
     fun register() {
-        PayloadTypeRegistry.playS2C().register(ScarredOneEffectsPayload.ID, ScarredOneEffectsPayload.CODEC)
+        PayloadTypeRegistry.clientboundPlay().register(ScarredOneEffectsPayload.ID, ScarredOneEffectsPayload.CODEC)
     }
 }

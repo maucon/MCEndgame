@@ -1,17 +1,18 @@
 package de.fuballer.mcendgame.client.component.particle
 
 import de.fuballer.mcendgame.main.component.particle.HorizontalFlameBreathParticleEffect
-import net.minecraft.client.particle.BillboardParticle
+import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.particle.Particle
-import net.minecraft.client.particle.ParticleFactory
-import net.minecraft.client.particle.SpriteProvider
-import net.minecraft.client.texture.Sprite
-import net.minecraft.client.world.ClientWorld
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.particle.ParticleProvider
+import net.minecraft.client.particle.SingleQuadParticle
+import net.minecraft.client.particle.SpriteSet
+import net.minecraft.client.renderer.texture.TextureAtlasSprite
+import net.minecraft.util.RandomSource
+import net.minecraft.world.phys.Vec3
 import kotlin.random.Random
 
 class HorizontalFlameBreathParticle(
-    clientWorld: ClientWorld,
+    clientWorld: ClientLevel,
     x: Double,
     y: Double,
     z: Double,
@@ -19,60 +20,60 @@ class HorizontalFlameBreathParticle(
     directionY: Double,
     directionZ: Double,
     spreadAngle: Double,
-    sprite: Sprite,
-) : BillboardParticle(clientWorld, x, y, z, 0.0, 0.0, 0.0, sprite) {
+    sprite: TextureAtlasSprite,
+) : SingleQuadParticle(clientWorld, x, y, z, 0.0, 0.0, 0.0, sprite) {
     init {
-        maxAge = 40
-        collidesWithWorld = false
+        lifetime = 40
+        hasPhysics = false
 
         val randomAngle = Math.toRadians(Random.nextDouble() * spreadAngle - spreadAngle / 2)
-        val direction = Vec3d(directionX, directionY, directionZ).rotateY(randomAngle.toFloat()).normalize()
-        val velocity = direction.multiply(0.25)
-        velocityX = velocity.x
-        velocityY = velocity.y - 0.1
-        velocityZ = velocity.z
+        val direction = Vec3(directionX, directionY, directionZ).yRot(randomAngle.toFloat()).normalize()
+        val velocity = direction.scale(0.25)
+        xd = velocity.x
+        yd = velocity.y - 0.1
+        zd = velocity.z
     }
 
     override fun tick() {
-        lastX = x
-        lastY = y
-        lastZ = z
-        if (age++ >= maxAge) {
-            markDead()
+        xo = x
+        yo = y
+        zo = z
+        if (age++ >= lifetime) {
+            remove()
             return
         }
 
-        if (velocityY < 0.03) velocityY += 0.008
-        move(velocityX, velocityY, velocityZ)
+        if (yd < 0.03) yd += 0.008
+        move(xd, yd, zd)
     }
 
-    override fun getSize(tickProgress: Float): Float {
-        val time = (age + tickProgress) / maxAge.toFloat()
+    override fun getQuadSize(tickProgress: Float): Float {
+        val time = (age + tickProgress) / lifetime.toFloat()
 
         return if (time <= 0.8f) {
             val normalized = time / 0.8f
-            scale * (0.3f + normalized * 1.2f)
+            quadSize * (0.3f + normalized * 1.2f)
         } else {
             val normalized = (time - 0.8f) / 0.2f
-            scale * (1.5f - normalized * 1.0f)
+            quadSize * (1.5f - normalized * 1.0f)
         }
     }
 
-    override fun getRenderType(): RenderType = RenderType.PARTICLE_ATLAS_OPAQUE
+    override fun getLayer(): Layer = Layer.OPAQUE
 
     class Factory(
-        private val spriteProvider: SpriteProvider,
-    ) : ParticleFactory<HorizontalFlameBreathParticleEffect> {
+        private val spriteProvider: SpriteSet,
+    ) : ParticleProvider<HorizontalFlameBreathParticleEffect> {
         override fun createParticle(
             particleEffect: HorizontalFlameBreathParticleEffect,
-            clientWorld: ClientWorld,
+            clientWorld: ClientLevel,
             x: Double,
             y: Double,
             z: Double,
             velocityX: Double,
             velocityY: Double,
             velocityZ: Double,
-            random: net.minecraft.util.math.random.Random,
+            random: RandomSource,
         ): Particle {
             return HorizontalFlameBreathParticle(
                 clientWorld,
@@ -83,7 +84,7 @@ class HorizontalFlameBreathParticle(
                 particleEffect.directionY,
                 particleEffect.directionZ,
                 particleEffect.spreadAngle,
-                spriteProvider.getSprite(random)
+                spriteProvider.get(random)
             )
         }
     }

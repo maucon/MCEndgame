@@ -1,16 +1,16 @@
 package de.fuballer.mcendgame.main.messaging.misc
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.world.World
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.level.Level
 
 data class MobEntityTargetCommand(
-    val world: World,
-    val entity: MobEntity,
+    val world: Level,
+    val entity: Mob,
     val target: LivingEntity?,
     var canTarget: Boolean = true,
 ) {
     companion object {
-        fun of(entity: MobEntity, target: LivingEntity?) = MobEntityTargetCommand(entity.entityWorld, entity, target)
+        fun of(entity: Mob, target: LivingEntity?) = MobEntityTargetCommand(entity.level(), entity, target)
     }
 }

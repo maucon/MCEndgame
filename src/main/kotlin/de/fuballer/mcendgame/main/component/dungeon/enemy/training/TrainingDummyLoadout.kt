@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.main.component.dungeon.enemy.training
 
 import de.fuballer.mcendgame.main.component.dungeon.enemy.potion_effect.PotionEffect
 import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
-import net.minecraft.entity.EquipmentSlot
-import net.minecraft.item.ItemStack
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.ItemStack
 
 data class TrainingDummyLoadout(
     val items: Map<EquipmentSlot, ItemStack> = mapOf(),
@@ -11,10 +11,10 @@ data class TrainingDummyLoadout(
 ) {
     fun apply(dummy: TrainingDummyEntity) {
         items.forEach {
-            dummy.equipStack(it.key, it.value.copy())
+            dummy.setItemSlot(it.key, it.value)
         }
         effects.forEach {
-            dummy.addStatusEffect(it.getEffectInstance())
+            dummy.addEffect(it.getEffectInstance())
         }
     }
 }

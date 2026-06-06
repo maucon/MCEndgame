@@ -1,32 +1,32 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.spiderling
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.spiderling.SpiderlingEntity
-import net.minecraft.client.render.entity.EntityRendererFactory
-import net.minecraft.client.render.entity.MobEntityRenderer
-import net.minecraft.client.render.entity.feature.SpiderEyesFeatureRenderer
-import net.minecraft.client.render.entity.model.EntityModelLayers
-import net.minecraft.client.render.entity.model.SpiderEntityModel
-import net.minecraft.client.render.entity.state.LivingEntityRenderState
-import net.minecraft.util.Identifier
+import net.minecraft.client.model.geom.ModelLayers
+import net.minecraft.client.model.monster.spider.SpiderModel
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.MobRenderer
+import net.minecraft.client.renderer.entity.layers.SpiderEyesLayer
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import net.minecraft.resources.Identifier
 
 class SpiderlingRenderer(
-    context: EntityRendererFactory.Context,
-) : MobEntityRenderer<SpiderlingEntity, LivingEntityRenderState, SpiderEntityModel>(
+    context: EntityRendererProvider.Context,
+) : MobRenderer<SpiderlingEntity, LivingEntityRenderState, SpiderModel>(
     context,
-    SpiderEntityModel(context.getPart(EntityModelLayers.SPIDER)),
+    SpiderModel(context.bakeLayer(ModelLayers.SPIDER)),
     0.8f,
 ) {
     init {
-        addFeature(SpiderEyesFeatureRenderer(this))
+        addLayer(SpiderEyesLayer(this))
     }
 
     companion object {
-        val TEXTURE: Identifier = Identifier.ofVanilla("textures/entity/spider/spider.png")
+        val TEXTURE: Identifier = Identifier.withDefaultNamespace("textures/entity/spider/spider.png")
     }
 
-    override fun getTexture(state: LivingEntityRenderState) = TEXTURE
+    override fun getTextureLocation(state: LivingEntityRenderState) = TEXTURE
 
     override fun createRenderState() = LivingEntityRenderState()
 
-    override fun getLyingPositionRotationDegrees() = 180.0f
+    override fun getFlipDegrees() = 180.0f
 }

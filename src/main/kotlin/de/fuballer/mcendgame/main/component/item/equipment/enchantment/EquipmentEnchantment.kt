@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.main.component.item.equipment.enchantment
 
-import net.minecraft.enchantment.Enchantment
-import net.minecraft.enchantment.Enchantments
-import net.minecraft.registry.RegistryKey
+import net.minecraft.resources.ResourceKey
+import net.minecraft.world.item.enchantment.Enchantment
+import net.minecraft.world.item.enchantment.Enchantments
 
 enum class EquipmentEnchantment(
-    val enchantment: RegistryKey<Enchantment>,
+    val enchantment: ResourceKey<Enchantment>,
     val level: Int
 ) {
     // all-purpose

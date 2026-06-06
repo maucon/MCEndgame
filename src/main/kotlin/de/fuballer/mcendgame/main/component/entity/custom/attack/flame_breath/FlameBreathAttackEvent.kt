@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.flame_breath
 
-import net.minecraft.entity.Entity
+import net.minecraft.world.entity.Entity
 
 class FlameBreathAttackEvent(
     val attacker: Entity,

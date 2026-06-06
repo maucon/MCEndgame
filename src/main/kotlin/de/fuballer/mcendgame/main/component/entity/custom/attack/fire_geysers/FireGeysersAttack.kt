@@ -1,14 +1,14 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.fire_geysers
 
+import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
 import de.maucon.mauconframework.event.EventGateway
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
-import software.bernie.geckolib.animatable.GeoEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 
 class FireGeysersAttack<T>(
     animationData: AttackAnimationData,
@@ -26,7 +26,7 @@ class FireGeysersAttack<T>(
     val geyserCountLimit: Int = Int.MAX_VALUE,
     sounds: List<DelayedSoundData> = listOf(),
     blockMovementDuration: Int = 0,
-) : Attack<T>(animationData, totalDuration, cooldown, trigger, damage, sounds, blockMovementDuration) where T : MobEntity, T : GeoEntity {
+) : Attack<T>(animationData, totalDuration, cooldown, trigger, damage, sounds, blockMovementDuration) where T : Mob, T : GeoEntity {
     constructor(
         animationData: AttackAnimationData,
         totalDuration: Int,

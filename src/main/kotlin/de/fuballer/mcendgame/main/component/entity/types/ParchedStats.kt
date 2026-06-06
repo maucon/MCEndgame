@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.main.component.entity.types
 
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.mob.ParchedEntity
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.monster.skeleton.Parched
 
 object ParchedStats : EntityTypeStats {
-    override val type: EntityType<ParchedEntity> = EntityType.PARCHED
+    override val type: EntityType<Parched> = EntityType.PARCHED
 
     override val canHaveWeapons = true
     override val isRanged = true

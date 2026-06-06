@@ -2,19 +2,19 @@ package de.fuballer.mcendgame.main.component.damage.dealing
 
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.damage.DifficultyScaling
-import net.minecraft.entity.Entity
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.damage.DamageType
-import net.minecraft.registry.entry.RegistryEntry
+import net.minecraft.core.Holder
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.entity.Entity
 
 class ExtendedDamageSource(
     val damageCalculationConfig: DamageCalculationConfig,
-    type: RegistryEntry<DamageType>,
+    type: Holder<DamageType>,
     source: Entity?,
     attacker: Entity?
 ) : DamageSource(type, source, attacker) {
     constructor(damageCalculationConfig: DamageCalculationConfig, damageSource: DamageSource)
-            : this(damageCalculationConfig, damageSource.typeRegistryEntry, damageSource.source, damageSource.attacker)
+            : this(damageCalculationConfig, damageSource.typeHolder(), damageSource.directEntity, damageSource.entity)
 
     constructor(damageSource: DamageSource)
             : this(DamageCalculationConfig(), damageSource)

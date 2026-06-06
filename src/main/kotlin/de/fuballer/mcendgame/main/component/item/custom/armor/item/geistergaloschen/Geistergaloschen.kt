@@ -3,10 +3,10 @@ package de.fuballer.mcendgame.main.component.item.custom.armor.item.geistergalos
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
-import net.minecraft.component.type.AttributeModifierSlot
+import net.minecraft.world.entity.EquipmentSlotGroup
 
 class Geistergaloschen(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.GHOSTLY_APPEARANCE, 0),
@@ -14,5 +14,5 @@ class Geistergaloschen(
         RollableCustomAttribute(CustomAttributeTypes.BLOCK_PHASING, 0),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.FEET
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.FEET
 }

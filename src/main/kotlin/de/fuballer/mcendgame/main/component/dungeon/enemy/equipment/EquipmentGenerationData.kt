@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.component.dungeon.enemy.equipment
 
-import net.minecraft.item.equipment.trim.ArmorTrim
+import net.minecraft.world.item.equipment.trim.ArmorTrim
 
 data class EquipmentGenerationData(
     val uniqueProbability: Double,

@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import de.fuballer.mcendgame.main.component.custom_attribute.affinity.Affinity
 import de.fuballer.mcendgame.main.component.custom_attribute.affinity.AttributeAffinity
 import de.fuballer.mcendgame.main.util.minecraft.CodecUtil
-import net.minecraft.util.Formatting
+import net.minecraft.ChatFormatting
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -66,10 +66,10 @@ sealed interface AttributeRoll<T> {
     fun getDominantEnhancementColor() = enhancements.keys.minByOrNull { it.ordinal }?.color
 
     enum class EnhancementType(
-        val color: Formatting,
+        val color: ChatFormatting,
     ) {
-        CORRUPTION(Formatting.DARK_RED),
-        SACRIFICE(Formatting.RED);
+        CORRUPTION(ChatFormatting.DARK_RED),
+        SACRIFICE(ChatFormatting.RED);
 
         companion object {
             val CODEC: Codec<EnhancementType> =

@@ -11,17 +11,17 @@ import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.particle.BlockStateParticleEffect
-import net.minecraft.particle.ParticleTypes
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvents
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.core.particles.BlockParticleOption
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.level.Level
+import net.minecraft.world.phys.AABB
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
@@ -35,9 +35,9 @@ class FireGeysersAttackService(
     @EventSubscriber(sync = true)
     fun on(event: FireGeysersAttackEvent) {
         val attacker = event.attacker
-        val world = event.attacker.entityWorld as? ServerWorld ?: return
+        val world = event.attacker.level() as? ServerLevel ?: return
 
-        val positions = chosePositions(world, attacker.blockPos, event.radius, event.geyserProbability, event.geyserCountLimit)
+        val positions = chosePositions(world, attacker.blockPosition(), event.radius, event.geyserProbability, event.geyserCountLimit)
 
         createParticles(world, positions, event.delay, event.indicatorDuration, event.pillarDuration)
         playSound(world, positions, event.delay, event.indicatorDuration, event.pillarDuration)
@@ -45,7 +45,7 @@ class FireGeysersAttackService(
     }
 
     private fun chosePositions(
-        world: World,
+        world: Level,
         startPos: BlockPos,
         radius: Int,
         probability: Double,
@@ -57,7 +57,7 @@ class FireGeysersAttackService(
     }
 
     private fun getPossiblePositions(
-        world: World,
+        world: Level,
         startPos: BlockPos,
         radius: Int,
     ): List<BlockPos> {
@@ -71,11 +71,11 @@ class FireGeysersAttackService(
             val newHeads = mutableListOf<BlockPos>()
 
             for (head in heads) {
-                if (head.getSquaredDistance(startPos) > squaredRadius) continue
+                if (head.distSqr(startPos) > squaredRadius) continue
 
-                val below = head.down()
+                val below = head.below()
                 val belowState = world.getBlockState(below)
-                if (belowState.isSolidBlock(world, below)) {
+                if (belowState.isRedstoneConductor(world, below)) {
                     possiblePositions.add(head)
                 }
 
@@ -84,8 +84,8 @@ class FireGeysersAttackService(
                     head.south(),
                     head.east(),
                     head.west(),
-                    head.up(),
-                    head.down()
+                    head.above(),
+                    head.below()
                 )
 
                 for (neighbor in neighbors) {
@@ -93,7 +93,7 @@ class FireGeysersAttackService(
                     checkedPositions.add(neighbor)
 
                     val state = world.getBlockState(neighbor)
-                    if (!state.isSolidBlock(world, neighbor)) newHeads.add(neighbor)
+                    if (!state.isRedstoneConductor(world, neighbor)) newHeads.add(neighbor)
                 }
             }
 
@@ -104,7 +104,7 @@ class FireGeysersAttackService(
     }
 
     private fun createParticles(
-        world: ServerWorld,
+        world: ServerLevel,
         positions: List<BlockPos>,
         delay: Int,
         indicatorDuration: Int,
@@ -112,9 +112,9 @@ class FireGeysersAttackService(
     ) {
         scheduler.repeatingForDuration(delay, 1, indicatorDuration) {
             positions.forEach {
-                val centerPos = it.toCenterPos().subtract(0.0, 0.2, 0.0)
-                world.spawnParticles(
-                    BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(it.down())),
+                val centerPos = it.center.subtract(0.0, 0.2, 0.0)
+                world.sendParticles(
+                    BlockParticleOption(ParticleTypes.BLOCK, world.getBlockState(it.below())),
                     centerPos.x,
                     centerPos.y,
                     centerPos.z,
@@ -130,8 +130,8 @@ class FireGeysersAttackService(
         val halfIndicatorDuration = indicatorDuration / 2
         scheduler.repeatingForDuration(delay + halfIndicatorDuration, 4, halfIndicatorDuration + pillarDuration) {
             positions.forEach {
-                val centerPos = it.toCenterPos().subtract(0.0, 0.2, 0.0)
-                world.spawnParticles(
+                val centerPos = it.center.subtract(0.0, 0.2, 0.0)
+                world.sendParticles(
                     ParticleTypes.LAVA,
                     centerPos.x,
                     centerPos.y,
@@ -147,8 +147,8 @@ class FireGeysersAttackService(
 
         scheduler.delayed(delay + indicatorDuration) {
             positions.forEach {
-                val centerPos = it.toCenterPos().subtract(0.0, 0.2, 0.0)
-                world.spawnParticles(
+                val centerPos = it.center.subtract(0.0, 0.2, 0.0)
+                world.sendParticles(
                     ParticleTypes.FLAME,
                     centerPos.x,
                     centerPos.y,
@@ -164,9 +164,9 @@ class FireGeysersAttackService(
 
         scheduler.repeatingForDuration(delay + indicatorDuration, 2, pillarDuration) {
             positions.forEach {
-                val centerPos = it.toCenterPos().subtract(0.0, 0.2, 0.0)
-                world.spawnParticles(
-                    BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(it.down())),
+                val centerPos = it.center.subtract(0.0, 0.2, 0.0)
+                world.sendParticles(
+                    BlockParticleOption(ParticleTypes.BLOCK, world.getBlockState(it.below())),
                     centerPos.x,
                     centerPos.y,
                     centerPos.z,
@@ -176,7 +176,7 @@ class FireGeysersAttackService(
                     0.1,
                     0.3
                 )
-                world.spawnParticles(
+                world.sendParticles(
                     CustomParticleTypes.FLAME_PILLAR,
                     centerPos.x,
                     centerPos.y,
@@ -187,7 +187,7 @@ class FireGeysersAttackService(
                     0.0,
                     0.0
                 )
-                world.spawnParticles(
+                world.sendParticles(
                     CustomParticleTypes.SMOKE_PILLAR,
                     centerPos.x,
                     centerPos.y,
@@ -203,7 +203,7 @@ class FireGeysersAttackService(
     }
 
     private fun playSound(
-        world: ServerWorld,
+        world: ServerLevel,
         positions: List<BlockPos>,
         delay: Int,
         indicatorDuration: Int,
@@ -212,7 +212,7 @@ class FireGeysersAttackService(
         scheduler.delayed(max(1, delay + indicatorDuration - 60)) {
             positions.forEach {
                 if (Random.nextDouble() > 0.15) return@forEach
-                world.playSound(null, it, SoundEvents.BLOCK_LAVA_AMBIENT, SoundCategory.HOSTILE, 0.5F, 0.8F + 0.3F * Random.nextFloat())
+                world.playSound(null, it, SoundEvents.LAVA_AMBIENT, SoundSource.HOSTILE, 0.5F, 0.8F + 0.3F * Random.nextFloat())
             }
         }
 
@@ -220,29 +220,29 @@ class FireGeysersAttackService(
             val volume = max(0.2F, ticks / indicatorDuration.toFloat())
             positions.forEach {
                 if (Random.nextDouble() > 0.15) return@forEach
-                world.playSound(null, it, SoundEvents.BLOCK_STONE_HIT, SoundCategory.HOSTILE, volume, 0.5F)
+                world.playSound(null, it, SoundEvents.STONE_HIT, SoundSource.HOSTILE, volume, 0.5F)
             }
         }
 
         scheduler.delayed(delay + indicatorDuration) {
             positions.forEach {
                 if (Random.nextDouble() < 0.5)
-                    world.playSound(null, it, SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.HOSTILE, 0.3F, 0.8F + 0.4F * Random.nextFloat())
+                    world.playSound(null, it, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.HOSTILE, 0.3F, 0.8F + 0.4F * Random.nextFloat())
                 if (Random.nextDouble() < 0.3)
-                    world.playSound(null, it, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.HOSTILE, 0.3F, 1F)
+                    world.playSound(null, it, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE, 0.3F, 1F)
             }
         }
 
         scheduler.repeatingForDuration(delay + indicatorDuration, 2, pillarDuration) {
             positions.forEach {
                 if (Random.nextDouble() > 0.15) return@forEach
-                world.playSound(null, it, SoundEvents.ENTITY_BLAZE_BURN, SoundCategory.HOSTILE, 0.4F + 0.1F * Random.nextFloat(), 0.8F + 0.3F * Random.nextFloat())
+                world.playSound(null, it, SoundEvents.BLAZE_BURN, SoundSource.HOSTILE, 0.4F + 0.1F * Random.nextFloat(), 0.8F + 0.3F * Random.nextFloat())
             }
         }
     }
 
     private fun dealDamage(
-        world: ServerWorld,
+        world: ServerLevel,
         positions: List<BlockPos>,
         delay: Int,
         indicatorDuration: Int,
@@ -251,7 +251,7 @@ class FireGeysersAttackService(
         burstDamageConversion: Double,
         durationDamageConversion: Double,
     ) {
-        val attackDamage = if (attacker is LivingEntity) attacker.getAttributeValue(EntityAttributes.ATTACK_DAMAGE) else 1.0
+        val attackDamage = if (attacker is LivingEntity) attacker.getAttributeValue(Attributes.ATTACK_DAMAGE) else 1.0
         val burstElementalDamage = attackDamage * burstDamageConversion
         val durationDamage = attackDamage * durationDamageConversion
 
@@ -266,8 +266,8 @@ class FireGeysersAttackService(
                     ),
                     CustomDamageTypes.SPELL
                 )
-                it.setOnFireForTicks(80)
-                it.setAndSyncVelocity(it.velocity.add(0.0, 1.0, 0.0))
+                it.igniteForTicks(80)
+                it.setAndSyncVelocity(it.deltaMovement.add(0.0, 1.0, 0.0))
             }
         }
 
@@ -282,21 +282,21 @@ class FireGeysersAttackService(
                     ),
                     CustomDamageTypes.SPELL
                 )
-                it.setOnFireForTicks(80)
+                it.igniteForTicks(80)
             }
         }
     }
 
     private fun getTargets(
-        world: ServerWorld,
+        world: ServerLevel,
         positions: List<BlockPos>,
         attacker: Entity,
     ): Set<LivingEntity> {
         val targets = mutableSetOf<LivingEntity>()
 
         positions.forEach {
-            val box = Box(it.x - 0.2, it.y - 1.0, it.z - 0.2, it.x + 1.2, it.y + 4.0, it.z + 1.2)
-            targets.addAll(world.getEntitiesByClass(LivingEntity::class.java, box) { target -> target != attacker })
+            val box = AABB(it.x - 0.2, it.y - 1.0, it.z - 0.2, it.x + 1.2, it.y + 4.0, it.z + 1.2)
+            targets.addAll(world.getEntitiesOfClass(LivingEntity::class.java, box) { target -> target != attacker })
         }
 
         return targets

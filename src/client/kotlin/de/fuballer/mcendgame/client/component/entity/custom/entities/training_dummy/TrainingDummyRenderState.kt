@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.training_dummy
 
-import net.minecraft.client.render.entity.state.BipedEntityRenderState
-import software.bernie.geckolib.constant.dataticket.DataTicket
+import com.geckolib.constant.dataticket.DataTicket
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState
 
-class TrainingDummyRenderState : BipedEntityRenderState() {
+class TrainingDummyRenderState : HumanoidRenderState() {
     var lastDamage: Float = 0F
     var highestDamage: Float = 0F
     var damageSum: Float = 0F

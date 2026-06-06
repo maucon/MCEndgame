@@ -8,20 +8,20 @@ import de.fuballer.mcendgame.main.component.item.equipment.Equipment
 import de.fuballer.mcendgame.main.component.item.equipment.enchantment.EquipmentEnchantment
 import de.fuballer.mcendgame.main.util.random.LevelRestrictedRandomOption
 import de.fuballer.mcendgame.main.util.random.RandomOption
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.item.Item
-import net.minecraft.item.Items
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.Items
 
 @Suppress("unused")
 enum class Miscellaneous(
     override val item: Item,
-    override val slot: AttributeModifierSlot,
+    override val slot: EquipmentSlotGroup,
     override val rollableCustomAttributes: List<RandomOption<List<LevelRestrictedRandomOption<RollableCustomAttribute>>>>,
     override val rollableEnchants: List<RandomOption<EquipmentEnchantment>>,
 ) : Equipment {
     TRIDENT(
         Items.TRIDENT,
-        AttributeModifierSlot.MAINHAND,
+        EquipmentSlotGroup.MAINHAND,
         listOf(
             RandomOption(
                 weight = 1,
@@ -124,7 +124,7 @@ enum class Miscellaneous(
     ),
     FISHING_ROD(
         Items.FISHING_ROD,
-        AttributeModifierSlot.OFFHAND,
+        EquipmentSlotGroup.OFFHAND,
         listOf(
             RandomOption(
                 weight = 1,
@@ -151,7 +151,7 @@ enum class Miscellaneous(
     ),
     CROSSBOW(
         Items.CROSSBOW,
-        AttributeModifierSlot.MAINHAND,
+        EquipmentSlotGroup.MAINHAND,
         listOf(
             RandomOption(
                 weight = 1,
@@ -265,7 +265,7 @@ enum class Miscellaneous(
     ),
     FLINT_AND_STEEL(
         Items.FLINT_AND_STEEL,
-        AttributeModifierSlot.OFFHAND,
+        EquipmentSlotGroup.OFFHAND,
         listOf(),
         listOf(
             RandomOption(10, EquipmentEnchantment.MENDING),
@@ -277,7 +277,7 @@ enum class Miscellaneous(
     ),
     CARROT_ON_A_STICK(
         Items.CARROT_ON_A_STICK,
-        AttributeModifierSlot.OFFHAND,
+        EquipmentSlotGroup.OFFHAND,
         listOf(),
         listOf(
             RandomOption(10, EquipmentEnchantment.MENDING),
@@ -289,7 +289,7 @@ enum class Miscellaneous(
     ),
     WARPED_FUNGUS_ON_A_STICK(
         Items.WARPED_FUNGUS_ON_A_STICK,
-        AttributeModifierSlot.OFFHAND,
+        EquipmentSlotGroup.OFFHAND,
         listOf(),
         listOf(
             RandomOption(10, EquipmentEnchantment.MENDING),
@@ -301,7 +301,7 @@ enum class Miscellaneous(
     ),
     ELYTRA(
         Items.ELYTRA,
-        AttributeModifierSlot.CHEST,
+        EquipmentSlotGroup.CHEST,
         listOf(
             RandomOption(
                 weight = 1,
@@ -371,7 +371,7 @@ enum class Miscellaneous(
     ),
     SHEARS(
         Items.SHEARS,
-        AttributeModifierSlot.OFFHAND,
+        EquipmentSlotGroup.OFFHAND,
         listOf(),
         listOf(
             RandomOption(10, EquipmentEnchantment.MENDING),

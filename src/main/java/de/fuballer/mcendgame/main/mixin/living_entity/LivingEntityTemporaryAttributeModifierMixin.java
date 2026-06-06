@@ -3,11 +3,11 @@ package de.fuballer.mcendgame.main.mixin.living_entity;
 import de.fuballer.mcendgame.main.accessor.LivingEntityTemporaryAttributeModifierAccessor;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import kotlin.Pair;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,14 +19,14 @@ public class LivingEntityTemporaryAttributeModifierMixin implements LivingEntity
     @Unique
     private static final int checkInterval = 4;
     @Unique
-    private final Object2IntOpenHashMap<Pair<RegistryEntry<EntityAttribute>, Identifier>> toRemoveModifiers = new Object2IntOpenHashMap<>();
+    private final Object2IntOpenHashMap<Pair<Holder<Attribute>, Identifier>> toRemoveModifiers = new Object2IntOpenHashMap<>();
 
     @Inject(method = "tick", at = @At("HEAD"))
     void tick(CallbackInfo ci) {
         var entity = (LivingEntity) (Object) this;
-        if (entity.getEntityWorld().isClient()) return;
+        if (entity.level().isClientSide()) return;
 
-        if (entity.age % checkInterval != 0) return;
+        if (entity.tickCount % checkInterval != 0) return;
 
         var iterator = toRemoveModifiers.object2IntEntrySet().iterator();
         while (iterator.hasNext()) {
@@ -41,7 +41,7 @@ public class LivingEntityTemporaryAttributeModifierMixin implements LivingEntity
             var modifier = entry.getKey();
             iterator.remove();
 
-            var attributeInstance = entity.getAttributeInstance(modifier.getFirst());
+            var attributeInstance = entity.getAttribute(modifier.getFirst());
             if (attributeInstance == null) continue;
             attributeInstance.removeModifier(modifier.getSecond());
         }
@@ -49,14 +49,14 @@ public class LivingEntityTemporaryAttributeModifierMixin implements LivingEntity
 
     @Override
     public void mcendgame$addTemporaryAttributeModifier(
-            RegistryEntry<EntityAttribute> type,
+            Holder<Attribute> type,
             Identifier identifier,
             int ticks,
             double value,
-            EntityAttributeModifier.Operation operation
+            AttributeModifier.Operation operation
     ) {
         var entity = (LivingEntity) (Object) this;
-        var attributeInstance = entity.getAttributeInstance(type);
+        var attributeInstance = entity.getAttribute(type);
         if (attributeInstance == null) return;
 
         var key = new Pair<>(type, identifier);
@@ -64,11 +64,11 @@ public class LivingEntityTemporaryAttributeModifierMixin implements LivingEntity
         toRemoveModifiers.put(key, ticks);
 
         var existingModifier = attributeInstance.getModifier(identifier);
-        if (existingModifier != null && Math.abs(existingModifier.value() - value) < 0.001) return;
+        if (existingModifier != null && Math.abs(existingModifier.amount() - value) < 0.001) return;
 
-        var modifier = new EntityAttributeModifier(identifier, value, operation);
+        var modifier = new AttributeModifier(identifier, value, operation);
 
         attributeInstance.removeModifier(identifier);
-        attributeInstance.addTemporaryModifier(modifier);
+        attributeInstance.addTransientModifier(modifier);
     }
 }

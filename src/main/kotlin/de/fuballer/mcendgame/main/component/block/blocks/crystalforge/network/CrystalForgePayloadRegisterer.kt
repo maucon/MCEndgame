@@ -10,11 +10,11 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 object CrystalForgePayloadRegisterer {
     @Initializer
     fun register() {
-        PayloadTypeRegistry.playC2S().register(CrystalForgePayload.ID, CrystalForgePayload.CODEC)
+        PayloadTypeRegistry.serverboundPlay().register(CrystalForgePayload.ID, CrystalForgePayload.CODEC)
 
         ServerPlayNetworking.registerGlobalReceiver(CrystalForgePayload.ID) { _, context ->
             val player = context.player()
-            val screenHandler = player.currentScreenHandler as? CrystalForgeScreenHandler ?: return@registerGlobalReceiver
+            val screenHandler = player.containerMenu as? CrystalForgeScreenHandler ?: return@registerGlobalReceiver
             screenHandler.forge()
         }
     }

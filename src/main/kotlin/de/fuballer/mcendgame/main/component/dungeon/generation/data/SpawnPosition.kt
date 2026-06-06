@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.main.component.dungeon.generation.data
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.toBlockPos
-import net.minecraft.util.math.Vec3i
+import net.minecraft.core.Vec3i
 
 data class SpawnPosition(
     val pos: Vec3i,

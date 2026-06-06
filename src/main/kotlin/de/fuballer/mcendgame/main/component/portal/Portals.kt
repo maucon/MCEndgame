@@ -7,21 +7,21 @@ import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
-import net.minecraft.command.argument.EntityAnchorArgumentType
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.SpawnGroup
-import net.minecraft.entity.SpawnReason
-import net.minecraft.entity.passive.AbstractHorseEntity.createLivingAttributes
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
+import net.minecraft.commands.arguments.EntityAnchorArgument
+import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.EntitySpawnReason
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.MobCategory
+import net.minecraft.world.entity.animal.equine.AbstractHorse.createLivingAttributes
+import net.minecraft.world.phys.Vec3
 
 @Injectable
 object Portals {
     val ENTITY_TYPE = RegistryUtil.registerEntity(
         "portal",
-        EntityType.Builder.create(::PortalEntity, SpawnGroup.MISC)
-            .dimensions(PortalSettings.DEFAULT_HITBOX_WIDTH, PortalSettings.DEFAULT_HITBOX_HEIGHT)
+        EntityType.Builder.of(::PortalEntity, MobCategory.MISC)
+            .sized(PortalSettings.DEFAULT_HITBOX_WIDTH, PortalSettings.DEFAULT_HITBOX_HEIGHT)
     )
 
     @Initializer
@@ -30,23 +30,23 @@ object Portals {
     }
 
     fun spawn(
-        world: ServerWorld,
-        pos: Vec3d,
+        world: ServerLevel,
+        pos: Vec3,
         teleportLocation: TeleportLocation,
-        lookAt: Vec3d = Vec3d.ZERO,
+        lookAt: Vec3 = Vec3.ZERO,
         rotation: Float? = null,
         singleUse: Boolean = false,
         type: PortalType = DefaultPortalType()
     ): PortalEntity {
         val consumer = { entity: PortalEntity ->
-            entity.dataTracker.set(PortalEntity.TYPE, type.getId())
-            entity.setPosition(pos)
-            entity.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, lookAt)
-            rotation?.let { entity.rotate(it, false, 0f, false) }
+            entity.entityData.set(PortalEntity.TYPE, type.getId())
+            entity.setPos(pos)
+            entity.lookAt(EntityAnchorArgument.Anchor.FEET, lookAt)
+            rotation?.let { entity.forceSetRotation(it, false, 0f, false) }
             entity.singleUse = singleUse
             entity.type = type
             entity.teleportLocation = teleportLocation
         }
-        return ENTITY_TYPE.spawn(world, consumer, BlockPos.ofFloored(pos.x, pos.y, pos.z), SpawnReason.LOAD, false, false)!!
+        return ENTITY_TYPE.spawn(world, consumer, BlockPos.containing(pos.x, pos.y, pos.z), EntitySpawnReason.LOAD, false, false)!!
     }
 }

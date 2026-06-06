@@ -5,18 +5,18 @@ import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
 import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItems
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItems
 import de.fuballer.mcendgame.main.component.tags.CustomTags
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider
-import net.minecraft.item.Items
-import net.minecraft.registry.RegistryWrapper
-import net.minecraft.registry.tag.ItemTags
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider
+import net.minecraft.core.HolderLookup
+import net.minecraft.tags.ItemTags
+import net.minecraft.world.item.Items
 import java.util.concurrent.CompletableFuture
 
 class CustomItemTagProvider(
-    dataOutput: FabricDataOutput,
-    registryLookup: CompletableFuture<RegistryWrapper.WrapperLookup>,
-) : FabricTagProvider.ItemTagProvider(dataOutput, registryLookup) {
-    override fun configure(wrapperLookup: RegistryWrapper.WrapperLookup) {
+    packOutput: FabricPackOutput,
+    registryLookup: CompletableFuture<HolderLookup.Provider>,
+) : FabricTagsProvider.ItemTagsProvider(packOutput, registryLookup) {
+    override fun addTags(wrapperLookup: HolderLookup.Provider) {
         valueLookupBuilder(ItemTags.SWORDS)
             .add(CustomToolItems.TWINFIRE)
             .add(CustomToolItems.BLOODHARVEST)
@@ -88,7 +88,7 @@ class CustomItemTagProvider(
             .forceAddTag(CustomTags.SHIELD)
             .forceAddTag(CustomTags.MACE)
 
-        valueLookupBuilder(ItemTags.DYEABLE)
+        valueLookupBuilder(ItemTags.CAULDRON_CAN_REMOVE_DYE)
             .add(CustomArmorItems.SUEDE_HELMET)
             .add(CustomArmorItems.SUEDE_CHESTPLATE)
             .add(CustomArmorItems.SUEDE_LEGGINGS)

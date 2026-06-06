@@ -6,11 +6,11 @@ import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttribu
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HidePlayerModelPartArmor
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.entity.player.PlayerModelPart
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.player.PlayerModelPart
 
 class Windstrider(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings), HidePlayerModelPartArmor {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.PROJECTILE_DODGE, 0, DoubleBounds(0.3, 0.4)),
@@ -19,7 +19,7 @@ class Windstrider(
         RollableCustomAttribute(VanillaAttributeTypes.INCREASED_JUMP_STRENGTH, 0, DoubleBounds(0.15, 0.25)),
     )
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.LEGS
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.LEGS
 
     override val hiddenPlayerModelParts = listOf(
         PlayerModelPart.LEFT_PANTS_LEG,

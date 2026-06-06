@@ -2,17 +2,17 @@ package de.fuballer.mcendgame.main.component.block.blocks.crystalforge.network
 
 import de.fuballer.mcendgame.main.component.block.blocks.crystalforge.CrystalForgeBlock
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.codec.PacketCodec
-import net.minecraft.network.packet.CustomPayload
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 
-class CrystalForgePayload : CustomPayload {
+class CrystalForgePayload : CustomPacketPayload {
     companion object {
         val IDENTIFIER = IdentifierUtil.default("${CrystalForgeBlock.ID}.forge")
-        val ID = CustomPayload.Id<CrystalForgePayload>(IDENTIFIER)
+        val ID = CustomPacketPayload.Type<CrystalForgePayload>(IDENTIFIER)
 
-        val CODEC: PacketCodec<RegistryByteBuf, CrystalForgePayload> = PacketCodec.of({ _, _ -> }, { _ -> CrystalForgePayload() })
+        val CODEC: StreamCodec<RegistryFriendlyByteBuf, CrystalForgePayload> = StreamCodec.ofMember({ _, _ -> }, { _ -> CrystalForgePayload() })
     }
 
-    override fun getId() = ID
+    override fun type() = ID
 }

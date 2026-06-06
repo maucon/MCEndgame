@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.main.component.dungeon.generation.room_types.loade
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.Door
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.RoomMarkerPoints
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
-import net.minecraft.util.math.Vec3i
+import net.minecraft.core.Vec3i
 
 object MirrorUtil {
     /** Mirror a single block position (flip X). */

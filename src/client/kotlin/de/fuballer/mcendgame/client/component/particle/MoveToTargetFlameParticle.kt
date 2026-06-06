@@ -1,28 +1,29 @@
 package de.fuballer.mcendgame.client.component.particle
 
 import de.fuballer.mcendgame.main.component.particle.MoveToTargetFlameParticleEffect
-import net.minecraft.client.particle.BillboardParticle
+import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.particle.Particle
-import net.minecraft.client.particle.ParticleFactory
-import net.minecraft.client.particle.SpriteProvider
-import net.minecraft.client.texture.Sprite
-import net.minecraft.client.world.ClientWorld
-import net.minecraft.entity.Entity
+import net.minecraft.client.particle.ParticleProvider
+import net.minecraft.client.particle.SingleQuadParticle
+import net.minecraft.client.particle.SpriteSet
+import net.minecraft.client.renderer.texture.TextureAtlasSprite
+import net.minecraft.util.RandomSource
+import net.minecraft.world.entity.Entity
 import java.util.*
 
 class MoveToTargetFlameParticle(
-    clientWorld: ClientWorld,
+    clientWorld: ClientLevel,
     x: Double,
     y: Double,
     z: Double,
     targetId: UUID,
     duration: Int,
-    sprite: Sprite,
-) : BillboardParticle(clientWorld, x, y, z, 0.0, 0.0, 0.0, sprite) {
+    sprite: TextureAtlasSprite,
+) : SingleQuadParticle(clientWorld, x, y, z, 0.0, 0.0, 0.0, sprite) {
     val target: Entity? = clientWorld.getEntity(targetId)
 
     init {
-        maxAge = duration
+        lifetime = duration
 
         updateVelocityTowardTarget()
     }
@@ -36,18 +37,18 @@ class MoveToTargetFlameParticle(
         val dy = targetPos.y - y
         val dz = targetPos.z - z
 
-        val ticksLeft = (maxAge - age).coerceAtLeast(1)
+        val ticksLeft = (lifetime - age).coerceAtLeast(1)
 
-        velocityX = dx / ticksLeft
-        velocityY = dy / ticksLeft
-        velocityZ = dz / ticksLeft
+        xd = dx / ticksLeft
+        yd = dy / ticksLeft
+        zd = dz / ticksLeft
     }
 
     override fun tick() {
         super.tick()
 
         if (target == null || !target.isAlive) {
-            markDead()
+            remove()
             return
         }
 
@@ -64,31 +65,31 @@ class MoveToTargetFlameParticle(
 
         val distanceSq = dx * dx + dy * dy + dz * dz
         if (distanceSq < 0.04) {
-            markDead()
+            remove()
             return
         }
     }
 
-    override fun getSize(tickProgress: Float): Float {
-        val time = (age + tickProgress) / maxAge.toFloat()
-        return scale * (0.3f + time * 1.2f)
+    override fun getQuadSize(tickProgress: Float): Float {
+        val time = (age + tickProgress) / lifetime.toFloat()
+        return quadSize * (0.3f + time * 1.2f)
     }
 
-    override fun getRenderType(): RenderType = RenderType.PARTICLE_ATLAS_OPAQUE
+    override fun getLayer(): Layer = Layer.OPAQUE
 
     class Factory(
-        private val spriteProvider: SpriteProvider,
-    ) : ParticleFactory<MoveToTargetFlameParticleEffect> {
+        private val spriteProvider: SpriteSet,
+    ) : ParticleProvider<MoveToTargetFlameParticleEffect> {
         override fun createParticle(
             particleEffect: MoveToTargetFlameParticleEffect,
-            clientWorld: ClientWorld,
+            clientWorld: ClientLevel,
             x: Double,
             y: Double,
             z: Double,
             velocityX: Double,
             velocityY: Double,
             velocityZ: Double,
-            random: net.minecraft.util.math.random.Random,
+            random: RandomSource,
         ): Particle {
             return MoveToTargetFlameParticle(
                 clientWorld,
@@ -97,7 +98,7 @@ class MoveToTargetFlameParticle(
                 z,
                 particleEffect.targetEntityId,
                 particleEffect.duration,
-                spriteProvider.getSprite(random)
+                spriteProvider.get(random)
             )
         }
     }

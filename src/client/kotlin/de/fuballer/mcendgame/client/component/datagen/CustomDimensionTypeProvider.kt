@@ -2,23 +2,23 @@ package de.fuballer.mcendgame.client.component.datagen
 
 import com.google.gson.JsonObject
 import de.fuballer.mcendgame.main.MCEndgame
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
+import net.minecraft.data.CachedOutput
 import net.minecraft.data.DataProvider
-import net.minecraft.data.DataWriter
 import java.util.concurrent.CompletableFuture
 
 class CustomDimensionTypeProvider(
-    val dataOutput: FabricDataOutput,
+    val packOutput: FabricPackOutput,
 ) : DataProvider {
     override fun getName() = "${MCEndgame.MOD_ID} Dimension Type Provider"
 
-    override fun run(writer: DataWriter): CompletableFuture<*> {
+    override fun run(writer: CachedOutput): CompletableFuture<*> {
         val dungeonJson = generateDimensionTypeJSON(
             hasRaids = false,
             hasSkylight = false,
             piglinSafe = true,
         )
-        return DataProvider.writeToPath(writer, dungeonJson, getPath("dungeon"))
+        return DataProvider.saveStable(writer, dungeonJson, getPath("dungeon"))
     }
 
     private fun generateDimensionTypeJSON(
@@ -41,6 +41,7 @@ class CustomDimensionTypeProvider(
         piglinSafe: Boolean = false,
         respawnAnchorWorks: Boolean = false,
         ultrawarm: Boolean = false,
+        hasEnderDragonFight: Boolean = false,
         musicDefault: String = "minecraft:music.game",
         musicCreative: String = "minecraft:music.creative",
         musicMinDelay: Int = 0,
@@ -85,7 +86,8 @@ class CustomDimensionTypeProvider(
         addProperty("piglin_safe", piglinSafe)
         addProperty("respawn_anchor_works", respawnAnchorWorks)
         addProperty("ultrawarm", ultrawarm)
+        addProperty("has_ender_dragon_fight", hasEnderDragonFight)
     }
 
-    private fun getPath(name: String) = dataOutput.path.resolve("data/${MCEndgame.MOD_ID}/dimension_type/$name.json")
+    private fun getPath(name: String) = packOutput.outputFolder.resolve("data/${MCEndgame.MOD_ID}/dimension_type/$name.json")
 }

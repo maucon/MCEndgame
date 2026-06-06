@@ -6,10 +6,10 @@ import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.minecraft.text.Text
-import net.minecraft.util.Formatting
+import net.minecraft.ChatFormatting
+import net.minecraft.network.chat.Component
 
-private val CORRUPTION_TEXT = Text.translatable("mcendgame.corrupted").formatted(Formatting.DARK_RED)
+private val CORRUPTION_TEXT = Component.translatable("mcendgame.corrupted").withStyle(ChatFormatting.DARK_RED)
 
 @Injectable
 @Environment(EnvType.CLIENT)
@@ -21,7 +21,7 @@ class CorruptionRenderer {
 
         val texts = cmd.texts
         if (cmd.tooltipType.isAdvanced) {
-            val hasDurabilityLine = stack.damage > 0
+            val hasDurabilityLine = stack.damageValue > 0
             val offset = if (hasDurabilityLine) 3 else 2
             texts.add(texts.size - offset, CORRUPTION_TEXT)
         } else {

@@ -4,13 +4,13 @@ import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
 import de.fuballer.mcendgame.main.util.extension.DamageTypeExtension.isOf
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.damage.DamageTypes
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
+import net.minecraft.world.entity.LivingEntity
 import kotlin.random.Random
 
 object ThornsCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.type.isOf(DamageTypes.THORNS)
+    override fun isActive(source: DamageSource) = source.type().isOf(DamageTypes.THORNS)
 
     override fun calculateAttackDamage(
         originalDamage: Float,

@@ -9,7 +9,7 @@ import de.maucon.mauconframework.di.annotation.Injectable
 class ResilienceEffectService {
     @CommandHandler
     fun on(cmd: DamageCalculationCommand) {
-        val amplifier = cmd.damaged.getStatusEffect(CustomStatusEffects.RESILIENCE)?.amplifier ?: return
+        val amplifier = cmd.damaged.getEffect(CustomStatusEffects.RESILIENCE)?.amplifier ?: return
 
         cmd.moreDamageTaken.add((amplifier + 1) * -0.02)
     }

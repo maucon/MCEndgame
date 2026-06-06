@@ -1,26 +1,26 @@
 package de.fuballer.mcendgame.main.component.dungeon.generation.builder
 
 import de.fuballer.mcendgame.main.component.dungeon.generation.DungeonGenerationSettings
-import net.minecraft.structure.StructurePlacementData
-import net.minecraft.structure.StructureTemplate
-import net.minecraft.structure.processor.StructureProcessor
-import net.minecraft.structure.processor.StructureProcessorType
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.WorldView
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.LevelReader
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate
 
 class IgnoreMarkerStructureProcessor : StructureProcessor() {
-    override fun process(
-        world: WorldView,
+    override fun processBlock(
+        world: LevelReader,
         pos: BlockPos,
         pivot: BlockPos,
         originalBlockInfo: StructureTemplate.StructureBlockInfo,
         currentBlockInfo: StructureTemplate.StructureBlockInfo,
-        data: StructurePlacementData
+        data: StructurePlaceSettings
     ): StructureTemplate.StructureBlockInfo? {
         return if (DungeonGenerationSettings.MARKER_BLOCKS.contains(originalBlockInfo.state.block)) {
             null
         } else {
-            super.process(world, pos, pivot, originalBlockInfo, currentBlockInfo, data)
+            super.processBlock(world, pos, pivot, originalBlockInfo, currentBlockInfo, data)
         }
     }
 

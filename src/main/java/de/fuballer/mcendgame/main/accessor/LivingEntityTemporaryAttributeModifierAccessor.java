@@ -1,16 +1,16 @@
 package de.fuballer.mcendgame.main.accessor;
 
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 public interface LivingEntityTemporaryAttributeModifierAccessor {
     void mcendgame$addTemporaryAttributeModifier(
-            RegistryEntry<EntityAttribute> type,
+            Holder<Attribute> type,
             Identifier identifier,
             int ticks,
             double value,
-            EntityAttributeModifier.Operation operation
+            AttributeModifier.Operation operation
     );
 }

@@ -9,12 +9,12 @@ import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getOp
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.world.entity.player.Player
 import kotlin.random.Random
 
 @Injectable
 class DungeonSeedService {
-    fun rollSeed(player: PlayerEntity): PlayerDungeonSeed {
+    fun rollSeed(player: Player): PlayerDungeonSeed {
         val playerSeed = player.getDungeonSeed()
         if (playerSeed != null) return playerSeed
 

@@ -6,8 +6,8 @@ import de.fuballer.mcendgame.main.component.item.equipment.Equipment
 import de.fuballer.mcendgame.main.component.item.equipment.enchantment.EquipmentEnchantment
 import de.fuballer.mcendgame.main.util.random.LevelRestrictedRandomOption
 import de.fuballer.mcendgame.main.util.random.RandomOption
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.item.Item
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.item.Item
 
 enum class Horn(
     override val item: Item,
@@ -22,7 +22,7 @@ enum class Horn(
         CustomMiscItems.FRIGID_CRY,
     );
 
-    override val slot = AttributeModifierSlot.HAND
+    override val slot = EquipmentSlotGroup.HAND
 
     override val rollableCustomAttributes: List<RandomOption<List<LevelRestrictedRandomOption<RollableCustomAttribute>>>> = listOf()
 

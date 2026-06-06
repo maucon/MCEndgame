@@ -6,50 +6,50 @@ import de.fuballer.mcendgame.main.accessor.PlayerEntityInsideDungeonAccessor
 import de.fuballer.mcendgame.main.accessor.PlayerEntityMixinAccessor
 import de.fuballer.mcendgame.main.component.dungeon.level.PlayerDungeonLevel
 import de.fuballer.mcendgame.main.component.dungeon.seed.PlayerDungeonSeed
-import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.world.entity.player.Player
 
 object PlayerEntityMixinExtension {
-    fun PlayerEntity.getDungeonLevel(): PlayerDungeonLevel {
+    fun Player.getDungeonLevel(): PlayerDungeonLevel {
         val accessor = this as PlayerEntityDungeonLevelAccessor
         return accessor.`mcendgame$getDungeonLevel`()
     }
 
-    fun PlayerEntity.setDungeonLevel(dungeonLevel: PlayerDungeonLevel) {
+    fun Player.setDungeonLevel(dungeonLevel: PlayerDungeonLevel) {
         val accessor = this as PlayerEntityDungeonLevelAccessor
         return accessor.`mcendgame$setDungeonLevel`(dungeonLevel)
     }
 
-    fun PlayerEntity.getDungeonSeed(): PlayerDungeonSeed? {
+    fun Player.getDungeonSeed(): PlayerDungeonSeed? {
         val accessor = this as PlayerEntityDungeonSeedAccessor
         return accessor.`mcendgame$getDungeonSeed`()
     }
 
-    fun PlayerEntity.setDungeonSeed(dungeonSeed: PlayerDungeonSeed?) {
+    fun Player.setDungeonSeed(dungeonSeed: PlayerDungeonSeed?) {
         val accessor = this as PlayerEntityDungeonSeedAccessor
         return accessor.`mcendgame$setDungeonSeed`(dungeonSeed)
     }
 
-    fun PlayerEntity.clearDungeonSeed() {
+    fun Player.clearDungeonSeed() {
         val accessor = this as PlayerEntityDungeonSeedAccessor
         return accessor.`mcendgame$setDungeonSeed`(null)
     }
 
-    fun PlayerEntity.getAttackCooldownMultiplier(): Float {
+    fun Player.getAttackCooldownMultiplier(): Float {
         val accessor = this as PlayerEntityMixinAccessor
         return accessor.`mcendgame$getLastAttackCharge`()
     }
 
-    fun PlayerEntity.wasLastAttackCritical(): Boolean {
+    fun Player.wasLastAttackCritical(): Boolean {
         val accessor = this as PlayerEntityMixinAccessor
         return accessor.`mcendgame$getLastAttackWasCritical`()
     }
 
-    fun PlayerEntity.isInsideDungeon(): Boolean {
+    fun Player.isInsideDungeon(): Boolean {
         val accessor = this as PlayerEntityInsideDungeonAccessor
         return accessor.`mcendgame$isInsideDungeon`()
     }
 
-    fun PlayerEntity.setInsideDungeon(insideDungeon: Boolean) {
+    fun Player.setInsideDungeon(insideDungeon: Boolean) {
         val accessor = this as PlayerEntityInsideDungeonAccessor
         return accessor.`mcendgame$setInsideDungeon`(insideDungeon)
     }

@@ -1,14 +1,14 @@
 package de.fuballer.mcendgame.main.messaging.misc
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.world.World
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.level.Level
 
 data class EntityConversionCommand(
-    val world: World,
+    val world: Level,
     val entity: LivingEntity,
     var canConvert: Boolean = true,
 ) {
     companion object {
-        fun of(entity: LivingEntity) = EntityConversionCommand(entity.entityWorld, entity)
+        fun of(entity: LivingEntity) = EntityConversionCommand(entity.level(), entity)
     }
 }

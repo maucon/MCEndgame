@@ -1,14 +1,14 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 
 class TriggerConditionGroup(
     private val joinType: TriggerConditionJoinType,
     private val trigger: List<TriggerCondition>,
 ) : TriggerCondition() {
     override fun doesTrigger(
-        attacker: MobEntity,
+        attacker: Mob,
         target: LivingEntity?,
     ) = when (joinType) {
         TriggerConditionJoinType.OR -> trigger.any { it.doesTrigger(attacker, target) }

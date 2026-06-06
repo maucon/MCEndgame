@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.main.messaging.dungeon
 
 import de.fuballer.mcendgame.main.component.dungeon.level.PlayerDungeonLevel
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 data class ClientDungeonLevelUpdateEvent(
-    val playerEntity: ServerPlayerEntity,
+    val playerEntity: ServerPlayer,
     val dungeonLevel: PlayerDungeonLevel,
 )

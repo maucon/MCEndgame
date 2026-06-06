@@ -4,21 +4,21 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesHornItem
 import de.fuballer.mcendgame.main.component.item.custom.misc.horn.command.HornUseCommand
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isEnemy
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.effect.StatusEffects
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.text.Text
-import net.minecraft.world.World
+import net.minecraft.network.chat.Component
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.Level
 
 class FrigidCry(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesHornItem(settings) {
     override val id = "frigid_cry"
 
     override val description = listOf(
-        Text.translatable(DESCRIPTION_KEY + id),
+        Component.translatable(DESCRIPTION_KEY + id),
     )
 
     override val baseCooldown = 600
@@ -27,17 +27,17 @@ class FrigidCry(
 
     override fun getCustomAttributes(): List<RollableCustomAttribute> = listOf()
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.HAND
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.HAND
 
-    override fun onUse(world: World, user: PlayerEntity, cmd: HornUseCommand) {
-        val nearbyEnemies = world.getEntitiesByClass(LivingEntity::class.java, user.boundingBox.expand(range)) { user.isEnemy(it) && user.distanceTo(it) <= range }
+    override fun onUse(world: Level, user: Player, cmd: HornUseCommand) {
+        val nearbyEnemies = world.getEntitiesOfClass(LivingEntity::class.java, user.boundingBox.inflate(range)) { user.isEnemy(it) && user.distanceTo(it) <= range }
         if (nearbyEnemies.isEmpty()) return
 
         val duration = (baseDuration * cmd.getDurationFactor()).toInt()
         val amplifier = if (cmd.isStronger) 2 else 1
         nearbyEnemies.forEach {
-            val effectInstance = StatusEffectInstance(StatusEffects.SLOWNESS, duration, amplifier, false, true, true)
-            it.addStatusEffect(effectInstance)
+            val effectInstance = MobEffectInstance(MobEffects.SLOWNESS, duration, amplifier, false, true, true)
+            it.addEffect(effectInstance)
         }
     }
 }

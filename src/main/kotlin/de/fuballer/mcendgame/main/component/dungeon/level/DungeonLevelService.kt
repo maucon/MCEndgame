@@ -12,7 +12,7 @@ import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.isTra
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
 import kotlin.math.max
 
 @Injectable
@@ -22,11 +22,11 @@ class DungeonLevelService {
         if (event.isClient) return
 
         val player = event.player
-        if ((player.entityWorld as ServerWorld).isTrainingDungeon()) return
+        if ((player.level() as ServerLevel).isTrainingDungeon()) return
         val playerDungeonLevel = player.getDungeonLevel()
 
         if (playerDungeonLevel.locked && playerDungeonLevel.level <= DungeonLevelSettings.getClientSetLevelLimit(playerDungeonLevel.highestReached)) {
-            player.sendMessage(DungeonLevelSettings.REGRESS_LOCKED_MESSAGE, false)
+            player.sendSystemMessage(DungeonLevelSettings.REGRESS_LOCKED_MESSAGE)
             return
         }
 
@@ -34,7 +34,7 @@ class DungeonLevelService {
         playerDungeonLevel.levelProgress = 0
 
         player.setDungeonLevel(playerDungeonLevel)
-        player.sendMessage(DungeonLevelSettings.getRegressMessage(playerDungeonLevel.level, playerDungeonLevel.levelProgress), false)
+        player.sendSystemMessage(DungeonLevelSettings.getRegressMessage(playerDungeonLevel.level, playerDungeonLevel.levelProgress))
     }
 
     @EventSubscriber(sync = true)
@@ -50,12 +50,12 @@ class DungeonLevelService {
             val playerDungeonLevel = player.getDungeonLevel()
 
             if (playerDungeonLevel.locked) {
-                player.sendMessage(DungeonLevelSettings.COMPLETION_LOCKED_MESSAGE, false)
+                player.sendSystemMessage(DungeonLevelSettings.COMPLETION_LOCKED_MESSAGE)
                 return@forEach
             }
 
             if (playerDungeonLevel.level > dungeonLevel) {
-                player.sendMessage(DungeonLevelSettings.NO_PROGRESS_MESSAGE, false)
+                player.sendSystemMessage(DungeonLevelSettings.NO_PROGRESS_MESSAGE)
                 return@forEach
             }
 
@@ -65,7 +65,7 @@ class DungeonLevelService {
             playerDungeonLevel.highestReached = max(playerDungeonLevel.highestReached, playerDungeonLevel.level)
 
             player.setDungeonLevel(playerDungeonLevel)
-            player.sendMessage(DungeonLevelSettings.getProgressMessage(playerDungeonLevel.level, playerDungeonLevel.levelProgress), false)
+            player.sendSystemMessage(DungeonLevelSettings.getProgressMessage(playerDungeonLevel.level, playerDungeonLevel.levelProgress))
         }
     }
 

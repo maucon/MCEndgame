@@ -3,13 +3,13 @@ package de.fuballer.mcendgame.main.component.dungeon.enemy.potion_effect
 import de.fuballer.mcendgame.main.component.dungeon.enemy.EnemyGenerationSettings
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.mob.MobEntity
+import net.minecraft.world.entity.Mob
 import kotlin.random.Random
 
 @Injectable
 class PotionEffectService {
     fun addEffects(
-        entity: MobEntity,
+        entity: Mob,
         level: Int,
         canBeInvisible: Boolean,
         random: Random,
@@ -26,6 +26,6 @@ class PotionEffectService {
         }
 
         val effectInstances = effects.filterNotNull().map { it.getEffectInstance(false) }
-        effectInstances.forEach { entity.addStatusEffect(it) }
+        effectInstances.forEach { entity.addEffect(it) }
     }
 }

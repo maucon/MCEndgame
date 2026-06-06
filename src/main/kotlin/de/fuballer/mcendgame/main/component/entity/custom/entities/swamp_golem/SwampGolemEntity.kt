@@ -3,37 +3,41 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.swamp_golem
 import de.fuballer.mcendgame.main.component.entity.custom.goals.SlamAttackGoal
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomPosesEntity
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.SlamAttacker
-import net.minecraft.entity.AnimationState
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.goal.*
-import net.minecraft.entity.attribute.DefaultAttributeContainer
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.data.DataTracker
-import net.minecraft.entity.data.TrackedData
-import net.minecraft.entity.mob.HostileEntity
-import net.minecraft.entity.passive.ChickenEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.world.World
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.world.entity.AnimationState
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.FloatGoal
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.animal.chicken.Chicken
+import net.minecraft.world.entity.monster.Monster
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.Level
 
 class SwampGolemEntity(
     type: EntityType<out SwampGolemEntity>,
-    world: World,
-) : HostileEntity(type, world), SlamAttacker {
+    world: Level,
+) : Monster(type, world), SlamAttacker {
     val slamAnimationState = AnimationState()
     val idleAnimationState = AnimationState()
     val walkAnimationState = AnimationState()
 
     companion object {
-        val CUSTOM_POSE = DataTracker.registerData(SwampGolemEntity::class.java, CustomPosesEntity.CUSTOM_POSE_TDH)
+        val CUSTOM_POSE = SynchedEntityData.defineId(SwampGolemEntity::class.java, CustomPosesEntity.CUSTOM_POSE_TDH)
 
-        fun createAttributes(): DefaultAttributeContainer.Builder {
-            return createHostileAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 35.0)
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.20)
-                .add(EntityAttributes.ATTACK_DAMAGE, 4.0)
-                .add(EntityAttributes.ARMOR, 5.0)
-                .add(EntityAttributes.KNOCKBACK_RESISTANCE, 0.5)
+        fun createAttributes(): AttributeSupplier.Builder {
+            return createMonsterAttributes()
+                .add(Attributes.FOLLOW_RANGE, 35.0)
+                .add(Attributes.MOVEMENT_SPEED, 0.20)
+                .add(Attributes.ATTACK_DAMAGE, 4.0)
+                .add(Attributes.ARMOR, 5.0)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
         }
     }
 
@@ -46,15 +50,15 @@ class SwampGolemEntity(
     override val knockbackStrength = 1.0
     override fun shouldDamage(target: LivingEntity) = target.isAlive
 
-    override fun initGoals() {
-        goalSelector.add(0, SwimGoal(this))
-        goalSelector.add(2, SlamAttackGoal(this, 1.0, 25, 17, 50))
-        goalSelector.add(7, WanderAroundFarGoal(this, 1.0))
-        goalSelector.add(8, LookAtEntityGoal(this, PlayerEntity::class.java, 8.0f))
-        goalSelector.add(8, LookAroundGoal(this))
+    override fun registerGoals() {
+        goalSelector.addGoal(0, FloatGoal(this))
+        goalSelector.addGoal(2, SlamAttackGoal(this, 1.0, 25, 17, 50))
+        goalSelector.addGoal(7, WaterAvoidingRandomStrollGoal(this, 1.0))
+        goalSelector.addGoal(8, LookAtPlayerGoal(this, Player::class.java, 8.0f))
+        goalSelector.addGoal(8, RandomLookAroundGoal(this))
 
-        targetSelector.add(1, ActiveTargetGoal(this, PlayerEntity::class.java, true))
-        targetSelector.add(1, ActiveTargetGoal(this, ChickenEntity::class.java, true))
+        targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, true))
+        targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Chicken::class.java, true))
     }
 
     override fun tick() {
@@ -63,59 +67,59 @@ class SwampGolemEntity(
     }
 
     private fun tickWalking() {
-        if (entityWorld.isClient) return
-        if (navigation.isFollowingPath) {
-            if (dataTracker.get(CUSTOM_POSE) != CustomPosesEntity.CustomPose.IDLING) return
-            dataTracker.set(CUSTOM_POSE, CustomPosesEntity.CustomPose.WALKING)
+        if (level().isClientSide) return
+        if (navigation.isInProgress) {
+            if (entityData.get(CUSTOM_POSE) != CustomPosesEntity.CustomPose.IDLING) return
+            entityData.set(CUSTOM_POSE, CustomPosesEntity.CustomPose.WALKING)
         } else {
-            if (dataTracker.get(CUSTOM_POSE) != CustomPosesEntity.CustomPose.WALKING) return
-            dataTracker.set(CUSTOM_POSE, CustomPosesEntity.CustomPose.IDLING)
+            if (entityData.get(CUSTOM_POSE) != CustomPosesEntity.CustomPose.WALKING) return
+            entityData.set(CUSTOM_POSE, CustomPosesEntity.CustomPose.IDLING)
         }
     }
 
-    override fun initDataTracker(builder: DataTracker.Builder) {
-        super.initDataTracker(builder)
-        builder.add(CUSTOM_POSE, CustomPosesEntity.CustomPose.IDLING)
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(CUSTOM_POSE, CustomPosesEntity.CustomPose.IDLING)
     }
 
-    override fun onTrackedDataSet(data: TrackedData<*>) {
+    override fun onSyncedDataUpdated(data: EntityDataAccessor<*>) {
         if (data == CUSTOM_POSE) {
-            when (dataTracker.get(CUSTOM_POSE)) {
+            when (entityData.get(CUSTOM_POSE)) {
                 CustomPosesEntity.CustomPose.SLAMMING -> {
                     walkAnimationState.stop()
                     idleAnimationState.stop()
-                    slamAnimationState.start(age)
+                    slamAnimationState.start(tickCount)
                 }
 
                 CustomPosesEntity.CustomPose.IDLING -> {
                     walkAnimationState.stop()
-                    idleAnimationState.start(age)
+                    idleAnimationState.start(tickCount)
                 }
 
                 CustomPosesEntity.CustomPose.WALKING -> {
                     idleAnimationState.stop()
-                    walkAnimationState.start(age)
+                    walkAnimationState.start(tickCount)
                 }
 
                 else -> {}
             }
         }
-        super.onTrackedDataSet(data)
+        super.onSyncedDataUpdated(data)
     }
 
-    override fun rotate(yaw: Float, relativeYaw: Boolean, pitch: Float, relativePitch: Boolean) {
+    override fun forceSetRotation(yaw: Float, relativeYaw: Boolean, pitch: Float, relativePitch: Boolean) {
         if (isRotationLocked()) return
-        super.rotate(yaw, relativeYaw, pitch, relativePitch)
+        super.forceSetRotation(yaw, relativeYaw, pitch, relativePitch)
     }
 
-    override fun setYaw(yaw: Float) {
+    override fun setYRot(yaw: Float) {
         if (isRotationLocked()) return
-        super.setYaw(yaw)
+        super.setYRot(yaw)
     }
 
     override fun setPose(pose: CustomPosesEntity.CustomPose) {
-        dataTracker.set(CUSTOM_POSE, pose)
+        entityData.set(CUSTOM_POSE, pose)
     }
 
-    private fun isRotationLocked() = dataTracker.get(CUSTOM_POSE) == CustomPosesEntity.CustomPose.SLAMMING
+    private fun isRotationLocked() = entityData.get(CUSTOM_POSE) == CustomPosesEntity.CustomPose.SLAMMING
 }

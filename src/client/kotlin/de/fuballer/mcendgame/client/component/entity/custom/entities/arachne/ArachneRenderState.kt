@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.arachne
 
+import com.geckolib.constant.dataticket.DataTicket
 import de.fuballer.mcendgame.client.component.entity.custom.data.MultipleEntityConnectionData
-import net.minecraft.client.render.entity.state.LivingEntityRenderState
-import net.minecraft.entity.AnimationState
-import software.bernie.geckolib.constant.dataticket.DataTicket
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import net.minecraft.world.entity.AnimationState
 
 class ArachneRenderState : LivingEntityRenderState() {
     val idleAnimationState: AnimationState = AnimationState()

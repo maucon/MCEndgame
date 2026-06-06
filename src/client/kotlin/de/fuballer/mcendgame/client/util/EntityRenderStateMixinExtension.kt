@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.client.accessor.LivingEntityRenderStateAccessor
 import de.fuballer.mcendgame.client.accessor.LivingEntityRenderStateGhostlyAccessor
 import de.fuballer.mcendgame.client.accessor.LivingEntityRenderStateIsolatedAccessor
 import de.fuballer.mcendgame.client.accessor.LivingEntityRenderStateWebbedAccessor
-import net.minecraft.client.render.entity.state.LivingEntityRenderState
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 
 object EntityRenderStateMixinExtension {
     fun LivingEntityRenderState.setWebbed(webbed: Boolean = true) {

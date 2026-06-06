@@ -18,11 +18,11 @@ import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.EquipmentSlot
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.passive.TameableEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.TamableAnimal
+import net.minecraft.world.item.ItemStack
 import kotlin.random.Random
 
 @Injectable
@@ -40,7 +40,7 @@ class LootService {
     @EventSubscriber(sync = true)
     fun on(event: DungeonEnemyDeathEvent) {
         if (event.isClient) return
-        val serverWorld = event.world as? ServerWorld ?: return
+        val serverWorld = event.world as? ServerLevel ?: return
         val enemyEntity = event.enemyEntity
 
         if (enemyEntity.isDungeonBoss()) return
@@ -48,7 +48,7 @@ class LootService {
         if (enemyEntity.isElite()) dropEliteLoot(serverWorld, enemyEntity)
 
         EquipmentSlot.VALUES
-            .map { enemyEntity.getEquippedStack(it) }
+            .map { enemyEntity.getItemBySlot(it) }
             .filter {
                 val baseDropProbability = getDropProbability(it, enemyEntity.isLootGoblin())
                 var dropProbability = baseDropProbability * getMagicFindFactor(event.killer)
@@ -57,12 +57,12 @@ class LootService {
                 Random.nextDouble() <= dropProbability
             }
             .onEach { setRandomDurability(it) }
-            .forEach { RuntimeConfig.SERVER.execute { enemyEntity.dropStack(serverWorld, it) } }
+            .forEach { RuntimeConfig.SERVER.execute { enemyEntity.spawnAtLocation(serverWorld, it) } }
     }
 
     @EventSubscriber(sync = true)
     fun dropBossCrystals(event: DungeonBossDeathEvent) {
-        val serverWorld = event.world as? ServerWorld ?: return
+        val serverWorld = event.world as? ServerLevel ?: return
 
         val level = serverWorld.getDungeonLevel()
         val baseCrystalCount = LootSettings.getBossBaseCrystalCount(level)
@@ -73,14 +73,14 @@ class LootService {
         val finalCrystalCount = empoweredCrystalCount.toInt() + if (Random.nextDouble() < empoweredCrystalCount % 1) 1 else 0
 
         val crystalItems = RandomUtil.pickLevelRestrictedWithRepeats(LootSettings.CRYSTALS, 1, level, finalCrystalCount)
-        val itemStacks = crystalItems.map { it.defaultStack }
+        val itemStacks = crystalItems.map { it.defaultInstance }
 
-        RuntimeConfig.SERVER.execute { itemStacks.forEach { bossEntity.dropStack(serverWorld, it) } }
+        RuntimeConfig.SERVER.execute { itemStacks.forEach { bossEntity.spawnAtLocation(serverWorld, it) } }
     }
 
     @EventSubscriber(sync = true)
     fun dropBossUniques(event: DungeonBossDeathEvent) {
-        val serverWorld = event.world as? ServerWorld ?: return
+        val serverWorld = event.world as? ServerLevel ?: return
         val boss = event.bossEntity
 
         val type = event.bossEntity.type
@@ -88,16 +88,16 @@ class LootService {
         possibleUniques.forEach {
             if (Random.nextDouble() > it.value) return@forEach
             val item = it.key
-            val itemStack = if (item is UniqueAttributesItemInterface) item.getRolledStack(item) else item.defaultStack
+            val itemStack = if (item is UniqueAttributesItemInterface) item.getRolledStack(item) else item.defaultInstance
 
-            boss.dropStack(serverWorld, itemStack)
+            boss.spawnAtLocation(serverWorld, itemStack)
         }
     }
 
     private fun getMagicFindFactor(entity: LivingEntity?): Double {
         if (entity == null) return 1.0
 
-        val magicFindEntity = if (entity !is TameableEntity) entity else entity.owner ?: entity
+        val magicFindEntity = if (entity !is TamableAnimal) entity else entity.owner ?: entity
 
         val magicFindCommand = MagicFindCommand(magicFindEntity)
         val cmd = CommandGateway.apply(magicFindCommand)
@@ -106,21 +106,21 @@ class LootService {
     }
 
     private fun getDropProbability(stack: ItemStack, isLootGoblin: Boolean): Double {
-        if (stack.isIn(CustomTags.DUNGEON_DROP_DISABLED)) return 0.0
+        if (stack.`is`(CustomTags.DUNGEON_DROP_DISABLED)) return 0.0
         if (isLootGoblin) return 1.0 // loot goblins should always drop all equipment
         if (stack.item is UniqueAttributesItemInterface) return 1.0 // uniques should always drop
 
-        if (stack.isIn(CustomTags.DIAMOND_GEAR)) return LootSettings.ITEMS_DROP_PROBABILITY_DIAMOND
-        if (stack.isIn(CustomTags.NETHERITE_GEAR)) return LootSettings.ITEMS_DROP_PROBABILITY_NETHERITE
+        if (stack.`is`(CustomTags.DIAMOND_GEAR)) return LootSettings.ITEMS_DROP_PROBABILITY_DIAMOND
+        if (stack.`is`(CustomTags.NETHERITE_GEAR)) return LootSettings.ITEMS_DROP_PROBABILITY_NETHERITE
         return LootSettings.ITEMS_DROP_PROBABILITY
     }
 
     private fun setRandomDurability(itemStack: ItemStack) {
-        itemStack.damage = (itemStack.maxDamage * Random.nextDouble()).toInt()
+        itemStack.damageValue = (itemStack.maxDamage * Random.nextDouble()).toInt()
     }
 
-    private fun dropEliteLoot(serverWorld: ServerWorld, entity: LivingEntity) {
+    private fun dropEliteLoot(serverWorld: ServerLevel, entity: LivingEntity) {
         val aspect = RandomUtil.pickOne(LootSettings.ASPECTS).option
-        RuntimeConfig.SERVER.execute { entity.dropStack(serverWorld, aspect.defaultStack) }
+        RuntimeConfig.SERVER.execute { entity.spawnAtLocation(serverWorld, aspect.defaultInstance) }
     }
 }

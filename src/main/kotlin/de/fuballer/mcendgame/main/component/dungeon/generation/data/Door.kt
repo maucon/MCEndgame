@@ -2,13 +2,13 @@ package de.fuballer.mcendgame.main.component.dungeon.generation.data
 
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.clone
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.rotateY90
-import net.minecraft.util.math.Vec3i
+import net.minecraft.core.Vec3i
 
 data class Door(
     var pos: Vec3i,
     var dir: Vec3i,
 ) {
-    fun getAdjacentPosition(): Vec3i = pos.clone().add(dir)
+    fun getAdjacentPosition(): Vec3i = pos.clone().offset(dir)
 
     fun getRotated90(times: Int): Door {
         val newPosition = pos.rotateY90(times)

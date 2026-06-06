@@ -4,9 +4,9 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asIntRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.damage.dodge.DodgeCalculationCommand
+import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDodgedEvent
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.hasDodged
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.updateDodged
-import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDodgedEvent
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber

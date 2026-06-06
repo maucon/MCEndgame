@@ -4,18 +4,18 @@ import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
 import de.fuballer.mcendgame.main.util.extension.mixin.PersistentProjectileEntityMixinExtension.getDamage
-import net.minecraft.enchantment.EnchantmentHelper
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.projectile.PersistentProjectileEntity
-import net.minecraft.entity.projectile.ProjectileEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow
+import net.minecraft.world.item.enchantment.EnchantmentHelper
 import kotlin.math.ceil
 import kotlin.random.Random
 
 // skeleton arrows (bogged, stray)
 object PersistentProjectileCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.source is PersistentProjectileEntity
+    override fun isActive(source: DamageSource) = source.directEntity is AbstractArrow
 
     override fun calculateAttackDamage(
         originalDamage: Float,
@@ -23,7 +23,7 @@ object PersistentProjectileCalculator : DamageCalculator {
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
     ): Float {
-        val attacker = source.attacker as? LivingEntity ?: return originalDamage
+        val attacker = source.entity as? LivingEntity ?: return originalDamage
 
         val baseDamage = calculateBaseAttackDamage(source)
         val enchantmentDamage = calculateEnchantmentDamage(attacker, attacked, source)
@@ -41,7 +41,7 @@ object PersistentProjectileCalculator : DamageCalculator {
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
     ): Float {
-        if (source.attacker !is LivingEntity) return 0.0F
+        if (source.entity !is LivingEntity) return 0.0F
 
         val baseDamage = calculateBaseElementalDamage(event)
         val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
@@ -53,15 +53,15 @@ object PersistentProjectileCalculator : DamageCalculator {
     }
 
     private fun calculateBaseAttackDamage(source: DamageSource): Double {
-        val persistentProjectile = source.source as PersistentProjectileEntity
+        val persistentProjectile = source.directEntity as AbstractArrow
         return persistentProjectile.getDamage()
     }
 
     private fun calculateEnchantmentDamage(attacker: LivingEntity, attacked: LivingEntity, source: DamageSource): Double {
-        val projectile = source.source as ProjectileEntity
-        val weaponStack = projectile.weaponStack ?: return 0.0
+        val projectile = source.directEntity as Projectile
+        val weaponStack = projectile.weaponItem ?: return 0.0
 
-        return EnchantmentHelper.getDamage(attacker.entityWorld as ServerWorld, weaponStack, attacked, source, 0.0F).toDouble()
+        return EnchantmentHelper.modifyDamage(attacker.level() as ServerLevel, weaponStack, attacked, source, 0.0F).toDouble()
     }
 
     private fun calculateCriticalDamage(event: DamageCalculationCommand, amount: Double): Int {
@@ -71,8 +71,8 @@ object PersistentProjectileCalculator : DamageCalculator {
     }
 
     private fun calculateOtherMultiplier(source: DamageSource): Double {
-        val sourceEntity = source.source as PersistentProjectileEntity
-        return sourceEntity.velocity.length()
+        val sourceEntity = source.directEntity as AbstractArrow
+        return sourceEntity.deltaMovement.length()
     }
 
     private fun calculateBaseElementalDamage(

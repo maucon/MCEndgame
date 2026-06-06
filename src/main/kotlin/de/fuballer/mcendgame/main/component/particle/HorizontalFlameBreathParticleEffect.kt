@@ -3,11 +3,11 @@ package de.fuballer.mcendgame.main.component.particle
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.codec.PacketCodec
-import net.minecraft.network.codec.PacketCodecs
-import net.minecraft.particle.ParticleEffect
-import net.minecraft.particle.ParticleType
+import net.minecraft.core.particles.ParticleOptions
+import net.minecraft.core.particles.ParticleType
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
 import java.util.function.Function
 
 class HorizontalFlameBreathParticleEffect(
@@ -15,7 +15,7 @@ class HorizontalFlameBreathParticleEffect(
     val directionY: Double,
     val directionZ: Double,
     val spreadAngle: Double
-) : ParticleEffect {
+) : ParticleOptions {
     companion object {
         val CODEC: MapCodec<HorizontalFlameBreathParticleEffect> = RecordCodecBuilder.mapCodec(
             Function { instance ->
@@ -28,12 +28,12 @@ class HorizontalFlameBreathParticleEffect(
             }
         )
 
-        val PACKET_CODEC: PacketCodec<RegistryByteBuf, HorizontalFlameBreathParticleEffect> =
-            PacketCodec.tuple(
-                PacketCodecs.DOUBLE, { it.directionX },
-                PacketCodecs.DOUBLE, { it.directionY },
-                PacketCodecs.DOUBLE, { it.directionZ },
-                PacketCodecs.DOUBLE, { it.spreadAngle },
+        val PACKET_CODEC: StreamCodec<RegistryFriendlyByteBuf, HorizontalFlameBreathParticleEffect> =
+            StreamCodec.composite(
+                ByteBufCodecs.DOUBLE, { it.directionX },
+                ByteBufCodecs.DOUBLE, { it.directionY },
+                ByteBufCodecs.DOUBLE, { it.directionZ },
+                ByteBufCodecs.DOUBLE, { it.spreadAngle },
                 ::HorizontalFlameBreathParticleEffect
             )
     }

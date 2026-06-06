@@ -1,13 +1,13 @@
 package de.fuballer.mcendgame.main.messaging.dungeon
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.world.World
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.level.Level
 
 data class DungeonFinalBossDeathEvent(
     val isClient: Boolean,
-    val world: World,
-    val bossEntity: MobEntity,
+    val world: Level,
+    val bossEntity: Mob,
     val killer: LivingEntity?,
 ) {
     companion object {

@@ -18,19 +18,15 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.SpawnReason
-import net.minecraft.entity.ai.goal.ActiveTargetGoal
-import net.minecraft.entity.ai.goal.AttackWithOwnerGoal
-import net.minecraft.entity.ai.goal.TrackOwnerAttackerGoal
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.passive.TameableEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.TypeFilter
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.entity.EntityTypeTest
 import java.util.*
 
 @Injectable
@@ -44,13 +40,13 @@ class CompanionService {
 
     @EventSubscriber(sync = true)
     fun on(event: PlayerEntityDeathEvent) {
-        val player = event.player as? ServerPlayerEntity ?: return
+        val player = event.player as? ServerPlayer ?: return
         removeCompanions(player)
     }
 
     @EventSubscriber(sync = true)
     fun on(event: PlayerBeforeDimensionChangeEvent) {
-        val player = event.player as? ServerPlayerEntity ?: return
+        val player = event.player as? ServerPlayer ?: return
         removeCompanions(player)
     }
 
@@ -63,7 +59,7 @@ class CompanionService {
     @EventSubscriber(sync = true)
     fun on(event: WorldAttributeChangedEvent) {
         val companionTypes = CompanionType.entries.filter { it.attribute == event.attribute.type }
-        event.world.players.forEach {
+        event.world.players().forEach {
             val id = it.uuid
             val set = toSummon[id] ?: mutableSetOf()
             set.addAll(companionTypes)
@@ -74,9 +70,9 @@ class CompanionService {
     // this also gets triggered by respawn and join
     @EventSubscriber(sync = true)
     fun on(event: EquipmentChangeEvent) {
-        val player = event.entity as? PlayerEntity ?: return
+        val player = event.entity as? Player ?: return
         val id = player.uuid
-        val attributeSlot = AttributeModifierSlot.forEquipmentSlot(event.slot)
+        val attributeSlot = EquipmentSlotGroup.bySlot(event.slot)
 
         val set = toSummon[id] ?: mutableSetOf()
         set.addAll(getItemStackCompanions(event.oldStack, attributeSlot))
@@ -94,7 +90,7 @@ class CompanionService {
             val types = entry.value
             iterator.remove()
 
-            event.server.playerManager.getPlayer(id)?.let { player ->
+            event.server.playerList.getPlayer(id)?.let { player ->
                 types.forEach { type -> resummon(player, type) }
             }
         }
@@ -102,49 +98,49 @@ class CompanionService {
 
     private fun getItemStackCompanions(
         itemStack: ItemStack,
-        slot: AttributeModifierSlot,
+        slot: EquipmentSlotGroup,
     ): Set<CompanionType> {
         val attributes = itemStack.getCustomAttributes().filter { slot.isOrIsChildOf(it.slot) }
         return CompanionType.entries.filter { entry -> attributes.any { attr -> attr.type == entry.attribute } }.toSet()
     }
 
     private fun resummon(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         type: CompanionType,
     ) {
         removeCompanions(player, type.entityClass)
         summonAllOfType(player, type)
     }
 
-    fun removeCompanions(player: ServerPlayerEntity) {
+    fun removeCompanions(player: ServerPlayer) {
         CompanionType.entries.forEach { removeCompanions(player, it.entityClass) }
     }
 
     fun removeCompanions(
-        player: ServerPlayerEntity,
-        type: Class<out TameableEntity>,
+        player: ServerPlayer,
+        type: Class<out TamableAnimal>,
     ) {
-        val world = player.entityWorld ?: return
+        val world = player.level()
 
-        val companions = world.getEntitiesByType(TypeFilter.instanceOf(type)) {
+        val companions = world.getEntities(EntityTypeTest.forClass(type)) {
             it.isCompanion() && it.owner == player
         }
 
         companions.forEach {
-            if (it == null || !it.isAlive) return@forEach
+            if (!it.isAlive) return@forEach
             it.remove(Entity.RemovalReason.UNLOADED_WITH_PLAYER)
         }
     }
 
     private fun summonAllOfType(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         type: CompanionType,
     ) {
         player.getAllCustomAttributes()[type.attribute]?.forEach { summonAllFromAttribute(player, type, it) }
     }
 
     private fun summonAllFromAttribute(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         type: CompanionType,
         attribute: CustomAttribute,
     ) {
@@ -153,39 +149,39 @@ class CompanionService {
     }
 
     private fun summonFromAttribute(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         type: CompanionType,
         attribute: CustomAttribute,
     ) {
-        val world = player.entityWorld
-        val companion = type.entityType.create(world, SpawnReason.MOB_SUMMONED) ?: return
+        val world = player.level()
+        val companion = type.entityType.create(world, EntitySpawnReason.MOB_SUMMONED) ?: return
 
-        companion.setPosition(player.entityPos)
-        companion.setTamedBy(player)
+        companion.setPos(player.position())
+        companion.tame(player)
         companion.setCompanion()
         companion.isInvulnerable = true
-        companion.getAttributeInstance(EntityAttributes.FOLLOW_RANGE)?.baseValue = 24.0
+        companion.getAttribute(Attributes.FOLLOW_RANGE)?.baseValue = 24.0
 
         addGoals(companion)
 
         type.applyOther(companion, attribute)
 
-        world.spawnEntity(companion)
+        world.addFreshEntity(companion)
     }
 
-    fun addGoals(entity: TameableEntity) {
+    fun addGoals(entity: TamableAnimal) {
         val targetSelector = entity.getTargetSelector()
 
-        targetSelector.goals
+        targetSelector.availableGoals
             .map { it.goal }
             .toList()
-            .forEach(targetSelector::remove)
+            .forEach(targetSelector::removeGoal)
 
-        targetSelector.add(1, TrackOwnerAttackerGoal(entity))
-        targetSelector.add(2, AttackWithOwnerGoal(entity))
-        targetSelector.add(
+        targetSelector.addGoal(1, OwnerHurtByTargetGoal(entity))
+        targetSelector.addGoal(2, OwnerHurtTargetGoal(entity))
+        targetSelector.addGoal(
             3,
-            ActiveTargetGoal(
+            NearestAttackableTargetGoal(
                 entity,
                 LivingEntity::class.java,
                 10,

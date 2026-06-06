@@ -2,10 +2,10 @@ package de.fuballer.mcendgame.main.component.block.blocks.dungeon_device.network
 
 import de.fuballer.mcendgame.main.component.dungeon.level.PlayerDungeonLevel
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.codec.PacketCodec
-import net.minecraft.network.packet.CustomPayload
-import net.minecraft.util.Uuids
+import net.minecraft.core.UUIDUtil
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.StreamCodec
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import java.util.*
 
 private val PAYLOAD_ID = IdentifierUtil.default("update_dungeon_level")
@@ -13,12 +13,12 @@ private val PAYLOAD_ID = IdentifierUtil.default("update_dungeon_level")
 data class UpdateDungeonLevelPayload(
     val playerId: UUID,
     val dungeonLevel: PlayerDungeonLevel,
-) : CustomPayload {
+) : CustomPacketPayload {
     companion object {
-        val ID = CustomPayload.Id<UpdateDungeonLevelPayload>(PAYLOAD_ID)
+        val ID = CustomPacketPayload.Type<UpdateDungeonLevelPayload>(PAYLOAD_ID)
 
-        val CODEC: PacketCodec<RegistryByteBuf, UpdateDungeonLevelPayload> = PacketCodec.tuple(
-            Uuids.PACKET_CODEC, UpdateDungeonLevelPayload::playerId,
+        val CODEC: StreamCodec<RegistryFriendlyByteBuf, UpdateDungeonLevelPayload> = StreamCodec.composite(
+            UUIDUtil.STREAM_CODEC, UpdateDungeonLevelPayload::playerId,
             PlayerDungeonLevel.PACKET_CODEC, UpdateDungeonLevelPayload::dungeonLevel,
             ::UpdateDungeonLevelPayload
         )
@@ -29,5 +29,5 @@ data class UpdateDungeonLevelPayload(
         )
     }
 
-    override fun getId(): CustomPayload.Id<out CustomPayload> = ID
+    override fun type(): CustomPacketPayload.Type<out CustomPacketPayload> = ID
 }

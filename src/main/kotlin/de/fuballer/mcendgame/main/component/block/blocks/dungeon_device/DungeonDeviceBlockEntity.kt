@@ -4,48 +4,48 @@ import de.fuballer.mcendgame.main.component.block.CustomBlockEntityTypes
 import de.fuballer.mcendgame.main.component.block.blocks.dungeon_device.networking.DungeonDevicePayload
 import de.fuballer.mcendgame.main.functional.inventory.ImplementedInventory
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getDungeonLevel
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
-import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.Inventories
-import net.minecraft.item.ItemStack
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.storage.ReadView
-import net.minecraft.storage.WriteView
-import net.minecraft.text.Text
-import net.minecraft.util.collection.DefaultedList
-import net.minecraft.util.math.BlockPos
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider
+import net.minecraft.core.BlockPos
+import net.minecraft.core.NonNullList
+import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.ContainerHelper
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 
-private val TITLE = Text.translatable("container.mcendgame.dungeon_device.title")
+private val TITLE = Component.translatable("container.mcendgame.dungeon_device.title")
 
 class DungeonDeviceBlockEntity(
     blockPos: BlockPos,
     blockState: BlockState,
-) : BlockEntity(CustomBlockEntityTypes.DUNGEON_DEVICE, blockPos, blockState), ExtendedScreenHandlerFactory<DungeonDevicePayload>, ImplementedInventory {
-    private val inventory = DefaultedList.ofSize(DungeonDeviceSettings.INVENTORY_SIZE, ItemStack.EMPTY)
+) : BlockEntity(CustomBlockEntityTypes.DUNGEON_DEVICE, blockPos, blockState), ExtendedMenuProvider<DungeonDevicePayload>, ImplementedInventory {
+    private val inventory = NonNullList.withSize(DungeonDeviceSettings.INVENTORY_SIZE, ItemStack.EMPTY)
 
-    override fun getItems(): DefaultedList<ItemStack> = inventory
+    override fun getItems(): NonNullList<ItemStack> = inventory
 
-    override fun createMenu(syncId: Int, playerInventory: PlayerInventory, player: PlayerEntity) = DungeonDeviceScreenHandler(syncId, playerInventory, this)
+    override fun createMenu(syncId: Int, playerInventory: Inventory, player: Player) = DungeonDeviceScreenHandler(syncId, playerInventory, this)
 
-    override fun getDisplayName(): Text = TITLE
+    override fun getDisplayName(): Component = TITLE
 
-    override fun getScreenOpeningData(player: ServerPlayerEntity): DungeonDevicePayload {
+    override fun getScreenOpeningData(player: ServerPlayer): DungeonDevicePayload {
         val playerDungeonLevel = player.getDungeonLevel()
-        return DungeonDevicePayload(pos, world!!.registryKey, player.uuid, playerDungeonLevel)
+        return DungeonDevicePayload(worldPosition, level!!.dimension(), player.uuid, playerDungeonLevel)
     }
 
-    override fun markDirty() = super<ImplementedInventory>.markDirty(world, pos)
+    override fun setChanged() = super.markDirty(level, worldPosition)
 
-    override fun readData(view: ReadView) {
-        super.readData(view)
-        Inventories.readData(view, this.inventory)
+    override fun loadAdditional(view: ValueInput) {
+        super.loadAdditional(view)
+        ContainerHelper.loadAllItems(view, this.inventory)
     }
 
-    override fun writeData(view: WriteView) {
-        super.writeData(view)
-        Inventories.writeData(view, this.inventory)
+    override fun saveAdditional(view: ValueOutput) {
+        super.saveAdditional(view)
+        ContainerHelper.saveAllItems(view, this.inventory)
     }
 }

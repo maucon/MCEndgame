@@ -9,12 +9,12 @@ import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtensio
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
-import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.server.command.CommandManager
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
-import net.minecraft.util.Formatting
+import net.minecraft.ChatFormatting
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
+import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerPlayer
 import kotlin.math.max
 
 private const val PLAYER_ENTITIES_ARGUMENT = "player_entities"
@@ -35,29 +35,29 @@ class DungeonLevelCommand {
     @Initializer
     fun register() = CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _, _ ->
         dispatcher.register(
-            CommandManager.literal(NAME)
+            Commands.literal(NAME)
                 .requires { it.isModerator() }
                 .then(
-                    CommandManager.argument(PLAYER_ENTITIES_ARGUMENT, EntityArgumentType.players())
+                    Commands.argument(PLAYER_ENTITIES_ARGUMENT, EntityArgument.players())
                         .then(
-                            CommandManager.argument(LEVEL_ARGUMENT, IntegerArgumentType.integer(1))
+                            Commands.argument(LEVEL_ARGUMENT, IntegerArgumentType.integer(1))
                                 .executes { context ->
-                                    val players = EntityArgumentType.getPlayers(context, PLAYER_ENTITIES_ARGUMENT).toList()
+                                    val players = EntityArgument.getPlayers(context, PLAYER_ENTITIES_ARGUMENT).toList()
                                     val level = IntegerArgumentType.getInteger(context, LEVEL_ARGUMENT)
                                     execute(context, players, level)
                                 }
                                 .then(
-                                    CommandManager.argument(PROGRESS_ARGUMENT, IntegerArgumentType.integer(0, DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD - 1))
+                                    Commands.argument(PROGRESS_ARGUMENT, IntegerArgumentType.integer(0, DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD - 1))
                                         .executes { context ->
-                                            val players = EntityArgumentType.getPlayers(context, PLAYER_ENTITIES_ARGUMENT).toList()
+                                            val players = EntityArgument.getPlayers(context, PLAYER_ENTITIES_ARGUMENT).toList()
                                             val level = IntegerArgumentType.getInteger(context, LEVEL_ARGUMENT)
                                             val progress = IntegerArgumentType.getInteger(context, PROGRESS_ARGUMENT)
                                             execute(context, players, level, progress)
                                         }
                                         .then(
-                                            CommandManager.argument(HIGHEST_REACHED_ARGUMENT, IntegerArgumentType.integer())
+                                            Commands.argument(HIGHEST_REACHED_ARGUMENT, IntegerArgumentType.integer())
                                                 .executes { context ->
-                                                    val players = EntityArgumentType.getPlayers(context, PLAYER_ENTITIES_ARGUMENT).toList()
+                                                    val players = EntityArgument.getPlayers(context, PLAYER_ENTITIES_ARGUMENT).toList()
                                                     val level = IntegerArgumentType.getInteger(context, LEVEL_ARGUMENT)
                                                     val progress = IntegerArgumentType.getInteger(context, PROGRESS_ARGUMENT)
                                                     val highestReached = IntegerArgumentType.getInteger(context, HIGHEST_REACHED_ARGUMENT)
@@ -68,8 +68,8 @@ class DungeonLevelCommand {
     })
 
     private fun execute(
-        context: CommandContext<ServerCommandSource>,
-        players: List<ServerPlayerEntity>,
+        context: CommandContext<CommandSourceStack>,
+        players: List<ServerPlayer>,
         level: Int,
         progress: Int = 0,
         highestReached: Int? = null,
@@ -77,7 +77,7 @@ class DungeonLevelCommand {
         val sender = context.source
 
         if (players.isEmpty()) {
-            sender.sendMessage(Text.translatable(NO_PLAYER_FOUND_KEY).formatted(Formatting.RED))
+            sender.sendSystemMessage(Component.translatable(NO_PLAYER_FOUND_KEY).withStyle(ChatFormatting.RED))
             return 0
         }
 
@@ -90,9 +90,9 @@ class DungeonLevelCommand {
 
         val count = players.size
         val highestReached = if (highestReached == null) "-" else max(highestReached, level).toString()
-        val message = if (count == 1) Text.translatable(SET_LEVEL_SINGLE_KEY, players.first().nameForScoreboard, level, progress, highestReached)
-        else Text.translatable(SET_LEVEL_MULTIPLE_KEY, players.size, level, progress, highestReached)
-        sender.sendMessage(message)
+        val message = if (count == 1) Component.translatable(SET_LEVEL_SINGLE_KEY, players.first().scoreboardName, level, progress, highestReached)
+        else Component.translatable(SET_LEVEL_MULTIPLE_KEY, players.size, level, progress, highestReached)
+        sender.sendSystemMessage(message)
 
         return Command.SINGLE_SUCCESS
     }

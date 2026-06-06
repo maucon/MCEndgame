@@ -3,26 +3,26 @@ package de.fuballer.mcendgame.main.component.totem
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemType
 import de.fuballer.mcendgame.main.component.screen.CustomScreenHandlerTypes
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isInDungeonWorld
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.SimpleInventory
-import net.minecraft.item.ItemStack
-import net.minecraft.screen.ScreenHandler
-import net.minecraft.screen.slot.SlotActionType
+import net.minecraft.world.SimpleContainer
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.ContainerInput
+import net.minecraft.world.item.ItemStack
 
 class TotemScreenHandler(
     syncId: Int,
-    playerInventory: PlayerInventory,
+    playerInventory: Inventory,
     totems: List<ItemStack> = listOf(),
     private val totemService: TotemService? = null,
-) : ScreenHandler(CustomScreenHandlerTypes.TOTEM, syncId) {
-    private val totemInventory = SimpleInventory(8)
+) : AbstractContainerMenu(CustomScreenHandlerTypes.TOTEM, syncId) {
+    private val totemInventory = SimpleContainer(8)
 
     init {
         addTotemSlots()
         fillTotemSlots(totems)
 
-        addPlayerSlots(playerInventory, 8, 87)
+        addStandardInventorySlots(playerInventory, 8, 87)
     }
 
     private fun addTotemSlots() {
@@ -34,34 +34,34 @@ class TotemScreenHandler(
 
     private fun fillTotemSlots(totems: List<ItemStack>) {
         for ((index, totem) in totems.withIndex()) {
-            if (index >= totemInventory.size()) break
-            setStackInSlot(index, 0, totem)
+            if (index >= totemInventory.containerSize) break
+            setItem(index, 0, totem)
         }
     }
 
-    override fun onClosed(player: PlayerEntity) {
-        super.onClosed(player)
+    override fun removed(player: Player) {
+        super.removed(player)
         totemService?.savePlayerTotems(player, totemInventory)
     }
 
-    override fun onSlotClick(slotIndex: Int, button: Int, actionType: SlotActionType, player: PlayerEntity) {
+    override fun clicked(slotIndex: Int, button: Int, containerInput: ContainerInput, player: Player) {
         if (player.isInDungeonWorld()) return
-        super.onSlotClick(slotIndex, button, actionType, player)
+        super.clicked(slotIndex, button, containerInput, player)
     }
 
-    override fun quickMove(player: PlayerEntity, slotIndex: Int): ItemStack {
+    override fun quickMoveStack(player: Player, slotIndex: Int): ItemStack {
         val slot = slots[slotIndex]
-        if (!slot.hasStack()) return ItemStack.EMPTY
-        val stack = slot.stack
+        if (!slot.hasItem()) return ItemStack.EMPTY
+        val stack = slot.item
 
         if (slotIndex < 8) {
-            if (!insertItem(stack, 8, 44, true)) return ItemStack.EMPTY
+            if (!moveItemStackTo(stack, 8, 44, true)) return ItemStack.EMPTY
             return stack
         } else {
-            if (!insertItem(stack, 0, 8, false)) return ItemStack.EMPTY
+            if (!moveItemStackTo(stack, 0, 8, false)) return ItemStack.EMPTY
             return stack
         }
     }
 
-    override fun canUse(player: PlayerEntity) = totemInventory.canPlayerUse(player)
+    override fun stillValid(player: Player) = totemInventory.stillValid(player)
 }

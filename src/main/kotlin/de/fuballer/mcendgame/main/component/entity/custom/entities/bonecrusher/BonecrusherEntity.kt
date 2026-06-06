@@ -1,5 +1,14 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher
 
+import com.geckolib.animatable.GeoAnimatable
+import com.geckolib.animatable.GeoEntity
+import com.geckolib.animatable.instance.AnimatableInstanceCache
+import com.geckolib.animatable.manager.AnimatableManager
+import com.geckolib.animation.AnimationController
+import com.geckolib.animation.RawAnimation
+import com.geckolib.animation.`object`.PlayState
+import com.geckolib.constant.DefaultAnimations
+import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
@@ -15,34 +24,25 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAble
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.TeleportAttackMob
 import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundInstance
 import de.fuballer.mcendgame.main.util.random.RandomOption
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.ai.goal.ActiveTargetGoal
-import net.minecraft.entity.ai.goal.SwimGoal
-import net.minecraft.entity.attribute.DefaultAttributeContainer
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.mob.Monster
-import net.minecraft.entity.mob.PathAwareEntity
-import net.minecraft.entity.passive.VillagerEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.particle.ParticleTypes
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundEvents
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
-import software.bernie.geckolib.animatable.GeoAnimatable
-import software.bernie.geckolib.animatable.GeoEntity
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache
-import software.bernie.geckolib.animatable.manager.AnimatableManager
-import software.bernie.geckolib.animation.AnimationController
-import software.bernie.geckolib.animation.RawAnimation
-import software.bernie.geckolib.animation.`object`.PlayState
-import software.bernie.geckolib.constant.DefaultAnimations
-import software.bernie.geckolib.util.GeckoLibUtil
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.PathfinderMob
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.FloatGoal
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.npc.villager.Villager
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.Level
+import net.minecraft.world.phys.Vec3
 
 class BonecrusherEntity(
     type: EntityType<out BonecrusherEntity>,
-    world: World,
-) : PathAwareEntity(type, world), GeoEntity, DisableAbleGoalsMob, BlockAbleMovementMob<BonecrusherEntity>, Monster, CustomAttacksMob<BonecrusherEntity>, TeleportAttackMob {
+    world: Level,
+) : PathfinderMob(type, world), GeoEntity, DisableAbleGoalsMob, BlockAbleMovementMob<BonecrusherEntity>, Enemy, CustomAttacksMob<BonecrusherEntity>, TeleportAttackMob {
     companion object {
         val WALK_ANIM: RawAnimation = RawAnimation.begin().thenLoop("movement.walk")
 
@@ -67,7 +67,7 @@ class BonecrusherEntity(
         private val SLAM_AREA = AreaAttackDamage.DamageArea(6.0, 3.0, 1.5, 0.5, 0.0, 0.5)
         private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(1.2F, 1.0, SLAM_AREA, knockbackType = AreaAttackDamage.KnockbackType.AREA_CENTER, blockable = false)
             .setParticles(100, 0.25, ParticleTypes.CRIT, 0.5)
-            .setSound(false, SoundEvents.ENTITY_GENERIC_EXPLODE.value(), 1F, 1F)
+            .setSound(false, SoundEvents.GENERIC_EXPLODE.value(), 1F, 1F)
         private val SLAM_ANIMATION_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLAM_ID)
         private val SLAM_ATTACK = Attack<BonecrusherEntity>(
             SLAM_ANIMATION_DATA,
@@ -83,7 +83,7 @@ class BonecrusherEntity(
         private val TELEPORT_PRESS_AREA = AreaAttackDamage.DamageArea(6.0, 3.0, 1.5, -2.6, 0.0, 0.5)
         private val TELEPORT_PRESS_DAMAGE = AreaAttackDamage(1F, 1.0, TELEPORT_PRESS_AREA, knockbackType = AreaAttackDamage.KnockbackType.AREA_CENTER)
             .setParticles(100, 0.25, ParticleTypes.CRIT, 0.5)
-            .setSound(false, SoundEvents.ENTITY_GENERIC_EXPLODE.value(), 1F, 1F)
+            .setSound(false, SoundEvents.GENERIC_EXPLODE.value(), 1F, 1F)
         private val TELEPORT_PRESS_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, TELEPORT_PRESS_ID)
         private val TELEPORT_PRESS_ATTACK = TeleportToTargetAttack<BonecrusherEntity>(
             TELEPORT_PRESS_DATA,
@@ -152,15 +152,15 @@ class BonecrusherEntity(
             RandomOption(1, TELEPORT_PRESS_ATTACK),
         )
 
-        fun createAttributes(): DefaultAttributeContainer.Builder {
+        fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 35.0)
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.2)
-                .add(EntityAttributes.ATTACK_DAMAGE, 7.0)
-                .add(EntityAttributes.ATTACK_KNOCKBACK, 2.0)
-                .add(EntityAttributes.ARMOR, 0.0)
-                .add(EntityAttributes.KNOCKBACK_RESISTANCE, 0.8)
-                .add(EntityAttributes.MOVEMENT_EFFICIENCY, 0.85)
+                .add(Attributes.FOLLOW_RANGE, 35.0)
+                .add(Attributes.MOVEMENT_SPEED, 0.2)
+                .add(Attributes.ATTACK_DAMAGE, 7.0)
+                .add(Attributes.ATTACK_KNOCKBACK, 2.0)
+                .add(Attributes.ARMOR, 0.0)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)
+                .add(Attributes.MOVEMENT_EFFICIENCY, 0.85)
         }
     }
 
@@ -174,7 +174,7 @@ class BonecrusherEntity(
     override val attackDamageInstances = mutableListOf<AttackDamageInstance>()
     override val attackSoundInstances = mutableListOf<DelayedSoundInstance>()
 
-    override var teleportAttackTargetPosition: Vec3d? = null
+    override var teleportAttackTargetPosition: Vec3? = null
 
     override var blockAbleMovementEntity = this
     override var blockedMovementTicks = 0
@@ -183,7 +183,7 @@ class BonecrusherEntity(
     private val attackGoal = CustomAttacksGoal(this)
     private val stayInMeleeRangeGoal = StayInRangeGoal(this, 1.0, 2.5)
     private val wanderGoal = DisableAbleWanderAroundFarGoal(this, 1.0)
-    private val lookAtPlayerGoal = DisableAbleLookAtEntityGoal(this, PlayerEntity::class.java, 8F)
+    private val lookAtPlayerGoal = DisableAbleLookAtEntityGoal(this, Player::class.java, 8F)
     private val lookAroundGoal = DisableAbleLookAroundGoal(this)
 
     init {
@@ -191,19 +191,19 @@ class BonecrusherEntity(
     }
 
     private fun initDynamicGoals() {
-        goalSelector.add(2, attackGoal)
-        goalSelector.add(3, stayInMeleeRangeGoal)
-        goalSelector.add(4, lookAtPlayerGoal)
-        goalSelector.add(4, lookAroundGoal)
-        goalSelector.add(5, wanderGoal)
+        goalSelector.addGoal(2, attackGoal)
+        goalSelector.addGoal(3, stayInMeleeRangeGoal)
+        goalSelector.addGoal(4, lookAtPlayerGoal)
+        goalSelector.addGoal(4, lookAroundGoal)
+        goalSelector.addGoal(5, wanderGoal)
     }
 
-    override fun initGoals() {
-        goalSelector.add(0, SwimGoal(this))
-        goalSelector.add(1, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { e -> e is PlayerEntity || e is VillagerEntity }))
+    override fun registerGoals() {
+        goalSelector.addGoal(0, FloatGoal(this))
+        goalSelector.addGoal(1, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { e -> e is Player || e is Villager }))
 
-        targetSelector.add(2, ActiveTargetGoal(this, PlayerEntity::class.java, true))
-        targetSelector.add(3, ActiveTargetGoal(this, VillagerEntity::class.java, true))
+        targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Player::class.java, true))
+        targetSelector.addGoal(3, NearestAttackableTargetGoal(this, Villager::class.java, true))
     }
 
     override fun updateGoals() {
@@ -219,7 +219,7 @@ class BonecrusherEntity(
         super.tick()
         tickBlockedMovement()
 
-        val world = entityWorld as? ServerWorld ?: return
+        val world = level() as? ServerLevel ?: return
         tickAttacks(world, this)
     }
 

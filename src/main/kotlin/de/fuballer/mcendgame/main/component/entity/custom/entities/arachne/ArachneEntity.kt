@@ -13,35 +13,35 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.MeleeAttack
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setShieldsCooldown
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setWebbed
-import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
-import net.minecraft.entity.AnimationState
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.PlayerLikeEntity
-import net.minecraft.entity.ai.RangedAttackMob
-import net.minecraft.entity.ai.goal.ActiveTargetGoal
-import net.minecraft.entity.ai.goal.RevengeGoal
-import net.minecraft.entity.ai.goal.SwimGoal
-import net.minecraft.entity.attribute.DefaultAttributeContainer
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.data.DataTracker
-import net.minecraft.entity.data.TrackedData
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.effect.StatusEffects
-import net.minecraft.entity.mob.Monster
-import net.minecraft.entity.passive.VillagerEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.projectile.ProjectileEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundEvent
-import net.minecraft.sound.SoundEvents
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.AnimationState
+import net.minecraft.world.entity.Avatar
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.FloatGoal
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.monster.RangedAttackMob
+import net.minecraft.world.entity.npc.villager.Villager
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.phys.Vec3
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.pow
@@ -49,8 +49,8 @@ import kotlin.math.sqrt
 
 class ArachneEntity(
     type: EntityType<out ArachneEntity>,
-    world: World,
-) : DirectionalMovementEntity(type, world), Monster, RangedAttackMob, HookAttackMob, MeleeAttackMob {
+    world: Level,
+) : DirectionalMovementEntity(type, world), Enemy, RangedAttackMob, HookAttackMob, MeleeAttackMob {
     private var attackAnimationTicks = 0
     val spitAnimationState = AnimationState()
     val attackAnimationState = AnimationState()
@@ -76,7 +76,7 @@ class ArachneEntity(
     private val rangedKeepDistanceGoal = KeepDistanceToTargetGoal(this, 1.0, 10F, 15F)
 
     private val wanderGoal = DisableAbleWanderAroundFarGoal(this, 1.0)
-    private val lookAtPlayerGoal = DisableAbleLookAtEntityGoal(this, PlayerEntity::class.java, 8.0f)
+    private val lookAtPlayerGoal = DisableAbleLookAtEntityGoal(this, Player::class.java, 8.0f)
     private val lookAroundGoal = DisableAbleLookAroundGoal(this)
 
     private var previousScale = 0F
@@ -94,22 +94,22 @@ class ArachneEntity(
         const val MELEE_ATTACK_WIDTH = 3.0
         const val MELEE_ATTACK_HEIGHT = 3
 
-        fun createAttributes(): DefaultAttributeContainer.Builder {
+        fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 35.0)
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.4)
-                .add(EntityAttributes.STEP_HEIGHT, 1.1)
-                .add(EntityAttributes.SAFE_FALL_DISTANCE, 10.0)
-                .add(EntityAttributes.FALL_DAMAGE_MULTIPLIER, 0.2)
-                .add(EntityAttributes.ATTACK_DAMAGE, 4.0)
-                .add(EntityAttributes.ATTACK_KNOCKBACK, 1.5)
-                .add(EntityAttributes.ARMOR, 0.0)
-                .add(EntityAttributes.KNOCKBACK_RESISTANCE, 0.8)
-                .add(EntityAttributes.MOVEMENT_EFFICIENCY, 0.85)
+                .add(Attributes.FOLLOW_RANGE, 35.0)
+                .add(Attributes.MOVEMENT_SPEED, 0.4)
+                .add(Attributes.STEP_HEIGHT, 1.1)
+                .add(Attributes.SAFE_FALL_DISTANCE, 10.0)
+                .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.2)
+                .add(Attributes.ATTACK_DAMAGE, 4.0)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.5)
+                .add(Attributes.ARMOR, 0.0)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)
+                .add(Attributes.MOVEMENT_EFFICIENCY, 0.85)
         }
 
-        val ATTACK_POSE: TrackedData<CustomPosesEntity.CustomPose> =
-            DataTracker.registerData(ArachneEntity::class.java, CustomPosesEntity.CUSTOM_POSE_TDH)
+        val ATTACK_POSE: EntityDataAccessor<CustomPosesEntity.CustomPose> =
+            SynchedEntityData.defineId(ArachneEntity::class.java, CustomPosesEntity.CUSTOM_POSE_TDH)
     }
 
     init {
@@ -117,25 +117,25 @@ class ArachneEntity(
     }
 
     private fun initDynamicGoals() {
-        goalSelector.add(2, hookAttackGoal)
-        goalSelector.add(3, projectileAttackGoal)
-        goalSelector.add(3, meleeAttackGoal)
-        goalSelector.add(4, rangedKeepDistanceGoal)
-        goalSelector.add(4, stayInMeleeRangeGoal)
-        goalSelector.add(5, wanderGoal)
-        goalSelector.add(6, lookAtPlayerGoal)
-        goalSelector.add(7, lookAroundGoal)
+        goalSelector.addGoal(2, hookAttackGoal)
+        goalSelector.addGoal(3, projectileAttackGoal)
+        goalSelector.addGoal(3, meleeAttackGoal)
+        goalSelector.addGoal(4, rangedKeepDistanceGoal)
+        goalSelector.addGoal(4, stayInMeleeRangeGoal)
+        goalSelector.addGoal(5, wanderGoal)
+        goalSelector.addGoal(6, lookAtPlayerGoal)
+        goalSelector.addGoal(7, lookAroundGoal)
 
         updateGoals()
     }
 
-    override fun initGoals() {
-        goalSelector.add(0, SwimGoal(this))
-        goalSelector.add(1, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { it is PlayerEntity || it is VillagerEntity }))
+    override fun registerGoals() {
+        goalSelector.addGoal(0, FloatGoal(this))
+        goalSelector.addGoal(1, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { it is Player || it is Villager }))
 
-        targetSelector.add(0, RevengeGoal(this))
-        targetSelector.add(1, ActiveTargetGoal(this, PlayerEntity::class.java, true))
-        targetSelector.add(2, ActiveTargetGoal(this, VillagerEntity::class.java, true))
+        targetSelector.addGoal(0, HurtByTargetGoal(this))
+        targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, true))
+        targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Villager::class.java, true))
     }
 
     private fun updateGoals() {
@@ -153,32 +153,32 @@ class ArachneEntity(
         lookAroundGoal.isDisabled = movementDisabled
     }
 
-    override fun initDataTracker(builder: DataTracker.Builder) {
-        super.initDataTracker(builder)
-        builder.add(ATTACK_POSE, CustomPosesEntity.CustomPose.IDLING)
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(ATTACK_POSE, CustomPosesEntity.CustomPose.IDLING)
     }
 
-    override fun onTrackedDataSet(data: TrackedData<*>) {
+    override fun onSyncedDataUpdated(data: EntityDataAccessor<*>) {
         if (data == ATTACK_POSE) {
-            when (dataTracker.get(ATTACK_POSE)) {
+            when (entityData.get(ATTACK_POSE)) {
                 CustomPosesEntity.CustomPose.SPITTING -> {
-                    spitAnimationState.start(age)
+                    spitAnimationState.start(tickCount)
                 }
 
                 CustomPosesEntity.CustomPose.MELEE_ATTACKING -> {
-                    attackAnimationState.start(age)
+                    attackAnimationState.start(tickCount)
                 }
 
                 else -> {}
             }
         }
-        super.onTrackedDataSet(data)
+        super.onSyncedDataUpdated(data)
     }
 
     override fun tick() {
         super.tick()
 
-        if (entityWorld.isClient) return
+        if (level().isClientSide) return
         tickChangeToRanged()
         updateAttackPose()
         updateBlockMovementTicks()
@@ -215,9 +215,9 @@ class ArachneEntity(
         if (isMovementDisabled()) return false
 
         val livingTarget = target ?: return true
-        if (livingTarget.isDead) return true
+        if (livingTarget.isDeadOrDying) return true
 
-        if (squaredDistanceTo(livingTarget) > maxStayMeleeRangeSquared) return true
+        if (distanceToSqr(livingTarget) > maxStayMeleeRangeSquared) return true
 
         return random.nextDouble() < RANDOM_STOP_MELEE_PROBABILITY
     }
@@ -234,24 +234,24 @@ class ArachneEntity(
 
     private fun updateBlockMovementTicks() {
         if (disabledMovementTicks <= 0) return
-        moveControl.strafeTo(0F, 0F)
+        moveControl.strafe(0F, 0F)
         if (--disabledMovementTicks > 0) return
         updateGoals()
     }
 
     private fun updateAttackPose() {
-        if (entityWorld.isClient) return
+        if (level().isClientSide) return
         if (attackAnimationTicks <= 0) return
         if (--attackAnimationTicks > 0) return
 
-        dataTracker.set(
+        entityData.set(
             ATTACK_POSE, CustomPosesEntity.CustomPose.IDLING
         )
     }
 
     private fun changeAttackPose(pose: CustomPosesEntity.CustomPose, animationTime: Int) {
         if (attackAnimationTicks > 0) return
-        dataTracker.set(ATTACK_POSE, pose)
+        entityData.set(ATTACK_POSE, pose)
         attackAnimationTicks = animationTime
     }
 
@@ -264,9 +264,9 @@ class ArachneEntity(
 
     private fun shootAt(
         target: LivingEntity,
-        projectile: ProjectileEntity,
+        projectile: Projectile,
     ) {
-        val serverWorld = entityWorld as? ServerWorld ?: return
+        val serverWorld = level() as? ServerLevel ?: return
 
         val xDistance = target.x - x
         val zDistance = target.z - z
@@ -276,62 +276,62 @@ class ArachneEntity(
         changeAttackPose(CustomPosesEntity.CustomPose.SPITTING, 9)// anim is 0.42s
 
         val itemStack = ItemStack(Items.AIR)
-        ProjectileEntity.spawn(projectile, serverWorld, itemStack)
-        { entity: ProjectileEntity ->
-            entity.setVelocity(xDistance, aimY - entity.y + addedYVelocity, zDistance, 1.6f, 2.0f)
+        Projectile.spawnProjectile(projectile, serverWorld, itemStack)
+        { entity: Projectile ->
+            entity.shoot(xDistance, aimY - entity.y + addedYVelocity, zDistance, 1.6f, 2.0f)
         }
 
         playSpitSound()
     }
 
-    override fun shootAt(
+    override fun performRangedAttack(
         target: LivingEntity,
         pullProgress: Float,
     ) {
-        val serverWorld = entityWorld as? ServerWorld ?: return
+        val serverWorld = level() as? ServerLevel ?: return
         val projectile = WebshotEntity(CustomEntities.WEBSHOT, serverWorld, this)
-        projectile.setDamage(getAttributeValue(EntityAttributes.ATTACK_DAMAGE) / 2.0)
+        projectile.setBaseDamage(getAttributeValue(Attributes.ATTACK_DAMAGE) / 2.0)
         shootAt(target, projectile)
     }
 
     override fun shootHookAt(
         target: LivingEntity,
     ) {
-        val serverWorld = entityWorld as? ServerWorld ?: return
+        val serverWorld = level() as? ServerLevel ?: return
         val projectile = WebhookEntity(CustomEntities.WEBHOOK, serverWorld, this)
-        projectile.setDamage(1.0)
+        projectile.setBaseDamage(1.0)
         shootAt(target, projectile)
         addHookedEntity(projectile.uuid)
     }
 
-    override fun slowMovement(
+    override fun makeStuckInBlock(
         state: BlockState,
-        multiplier: Vec3d
+        multiplier: Vec3
     ) {
-        onLanding()
-        if (state.isOf(Blocks.COBWEB)) return
-        if (state.isOf(CustomBlocks.DECAYING_COBWEB)) return
-        movementMultiplier = multiplier
+        resetFallDistance()
+        if (state.`is`(Blocks.COBWEB)) return
+        if (state.`is`(CustomBlocks.DECAYING_COBWEB)) return
+        stuckSpeedMultiplier = multiplier
     }
 
-    override fun handleFallDamage(fallDistance: Double, damagePerDistance: Float, damageSource: DamageSource) = false
+    override fun causeFallDamage(fallDistance: Double, damagePerDistance: Float, damageSource: DamageSource) = false
 
-    override fun occludeVibrationSignals() = true
+    override fun dampensVibrations() = true
 
     override fun getAmbientSound(): SoundEvent {
-        return SoundEvents.ENTITY_SPIDER_AMBIENT
+        return SoundEvents.SPIDER_AMBIENT
     }
 
     override fun getDeathSound(): SoundEvent {
-        return SoundEvents.ENTITY_SPIDER_DEATH
+        return SoundEvents.SPIDER_DEATH
     }
 
     override fun getHurtSound(source: DamageSource): SoundEvent {
-        return SoundEvents.ENTITY_SPIDER_HURT
+        return SoundEvents.SPIDER_HURT
     }
 
     private fun playSpitSound() {
-        playSound(SoundEvents.ENTITY_SPIDER_AMBIENT, 1.0f, 0.75F + random.nextFloat() * 0.25F)
+        playSound(SoundEvents.SPIDER_AMBIENT, 1.0f, 0.75F + random.nextFloat() * 0.25F)
     }
 
     override fun playStepSound(
@@ -340,18 +340,18 @@ class ArachneEntity(
     ) {
         if (!state.fluidState.isEmpty) return
 
-        val blockState = entityWorld.getBlockState(pos.up())
-        val blockSoundGroup = if (blockState.isOf(Blocks.SNOW)) blockState.soundGroup else state.soundGroup
+        val blockState = level().getBlockState(pos.above())
+        val blockSoundGroup = if (blockState.`is`(Blocks.SNOW)) blockState.soundType else state.soundType
 
-        playSound(SoundEvents.ENTITY_SPIDER_STEP, blockSoundGroup.getVolume() * 0.15f, blockSoundGroup.getPitch())
+        playSound(SoundEvents.SPIDER_STEP, blockSoundGroup.getVolume() * 0.15f, blockSoundGroup.getPitch())
     }
 
-    override fun getLeashOffset() = Vec3d(0.0, standingEyeHeight * 0.9, width * 0.4)
+    override fun getLeashOffset() = Vec3(0.0, eyeHeight * 0.9, bbWidth * 0.4)
 
     override fun addHookedEntity(hookedUuid: UUID) {
         super.addHookedEntity(hookedUuid)
 
-        val world = entityWorld as? ServerWorld ?: return
+        val world = level() as? ServerLevel ?: return
         val entity = world.getEntity(hookedUuid) as? LivingEntity ?: return
 
         triggerMeleeOnHook(entity)
@@ -360,7 +360,7 @@ class ArachneEntity(
     }
 
     private fun triggerMeleeOnHook(hookedEntity: LivingEntity) {
-        if (target != hookedEntity && hookedEntity !is PlayerEntity) return
+        if (target != hookedEntity && hookedEntity !is Player) return
         target = hookedEntity
 
         isCurrentlyRanged = false
@@ -371,17 +371,17 @@ class ArachneEntity(
     override fun removeHookedEntity(hookedUuid: UUID) {
         super.removeHookedEntity(hookedUuid)
 
-        val world = entityWorld as? ServerWorld ?: return
+        val world = level() as? ServerLevel ?: return
         val entity = world.getEntity(hookedUuid) ?: return
 
         if (entity !is LivingEntity) return
         entity.setWebbed(false)
     }
 
-    override fun onDeath(damageSource: DamageSource?) {
-        super.onDeath(damageSource)
+    override fun die(damageSource: DamageSource) {
+        super.die(damageSource)
 
-        val serverWorld = entityWorld as? ServerWorld ?: return
+        val serverWorld = level() as? ServerLevel ?: return
         hookedEntityUuidMap.keys.forEach { uuid ->
             val entity = serverWorld.getEntity(uuid) as? LivingEntity ?: return@forEach
             entity.setWebbed(false)
@@ -392,49 +392,49 @@ class ArachneEntity(
         changeAttackPose(CustomPosesEntity.CustomPose.MELEE_ATTACKING, 28)
         blockMovement(15)
         dealAttackDamageDelay = 7
-        lookControl.lookAt(target)
-        lookAtEntity(target, 180F, 180F)
-        bodyYaw = yaw
+        lookControl.setLookAt(target)
+        lookAt(target, 180F, 180F)
+        yBodyRot = yRot
     }
 
     private fun dealAttackDamage() {
-        val serverWorld = entityWorld as? ServerWorld ?: return
+        val serverWorld = level() as? ServerLevel ?: return
 
-        var targets = serverWorld.getEntitiesByClass(
+        var targets = serverWorld.getEntitiesOfClass(
             LivingEntity::class.java,
-            boundingBox.expand(MELEE_ATTACK_LENGTH * scale)
+            boundingBox.inflate(MELEE_ATTACK_LENGTH * scale)
         ) { it != this }
 
-        val forward = getRotationVector(pitch, bodyYaw).horizontal.normalize()
-        val sideways = forward.crossProduct(Vec3d(0.0, 1.0, 0.0))
+        val forward = calculateViewVector(xRot, yBodyRot).horizontal().normalize()
+        val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
         targets = targets.filter {
-            isInAttackArea(it.entityPos.subtract(entityPos), forward, sideways)
-                    || isInAttackArea(it.eyePos.subtract(entityPos), forward, sideways)
+            isInAttackArea(it.position().subtract(position()), forward, sideways)
+                    || isInAttackArea(it.eyePosition.subtract(position()), forward, sideways)
         }
 
-        val damage = getAttributeValue(EntityAttributes.ATTACK_DAMAGE).toFloat()
-        val knockBackDirection = getRotationVector(pitch, bodyYaw).horizontal.normalize()
-        val knockBackStrength = getAttributeValue(EntityAttributes.ATTACK_KNOCKBACK) * getAttributeValue(EntityAttributes.SCALE)
+        val damage = getAttributeValue(Attributes.ATTACK_DAMAGE).toFloat()
+        val knockBackDirection = calculateViewVector(xRot, yBodyRot).horizontal().normalize()
+        val knockBackStrength = getAttributeValue(Attributes.ATTACK_KNOCKBACK) * getAttributeValue(Attributes.SCALE)
 
         targets.forEach {
             it.dealGenericAttackDamage(damage, this)
-            if (entityWorld is ServerWorld && it is PlayerLikeEntity && it.isBlocking) it.setShieldsCooldown(MELEE_SHIELD_DISABLE_TIME)
+            if (level() is ServerLevel && it is Avatar && it.isBlocking) it.setShieldsCooldown(MELEE_SHIELD_DISABLE_TIME)
 
-            it.setAndSyncVelocity(knockBackDirection.multiply(knockBackStrength))
+            it.setAndSyncVelocity(knockBackDirection.scale(knockBackStrength))
         }
     }
 
     private fun isInAttackArea(
-        relativePos: Vec3d,
-        forward: Vec3d,
-        sideways: Vec3d
+        relativePos: Vec3,
+        forward: Vec3,
+        sideways: Vec3
     ): Boolean {
-        val forwardDistance = relativePos.dotProduct(forward)
-        val sidewaysDistance = relativePos.dotProduct(sideways)
+        val forwardDistance = relativePos.dot(forward)
+        val sidewaysDistance = relativePos.dot(sideways)
         val heightDistance = relativePos.y
 
-        val scale = getAttributeValue(EntityAttributes.SCALE)
-        if (forwardDistance < width * scale * 0.2 || forwardDistance > MELEE_ATTACK_LENGTH * scale) return false
+        val scale = getAttributeValue(Attributes.SCALE)
+        if (forwardDistance < bbWidth * scale * 0.2 || forwardDistance > MELEE_ATTACK_LENGTH * scale) return false
         if (abs(sidewaysDistance) > MELEE_ATTACK_WIDTH / 2.0 * scale) return false
         if (abs(heightDistance) > MELEE_ATTACK_HEIGHT / 2.0 * scale) return false
         return true
@@ -445,12 +445,12 @@ class ArachneEntity(
     override fun updateMovementPose() {
         if (!isMovementDisabled()) return super.updateMovementPose()
 
-        if (dataTracker.get(MOVEMENT_POSE) == CustomPosesEntity.CustomPose.IDLING) return
-        dataTracker.set(MOVEMENT_POSE, CustomPosesEntity.CustomPose.IDLING)
+        if (entityData.get(MOVEMENT_POSE) == CustomPosesEntity.CustomPose.IDLING) return
+        entityData.set(MOVEMENT_POSE, CustomPosesEntity.CustomPose.IDLING)
     }
 
-    override fun canHaveStatusEffect(effect: StatusEffectInstance): Boolean {
-        if (effect.effectType == StatusEffects.SLOWNESS) return false
-        return super.canHaveStatusEffect(effect)
+    override fun canBeAffected(effect: MobEffectInstance): Boolean {
+        if (effect.effect == MobEffects.SLOWNESS) return false
+        return super.canBeAffected(effect)
     }
 }

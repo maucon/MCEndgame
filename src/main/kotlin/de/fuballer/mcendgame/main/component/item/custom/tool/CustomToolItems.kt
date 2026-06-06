@@ -3,97 +3,98 @@ package de.fuballer.mcendgame.main.component.item.custom.tool
 import de.fuballer.mcendgame.main.component.item.custom.UniqueItemRegistry
 import de.fuballer.mcendgame.main.component.item.custom.tool.item.*
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.component.DataComponentTypes
-import net.minecraft.component.type.BlocksAttacksComponent
-import net.minecraft.component.type.UseCooldownComponent
-import net.minecraft.component.type.WeaponComponent
-import net.minecraft.item.Item
-import net.minecraft.item.MaceItem
-import net.minecraft.registry.tag.DamageTypeTags
-import net.minecraft.registry.tag.ItemTags
-import net.minecraft.sound.SoundEvents
-import net.minecraft.util.Identifier
+import net.minecraft.core.component.DataComponents
+import net.minecraft.resources.Identifier
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.tags.DamageTypeTags
+import net.minecraft.tags.ItemTags
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.MaceItem
+import net.minecraft.world.item.component.BlocksAttacks
+import net.minecraft.world.item.component.UseCooldown
+import net.minecraft.world.item.component.Weapon
 import java.util.*
 
 @Injectable
 object CustomToolItems {
     val BLOODHARVEST = UniqueItemRegistry.registerToolItem(
         ::Bloodharvest,
-        Item.Settings().sword(CustomToolMaterials.BLOODHARVEST, 7F, -2.4F),
+        Item.Properties().sword(CustomToolMaterials.BLOODHARVEST, 7F, -2.4F),
         "bloodharvest"
     )
     val TWINFIRE = UniqueItemRegistry.registerToolItem(
         ::Twinfire,
-        Item.Settings().sword(CustomToolMaterials.TWINFIRE, 7F, -2.4F),
+        Item.Properties().sword(CustomToolMaterials.TWINFIRE, 7F, -2.4F),
         "twinfire"
     )
     val FATESPLITTER = UniqueItemRegistry.registerToolItem(
         ::Fatesplitter,
-        Item.Settings().axe(CustomToolMaterials.FATESPLITTER, 9F, -3F),
+        Item.Properties().axe(CustomToolMaterials.FATESPLITTER, 9F, -3F),
         "fatesplitter"
     )
     val SERPENTS_FANG = UniqueItemRegistry.registerToolItem(
         ::SerpentsFang,
-        Item.Settings().sword(CustomToolMaterials.SERPENTS_FANG, 5F, -2.2F),
+        Item.Properties().sword(CustomToolMaterials.SERPENTS_FANG, 5F, -2.2F),
         "serpents_fang"
     )
     val NIGHTREAVER = UniqueItemRegistry.registerToolItem(
         ::Nightreaver,
-        Item.Settings().sword(CustomToolMaterials.NIGHTREAVER, 5F, -2F),
+        Item.Properties().sword(CustomToolMaterials.NIGHTREAVER, 5F, -2F),
         "nightreaver"
     )
     val RADIANT_DAWN = UniqueItemRegistry.registerToolItem(
         ::RadiantDawn,
-        Item.Settings().sword(CustomToolMaterials.RADIANT_DAWN, 7F, -3.2F),
+        Item.Properties().sword(CustomToolMaterials.RADIANT_DAWN, 7F, -3.2F),
         "radiant_dawn"
     )
     val WINDSTRING = UniqueItemRegistry.registerToolItem(
         ::Windstring,
-        Item.Settings().maxDamage(500),
+        Item.Properties().durability(500),
         "windstring"
     )
     val HAILSTORM = UniqueItemRegistry.registerToolItem(
         ::Hailstorm,
-        Item.Settings().maxDamage(500),
+        Item.Properties().durability(500),
         "hailstorm"
     )
     val DUSK_PIERCER = UniqueItemRegistry.registerToolItem(
         ::DuskPiercer,
-        Item.Settings().maxDamage(500),
+        Item.Properties().durability(500),
         "dusk_piercer"
     )
     val GRUDGEBEARER = UniqueItemRegistry.registerToolItem(
         ::Grudgebearer,
-        Item.Settings()
-            .maxDamage(336)
-            .component(
-                DataComponentTypes.BLOCKS_ATTACKS,
-                BlocksAttacksComponent(
+        Item.Properties()
+            .equippableUnswappable(EquipmentSlot.OFFHAND)
+            .durability(336)
+            .delayedComponent(DataComponents.BLOCKS_ATTACKS) { context ->
+                BlocksAttacks(
                     0.25F,
                     1.0F,
-                    listOf(BlocksAttacksComponent.DamageReduction(90.0F, Optional.empty(), 0.0F, 1.0F)),
-                    BlocksAttacksComponent.ItemDamage(3.0F, 1.0F, 1.0F),
-                    Optional.of(DamageTypeTags.BYPASSES_SHIELD),
-                    Optional.of(SoundEvents.ITEM_SHIELD_BLOCK),
-                    Optional.of(SoundEvents.ITEM_SHIELD_BREAK),
+                    listOf(BlocksAttacks.DamageReduction(90.0F, Optional.empty(), 0.0F, 1.0F)),
+                    BlocksAttacks.ItemDamageFunction(3.0F, 1.0F, 1.0F),
+                    Optional.of(context.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
+                    Optional.of(SoundEvents.SHIELD_BLOCK),
+                    Optional.of(SoundEvents.SHIELD_BREAK)
                 )
-            )
+            }
             .component(
-                DataComponentTypes.USE_COOLDOWN,
-                UseCooldownComponent(0F, Optional.of(Identifier.of("minecraft", "shield")))
+                DataComponents.USE_COOLDOWN,
+                UseCooldown(0F, Optional.of(Identifier.fromNamespaceAndPath("minecraft", "shield")))
             )
-            .component(DataComponentTypes.BREAK_SOUND, SoundEvents.ITEM_SHIELD_BREAK),
+            .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK),
         "grudgebearer"
     )
     val GRAVEBREAKER = UniqueItemRegistry.registerToolItem(
         ::Gravebreaker,
-        Item.Settings()
-            .maxDamage(500)
-            .component(DataComponentTypes.TOOL, MaceItem.createToolComponent())
+        Item.Properties()
+            .durability(500)
+            .component(DataComponents.TOOL, MaceItem.createToolProperties())
             .repairable(ItemTags.STONE_TOOL_MATERIALS)
-            .attributeModifiers(Gravebreaker.createAttributeModifiers())
+            .attributes(Gravebreaker.createAttributeModifiers())
             .enchantable(15)
-            .component(DataComponentTypes.WEAPON, WeaponComponent(1)),
+            .component(DataComponents.WEAPON, Weapon(1)),
         "gravebreaker"
     )
 }

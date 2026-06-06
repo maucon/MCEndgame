@@ -9,128 +9,128 @@ import de.fuballer.mcendgame.main.component.world.VanillaTypeWorldAttributeInsta
 import de.fuballer.mcendgame.main.component.world.WorldAttributeAction
 import de.fuballer.mcendgame.main.messaging.dungeon.WorldAttributeChangedEvent
 import de.maucon.mauconframework.event.EventGateway
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.GlobalPos
+import net.minecraft.core.GlobalPos
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
 import java.util.function.Predicate
 
 object WorldMixinExtension {
-    fun ServerWorld.setTrainingDungeon() {
+    fun ServerLevel.setTrainingDungeon() {
         val accessor = this as DungeonWorldAccessor
         accessor.`mcendgame$setTraining`()
     }
 
-    fun ServerWorld.isTrainingDungeon(): Boolean {
+    fun ServerLevel.isTrainingDungeon(): Boolean {
         val accessor = this as DungeonWorldAccessor
         return accessor.`mcendgame$isTraining`()
     }
 
-    fun ServerWorld.setDungeonCompleted(completed: Boolean = true) {
+    fun ServerLevel.setDungeonCompleted(completed: Boolean = true) {
         val accessor = this as DungeonWorldAccessor
         accessor.`mcendgame$setCompleted`(completed)
     }
 
-    fun ServerWorld.isDungeonCompleted(): Boolean {
+    fun ServerLevel.isDungeonCompleted(): Boolean {
         val accessor = this as DungeonWorldAccessor
         return accessor.`mcendgame$isCompleted`()
     }
 
-    fun ServerWorld.setDungeonLevel(dungeonLevel: Int) {
+    fun ServerLevel.setDungeonLevel(dungeonLevel: Int) {
         val accessor = this as DungeonWorldAccessor
         accessor.`mcendgame$setLevel`(dungeonLevel)
     }
 
-    fun ServerWorld.getDungeonLevel(): Int {
+    fun ServerLevel.getDungeonLevel(): Int {
         val accessor = this as DungeonWorldAccessor
         return accessor.`mcendgame$getLevel`()
     }
 
-    fun ServerWorld.setTotalBossCount(count: Int) {
+    fun ServerLevel.setTotalBossCount(count: Int) {
         val accessor = this as DungeonWorldAccessor
         accessor.`mcendgame$setTotalBossCount`(count)
     }
 
-    fun ServerWorld.getTotalBossCount(): Int {
+    fun ServerLevel.getTotalBossCount(): Int {
         val accessor = this as DungeonWorldAccessor
         return accessor.`mcendgame$getTotalBossCount`()
     }
 
-    fun ServerWorld.increaseBossesKilled() {
+    fun ServerLevel.increaseBossesKilled() {
         val accessor = this as DungeonWorldAccessor
         accessor.`mcendgame$increaseBossesKilled`()
     }
 
-    fun ServerWorld.getBossesKilled(): Int {
+    fun ServerLevel.getBossesKilled(): Int {
         val accessor = this as DungeonWorldAccessor
         return accessor.`mcendgame$getBossesKilled`()
     }
 
-    fun ServerWorld.setOpener(opener: PlayerEntity) {
+    fun ServerLevel.setOpener(opener: Player) {
         val accessor = this as DungeonWorldAccessor
         accessor.`mcendgame$setOpener`(opener)
     }
 
-    fun ServerWorld.getOpener(): PlayerEntity {
+    fun ServerLevel.getOpener(): Player {
         val accessor = this as DungeonWorldAccessor
         return accessor.`mcendgame$getOpener`()
     }
 
-    fun ServerWorld.setDungeonAspects(aspects: Map<AspectItem, Int>) {
+    fun ServerLevel.setDungeonAspects(aspects: Map<AspectItem, Int>) {
         val accessor = this as DungeonWorldAccessor
         accessor.`mcendgame$setAspects`(aspects)
     }
 
-    fun ServerWorld.getDungeonAspects(): Map<AspectItem, Int> {
+    fun ServerLevel.getDungeonAspects(): Map<AspectItem, Int> {
         val accessor = this as DungeonWorldAccessor
         return accessor.`mcendgame$getAspects`()
     }
 
-    fun ServerWorld.setDungeonType(type: DungeonType) {
+    fun ServerLevel.setDungeonType(type: DungeonType) {
         val accessor = this as DungeonWorldAccessor
         accessor.`mcendgame$setDungeonType`(type)
     }
 
-    fun ServerWorld.getDungeonType(): DungeonType {
+    fun ServerLevel.getDungeonType(): DungeonType {
         val accessor = this as DungeonWorldAccessor
         return accessor.`mcendgame$getDungeonType`()
     }
 
-    fun ServerWorld.setDungeonExitPos(pos: GlobalPos) {
+    fun ServerLevel.setDungeonExitPos(pos: GlobalPos) {
         val accessor = this as DungeonWorldAccessor
         accessor.`mcendgame$setDungeonExitPos`(pos)
     }
 
-    fun ServerWorld.getDungeonExitPos(): GlobalPos {
+    fun ServerLevel.getDungeonExitPos(): GlobalPos {
         val accessor = this as DungeonWorldAccessor
         return accessor.`mcendgame$getDungeonExitPos`()
     }
 
-    fun ServerWorld.getAttributeUpdateCount(): Int {
+    fun ServerLevel.getAttributeUpdateCount(): Int {
         val accessor = this as WorldAttributesAccessor
         return accessor.`mcendgame$getAttributeUpdateCount`()
     }
 
-    fun ServerWorld.addCustomAttribute(attribute: CustomAttribute, applies: Predicate<LivingEntity> = { true }) {
+    fun ServerLevel.addCustomAttribute(attribute: CustomAttribute, applies: Predicate<LivingEntity> = { true }) {
         val accessor = this as WorldAttributesAccessor
         accessor.`mcendgame$addCustomAttribute`(attribute, applies)
 
         EventGateway.publish(WorldAttributeChangedEvent(this, attribute, WorldAttributeAction.ADD))
     }
 
-    fun ServerWorld.removeCustomAttribute(attribute: CustomAttribute, applies: Predicate<LivingEntity> = { true }) {
+    fun ServerLevel.removeCustomAttribute(attribute: CustomAttribute, applies: Predicate<LivingEntity> = { true }) {
         val accessor = this as WorldAttributesAccessor
         accessor.`mcendgame$removeCustomAttribute`(attribute, applies)
 
         EventGateway.publish(WorldAttributeChangedEvent(this, attribute, WorldAttributeAction.REMOVE))
     }
 
-    fun ServerWorld.getCustomTypeAttributes(entity: LivingEntity): List<CustomAttribute> {
+    fun ServerLevel.getCustomTypeAttributes(entity: LivingEntity): List<CustomAttribute> {
         val accessor = this as WorldAttributesAccessor
         return accessor.`mcendgame$getCustomTypeAttributes`(entity)
     }
 
-    fun ServerWorld.getVanillaTypeAttributesHistory(entity: LivingEntity): List<VanillaTypeWorldAttributeInstance> {
+    fun ServerLevel.getVanillaTypeAttributesHistory(entity: LivingEntity): List<VanillaTypeWorldAttributeInstance> {
         val accessor = this as WorldAttributesAccessor
         return accessor.`mcendgame$getVanillaTypeAttributesHistory`(entity)
     }

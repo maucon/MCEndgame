@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.client.accessor;
 
-import net.minecraft.client.network.ClientPlayerLikeState;
+import net.minecraft.client.entity.ClientAvatarState;
 
 public interface LivingEntityCapeDataAccessor {
-    ClientPlayerLikeState mcendgame$getCapeState();
+    ClientAvatarState mcendgame$getCapeState();
 }

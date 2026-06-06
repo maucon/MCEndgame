@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.data
 
+import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
-import software.bernie.geckolib.animatable.GeoEntity
 
 data class AttackAnimationData(
     val startPose: AttackPose,

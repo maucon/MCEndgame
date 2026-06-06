@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.main.mixin.enemy;
 
 import de.fuballer.mcendgame.main.accessor.LivingEntityDungeonEnemyAccessor;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -43,15 +43,15 @@ public class LivingEntityDungeonEnemyMixin implements LivingEntityDungeonEnemyAc
         dropsAspectOfGhosts = drops;
     }
 
-    @Inject(method = "writeCustomData", at = @At("TAIL"))
-    private void writeNBT(WriteView view, CallbackInfo ci) {
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void writeNBT(ValueOutput view, CallbackInfo ci) {
         if (isDungeonEnemy) view.putBoolean(DUNGEON_ENEMY_NBT, true);
         if (dropsAspectOfGhosts) view.putBoolean(DROPS_ASPECT_OF_GHOSTS_NBT, true);
     }
 
-    @Inject(method = "readCustomData", at = @At("TAIL"))
-    private void readNBT(ReadView view, CallbackInfo ci) {
-        isDungeonEnemy = view.getBoolean(DUNGEON_ENEMY_NBT, false);
-        dropsAspectOfGhosts = view.getBoolean(DROPS_ASPECT_OF_GHOSTS_NBT, false);
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void readNBT(ValueInput view, CallbackInfo ci) {
+        isDungeonEnemy = view.getBooleanOr(DUNGEON_ENEMY_NBT, false);
+        dropsAspectOfGhosts = view.getBooleanOr(DROPS_ASPECT_OF_GHOSTS_NBT, false);
     }
 }

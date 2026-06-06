@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItem
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemType
 
 class TotemOfResilienceItem(
-    settings: Settings,
+    settings: Properties,
 ) : TotemItem(settings) {
     override val maxTier = 0
     override val type = TotemType.EFFECT

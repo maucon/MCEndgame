@@ -5,13 +5,13 @@ import de.fuballer.mcendgame.main.component.dungeon.generation.data.*
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.clone
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.max
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.block.Block
-import net.minecraft.state.property.Properties
-import net.minecraft.structure.StructurePlacementData
-import net.minecraft.structure.StructureTemplate
-import net.minecraft.structure.StructureTemplateManager
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3i
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Vec3i
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager
 
 object RoomTypeLoader {
     fun load(
@@ -61,7 +61,7 @@ object RoomTypeLoader {
         path: String
     ): StructureTemplate {
         val id = IdentifierUtil.default(path)
-        val templateOptional = templateManager.getTemplate(id)
+        val templateOptional = templateManager.get(id)
 
         if (templateOptional.isEmpty) {
             throw IllegalStateException("Couldn't load template: $path")
@@ -74,7 +74,7 @@ object RoomTypeLoader {
         var size = main.size.clone()
 
         for (extension in extensions) {
-            size = size.max(extension.offset.add(extension.template.size))
+            size = size.max(extension.offset.offset(extension.template.size))
         }
 
         return size
@@ -86,35 +86,35 @@ object RoomTypeLoader {
         size: Vec3i? = null,
     ): RoomMarkerPoints {
         val startPosMarkerInfos = getMarkerInfos(template, DungeonGenerationSettings.START_POS_MARKER)
-        val startPos = if (startPosMarkerInfos.isEmpty()) null else startPosMarkerInfos.first().pos.add(offset)
+        val startPos = if (startPosMarkerInfos.isEmpty()) null else startPosMarkerInfos.first().pos.offset(offset)
 
         val monsterPosMarkerInfos = getMarkerInfos(template, DungeonGenerationSettings.MONSTER_MARKER)
         val monsterPos =
-            monsterPosMarkerInfos.stream().map { SpawnPosition(it.pos.add(offset)) }.toList()
+            monsterPosMarkerInfos.stream().map { SpawnPosition(it.pos.offset(offset)) }.toList()
 
         val bossPosMarkerInfos = getMarkerInfos(template, DungeonGenerationSettings.BOSS_MARKER)
         val bossPos = bossPosMarkerInfos.stream().map {
             SpawnPosition(
-                it.pos.add(offset),
-                (it.state.get(Properties.ROTATION) * 22.5 + 180.0) % 360 // 0 rot -> 180 yaw
+                it.pos.offset(offset),
+                (it.state.getValue(BlockStateProperties.ROTATION_16) * 22.5 + 180.0) % 360 // 0 rot -> 180 yaw
             )
         }.toList()
 
         val doorPosMarkerInfos = getMarkerInfos(template, DungeonGenerationSettings.DOOR_MARKER)
         val doorPos =
             doorPosMarkerInfos.stream()
-                .map { getDoor(it.pos.add(offset), size ?: template.size) }
+                .map { getDoor(it.pos.offset(offset), size ?: template.size) }
                 .toList()
 
         val encounterPosMarkerInfos = getMarkerInfos(template, DungeonGenerationSettings.ENCOUNTER_MARKER)
-        val encounterPos = encounterPosMarkerInfos.stream().map { it.pos.add(offset) }.toList()
+        val encounterPos = encounterPosMarkerInfos.stream().map { it.pos.offset(offset) }.toList()
         val startEncounterPosMarkerInfos = getMarkerInfos(template, DungeonGenerationSettings.START_ENCOUNTER_MARKER)
-        val startEncounterPos = startEncounterPosMarkerInfos.stream().map { it.pos.add(offset) }.toList()
+        val startEncounterPos = startEncounterPosMarkerInfos.stream().map { it.pos.offset(offset) }.toList()
 
         return RoomMarkerPoints.fromImmutable(startPos, monsterPos, bossPos, doorPos, encounterPos, startEncounterPos)
     }
 
-    private fun getMarkerInfos(template: StructureTemplate, block: Block) = template.getInfosForBlock(BlockPos(0, 0, 0), StructurePlacementData(), block)
+    private fun getMarkerInfos(template: StructureTemplate, block: Block) = template.filterBlocks(BlockPos(0, 0, 0), StructurePlaceSettings(), block)
 
     private fun getDoor(pos: Vec3i, size: Vec3i) = Door(
         pos.clone(),

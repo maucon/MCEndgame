@@ -2,14 +2,11 @@ package de.fuballer.mcendgame.main.mixin.living_entity;
 
 import de.fuballer.mcendgame.main.accessor.LivingEntityCustomAttributesAccessor;
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,39 +19,39 @@ import java.util.List;
 @Mixin(LivingEntity.class)
 public class LivingEntityCustomAttributesMixin implements LivingEntityCustomAttributesAccessor {
     @Unique
-    private final String CUSTOM_ATTRIBUTES_NBT_KEY = "CustomAttributes";
+    private static final String CUSTOM_ATTRIBUTES_NBT_KEY = "CustomAttributes";
 
     // TODO: #236 don't sync attributes with clients
     @Unique
-    private static final TrackedData<List<CustomAttribute>> CUSTOM_ATTRIBUTES =
-            DataTracker.registerData(LivingEntity.class, CustomAttribute.Companion.getLIST_TRACKED_DATA_HANDLER());
+    private static final EntityDataAccessor<List<CustomAttribute>> CUSTOM_ATTRIBUTES =
+            SynchedEntityData.defineId(LivingEntity.class, CustomAttribute.Companion.getLIST_TRACKED_DATA_HANDLER());
 
-    @Inject(method = "initDataTracker", at = @At("TAIL"))
-    void initDataTracker(DataTracker.Builder builder, CallbackInfo ci) {
-        builder.add(CUSTOM_ATTRIBUTES, new LinkedList<>());
+    @Inject(method = "defineSynchedData", at = @At("TAIL"))
+    void initDataTracker(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(CUSTOM_ATTRIBUTES, new LinkedList<>());
     }
 
-    @Inject(method = "writeCustomData", at = @At("TAIL"))
-    void writeNbt(WriteView view, CallbackInfo ci) {
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    void writeNbt(ValueOutput view, CallbackInfo ci) {
         var attributes = mcendgame$getCustomAttributes();
         if (attributes.isEmpty()) return;
 
-        view.put(CUSTOM_ATTRIBUTES_NBT_KEY, CustomAttribute.Companion.getCODEC().listOf(), attributes);
+        view.store(CUSTOM_ATTRIBUTES_NBT_KEY, CustomAttribute.Companion.getCODEC().listOf(), attributes);
     }
 
-    @Inject(method = "readCustomData", at = @At("TAIL"))
-    void readNbt(ReadView view, CallbackInfo ci) {
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    void readNbt(ValueInput view, CallbackInfo ci) {
         var attributes = view.read(CUSTOM_ATTRIBUTES_NBT_KEY, CustomAttribute.Companion.getCODEC().listOf()).orElse(List.of());
 
         var entity = (LivingEntity) (Object) this;
-        var dataTracker = entity.getDataTracker();
+        var dataTracker = entity.getEntityData();
         dataTracker.set(CUSTOM_ATTRIBUTES, attributes);
     }
 
     @Override
     public void mcendgame$addCustomAttribute(CustomAttribute customAttribute) {
         var entity = (LivingEntity) (Object) this;
-        var dataTracker = entity.getDataTracker();
+        var dataTracker = entity.getEntityData();
         var attributes = new LinkedList<>(dataTracker.get(CUSTOM_ATTRIBUTES));
         attributes.add(customAttribute);
         dataTracker.set(CUSTOM_ATTRIBUTES, attributes);
@@ -63,7 +60,7 @@ public class LivingEntityCustomAttributesMixin implements LivingEntityCustomAttr
     @Override
     public List<CustomAttribute> mcendgame$getCustomAttributes() {
         var entity = (LivingEntity) (Object) this;
-        var dataTracker = entity.getDataTracker();
+        var dataTracker = entity.getEntityData();
         return dataTracker.get(CUSTOM_ATTRIBUTES);
     }
 }

@@ -1,20 +1,20 @@
 package de.fuballer.mcendgame.client.component.block.totem_statue
 
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
 import de.fuballer.mcendgame.main.component.block.blocks.totem_statue.TotemStatueBlockEntity
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.render.RenderLayers
-import net.minecraft.client.render.block.entity.BlockEntityRenderer
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory
-import net.minecraft.client.render.command.ModelCommandRenderer
-import net.minecraft.client.render.command.OrderedRenderCommandQueue
-import net.minecraft.client.render.state.CameraRenderState
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.state.property.Properties
-import net.minecraft.util.math.RotationAxis
-import net.minecraft.util.math.RotationPropertyHelper
-import net.minecraft.util.math.Vec3d
+import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.SubmitNodeCollector
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer
+import net.minecraft.client.renderer.rendertype.RenderTypes
+import net.minecraft.client.renderer.state.level.CameraRenderState
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.block.state.properties.RotationSegment
+import net.minecraft.world.phys.Vec3
 import kotlin.math.PI
 import kotlin.math.exp
 import kotlin.math.pow
@@ -37,13 +37,13 @@ private val X2_COEFFICIENT = (3 * HOVER_HEIGHT - HOVER_START_TICKS * SLOPE_AT_CY
 private const val DEG_ROTATION_PER_TICK = 5F
 
 class TotemStatueBlockEntityRenderer(
-    context: BlockEntityRendererFactory.Context,
+    context: BlockEntityRendererProvider.Context,
 ) : BlockEntityRenderer<TotemStatueBlockEntity, TotemStatueBlockEntityRenderState> {
     private val model: TotemStatueBlockEntityModel
 
     init {
-        val loadedModels = context.loadedEntityModels
-        model = TotemStatueBlockEntityModel(loadedModels.getModelPart(TotemStatueBlockEntityModel.MODEL_LAYER))
+        val loadedModels = context.entityModelSet
+        model = TotemStatueBlockEntityModel(loadedModels.bakeLayer(TotemStatueBlockEntityModel.MODEL_LAYER))
     }
 
     private fun getHoverOffset(ticks: Float): Double {
@@ -66,60 +66,60 @@ class TotemStatueBlockEntityRenderer(
 
     override fun createRenderState(): TotemStatueBlockEntityRenderState = TotemStatueBlockEntityRenderState()
 
-    override fun updateRenderState(
+    override fun extractRenderState(
         blockEntity: TotemStatueBlockEntity,
         state: TotemStatueBlockEntityRenderState,
         tickProgress: Float,
-        cameraPos: Vec3d,
-        crumblingOverlay: ModelCommandRenderer.CrumblingOverlayCommand?
+        cameraPos: Vec3,
+        crumblingOverlay: ModelFeatureRenderer.CrumblingOverlay?
     ) {
-        super.updateRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay)
+        super.extractRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay)
 
-        state.rotation = blockEntity.cachedState.get(Properties.ROTATION)
+        state.rotation = blockEntity.blockState.getValue(BlockStateProperties.ROTATION_16)
         state.activeTicks = blockEntity.getActiveTicks()
     }
 
-    override fun render(
+    override fun submit(
         state: TotemStatueBlockEntityRenderState,
-        matrices: MatrixStack,
-        queue: OrderedRenderCommandQueue,
+        matrices: PoseStack,
+        queue: SubmitNodeCollector,
         cameraState: CameraRenderState,
     ) {
-        matrices.push()
+        matrices.pushPose()
         matrices.translate(0.5F, 0.0F, 0.5F)
         matrices.scale(-1.0F, -1.0F, 1.0F)
 
         val rotation = state.rotation
-        val rotationDeg = RotationPropertyHelper.toDegrees(rotation)
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotationDeg))
+        val rotationDeg = RotationSegment.convertToDegrees(rotation)
+        matrices.mulPose(Axis.YP.rotationDegrees(rotationDeg))
 
         val activeTicks = state.activeTicks
         if (activeTicks > 0) {
-            val preciseTick = activeTicks + MinecraftClient.getInstance().renderTickCounter.getTickProgress(false)
+            val preciseTick = activeTicks + Minecraft.getInstance().deltaTracker.getGameTimeDeltaPartialTick(false)
 
             val hoverOffset = getHoverOffset(preciseTick)
             matrices.translate(0.0, -hoverOffset, 0.0)
 
             val hoverRot = getHoverRotation(preciseTick)
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(hoverRot))
+            matrices.mulPose(Axis.YP.rotationDegrees(hoverRot))
         }
 
         val modelState = TotemStatueBlockEntityModel.TotemStatueModelState()
         val texture = if (activeTicks >= 0) ACTIVE_TEXTURE else TEXTURE
-        val renderLayer = RenderLayers.entityCutout(texture)
+        val renderLayer = RenderTypes.entityCutout(texture)
         queue.submitModel(
             model,
             modelState,
             matrices,
             renderLayer,
-            state.lightmapCoordinates,
-            OverlayTexture.DEFAULT_UV,
+            state.lightCoords,
+            OverlayTexture.NO_OVERLAY,
             -1,
             null,
             0,
-            state.crumblingOverlay
+            state.breakProgress
         )
 
-        matrices.pop()
+        matrices.popPose()
     }
 }

@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.accessor;
 
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 
 public interface LivingEntityDamageAccessor {
     void mcendgame$setLastDamageSource(DamageSource damageSource);

@@ -5,12 +5,12 @@ import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItem
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemType
-import net.minecraft.entity.ItemEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
+import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 
 object DungeonDropSelectors {
-    val PLAYER_DROPPED: (ItemStack, ItemEntity) -> Boolean = { _, itemEntity -> itemEntity.owner is PlayerEntity }
+    val PLAYER_DROPPED: (ItemStack, ItemEntity) -> Boolean = { _, itemEntity -> itemEntity.owner is Player }
 
     val UNIQUE: (ItemStack, ItemEntity) -> Boolean = { itemStack, _ -> itemStack.item is UniqueAttributesItemInterface }
     val UNIQUE_PLAYER_DROPPED: (ItemStack, ItemEntity) -> Boolean = { itemStack, itemEntity -> UNIQUE(itemStack, itemEntity) && PLAYER_DROPPED(itemStack, itemEntity) }

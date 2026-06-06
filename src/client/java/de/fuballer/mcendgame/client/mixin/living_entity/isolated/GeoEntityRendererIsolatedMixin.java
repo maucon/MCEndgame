@@ -1,18 +1,18 @@
 package de.fuballer.mcendgame.client.mixin.living_entity.isolated;
 
+import com.geckolib.renderer.GeoEntityRenderer;
 import de.fuballer.mcendgame.client.accessor.LivingEntityRenderStateIsolatedAccessor;
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributeUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.ItemModelManager;
-import net.minecraft.client.render.entity.state.LivingEntityRenderState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.PlayerLikeEntity;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.world.entity.Avatar;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 @Mixin(GeoEntityRenderer.class)
 public class GeoEntityRendererIsolatedMixin {
@@ -24,13 +24,13 @@ public class GeoEntityRendererIsolatedMixin {
             LivingEntity entity,
             LivingEntityRenderState renderState,
             float partialTick,
-            ItemModelManager itemModelResolver,
+            ItemModelResolver itemModelResolver,
             CallbackInfo ci
     ) {
-        if (!(entity instanceof MobEntity || entity instanceof PlayerLikeEntity)) return;
+        if (!(entity instanceof Mob || entity instanceof Avatar)) return;
         if (!(renderState instanceof LivingEntityRenderStateIsolatedAccessor renderStateAccessor)) return;
 
-        var player = MinecraftClient.getInstance().player;
+        var player = Minecraft.getInstance().player;
         var isolated = player != null && CustomAttributeUtil.INSTANCE.isIsolated(entity, player);
         renderStateAccessor.mcendgame$setIsolated(isolated);
     }

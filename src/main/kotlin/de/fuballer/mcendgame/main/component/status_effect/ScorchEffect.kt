@@ -2,25 +2,27 @@ package de.fuballer.mcendgame.main.component.status_effect
 
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealGenericAttackDamage
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isEnemy
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.effect.StatusEffect
-import net.minecraft.entity.effect.StatusEffectCategory
-import net.minecraft.particle.ParticleTypes
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvents
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.effect.MobEffect
+import net.minecraft.world.effect.MobEffectCategory
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
 import kotlin.random.Random
 
-class ScorchEffect : StatusEffect(StatusEffectCategory.BENEFICIAL, 15754270) {
-    override fun applyUpdateEffect(world: ServerWorld, entity: LivingEntity, amplifier: Int): Boolean {
-        if (entity.age % 40 != 0) return true
+class ScorchEffect : MobEffect(MobEffectCategory.BENEFICIAL, 15754270) {
+    override fun applyEffectTick(world: ServerLevel, entity: LivingEntity, amplifier: Int): Boolean {
+        if (entity.tickCount % 40 != 0) return true
 
-        val enemies = world.getOtherEntities(entity, entity.boundingBox.expand(5.0))?.filter { it is LivingEntity && it.isEnemy(entity) } ?: return true
+        val enemies = world.getEntities(entity, entity.boundingBox.inflate(5.0))
+            .filter { it is LivingEntity && it.isEnemy(entity) }
+
         if (enemies.isEmpty()) return true
 
         for (enemy in enemies) {
-            enemy.fireTicks = 60
+            enemy.remainingFireTicks = 60
             enemy.dealGenericAttackDamage(2f, entity)
 
             spawnParticles(world, enemy, 3, 0.2)
@@ -31,13 +33,13 @@ class ScorchEffect : StatusEffect(StatusEffectCategory.BENEFICIAL, 15754270) {
         return true
     }
 
-    private fun spawnParticles(world: ServerWorld, entity: Entity, count: Int, speed: Double) {
-        world.spawnParticles(ParticleTypes.FLAME, entity.x, entity.y + entity.height / 2, entity.z, count, 0.0, 0.0, 0.0, speed)
+    private fun spawnParticles(world: ServerLevel, entity: Entity, count: Int, speed: Double) {
+        world.sendParticles(ParticleTypes.FLAME, entity.x, entity.y + entity.bbHeight / 2, entity.z, count, 0.0, 0.0, 0.0, speed)
     }
 
-    private fun playSound(world: ServerWorld, entity: Entity) {
-        world.playSound(entity, entity.blockPos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.NEUTRAL, 0.5F, 1F + (Random.nextFloat() - 0.5F) / 10F)
+    private fun playSound(world: ServerLevel, entity: Entity) {
+        world.playSound(entity, entity.blockPosition(), SoundEvents.FIRECHARGE_USE, SoundSource.NEUTRAL, 0.5F, 1F + (Random.nextFloat() - 0.5F) / 10F)
     }
 
-    override fun canApplyUpdateEffect(duration: Int, amplifier: Int) = true
+    override fun shouldApplyEffectTickThisTick(duration: Int, amplifier: Int) = true
 }

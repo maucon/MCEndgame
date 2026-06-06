@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.main.messaging.misc
 
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 data class GetRespawnCommand(
-    val player: ServerPlayerEntity,
-    var respawn: ServerPlayerEntity.Respawn?,
+    val player: ServerPlayer,
+    var respawn: ServerPlayer.RespawnConfig?,
 ) {
-    constructor(player: ServerPlayerEntity) : this(player, null) // java
+    constructor(player: ServerPlayer) : this(player, null) // java
 }

@@ -8,8 +8,8 @@ import de.fuballer.mcendgame.main.util.random.LevelRestrictedRandomOption
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.item.ItemStack
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.item.ItemStack
 import kotlin.random.Random
 
 @Injectable
@@ -19,7 +19,7 @@ class AttributeService {
         possibleAttributes: List<RandomOption<List<LevelRestrictedRandomOption<RollableCustomAttribute>>>>,
         level: Int,
         random: Random,
-        slot: AttributeModifierSlot,
+        slot: EquipmentSlotGroup,
         data: EquipmentGenerationData,
     ) {
         val customAttributes = selectAttributes(level, possibleAttributes, slot, random, data)
@@ -29,7 +29,7 @@ class AttributeService {
     private fun selectAttributes(
         level: Int,
         possibleAttributes: List<RandomOption<List<LevelRestrictedRandomOption<RollableCustomAttribute>>>>,
-        slot: AttributeModifierSlot,
+        slot: EquipmentSlotGroup,
         random: Random,
         data: EquipmentGenerationData,
     ): List<CustomAttribute> {
@@ -43,7 +43,7 @@ class AttributeService {
     private fun getDistinctRolledAttributes(
         level: Int,
         possibleAttributes: List<RandomOption<List<LevelRestrictedRandomOption<RollableCustomAttribute>>>>,
-        slot: AttributeModifierSlot,
+        slot: EquipmentSlotGroup,
         random: Random,
         data: EquipmentGenerationData,
     ): List<CustomAttribute> {
@@ -61,7 +61,7 @@ class AttributeService {
 
     private fun rollAttributes(
         attributes: List<RollableCustomAttribute>,
-        slot: AttributeModifierSlot,
+        slot: EquipmentSlotGroup,
         random: Random,
     ) = attributes
         .map {

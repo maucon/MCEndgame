@@ -12,7 +12,7 @@ private const val MORE_DAMAGE_TAKEN_PER_AMPLIFIER = -0.05
 class VerdantEchoEffectService {
     @CommandHandler
     fun on(cmd: DamageCalculationCommand) {
-        val amplifier = cmd.damaged.getStatusEffect(CustomStatusEffects.VERDANT_ECHO)?.amplifier ?: return
+        val amplifier = cmd.damaged.getEffect(CustomStatusEffects.VERDANT_ECHO)?.amplifier ?: return
         cmd.moreDamageTaken.add(BASE_MORE_DAMAGE_TAKEN + (amplifier * MORE_DAMAGE_TAKEN_PER_AMPLIFIER))
     }
 }

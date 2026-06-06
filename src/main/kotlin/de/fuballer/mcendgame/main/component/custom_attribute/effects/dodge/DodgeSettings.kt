@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.component.custom_attribute.effects.dodge
 
-import net.minecraft.entity.damage.DamageTypes
+import net.minecraft.world.damagesource.DamageTypes
 
 object DodgeSettings {
     val BYPASS_DODGE = listOf(
@@ -17,7 +17,7 @@ object DodgeSettings {
         DamageTypes.FALL,
         DamageTypes.ENDER_PEARL,
         DamageTypes.FLY_INTO_WALL,
-        DamageTypes.OUT_OF_WORLD,
+        DamageTypes.FELL_OUT_OF_WORLD,
         DamageTypes.GENERIC,
         DamageTypes.MAGIC,
         DamageTypes.WITHER,

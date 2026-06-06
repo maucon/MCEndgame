@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.main.component.dungeon.generation.room_types.loade
 
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.RoomType
 import de.fuballer.mcendgame.main.util.random.RandomOption
-import net.minecraft.structure.StructureTemplateManager
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager
 
 /**
  * Loads a room template and its mirrored variant, wrapping both as weighted [RandomOption]s.

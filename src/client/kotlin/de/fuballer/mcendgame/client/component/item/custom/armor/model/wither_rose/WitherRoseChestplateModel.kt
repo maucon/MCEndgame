@@ -2,86 +2,91 @@ package de.fuballer.mcendgame.client.component.item.custom.armor.model.wither_ro
 
 import de.fuballer.mcendgame.client.component.item.custom.ModelPartDataExtension.createEmptyChild
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.model.*
-import net.minecraft.client.render.entity.model.BipedEntityModel
-import net.minecraft.client.render.entity.model.EntityModelLayer
-import net.minecraft.client.render.entity.model.EntityModelPartNames
-import net.minecraft.client.render.entity.state.BipedEntityRenderState
+import net.minecraft.client.model.HumanoidModel
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.model.geom.PartNames
+import net.minecraft.client.model.geom.PartPose
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.CubeListBuilder
+import net.minecraft.client.model.geom.builders.LayerDefinition
+import net.minecraft.client.model.geom.builders.MeshDefinition
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState
 
-class WitherRoseChestplateModel<S : BipedEntityRenderState>(
+class WitherRoseChestplateModel<S : HumanoidRenderState>(
     root: ModelPart,
-) : BipedEntityModel<S>(root) {
+) : HumanoidModel<S>(root) {
     companion object {
-        val MODEL_LAYER = EntityModelLayer(IdentifierUtil.default("wither_rose_chestplate"), "main")
+        val MODEL_LAYER = ModelLayerLocation(IdentifierUtil.default("wither_rose_chestplate"), "main")
 
-        fun getTexturedModelData(): TexturedModelData {
-            val modelData = ModelData()
+        fun getTexturedModelData(): LayerDefinition {
+            val modelData = MeshDefinition()
             val modelPartData = modelData.root
 
-            val head = modelPartData.createEmptyChild(EntityModelPartNames.HEAD)
-            val hat = head.createEmptyChild(EntityModelPartNames.HAT)
-            val left_leg = modelPartData.createEmptyChild(EntityModelPartNames.LEFT_LEG)
-            val right_leg = modelPartData.createEmptyChild(EntityModelPartNames.RIGHT_LEG)
+            val head = modelPartData.createEmptyChild(PartNames.HEAD)
+            val hat = head.createEmptyChild(PartNames.HAT)
+            val left_leg = modelPartData.createEmptyChild(PartNames.LEFT_LEG)
+            val right_leg = modelPartData.createEmptyChild(PartNames.RIGHT_LEG)
 
-            val body = modelPartData.addChild(EntityModelPartNames.BODY, ModelPartBuilder.create(), ModelTransform.origin(0.0f, 0.0f, 0.0f))
+            val body = modelPartData.addOrReplaceChild(PartNames.BODY, CubeListBuilder.create(), PartPose.offset(0.0f, 0.0f, 0.0f))
 
-            val chestplate = body.addChild(
-                "chestplate", ModelPartBuilder.create().uv(0, 52).cuboid(-4.5f, 5.5f, -2.5f, 9.0f, 5.0f, 5.0f, Dilation(0.3f))
-                    .uv(0, 39).cuboid(-5.0f, -0.5f, -3.25f, 10.0f, 6.0f, 6.0f, Dilation(0.3f)), ModelTransform.origin(0.0f, 0.0f, 0.0f)
+            val chestplate = body.addOrReplaceChild(
+                "chestplate", CubeListBuilder.create().texOffs(0, 52).addBox(-4.5f, 5.5f, -2.5f, 9.0f, 5.0f, 5.0f, CubeDeformation(0.3f))
+                    .texOffs(0, 39).addBox(-5.0f, -0.5f, -3.25f, 10.0f, 6.0f, 6.0f, CubeDeformation(0.3f)), PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val left_arm = modelPartData.addChild(EntityModelPartNames.LEFT_ARM, ModelPartBuilder.create(), ModelTransform.origin(5.0f, 2.0f, 0.0f))
+            val left_arm = modelPartData.addOrReplaceChild(PartNames.LEFT_ARM, CubeListBuilder.create(), PartPose.offset(5.0f, 2.0f, 0.0f))
 
-            val chestplate_left_arm = left_arm.addChild(
-                "chestplate_left_arm", ModelPartBuilder.create().uv(33, 17).cuboid(-1.0f, -2.0f, -2.0f, 4.0f, 5.0f, 4.0f, Dilation(0.5f))
-                    .uv(33, 27).cuboid(-1.0f, 3.25f, -2.0f, 4.0f, 7.0f, 4.0f, Dilation(0.1f)), ModelTransform.origin(0.0f, 0.0f, 0.0f)
+            val chestplate_left_arm = left_arm.addOrReplaceChild(
+                "chestplate_left_arm", CubeListBuilder.create().texOffs(33, 17).addBox(-1.0f, -2.0f, -2.0f, 4.0f, 5.0f, 4.0f, CubeDeformation(0.5f))
+                    .texOffs(33, 27).addBox(-1.0f, 3.25f, -2.0f, 4.0f, 7.0f, 4.0f, CubeDeformation(0.1f)), PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val vambraceLeft = chestplate_left_arm.addChild(
+            val vambraceLeft = chestplate_left_arm.addOrReplaceChild(
                 "vambraceLeft",
-                ModelPartBuilder.create().uv(50, 28).cuboid(1.0f, 4.25f, -3.0f, 2.0f, 5.0f, 5.0f, Dilation(0.0f)),
-                ModelTransform.origin(0.5f, 0.0f, 0.5f)
+                CubeListBuilder.create().texOffs(50, 28).addBox(1.0f, 4.25f, -3.0f, 2.0f, 5.0f, 5.0f, CubeDeformation(0.0f)),
+                PartPose.offset(0.5f, 0.0f, 0.5f)
             )
 
-            val pauldronLeft = chestplate_left_arm.addChild(
+            val pauldronLeft = chestplate_left_arm.addOrReplaceChild(
                 "pauldronLeft",
-                ModelPartBuilder.create().uv(33, 6).cuboid(-3.5f, 0.5f, -2.5f, 3.0f, 5.0f, 5.0f, Dilation(0.5f)),
-                ModelTransform.of(3.75f, -3.5f, 0.0f, 0.0f, 0.0f, -0.0873f)
+                CubeListBuilder.create().texOffs(33, 6).addBox(-3.5f, 0.5f, -2.5f, 3.0f, 5.0f, 5.0f, CubeDeformation(0.5f)),
+                PartPose.offsetAndRotation(3.75f, -3.5f, 0.0f, 0.0f, 0.0f, -0.0873f)
             )
 
-            val pauldronLeftTop = pauldronLeft.addChild(
+            val pauldronLeftTop = pauldronLeft.addOrReplaceChild(
                 "pauldronLeftTop",
-                ModelPartBuilder.create().uv(33, 0).cuboid(-4.0f, 0.0f, -2.0f, 4.0f, 1.0f, 4.0f, Dilation(0.0f)),
-                ModelTransform.of(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.1745f)
+                CubeListBuilder.create().texOffs(33, 0).addBox(-4.0f, 0.0f, -2.0f, 4.0f, 1.0f, 4.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.1745f)
             )
 
-            val right_arm = modelPartData.addChild(EntityModelPartNames.RIGHT_ARM, ModelPartBuilder.create(), ModelTransform.origin(-5.0f, 2.0f, 0.0f))
+            val right_arm = modelPartData.addOrReplaceChild(PartNames.RIGHT_ARM, CubeListBuilder.create(), PartPose.offset(-5.0f, 2.0f, 0.0f))
 
-            val chestplate_right_arm = right_arm.addChild(
-                "chestplate_right_arm", ModelPartBuilder.create().uv(15, 27).cuboid(-3.0f, 3.25f, -2.0f, 4.0f, 7.0f, 4.0f, Dilation(0.1f))
-                    .uv(15, 17).cuboid(-3.0f, -2.0f, -2.0f, 4.0f, 5.0f, 4.0f, Dilation(0.5f)), ModelTransform.origin(0.0f, 0.0f, 0.0f)
+            val chestplate_right_arm = right_arm.addOrReplaceChild(
+                "chestplate_right_arm", CubeListBuilder.create().texOffs(15, 27).addBox(-3.0f, 3.25f, -2.0f, 4.0f, 7.0f, 4.0f, CubeDeformation(0.1f))
+                    .texOffs(15, 17).addBox(-3.0f, -2.0f, -2.0f, 4.0f, 5.0f, 4.0f, CubeDeformation(0.5f)), PartPose.offset(0.0f, 0.0f, 0.0f)
             )
 
-            val vambraceRight = chestplate_right_arm.addChild(
+            val vambraceRight = chestplate_right_arm.addOrReplaceChild(
                 "vambraceRight",
-                ModelPartBuilder.create().uv(0, 28).cuboid(-3.0f, 4.25f, -3.0f, 2.0f, 5.0f, 5.0f, Dilation(0.0f)),
-                ModelTransform.origin(-0.5f, 0.0f, 0.5f)
+                CubeListBuilder.create().texOffs(0, 28).addBox(-3.0f, 4.25f, -3.0f, 2.0f, 5.0f, 5.0f, CubeDeformation(0.0f)),
+                PartPose.offset(-0.5f, 0.0f, 0.5f)
             )
 
-            val pauldronRight = chestplate_right_arm.addChild(
+            val pauldronRight = chestplate_right_arm.addOrReplaceChild(
                 "pauldronRight",
-                ModelPartBuilder.create().uv(15, 6).cuboid(0.5f, 0.5f, -2.5f, 3.0f, 5.0f, 5.0f, Dilation(0.5f)),
-                ModelTransform.of(-3.75f, -3.5f, 0.0f, 0.0f, 0.0f, 0.0873f)
+                CubeListBuilder.create().texOffs(15, 6).addBox(0.5f, 0.5f, -2.5f, 3.0f, 5.0f, 5.0f, CubeDeformation(0.5f)),
+                PartPose.offsetAndRotation(-3.75f, -3.5f, 0.0f, 0.0f, 0.0f, 0.0873f)
             )
 
-            val pauldronRightTop = pauldronRight.addChild(
+            val pauldronRightTop = pauldronRight.addOrReplaceChild(
                 "pauldronRightTop",
-                ModelPartBuilder.create().uv(15, 0).cuboid(0.0f, 0.0f, -2.0f, 4.0f, 1.0f, 4.0f, Dilation(0.0f)),
-                ModelTransform.of(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.1745f)
+                CubeListBuilder.create().texOffs(15, 0).addBox(0.0f, 0.0f, -2.0f, 4.0f, 1.0f, 4.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.1745f)
             )
-            return TexturedModelData.of(modelData, 128, 128)
+            return LayerDefinition.create(modelData, 128, 128)
         }
     }
 
-    override fun setAngles(renderState: S) {}
+    override fun setupAnim(renderState: S) {}
 }

@@ -6,10 +6,10 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 
 class AspectOfSavagery(
-    settings: Settings,
+    settings: Properties,
 ) : AspectItem(settings) {
     companion object {
         const val MORE_DAMAGE = 0.3
@@ -24,8 +24,8 @@ class AspectOfSavagery(
     override val tier = 2
     override val limit = 2
     override val description = mutableListOf(
-        Text.translatable(TRANSLATABLE_DESCRIPTION_KEY + "savagery_0", AttributeFormats.formatDouble(MORE_DAMAGE * 100)),
-        Text.translatable(TRANSLATABLE_DESCRIPTION_KEY + "savagery_1", AttributeFormats.formatDouble(INCREASED_LOOT * 100)),
+        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "savagery_0", AttributeFormats.formatDouble(MORE_DAMAGE * 100)),
+        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "savagery_1", AttributeFormats.formatDouble(INCREASED_LOOT * 100)),
     )
     override val disabledAspects = listOf<AspectItem>()
 }

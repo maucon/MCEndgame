@@ -2,12 +2,12 @@ package de.fuballer.mcendgame.main.component.damage.calculator
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.projectile.ShulkerBulletEntity
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.projectile.ShulkerBullet
 
 object ShulkerBulletCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.source is ShulkerBulletEntity
+    override fun isActive(source: DamageSource) = source.directEntity is ShulkerBullet
 
     override fun calculateAttackDamage(
         originalDamage: Float,

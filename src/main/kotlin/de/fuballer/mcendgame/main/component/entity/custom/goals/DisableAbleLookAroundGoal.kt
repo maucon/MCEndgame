@@ -1,20 +1,20 @@
 package de.fuballer.mcendgame.main.component.entity.custom.goals
 
-import net.minecraft.entity.ai.goal.LookAroundGoal
-import net.minecraft.entity.mob.MobEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
 
 class DisableAbleLookAroundGoal(
-    entity: MobEntity,
-) : LookAroundGoal(entity) {
+    entity: Mob,
+) : RandomLookAroundGoal(entity) {
     var isDisabled = false
 
-    override fun canStart(): Boolean {
+    override fun canUse(): Boolean {
         if (isDisabled) return false
-        return super.canStart()
+        return super.canUse()
     }
 
-    override fun shouldContinue(): Boolean {
+    override fun canContinueToUse(): Boolean {
         if (isDisabled) return false
-        return super.shouldContinue()
+        return super.canContinueToUse()
     }
 }

@@ -10,14 +10,14 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getL
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getLinkedEntities
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.LivingEntity
 
 @Injectable
 class HealOnLinkedEnemyKilledService {
     @EventSubscriber(sync = true)
     fun on(event: LivingEntityDeathEvent) {
-        val world = event.world as? ServerWorld ?: return
+        val world = event.world as? ServerLevel ?: return
         val linkedEntity = event.entity
         val linkedUuid = linkedEntity.uuid
 

@@ -8,151 +8,153 @@ import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
 import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItems
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItems
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.minecraft.block.Block
-import net.minecraft.block.Blocks
-import net.minecraft.client.data.*
-import net.minecraft.client.render.item.tint.DyeTintSource
-import net.minecraft.item.Item
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
+import net.minecraft.client.color.item.Dye
+import net.minecraft.client.data.models.BlockModelGenerators
+import net.minecraft.client.data.models.ItemModelGenerators
+import net.minecraft.client.data.models.model.*
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
 
 class CustomModelProvider(
-    output: FabricDataOutput,
-) : FabricModelProvider(output) {
-    override fun generateBlockStateModels(generator: BlockStateModelGenerator) {
-        generator.registerCubeWithCustomTextures(CustomBlocks.DUNGEON_DEVICE, CustomBlocks.DUNGEON_DEVICE) { block, _ -> sideTopBottomTextureMap(block) }
-        generator.registerTintableCross(CustomBlocks.DECAYING_COBWEB, BlockStateModelGenerator.CrossType.NOT_TINTED)
-        generator.registerBuiltinWithParticle(CustomBlocks.TOTEM_STATUE, Blocks.STONE)
+    packOutput: FabricPackOutput,
+) : FabricModelProvider(packOutput) {
+    override fun generateBlockStateModels(generator: BlockModelGenerators) {
+        generator.createCraftingTableLike(CustomBlocks.DUNGEON_DEVICE, CustomBlocks.DUNGEON_DEVICE) { block, _ -> sideTopBottomTextureMap(block) }
+        generator.createCrossBlockWithDefaultItem(CustomBlocks.DECAYING_COBWEB, BlockModelGenerators.PlantType.NOT_TINTED)
+        generator.createParticleOnlyBlock(CustomBlocks.TOTEM_STATUE, Blocks.STONE)
     }
 
-    override fun generateItemModels(generator: ItemModelGenerator) {
-        generator.register(CustomToolItems.TWINFIRE, Models.HANDHELD)
-        generator.register(CustomToolItems.FATESPLITTER, Models.HANDHELD)
-        generator.register(CustomToolItems.SERPENTS_FANG, Models.HANDHELD)
-        generator.register(CustomToolItems.NIGHTREAVER, Models.HANDHELD)
+    override fun generateItemModels(generator: ItemModelGenerators) {
+        generator.generateFlatItem(CustomToolItems.TWINFIRE, ModelTemplates.FLAT_HANDHELD_ITEM)
+        generator.generateFlatItem(CustomToolItems.FATESPLITTER, ModelTemplates.FLAT_HANDHELD_ITEM)
+        generator.generateFlatItem(CustomToolItems.SERPENTS_FANG, ModelTemplates.FLAT_HANDHELD_ITEM)
+        generator.generateFlatItem(CustomToolItems.NIGHTREAVER, ModelTemplates.FLAT_HANDHELD_ITEM)
         registerCustomBow(generator, CustomToolItems.WINDSTRING)
         registerCustomBow(generator, CustomToolItems.HAILSTORM)
         registerCustomBow(generator, CustomToolItems.DUSK_PIERCER)
 
-        generator.register(CustomArmorItems.BOUND_ABYSS, Models.GENERATED)
-        generator.register(CustomArmorItems.DRUIDS_BOOTS, Models.GENERATED)
-        generator.register(CustomArmorItems.DRUIDS_CHESTPLATE, Models.GENERATED)
-        generator.register(CustomArmorItems.DRUIDS_HELMET, Models.GENERATED)
-        generator.register(CustomArmorItems.DRUIDS_LEGGINGS, Models.GENERATED)
-        generator.register(CustomArmorItems.EMBERCHANT, Models.GENERATED)
-        generator.register(CustomArmorItems.ICEBORNE, Models.GENERATED)
-        generator.register(CustomArmorItems.LAMIAS_GIFT, Models.GENERATED)
+        generator.generateFlatItem(CustomArmorItems.BOUND_ABYSS, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.DRUIDS_BOOTS, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.DRUIDS_CHESTPLATE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.DRUIDS_HELMET, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.DRUIDS_LEGGINGS, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.EMBERCHANT, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.ICEBORNE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.LAMIAS_GIFT, ModelTemplates.FLAT_ITEM)
         generateDyeable(generator, CustomArmorItems.SUEDE_BOOTS)
         generateDyeable(generator, CustomArmorItems.SUEDE_CHESTPLATE, hasOverlay = true)
         generateDyeable(generator, CustomArmorItems.SUEDE_HELMET)
         generateDyeable(generator, CustomArmorItems.SUEDE_LEGGINGS, hasOverlay = true)
-        generator.register(CustomArmorItems.WITHER_ROSE_BOOTS, Models.GENERATED)
-        generator.register(CustomArmorItems.WITHER_ROSE_CHESTPLATE, Models.GENERATED)
-        generator.register(CustomArmorItems.WITHER_ROSE_HELMET, Models.GENERATED)
-        generator.register(CustomArmorItems.WITHER_ROSE_LEGGINGS, Models.GENERATED)
-        generator.register(CustomArmorItems.STONEWARD, Models.GENERATED)
-        generator.register(CustomArmorItems.MOONSHADOW, Models.GENERATED)
-        generator.register(CustomArmorItems.GEISTERGALOSCHEN, Models.GENERATED)
-        generator.register(CustomArmorItems.VOIDWEAVER, Models.GENERATED)
-        generator.register(CustomArmorItems.ABYSSAL_MASK, Models.GENERATED)
-        generator.register(CustomArmorItems.GILDED_TEMPEST, Models.GENERATED)
-        generator.register(CustomArmorItems.WINDSTRIDER, Models.GENERATED)
-        generator.register(CustomArmorItems.BROODMOTHER, Models.GENERATED)
-        generator.register(CustomArmorItems.EMBERREIGN, Models.GENERATED)
+        generator.generateFlatItem(CustomArmorItems.WITHER_ROSE_BOOTS, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.WITHER_ROSE_CHESTPLATE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.WITHER_ROSE_HELMET, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.WITHER_ROSE_LEGGINGS, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.STONEWARD, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.MOONSHADOW, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.GEISTERGALOSCHEN, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.VOIDWEAVER, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.ABYSSAL_MASK, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.GILDED_TEMPEST, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.WINDSTRIDER, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.BROODMOTHER, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.EMBERREIGN, ModelTemplates.FLAT_ITEM)
 
-        generator.register(AspectItems.ASPECT_OF_ANCESTORS, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_CURIO, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_DOMINION, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_DUALITY, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_EMINENCE, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_FORTITUDE, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_FORTUNE, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_GHOSTS, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_GREED, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_HORDES, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_IMPATIENCE, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_SAVAGERY, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_TYRANNY, Models.GENERATED)
-        generator.register(AspectItems.ASPECT_OF_ZEAL, Models.GENERATED)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_ANCESTORS, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_CURIO, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_DOMINION, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_DUALITY, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_EMINENCE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_FORTITUDE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_FORTUNE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_GHOSTS, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_GREED, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_HORDES, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_IMPATIENCE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_SAVAGERY, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_TYRANNY, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_ZEAL, ModelTemplates.FLAT_ITEM)
 
-        generator.register(CrystalItems.CALIBRATION_CRYSTAL, Models.GENERATED)
-        generator.register(CrystalItems.SACRIFICIAL_CRYSTAL, Models.GENERATED)
-        generator.register(CrystalItems.PERMUTATION_CRYSTAL, Models.GENERATED)
-        generator.register(CrystalItems.REFORGE_CRYSTAL, Models.GENERATED)
-        generator.register(CrystalItems.CORRUPTION_CRYSTAL, Models.GENERATED)
+        generator.generateFlatItem(CrystalItems.CALIBRATION_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.SACRIFICIAL_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.PERMUTATION_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.REFORGE_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.CORRUPTION_CRYSTAL, ModelTemplates.FLAT_ITEM)
 
-        generator.register(TotemItems.TOTEM_OF_BASTION, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_FORCE, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_FORTRESS, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_FRENZY, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_GRACE, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_IMPACT, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_SWIFTNESS, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_THICKNESS, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_VANGUARD, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_RENEWAL, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_TEMPEST, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_DEFIANCE, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_RECOVERY, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_RIME, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_ONSLAUGHT, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_RESILIENCE, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_FURY, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_VOLLEY, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_REACH, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_GIGANTISM, Models.GENERATED)
-        generator.register(TotemItems.TOTEM_OF_RESTORATION, Models.GENERATED)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_BASTION, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_FORCE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_FORTRESS, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_FRENZY, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_GRACE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_IMPACT, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_SWIFTNESS, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_THICKNESS, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_VANGUARD, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_RENEWAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_TEMPEST, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_DEFIANCE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_RECOVERY, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_RIME, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_ONSLAUGHT, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_RESILIENCE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_FURY, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_VOLLEY, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_REACH, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_GIGANTISM, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_RESTORATION, ModelTemplates.FLAT_ITEM)
 
-        generator.register(CustomBlocks.TOTEM_STATUE.asItem(), Models.GENERATED)
-        generator.register(CustomBlocks.DUNGEON_ENEMY_BLOCKER.asItem(), Models.GENERATED)
+        generator.generateFlatItem(CustomBlocks.TOTEM_STATUE.asItem(), ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomBlocks.DUNGEON_ENEMY_BLOCKER.asItem(), ModelTemplates.FLAT_ITEM)
     }
 
-    private fun sideTopBottomTextureMap(block: Block) = TextureMap()
-        .put(TextureKey.PARTICLE, TextureMap.getSubId(block, "_top"))
-        .put(TextureKey.UP, TextureMap.getSubId(block, "_top"))
-        .put(TextureKey.DOWN, TextureMap.getSubId(block, "_bottom"))
-        .put(TextureKey.NORTH, TextureMap.getSubId(block, "_side"))
-        .put(TextureKey.EAST, TextureMap.getSubId(block, "_side"))
-        .put(TextureKey.SOUTH, TextureMap.getSubId(block, "_side"))
-        .put(TextureKey.WEST, TextureMap.getSubId(block, "_side"))
+    private fun sideTopBottomTextureMap(block: Block) = TextureMapping()
+        .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(block, "_top"))
+        .put(TextureSlot.UP, TextureMapping.getBlockTexture(block, "_top"))
+        .put(TextureSlot.DOWN, TextureMapping.getBlockTexture(block, "_bottom"))
+        .put(TextureSlot.NORTH, TextureMapping.getBlockTexture(block, "_side"))
+        .put(TextureSlot.EAST, TextureMapping.getBlockTexture(block, "_side"))
+        .put(TextureSlot.SOUTH, TextureMapping.getBlockTexture(block, "_side"))
+        .put(TextureSlot.WEST, TextureMapping.getBlockTexture(block, "_side"))
 
     fun generateDyeable(
-        generator: ItemModelGenerator,
+        generator: ItemModelGenerators,
         item: Item,
         defaultColor: Int = -6265536,
         hasOverlay: Boolean = false,
     ) {
-        val modelId = ModelIds.getItemModelId(item)
-        val dyeableLayer = TextureMap.getId(item)
+        val modelId = ModelLocationUtils.getModelLocation(item)
+        val dyeableLayer = TextureMapping.getItemTexture(item)
 
         if (!hasOverlay) {
-            Models.GENERATED.upload(modelId, TextureMap.layer0(dyeableLayer), generator.modelCollector)
+            ModelTemplates.FLAT_ITEM.create(modelId, TextureMapping.layer0(dyeableLayer), generator.modelOutput)
         } else {
-            val overlayLayer = TextureMap.getSubId(item, "_overlay")
-            Models.GENERATED_TWO_LAYERS.upload(modelId, TextureMap.layered(dyeableLayer, overlayLayer), generator.modelCollector)
+            val overlayLayer = TextureMapping.getItemTexture(item, "_overlay")
+            ModelTemplates.TWO_LAYERED_ITEM.create(modelId, TextureMapping.layered(dyeableLayer, overlayLayer), generator.modelOutput)
         }
 
-        generator.output.accept(item, ItemModels.tinted(modelId, DyeTintSource(defaultColor)))
+        generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, Dye(defaultColor)))
     }
 
     fun registerCustomBow(
-        generator: ItemModelGenerator,
+        generator: ItemModelGenerators,
         item: Item
     ) {
-        val unbaked = ItemModels.basic(generator.registerSubModel(item, "", Models.BOW))
-        val unbaked2 = ItemModels.basic(generator.registerSubModel(item, "_pulling_0", Models.BOW))
-        val unbaked3 = ItemModels.basic(generator.registerSubModel(item, "_pulling_1", Models.BOW))
-        val unbaked4 = ItemModels.basic(generator.registerSubModel(item, "_pulling_2", Models.BOW))
+        val unbaked = ItemModelUtils.plainModel(generator.createFlatItemModel(item, "", ModelTemplates.BOW))
+        val unbaked2 = ItemModelUtils.plainModel(generator.createFlatItemModel(item, "_pulling_0", ModelTemplates.BOW))
+        val unbaked3 = ItemModelUtils.plainModel(generator.createFlatItemModel(item, "_pulling_1", ModelTemplates.BOW))
+        val unbaked4 = ItemModelUtils.plainModel(generator.createFlatItemModel(item, "_pulling_2", ModelTemplates.BOW))
 
-        generator.output.accept(
+        generator.itemModelOutput.accept(
             item,
-            ItemModels.condition(
-                ItemModels.usingItemProperty(),
-                ItemModels.rangeDispatch(
+            ItemModelUtils.conditional(
+                ItemModelUtils.isUsingItem(),
+                ItemModelUtils.rangeSelect(
                     BowPullDurationProperty(),
                     1F,
                     unbaked2,
-                    ItemModels.rangeDispatchEntry(unbaked3, 0.65f),
-                    ItemModels.rangeDispatchEntry(unbaked4, 0.9f)
+                    ItemModelUtils.override(unbaked3, 0.65f),
+                    ItemModelUtils.override(unbaked4, 0.9f)
                 ),
                 unbaked
             )

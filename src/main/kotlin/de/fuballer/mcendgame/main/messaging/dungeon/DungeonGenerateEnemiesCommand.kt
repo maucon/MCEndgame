@@ -5,10 +5,10 @@ import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPositio
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonAspects
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
 
 data class DungeonGenerateEnemiesCommand(
-    val dungeonWorld: ServerWorld,
+    val dungeonWorld: ServerLevel,
     val aspects: Map<AspectItem, Int>,
     val spawnPositions: MutableList<SpawnPosition>,
     val isEncounter: Boolean,
@@ -20,7 +20,7 @@ data class DungeonGenerateEnemiesCommand(
 ) {
     companion object {
         fun of(
-            dungeonWorld: ServerWorld,
+            dungeonWorld: ServerLevel,
             spawnPositions: MutableList<SpawnPosition>,
             isEncounter: Boolean,
         ) = DungeonGenerateEnemiesCommand(

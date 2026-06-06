@@ -15,8 +15,8 @@ import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.minecraft.command.argument.EntityAnchorArgumentType
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.commands.arguments.EntityAnchorArgument
+import net.minecraft.server.level.ServerPlayer
 import java.util.*
 
 @Injectable
@@ -40,10 +40,10 @@ class ScarredOneEncounterService {
 
         val world = event.world
         val entity = ScarredOneEntity(CustomEntities.SCARRED_ONE, world)
-        entity.setPosition(encounterLocation.location.toVec3d().add(0.5, 0.0, 0.5))
+        entity.setPos(encounterLocation.location.toVec3d().add(0.5, 0.0, 0.5))
         entity.isInvulnerable = true
-        entity.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, encounterLocation.facingToLocation.toVec3d().add(0.5, 1.0, 0.5))
-        world.spawnEntity(entity)
+        entity.lookAt(EntityAnchorArgument.Anchor.EYES, encounterLocation.facingToLocation.toVec3d().add(0.5, 1.0, 0.5))
+        world.addFreshEntity(entity)
     }
 
     @EventSubscriber(sync = true)
@@ -66,11 +66,11 @@ class ScarredOneEncounterService {
     }
 
     fun response(
-        player: ServerPlayerEntity,
+        player: ServerPlayer,
         accept: Boolean,
         scarredOneUuid: UUID,
     ) {
-        val world = player.entityWorld
+        val world = player.level()
         val scarredOne = world.getEntity(scarredOneUuid) as? ScarredOneEntity ?: return
         if (scarredOne.gotResponse) return
 

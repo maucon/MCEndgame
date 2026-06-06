@@ -4,9 +4,9 @@ import de.fuballer.mcendgame.main.component.entity.custom.networking.EntityHookE
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
 import java.util.*
 
 interface HookAttackMob {
@@ -28,10 +28,10 @@ interface HookAttackMob {
         }
         hookedEntityUuidMap[hookedUuid] = Pair(0, 0)
 
-        val serverWorld = hooker.entityWorld as? ServerWorld ?: return
+        val serverWorld = hooker.level() as? ServerLevel ?: return
 
         val hookedEntity = serverWorld.getEntity(hookedUuid) ?: return
-        for (player in PlayerLookup.tracking(serverWorld, hookedEntity.blockPos)) {
+        for (player in PlayerLookup.tracking(serverWorld, hookedEntity.blockPosition())) {
             ServerPlayNetworking.send(player, EntityHookEntityPayload(hooker.id, hookedEntity.id, false))
         }
     }
@@ -39,10 +39,10 @@ interface HookAttackMob {
     fun removeHookedEntity(hookedUuid: UUID) {
         hookedEntityUuidMap.remove(hookedUuid)
 
-        val serverWorld = hooker.entityWorld as? ServerWorld ?: return
+        val serverWorld = hooker.level() as? ServerLevel ?: return
         val hookedEntity = serverWorld.getEntity(hookedUuid) ?: return
 
-        for (player in PlayerLookup.tracking(serverWorld, hookedEntity.blockPos)) {
+        for (player in PlayerLookup.tracking(serverWorld, hookedEntity.blockPosition())) {
             ServerPlayNetworking.send(player, EntityHookEntityPayload(hooker.id, hookedEntity.id, true))
         }
     }
@@ -56,12 +56,12 @@ interface HookAttackMob {
     }
 
     fun tickHooks() {
-        val world = hooker.entityWorld as? ServerWorld ?: return
+        val world = hooker.level() as? ServerLevel ?: return
         updateHookedEntities(world)
     }
 
     fun updateHookedEntities(
-        world: ServerWorld
+        world: ServerLevel
     ) {
         val toRemove = mutableListOf<UUID>()
 
@@ -95,11 +95,11 @@ interface HookAttackMob {
     fun pullHookedEntity(
         hooked: Entity
     ) {
-        val direction = hooker.entityPos.subtract(hooked.entityPos)
-        if (direction.lengthSquared() < 1e-6) return
+        val direction = hooker.position().subtract(hooked.position())
+        if (direction.lengthSqr() < 1e-6) return
         val normalizedDirection = direction.normalize()
 
-        val baseVelocity = normalizedDirection.multiply(hookPullStrength)
+        val baseVelocity = normalizedDirection.scale(hookPullStrength)
         val finalVelocity = baseVelocity.add(0.0, hookPullAdditionalY, 0.0)
 
         hooked.setAndSyncVelocity(finalVelocity)

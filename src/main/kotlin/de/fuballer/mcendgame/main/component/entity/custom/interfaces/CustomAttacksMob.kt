@@ -1,17 +1,17 @@
 package de.fuballer.mcendgame.main.component.entity.custom.interfaces
 
+import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
 import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundInstance
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
-import net.minecraft.entity.Entity
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.server.world.ServerWorld
-import software.bernie.geckolib.animatable.GeoEntity
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.Mob
 
-interface CustomAttacksMob<T> where T : MobEntity, T : GeoEntity {
+interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
     var attackPose: AttackPose
     var attackDuration: Int
 
@@ -23,7 +23,7 @@ interface CustomAttacksMob<T> where T : MobEntity, T : GeoEntity {
     val attackSoundInstances: MutableList<DelayedSoundInstance>
 
     fun tickAttacks(
-        world: ServerWorld,
+        world: ServerLevel,
         damager: T,
     ) {
         tickCooldowns()
@@ -73,8 +73,8 @@ interface CustomAttacksMob<T> where T : MobEntity, T : GeoEntity {
     }
 
     private fun tickAttackDamageInstances(
-        world: ServerWorld,
-        damager: MobEntity,
+        world: ServerLevel,
+        damager: Mob,
     ) {
         val toRemove = mutableListOf<AttackDamageInstance>()
         for (attack in attackDamageInstances) {
@@ -85,7 +85,7 @@ interface CustomAttacksMob<T> where T : MobEntity, T : GeoEntity {
     }
 
     private fun tickSoundInstances(
-        world: ServerWorld,
+        world: ServerLevel,
         entity: Entity,
     ) {
         val toRemove = mutableListOf<DelayedSoundInstance>()
@@ -97,7 +97,7 @@ interface CustomAttacksMob<T> where T : MobEntity, T : GeoEntity {
     }
 
     fun getRandomAttack(
-        attacker: MobEntity,
+        attacker: Mob,
         ignoreTriggerConditions: Boolean = false,
     ): Attack<T>? {
         val target = attacker.target

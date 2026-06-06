@@ -2,19 +2,19 @@ package de.fuballer.mcendgame.client.component.datagen
 
 import de.fuballer.mcendgame.main.component.block.CustomBlocks
 import de.fuballer.mcendgame.main.component.tags.CustomTags
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider
-import net.minecraft.block.Blocks
-import net.minecraft.registry.RegistryWrapper
-import net.minecraft.registry.tag.BlockTags
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider
+import net.minecraft.core.HolderLookup
+import net.minecraft.tags.BlockTags
+import net.minecraft.world.level.block.Blocks
 import java.util.concurrent.CompletableFuture
 
 class CustomBlockTagProvider(
-    dataOutput: FabricDataOutput,
-    registryLookup: CompletableFuture<RegistryWrapper.WrapperLookup>,
-) : FabricTagProvider.BlockTagProvider(dataOutput, registryLookup) {
-    override fun configure(wrapperLookup: RegistryWrapper.WrapperLookup) {
-        valueLookupBuilder(BlockTags.PICKAXE_MINEABLE)
+    packOutput: FabricPackOutput,
+    registryLookup: CompletableFuture<HolderLookup.Provider>,
+) : FabricTagsProvider.BlockTagsProvider(packOutput, registryLookup) {
+    override fun addTags(wrapperLookup: HolderLookup.Provider) {
+        valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
             .add(CustomBlocks.DUNGEON_DEVICE)
             .add(CustomBlocks.CRYSTAL_FORGE)
             .add(CustomBlocks.TOTEM_STATUE)

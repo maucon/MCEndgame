@@ -2,22 +2,22 @@ package de.fuballer.mcendgame.main.component.item.custom
 
 import de.fuballer.mcendgame.main.component.item.custom.misc.horn.command.HornUseCommand
 import de.maucon.mauconframework.command.CommandGateway
-import net.minecraft.component.DataComponentTypes
-import net.minecraft.component.type.LoreComponent
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.GoatHornItem
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.ActionResult
-import net.minecraft.util.Formatting
-import net.minecraft.util.Hand
-import net.minecraft.world.World
+import net.minecraft.ChatFormatting
+import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.InstrumentItem
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.ItemLore
+import net.minecraft.world.level.Level
 
 abstract class UniqueAttributesHornItem(
-    val settings: Settings,
-) : GoatHornItem(settings), UniqueAttributesItemInterface {
+    val settings: Properties,
+) : InstrumentItem(settings), UniqueAttributesItemInterface {
     companion object {
         const val BASE_KEY = "item.mcendgame.horn."
         const val DESCRIPTION_KEY = BASE_KEY + "description."
@@ -28,7 +28,7 @@ abstract class UniqueAttributesHornItem(
 
     abstract val id: String
 
-    abstract val description: List<MutableText>
+    abstract val description: List<MutableComponent>
 
     abstract val baseCooldown: Int // ticks
     abstract val baseDuration: Int // ticks
@@ -40,36 +40,36 @@ abstract class UniqueAttributesHornItem(
         val lore = description.toMutableList()
         lore.addAll(
             listOf(
-                Text.translatable(DURATION_KEY, (baseDuration / 20).toInt()),
-                Text.translatable(RANGE_KEY, (range).toInt()),
-                Text.translatable(COOLDOWN_KEY, (baseCooldown / 20).toInt()),
+                Component.translatable(DURATION_KEY, baseDuration / 20),
+                Component.translatable(RANGE_KEY, range.toInt()),
+                Component.translatable(COOLDOWN_KEY, baseCooldown / 20),
             )
         )
-        val styledLore = lore.map { it.styled { style -> style.withItalic(false).withColor(Formatting.BLUE) } }
-        stack.set(DataComponentTypes.LORE, LoreComponent(styledLore))
+        val styledLore = lore.map { it.withStyle { style -> style.withItalic(false).withColor(ChatFormatting.BLUE) } }
+        stack.set(DataComponents.LORE, ItemLore(styledLore))
 
         return stack
     }
 
-    override fun getDefaultStack() = getRolledStack(this, true)
+    override fun getDefaultInstance() = getRolledStack(this, true)
 
-    override fun getName(stack: ItemStack): MutableText = super.getName(stack).copy().withColor(getNameColor())
+    override fun getName(stack: ItemStack): MutableComponent = super.getName(stack).copy().withColor(getNameColor())
 
-    override fun use(world: World, user: PlayerEntity, hand: Hand): ActionResult {
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResult {
         val result = super.use(world, user, hand)
-        if (result == ActionResult.FAIL) return result
+        if (result == InteractionResult.FAIL) return result
 
         val command = HornUseCommand(user)
         val cmd = CommandGateway.apply(command)
 
         onUse(world, user, cmd)
 
-        val itemStack = user.getStackInHand(hand)
+        val itemStack = user.getItemInHand(hand)
         val cooldown = (baseCooldown * cmd.getCooldownFactor()).toInt()
-        user.itemCooldownManager.set(itemStack, cooldown)
+        user.cooldowns.addCooldown(itemStack, cooldown)
 
         return result
     }
 
-    abstract fun onUse(world: World, user: PlayerEntity, cmd: HornUseCommand)
+    abstract fun onUse(world: Level, user: Player, cmd: HornUseCommand)
 }

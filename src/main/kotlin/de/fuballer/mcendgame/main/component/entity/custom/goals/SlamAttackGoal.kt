@@ -2,13 +2,13 @@ package de.fuballer.mcendgame.main.component.entity.custom.goals
 
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomPosesEntity
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.SlamAttacker
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.goal.Goal
-import net.minecraft.entity.ai.pathing.Path
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.predicate.entity.EntityPredicates
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.entity.EntitySelector
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.goal.Goal
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.pathfinder.Path
+import net.minecraft.world.phys.Vec3
 import java.util.*
 import kotlin.math.max
 
@@ -18,7 +18,7 @@ class SlamAttackGoal<T>(
     private val slamDuration: Int,
     private val slamImpactTime: Int,
     private val slamCooldown: Int,
-) : Goal() where T : MobEntity, T : SlamAttacker {
+) : Goal() where T : Mob, T : SlamAttacker {
     private var path: Path? = null
     private var targetX = 0.0
     private var targetY = 0.0
@@ -29,48 +29,48 @@ class SlamAttackGoal<T>(
     private var slamTime = -1
 
     init {
-        setControls(EnumSet.of(Control.MOVE, Control.LOOK))
+        setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK))
     }
 
-    override fun canStart(): Boolean {
-        val time = mob.entityWorld.time
+    override fun canUse(): Boolean {
+        val time = mob.level().gameTime
         if (time - lastUpdateTime < 20) return false
         lastUpdateTime = time
 
         val target = mob.target ?: return false
         if (!target.isAlive) return false
 
-        path = mob.navigation.findPathTo(target, 0)
-        return path != null || mob.isInAttackRange(target)
+        path = mob.navigation.createPath(target, 0)
+        return path != null || mob.isWithinMeleeAttackRange(target)
     }
 
-    override fun shouldContinue(): Boolean {
+    override fun canContinueToUse(): Boolean {
         if (slamTime >= 0) return true
 
         val target = mob.target ?: return false
         if (!target.isAlive) return false
 
-        if (!mob.isInPositionTargetRange(target.blockPos)) return false
-        return target !is PlayerEntity || (!target.isSpectator && !target.isCreative)
+        if (!mob.isWithinHome(target.blockPosition())) return false
+        return target !is Player || (!target.isSpectator && !target.isCreative)
     }
 
     override fun start() {
-        mob.navigation.startMovingAlong(path, moveSpeedFactor)
-        mob.isAttacking = true
+        mob.navigation.moveTo(path, moveSpeedFactor)
+        mob.setAggressive(true)
         updateCountdownTicks = 0
     }
 
     override fun stop() {
-        val target = mob.target
-        if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(target)) {
+        val target = mob.target ?: return
+        if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target)) {
             mob.target = null
         }
 
-        mob.isAttacking = false
+        mob.setAggressive(false)
         mob.navigation.stop()
     }
 
-    override fun shouldRunEveryTick() = true
+    override fun requiresUpdateEveryTick() = true
 
     override fun tick() {
         val target = mob.target ?: return
@@ -82,7 +82,7 @@ class SlamAttackGoal<T>(
         target: LivingEntity
     ) {
         if (!updateSlam()) {
-            mob.lookControl.lookAt(target, 30.0f, 30.0f)
+            mob.lookControl.setLookAt(target, 30.0f, 30.0f)
         }
 
         cooldown = max(cooldown - 1, 0)
@@ -99,22 +99,22 @@ class SlamAttackGoal<T>(
         val distance = mob.distanceTo(target)
         updateCountdownTicks += (distance / 10).toInt()
 
-        if (!mob.navigation.startMovingTo(target, moveSpeedFactor)) {
+        if (!mob.navigation.moveTo(target, moveSpeedFactor)) {
             updateCountdownTicks += 15
         }
 
-        updateCountdownTicks = getTickCount(updateCountdownTicks)
+        updateCountdownTicks = adjustedTickDelay(updateCountdownTicks)
     }
 
     private fun shouldUpdate(
         target: LivingEntity
     ): Boolean {
         if (updateCountdownTicks > 0) return false
-        if (!mob.visibilityCache.canSee(target)) return false
+        if (!mob.sensing.hasLineOfSight(target)) return false
 
         if (targetX == 0.0 && targetY == 0.0 && targetZ == 0.0) return true
-        if (target.entityPos.distanceTo(Vec3d(targetX, targetY, targetZ)) > 1) return true
-        if (mob.navigation.isIdle && mob.distanceTo(target) > 1) return true
+        if (target.position().distanceTo(Vec3(targetX, targetY, targetZ)) > 1) return true
+        if (mob.navigation.isDone && mob.distanceTo(target) > 1) return true
 
         return mob.random.nextFloat() < 0.05
     }
@@ -129,7 +129,7 @@ class SlamAttackGoal<T>(
         testSlamDamage()
         if (slamTime < slamDuration) return true
 
-        updateCountdownTicks = getTickCount(5)
+        updateCountdownTicks = adjustedTickDelay(5)
         slamTime = -1
         mob.setPose(CustomPosesEntity.CustomPose.IDLING)
 
@@ -146,9 +146,9 @@ class SlamAttackGoal<T>(
 
         slamTime = 0
         mob.setPose(CustomPosesEntity.CustomPose.SLAMMING)
-        cooldown = getTickCount(slamCooldown)
+        cooldown = adjustedTickDelay(slamCooldown)
     }
 
     private fun canSlam(target: LivingEntity) =
-        cooldown <= 0 && mob.isInAttackRange(target) && mob.visibilityCache.canSee(target)
+        cooldown <= 0 && mob.isWithinMeleeAttackRange(target) && mob.sensing.hasLineOfSight(target)
 }

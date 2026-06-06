@@ -5,11 +5,11 @@ import de.fuballer.mcendgame.main.component.item_filter.db.ItemFilterRepository
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.inventory.Inventory
-import net.minecraft.item.Item
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
+import net.minecraft.world.Container
+import net.minecraft.world.SimpleMenuProvider
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.Item
 import java.util.*
 
 @Injectable
@@ -19,21 +19,21 @@ class ItemFilterService(
     @CommandHandler
     fun on(cmd: PlayerItemPickupCommand) {
         val player = cmd.player
-        if (!player.entityWorld.isDungeonWorld()) return
+        if (!player.level().isDungeonWorld()) return
 
         val uuid = player.uuid
         val filter = itemFilterRepo.findById(uuid)?.items ?: return
         if (filter.contains(cmd.item)) cmd.cancel()
     }
 
-    fun openFilterInventory(player: PlayerEntity) {
+    fun openFilterInventory(player: Player) {
         val filter = getFilterOrCreate(player.uuid)
 
-        val screenHandlerFactory = SimpleNamedScreenHandlerFactory({ syncId, inventory, _ ->
+        val screenHandlerFactory = SimpleMenuProvider({ syncId, inventory, _ ->
             ItemFilterScreenHandler(syncId, inventory, filter, this)
-        }, Text.translatable("container.mcendgame.filter.title"))
+        }, Component.translatable("container.mcendgame.filter.title"))
 
-        player.openHandledScreen(screenHandlerFactory)
+        player.openMenu(screenHandlerFactory)
     }
 
     private fun getFilterOrCreate(uuid: UUID): Set<Item> {
@@ -43,11 +43,11 @@ class ItemFilterService(
         return entity.items
     }
 
-    fun saveItemFilter(player: PlayerEntity, inventory: Inventory) {
+    fun saveItemFilter(player: Player, inventory: Container) {
         val newFilter = mutableSetOf<Item>()
 
-        for (i in 0 until inventory.size()) {
-            val stack = inventory.getStack(i)
+        for (i in 0 until inventory.containerSize) {
+            val stack = inventory.getItem(i)
             if (stack.isEmpty) continue
 
             newFilter.add(stack.item)

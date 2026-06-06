@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.component.dungeon.generation.data
 
-import net.minecraft.util.math.Vec3i
+import net.minecraft.core.Vec3i
 import kotlin.math.atan2
 import kotlin.math.roundToInt
 

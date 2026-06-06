@@ -2,20 +2,20 @@ package de.fuballer.mcendgame.main.component.entity.custom.interfaces
 
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.knockback.AttackKnockbackUtil.takeKnockbackFrom
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealGenericAttackDamage
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.particle.ParticleTypes
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvents
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Vec3d
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import kotlin.math.max
 import kotlin.math.min
 
 interface SlamAttacker : CustomPosesEntity {
-    val slamAttacker: MobEntity
+    val slamAttacker: Mob
     val slamRadius: Double
     val minSlamStrength: Double
     val slamCenterFacingOffset: Double
@@ -25,19 +25,19 @@ interface SlamAttacker : CustomPosesEntity {
     fun shouldDamage(target: LivingEntity): Boolean
 
     fun slam() {
-        val world = slamAttacker.entityWorld as? ServerWorld ?: return
+        val world = slamAttacker.level() as? ServerLevel ?: return
 
-        val scale = if (applyScale) slamAttacker.getAttributeValue(EntityAttributes.SCALE) else 1.0
+        val scale = if (applyScale) slamAttacker.getAttributeValue(Attributes.SCALE) else 1.0
         val scaledRadius = slamRadius * scale
         val scaledKnockbackStrength = knockbackStrength * scale
         val scaledOffset = slamCenterFacingOffset * scale
 
-        val offset = slamAttacker.rotationVector.normalize().multiply(scaledOffset)
-        val damageCenter = slamAttacker.entityPos.add(offset)
+        val offset = slamAttacker.lookAngle.normalize().scale(scaledOffset)
+        val damageCenter = slamAttacker.position().add(offset)
 
-        val box = Box(damageCenter, Vec3d.ZERO).expand(scaledRadius) //TODO is this box even used
-        val targets = world.getEntitiesByClass(LivingEntity::class.java, box) { it != slamAttacker && shouldDamage(it) }
-            .filter { damageCenter.distanceTo(it.entityPos) <= scaledRadius }
+        val box = AABB(damageCenter, Vec3.ZERO).inflate(scaledRadius) //TODO is this box even used
+        val targets = world.getEntitiesOfClass(LivingEntity::class.java, box) { it != slamAttacker && shouldDamage(it) }
+            .filter { damageCenter.distanceTo(it.position()) <= scaledRadius }
 
         damageTargets(
             targets,
@@ -53,15 +53,15 @@ interface SlamAttacker : CustomPosesEntity {
 
     private fun damageTargets(
         targets: List<LivingEntity>,
-        world: ServerWorld,
-        damageCenter: Vec3d,
+        world: ServerLevel,
+        damageCenter: Vec3,
         scaledRadius: Double,
         scaledKnockbackStrength: Double,
     ) {
-        val attackDamage = slamAttacker.getAttributeValue(EntityAttributes.ATTACK_DAMAGE).toFloat()
+        val attackDamage = slamAttacker.getAttributeValue(Attributes.ATTACK_DAMAGE).toFloat()
 
         for (target in targets) {
-            val distanceVector = target.entityPos.subtract(damageCenter)
+            val distanceVector = target.position().subtract(damageCenter)
             val distancePercent = max(1 - (distanceVector.length() / scaledRadius), 0.0)
 
             val damage = getDistanceScaled(attackDamage.toDouble(), distancePercent).toFloat()
@@ -82,11 +82,11 @@ interface SlamAttacker : CustomPosesEntity {
     }
 
     private fun createParticles(
-        world: ServerWorld,
-        center: Vec3d,
+        world: ServerLevel,
+        center: Vec3,
         scaledRadius: Double,
     ) {
-        world.spawnParticles(
+        world.sendParticles(
             ParticleTypes.CLOUD,
             center.x,
             center.y + 0.2,
@@ -100,8 +100,8 @@ interface SlamAttacker : CustomPosesEntity {
     }
 
     private fun playSound(
-        world: ServerWorld,
-        slamCenter: Vec3d,
+        world: ServerLevel,
+        slamCenter: Vec3,
         slamRadius: Double,
     ) {
         val volume = min(slamRadius / 3, 2.0).toFloat()
@@ -110,8 +110,8 @@ interface SlamAttacker : CustomPosesEntity {
             slamCenter.x,
             slamCenter.y,
             slamCenter.z,
-            SoundEvents.ENTITY_GENERIC_EXPLODE,
-            SoundCategory.HOSTILE,
+            SoundEvents.GENERIC_EXPLODE,
+            SoundSource.HOSTILE,
             volume,
             1F
         )

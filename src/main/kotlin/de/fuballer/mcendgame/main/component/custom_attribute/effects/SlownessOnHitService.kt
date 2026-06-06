@@ -6,15 +6,15 @@ import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttribu
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDamagedEvent
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.effect.StatusEffects
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.LivingEntity
 
 @Injectable
 class SlownessOnHitService {
     @EventSubscriber(sync = true)
     fun on(event: LivingEntityDamagedEvent) {
-        val attacker = event.damageSource.attacker as? LivingEntity ?: return
+        val attacker = event.damageSource.entity as? LivingEntity ?: return
 
         val attributes = attacker.getAllCustomAttributes()[CustomAttributeTypes.SLOWNESS_ON_HIT] ?: return
 
@@ -22,8 +22,8 @@ class SlownessOnHitService {
         attributes.forEach {
             val duration = it.rolls[1].asIntRoll().getValue() * 20
             val amplifier = it.rolls[0].asIntRoll().getValue() - 1
-            val effectInstance = StatusEffectInstance(StatusEffects.SLOWNESS, duration, amplifier, false, true, true)
-            damaged.addStatusEffect(effectInstance)
+            val effectInstance = MobEffectInstance(MobEffects.SLOWNESS, duration, amplifier, false, true, true)
+            damaged.addEffect(effectInstance)
         }
     }
 }

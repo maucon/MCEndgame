@@ -4,13 +4,13 @@ import com.mojang.serialization.MapCodec
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
-import net.minecraft.network.RegistryByteBuf
-import net.minecraft.network.codec.PacketCodec
-import net.minecraft.particle.ParticleEffect
-import net.minecraft.particle.ParticleType
-import net.minecraft.particle.SimpleParticleType
-import net.minecraft.registry.Registries
-import net.minecraft.registry.Registry
+import net.minecraft.core.Registry
+import net.minecraft.core.particles.ParticleOptions
+import net.minecraft.core.particles.ParticleType
+import net.minecraft.core.particles.SimpleParticleType
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.StreamCodec
 import java.util.function.Function
 
 @Injectable
@@ -31,20 +31,20 @@ object CustomParticleTypes {
     )
 
     private fun registerSimple(name: String): SimpleParticleType =
-        Registry.register(Registries.PARTICLE_TYPE, IdentifierUtil.default(name), FabricParticleTypes.simple())
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, IdentifierUtil.default(name), FabricParticleTypes.simple())
 
-    private fun <T : ParticleEffect> registerComplex(
+    private fun <T : ParticleOptions> registerComplex(
         name: String,
         alwaysShow: Boolean,
         codecGetter: Function<ParticleType<T>, MapCodec<T>>,
-        packetCodecGetter: Function<ParticleType<T>, PacketCodec<in RegistryByteBuf, T>>
+        packetCodecGetter: Function<ParticleType<T>, StreamCodec<in RegistryFriendlyByteBuf, T>>
     ): ParticleType<T> {
-        return Registry.register(Registries.PARTICLE_TYPE, IdentifierUtil.default(name), object : ParticleType<T>(alwaysShow) {
-            override fun getCodec(): MapCodec<T> {
+        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, IdentifierUtil.default(name), object : ParticleType<T>(alwaysShow) {
+            override fun codec(): MapCodec<T> {
                 return codecGetter.apply(this)
             }
 
-            override fun getPacketCodec(): PacketCodec<in RegistryByteBuf, T> {
+            override fun streamCodec(): StreamCodec<in RegistryFriendlyByteBuf, T> {
                 return packetCodecGetter.apply(this)
             }
         })

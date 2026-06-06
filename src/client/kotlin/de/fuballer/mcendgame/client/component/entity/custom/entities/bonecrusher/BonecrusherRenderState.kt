@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher
 
-import net.minecraft.client.render.entity.state.LivingEntityRenderState
-import software.bernie.geckolib.renderer.base.GeoRenderState
+import com.geckolib.renderer.base.GeoRenderState
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 
 abstract class BonecrusherRenderState : LivingEntityRenderState(), GeoRenderState

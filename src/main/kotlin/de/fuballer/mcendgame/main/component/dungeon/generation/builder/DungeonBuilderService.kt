@@ -6,18 +6,18 @@ import de.fuballer.mcendgame.main.util.RotationUtil
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.rotateY90
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.toBlockPos
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.state.property.Properties
-import net.minecraft.structure.StructurePlacementData
-import net.minecraft.structure.StructureTemplate
-import net.minecraft.util.BlockMirror
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3i
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Vec3i
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.level.block.Mirror
+import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate
 
 @Injectable
 class DungeonBuilderService {
     fun build(
-        world: ServerWorld,
+        world: ServerLevel,
         rooms: List<PlaceableRoom>
     ) {
         for (room in rooms) {
@@ -26,7 +26,7 @@ class DungeonBuilderService {
 
             for (extension in room.type.extensions) {
                 val rotatedOffset = extension.offset.rotateY90(room.rotation90)
-                val position = rotatedOffset.add(room.position)
+                val position = rotatedOffset.offset(room.position)
                 placeTemplate(world, extension.template, position, rotDeg, room.type.mirrored)
             }
 
@@ -35,52 +35,52 @@ class DungeonBuilderService {
     }
 
     private fun placeTemplate(
-        world: ServerWorld,
+        world: ServerLevel,
         template: StructureTemplate,
         position: Vec3i,
         rotation: Double, // in degree
         mirrored: Boolean
     ) {
         val blockRotation = RotationUtil.getAsRotation(rotation)
-        val structurePlacementData = StructurePlacementData()
+        val structurePlacementData = StructurePlaceSettings()
             .addProcessor(IgnoreMarkerStructureProcessor())
             .setRotation(RotationUtil.getAsRotation(rotation))
-            .setMirror(if (mirrored) BlockMirror.FRONT_BACK else BlockMirror.NONE)
+            .setMirror(if (mirrored) Mirror.FRONT_BACK else Mirror.NONE)
 
         val offset = if (mirrored) {
             BlockPos(template.size.x - 1, 0, 0).rotate(blockRotation)
         } else {
-            BlockPos.ORIGIN
+            BlockPos.ZERO
         }
 
         val pos = position.toBlockPos()
-            .add(offset)
+            .offset(offset)
 
-        template.place(world, pos, pos, structurePlacementData, world.random, 2)
+        template.placeInWorld(world, pos, pos, structurePlacementData, world.random, 2)
     }
 
     private fun placeBlocks(
-        world: ServerWorld,
+        world: ServerLevel,
         offset: Vec3i,
         rotation90: Int,
         blocks: List<PlaceableBlock>
     ) = blocks.forEach { placeBlock(world, offset, rotation90, it) }
 
     private fun placeBlock(
-        world: ServerWorld,
+        world: ServerLevel,
         offset: Vec3i,
         rotation90: Int,
         block: PlaceableBlock
     ) {
         val blockPos = block.getBlockPos(offset, rotation90)
 
-        var state = block.block.defaultState
-        if (state.contains(Properties.ROTATION)) {
+        var state = block.block.defaultBlockState()
+        if (state.hasProperty(BlockStateProperties.ROTATION_16)) {
             val roomRot16 = rotation90 * 4
             val direction = (block.rotation16 + roomRot16) % 16
-            state = state.with(Properties.ROTATION, direction)
+            state = state.setValue(BlockStateProperties.ROTATION_16, direction)
         }
 
-        world.setBlockState(blockPos, state)
+        world.setBlockAndUpdate(blockPos, state)
     }
 }

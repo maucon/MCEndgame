@@ -1,14 +1,14 @@
 package de.fuballer.mcendgame.main.messaging.misc
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.world.World
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.level.Level
 
 data class LivingEntityDeathEvent(
     val isClient: Boolean,
-    val world: World,
+    val world: Level,
     val entity: LivingEntity,
     val killer: LivingEntity?,
 ) {
     constructor(entity: LivingEntity)
-            : this(entity.entityWorld.isClient, entity.entityWorld, entity, entity.attacker)
+            : this(entity.level().isClientSide, entity.level(), entity, entity.lastHurtByMob)
 }

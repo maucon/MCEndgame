@@ -4,13 +4,13 @@ import de.fuballer.mcendgame.main.component.corruption.CorruptionExtensions.isCo
 import de.fuballer.mcendgame.main.messaging.misc.*
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.item.ItemStack
+import net.minecraft.world.item.ItemStack
 
 @Injectable
 object CorruptionUnmodifiableService {
     @CommandHandler
     fun on(cmd: CraftingResultCommand) {
-        val stacks = cmd.input.stacks
+        val stacks = cmd.input.items()
         if (stacks.none { it.isCorrupted() }) return
         cmd.result = ItemStack.EMPTY
     }

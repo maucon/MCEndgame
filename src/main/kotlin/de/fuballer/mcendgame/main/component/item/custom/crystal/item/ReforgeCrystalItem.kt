@@ -4,20 +4,20 @@ import de.fuballer.mcendgame.main.component.block.blocks.crystalforge.CrystalFor
 import de.fuballer.mcendgame.main.component.dungeon.enemy.equipment.EquipmentGenerationSettings
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItemInterface
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import java.awt.Color
 
 class ReforgeCrystalItem(
-    settings: Settings,
+    settings: Properties,
 ) : CrystalItem(settings) {
     override val forgeColor = Color(232, 40, 160)
 
-    override val description: MutableText = Text.translatable(DESCRIPTION_BASE_KEY + "reforge")
+    override val description: MutableComponent = Component.translatable(DESCRIPTION_BASE_KEY + "reforge")
 
-    override fun canForge(stack: ItemStack): MutableText? {
+    override fun canForge(stack: ItemStack): MutableComponent? {
         val cannotForgeReason = super.canForge(stack)
         if (cannotForgeReason != null) return cannotForgeReason
 

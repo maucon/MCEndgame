@@ -8,9 +8,9 @@ import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectGenericIncreasedAndMoreDamageCommand
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributeModifier
-import net.minecraft.entity.attribute.EntityAttributes
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.attributes.Attributes
 
 @Injectable
 class MovementSpeedModifiersAffectDamageService {
@@ -22,7 +22,7 @@ class MovementSpeedModifiersAffectDamageService {
             damager,
             cmd.damagerAttributes,
             CustomAttributeTypes.INCREASED_MOVEMENT_SPEED_MODIFIERS_AFFECT_DAMAGE,
-            EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
+            AttributeModifier.Operation.ADD_MULTIPLIED_BASE
         )
         cmd.increasedDamage.addAll(increaseFactors)
 
@@ -30,7 +30,7 @@ class MovementSpeedModifiersAffectDamageService {
             damager,
             cmd.damagerAttributes,
             CustomAttributeTypes.MORE_MOVEMENT_SPEED_MODIFIERS_AFFECT_DAMAGE,
-            EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+            AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         )
         cmd.moreDamage.addAll(moreFactors)
     }
@@ -41,7 +41,7 @@ class MovementSpeedModifiersAffectDamageService {
             cmd.entity,
             cmd.attributes,
             CustomAttributeTypes.INCREASED_MOVEMENT_SPEED_MODIFIERS_AFFECT_DAMAGE,
-            EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
+            AttributeModifier.Operation.ADD_MULTIPLIED_BASE
         )
         cmd.increased.addAll(increaseFactors)
 
@@ -49,7 +49,7 @@ class MovementSpeedModifiersAffectDamageService {
             cmd.entity,
             cmd.attributes,
             CustomAttributeTypes.MORE_MOVEMENT_SPEED_MODIFIERS_AFFECT_DAMAGE,
-            EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+            AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         )
         cmd.more.addAll(moreFactors)
     }
@@ -58,15 +58,15 @@ class MovementSpeedModifiersAffectDamageService {
         entity: LivingEntity,
         customAttributes: Map<CustomAttributeType, List<CustomAttribute>>,
         attributeType: CustomAttributeType,
-        operation: EntityAttributeModifier.Operation,
+        operation: AttributeModifier.Operation,
     ): List<Double> {
         val attr = customAttributes[attributeType] ?: return listOf()
         val effectiveness = attr.sumOf { it.rolls[0].asDoubleRoll().getValue() }
 
-        val movementSpeedInstance = entity.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED) ?: return listOf()
+        val movementSpeedInstance = entity.getAttribute(Attributes.MOVEMENT_SPEED) ?: return listOf()
         return movementSpeedInstance.modifiers
             .filter { it.operation == operation }
-            .map { it.value * effectiveness }
+            .map { it.amount * effectiveness }
             .toList()
     }
 }

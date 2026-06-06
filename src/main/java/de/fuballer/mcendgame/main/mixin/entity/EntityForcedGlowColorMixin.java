@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.main.mixin.entity;
 
 import de.fuballer.mcendgame.main.accessor.EntityForcedGlowColorAccessor;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,28 +18,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class EntityForcedGlowColorMixin implements EntityForcedGlowColorAccessor {
     @Shadow
     @Final
-    protected DataTracker dataTracker;
+    protected SynchedEntityData entityData;
     @Unique
-    private static final TrackedData<Integer> FORCED_GLOW_COLOR = DataTracker.registerData(Entity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final EntityDataAccessor<Integer> FORCED_GLOW_COLOR = SynchedEntityData.defineId(Entity.class, EntityDataSerializers.INT);
 
     @ModifyVariable(
             method = "<init>",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;initDataTracker(Lnet/minecraft/entity/data/DataTracker$Builder;)V", shift = At.Shift.AFTER)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;defineSynchedData(Lnet/minecraft/network/syncher/SynchedEntityData$Builder;)V", shift = At.Shift.AFTER)
     )
-    private DataTracker.Builder modifyBuilder(DataTracker.Builder builder) {
-        builder.add(FORCED_GLOW_COLOR, -1);
+    private SynchedEntityData.Builder modifyBuilder(SynchedEntityData.Builder builder) {
+        builder.define(FORCED_GLOW_COLOR, -1);
         return builder;
     }
 
-    @Inject(method = "getTeamColorValue", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getTeamColor", at = @At("HEAD"), cancellable = true)
     void getTeamColorValue(CallbackInfoReturnable<Integer> cir) {
-        var forcedColor = dataTracker.get(FORCED_GLOW_COLOR);
+        var forcedColor = entityData.get(FORCED_GLOW_COLOR);
         if (forcedColor == -1) return;
         cir.setReturnValue(forcedColor);
     }
 
     @Override
     public void mcendgame$setForcedGlowColor(int color) {
-        dataTracker.set(FORCED_GLOW_COLOR, color);
+        entityData.set(FORCED_GLOW_COLOR, color);
     }
 }

@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.component.entity.custom.goals
 
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.ai.RangedAttackMob
-import net.minecraft.entity.mob.MobEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.monster.RangedAttackMob
 import java.util.*
 
 class KeepDistanceToTargetGoal<T>(
@@ -10,7 +10,7 @@ class KeepDistanceToTargetGoal<T>(
     private val speed: Double,
     minDistance: Float,
     maxDistance: Float,
-) : DisableAbleGoal() where  T : RangedAttackMob, T : MobEntity {
+) : DisableAbleGoal() where  T : RangedAttackMob, T : Mob {
     private val squaredMinDistance: Float
     private val squaredMaxDistance: Float
     private var seeingTargetTicker = 0
@@ -19,48 +19,48 @@ class KeepDistanceToTargetGoal<T>(
     private var strafeDirChangeCounter = -1
 
     init {
-        controls = EnumSet.of(Control.MOVE, Control.LOOK)
+        setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK))
 
         squaredMinDistance = minDistance * minDistance
         squaredMaxDistance = maxDistance * maxDistance
     }
 
-    override fun canStart(): Boolean {
+    override fun canUse(): Boolean {
         if (isDisabled) return false
         return entity.target != null
     }
 
-    override fun shouldContinue(): Boolean {
+    override fun canContinueToUse(): Boolean {
         if (isDisabled) return false
         if (entity.target != null) return true
-        return !entity.navigation.isIdle
+        return !entity.navigation.isDone
     }
 
     override fun start() {
         super.start()
-        entity.setAttacking(true)
+        entity.setAggressive(true)
     }
 
     override fun stop() {
         super.stop()
-        entity.setAttacking(false)
+        entity.setAggressive(false)
         seeingTargetTicker = 0
-        entity.moveControl.strafeTo(0F, 0F)
+        entity.moveControl.strafe(0F, 0F)
         entity.navigation.stop()
     }
 
-    override fun shouldRunEveryTick() = true
+    override fun requiresUpdateEveryTick() = true
 
     override fun tick() {
         val target = entity.target ?: return
 
         updateSeeingTargetTicker(target)
-        val squaredDistanceToTarget = entity.squaredDistanceTo(target)
+        val squaredDistanceToTarget = entity.distanceToSqr(target)
         if (squaredDistanceToTarget <= squaredMaxDistance && seeingTargetTicker >= 20) {
             entity.navigation.stop()
             strafeDirChangeCounter++
         } else {
-            entity.navigation.startMovingTo(target, speed)
+            entity.navigation.moveTo(target, speed)
             strafeDirChangeCounter = -1
         }
 
@@ -77,7 +77,7 @@ class KeepDistanceToTargetGoal<T>(
     private fun updateSeeingTargetTicker(
         target: LivingEntity
     ): Boolean {
-        val canSeeTarget = entity.visibilityCache.canSee(target)
+        val canSeeTarget = entity.sensing.hasLineOfSight(target)
         val sawTarget = seeingTargetTicker > 0
 
         if (canSeeTarget != sawTarget) seeingTargetTicker = 0
@@ -91,7 +91,7 @@ class KeepDistanceToTargetGoal<T>(
         squaredDistanceToTarget: Double,
     ) {
         if (strafeDirChangeCounter < 0) {
-            entity.lookControl.lookAt(target, 30.0f, 30.0f)
+            entity.lookControl.setLookAt(target, 30.0f, 30.0f)
             return
         }
 
@@ -109,9 +109,9 @@ class KeepDistanceToTargetGoal<T>(
         }
 
         val strafeLR = if (movingToLeft) 0.5f else -0.5f
-        entity.moveControl.strafeTo(strafeFB, strafeLR)
-        (entity.controllingVehicle as? MobEntity)?.lookAtEntity(target, 30.0F, 30.0F)
+        entity.moveControl.strafe(strafeFB, strafeLR)
+        (entity.controlledVehicle as? Mob)?.lookAt(target, 30.0F, 30.0F)
 
-        entity.lookAtEntity(target, 30.0f, 30.0f)
+        entity.lookAt(target, 30.0f, 30.0f)
     }
 }

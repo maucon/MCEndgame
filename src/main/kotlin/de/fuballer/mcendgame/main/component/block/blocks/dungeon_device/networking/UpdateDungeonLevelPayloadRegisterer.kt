@@ -11,7 +11,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 class UpdateDungeonLevelPayloadRegisterer {
     @Initializer
     fun register() {
-        PayloadTypeRegistry.playC2S().register(UpdateDungeonLevelPayload.ID, UpdateDungeonLevelPayload.CODEC)
+        PayloadTypeRegistry.serverboundPlay().register(UpdateDungeonLevelPayload.ID, UpdateDungeonLevelPayload.CODEC)
 
         ServerPlayNetworking.registerGlobalReceiver(UpdateDungeonLevelPayload.ID) { payload, context ->
             val playerEntity = context.player()

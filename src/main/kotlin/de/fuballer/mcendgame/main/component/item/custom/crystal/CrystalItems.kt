@@ -1,10 +1,6 @@
 package de.fuballer.mcendgame.main.component.item.custom.crystal
 
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.CalibrationCrystalItem
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.CorruptionCrystalItem
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.PermutationCrystalItem
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.ReforgeCrystalItem
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.SacrificeCrystalItem
+import de.fuballer.mcendgame.main.component.item.custom.crystal.item.*
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
 import de.maucon.mauconframework.di.annotation.Injectable
 

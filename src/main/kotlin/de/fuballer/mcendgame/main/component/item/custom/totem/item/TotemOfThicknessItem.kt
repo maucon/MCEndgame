@@ -9,7 +9,7 @@ import de.fuballer.mcendgame.main.component.item.custom.totem.TotemType
 
 // name chosen by xX20Erik01Xx
 class TotemOfThicknessItem(
-    settings: Settings,
+    settings: Properties,
 ) : TotemItem(settings) {
     override val maxTier = 2
     override val type = TotemType.BASIC

@@ -5,8 +5,8 @@ import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttribu
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributes
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.Attributes
 
 @Injectable
 class MoreAttackDamagePerArmorService {
@@ -14,7 +14,7 @@ class MoreAttackDamagePerArmorService {
     fun on(cmd: DamageCalculationCommand) {
         val attributes = cmd.damagerAttributes[CustomAttributeTypes.MORE_ATTACK_DAMAGE_PER_ARMOR] ?: return
         val damager = cmd.damager as? LivingEntity ?: return
-        val armor = damager.getAttributeValue(EntityAttributes.ARMOR)
+        val armor = damager.getAttributeValue(Attributes.ARMOR)
         attributes.forEach {
             val damagePerArmor = it.rolls[0].asDoubleRoll().getValue()
             cmd.moreAttackDamage.add(armor * damagePerArmor)

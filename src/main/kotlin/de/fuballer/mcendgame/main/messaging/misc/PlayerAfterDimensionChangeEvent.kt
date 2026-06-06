@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.main.messaging.misc
 
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.player.Player
 
 data class PlayerAfterDimensionChangeEvent(
-    val player: PlayerEntity,
-    val oldWorld: ServerWorld,
-    val newWorld: ServerWorld,
+    val player: Player,
+    val oldWorld: ServerLevel,
+    val newWorld: ServerLevel,
 )

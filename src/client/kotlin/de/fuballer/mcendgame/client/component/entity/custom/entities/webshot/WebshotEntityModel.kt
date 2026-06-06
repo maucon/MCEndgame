@@ -1,9 +1,14 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.webshot
 
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import net.minecraft.client.model.*
-import net.minecraft.client.render.entity.model.EntityModel
-import net.minecraft.client.render.entity.model.EntityModelLayer
+import net.minecraft.client.model.EntityModel
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.model.geom.PartPose
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.CubeListBuilder
+import net.minecraft.client.model.geom.builders.LayerDefinition
+import net.minecraft.client.model.geom.builders.MeshDefinition
 
 class WebshotEntityModel(
     modelPart: ModelPart,
@@ -11,28 +16,28 @@ class WebshotEntityModel(
     val webshot: ModelPart = root.getChild("webshot")
 
     companion object {
-        val WEBSHOT = EntityModelLayer(IdentifierUtil.default("webshot"), "main")
+        val WEBSHOT = ModelLayerLocation(IdentifierUtil.default("webshot"), "main")
 
-        fun getTexturedModelData(): TexturedModelData {
-            val modelData = ModelData()
+        fun getTexturedModelData(): LayerDefinition {
+            val modelData = MeshDefinition()
             val modelPartData = modelData.root
-            val webshot = modelPartData.addChild(
+            val webshot = modelPartData.addOrReplaceChild(
                 "webshot",
-                ModelPartBuilder.create().uv(0, 5).cuboid(-2.0f, -2.0f, -1.0f, 4.0f, 4.0f, 2.0f, Dilation(0.0f))
-                    .uv(2, 0).cuboid(-1.5f, -1.5f, -2.0f, 3.0f, 3.0f, 1.0f, Dilation(0.0f))
-                    .uv(1, 12).cuboid(-1.5f, -1.5f, 1.0f, 3.0f, 3.0f, 2.0f, Dilation(0.0f))
-                    .uv(2, 18).cuboid(-1.0f, -1.0f, 3.0f, 2.0f, 2.0f, 2.0f, Dilation(0.0f))
-                    .uv(3, 23).cuboid(-0.5f, -0.5f, 5.0f, 1.0f, 1.0f, 2.0f, Dilation(0.0f)),
-                ModelTransform.NONE
+                CubeListBuilder.create().texOffs(0, 5).addBox(-2.0f, -2.0f, -1.0f, 4.0f, 4.0f, 2.0f, CubeDeformation(0.0f))
+                    .texOffs(2, 0).addBox(-1.5f, -1.5f, -2.0f, 3.0f, 3.0f, 1.0f, CubeDeformation(0.0f))
+                    .texOffs(1, 12).addBox(-1.5f, -1.5f, 1.0f, 3.0f, 3.0f, 2.0f, CubeDeformation(0.0f))
+                    .texOffs(2, 18).addBox(-1.0f, -1.0f, 3.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.0f))
+                    .texOffs(3, 23).addBox(-0.5f, -0.5f, 5.0f, 1.0f, 1.0f, 2.0f, CubeDeformation(0.0f)),
+                PartPose.ZERO
             )
-            return TexturedModelData.of(modelData, 32, 32)
+            return LayerDefinition.create(modelData, 32, 32)
         }
     }
 
-    override fun setAngles(
+    override fun setupAnim(
         renderState: WebshotRenderState,
     ) {
-        super.setAngles(renderState)
-        webshot.roll += renderState.age * 0.12F
+        super.setupAnim(renderState)
+        webshot.zRot += renderState.ageInTicks * 0.12F
     }
 }

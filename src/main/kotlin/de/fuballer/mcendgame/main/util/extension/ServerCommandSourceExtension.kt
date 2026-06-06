@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.util.extension
 
-import net.minecraft.command.DefaultPermissions
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.server.permissions.Permissions
 
 object ServerCommandSourceExtension {
-    fun ServerCommandSource.isModerator() = permissions.hasPermission(DefaultPermissions.MODERATORS)
+    fun CommandSourceStack.isModerator() = permissions().hasPermission(Permissions.COMMANDS_MODERATOR)
 }

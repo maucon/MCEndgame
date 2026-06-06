@@ -1,14 +1,14 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.flame_breath
 
+import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
 import de.maucon.mauconframework.event.EventGateway
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
-import software.bernie.geckolib.animatable.GeoEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 import kotlin.math.atan2
 
 class FlameBreathAttack<T>(
@@ -25,7 +25,7 @@ class FlameBreathAttack<T>(
     val entityHeightOffsetFactor: Double,
     sounds: List<DelayedSoundData> = listOf(),
     blockMovementDuration: Int = 0,
-) : Attack<T>(animationData, totalDuration, cooldown, trigger, damage, sounds, blockMovementDuration) where T : MobEntity, T : GeoEntity {
+) : Attack<T>(animationData, totalDuration, cooldown, trigger, damage, sounds, blockMovementDuration) where T : Mob, T : GeoEntity {
     constructor(
         animationData: AttackAnimationData,
         totalDuration: Int,
@@ -60,9 +60,9 @@ class FlameBreathAttack<T>(
         super.start(attacker, target)
 
         if (target != null) {
-            attacker.getLookControl().lookAt(target, 360F, 360F)
+            attacker.getLookControl().setLookAt(target, 360F, 360F)
 
-            val diff = target.eyePos.subtract(attacker.entityPos)
+            val diff = target.eyePosition.subtract(attacker.position())
 
             val dx = diff.x
             val dy = diff.y
@@ -70,11 +70,11 @@ class FlameBreathAttack<T>(
 
             val distanceXZ = kotlin.math.sqrt(dx * dx + dz * dz)
 
-            attacker.yaw = (Math.toDegrees(atan2(dz, dx)) - 90.0).toFloat()
-            attacker.pitch = (-Math.toDegrees(atan2(dy, distanceXZ))).toFloat()
+            attacker.setYRot((Math.toDegrees(atan2(dz, dx)) - 90.0).toFloat())
+            attacker.setXRot((-Math.toDegrees(atan2(dy, distanceXZ))).toFloat())
 
-            attacker.bodyYaw = attacker.yaw
-            attacker.headYaw = attacker.yaw
+            attacker.yBodyRot = attacker.yRot
+            attacker.yHeadRot = attacker.yRot
         }
 
         val event = FlameBreathAttackEvent(attacker, target, damageConversion, delay, duration, angle, entityWidthOffsetFactor, entityHeightOffsetFactor)

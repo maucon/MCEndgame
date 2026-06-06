@@ -1,25 +1,24 @@
 package de.fuballer.mcendgame.client.component.screen
 
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gl.RenderPipelines
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.hud.InGameHud
-import net.minecraft.client.gui.screen.ingame.HandledScreen
-import net.minecraft.entity.effect.StatusEffect
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.effect.StatusEffectUtil
-import net.minecraft.screen.ScreenTexts
-import net.minecraft.text.Text
-import net.minecraft.util.Colors
-import net.minecraft.util.Identifier
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.Gui
+import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.network.chat.CommonComponents
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.Identifier
+import net.minecraft.util.CommonColors
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffectUtil
 import java.util.*
 
-private val EFFECT_BACKGROUND_TEXTURE: Identifier = Identifier.ofVanilla("container/inventory/effect_background")
-private val AMBIENT_EFFECT_BACKGROUND_TEXTURE: Identifier = Identifier.ofVanilla("container/inventory/effect_background_ambient")
+private val EFFECT_BACKGROUND_TEXTURE: Identifier = Identifier.withDefaultNamespace("container/inventory/effect_background")
+private val AMBIENT_EFFECT_BACKGROUND_TEXTURE: Identifier = Identifier.withDefaultNamespace("container/inventory/effect_background_ambient")
 
 class CustomStatusEffectsDisplay(
-    val parent: HandledScreen<*>,
-    val client: MinecraftClient = MinecraftClient.getInstance(),
+    val parent: AbstractContainerScreen<*>,
+    val client: Minecraft = Minecraft.getInstance(),
 ) {
     var backgroundHeight = 32
     var wideWidth = 120
@@ -32,9 +31,9 @@ class CustomStatusEffectsDisplay(
 
     var textXOffset = 28
     var descriptionTextYOffset = 6
-    var descriptionTextColor = Colors.WHITE
+    var descriptionTextColor = CommonColors.WHITE
     var durationTextYOffset = 16
-    var durationTextColor = Colors.GRAY
+    var durationTextColor = CommonColors.GRAY
     var renderDurationText = true
 
     var enableTooltip = true
@@ -42,12 +41,12 @@ class CustomStatusEffectsDisplay(
     var yOffsetPerEffect: (Int) -> Int = { effectCount -> if (effectCount <= 5) 33 else 132 / (effectCount - 1) }
 
     fun drawStatusEffects(
-        context: DrawContext,
+        graphics: GuiGraphicsExtractor,
         x: Int,
         y: Int,
         mouseX: Int,
         mouseY: Int,
-        statusEffects: Collection<StatusEffectInstance>,
+        statusEffects: Collection<MobEffectInstance>,
     ) {
         val space = parent.width - x
         if (space < 32) return
@@ -59,20 +58,20 @@ class CustomStatusEffectsDisplay(
         val sortedEffects = statusEffects.sortedBy { it }
         var effectY = y
         sortedEffects.forEach {
-            drawStatusEffectBackground(context, x, effectY, wide, it.isAmbient)
-            drawStatusEffectSprite(context, x, effectY, it, wide)
+            drawStatusEffectBackground(graphics, x, effectY, wide, it.isAmbient)
+            drawStatusEffectSprite(graphics, x, effectY, it, wide)
 
-            if (wide) drawStatusEffectDescription(context, x, effectY, it)
+            if (wide) drawStatusEffectDescription(graphics, x, effectY, it)
             effectY += yOffsetPerEffect
         }
 
         if (wide || !enableTooltip) return
-        drawTooltip(context, sortedEffects, x, y, mouseX, mouseY, yOffsetPerEffect)
+        drawTooltip(graphics, sortedEffects, x, y, mouseX, mouseY, yOffsetPerEffect)
     }
 
     private fun drawTooltip(
-        context: DrawContext,
-        effects: Iterable<StatusEffectInstance>,
+        graphics: GuiGraphicsExtractor,
+        effects: Iterable<MobEffectInstance>,
         x: Int,
         y: Int,
         mouseX: Int,
@@ -82,7 +81,7 @@ class CustomStatusEffectsDisplay(
         if (mouseX < x || mouseX > x + smallWidth) return
 
         var yy = y
-        var hoveredStatusEffectInstance: StatusEffectInstance? = null
+        var hoveredStatusEffectInstance: MobEffectInstance? = null
         effects.forEach {
             if (mouseY >= yy && mouseY <= yy + yOffsetPerEffect) {
                 hoveredStatusEffectInstance = it
@@ -92,19 +91,19 @@ class CustomStatusEffectsDisplay(
         if (hoveredStatusEffectInstance == null) return
 
         val tooltip = mutableListOf(getStatusEffectDescription(hoveredStatusEffectInstance))
-        if (renderDurationText) tooltip.add(StatusEffectUtil.getDurationText(hoveredStatusEffectInstance, 1.0F, client.world!!.tickManager.getTickRate()))
+        if (renderDurationText) tooltip.add(MobEffectUtil.formatDuration(hoveredStatusEffectInstance, 1.0F, client.level!!.tickRateManager().tickrate()))
 
-        context.drawTooltip(parent.getTextRenderer(), tooltip, Optional.empty(), mouseX, mouseY)
+        graphics.setTooltipForNextFrame(parent.font, tooltip, Optional.empty(), mouseX, mouseY)
     }
 
     private fun drawStatusEffectBackground(
-        context: DrawContext,
+        graphics: GuiGraphicsExtractor,
         x: Int,
         yBase: Int,
         wide: Boolean,
         ambient: Boolean,
     ) {
-        context.drawGuiTexture(
+        graphics.blitSprite(
             RenderPipelines.GUI_TEXTURED,
             if (ambient) AMBIENT_EFFECT_BACKGROUND_TEXTURE else EFFECT_BACKGROUND_TEXTURE,
             x,
@@ -115,36 +114,36 @@ class CustomStatusEffectsDisplay(
     }
 
     private fun drawStatusEffectSprite(
-        context: DrawContext,
+        graphics: GuiGraphicsExtractor,
         x: Int,
         yBase: Int,
-        statusEffect: StatusEffectInstance,
+        statusEffect: MobEffectInstance,
         wide: Boolean,
     ) {
-        val sprite = InGameHud.getEffectTexture(statusEffect.effectType)
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, sprite, x + spriteXOffset(wide), yBase + spriteYOffset, spriteSize, spriteSize)
+        val sprite = Gui.getMobEffectSprite(statusEffect.effect)
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x + spriteXOffset(wide), yBase + spriteYOffset, spriteSize, spriteSize)
     }
 
     private fun drawStatusEffectDescription(
-        context: DrawContext,
+        graphics: GuiGraphicsExtractor,
         x: Int,
         yBase: Int,
-        statusEffect: StatusEffectInstance,
+        statusEffect: MobEffectInstance,
     ) {
         val descriptionText = getStatusEffectDescription(statusEffect)
-        context.drawTextWithShadow(parent.textRenderer, descriptionText, x + textXOffset, yBase + descriptionTextYOffset, descriptionTextColor)
+        graphics.text(parent.font, descriptionText, x + textXOffset, yBase + descriptionTextYOffset, descriptionTextColor)
 
         if (renderDurationText) {
-            val durationText = StatusEffectUtil.getDurationText(statusEffect, 1.0F, client.world!!.tickManager.getTickRate())
-            context.drawTextWithShadow(parent.textRenderer, durationText, x + textXOffset, yBase + durationTextYOffset, durationTextColor)
+            val durationText = MobEffectUtil.formatDuration(statusEffect, 1.0F, client.level!!.tickRateManager().tickrate())
+            graphics.text(parent.font, durationText, x + textXOffset, yBase + durationTextYOffset, durationTextColor)
         }
     }
 
     private fun getStatusEffectDescription(
-        statusEffect: StatusEffectInstance,
-    ): Text {
-        val text = (statusEffect.effectType.value() as StatusEffect).name.copy()
+        statusEffect: MobEffectInstance,
+    ): Component {
+        val text = statusEffect.effect.value().displayName.copy()
         if (statusEffect.amplifier !in 1..9) return text
-        return text.append(ScreenTexts.SPACE).append(Text.translatable("enchantment.level." + (statusEffect.amplifier + 1)))
+        return text.append(CommonComponents.SPACE).append(Component.translatable("enchantment.level." + (statusEffect.amplifier + 1)))
     }
 }

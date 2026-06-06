@@ -3,19 +3,19 @@ package de.fuballer.mcendgame.main.mixin.world;
 import de.fuballer.mcendgame.main.accessor.DungeonWorldAccessor;
 import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType;
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem;
-import net.minecraft.entity.LazyEntityReference;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.GlobalPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Mixin(ServerWorld.class)
+@Mixin(ServerLevel.class)
 public class DungeonWorldMixin implements DungeonWorldAccessor {
     @Unique
     private boolean isTraining = false;
@@ -29,14 +29,14 @@ public class DungeonWorldMixin implements DungeonWorldAccessor {
     private int bossesKilled = 0;
 
     @Unique
-    private LazyEntityReference<PlayerEntity> opener;
+    private EntityReference<Player> opener;
 
     @Unique
     private Map<AspectItem, Integer> aspects = new HashMap<>();
     @Unique
     private DungeonType dungeonType = DungeonType.STRONGHOLD;
     @Unique
-    private GlobalPos dungeonExitPos = new GlobalPos(World.OVERWORLD, new BlockPos(0, 0, 0));
+    private GlobalPos dungeonExitPos = new GlobalPos(Level.OVERWORLD, new BlockPos(0, 0, 0));
 
     @Override
     public boolean mcendgame$isTraining() {
@@ -89,14 +89,14 @@ public class DungeonWorldMixin implements DungeonWorldAccessor {
     }
 
     @Override
-    public void mcendgame$setOpener(PlayerEntity opener) {
-        this.opener = LazyEntityReference.of(opener);
+    public void mcendgame$setOpener(Player opener) {
+        this.opener = EntityReference.of(opener);
     }
 
     @Override
-    public PlayerEntity mcendgame$getOpener() {
-        var world = (World) (Object) this;
-        return LazyEntityReference.getPlayerEntity(opener, world);
+    public Player mcendgame$getOpener() {
+        var world = (Level) (Object) this;
+        return EntityReference.getPlayer(opener, world);
     }
 
     @Override

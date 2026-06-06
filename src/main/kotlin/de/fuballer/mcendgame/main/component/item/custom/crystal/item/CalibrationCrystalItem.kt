@@ -4,19 +4,19 @@ import de.fuballer.mcendgame.main.component.block.blocks.crystalforge.CrystalFor
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.updateCustomAttributes
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
-import net.minecraft.item.ItemStack
-import net.minecraft.text.MutableText
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.world.item.ItemStack
 import java.awt.Color
 
 class CalibrationCrystalItem(
-    settings: Settings,
+    settings: Properties,
 ) : CrystalItem(settings) {
     override val forgeColor = Color(40, 179, 232)
 
-    override val description: MutableText = Text.translatable(DESCRIPTION_BASE_KEY + "calibration")
+    override val description: MutableComponent = Component.translatable(DESCRIPTION_BASE_KEY + "calibration")
 
-    override fun canForge(stack: ItemStack): MutableText? {
+    override fun canForge(stack: ItemStack): MutableComponent? {
         val cannotForgeReason = super.canForge(stack)
         if (cannotForgeReason != null) return cannotForgeReason
 

@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.component.entity.custom.interfaces
 
-import net.minecraft.entity.mob.MobEntity
+import net.minecraft.world.entity.Mob
 
-interface BlockAbleMovementMob<T> where T : MobEntity, T : DisableAbleGoalsMob {
+interface BlockAbleMovementMob<T> where T : Mob, T : DisableAbleGoalsMob {
     var blockAbleMovementEntity: T
     var blockedMovementTicks: Int
     var blockedMovementAirborne: Boolean
@@ -10,7 +10,7 @@ interface BlockAbleMovementMob<T> where T : MobEntity, T : DisableAbleGoalsMob {
     fun tickBlockedMovement() {
         updateAirborneBlocked()
 
-        if (isMovementBlocked()) blockAbleMovementEntity.moveControl.strafeTo(0F, 0F)
+        if (isMovementBlocked()) blockAbleMovementEntity.moveControl.strafe(0F, 0F)
 
         if (blockedMovementTicks <= 0) return
         if (--blockedMovementTicks > 0) return
@@ -19,7 +19,7 @@ interface BlockAbleMovementMob<T> where T : MobEntity, T : DisableAbleGoalsMob {
 
     fun updateAirborneBlocked() {
         if (!blockedMovementAirborne) return
-        if (!blockAbleMovementEntity.isOnGround && !blockAbleMovementEntity.isInFluid) return
+        if (!blockAbleMovementEntity.onGround() && !blockAbleMovementEntity.isInLiquid) return
         blockedMovementAirborne = false
         blockAbleMovementEntity.updateGoals()
     }

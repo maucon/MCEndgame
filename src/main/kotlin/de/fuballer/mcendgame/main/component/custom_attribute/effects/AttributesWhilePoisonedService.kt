@@ -10,20 +10,20 @@ import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectElementalDa
 import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectGenericIncreasedDamageCommand
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.effect.StatusEffects
+import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.LivingEntity
 import kotlin.random.Random
 
 @Injectable
 class AttributesWhilePoisonedService {
     @CommandHandler
     fun on(cmd: DamageCalculationCommand) {
-        if (cmd.damaged.hasStatusEffect(StatusEffects.POISON)) {
+        if (cmd.damaged.hasEffect(MobEffects.POISON)) {
             cmd.moreDamageTaken.addAll(getDoubleValues(cmd.damagedAttributes, CustomAttributeTypes.MORE_DAMAGE_TAKEN_WHILE_POISONED))
         }
 
         val damager = cmd.damager as? LivingEntity ?: return
-        if (!damager.hasStatusEffect(StatusEffects.POISON)) return
+        if (!damager.hasEffect(MobEffects.POISON)) return
 
         cmd.increasedDamage.addAll(getDoubleValues(cmd.damagerAttributes, CustomAttributeTypes.INCREASED_DAMAGE_WHILE_POISONED))
         cmd.increasedElementalDamage.addAll(getDoubleValues(cmd.damagerAttributes, CustomAttributeTypes.INCREASED_ELEMENTAL_DAMAGE_WHILE_POISONED))
@@ -31,13 +31,13 @@ class AttributesWhilePoisonedService {
 
     @CommandHandler
     fun on(cmd: CollectGenericIncreasedDamageCommand) {
-        if (!cmd.entity.hasStatusEffect(StatusEffects.POISON)) return
+        if (!cmd.entity.hasEffect(MobEffects.POISON)) return
         cmd.increased.addAll(getDoubleValues(cmd.attributes, CustomAttributeTypes.INCREASED_DAMAGE_WHILE_POISONED))
     }
 
     @CommandHandler
     fun on(cmd: CollectElementalDamageCommand) {
-        if (!cmd.entity.hasStatusEffect(StatusEffects.POISON)) return
+        if (!cmd.entity.hasEffect(MobEffects.POISON)) return
         cmd.increased.addAll(getDoubleValues(cmd.attributes, CustomAttributeTypes.INCREASED_ELEMENTAL_DAMAGE_WHILE_POISONED))
     }
 
@@ -51,7 +51,7 @@ class AttributesWhilePoisonedService {
 
     @CommandHandler
     fun dodge(cmd: DodgeCalculationCommand) {
-        if (!cmd.damaged.hasStatusEffect(StatusEffects.POISON)) return
+        if (!cmd.damaged.hasEffect(MobEffects.POISON)) return
 
         val attributes = cmd.damagedAttributes[CustomAttributeTypes.DODGE_WHILE_POISONED] ?: return
         for (attribute in attributes) {

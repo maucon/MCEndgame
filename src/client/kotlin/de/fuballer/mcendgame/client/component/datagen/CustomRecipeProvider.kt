@@ -1,45 +1,51 @@
 package de.fuballer.mcendgame.client.component.datagen
 
 import de.fuballer.mcendgame.main.component.block.CustomBlocks
+import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
 import de.fuballer.mcendgame.main.component.tags.CustomTags
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider
-import net.minecraft.data.recipe.RecipeExporter
-import net.minecraft.data.recipe.RecipeGenerator
-import net.minecraft.item.Items
-import net.minecraft.recipe.book.RecipeCategory
-import net.minecraft.registry.RegistryWrapper
-import net.minecraft.registry.tag.ItemTags
+import net.minecraft.core.HolderLookup
+import net.minecraft.data.recipes.RecipeCategory
+import net.minecraft.data.recipes.RecipeOutput
+import net.minecraft.data.recipes.RecipeProvider
+import net.minecraft.tags.ItemTags
+import net.minecraft.world.item.Items
 import java.util.concurrent.CompletableFuture
 
 class CustomRecipeProvider(
-    dataOutput: FabricDataOutput,
-    registryLookup: CompletableFuture<RegistryWrapper.WrapperLookup>,
-) : FabricRecipeProvider(dataOutput, registryLookup) {
-    override fun getRecipeGenerator(
-        registryLookup: RegistryWrapper.WrapperLookup,
-        exporter: RecipeExporter,
-    ) = object : RecipeGenerator(registryLookup, exporter) {
-        override fun generate() {
-            createShaped(RecipeCategory.MISC, CustomBlocks.DUNGEON_DEVICE.asItem())
+    packOutput: FabricPackOutput,
+    registryLookup: CompletableFuture<HolderLookup.Provider>,
+) : FabricRecipeProvider(packOutput, registryLookup) {
+    override fun createRecipeProvider(
+        registryLookup: HolderLookup.Provider,
+        exporter: RecipeOutput,
+    ) = object : RecipeProvider(registryLookup, exporter) {
+        override fun buildRecipes() {
+            shaped(RecipeCategory.MISC, CustomBlocks.DUNGEON_DEVICE.asItem())
                 .pattern("ono")
                 .pattern("nsn")
                 .pattern("ono")
-                .input('o', Items.OBSIDIAN)
-                .input('n', Items.NETHERITE_INGOT)
-                .input('s', Items.NETHER_STAR)
-                .criterion(hasItem(Items.NETHER_STAR), conditionsFromItem(Items.NETHER_STAR))
-                .offerTo(exporter)
+                .define('o', Items.OBSIDIAN)
+                .define('n', Items.NETHERITE_INGOT)
+                .define('s', Items.NETHER_STAR)
+                .unlockedBy(getHasName(Items.NETHER_STAR), has(Items.NETHER_STAR))
+                .save(exporter)
 
-            createShaped(RecipeCategory.MISC, CustomBlocks.CRYSTAL_FORGE.asItem())
+            shaped(RecipeCategory.MISC, CustomBlocks.CRYSTAL_FORGE.asItem())
                 .pattern("c")
                 .pattern("w")
                 .pattern("a")
-                .input('c', CustomTags.CRYSTAL)
-                .input('w', ItemTags.WOOL_CARPETS)
-                .input('a', ItemTags.ANVIL)
-                .criterion("has_crystal", conditionsFromTag(CustomTags.CRYSTAL))
-                .offerTo(exporter)
+                .define('c', CustomTags.CRYSTAL)
+                .define('w', ItemTags.WOOL_CARPETS)
+                .define('a', ItemTags.ANVIL)
+                .unlockedBy("has_crystal", has(CustomTags.CRYSTAL))
+                .save(exporter)
+
+            dyedItem(CustomArmorItems.SUEDE_HELMET, "dyed_armor");
+            dyedItem(CustomArmorItems.SUEDE_CHESTPLATE, "dyed_armor");
+            dyedItem(CustomArmorItems.SUEDE_LEGGINGS, "dyed_armor");
+            dyedItem(CustomArmorItems.SUEDE_BOOTS, "dyed_armor");
         }
     }
 

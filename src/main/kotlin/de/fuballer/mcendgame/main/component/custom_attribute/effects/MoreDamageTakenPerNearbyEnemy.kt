@@ -19,7 +19,7 @@ class MoreDamageTakenPerNearbyEnemy {
             val moreDamageTakenPerEnemy = attribute.rolls[0].asDoubleRoll().getValue()
             val range = attribute.rolls[1].asIntRoll().getValue()
 
-            val nearbyEnemies = cmd.world.getOtherEntities(damaged, damaged.boundingBox.expand(range.toDouble())) { damaged.isEnemy(it) }
+            val nearbyEnemies = cmd.world.getEntities(damaged, damaged.boundingBox.inflate(range.toDouble())) { damaged.isEnemy(it) }
             val totalMoreDamage = moreDamageTakenPerEnemy * nearbyEnemies.size
             cmd.moreDamageTaken.add(totalMoreDamage)
         }

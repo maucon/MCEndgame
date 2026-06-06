@@ -8,7 +8,7 @@ import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectGenericMoreDamageCommand
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 @Injectable
 class MoreDamagePerMissingHeartService {

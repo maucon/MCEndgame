@@ -12,26 +12,26 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.addA
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.addEnemyAuraStatusEffect
 import de.fuballer.mcendgame.main.util.extension.mixin.WolfMixinExtension.setCollarColor
 import de.fuballer.mcendgame.main.util.extension.mixin.WolfMixinExtension.setVariant
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.passive.TameableEntity
-import net.minecraft.entity.passive.WolfEntity
-import net.minecraft.registry.RegistryKeys
+import net.minecraft.core.registries.Registries
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.TamableAnimal
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.animal.wolf.Wolf
 
 enum class CompanionType(
-    val entityType: EntityType<out TameableEntity>,
-    val entityClass: Class<out TameableEntity>,
+    val entityType: EntityType<out TamableAnimal>,
+    val entityClass: Class<out TamableAnimal>,
     val attribute: CustomAttributeType,
     val getCount: (CustomAttribute) -> Int = { 1 },
-    val applyOther: (TameableEntity, CustomAttribute) -> Unit = { _, _ -> },
+    val applyOther: (TamableAnimal, CustomAttribute) -> Unit = { _, _ -> },
 ) {
     WOLF(
         EntityType.WOLF,
-        WolfEntity::class.java,
+        Wolf::class.java,
         CustomAttributeTypes.WOLF_COMPANION,
         applyOther = applyOther@{ wolf, attribute ->
-            if (wolf !is WolfEntity) return@applyOther
+            if (wolf !is Wolf) return@applyOther
             val type = WolfCompanionType.getByName(attribute.rolls[0].asStringRoll().getValue()) ?: return@applyOther
 
             for (effect in type.allyAuraStatusEffects) {
@@ -41,10 +41,10 @@ enum class CompanionType(
                 wolf.addEnemyAuraStatusEffect(effect)
             }
             for (effectType in type.selfEffects.keys) {
-                wolf.addStatusEffect(
-                    StatusEffectInstance(
+                wolf.addEffect(
+                    MobEffectInstance(
                         effectType,
-                        StatusEffectInstance.INFINITE,
+                        MobEffectInstance.INFINITE_DURATION,
                         type.selfEffects[effectType] ?: 0,
                         true,
                         true
@@ -53,12 +53,12 @@ enum class CompanionType(
             }
             type.applyExtras(wolf)
 
-            val registry = wolf.entityWorld.registryManager.getOrThrow(RegistryKeys.WOLF_VARIANT)
+            val registry = wolf.level().registryAccess().lookupOrThrow(Registries.WOLF_VARIANT)
             val variantEntry = registry.getOrThrow(type.variant)
             wolf.setVariant(variantEntry)
             wolf.setCollarColor(type.color)
 
-            wolf.getAttributeInstance(EntityAttributes.SCALE)?.baseValue = type.scale
+            wolf.getAttribute(Attributes.SCALE)?.baseValue = type.scale
         },
     ),
     SPIDERLING(

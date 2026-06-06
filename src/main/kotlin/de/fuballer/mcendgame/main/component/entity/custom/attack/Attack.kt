@@ -1,14 +1,14 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack
 
+import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.MobEntity
-import software.bernie.geckolib.animatable.GeoEntity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 
 open class Attack<T>(
     val animationData: AttackAnimationData,
@@ -18,7 +18,7 @@ open class Attack<T>(
     private val damage: List<DelayedAttackDamage>,
     private val sounds: List<DelayedSoundData> = listOf(),
     private val blockMovementDuration: Int = 0,
-) where T : MobEntity, T : GeoEntity {
+) where T : Mob, T : GeoEntity {
     constructor(
         animationData: AttackAnimationData,
         totalDuration: Int,
@@ -38,7 +38,7 @@ open class Attack<T>(
     )
 
     open fun canStart(
-        attacker: MobEntity,
+        attacker: Mob,
         target: LivingEntity?,
     ) = trigger.doesTrigger(attacker, target)
 

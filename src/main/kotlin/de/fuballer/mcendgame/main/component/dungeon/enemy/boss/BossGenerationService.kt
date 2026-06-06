@@ -10,16 +10,16 @@ import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setTo
 import de.fuballer.mcendgame.main.util.minecraft.EntityUtil
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.attributes.Attributes
 import kotlin.random.Random
 
 @Injectable
 class BossGenerationService {
     fun generate(
-        dungeonWorld: ServerWorld,
+        dungeonWorld: ServerLevel,
         types: List<EntityTypeStats>,
         applyMisc: (List<LivingEntity>) -> Unit,
         locations: List<SpawnPosition>,
@@ -40,17 +40,17 @@ class BossGenerationService {
     }
 
     private fun spawnBoss(
-        dungeonWorld: ServerWorld,
+        dungeonWorld: ServerLevel,
         type: EntityTypeStats,
         spawnPosition: SpawnPosition,
         random: Random,
-    ): MobEntity {
+    ): Mob {
         val bossEntity = EntityUtil.spawnEntityWithStats(dungeonWorld, type, spawnPosition)
 
-        bossEntity.setPersistent()
+        bossEntity.setPersistenceRequired()
         setScale(bossEntity, random)
 
-        bossEntity.isAiDisabled = true
+        bossEntity.setNoAi(true)
 
         bossEntity.setDungeonEnemy()
         bossEntity.setDungeonBoss()
@@ -60,10 +60,10 @@ class BossGenerationService {
     }
 
     private fun setScale(
-        entity: MobEntity,
+        entity: Mob,
         random: Random,
     ) {
         val scale = DungeonBossSettings.getRandomScale(random)
-        entity.getAttributeInstance(EntityAttributes.SCALE)?.baseValue = scale
+        entity.getAttribute(Attributes.SCALE)?.baseValue = scale
     }
 }

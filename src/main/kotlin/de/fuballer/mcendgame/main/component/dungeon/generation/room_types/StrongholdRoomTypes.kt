@@ -7,7 +7,7 @@ import de.fuballer.mcendgame.main.messaging.server.ServerStartedEvent
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.util.math.BlockPos
+import net.minecraft.core.BlockPos
 
 @Injectable
 object StrongholdRoomTypes {
@@ -17,7 +17,7 @@ object StrongholdRoomTypes {
 
     @EventSubscriber(sync = true)
     fun on(event: ServerStartedEvent) {
-        val templateManager = event.server.structureTemplateManager
+        val templateManager = event.server.structureManager
 
         START_ROOM = RoomTypeLoader.load(templateManager, "dungeon/stronghold/start")
 

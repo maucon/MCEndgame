@@ -6,18 +6,18 @@ import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
 import de.fuballer.mcendgame.main.component.screen.CustomScreenHandlerTypes
 import de.fuballer.mcendgame.main.messaging.crystals.CrystalForgeUsedEvent
 import de.maucon.mauconframework.event.EventGateway
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.SimpleInventory
-import net.minecraft.item.ItemStack
-import net.minecraft.screen.ScreenHandler
-import net.minecraft.screen.slot.Slot
+import net.minecraft.world.SimpleContainer
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.Slot
+import net.minecraft.world.item.ItemStack
 
 class CrystalForgeScreenHandler(
     syncId: Int,
-    private val playerInventory: PlayerInventory,
-) : ScreenHandler(CustomScreenHandlerTypes.CRYSTAL_FORGE, syncId) {
-    private val inputInventory = SimpleInventory(2)
+    private val playerInventory: Inventory,
+) : AbstractContainerMenu(CustomScreenHandlerTypes.CRYSTAL_FORGE, syncId) {
+    private val inputInventory = SimpleContainer(2)
 
     init {
         addSlot(ForgeableEquipmentSlot(inputInventory, 0, 44, 20))
@@ -36,32 +36,32 @@ class CrystalForgeScreenHandler(
         }
     }
 
-    override fun quickMove(player: PlayerEntity, slotIndex: Int): ItemStack {
+    override fun quickMoveStack(player: Player, slotIndex: Int): ItemStack {
         val slot = slots[slotIndex]
-        if (!slot.hasStack()) return ItemStack.EMPTY
+        if (!slot.hasItem()) return ItemStack.EMPTY
 
-        if (slotIndex >= inputInventory.size()) return quickMoveToInputInventory(slot.stack)
-        return quickMoveToPlayerInventory(slot.stack)
+        if (slotIndex >= inputInventory.containerSize) return quickMoveToInputInventory(slot.item)
+        return quickMoveToPlayerInventory(slot.item)
     }
 
     private fun quickMoveToInputInventory(
         itemStack: ItemStack,
-    ) = if (insertItem(itemStack, 0, inputInventory.size(), false)) itemStack else ItemStack.EMPTY
+    ) = if (moveItemStackTo(itemStack, 0, inputInventory.containerSize, false)) itemStack else ItemStack.EMPTY
 
     private fun quickMoveToPlayerInventory(
         itemStack: ItemStack,
-    ) = if (insertItem(itemStack, inputInventory.size(), slots.size, true)) itemStack else ItemStack.EMPTY
+    ) = if (moveItemStackTo(itemStack, inputInventory.containerSize, slots.size, true)) itemStack else ItemStack.EMPTY
 
-    override fun canUse(player: PlayerEntity) = true
+    override fun stillValid(player: Player) = true
 
-    override fun onClosed(player: PlayerEntity) {
-        super.onClosed(player)
-        dropInventory(player, inputInventory)
+    override fun removed(player: Player) {
+        super.removed(player)
+        clearContainer(player, inputInventory)
     }
 
     fun forge() {
-        val toForgeStack = inputInventory.getStack(0)
-        val crystalStack = inputInventory.getStack(1)
+        val toForgeStack = inputInventory.getItem(0)
+        val crystalStack = inputInventory.getItem(1)
         val crystalItem = crystalStack.item as? CrystalItem ?: return
 
         if (crystalItem.canForge(toForgeStack) != null) return
@@ -70,9 +70,9 @@ class CrystalForgeScreenHandler(
         EventGateway.publish(event)
 
         val forgedStack = crystalItem.forge(toForgeStack)
-        crystalStack.decrement(1)
-        inputInventory.setStack(0, forgedStack)
+        crystalStack.shrink(1)
+        inputInventory.setItem(0, forgedStack)
 
-        sendContentUpdates()
+        broadcastChanges()
     }
 }

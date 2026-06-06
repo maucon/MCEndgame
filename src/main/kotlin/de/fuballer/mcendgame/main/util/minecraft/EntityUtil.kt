@@ -2,23 +2,23 @@ package de.fuballer.mcendgame.main.util.minecraft
 
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
-import net.minecraft.entity.SpawnReason
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.entity.mob.MobEntity
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.EntitySpawnReason
+import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.attributes.Attributes
 
 object EntityUtil {
     fun spawnEntityWithStats(
-        world: ServerWorld,
+        world: ServerLevel,
         type: EntityTypeStats,
         location: SpawnPosition,
-    ): MobEntity {
-        val entity = type.type.spawn(world, location.blockPos(), SpawnReason.STRUCTURE)
+    ): Mob {
+        val entity = type.type.spawn(world, location.blockPos(), EntitySpawnReason.STRUCTURE)
             ?: throw Exception("Couldn't  spawn entity of type: ${type.type}, in world: $world")
 
         clearVehicleAndPassengers(entity)
 
-        entity.refreshPositionAndAngles(
+        entity.snapTo(
             location.pos.x + 0.5,
             location.pos.y.toDouble(),
             location.pos.z + 0.5,
@@ -33,24 +33,24 @@ object EntityUtil {
     }
 
     private fun setStats(
-        entity: MobEntity,
+        entity: Mob,
         type: EntityTypeStats,
     ) {
         val newMaxHealth = type.health
-        entity.getAttributeInstance(EntityAttributes.MAX_HEALTH)?.baseValue = newMaxHealth
+        entity.getAttribute(Attributes.MAX_HEALTH)?.baseValue = newMaxHealth
         entity.health = newMaxHealth.toFloat()
 
-        entity.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE)?.baseValue = type.attackDamage
-        entity.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED)?.baseValue = type.movementSpeed
-        entity.getAttributeInstance(EntityAttributes.KNOCKBACK_RESISTANCE)?.baseValue = type.knockbackResistance
+        entity.getAttribute(Attributes.ATTACK_DAMAGE)?.baseValue = type.attackDamage
+        entity.getAttribute(Attributes.MOVEMENT_SPEED)?.baseValue = type.movementSpeed
+        entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE)?.baseValue = type.knockbackResistance
     }
 
-    private fun clearVehicleAndPassengers(entity: MobEntity) {
+    private fun clearVehicleAndPassengers(entity: Mob) {
         entity.vehicle?.let { vehicle ->
             entity.stopRiding()
             vehicle.discard()
         }
-        entity.passengerList.toList().forEach { passenger ->
+        entity.passengers.toList().forEach { passenger ->
             passenger.discard()
         }
     }

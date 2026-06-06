@@ -7,11 +7,11 @@ import de.fuballer.mcendgame.main.component.custom_attribute.effects.change_gain
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HidePlayerModelPartArmor
-import net.minecraft.component.type.AttributeModifierSlot
-import net.minecraft.entity.player.PlayerModelPart
+import net.minecraft.world.entity.EquipmentSlotGroup
+import net.minecraft.world.entity.player.PlayerModelPart
 
 class AbyssalMask(
-    settings: Settings,
+    settings: Properties,
 ) : UniqueAttributesItem(settings), HidePlayerModelPartArmor {
     override fun getCustomAttributes(): List<RollableCustomAttribute> {
         val chosenConversions = ChangeGainedStatusEffectSettings.getStatusEffectPairs(2)
@@ -41,7 +41,7 @@ class AbyssalMask(
         return attributes
     }
 
-    override fun getAttributeModifierSlot() = AttributeModifierSlot.HEAD
+    override fun getAttributeModifierSlot() = EquipmentSlotGroup.HEAD
 
     override val hiddenPlayerModelParts = listOf(
         PlayerModelPart.HAT,

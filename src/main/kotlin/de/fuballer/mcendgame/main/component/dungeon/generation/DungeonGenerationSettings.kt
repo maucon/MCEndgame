@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.component.dungeon.generation
 
-import net.minecraft.block.Block
-import net.minecraft.block.Blocks
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
 
 object DungeonGenerationSettings {
     val START_POS_MARKER: Block = Blocks.GREEN_WOOL

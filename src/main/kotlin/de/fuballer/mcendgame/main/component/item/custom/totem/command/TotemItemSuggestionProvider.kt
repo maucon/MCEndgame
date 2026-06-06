@@ -5,12 +5,12 @@ import com.mojang.brigadier.suggestion.SuggestionProvider
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItemRegistry
-import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.commands.CommandSourceStack
 import java.util.concurrent.CompletableFuture
 
-class TotemItemSuggestionProvider : SuggestionProvider<ServerCommandSource> {
+class TotemItemSuggestionProvider : SuggestionProvider<CommandSourceStack> {
     override fun getSuggestions(
-        context: CommandContext<ServerCommandSource>,
+        context: CommandContext<CommandSourceStack>,
         builder: SuggestionsBuilder
     ): CompletableFuture<Suggestions> {
         for (name in TotemItemRegistry.NAME_MAP.keys) {

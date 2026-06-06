@@ -1,18 +1,18 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.scarred_one
 
+import com.geckolib.constant.DataTickets
+import com.geckolib.renderer.GeoEntityRenderer
+import com.geckolib.renderer.base.BoneSnapshots
+import com.geckolib.renderer.base.GeoRenderState
+import com.geckolib.renderer.base.RenderPassInfo
 import de.fuballer.mcendgame.client.component.entity.custom.feature.isolated.IsolatedGeoLayer
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
-import net.minecraft.client.render.entity.EntityRendererFactory
-import net.minecraft.client.render.entity.state.LivingEntityRenderState
-import software.bernie.geckolib.constant.DataTickets
-import software.bernie.geckolib.renderer.GeoEntityRenderer
-import software.bernie.geckolib.renderer.base.BoneSnapshots
-import software.bernie.geckolib.renderer.base.GeoRenderState
-import software.bernie.geckolib.renderer.base.RenderPassInfo
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import kotlin.math.PI
 
 class ScarredOneRenderer<R>(
-    context: EntityRendererFactory.Context
+    context: EntityRendererProvider.Context
 ) : GeoEntityRenderer<ScarredOneEntity, R>(context, ScarredOneModel()) where R : LivingEntityRenderState, R : GeoRenderState {
     init {
         withRenderLayer(IsolatedGeoLayer(this))

@@ -1,11 +1,11 @@
 package de.fuballer.mcendgame.main.component.entity
 
-import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityType
-import net.minecraft.entity.mob.MobEntity
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.Mob
 
 interface EntityTypeStats {
-    val type: EntityType<out MobEntity>
+    val type: EntityType<out Mob>
 
     val canHaveWeapons: Boolean
     val isRanged: Boolean

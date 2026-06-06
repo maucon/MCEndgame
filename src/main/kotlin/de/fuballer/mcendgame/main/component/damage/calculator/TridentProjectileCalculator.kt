@@ -3,13 +3,13 @@ package de.fuballer.mcendgame.main.component.damage.calculator
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.projectile.TridentEntity
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.projectile.arrow.ThrownTrident
 
 // TODO drowned with trident
 object TridentProjectileCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.source is TridentEntity
+    override fun isActive(source: DamageSource) = source.directEntity is ThrownTrident
 
     override fun calculateAttackDamage(
         originalDamage: Float,
@@ -17,7 +17,7 @@ object TridentProjectileCalculator : DamageCalculator {
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
     ): Float {
-        val attacker = source.attacker as? LivingEntity ?: return originalDamage
+        val attacker = source.entity as? LivingEntity ?: return originalDamage
 
         val baseDamage = 8.0
         val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
