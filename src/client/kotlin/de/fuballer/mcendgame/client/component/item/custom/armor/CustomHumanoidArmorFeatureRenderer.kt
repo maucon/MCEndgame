@@ -28,7 +28,9 @@ import de.fuballer.mcendgame.client.component.item.custom.armor.model.wither_ros
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.wither_rose.WitherRoseLeggingsModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.transformer.EntityArmorTransformer
 import de.fuballer.mcendgame.client.component.item.custom.armor.transformer.PiglinArmorTransformer
+import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
 import de.fuballer.mcendgame.client.util.BipedEntityRenderStateMixinExtension.getHiddenArmor
+import de.fuballer.mcendgame.client.util.EntityRenderStateMixinExtension.getLowHealthTicks
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
 import de.fuballer.mcendgame.main.util.ColorUtil
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
@@ -70,6 +72,16 @@ class CustomHumanoidArmorFeatureRenderer<S : HumanoidRenderState, M : HumanoidMo
         texturedArmorModels[CustomArmorItems.BOUND_ABYSS] = TexturedArmorModel(
             { BoundAbyssModel(ctx.bakeLayer(BoundAbyssModel.MODEL_LAYER)) },
             IdentifierUtil.default("textures/entity/equipment/custom_humanoid/bound_abyss.png"),
+            specialTextures = listOf(
+                TexturedArmorModel.SpecialRenderTypeArmorTexture(
+                    IdentifierUtil.default("textures/entity/equipment/custom_humanoid/bound_abyss_gold.png"),
+                    { CustomRenderLayers.boundAbyss(it) },
+                    { state, _ ->
+                        val strength = (state.getLowHealthTicks() / 20f * 255).toInt().coerceIn(0, 255)
+                        ColorUtil.rgbaToInt(strength, 0, 0, 0)
+                    }
+                )
+            ),
         )
         texturedArmorModels[CustomArmorItems.DRUIDS_HELMET] = TexturedArmorModel(
             { DruidsHelmetModel(ctx.bakeLayer(DruidsHelmetModel.MODEL_LAYER)) },
@@ -114,24 +126,24 @@ class CustomHumanoidArmorFeatureRenderer<S : HumanoidRenderState, M : HumanoidMo
         texturedArmorModels[CustomArmorItems.SUEDE_HELMET] = TexturedArmorModel(
             { SuedeHelmetModel(ctx.bakeLayer(SuedeHelmetModel.MODEL_LAYER)) },
             colorAbleTexture = IdentifierUtil.default("textures/entity/equipment/custom_humanoid/suede_color_able.png"),
-            defaultColor = ColorUtil.rgbaToInt(160, 101, 64, 255),
+            defaultColor = DyedItemColor.LEATHER_COLOR,
         )
         texturedArmorModels[CustomArmorItems.SUEDE_CHESTPLATE] = TexturedArmorModel(
             { SuedeChestplateModel(ctx.bakeLayer(SuedeChestplateModel.MODEL_LAYER)) },
             IdentifierUtil.default("textures/entity/equipment/custom_humanoid/suede.png"),
             IdentifierUtil.default("textures/entity/equipment/custom_humanoid/suede_color_able.png"),
-            defaultColor = ColorUtil.rgbaToInt(160, 101, 64, 255),
+            defaultColor = DyedItemColor.LEATHER_COLOR,
         )
         texturedArmorModels[CustomArmorItems.SUEDE_LEGGINGS] = TexturedArmorModel(
             { SuedeLeggingsModel(ctx.bakeLayer(SuedeLeggingsModel.MODEL_LAYER)) },
             IdentifierUtil.default("textures/entity/equipment/custom_humanoid/suede.png"),
             IdentifierUtil.default("textures/entity/equipment/custom_humanoid/suede_color_able.png"),
-            defaultColor = ColorUtil.rgbaToInt(160, 101, 64, 255),
+            defaultColor = DyedItemColor.LEATHER_COLOR,
         )
         texturedArmorModels[CustomArmorItems.SUEDE_BOOTS] = TexturedArmorModel(
             { SuedeBootsModel(ctx.bakeLayer(SuedeBootsModel.MODEL_LAYER)) },
             colorAbleTexture = IdentifierUtil.default("textures/entity/equipment/custom_humanoid/suede_color_able.png"),
-            defaultColor = ColorUtil.rgbaToInt(160, 101, 64, 255),
+            defaultColor = DyedItemColor.LEATHER_COLOR,
         )
         texturedArmorModels[CustomArmorItems.STONEWARD] = TexturedArmorModel(
             { StonewardModel(ctx.bakeLayer(StonewardModel.MODEL_LAYER)) },
@@ -241,6 +253,19 @@ class CustomHumanoidArmorFeatureRenderer<S : HumanoidRenderState, M : HumanoidMo
             )
         }
 
+        texturedArmorModel.specialTextures.forEach { (identifier, renderLayer, color) ->
+            renderModel(
+                bipedEntityRenderState,
+                model,
+                renderLayer(identifier),
+                matrices,
+                queue,
+                light,
+                itemStack.hasFoil(),
+                color(bipedEntityRenderState, itemStack)
+            )
+        }
+
         matrices.popPose()
     }
 
@@ -254,11 +279,6 @@ class CustomHumanoidArmorFeatureRenderer<S : HumanoidRenderState, M : HumanoidMo
         glint: Boolean,
         color: Int = -1,
     ) {
-        /*
-        if (model is CustomVertexConsumer) {
-            vertexConsumer = model.getVertexConsumer(bipedEntityRenderState, vertexConsumerProvider, vertexConsumer)
-        }
-        */
         queue.submitModel(model, state, matrices, renderLayer, light, OverlayTexture.NO_OVERLAY, color, null, state.outlineColor, null)
         if (glint) queue.submitModel(model, state, matrices, RenderTypes.armorEntityGlint(), light, OverlayTexture.NO_OVERLAY, color, null, state.outlineColor, null)
     }

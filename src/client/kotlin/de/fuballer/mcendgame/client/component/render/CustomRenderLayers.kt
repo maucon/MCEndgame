@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.client.component.render
 
+import net.minecraft.client.renderer.rendertype.LayeringTransform
 import net.minecraft.client.renderer.rendertype.OutputTarget
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
@@ -26,5 +27,18 @@ object CustomRenderLayers {
             .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
             .createRenderSetup()
         RenderType.create("ghostly", renderSetup)
+    }
+
+    fun boundAbyss(texture: Identifier) = BOUND_ABYSS.apply(texture)
+    val BOUND_ABYSS: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
+        val renderSetup = RenderSetup.builder(CustomRenderPipelines.BOUND_ABYSS_PIPELINE)
+            .withTexture("Sampler0", texture)
+            .useLightmap()
+            .useOverlay()
+            .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
+            .affectsCrumbling()
+            .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+            .createRenderSetup();
+        RenderType.create("bound_abyss", renderSetup)
     }
 }
