@@ -89,7 +89,7 @@ system.
 
 ### Installation
 
-1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft **1.21.11**
+1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft **26.1.2**
 2. Download [Fabric API](https://modrinth.com/mod/fabric-api)
 3. Download MCEndgame from [Releases](https://github.com/maucon/MCEndgame-fabric/releases), [Modrinth](https://modrinth.com/mod/mcendgame/)
    or [CurseForge](https://www.curseforge.com/minecraft/mc-mods/mcendgame)
@@ -99,13 +99,13 @@ system.
 
 ### Dependencies
 
-| Dependency                                                                | Version                |
-|---------------------------------------------------------------------------|------------------------|
-| [Fabric Loader](https://fabricmc.net/use/)                                | ≥ 0.18.4               |
-| [Fabric API](https://modrinth.com/mod/fabric-api)                         | ~0.141.3+1.21.11       |
-| [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | ~1.13.11+kotlin.2.3.21 |
-| [Fantasy](https://github.com/NucleoidMC/fantasy)                          | ~0.7.0+1.21.11         |
-| [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.4.4                 |
+| Dependency                                                                | Version               |
+|---------------------------------------------------------------------------|-----------------------|
+| [Fabric Loader](https://fabricmc.net/use/)                                | ≥ 0.19.3              |
+| [Fabric API](https://modrinth.com/mod/fabric-api)                         | ~0.150.0+26.1.2       |
+| [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | ~1.13.12+kotlin.2.4.0 |
+| [Fantasy](https://github.com/NucleoidMC/fantasy)                          | ~0.8.0+26.1.2         |
+| [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.5.1                |
 
 ### Building from Source
 
