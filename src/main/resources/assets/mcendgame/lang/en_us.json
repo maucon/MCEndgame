@@ -153,7 +153,7 @@
 
   "container.mcendgame.filter.title": "Dungeon Filter / Blacklist",
 
-  "block.mcendgame.dungeon_device": "Dungeon Device",
+  "item.mcendgame.dungeon_device": "Dungeon Device",
   "container.mcendgame.dungeon_device.title": "Dungeon Device",
   "container.mcendgame.dungeon_device.open": "Open",
   "container.mcendgame.dungeon_device.level_increase_tooltip": "Increase Dungeon Level",
@@ -172,7 +172,7 @@
   "container.mcendgame.dungeon_device.training_tooltip": "Training",
   "container.mcendgame.dungeon_device.progress_tooltip": "Progress: %s/%s",
 
-  "block.mcendgame.crystal_forge": "Crystal Forge",
+  "item.mcendgame.crystal_forge": "Crystal Forge",
   "container.mcendgame.crystal_forge.title": "Crystal Forge",
   "container.mcendgame.crystal_forge.forge_button": "Forge",
   "container.mcendgame.crystal_forge.forge_error.no_crystal": "No crystal provided.",
@@ -318,9 +318,9 @@
   "entity.mcendgame.spiderling": "Spiderling",
   "entity.mcendgame.training_dummy": "Training Dummy",
 
-  "block.mcendgame.decaying_cobweb": "Decaying Cobweb",
-  "block.mcendgame.totem_statue": "Totem Statue",
-  "block.mcendgame.dungeon_enemy_blocker": "Dungeon Enemy Blocker",
+  "item.mcendgame.decaying_cobweb": "Decaying Cobweb",
+  "item.mcendgame.totem_statue": "Totem Statue",
+  "item.mcendgame.dungeon_enemy_blocker": "Dungeon Enemy Blocker",
 
   "item_group.mcendgame.armor": "MCEndgame Armor",
   "item_group.mcendgame.tools": "MCEndgame Weapons & Tools",
@@ -353,7 +353,7 @@
 
   "error.mcendgame.invalid_totem_tier": "Maximum tier of this totem is %s!",
 
-  "death.attack.elemental": "%s fell to the elemental power of %s",
+  "death.attack.spell": "%s fell to the power of %s",
 
   "training_dummy.damage_per_second" : "DPS ",
   "training_dummy.last_damage" : "Last ",
