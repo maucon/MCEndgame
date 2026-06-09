@@ -10,7 +10,6 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.upda
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
-import kotlin.random.Random
 
 @Injectable
 class DodgeIfNotDodgedInLastSecondsService {
@@ -20,14 +19,9 @@ class DodgeIfNotDodgedInLastSecondsService {
 
         for (attribute in attributes) {
             val ticks = attribute.rolls[1].asIntRoll().getValue() * 20
-
             if (cmd.damaged.hasDodged(ticks)) continue
 
-            val dodge = attribute.rolls[0].asDoubleRoll().getValue()
-            if (Random.nextDouble() > dodge) continue
-
-            cmd.isDodging = true
-            return
+            cmd.dodgeChances += attribute.rolls[0].asDoubleRoll().getValue()
         }
     }
 
