@@ -7,6 +7,7 @@
     "access.PlayerAccessMixin",
     "additional_arrows.AbstractSkeletonAdditionalArrowsMixin",
     "additional_arrows.ProjectileWeaponItemAdditionalArrowsMixin",
+    "attribute.RangedAttributeMixin",
     "conversion.SkeletonConversionMixin",
     "conversion.ZombieConversionMixin",
     "corruption.AnvilMenuCorruptionUnmodifiableMixin",

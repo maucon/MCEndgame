@@ -12,7 +12,6 @@ import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.LivingEntity
-import kotlin.random.Random
 
 @Injectable
 class AttributesWhilePoisonedService {
@@ -54,12 +53,6 @@ class AttributesWhilePoisonedService {
         if (!cmd.damaged.hasEffect(MobEffects.POISON)) return
 
         val attributes = cmd.damagedAttributes[CustomAttributeTypes.DODGE_WHILE_POISONED] ?: return
-        for (attribute in attributes) {
-            val dodge = attribute.rolls[0].asDoubleRoll().getValue()
-            if (Random.nextDouble() > dodge) continue
-
-            cmd.isDodging = true
-            break
-        }
+        cmd.dodgeChances.addAll(attributes.map { it.rolls[0].asDoubleRoll().getValue() })
     }
 }

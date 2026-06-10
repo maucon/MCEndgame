@@ -15,9 +15,9 @@ class TotemOfRecoveryItem(
 
     override fun getCustomAttributes(tier: Int) =
         when (tier) {
-            0 -> listOf(CustomAttribute(CustomAttributeTypes.REGENERATION_WHEN_HIT_BY_ENEMY, 0, listOf(IntRoll(IntBounds(1)), IntRoll(IntBounds(5)))))
-            1 -> listOf(CustomAttribute(CustomAttributeTypes.REGENERATION_WHEN_HIT_BY_ENEMY, 0, listOf(IntRoll(IntBounds(2)), IntRoll(IntBounds(5)))))
-            2 -> listOf(CustomAttribute(CustomAttributeTypes.REGENERATION_WHEN_HIT_BY_ENEMY, 0, listOf(IntRoll(IntBounds(3)), IntRoll(IntBounds(4)))))
+            0 -> listOf(CustomAttribute(CustomAttributeTypes.REGENERATION_WHEN_HIT_BY_ENEMY, 0, listOf(IntRoll(IntBounds(1)), IntRoll(IntBounds(4)))))
+            1 -> listOf(CustomAttribute(CustomAttributeTypes.REGENERATION_WHEN_HIT_BY_ENEMY, 0, listOf(IntRoll(IntBounds(1)), IntRoll(IntBounds(7)))))
+            2 -> listOf(CustomAttribute(CustomAttributeTypes.REGENERATION_WHEN_HIT_BY_ENEMY, 0, listOf(IntRoll(IntBounds(2)), IntRoll(IntBounds(5)))))
             else -> listOf()
         }
 }

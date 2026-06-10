@@ -34,6 +34,7 @@ class Gravebreaker(
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.MORE_ATTACK_DAMAGE_PER_ARMOR, 0, DoubleBounds(0.03, 0.04)),
         RollableCustomAttribute(CustomAttributeTypes.GAIN_ENEMY_ARMOR_ON_KILL, 0, DoubleBounds(0.08, 0.12), IntBounds(10)),
+        RollableCustomAttribute(CustomAttributeTypes.MELEE_DAMAGE_CAN_NOT_BE_DODGED, 0),
         RollableCustomAttribute(VanillaAttributeTypes.MORE_ATTACK_SPEED, 0, DoubleBounds(-0.25, -0.2)),
     )
 

@@ -224,6 +224,7 @@
   "attribute.mcendgame.more_damage": " %s%% %s Damage",
   "attribute.mcendgame.more_damage_per_missing_heart": " %s%% %s Damage per missing Heart",
   "attribute.mcendgame.more_attack_damage_per_armor": " %s%% %s Attack Damage per Armor",
+  "attribute.mcendgame.melee_damage_can_not_be_dodged": " Your Melee Damage can not be Dodged",
   "attribute.mcendgame.gain_enemy_armor_on_kill": " Gain %s%% of Enemy Armor for %ss on Kill",
   "attribute.mcendgame.increased_elemental_damage": "%s%% %s Elemental Damage",
   "attribute.mcendgame.increased_projectile_damage": "%s%% %s Projectile Damage",
