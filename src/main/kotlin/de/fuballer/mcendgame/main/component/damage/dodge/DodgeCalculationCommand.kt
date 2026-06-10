@@ -16,6 +16,7 @@ data class DodgeCalculationCommand(
     val isProjectile: Boolean,
     val dodgeChances: MutableList<Double> = mutableListOf(),
     var canBeDodged: Boolean = true,
+    val randomRoll: Double = Random.nextDouble(),
 ) {
     companion object {
         fun of(
@@ -30,5 +31,5 @@ data class DodgeCalculationCommand(
         )
     }
 
-    fun isDodging() = canBeDodged && Random.nextDouble() > dodgeChances.fold(1.0) { a, b -> a * (1 - b) }
+    fun isDodging() = canBeDodged && randomRoll > dodgeChances.fold(1.0) { a, b -> a * (1 - b) }
 }
