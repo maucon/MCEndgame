@@ -1,0 +1,41 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"move.walk": {
+			"loop": true,
+			"bones": {
+				"left_arm": {
+					"rotation": {
+						"vector": ["-math.cos(math.to_deg(query.limb_swing * 0.6662)) * math.to_deg(1.0) * query.limb_swing_amount", 0, 0]
+					}
+				},
+				"right_arm": {
+					"rotation": {
+						"vector": ["-math.cos(math.to_deg(query.limb_swing * 0.6662 + math.pi)) * math.to_deg(1.0) * query.limb_swing_amount", 0, 0]
+					}
+				},
+				"left_leg": {
+					"rotation": {
+						"vector": [
+							"-math.cos(math.to_deg(query.limb_swing * 0.6662 + math.pi)) * math.to_deg(1.4) * query.limb_swing_amount",
+							"-math.to_deg(-0.005)",
+							"math.to_deg(-0.005)"
+						]
+					}
+				},
+				"right_leg": {
+					"rotation": {
+						"vector": [
+							"-math.cos(math.to_deg(query.limb_swing * 0.6662)) * math.to_deg(1.4) * query.limb_swing_amount",
+							"-math.to_deg(0.005)",
+							"math.to_deg(0.005)"
+						]
+					}
+				}
+			}
+		},
+		"misc.idle": {
+			"loop": true
+		}
+	}
+}
