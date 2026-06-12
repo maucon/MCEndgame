@@ -1,20 +1,14 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.skeleton_mage
 
-import com.geckolib.model.GeoModel
-import com.geckolib.renderer.base.GeoRenderState
-import de.fuballer.mcendgame.main.component.entity.custom.entities.skeleton_mage.SkeletonMageEntity
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.model.monster.skeleton.SkeletonModel
 
-class SkeletonMageModel : GeoModel<SkeletonMageEntity>() {
+class SkeletonMageModel(
+    modelPart: ModelPart,
+) : SkeletonModel<SkeletonMageRenderState>(modelPart) {
     companion object {
-        val MODEL_IDENTIFIER = IdentifierUtil.default("entity/skeleton_mage")
-        val TEXTURE_IDENTIFIER = IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage.png")
-        val ANIMATION_IDENTIFIER = IdentifierUtil.default("entity/skeleton_mage")
+        val SKELETON_MAGE = ModelLayerLocation(IdentifierUtil.default("skeleton_mage"), "main")
     }
-
-    override fun getModelResource(renderState: GeoRenderState) = MODEL_IDENTIFIER
-
-    override fun getTextureResource(renderState: GeoRenderState) = TEXTURE_IDENTIFIER
-
-    override fun getAnimationResource(entity: SkeletonMageEntity) = ANIMATION_IDENTIFIER
 }

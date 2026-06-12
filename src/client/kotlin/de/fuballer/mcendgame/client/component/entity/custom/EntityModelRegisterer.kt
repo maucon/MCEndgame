@@ -13,6 +13,7 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type.legacy.LegacyPortalEntityModel
 import de.fuballer.mcendgame.client.component.entity.custom.entities.scarred_one.ScarredOneRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.scarred_one.ScarredOneRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.skeleton_mage.SkeletonMageModel
 import de.fuballer.mcendgame.client.component.entity.custom.entities.skeleton_mage.SkeletonMageRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.skeleton_mage.SkeletonMageRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.spiderling.SpiderlingRenderer
@@ -29,6 +30,7 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.minecraft.client.model.geom.ModelLayers
+import net.minecraft.client.model.monster.skeleton.SkeletonModel
 import net.minecraft.client.renderer.entity.EntityRenderers
 
 @Injectable
@@ -43,6 +45,9 @@ object EntityModelRegisterer {
 
         ModelLayerRegistry.registerModelLayer(ArachneEntityModel.ARACHNE, ArachneEntityModel::getTexturedModelData)
         EntityRenderers.register(CustomEntities.ARACHNE, ::ArachneRenderer)
+
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE, SkeletonModel<SkeletonMageRenderState>::createBodyLayer)
+        EntityRenderers.register(CustomEntities.SKELETON_MAGE, ::SkeletonMageRenderer)
 
         ModelLayerRegistry.registerModelLayer(
             WebshotEntityModel.WEBSHOT,
@@ -61,7 +66,6 @@ object EntityModelRegisterer {
         EntityRenderers.register(CustomEntities.ELF_DUELIST) { state -> ElfDuelistRenderer<ElfDuelistRenderState>(state) }
         EntityRenderers.register(CustomEntities.BEAKBURN) { state -> BeakburnRenderer<BeakburnRenderState>(state) }
 
-        EntityRenderers.register(CustomEntities.SKELETON_MAGE) { state -> SkeletonMageRenderer<SkeletonMageRenderState>(state) }
 
         EntityRenderers.register(CustomEntities.SCARRED_ONE) { state -> ScarredOneRenderer<ScarredOneRenderState>(state) }
 
