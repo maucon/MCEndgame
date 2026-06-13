@@ -41,8 +41,6 @@ import net.minecraft.client.renderer.entity.EntityRenderers
 object EntityModelRegisterer {
     @Initializer
     fun register() {
-
-
         ModelLayerRegistry.registerModelLayer(
             SwampGolemEntityModel.SWAMP_GOLEM,
             SwampGolemEntityModel::getTexturedModelData

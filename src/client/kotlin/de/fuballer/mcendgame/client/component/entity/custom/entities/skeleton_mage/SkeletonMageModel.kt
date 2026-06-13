@@ -33,10 +33,16 @@ class SkeletonMageModel(
             val head = root.addOrReplaceChild(
                 "head",
                 CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, CubeDeformation(-0.25F)),
-                PartPose.offset(0.0F, 0.0F, 0.0F)
+                PartPose.offset(0.0F, 0.0F, 0.0F),
             )
             head.createEmptyChild("hat")
-            root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, CubeDeformation(-0.75F)), PartPose.offset(0.0F, 0.0F, 0.0F))
+            root.addOrReplaceChild(
+                "body",
+                CubeListBuilder.create()
+                    .texOffs(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 7.0F, 4.0F, CubeDeformation(-0.5F))
+                    .texOffs(16, 16).addBox(-3.0F, 6.0F, -1.5F, 6.0F, 6.0F, 3.0F, CubeDeformation(-0.5F)),
+                PartPose.offset(0.0F, 0.0F, 0.0F),
+            )
             root.createEmptyChild("right_arm")
             root.createEmptyChild("left_arm")
             root.createEmptyChild("right_leg")

@@ -11,15 +11,7 @@ class SkeletonMageRenderer(
     companion object {
         val TEXTURE = IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage.png")
         val INNER_TEXTURES = listOf(
-               IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage_inner.png"),
-//            IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage_inner_0.png"),
-//            IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage_inner_1.png"),
-//            IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage_inner_2.png"),
-//            IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage_inner_3.png"),
-//            IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage_inner_4.png"),
-//            IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage_inner_5.png"),
-//            IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage_inner_6.png"),
-//            IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage_inner_7.png"),
+            IdentifierUtil.default("textures/entity/skeleton_mage/skeleton_mage_inner.png"),
         )
     }
 

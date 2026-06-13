@@ -35,7 +35,7 @@ class SkeletonMageInnerLayer<M : EntityModel<SkeletonMageRenderState>>(
             state,
             poseStack,
             RenderTypes.energySwirl(texture, 0f, tickAge * 0.01F % 1.0F),
-            lightCoords,
+            -1,
             OverlayTexture.NO_OVERLAY,
             -1,
             null,
