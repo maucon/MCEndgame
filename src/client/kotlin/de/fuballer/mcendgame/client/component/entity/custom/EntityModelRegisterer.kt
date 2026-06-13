@@ -29,14 +29,20 @@ import de.fuballer.mcendgame.main.component.portal.Portals
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
+import net.minecraft.client.model.HumanoidModel
 import net.minecraft.client.model.geom.ModelLayers
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.LayerDefinition
 import net.minecraft.client.model.monster.skeleton.SkeletonModel
+import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRenderers
 
 @Injectable
 object EntityModelRegisterer {
     @Initializer
     fun register() {
+
+
         ModelLayerRegistry.registerModelLayer(
             SwampGolemEntityModel.SWAMP_GOLEM,
             SwampGolemEntityModel::getTexturedModelData
@@ -47,6 +53,13 @@ object EntityModelRegisterer {
         EntityRenderers.register(CustomEntities.ARACHNE, ::ArachneRenderer)
 
         ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE, SkeletonModel<SkeletonMageRenderState>::createBodyLayer)
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE_INNER, SkeletonMageModel::createInnerLayer)
+        val skeletonMageArmor: ArmorModelSet<LayerDefinition> = HumanoidModel.createArmorMeshSet(CubeDeformation(0.5F), CubeDeformation(1.0F))
+            .map { mesh -> LayerDefinition.create(mesh, 64, 32) }
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE_ARMOR.head, skeletonMageArmor::head)
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE_ARMOR.chest, skeletonMageArmor::chest)
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE_ARMOR.legs, skeletonMageArmor::legs)
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE_ARMOR.feet, skeletonMageArmor::feet)
         EntityRenderers.register(CustomEntities.SKELETON_MAGE, ::SkeletonMageRenderer)
 
         ModelLayerRegistry.registerModelLayer(
