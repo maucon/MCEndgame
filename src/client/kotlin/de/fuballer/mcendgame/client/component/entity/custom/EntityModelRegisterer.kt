@@ -16,6 +16,8 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.scarred_one
 import de.fuballer.mcendgame.client.component.entity.custom.entities.skeleton_mage.SkeletonMageModel
 import de.fuballer.mcendgame.client.component.entity.custom.entities.skeleton_mage.SkeletonMageRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.skeleton_mage.SkeletonMageRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.spell_fireball.SpellFireballEntityModel
+import de.fuballer.mcendgame.client.component.entity.custom.entities.spell_fireball.SpellFireballRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.spiderling.SpiderlingRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.swamp_golem.SwampGolemEntityModel
 import de.fuballer.mcendgame.client.component.entity.custom.entities.swamp_golem.SwampGolemRenderer
@@ -60,11 +62,12 @@ object EntityModelRegisterer {
         ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE_ARMOR.feet, skeletonMageArmor::feet)
         EntityRenderers.register(CustomEntities.SKELETON_MAGE, ::SkeletonMageRenderer)
 
-        ModelLayerRegistry.registerModelLayer(
-            WebshotEntityModel.WEBSHOT,
-            WebshotEntityModel::getTexturedModelData
-        )
+        ModelLayerRegistry.registerModelLayer(WebshotEntityModel.WEBSHOT, WebshotEntityModel::getTexturedModelData)
         EntityRenderers.register(CustomEntities.WEBSHOT, ::WebshotRenderer)
+
+        ModelLayerRegistry.registerModelLayer(SpellFireballEntityModel.SPELL_FIREBALL, SpellFireballEntityModel::getTexturedModelData)
+        ModelLayerRegistry.registerModelLayer(SpellFireballEntityModel.SPELL_FIREBALL_OUTER, SpellFireballEntityModel::getOuterTextureModelData)
+        EntityRenderers.register(CustomEntities.SPELL_FIREBALL, ::SpellFireballRenderer)
 
         EntityRenderers.register(CustomEntities.WEBHOOK, ::WebhookRenderer)
 

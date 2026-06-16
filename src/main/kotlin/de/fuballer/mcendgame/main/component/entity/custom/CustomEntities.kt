@@ -6,6 +6,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.B
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.skeleton_mage.SkeletonMageEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball.SpellFireballEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.spiderling.SpiderlingEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.swamp_golem.SwampGolemEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
@@ -47,6 +48,13 @@ object CustomEntities {
         "webhook",
         EntityType.Builder.of(::WebhookEntity, MobCategory.MISC)
             .sized(0.4f, 0.4f)
+            .eyeHeight(0.2f)
+    )
+    val SPELL_FIREBALL = RegistryUtil.registerEntity(
+        "spell_fireball",
+        EntityType.Builder.of(::SpellFireballEntity, MobCategory.MISC)
+            .sized(0.4f, 0.4f)
+            .eyeHeight(0.2f)
     )
     val BONECRUSHER = RegistryUtil.registerEntity(
         "bonecrusher",
