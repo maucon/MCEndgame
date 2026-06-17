@@ -45,7 +45,7 @@ class SkeletonMageEntity(
         goalSelector.addGoal(2, RestrictSunGoal(this))
         goalSelector.addGoal(3, FleeSunGoal(this, 1.0))
         goalSelector.addGoal(3, AvoidEntityGoal(this, Wolf::class.java, 6.0F, 1.0, 1.2))
-        goalSelector.addGoal(4, NoMovementProjectileAttackGoal(this, 40, 15F, 40))
+        goalSelector.addGoal(4, NoMovementProjectileAttackGoal(this, 40, 20F, 40))
         goalSelector.addGoal(5, KeepDistanceToTargetGoal(this, 1.0, 10F, 15F))
         goalSelector.addGoal(6, WaterAvoidingRandomStrollGoal(this, 1.0))
         goalSelector.addGoal(7, LookAtPlayerGoal(this, Player::class.java, 8.0F))
@@ -93,7 +93,7 @@ class SkeletonMageEntity(
     private fun getFireballVelocity(
         distance: Vec3,
     ): Vec3 {
-        val ticks = getFireballTravelTime(distance.length())
+        val ticks = getFireballTravelTicks(distance.length())
         val horizontalDistance = distance.horizontalDistance()
 
         val tickInertia = SpellFireballEntity.INERTIA.pow(ticks)
@@ -109,7 +109,7 @@ class SkeletonMageEntity(
         return velocityVec
     }
 
-    private fun getFireballTravelTime(distance: Double) = max(1, (distance * 4).pow(0.8).toInt())
+    private fun getFireballTravelTicks(distance: Double) = max(1, (distance * 4).pow(0.8).toInt())
 
     private fun getShootPos() = Vec3(
         x - (bbWidth + 1.0) * 0.5 * sin(yBodyRot * (Math.PI / 180.0)),
