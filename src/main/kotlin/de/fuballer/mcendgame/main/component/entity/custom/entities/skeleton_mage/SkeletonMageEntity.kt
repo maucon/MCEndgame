@@ -19,7 +19,6 @@ import net.minecraft.world.entity.animal.turtle.Turtle
 import net.minecraft.world.entity.animal.wolf.Wolf
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.skeleton.Skeleton
-import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
@@ -52,7 +51,6 @@ class SkeletonMageEntity(
         goalSelector.addGoal(7, RandomLookAroundGoal(this))
         targetSelector.addGoal(1, HurtByTargetGoal(this))
         targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Player::class.java, true))
-        targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Villager::class.java, true))
         targetSelector.addGoal(3, NearestAttackableTargetGoal(this, IronGolem::class.java, true))
         targetSelector.addGoal(3, NearestAttackableTargetGoal(this, Turtle::class.java, 10, true, false, Turtle.BABY_ON_LAND_SELECTOR))
     }
