@@ -259,12 +259,12 @@ class FireGeysersAttackService(
             val targets = getTargets(world, positions, attacker)
             targets.forEach {
                 it.dealDamage(
-                    attacker,
                     listOf(
                         NO_AD_ATTRIBUTE,
                         CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, roll = DoubleRoll(DoubleBounds(burstElementalDamage))),
                     ),
-                    CustomDamageTypes.SPELL
+                    CustomDamageTypes.SPELL,
+                    attacker,
                 )
                 it.igniteForTicks(80)
                 it.setAndSyncVelocity(it.deltaMovement.add(0.0, 1.0, 0.0))
@@ -275,12 +275,12 @@ class FireGeysersAttackService(
             val targets = getTargets(world, positions, attacker)
             targets.forEach {
                 it.dealDamage(
-                    attacker,
                     listOf(
                         NO_AD_ATTRIBUTE,
                         CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, roll = DoubleRoll(DoubleBounds(durationDamage))),
                     ),
-                    CustomDamageTypes.SPELL
+                    CustomDamageTypes.SPELL,
+                    attacker,
                 )
                 it.igniteForTicks(80)
             }

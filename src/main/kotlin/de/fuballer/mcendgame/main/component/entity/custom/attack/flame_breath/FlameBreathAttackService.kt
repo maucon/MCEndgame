@@ -161,12 +161,12 @@ class FlameBreathAttackService(
                 val dotProduct = direction.dot(directionVectorToEntity)
                 if (dotProduct >= cosThreshold) {
                     entity.dealDamage(
-                        attacker,
                         listOf(
                             NO_AD_ATTRIBUTE,
                             CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, roll = DoubleRoll(DoubleBounds(elementalDamage))),
                         ),
-                        CustomDamageTypes.SPELL
+                        CustomDamageTypes.SPELL,
+                        attacker,
                     )
                     entity.igniteForTicks(80)
                 }

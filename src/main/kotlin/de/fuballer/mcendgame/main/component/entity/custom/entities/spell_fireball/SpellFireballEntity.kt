@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball
 
+import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealElementalSpellDamage
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
@@ -9,7 +10,6 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.ProjectileUtil
-import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.BaseFireBlock
 import net.minecraft.world.phys.BlockHitResult
@@ -61,20 +61,22 @@ class SpellFireballEntity(
 
     override fun onHitEntity(hitResult: EntityHitResult) {
         super.onHitEntity(hitResult)
-        val livingOwner = getOwner() as? LivingEntity ?: return
-        val serverLevel = level() as? ServerLevel ?: return
+        if (level().isClientSide) return
 
-        val target = hitResult.entity
-        val damageSource = this.damageSources().spit(this, livingOwner)
-
-        if (!target.hurtServer(serverLevel, damageSource, 1.0f)) return
-        EnchantmentHelper.doPostAttackEffects(serverLevel, target, damageSource)
-        target.remainingFireTicks = TARGET_FIRE_TICKS
+        damageTarget(hitResult.entity)
 
         playSound(SoundEvents.FIRE_EXTINGUISH, 0.5f, 0.75F + random.nextFloat() * 0.25F)
         playSound(SoundEvents.GENERIC_EXPLODE.value(), 0.5f, 0.75F + random.nextFloat() * 0.25F)
 
         discard()
+    }
+
+    private fun damageTarget(
+        target: Entity,
+    ) {
+        val livingOwner = getOwner() as? LivingEntity ?: return
+        target.dealElementalSpellDamage(1.0, livingOwner, this)
+        target.remainingFireTicks = TARGET_FIRE_TICKS
     }
 
     override fun onHitBlock(blockHitResult: BlockHitResult) {

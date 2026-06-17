@@ -11,13 +11,17 @@ import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
 
 object DamageDealingExtension {
-    fun Entity.dealElementalSpellDamage(damagePercentage: Double, attacker: Entity) {
+    fun Entity.dealElementalSpellDamage(
+        damagePercentage: Double,
+        causingEntity: Entity,
+        directEntity: Entity? = causingEntity,
+    ) {
         val attributes = listOf(
             CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, rolls = listOf(DoubleRoll(DoubleBounds(damagePercentage - 1)))),
             CustomAttribute(CustomAttributeTypes.NO_ATTACK_DAMAGE),
         )
 
-        dealDamage(attacker, attributes, CustomDamageTypes.SPELL)
+        dealDamage(attributes, CustomDamageTypes.SPELL, causingEntity, directEntity)
     }
 
     fun Entity.dealGenericAttackDamage(amount: Float, attacker: Entity, blockable: Boolean = true) {
@@ -31,13 +35,14 @@ object DamageDealingExtension {
     }
 
     fun Entity.dealDamage(
-        attacker: Entity,
         attributes: List<CustomAttribute>,
         damageType: ResourceKey<DamageType>,
+        causingEntity: Entity,
+        directEntity: Entity? = causingEntity,
     ) {
         val serverWorld = level() as? ServerLevel ?: return
 
-        val damageSource = CustomDamageTypes.of(serverWorld, damageType, attacker)
+        val damageSource = CustomDamageTypes.of(serverWorld, damageType, causingEntity, directEntity)
         val config = DamageCalculationConfig(attackAttributes = attributes)
         val extended = ExtendedDamageSource(config, damageSource)
 

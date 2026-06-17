@@ -21,14 +21,14 @@ object CustomDamageTypes {
     fun of(
         world: Level,
         key: ResourceKey<DamageType>,
-        attacker: Entity,
-        source: Entity? = attacker
+        causingEntity: Entity,
+        directEntity: Entity? = causingEntity,
     ): DamageSource {
         val damageType = world.registryAccess()
             .lookupOrThrow(Registries.DAMAGE_TYPE)
             .get(key.identifier())
             .get()
 
-        return DamageSource(damageType, source, attacker)
+        return DamageSource(damageType, directEntity, causingEntity)
     }
 }
