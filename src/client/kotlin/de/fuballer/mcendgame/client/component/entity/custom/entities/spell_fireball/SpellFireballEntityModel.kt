@@ -49,6 +49,6 @@ class SpellFireballEntityModel(
         state: SpellFireballRenderState,
     ) {
         super.setupAnim(state)
-        fireball.zRot += state.ageInTicks * 0.12F
+        fireball.zRot = state.ageInTicks * 0.12F
     }
 }

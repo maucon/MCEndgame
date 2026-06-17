@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.util.Mth
 
 class SpellFireballRenderer(
     context: EntityRendererProvider.Context,
@@ -46,8 +47,8 @@ class SpellFireballRenderer(
     ) {
         poseStack.pushPose()
         poseStack.scale(-1.0F, -1.0F, 1.0F)
+        poseStack.mulPose(Axis.YP.rotationDegrees(180 + state.yRot))
         poseStack.mulPose(Axis.XP.rotationDegrees(state.xRot))
-        poseStack.mulPose(Axis.YP.rotationDegrees(state.yRot - 180))
         model.setupAnim(state)
 
         queue.submitModel(
@@ -90,10 +91,13 @@ class SpellFireballRenderer(
     override fun extractRenderState(
         entity: SpellFireballEntity,
         state: SpellFireballRenderState,
-        tickDelta: Float
+        tickDelta: Float,
     ) {
         super.extractRenderState(entity, state, tickDelta)
-        state.xRot = entity.getXRot(tickDelta)
-        state.yRot = entity.getYRot(tickDelta)
+
+        val velocity = entity.deltaMovement
+        val horizontal = velocity.horizontalDistance()
+        state.yRot = (Mth.atan2(velocity.z, velocity.x) * Mth.RAD_TO_DEG).toFloat() - 90f
+        state.xRot = (-(Mth.atan2(velocity.y, horizontal) * Mth.RAD_TO_DEG)).toFloat()
     }
 }
