@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.arachne
 
 import de.fuballer.mcendgame.main.component.block.CustomBlocks
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile.AdditionalProjectilesUtil
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealGenericAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.entities.mount.DirectionalMovementEntity
@@ -36,6 +37,7 @@ import net.minecraft.world.entity.monster.RangedAttackMob
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
@@ -264,23 +266,31 @@ class ArachneEntity(
 
     private fun shootAt(
         target: LivingEntity,
-        projectile: Projectile,
+        entityFactory: () -> Projectile,
+        applyMisc: (Projectile) -> Unit,
+        serverLevel: ServerLevel,
     ) {
-        val serverWorld = level() as? ServerLevel ?: return
-
         val xDistance = target.x - x
         val zDistance = target.z - z
         val aimY = target.eyeY - 1.1f
         val addedYVelocity = sqrt(xDistance * xDistance + zDistance * zDistance) * 0.2f
 
-        changeAttackPose(CustomPosesEntity.CustomPose.SPITTING, 9)// anim is 0.42s
+        AdditionalProjectilesUtil.shootProjectile(
+            this,
+            null,
+            Vec3(xDistance, addedYVelocity, zDistance),
+            entityFactory,
+        ) { projectile, spreadVelocity ->
+            val itemStack = ItemStack(Items.AIR)
+            Projectile.spawnProjectile(projectile, serverLevel, itemStack)
+            { entity: Projectile ->
+                entity.shoot(spreadVelocity.x, spreadVelocity.y + aimY - projectile.y, spreadVelocity.z, 1.6f, 2.0f)
+            }
 
-        val itemStack = ItemStack(Items.AIR)
-        Projectile.spawnProjectile(projectile, serverWorld, itemStack)
-        { entity: Projectile ->
-            entity.shoot(xDistance, aimY - entity.y + addedYVelocity, zDistance, 1.6f, 2.0f)
+            applyMisc(projectile)
         }
 
+        changeAttackPose(CustomPosesEntity.CustomPose.SPITTING, 9)// anim is 0.42s
         playSpitSound()
     }
 
@@ -288,20 +298,30 @@ class ArachneEntity(
         target: LivingEntity,
         pullProgress: Float,
     ) {
-        val serverWorld = level() as? ServerLevel ?: return
-        val projectile = WebshotEntity(CustomEntities.WEBSHOT, serverWorld, this)
-        projectile.setBaseDamage(getAttributeValue(Attributes.ATTACK_DAMAGE) / 2.0)
-        shootAt(target, projectile)
+        val serverLevel = level() as? ServerLevel ?: return
+        shootAt(
+            target,
+            { WebshotEntity(CustomEntities.WEBSHOT, serverLevel, this) },
+            { projectile ->
+                (projectile as? AbstractArrow)?.setBaseDamage(getAttributeValue(Attributes.ATTACK_DAMAGE) / 2.0)
+            },
+            serverLevel,
+        )
     }
 
     override fun shootHookAt(
         target: LivingEntity,
     ) {
-        val serverWorld = level() as? ServerLevel ?: return
-        val projectile = WebhookEntity(CustomEntities.WEBHOOK, serverWorld, this)
-        projectile.setBaseDamage(1.0)
-        shootAt(target, projectile)
-        addHookedEntity(projectile.uuid)
+        val serverLevel = level() as? ServerLevel ?: return
+        shootAt(
+            target,
+            { WebhookEntity(CustomEntities.WEBHOOK, serverLevel, this) },
+            { projectile ->
+                addHookedEntity(projectile.uuid)
+                (projectile as? AbstractArrow)?.setBaseDamage(1.0)
+            },
+            serverLevel,
+        )
     }
 
     override fun makeStuckInBlock(
