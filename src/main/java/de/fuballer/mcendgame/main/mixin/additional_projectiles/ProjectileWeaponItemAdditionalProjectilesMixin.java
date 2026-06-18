@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.mixin.additional_arrows;
+package de.fuballer.mcendgame.main.mixin.additional_projectiles;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions;

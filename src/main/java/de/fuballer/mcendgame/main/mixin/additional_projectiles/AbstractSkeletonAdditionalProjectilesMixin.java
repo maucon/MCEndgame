@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.mixin.additional_arrows;
+package de.fuballer.mcendgame.main.mixin.additional_projectiles;
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions;
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile.AdditionalProjectilesUtil;
@@ -50,8 +50,8 @@ public abstract class AbstractSkeletonAdditionalProjectilesMixin {
                 skeleton,
                 null,
                 direction,
-                () -> getArrow(projectileStack, pullProgress, bowStack),
-                (projectile, spreadVelocity) -> {
+                (_) -> getArrow(projectileStack, pullProgress, bowStack),
+                (projectile, spreadVelocity, _) -> {
                     projectile.shoot(
                             spreadVelocity.x,
                             spreadVelocity.y + target.getY(0.3333333333333333) - projectile.getY(),

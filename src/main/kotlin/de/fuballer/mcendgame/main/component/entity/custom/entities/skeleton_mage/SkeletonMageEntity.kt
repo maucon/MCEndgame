@@ -77,7 +77,7 @@ class SkeletonMageEntity(
             shootPos,
             velocity,
             { SpellFireballEntity(CustomEntities.SPELL_FIREBALL, serverLevel) },
-            { projectile, spreadVelocity ->
+            { projectile, spreadVelocity, _ ->
                 Projectile.spawnProjectileUsingShoot(
                     projectile,
                     serverLevel,

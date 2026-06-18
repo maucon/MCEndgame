@@ -266,7 +266,7 @@ class ArachneEntity(
 
     private fun shootAt(
         target: LivingEntity,
-        entityFactory: () -> Projectile,
+        entityFactory: (AdditionalProjectilesUtil.ProjectileIndex) -> Projectile,
         applyMisc: (Projectile) -> Unit,
         serverLevel: ServerLevel,
     ) {
@@ -280,7 +280,7 @@ class ArachneEntity(
             null,
             Vec3(xDistance, addedYVelocity, zDistance),
             entityFactory,
-        ) { projectile, spreadVelocity ->
+        ) { projectile, spreadVelocity, _ ->
             val itemStack = ItemStack(Items.AIR)
             Projectile.spawnProjectile(projectile, serverLevel, itemStack)
             { entity: Projectile ->
