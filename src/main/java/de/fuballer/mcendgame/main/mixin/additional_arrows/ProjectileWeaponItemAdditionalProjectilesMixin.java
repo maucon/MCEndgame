@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.main.mixin.additional_arrows;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions;
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.AdditionalProjectilesSettings;
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile.AdditionalProjectilesSettings;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;

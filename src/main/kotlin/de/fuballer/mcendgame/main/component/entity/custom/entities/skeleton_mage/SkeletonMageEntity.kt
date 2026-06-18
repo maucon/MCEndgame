@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.skeleton_mage
 
-import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAdditionalProjectileCount
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.AdditionalProjectilesSettings
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile.AdditionalProjectilesUtil
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball.SpellFireballEntity
 import de.fuballer.mcendgame.main.component.entity.custom.goals.KeepDistanceToTargetGoal
@@ -73,29 +72,24 @@ class SkeletonMageEntity(
         val itemStack = ItemStack(Items.AIR)
         val projectilePower = velocity.length().toFloat()
 
-        val additionalProjectileCount = getAdditionalProjectileCount()
-        val spread: Float = AdditionalProjectilesSettings.SPREAD_PRE_PROJECTILE_RAD * additionalProjectileCount
-        var spreadRotation = -spread
-
-        repeat(1 + additionalProjectileCount) {
-            val projectile = SpellFireballEntity(CustomEntities.SPELL_FIREBALL, serverLevel)
-            projectile.setPos(shootPos)
-            projectile.owner = this
-
-            val spreadVelocity = velocity.yRot(spreadRotation)
-            Projectile.spawnProjectileUsingShoot(
-                projectile,
-                serverLevel,
-                itemStack,
-                spreadVelocity.x,
-                spreadVelocity.y,
-                spreadVelocity.z,
-                projectilePower,
-                1.5F,
-            )
-
-            spreadRotation += 2 * AdditionalProjectilesSettings.SPREAD_PRE_PROJECTILE_RAD
-        }
+        AdditionalProjectilesUtil.shootProjectile(
+            this,
+            shootPos,
+            velocity,
+            { SpellFireballEntity(CustomEntities.SPELL_FIREBALL, serverLevel) },
+            { projectile, spreadVelocity ->
+                Projectile.spawnProjectileUsingShoot(
+                    projectile,
+                    serverLevel,
+                    itemStack,
+                    spreadVelocity.x,
+                    spreadVelocity.y,
+                    spreadVelocity.z,
+                    projectilePower,
+                    1.5F,
+                )
+            }
+        )
 
         playShootFireballSound()
         swing(InteractionHand.MAIN_HAND)
