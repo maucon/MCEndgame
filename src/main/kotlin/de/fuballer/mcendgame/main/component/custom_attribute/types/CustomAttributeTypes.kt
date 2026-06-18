@@ -55,7 +55,7 @@ object CustomAttributeTypes {
 
     // BOW
     val BOW_PULL_TICKS = CustomAttributeType("bow_pull_ticks", AttributeFormats.SIGNED_INT_ROLL, AttributeFormats.INT_BOUNDS, AttributeAffinities.DETRIMENTAL)
-    val ADDITIONAL_ARROWS = CustomAttributeType("additional_arrows", AttributeFormats.SIGNED_INT_ROLL, AttributeFormats.INT_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val ADDITIONAL_PROJECTILES = CustomAttributeType("additional_projectiles", AttributeFormats.SIGNED_INT_ROLL, AttributeFormats.INT_BOUNDS, AttributeAffinities.BENEFICIAL)
     val PIERCE_ALL = CustomAttributeType("pierce_all", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.EMPTY)
 
     // POISON

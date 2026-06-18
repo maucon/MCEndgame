@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.main.MCEndgame
 import de.fuballer.mcendgame.main.accessor.LivingEntityCustomAttributesAccessor
 import de.fuballer.mcendgame.main.component.custom_attribute.data.*
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
-import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes.ADDITIONAL_ARROWS
+import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes.ADDITIONAL_PROJECTILES
 import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectHealFactorCommand
 import de.fuballer.mcendgame.main.messaging.misc.CollectCustomAttributesCommand
 import de.fuballer.mcendgame.main.util.extension.SlotExtension.isOrIsChildOf
@@ -142,11 +142,11 @@ object CustomAttributesExtensions {
 
     fun LivingEntity.getHealingFactor() = CommandGateway.apply(CollectHealFactorCommand(this)).getFactor()
 
-    fun LivingEntity.getAdditionalArrowCount(): Int {
-        val attributes = getAllCustomAttributes()[ADDITIONAL_ARROWS]
+    fun LivingEntity.getAdditionalProjectileCount(): Int {
+        val attributes = getAllCustomAttributes()[ADDITIONAL_PROJECTILES]
         if (attributes.isNullOrEmpty()) return 0
-        val arrowCount = attributes.sumOf { it.rolls[0].asIntRoll().getValue() }
-        return max(0, arrowCount)
+        val projectileCount = attributes.sumOf { it.rolls[0].asIntRoll().getValue() }
+        return max(0, projectileCount)
     }
 
     fun LivingEntity.addCustomAttribute(customAttribute: CustomAttribute) {

@@ -11,7 +11,7 @@ class Hailstorm(
     settings: Properties,
 ) : UniqueAttributesBowItem(settings) {
     override fun getCustomAttributes() = listOf(
-        RollableCustomAttribute(CustomAttributeTypes.ADDITIONAL_ARROWS, 0, IntBounds(2, 2)),
+        RollableCustomAttribute(CustomAttributeTypes.ADDITIONAL_PROJECTILES, 0, IntBounds(2, 2)),
         RollableCustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, 0, DoubleBounds(1.0, 2.0)),
     )
 

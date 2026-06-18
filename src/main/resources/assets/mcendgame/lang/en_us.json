@@ -261,7 +261,7 @@
   "attribute.mcendgame.companion_attack_damage": "%s Companion Attack Damage",
   "attribute.mcendgame.increased_companion_damage": "%s%% %s Companion Damage",
   "attribute.mcendgame.bow_pull_ticks": "%s Bow Draw Ticks",
-  "attribute.mcendgame.additional_arrows": "%s additional Arrows",
+  "attribute.mcendgame.additional_projectiles": "%s additional Projectiles",
   "attribute.mcendgame.pierce_all": " Arrows Pierce all Targets",
   "attribute.mcendgame.ghostly_appearance": " Ghostly Appearance",
   "attribute.mcendgame.entity_phasing": " Entity Phasing",
