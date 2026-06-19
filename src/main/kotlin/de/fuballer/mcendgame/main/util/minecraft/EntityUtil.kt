@@ -1,5 +1,10 @@
 package de.fuballer.mcendgame.main.util.minecraft
 
+import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.addCustomAttribute
+import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
+import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
+import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
+import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import net.minecraft.server.level.ServerLevel
@@ -43,6 +48,9 @@ object EntityUtil {
         entity.getAttribute(Attributes.ATTACK_DAMAGE)?.baseValue = type.attackDamage
         entity.getAttribute(Attributes.MOVEMENT_SPEED)?.baseValue = type.movementSpeed
         entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE)?.baseValue = type.knockbackResistance
+
+        val elementalDamage = type.elementalDamage
+        if (elementalDamage > 0) entity.addCustomAttribute(CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, roll = DoubleRoll(DoubleBounds(elementalDamage))))
     }
 
     private fun clearVehicleAndPassengers(entity: Mob) {

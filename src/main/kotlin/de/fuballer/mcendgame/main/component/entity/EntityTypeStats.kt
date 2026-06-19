@@ -14,6 +14,8 @@ interface EntityTypeStats {
 
     val health: Double
     val attackDamage: Double
+    val elementalDamage: Double
+        get() = 0.0
     val movementSpeed: Double
     val knockbackResistance: Double
 
