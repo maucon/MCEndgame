@@ -35,7 +35,7 @@ object PersistentProjectileCalculator : DamageCalculator {
         return ((arrowDamage + criticalDamage) * damageMulti).toFloat()
     }
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,
@@ -43,12 +43,12 @@ object PersistentProjectileCalculator : DamageCalculator {
     ): Float {
         if (source.entity !is LivingEntity) return 0.0F
 
-        val baseDamage = calculateBaseElementalDamage(event)
+        val baseDamage = calculateBaseSpellDamage(event)
         val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
         val projectileSpeedMulti = calculateOtherMultiplier(source)
 
         val arrowDamage = ceil(projectileSpeedMulti * baseDamage)
-        val criticalDamage = if (event.applyCritToElementalDamage) calculateCriticalDamage(event, arrowDamage) else 0
+        val criticalDamage = if (event.applyCritToSpellDamage) calculateCriticalDamage(event, arrowDamage) else 0
         return ((arrowDamage + criticalDamage) * damageMulti).toFloat()
     }
 
@@ -75,9 +75,9 @@ object PersistentProjectileCalculator : DamageCalculator {
         return sourceEntity.deltaMovement.length()
     }
 
-    private fun calculateBaseElementalDamage(
+    private fun calculateBaseSpellDamage(
         event: DamageCalculationCommand
     ): Double {
-        return event.elementalDamage.sum()
+        return event.spellDamage.sum()
     }
 }

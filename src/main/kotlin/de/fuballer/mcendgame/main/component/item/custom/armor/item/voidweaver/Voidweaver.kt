@@ -16,7 +16,7 @@ class Voidweaver(
         RollableCustomAttribute(CustomAttributeTypes.LINK_NEARBY_ENEMIES, 0, IntBounds(4, 5)),
         RollableCustomAttribute(CustomAttributeTypes.DAMAGE_LINKED_ENEMIES, 0, DoubleBounds(0.4, 0.6)),
         RollableCustomAttribute(CustomAttributeTypes.HEAL_ON_LINKED_ENEMY_KILLED, 0, DoubleBounds(0.8, 1.2)),
-        RollableCustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, 0, DoubleBounds(2.0, 3.0)),
+        RollableCustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, 0, DoubleBounds(2.0, 3.0)),
         RollableCustomAttribute(CustomAttributeTypes.WARD, 0, DoubleBounds(2.0, 3.0)),
     )
 

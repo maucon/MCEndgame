@@ -42,7 +42,7 @@ object DamageUtil {
         return (damageAmount * totalFactor).toFloat()
     }
 
-    fun reduceElementalDamageByWard(
+    fun reduceSpellDamageByWard(
         armorWearer: LivingEntity,
         damageAmount: Float,
         damageSource: DamageSource,
@@ -79,14 +79,14 @@ object DamageUtil {
         return damageIncrease * moreDamage
     }
 
-    fun calculateElementalDamageMultiplier(
+    fun calculateSpellDamageMultiplier(
         event: DamageCalculationCommand
     ): Double {
         var damageIncrease = 1 + event.increasedDamage.sum()
-        damageIncrease += event.increasedElementalDamage.sum()
+        damageIncrease += event.increasedSpellDamage.sum()
 
         var moreDamage = event.moreDamage.fold(1.0) { a, b -> a * (b + 1) }
-        moreDamage *= event.moreElementalDamage.fold(1.0) { a, b -> a * (b + 1) }
+        moreDamage *= event.moreSpellDamage.fold(1.0) { a, b -> a * (b + 1) }
 
         return damageIncrease * moreDamage
     }

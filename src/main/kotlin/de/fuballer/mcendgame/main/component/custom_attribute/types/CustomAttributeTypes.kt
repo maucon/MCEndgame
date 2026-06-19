@@ -33,13 +33,13 @@ object CustomAttributeTypes {
         )
 
     // OFFENSE
-    val ELEMENTAL_DAMAGE = CustomAttributeType("elemental_damage", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val SPELL_DAMAGE = CustomAttributeType("elemental_damage", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
     val INCREASED_DAMAGE =
         CustomAttributeType("increased_damage", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
     val MORE_DAMAGE = CustomAttributeType("more_damage", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
     val MORE_DAMAGE_PER_MISSING_HEART =
         CustomAttributeType("more_damage_per_missing_heart", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
-    val INCREASED_ELEMENTAL_DAMAGE =
+    val INCREASED_SPELL_DAMAGE =
         CustomAttributeType("increased_elemental_damage", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
     val INCREASED_PROJECTILE_DAMAGE =
         CustomAttributeType("increased_projectile_damage", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
@@ -71,7 +71,7 @@ object CustomAttributeTypes {
         "increased_attack_damage_while_poisoned", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL,
         SignBasedKeywords.INCREASED
     )
-    val INCREASED_ELEMENTAL_DAMAGE_WHILE_POISONED = CustomAttributeType(
+    val INCREASED_SPELL_DAMAGE_WHILE_POISONED = CustomAttributeType(
         "increased_elemental_damage_while_poisoned", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL,
         SignBasedKeywords.INCREASED
     )
@@ -230,7 +230,7 @@ object CustomAttributeTypes {
         AttributeFormats.INT_AND_DOUBLE_BOUNDS,
         AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL
     )
-    val INCREASED_HEALING_PER_ELEMENTAL_DAMAGE =
+    val INCREASED_HEALING_PER_SPELL_DAMAGE =
         CustomAttributeType(
             "increased_healing_per_elemental_damage",
             AttributeFormats.SIGNED_PERCENT_ROLL,

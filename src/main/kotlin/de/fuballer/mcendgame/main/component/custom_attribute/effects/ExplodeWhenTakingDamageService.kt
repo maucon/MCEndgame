@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.main.component.custom_attribute.effects
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asDoubleRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
-import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealElementalSpellDamage
+import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealSpellDamage
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDamagedEvent
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.centerPos
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isEnemy
@@ -40,7 +40,7 @@ class ExplodeWhenTakingDamageService {
         playSound(world, damaged)
 
         getNearbyEnemies(world, damaged)
-            .forEach { target -> target.dealElementalSpellDamage(damagePercentage, damaged) }
+            .forEach { target -> target.dealSpellDamage(damagePercentage, damaged) }
     }
 
     private fun getNearbyEnemies(

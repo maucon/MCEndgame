@@ -14,8 +14,8 @@ object SkeletonMageStats : EntityTypeStats {
     override val canBeInvisible = true
 
     override val health = 15.0
-    override val attackDamage = 4.0
-    override val elementalDamage: Double
+    override val attackDamage = 1.0
+    override val spellDamage: Double
         get() = 3.0
     override val movementSpeed = 0.25
     override val knockbackResistance = 0.0

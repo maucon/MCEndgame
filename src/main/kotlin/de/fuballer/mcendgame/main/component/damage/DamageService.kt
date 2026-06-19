@@ -121,14 +121,14 @@ object DamageService {
         val damageCalculator = DAMAGE_CALCULATORS.firstOrNull { it.isActive(source) }!!
 
         var attackDamage = damageCalculator.calculateAttackDamage(originalDamage, attacked, source, cmd)
-        var elementalDamage = damageCalculator.calculateElementalDamage(originalDamage, attacked, source, cmd)
+        var spellDamage = damageCalculator.calculateSpellDamage(originalDamage, attacked, source, cmd)
 
-        log.debug("${attacked.javaClass.simpleName} [${damageCalculator.javaClass.simpleName}]: originalDamage: $originalDamage --> calculated damage: ${attackDamage + elementalDamage} ($attackDamage + $elementalDamage)")
+        log.debug("${attacked.javaClass.simpleName} [${damageCalculator.javaClass.simpleName}]: originalDamage: $originalDamage --> calculated damage: ${attackDamage + spellDamage} ($attackDamage + $spellDamage)")
 
         attackDamage = calculateAttackDamageReduction(attackDamage, attacked, source, cmd)
-        elementalDamage = calculateElementalDamageReduction(elementalDamage, attacked, source, cmd)
+        spellDamage = calculateSpellDamageReduction(spellDamage, attacked, source, cmd)
 
-        var combinedDamage = attackDamage + elementalDamage
+        var combinedDamage = attackDamage + spellDamage
 
         // Special damage calculation
         if (damageCalculationConfig.isArmadilloDamageReduction) {
@@ -151,15 +151,15 @@ object DamageService {
         return DamageUtil.applyDamageTakenAttributes(attackDamage, cmd)
     }
 
-    private fun calculateElementalDamageReduction(
+    private fun calculateSpellDamageReduction(
         damage: Float,
         attacked: LivingEntity,
         source: DamageSource,
         cmd: DamageCalculationCommand
     ): Float {
-        var elementalDamage = applyWardToDamage(damage, source, cmd, attacked)
-        elementalDamage = modifyAppliedDamage(source, elementalDamage, attacked)
-        return DamageUtil.applyDamageTakenAttributes(elementalDamage, cmd)
+        var spellDamage = applyWardToDamage(damage, source, cmd, attacked)
+        spellDamage = modifyAppliedDamage(source, spellDamage, attacked)
+        return DamageUtil.applyDamageTakenAttributes(spellDamage, cmd)
     }
 
     private fun applyArmorToDamage(
@@ -186,7 +186,7 @@ object DamageService {
     ): Float {
         var amount = amount
         val ward = cmd.ward.sum().toFloat()
-        amount = DamageUtil.reduceElementalDamageByWard(entity, amount, source, ward)
+        amount = DamageUtil.reduceSpellDamageByWard(entity, amount, source, ward)
 
         return amount
     }

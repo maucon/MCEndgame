@@ -20,7 +20,7 @@ object EnderDragonCalculator : DamageCalculator {
         return (originalDamage * damageMulti).toFloat()
     }
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,

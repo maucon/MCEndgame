@@ -198,7 +198,7 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
                 .map(Pair::getFirst)
                 .toList();
 
-        linkedEntities.forEach(linkedEntity -> DamageDealingExtension.INSTANCE.dealElementalSpellDamage(linkedEntity, sum, entity, entity));
+        linkedEntities.forEach(linkedEntity -> DamageDealingExtension.INSTANCE.dealSpellDamage(linkedEntity, sum, entity, entity));
     }
 
     @Override

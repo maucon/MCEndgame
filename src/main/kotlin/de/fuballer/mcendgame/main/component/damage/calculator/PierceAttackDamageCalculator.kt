@@ -26,7 +26,7 @@ object PierceAttackDamageCalculator : DamageCalculator {
         return ((baseDamage + enchantmentDamage) * damageMulti).toFloat()
     }
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,
@@ -34,8 +34,8 @@ object PierceAttackDamageCalculator : DamageCalculator {
     ): Float {
         if (source.entity !is LivingEntity) return 0.0F
 
-        val baseDamage = event.elementalDamage.sum()
-        val damageMulti = DamageUtil.calculateElementalDamageMultiplier(event)
+        val baseDamage = event.spellDamage.sum()
+        val damageMulti = DamageUtil.calculateSpellDamageMultiplier(event)
 
         return (baseDamage * damageMulti).toFloat()
     }

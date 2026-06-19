@@ -49,8 +49,8 @@ object EntityUtil {
         entity.getAttribute(Attributes.MOVEMENT_SPEED)?.baseValue = type.movementSpeed
         entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE)?.baseValue = type.knockbackResistance
 
-        val elementalDamage = type.elementalDamage
-        if (elementalDamage > 0) entity.addCustomAttribute(CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, roll = DoubleRoll(DoubleBounds(elementalDamage))))
+        val spellDamage = type.spellDamage
+        if (spellDamage > 0) entity.addCustomAttribute(CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(spellDamage))))
     }
 
     private fun clearVehicleAndPassengers(entity: Mob) {

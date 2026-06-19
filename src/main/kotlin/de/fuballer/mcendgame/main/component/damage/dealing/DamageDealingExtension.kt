@@ -11,7 +11,7 @@ import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
 
 object DamageDealingExtension {
-    fun Entity.dealElementalSpellDamage(
+    fun Entity.dealSpellDamage(
         damagePercentage: Double,
         causingEntity: Entity,
         directEntity: Entity? = causingEntity,

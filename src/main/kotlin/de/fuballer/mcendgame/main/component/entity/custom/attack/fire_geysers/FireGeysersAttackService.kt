@@ -252,7 +252,7 @@ class FireGeysersAttackService(
         durationDamageConversion: Double,
     ) {
         val attackDamage = if (attacker is LivingEntity) attacker.getAttributeValue(Attributes.ATTACK_DAMAGE) else 1.0
-        val burstElementalDamage = attackDamage * burstDamageConversion
+        val burstSpellDamage = attackDamage * burstDamageConversion
         val durationDamage = attackDamage * durationDamageConversion
 
         scheduler.delayed(delay + indicatorDuration) {
@@ -261,7 +261,7 @@ class FireGeysersAttackService(
                 it.dealDamage(
                     listOf(
                         NO_AD_ATTRIBUTE,
-                        CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, roll = DoubleRoll(DoubleBounds(burstElementalDamage))),
+                        CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(burstSpellDamage))),
                     ),
                     CustomDamageTypes.SPELL,
                     attacker,
@@ -277,7 +277,7 @@ class FireGeysersAttackService(
                 it.dealDamage(
                     listOf(
                         NO_AD_ATTRIBUTE,
-                        CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, roll = DoubleRoll(DoubleBounds(durationDamage))),
+                        CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(durationDamage))),
                     ),
                     CustomDamageTypes.SPELL,
                     attacker,

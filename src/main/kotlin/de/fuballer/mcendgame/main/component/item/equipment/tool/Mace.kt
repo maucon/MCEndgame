@@ -67,9 +67,9 @@ enum class Mace(
         RandomOption(
             weight = 1,
             listOf(
-                LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, RollableCustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, 3, DoubleBounds(0.6, 1.4))),
-                LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, RollableCustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, 2, DoubleBounds(1.4, 2.2))),
-                LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, RollableCustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, 1, DoubleBounds(2.2, 3.0))),
+                LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, RollableCustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, 3, DoubleBounds(0.6, 1.4))),
+                LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, RollableCustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, 2, DoubleBounds(1.4, 2.2))),
+                LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, RollableCustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, 1, DoubleBounds(2.2, 3.0))),
             )
         ),
         RandomOption(
@@ -79,19 +79,19 @@ enum class Mace(
                     weight = 50,
                     tier = 1,
                     requiredLevel = 0,
-                    RollableCustomAttribute(CustomAttributeTypes.INCREASED_ELEMENTAL_DAMAGE, 3, DoubleBounds(0.05, 0.1))
+                    RollableCustomAttribute(CustomAttributeTypes.INCREASED_SPELL_DAMAGE, 3, DoubleBounds(0.05, 0.1))
                 ),
                 LevelRestrictedRandomOption(
                     weight = 10,
                     tier = 2,
                     requiredLevel = 5,
-                    RollableCustomAttribute(CustomAttributeTypes.INCREASED_ELEMENTAL_DAMAGE, 2, DoubleBounds(0.1, 0.15))
+                    RollableCustomAttribute(CustomAttributeTypes.INCREASED_SPELL_DAMAGE, 2, DoubleBounds(0.1, 0.15))
                 ),
                 LevelRestrictedRandomOption(
                     weight = 1,
                     tier = 3,
                     requiredLevel = 10,
-                    RollableCustomAttribute(CustomAttributeTypes.INCREASED_ELEMENTAL_DAMAGE, 1, DoubleBounds(0.15, 0.2))
+                    RollableCustomAttribute(CustomAttributeTypes.INCREASED_SPELL_DAMAGE, 1, DoubleBounds(0.15, 0.2))
                 ),
             )
         ),

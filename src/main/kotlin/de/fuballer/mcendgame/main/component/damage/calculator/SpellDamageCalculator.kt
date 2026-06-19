@@ -18,27 +18,27 @@ object SpellDamageCalculator : DamageCalculator {
         event: DamageCalculationCommand
     ) = 0f // TODO add attack damage calculation (currently no spell has attack damage)
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
     ): Float {
-        val baseDamage = calculateBaseElementalDamage(event)
-        val damageMulti = DamageUtil.calculateElementalDamageMultiplier(event)
+        val baseDamage = calculateBaseSpellDamage(event)
+        val damageMulti = DamageUtil.calculateSpellDamageMultiplier(event)
 
         val critMulti = calculateCriticalMultiplier(event)
         return (baseDamage * critMulti * damageMulti).toFloat()
     }
 
-    private fun calculateBaseElementalDamage(
+    private fun calculateBaseSpellDamage(
         event: DamageCalculationCommand
     ): Double {
-        return event.elementalDamage.sum()
+        return event.spellDamage.sum()
     }
 
     private fun calculateCriticalMultiplier(event: DamageCalculationCommand): Double {
-        if (!event.isCritical || !event.applyCritToElementalDamage) return 1.0
+        if (!event.isCritical || !event.applyCritToSpellDamage) return 1.0
         return 1.5 + event.criticalDamageMulti.sum()
     }
 }

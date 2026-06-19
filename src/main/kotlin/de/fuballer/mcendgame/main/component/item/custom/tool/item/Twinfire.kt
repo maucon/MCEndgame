@@ -18,7 +18,7 @@ class Twinfire(
 
     private fun getFlatDamageAttribute() = listOf(
         RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 0, DoubleBounds(1.0, 2.0)),
-        RollableCustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, 0, DoubleBounds(1.0, 2.0)),
+        RollableCustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, 0, DoubleBounds(1.0, 2.0)),
     ).random()
 
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.HAND

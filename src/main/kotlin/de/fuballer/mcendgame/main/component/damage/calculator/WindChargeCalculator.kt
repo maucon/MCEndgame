@@ -18,7 +18,7 @@ object WindChargeCalculator : DamageCalculator {
         return 1f
     }
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,

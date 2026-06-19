@@ -15,7 +15,7 @@ interface DamageCalculator {
         event: DamageCalculationCommand,
     ): Float
 
-    fun calculateElementalDamage(
+    fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,

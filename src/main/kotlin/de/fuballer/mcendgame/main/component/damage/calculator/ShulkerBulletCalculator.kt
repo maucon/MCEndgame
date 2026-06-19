@@ -16,7 +16,7 @@ object ShulkerBulletCalculator : DamageCalculator {
         event: DamageCalculationCommand
     ) = 4f
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,

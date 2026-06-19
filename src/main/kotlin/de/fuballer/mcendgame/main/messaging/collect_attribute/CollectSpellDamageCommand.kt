@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribut
 import de.maucon.mauconframework.command.CommandGateway
 import net.minecraft.world.entity.LivingEntity
 
-data class CollectElementalDamageCommand(
+data class CollectSpellDamageCommand(
     override val entity: LivingEntity,
     override val attributes: Map<CustomAttributeType, List<CustomAttribute>> = entity.getAllCustomAttributes(),
     override val flat: MutableList<Double> = mutableListOf(),

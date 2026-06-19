@@ -15,9 +15,9 @@ class TotemOfTempestItem(
 
     override fun getCustomAttributes(tier: Int) =
         when (tier) {
-            0 -> listOf(CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, 0, DoubleRoll(DoubleBounds(0.5))))
-            1 -> listOf(CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, 0, DoubleRoll(DoubleBounds(1.0))))
-            2 -> listOf(CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, 0, DoubleRoll(DoubleBounds(1.5))))
+            0 -> listOf(CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, 0, DoubleRoll(DoubleBounds(0.5))))
+            1 -> listOf(CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, 0, DoubleRoll(DoubleBounds(1.0))))
+            2 -> listOf(CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, 0, DoubleRoll(DoubleBounds(1.5))))
             else -> listOf()
         }
 }

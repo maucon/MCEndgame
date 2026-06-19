@@ -14,7 +14,7 @@ class Emberreign(
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(VanillaAttributeTypes.INCREASED_MOVEMENT_SPEED, 0, DoubleBounds(0.1, 0.15)),
         RollableCustomAttribute(CustomAttributeTypes.BURN_ENEMY_ON_WALK, 0, DoubleBounds(2.0, 2.5), IntBounds(5, 5), DoubleBounds(0.3, 0.4)),
-        RollableCustomAttribute(CustomAttributeTypes.INCREASED_ELEMENTAL_DAMAGE, 0, DoubleBounds(0.2, 0.3)),
+        RollableCustomAttribute(CustomAttributeTypes.INCREASED_SPELL_DAMAGE, 0, DoubleBounds(0.2, 0.3)),
     )
 
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.FEET
