@@ -6,6 +6,7 @@
     "access.EntityAccessMixin",
     "access.PlayerAccessMixin",
     "additional_projectiles.AbstractSkeletonAdditionalProjectilesMixin",
+    "additional_projectiles.DrownedAdditionalProjectilesMixin",
     "additional_projectiles.ProjectileWeaponItemAdditionalProjectilesMixin",
     "additional_projectiles.TridentItemAdditionalProjectilesMixin",
     "attribute.RangedAttributeMixin",
