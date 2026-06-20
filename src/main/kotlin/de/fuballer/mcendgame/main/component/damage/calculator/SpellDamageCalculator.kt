@@ -16,7 +16,7 @@ object SpellDamageCalculator : DamageCalculator {
         attacked: LivingEntity,
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
-    ) = 0f // TODO add attack damage calculation (currently no spell has attack damage)
+    ) = 0f
 
     override fun calculateSpellDamage(
         originalDamage: Float,

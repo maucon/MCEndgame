@@ -31,12 +31,5 @@ object PierceAttackDamageCalculator : DamageCalculator {
         attacked: LivingEntity,
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
-    ): Float {
-        if (source.entity !is LivingEntity) return 0.0F
-
-        val baseDamage = event.spellDamage.sum()
-        val damageMulti = DamageUtil.calculateSpellDamageMultiplier(event)
-
-        return (baseDamage * damageMulti).toFloat()
-    }
+    ): Float = 0.0F
 }

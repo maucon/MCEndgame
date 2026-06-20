@@ -37,17 +37,7 @@ object MeleeAttackCalculator : DamageCalculator {
         attacked: LivingEntity,
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
-    ): Float {
-        if (source.entity !is LivingEntity) return 0.0F
-
-        val baseDamage = calculateBaseSpellDamage(event)
-        val damageMulti = DamageUtil.calculateSpellDamageMultiplier(event)
-        val critMulti = if (event.applyCritToSpellDamage) calculateCriticalMultiplier(event) else 1.0
-        val attackCooldown = getAttackCooldown(source)
-        val attackDamageMulti = calculateAttackCooldownMulti(attackCooldown)
-
-        return (baseDamage * attackDamageMulti * critMulti * damageMulti).toFloat()
-    }
+    ): Float = 0.0F
 
     private fun calculateBaseAttackDamage(
         event: DamageCalculationCommand,
@@ -77,11 +67,5 @@ object MeleeAttackCalculator : DamageCalculator {
 
     private fun calculateAttackCooldownMulti(attackCooldown: Double): Double {
         return 0.2 + attackCooldown * attackCooldown * 0.8
-    }
-
-    private fun calculateBaseSpellDamage(
-        event: DamageCalculationCommand
-    ): Double {
-        return event.spellDamage.sum()
     }
 }

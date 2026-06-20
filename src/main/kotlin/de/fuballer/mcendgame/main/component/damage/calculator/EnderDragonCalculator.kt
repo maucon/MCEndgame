@@ -25,5 +25,5 @@ object EnderDragonCalculator : DamageCalculator {
         attacked: LivingEntity,
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
-    ) = 0f // per default only attack damage is dealt
+    ) = 0f
 }

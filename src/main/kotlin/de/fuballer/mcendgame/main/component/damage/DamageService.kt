@@ -36,7 +36,7 @@ private val DAMAGE_CALCULATORS = listOf(
     TridentProjectileCalculator,
     SmallFireballCalculator,
     FireballCalculator,
-    PersistentProjectileCalculator,
+    AbstractArrowCalculator,
     SnowballCalculator,
     WindChargeCalculator,
     ThornsCalculator,

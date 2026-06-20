@@ -14,7 +14,7 @@ import kotlin.math.ceil
 import kotlin.random.Random
 
 // skeleton arrows (bogged, stray)
-object PersistentProjectileCalculator : DamageCalculator {
+object AbstractArrowCalculator : DamageCalculator {
     override fun isActive(source: DamageSource) = source.directEntity is AbstractArrow
 
     override fun calculateAttackDamage(
@@ -40,17 +40,7 @@ object PersistentProjectileCalculator : DamageCalculator {
         attacked: LivingEntity,
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
-    ): Float {
-        if (source.entity !is LivingEntity) return 0.0F
-
-        val baseDamage = calculateBaseSpellDamage(event)
-        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
-        val projectileSpeedMulti = calculateOtherMultiplier(source)
-
-        val arrowDamage = ceil(projectileSpeedMulti * baseDamage)
-        val criticalDamage = if (event.applyCritToSpellDamage) calculateCriticalDamage(event, arrowDamage) else 0
-        return ((arrowDamage + criticalDamage) * damageMulti).toFloat()
-    }
+    ): Float = 0.0F
 
     private fun calculateBaseAttackDamage(source: DamageSource): Double {
         val persistentProjectile = source.directEntity as AbstractArrow
@@ -73,11 +63,5 @@ object PersistentProjectileCalculator : DamageCalculator {
     private fun calculateOtherMultiplier(source: DamageSource): Double {
         val sourceEntity = source.directEntity as AbstractArrow
         return sourceEntity.deltaMovement.length()
-    }
-
-    private fun calculateBaseSpellDamage(
-        event: DamageCalculationCommand
-    ): Double {
-        return event.spellDamage.sum()
     }
 }
