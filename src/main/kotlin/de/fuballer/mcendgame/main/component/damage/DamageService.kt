@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.damage
 
 import com.mojang.logging.LogUtils
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.SpellResistanceSettings
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.dodge.DodgeSettings
 import de.fuballer.mcendgame.main.component.damage.calculator.*
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageCalculationConfig
@@ -157,7 +158,7 @@ object DamageService {
         source: DamageSource,
         cmd: DamageCalculationCommand
     ): Float {
-        var spellDamage = applyWardToDamage(damage, source, cmd, attacked)
+        var spellDamage = applySpellResistanceToDamage(damage, cmd)
         spellDamage = modifyAppliedDamage(source, spellDamage, attacked)
         return DamageUtil.applyDamageTakenAttributes(spellDamage, cmd)
     }
@@ -178,15 +179,13 @@ object DamageService {
         return amount
     }
 
-    private fun applyWardToDamage(
+    private fun applySpellResistanceToDamage(
         amount: Float,
-        source: DamageSource,
         cmd: DamageCalculationCommand,
-        entity: LivingEntity
     ): Float {
         var amount = amount
-        val ward = cmd.ward.sum().toFloat()
-        amount = DamageUtil.reduceSpellDamageByWard(entity, amount, source, ward)
+        val spellResistance = min(SpellResistanceSettings.LIMIT, cmd.spellResistance.sum()).toFloat()
+        amount *= 1 - spellResistance
 
         return amount
     }

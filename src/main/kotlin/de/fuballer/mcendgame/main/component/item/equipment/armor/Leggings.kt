@@ -89,9 +89,9 @@ enum class Leggings(
         RandomOption(
             weight = 1,
             listOf(
-                LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, RollableCustomAttribute(CustomAttributeTypes.WARD, 3, DoubleBounds(0.5, 1.25))),
-                LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, RollableCustomAttribute(CustomAttributeTypes.WARD, 2, DoubleBounds(1.25, 2.0))),
-                LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, RollableCustomAttribute(CustomAttributeTypes.WARD, 1, DoubleBounds(2.0, 2.5))),
+                LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, RollableCustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 3, DoubleBounds(0.05, 0.125))),
+                LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, RollableCustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 2, DoubleBounds(0.125, 0.2))),
+                LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, RollableCustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 1, DoubleBounds(0.2, 0.25))),
             )
         ),
         RandomOption(

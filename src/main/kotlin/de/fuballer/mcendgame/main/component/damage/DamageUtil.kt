@@ -42,26 +42,6 @@ object DamageUtil {
         return (damageAmount * totalFactor).toFloat()
     }
 
-    fun reduceSpellDamageByWard(
-        armorWearer: LivingEntity,
-        damageAmount: Float,
-        damageSource: DamageSource,
-        ward: Float,
-    ): Float {
-        val wardReduction = 0.33F * damageAmount
-        val effectiveWard = Mth.clamp(ward - wardReduction, ward / 5.0F, 10F)
-        var damageReduction = effectiveWard / 12.5F
-
-        val itemStack = damageSource.weaponItem
-        if (itemStack != null && armorWearer.level() is ServerLevel) {
-            damageReduction =
-                Mth.clamp(EnchantmentHelper.modifyArmorEffectiveness(armorWearer.level() as ServerLevel, itemStack, armorWearer, damageSource, damageReduction), 0.0f, 1.0f)
-        }
-
-        val damageMultiplier = 1.0f - damageReduction
-        return damageAmount * damageMultiplier
-    }
-
     fun calculateAttackDamageMultiplier(
         event: DamageCalculationCommand
     ): Double {

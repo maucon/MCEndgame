@@ -7,14 +7,14 @@ import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 
 @Injectable
-class WardService {
+class SpellResistanceService {
     @CommandHandler
     fun on(cmd: DamageCalculationCommand) {
-        val attributes = cmd.damagedAttributes[CustomAttributeTypes.WARD] ?: return
+        val attributes = cmd.damagedAttributes[CustomAttributeTypes.SPELL_RESISTANCE] ?: return
 
         attributes.forEach { attribute ->
-            val ward = attribute.rolls[0].asDoubleRoll().getValue()
-            cmd.ward.add(ward)
+            val spellResistance = attribute.rolls[0].asDoubleRoll().getValue()
+            cmd.spellResistance.add(spellResistance)
         }
     }
 }

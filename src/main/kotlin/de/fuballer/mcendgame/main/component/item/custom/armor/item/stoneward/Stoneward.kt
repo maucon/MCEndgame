@@ -11,7 +11,7 @@ class Stoneward(
     settings: Properties,
 ) : UniqueAttributesItem(settings) {
     override fun getCustomAttributes() = listOf(
-        RollableCustomAttribute(CustomAttributeTypes.WARD, 0, DoubleBounds(2.0, 2.8)),
+        RollableCustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 0, DoubleBounds(0.2, 0.28)),
         RollableCustomAttribute(VanillaAttributeTypes.ARMOR, 0, DoubleBounds(1.0, 1.8)),
         RollableCustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 0, DoubleBounds(2.5, 4.0)),
         RollableCustomAttribute(VanillaAttributeTypes.INCREASED_SCALE, 0, DoubleBounds(0.05, 0.1)),

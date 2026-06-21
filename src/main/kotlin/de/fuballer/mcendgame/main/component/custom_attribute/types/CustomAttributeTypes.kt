@@ -11,7 +11,7 @@ object CustomAttributeTypes {
     private val ERROR = CustomAttributeType("error", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.EMPTY)
 
     // DEFENSE
-    val WARD = CustomAttributeType("ward", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val SPELL_RESISTANCE = CustomAttributeType("spell_resistance", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
     val DODGE = CustomAttributeType("dodge", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
     val DODGE_PER_MAX_HEART_BELOW_TEN = CustomAttributeType("dodge_per_max_heart_below_ten", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
     val DODGE_IF_NOT_DODGED_IN_LAST_SECONDS =
@@ -33,14 +33,14 @@ object CustomAttributeTypes {
         )
 
     // OFFENSE
-    val SPELL_DAMAGE = CustomAttributeType("elemental_damage", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val SPELL_DAMAGE = CustomAttributeType("spell_damage", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
     val INCREASED_DAMAGE =
         CustomAttributeType("increased_damage", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
     val MORE_DAMAGE = CustomAttributeType("more_damage", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
     val MORE_DAMAGE_PER_MISSING_HEART =
         CustomAttributeType("more_damage_per_missing_heart", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
     val INCREASED_SPELL_DAMAGE =
-        CustomAttributeType("increased_elemental_damage", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
+        CustomAttributeType("increased_spell_damage", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
     val INCREASED_PROJECTILE_DAMAGE =
         CustomAttributeType("increased_projectile_damage", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
     val MORE_PROJECTILE_DAMAGE =
@@ -72,7 +72,7 @@ object CustomAttributeTypes {
         SignBasedKeywords.INCREASED
     )
     val INCREASED_SPELL_DAMAGE_WHILE_POISONED = CustomAttributeType(
-        "increased_elemental_damage_while_poisoned", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL,
+        "increased_spell_damage_while_poisoned", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL,
         SignBasedKeywords.INCREASED
     )
     val MORE_DAMAGE_TAKEN_WHILE_POISONED =
@@ -232,7 +232,7 @@ object CustomAttributeTypes {
     )
     val INCREASED_HEALING_PER_SPELL_DAMAGE =
         CustomAttributeType(
-            "increased_healing_per_elemental_damage",
+            "increased_healing_per_spell_damage",
             AttributeFormats.SIGNED_PERCENT_ROLL,
             AttributeFormats.PERCENT_BOUNDS,
             AttributeAffinities.BENEFICIAL,
