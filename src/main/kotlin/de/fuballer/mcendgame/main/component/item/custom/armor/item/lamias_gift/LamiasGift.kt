@@ -32,7 +32,7 @@ class LamiasGift(
     private fun getOffensiveAttribute() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE_WHILE_POISONED, 0, DoubleBounds(0.04, 0.06)),
         RollableCustomAttribute(CustomAttributeTypes.INCREASED_ATTACK_DAMAGE_WHILE_POISONED, 0, DoubleBounds(0.1, 0.15)),
-        RollableCustomAttribute(CustomAttributeTypes.INCREASED_ELEMENTAL_DAMAGE_WHILE_POISONED, 0, DoubleBounds(0.1, 0.2)),
+        RollableCustomAttribute(CustomAttributeTypes.INCREASED_SPELL_DAMAGE_WHILE_POISONED, 0, DoubleBounds(0.1, 0.2)),
     ).random()
 
     private fun getDefensiveAttribute() = listOf(

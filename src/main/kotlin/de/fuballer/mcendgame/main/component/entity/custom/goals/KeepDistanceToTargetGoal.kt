@@ -14,9 +14,9 @@ class KeepDistanceToTargetGoal<T>(
     private val squaredMinDistance: Float
     private val squaredMaxDistance: Float
     private var seeingTargetTicker = 0
-    private var movingToLeft = false
-    private var strafeFB = 0F
-    private var strafeDirChangeCounter = -1
+    private var strafingClockwise = false
+    private var strafingBackwards = false
+    private var strafingTime = -1
 
     init {
         setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK))
@@ -58,20 +58,13 @@ class KeepDistanceToTargetGoal<T>(
         val squaredDistanceToTarget = entity.distanceToSqr(target)
         if (squaredDistanceToTarget <= squaredMaxDistance && seeingTargetTicker >= 20) {
             entity.navigation.stop()
-            strafeDirChangeCounter++
+            strafingTime++
         } else {
             entity.navigation.moveTo(target, speed)
-            strafeDirChangeCounter = -1
+            strafingTime = -1
         }
 
         updateStrafing(target, squaredDistanceToTarget)
-
-        /*if (--cooldown > 0 || !canSeeTarget) return
-        cooldown = getTickCount(attackInterval)
-
-        var distanceRangePercentage: Float = sqrt(squaredDistanceToTarget).toFloat() / range
-        distanceRangePercentage = MathHelper.clamp(distanceRangePercentage, 0.1f, 1.0f)
-        entity.shootAt(target, distanceRangePercentage)*/
     }
 
     private fun updateSeeingTargetTicker(
@@ -90,28 +83,33 @@ class KeepDistanceToTargetGoal<T>(
         target: LivingEntity,
         squaredDistanceToTarget: Double,
     ) {
-        if (strafeDirChangeCounter < 0) {
-            entity.lookControl.setLookAt(target, 30.0f, 30.0f)
-            return
+        if (strafingTime >= 20) {
+            if (entity.getRandom().nextFloat() < 0.3) {
+                strafingClockwise = !strafingClockwise
+            }
+
+            if (entity.getRandom().nextFloat() < 0.3) {
+                strafingBackwards = !strafingBackwards
+            }
+
+            strafingTime = 0
         }
 
-        if (strafeDirChangeCounter >= 20) {
-            if (entity.random.nextDouble() < 0.3) movingToLeft = !movingToLeft
-            strafeDirChangeCounter = 0
-        }
+        if (strafingTime > -1) {
+            if (squaredDistanceToTarget > squaredMaxDistance) {
+                strafingBackwards = false
+            } else if (squaredDistanceToTarget < squaredMinDistance) {
+                strafingBackwards = true
+            }
 
-        if (squaredDistanceToTarget > squaredMaxDistance) {
-            strafeFB = 0.5F
-        } else if (squaredDistanceToTarget < squaredMinDistance) {
-            strafeFB = -0.5F
+            val strafeBackwards = if (strafingBackwards) -0.5f else 0.5f
+            val strafeClockwise = if (strafingClockwise) 0.5f else -0.5f
+            entity.getMoveControl().strafe(strafeBackwards, strafeClockwise)
+            (entity.controlledVehicle as? Mob)?.lookAt(target, 30.0f, 30.0f)
+
+            entity.lookAt(target, 30.0f, 30.0f)
         } else {
-            strafeFB = 0F
+            entity.getLookControl().setLookAt(target, 30.0f, 30.0f)
         }
-
-        val strafeLR = if (movingToLeft) 0.5f else -0.5f
-        entity.moveControl.strafe(strafeFB, strafeLR)
-        (entity.controlledVehicle as? Mob)?.lookAt(target, 30.0F, 30.0F)
-
-        entity.lookAt(target, 30.0f, 30.0f)
     }
 }

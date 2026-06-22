@@ -32,7 +32,7 @@ object ScarredOneEncounterSettings {
         RandomOption(5, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.PROJECTILE_DODGE, 0, DoubleBounds(0.2, 0.35)), ScarredOneEffectTargetGroup.ALLIES)),
         RandomOption(7, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, 0, DoubleBounds(-0.15, -0.1)), ScarredOneEffectTargetGroup.ALLIES)),
         RandomOption(7, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE, 0, DoubleBounds(0.2, 0.3)), ScarredOneEffectTargetGroup.ALLIES)),
-        RandomOption(4, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.ADDITIONAL_ARROWS, 0, IntBounds(1, 2)), ScarredOneEffectTargetGroup.ALLIES)),
+        RandomOption(4, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.ADDITIONAL_PROJECTILES, 0, IntBounds(1, 2)), ScarredOneEffectTargetGroup.ALLIES)),
         RandomOption(4, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.BOW_PULL_TICKS, 0, IntBounds(-5, -3)), ScarredOneEffectTargetGroup.ALLIES)),
         RandomOption(
             5,
@@ -73,7 +73,7 @@ object ScarredOneEncounterSettings {
         RandomOption(6, ScarredOneEffect(RollableCustomAttribute(VanillaAttributeTypes.INCREASED_MOVEMENT_SPEED, 0, DoubleBounds(0.05, 0.15)), ScarredOneEffectTargetGroup.ENEMIES)),
         RandomOption(4, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.DODGE, 0, DoubleBounds(0.05, 0.15)), ScarredOneEffectTargetGroup.ENEMIES)),
         RandomOption(7, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE, 0, DoubleBounds(0.1, 0.15)), ScarredOneEffectTargetGroup.ENEMIES)),
-        RandomOption(5, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.ADDITIONAL_ARROWS, 0, IntBounds(1, 2)), ScarredOneEffectTargetGroup.ENEMIES)),
+        RandomOption(5, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.ADDITIONAL_PROJECTILES, 0, IntBounds(1, 2)), ScarredOneEffectTargetGroup.ENEMIES)),
         RandomOption(5, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.MORE_ATTACK_KNOCKBACK, 0, DoubleBounds(0.15, 0.25)), ScarredOneEffectTargetGroup.ENEMIES)),
         RandomOption(5, ScarredOneEffect(RollableCustomAttribute(CustomAttributeTypes.SLOWNESS_ON_HIT, 0, IntBounds(1), IntBounds(1, 2)), ScarredOneEffectTargetGroup.ENEMIES)),
 

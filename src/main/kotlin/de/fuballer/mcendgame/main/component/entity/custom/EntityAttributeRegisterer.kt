@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.Beak
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.skeleton_mage.SkeletonMageEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.spiderling.SpiderlingEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.swamp_golem.SwampGolemEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
@@ -24,5 +25,6 @@ object EntityAttributeRegisterer {
         FabricDefaultAttributeRegistry.register(CustomEntities.SCARRED_ONE, ScarredOneEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.SPIDERLING, SpiderlingEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.TRAINING_DUMMY, TrainingDummyEntity.createAttributes())
+        FabricDefaultAttributeRegistry.register(CustomEntities.SKELETON_MAGE, SkeletonMageEntity.createAttributes())
     }
 }

@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribut
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.dodge.DodgeCalculationCommand
-import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectElementalDamageCommand
+import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectSpellDamageCommand
 import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectGenericIncreasedDamageCommand
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
@@ -25,7 +25,7 @@ class AttributesWhilePoisonedService {
         if (!damager.hasEffect(MobEffects.POISON)) return
 
         cmd.increasedDamage.addAll(getDoubleValues(cmd.damagerAttributes, CustomAttributeTypes.INCREASED_DAMAGE_WHILE_POISONED))
-        cmd.increasedElementalDamage.addAll(getDoubleValues(cmd.damagerAttributes, CustomAttributeTypes.INCREASED_ELEMENTAL_DAMAGE_WHILE_POISONED))
+        cmd.increasedSpellDamage.addAll(getDoubleValues(cmd.damagerAttributes, CustomAttributeTypes.INCREASED_SPELL_DAMAGE_WHILE_POISONED))
     }
 
     @CommandHandler
@@ -35,9 +35,9 @@ class AttributesWhilePoisonedService {
     }
 
     @CommandHandler
-    fun on(cmd: CollectElementalDamageCommand) {
+    fun on(cmd: CollectSpellDamageCommand) {
         if (!cmd.entity.hasEffect(MobEffects.POISON)) return
-        cmd.increased.addAll(getDoubleValues(cmd.attributes, CustomAttributeTypes.INCREASED_ELEMENTAL_DAMAGE_WHILE_POISONED))
+        cmd.increased.addAll(getDoubleValues(cmd.attributes, CustomAttributeTypes.INCREASED_SPELL_DAMAGE_WHILE_POISONED))
     }
 
     private fun getDoubleValues(

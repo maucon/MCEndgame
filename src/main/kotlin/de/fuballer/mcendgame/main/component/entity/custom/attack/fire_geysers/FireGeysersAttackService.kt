@@ -252,19 +252,19 @@ class FireGeysersAttackService(
         durationDamageConversion: Double,
     ) {
         val attackDamage = if (attacker is LivingEntity) attacker.getAttributeValue(Attributes.ATTACK_DAMAGE) else 1.0
-        val burstElementalDamage = attackDamage * burstDamageConversion
+        val burstSpellDamage = attackDamage * burstDamageConversion
         val durationDamage = attackDamage * durationDamageConversion
 
         scheduler.delayed(delay + indicatorDuration) {
             val targets = getTargets(world, positions, attacker)
             targets.forEach {
                 it.dealDamage(
-                    attacker,
                     listOf(
                         NO_AD_ATTRIBUTE,
-                        CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, roll = DoubleRoll(DoubleBounds(burstElementalDamage))),
+                        CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(burstSpellDamage))),
                     ),
-                    CustomDamageTypes.SPELL
+                    CustomDamageTypes.SPELL,
+                    attacker,
                 )
                 it.igniteForTicks(80)
                 it.setAndSyncVelocity(it.deltaMovement.add(0.0, 1.0, 0.0))
@@ -275,12 +275,12 @@ class FireGeysersAttackService(
             val targets = getTargets(world, positions, attacker)
             targets.forEach {
                 it.dealDamage(
-                    attacker,
                     listOf(
                         NO_AD_ATTRIBUTE,
-                        CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, roll = DoubleRoll(DoubleBounds(durationDamage))),
+                        CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(durationDamage))),
                     ),
-                    CustomDamageTypes.SPELL
+                    CustomDamageTypes.SPELL,
+                    attacker,
                 )
                 it.igniteForTicks(80)
             }

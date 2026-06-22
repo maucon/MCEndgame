@@ -39,7 +39,7 @@ jobs:
       # endregion
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@c10b8064de6f491fea524254123dbe5e09572f13
+        uses: github/codeql-action/init@c35d1b164463ee62a100735382aaaa525c5d3496
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
@@ -69,6 +69,6 @@ jobs:
       # endregion
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@c10b8064de6f491fea524254123dbe5e09572f13
+        uses: github/codeql-action/analyze@c35d1b164463ee62a100735382aaaa525c5d3496
         with:
           category: "/language:${{matrix.language}}"

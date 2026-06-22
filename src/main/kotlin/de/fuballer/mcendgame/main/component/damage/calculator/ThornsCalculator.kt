@@ -23,7 +23,7 @@ object ThornsCalculator : DamageCalculator {
         return (baseDamage * damageMulti).toFloat()
     }
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,

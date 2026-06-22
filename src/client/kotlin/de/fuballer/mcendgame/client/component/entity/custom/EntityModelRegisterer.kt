@@ -13,6 +13,11 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type.legacy.LegacyPortalEntityModel
 import de.fuballer.mcendgame.client.component.entity.custom.entities.scarred_one.ScarredOneRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.scarred_one.ScarredOneRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.skeleton_mage.SkeletonMageModel
+import de.fuballer.mcendgame.client.component.entity.custom.entities.skeleton_mage.SkeletonMageRenderState
+import de.fuballer.mcendgame.client.component.entity.custom.entities.skeleton_mage.SkeletonMageRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.spell_fireball.SpellFireballEntityModel
+import de.fuballer.mcendgame.client.component.entity.custom.entities.spell_fireball.SpellFireballRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.spiderling.SpiderlingRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.swamp_golem.SwampGolemEntityModel
 import de.fuballer.mcendgame.client.component.entity.custom.entities.swamp_golem.SwampGolemRenderer
@@ -26,7 +31,12 @@ import de.fuballer.mcendgame.main.component.portal.Portals
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
+import net.minecraft.client.model.HumanoidModel
 import net.minecraft.client.model.geom.ModelLayers
+import net.minecraft.client.model.geom.builders.CubeDeformation
+import net.minecraft.client.model.geom.builders.LayerDefinition
+import net.minecraft.client.model.monster.skeleton.SkeletonModel
+import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRenderers
 
 @Injectable
@@ -42,11 +52,22 @@ object EntityModelRegisterer {
         ModelLayerRegistry.registerModelLayer(ArachneEntityModel.ARACHNE, ArachneEntityModel::getTexturedModelData)
         EntityRenderers.register(CustomEntities.ARACHNE, ::ArachneRenderer)
 
-        ModelLayerRegistry.registerModelLayer(
-            WebshotEntityModel.WEBSHOT,
-            WebshotEntityModel::getTexturedModelData
-        )
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE, SkeletonModel<SkeletonMageRenderState>::createBodyLayer)
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE_INNER, SkeletonMageModel::createInnerLayer)
+        val skeletonMageArmor: ArmorModelSet<LayerDefinition> = HumanoidModel.createArmorMeshSet(CubeDeformation(0.5F), CubeDeformation(1.0F))
+            .map { mesh -> LayerDefinition.create(mesh, 64, 32) }
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE_ARMOR.head, skeletonMageArmor::head)
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE_ARMOR.chest, skeletonMageArmor::chest)
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE_ARMOR.legs, skeletonMageArmor::legs)
+        ModelLayerRegistry.registerModelLayer(SkeletonMageModel.SKELETON_MAGE_ARMOR.feet, skeletonMageArmor::feet)
+        EntityRenderers.register(CustomEntities.SKELETON_MAGE, ::SkeletonMageRenderer)
+
+        ModelLayerRegistry.registerModelLayer(WebshotEntityModel.WEBSHOT, WebshotEntityModel::getTexturedModelData)
         EntityRenderers.register(CustomEntities.WEBSHOT, ::WebshotRenderer)
+
+        ModelLayerRegistry.registerModelLayer(SpellFireballEntityModel.SPELL_FIREBALL, SpellFireballEntityModel::getTexturedModelData)
+        ModelLayerRegistry.registerModelLayer(SpellFireballEntityModel.SPELL_FIREBALL_OUTER, SpellFireballEntityModel::getOuterTextureModelData)
+        EntityRenderers.register(CustomEntities.SPELL_FIREBALL, ::SpellFireballRenderer)
 
         EntityRenderers.register(CustomEntities.WEBHOOK, ::WebhookRenderer)
 
@@ -58,6 +79,7 @@ object EntityModelRegisterer {
         EntityRenderers.register(CustomEntities.BONECRUSHER) { state -> BonecrusherRenderer<BonecrusherRenderState>(state) }
         EntityRenderers.register(CustomEntities.ELF_DUELIST) { state -> ElfDuelistRenderer<ElfDuelistRenderState>(state) }
         EntityRenderers.register(CustomEntities.BEAKBURN) { state -> BeakburnRenderer<BeakburnRenderState>(state) }
+
 
         EntityRenderers.register(CustomEntities.SCARRED_ONE) { state -> ScarredOneRenderer<ScarredOneRenderState>(state) }
 

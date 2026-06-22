@@ -5,6 +5,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.Beak
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.skeleton_mage.SkeletonMageEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball.SpellFireballEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.spiderling.SpiderlingEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.swamp_golem.SwampGolemEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
@@ -19,7 +21,7 @@ import net.minecraft.world.entity.MobCategory
 object CustomEntities {
     val SWAMP_GOLEM = RegistryUtil.registerEntity(
         "swamp_golem",
-        EntityType.Builder.of({ type, world -> SwampGolemEntity(type, world) }, MobCategory.MONSTER)
+        EntityType.Builder.of(::SwampGolemEntity, MobCategory.MONSTER)
             .sized(0.8f, 1.95f)
             .eyeHeight(1.65f)
             .passengerAttachments(1.8125f)
@@ -29,7 +31,7 @@ object CustomEntities {
     )
     val ARACHNE = RegistryUtil.registerEntity(
         "arachne",
-        EntityType.Builder.of({ type, world -> ArachneEntity(type, world) }, MobCategory.MONSTER)
+        EntityType.Builder.of(::ArachneEntity, MobCategory.MONSTER)
             .sized(1.5f, 1.8f)
             .eyeHeight(1.7f)
             .passengerAttachments(1.8125f)
@@ -39,17 +41,24 @@ object CustomEntities {
     )
     val WEBSHOT = RegistryUtil.registerEntity(
         "webshot",
-        EntityType.Builder.of({ type, world -> WebshotEntity(type, world) }, MobCategory.MISC)
+        EntityType.Builder.of(::WebshotEntity, MobCategory.MISC)
             .sized(0.4f, 0.4f)
     )
     val WEBHOOK = RegistryUtil.registerEntity(
         "webhook",
-        EntityType.Builder.of({ type, world -> WebhookEntity(type, world) }, MobCategory.MISC)
+        EntityType.Builder.of(::WebhookEntity, MobCategory.MISC)
             .sized(0.4f, 0.4f)
+            .eyeHeight(0.2f)
+    )
+    val SPELL_FIREBALL = RegistryUtil.registerEntity(
+        "spell_fireball",
+        EntityType.Builder.of(::SpellFireballEntity, MobCategory.MISC)
+            .sized(0.4f, 0.4f)
+            .eyeHeight(0.2f)
     )
     val BONECRUSHER = RegistryUtil.registerEntity(
         "bonecrusher",
-        EntityType.Builder.of({ type, world -> BonecrusherEntity(type, world) }, MobCategory.MONSTER)
+        EntityType.Builder.of(::BonecrusherEntity, MobCategory.MONSTER)
             .sized(0.7f, 2.99f)
             .eyeHeight(2.85f)
             .clientTrackingRange(8)
@@ -57,7 +66,7 @@ object CustomEntities {
     )
     val ELF_DUELIST = RegistryUtil.registerEntity(
         "elf_duelist",
-        EntityType.Builder.of({ type, world -> ElfDuelistEntity(type, world) }, MobCategory.MONSTER)
+        EntityType.Builder.of(::ElfDuelistEntity, MobCategory.MONSTER)
             .sized(0.7f, 1.9f)
             .eyeHeight(1.8f)
             .clientTrackingRange(8)
@@ -65,7 +74,7 @@ object CustomEntities {
     )
     val BEAKBURN = RegistryUtil.registerEntity(
         "beakburn",
-        EntityType.Builder.of({ type, world -> BeakburnEntity(type, world) }, MobCategory.MONSTER)
+        EntityType.Builder.of(::BeakburnEntity, MobCategory.MONSTER)
             .sized(1.6f, 2.5f)
             .eyeHeight(2.0f)
             .clientTrackingRange(8)
@@ -73,22 +82,31 @@ object CustomEntities {
     )
     val SCARRED_ONE = RegistryUtil.registerEntity(
         "scarred_one",
-        EntityType.Builder.of({ type, world -> ScarredOneEntity(type, world) }, MobCategory.MISC)
+        EntityType.Builder.of(::ScarredOneEntity, MobCategory.MISC)
             .sized(0.6f, 1.95f)
             .clientTrackingRange(10)
     )
     val SPIDERLING = RegistryUtil.registerEntity(
         "spiderling",
-        EntityType.Builder.of({ type, world -> SpiderlingEntity(type, world) }, MobCategory.MISC)
+        EntityType.Builder.of(::SpiderlingEntity, MobCategory.MISC)
             .sized(0.7f, 0.45f)
             .eyeHeight(0.325f)
             .clientTrackingRange(8)
     )
     val TRAINING_DUMMY = RegistryUtil.registerEntity(
         "training_dummy",
-        EntityType.Builder.of({ type, world -> TrainingDummyEntity(type, world) }, MobCategory.MISC)
+        EntityType.Builder.of(::TrainingDummyEntity, MobCategory.MISC)
             .sized(0.5F, 1.975F)
             .eyeHeight(1.7775F)
             .clientTrackingRange(10)
+    )
+    val SKELETON_MAGE = RegistryUtil.registerEntity(
+        "skeleton_mage",
+        EntityType.Builder.of(::SkeletonMageEntity, MobCategory.MONSTER)
+            .sized(0.6F, 1.99F)
+            .eyeHeight(1.74F)
+            .ridingOffset(-0.7F)
+            .clientTrackingRange(8)
+            .notInPeaceful()
     )
 }

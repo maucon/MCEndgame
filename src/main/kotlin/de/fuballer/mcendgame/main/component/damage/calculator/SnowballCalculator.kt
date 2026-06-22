@@ -20,7 +20,7 @@ object SnowballCalculator : DamageCalculator {
         return 0.0f
     }
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,

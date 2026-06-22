@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.damage
 
 import com.mojang.logging.LogUtils
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.SpellResistanceSettings
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.dodge.DodgeSettings
 import de.fuballer.mcendgame.main.component.damage.calculator.*
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageCalculationConfig
@@ -36,7 +37,7 @@ private val DAMAGE_CALCULATORS = listOf(
     TridentProjectileCalculator,
     SmallFireballCalculator,
     FireballCalculator,
-    PersistentProjectileCalculator,
+    AbstractArrowCalculator,
     SnowballCalculator,
     WindChargeCalculator,
     ThornsCalculator,
@@ -121,14 +122,14 @@ object DamageService {
         val damageCalculator = DAMAGE_CALCULATORS.firstOrNull { it.isActive(source) }!!
 
         var attackDamage = damageCalculator.calculateAttackDamage(originalDamage, attacked, source, cmd)
-        var elementalDamage = damageCalculator.calculateElementalDamage(originalDamage, attacked, source, cmd)
+        var spellDamage = damageCalculator.calculateSpellDamage(originalDamage, attacked, source, cmd)
 
-        log.debug("${attacked.javaClass.simpleName} [${damageCalculator.javaClass.simpleName}]: originalDamage: $originalDamage --> calculated damage: ${attackDamage + elementalDamage} ($attackDamage + $elementalDamage)")
+        log.debug("${attacked.javaClass.simpleName} [${damageCalculator.javaClass.simpleName}]: originalDamage: $originalDamage --> calculated damage: ${attackDamage + spellDamage} ($attackDamage + $spellDamage)")
 
         attackDamage = calculateAttackDamageReduction(attackDamage, attacked, source, cmd)
-        elementalDamage = calculateElementalDamageReduction(elementalDamage, attacked, source, cmd)
+        spellDamage = calculateSpellDamageReduction(spellDamage, attacked, source, cmd)
 
-        var combinedDamage = attackDamage + elementalDamage
+        var combinedDamage = attackDamage + spellDamage
 
         // Special damage calculation
         if (damageCalculationConfig.isArmadilloDamageReduction) {
@@ -151,15 +152,15 @@ object DamageService {
         return DamageUtil.applyDamageTakenAttributes(attackDamage, cmd)
     }
 
-    private fun calculateElementalDamageReduction(
+    private fun calculateSpellDamageReduction(
         damage: Float,
         attacked: LivingEntity,
         source: DamageSource,
         cmd: DamageCalculationCommand
     ): Float {
-        var elementalDamage = applyWardToDamage(damage, source, cmd, attacked)
-        elementalDamage = modifyAppliedDamage(source, elementalDamage, attacked)
-        return DamageUtil.applyDamageTakenAttributes(elementalDamage, cmd)
+        var spellDamage = applySpellResistanceToDamage(damage, cmd)
+        spellDamage = modifyAppliedDamage(source, spellDamage, attacked)
+        return DamageUtil.applyDamageTakenAttributes(spellDamage, cmd)
     }
 
     private fun applyArmorToDamage(
@@ -178,15 +179,13 @@ object DamageService {
         return amount
     }
 
-    private fun applyWardToDamage(
+    private fun applySpellResistanceToDamage(
         amount: Float,
-        source: DamageSource,
         cmd: DamageCalculationCommand,
-        entity: LivingEntity
     ): Float {
         var amount = amount
-        val ward = cmd.ward.sum().toFloat()
-        amount = DamageUtil.reduceElementalDamageByWard(entity, amount, source, ward)
+        val spellResistance = min(SpellResistanceSettings.LIMIT, cmd.spellResistance.sum()).toFloat()
+        amount *= 1 - spellResistance
 
         return amount
     }

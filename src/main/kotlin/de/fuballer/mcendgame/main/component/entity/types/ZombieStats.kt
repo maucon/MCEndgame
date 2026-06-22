@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.types
 
+import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
@@ -8,9 +9,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie
 object ZombieStats : EntityTypeStats {
     override val type: EntityType<Zombie> = EntityType.ZOMBIE
 
-    override val canHaveWeapons = true
-    override val isRanged = false
-    override val canHaveArmor = true
+    override val equipmentClass = EnemyEquipmentClass.MELEE_ATTACK_DAMAGE
     override val canBeInvisible = true
 
     override val health = 20.0

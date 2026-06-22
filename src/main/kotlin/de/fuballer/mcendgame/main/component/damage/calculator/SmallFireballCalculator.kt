@@ -22,7 +22,7 @@ object SmallFireballCalculator : DamageCalculator {
         return 5f
     }
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,

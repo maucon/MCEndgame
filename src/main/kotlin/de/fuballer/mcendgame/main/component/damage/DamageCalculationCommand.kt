@@ -34,16 +34,16 @@ data class DamageCalculationCommand(
     val increasedAttackDamage: MutableList<Double> = mutableListOf(),
     val moreAttackDamage: MutableList<Double> = mutableListOf(),
 
-    val elementalDamage: MutableList<Double> = mutableListOf(),
-    val increasedElementalDamage: MutableList<Double> = mutableListOf(),
-    val moreElementalDamage: MutableList<Double> = mutableListOf(),
+    val spellDamage: MutableList<Double> = mutableListOf(),
+    val increasedSpellDamage: MutableList<Double> = mutableListOf(),
+    val moreSpellDamage: MutableList<Double> = mutableListOf(),
 
     val increasedDamageTaken: MutableList<Double> = mutableListOf(),
     val moreDamageTaken: MutableList<Double> = mutableListOf(),
-    val ward: MutableList<Double> = mutableListOf(),
+    val spellResistance: MutableList<Double> = mutableListOf(),
 
     val criticalDamageMulti: MutableList<Double> = mutableListOf(),
-    val applyCritToElementalDamage: Boolean = false,
+    val applyCritToSpellDamage: Boolean = false,
 ) {
     companion object {
         fun of(

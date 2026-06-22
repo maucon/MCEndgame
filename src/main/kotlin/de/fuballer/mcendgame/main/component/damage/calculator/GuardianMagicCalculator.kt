@@ -25,7 +25,7 @@ object GuardianMagicCalculator : DamageCalculator {
         return base
     }
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,

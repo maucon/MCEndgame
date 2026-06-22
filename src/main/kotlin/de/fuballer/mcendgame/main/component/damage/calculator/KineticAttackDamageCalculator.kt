@@ -37,7 +37,7 @@ object KineticAttackDamageCalculator : DamageCalculator {
         return ((baseDamage + enchantmentDamage + floor(damageMultiplier * relativeMovement)) * damageMulti).toFloat()
     }
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,

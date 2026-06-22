@@ -1,8 +1,8 @@
-package de.fuballer.mcendgame.main.mixin.additional_arrows;
+package de.fuballer.mcendgame.main.mixin.additional_projectiles;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions;
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.AdditionalArrowsSettings;
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile.AdditionalProjectilesSettings;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(ProjectileWeaponItem.class)
-public class ProjectileWeaponItemAdditionalArrowsMixin {
+public class ProjectileWeaponItemAdditionalProjectilesMixin {
     @ModifyVariable(
             method = "draw",
             at = @At(value = "STORE"),
@@ -24,7 +24,7 @@ public class ProjectileWeaponItemAdditionalArrowsMixin {
             ItemStack projectileStack,
             LivingEntity shooter
     ) {
-        var additional = CustomAttributesExtensions.INSTANCE.getAdditionalArrowCount(shooter);
+        var additional = CustomAttributesExtensions.INSTANCE.getAdditionalProjectileCount(shooter);
         return original + additional;
     }
 
@@ -40,7 +40,7 @@ public class ProjectileWeaponItemAdditionalArrowsMixin {
             ServerLevel world,
             LivingEntity shooter
     ) {
-        var additional = CustomAttributesExtensions.INSTANCE.getAdditionalArrowCount(shooter);
-        return original + AdditionalArrowsSettings.SPREAD_PER_ARROW * additional;
+        var additional = CustomAttributesExtensions.INSTANCE.getAdditionalProjectileCount(shooter);
+        return original + AdditionalProjectilesSettings.SPREAD_PER_PROJECTILE * additional;
     }
 }

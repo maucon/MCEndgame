@@ -17,7 +17,7 @@ object SonicBoomCalculator : DamageCalculator {
         event: DamageCalculationCommand
     ) = 10f
 
-    override fun calculateElementalDamage(
+    override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,

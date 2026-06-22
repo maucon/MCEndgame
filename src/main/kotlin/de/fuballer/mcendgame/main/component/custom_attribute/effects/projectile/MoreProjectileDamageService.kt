@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.custom_attribute.effects
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asDoubleRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
@@ -7,15 +7,15 @@ import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 
 @Injectable
-class IncreasedProjectileDamageService {
+class MoreProjectileDamageService {
     @CommandHandler
     fun on(cmd: DamageCalculationCommand) {
         if (!cmd.isProjectile) return
-        val attributes = cmd.damagerAttributes[CustomAttributeTypes.INCREASED_PROJECTILE_DAMAGE] ?: return
+        val attributes = cmd.damagerAttributes[CustomAttributeTypes.MORE_PROJECTILE_DAMAGE] ?: return
 
         attributes.forEach { attribute ->
-            val increaseProjectileDamage = attribute.rolls[0].asDoubleRoll().getValue()
-            cmd.increasedDamage.add(increaseProjectileDamage)
+            val moreProjectileDamage = attribute.rolls[0].asDoubleRoll().getValue()
+            cmd.moreDamage.add(moreProjectileDamage)
         }
     }
 }

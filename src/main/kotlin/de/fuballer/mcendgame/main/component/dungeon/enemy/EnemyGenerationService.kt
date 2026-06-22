@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.main.component.dungeon.enemy.equipment.EquipmentGen
 import de.fuballer.mcendgame.main.component.dungeon.enemy.potion_effect.PotionEffectService
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
+import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemiesGeneratedCommand
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateEnemiesCommand
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setDungeonEnemy
@@ -92,7 +93,7 @@ class EnemyGenerationService(
     ): LivingEntity {
         val isLootGoblin = isForcedLootGoblin || EnemyGenerationSettings.randomLootGoblin(random)
 
-        val validTypes = if (!isLootGoblin) types else types.filter { it.option.canHaveArmor }
+        val validTypes = if (!isLootGoblin) types else types.filter { it.option.equipmentClass.isNot(EnemyEquipmentClass.NO_ARMOR) }
         val type = RandomUtil.pickOne(validTypes, random).option
         val enemyEntity = EntityUtil.spawnEntityWithStats(dungeonWorld, type, location)
 
@@ -111,7 +112,7 @@ class EnemyGenerationService(
 
         equipmentGenerationService.generate(
             enemyEntity,
-            type,
+            type.equipmentClass,
             level,
             dungeonWorld.server,
             isLootGoblin,

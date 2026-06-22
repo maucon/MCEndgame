@@ -40,6 +40,7 @@ enum class DungeonType(
             RandomOption(8, BoggedStats),
             RandomOption(8, ParchedStats),
             RandomOption(3, WitherSkeletonStats),
+            RandomOption(10, SkeletonMageStats),
         ),
         listOf(
             RandomOption(1, ArachneBossStats),
@@ -63,6 +64,7 @@ enum class DungeonType(
             RandomOption(15, ParchedStats),
             RandomOption(20, MeleeSkeletonStats),
             RandomOption(5, WitherSkeletonStats),
+            RandomOption(10, SkeletonMageStats),
         ),
         listOf(
             RandomOption(1, ArachneBossStats),
@@ -87,6 +89,7 @@ enum class DungeonType(
             RandomOption(20, ParchedStats),
             RandomOption(20, MeleeSkeletonStats),
             RandomOption(5, WitherSkeletonStats),
+            RandomOption(10, SkeletonMageStats),
         ),
         listOf(
             RandomOption(1, ArachneBossStats),

@@ -154,19 +154,19 @@ class FlameBreathAttackService(
             }
 
             val attackDamage = if (attacker is LivingEntity) attacker.getAttributeValue(Attributes.ATTACK_DAMAGE) else 1.0
-            val elementalDamage = attackDamage * damageConversion
+            val spellDamage = attackDamage * damageConversion
             for (entity in entities) {
                 val directionVectorToEntity = entity.position().subtract(originPoint).multiply(HORIZONTAL_VECTOR).normalize()
 
                 val dotProduct = direction.dot(directionVectorToEntity)
                 if (dotProduct >= cosThreshold) {
                     entity.dealDamage(
-                        attacker,
                         listOf(
                             NO_AD_ATTRIBUTE,
-                            CustomAttribute(CustomAttributeTypes.ELEMENTAL_DAMAGE, roll = DoubleRoll(DoubleBounds(elementalDamage))),
+                            CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(spellDamage))),
                         ),
-                        CustomDamageTypes.SPELL
+                        CustomDamageTypes.SPELL,
+                        attacker,
                     )
                     entity.igniteForTicks(80)
                 }

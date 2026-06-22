@@ -1,8 +1,9 @@
-package de.fuballer.mcendgame.main.mixin.additional_arrows;
+package de.fuballer.mcendgame.main.mixin.additional_projectiles;
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions;
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.AdditionalArrowsSettings;
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile.AdditionalProjectilesUtil;
 import de.fuballer.mcendgame.main.component.tags.CustomTags;
+import kotlin.Unit;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -19,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractSkeleton.class)
-public abstract class AbstractSkeletonAdditionalArrowsMixin {
+public abstract class AbstractSkeletonAdditionalProjectilesMixin {
     @Shadow
     protected abstract AbstractArrow getArrow(ItemStack arrow, float damageModifier, @Nullable ItemStack shotFrom);
 
@@ -32,40 +33,37 @@ public abstract class AbstractSkeletonAdditionalArrowsMixin {
         AbstractSkeleton skeleton = (AbstractSkeleton) (Object) this;
         if (!(skeleton.level() instanceof ServerLevel serverWorld)) return;
 
-        var additionalArrowCount = CustomAttributesExtensions.INSTANCE.getAdditionalArrowCount(skeleton);
+        var additionalArrowCount = CustomAttributesExtensions.INSTANCE.getAdditionalProjectileCount(skeleton);
         if (additionalArrowCount <= 0) return;
 
         var hand = skeleton.getMainHandItem().is(CustomTags.INSTANCE.getBOW()) ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         var bowStack = skeleton.getItemInHand(hand);
         var projectileStack = skeleton.getProjectile(bowStack);
 
-        var totalArrowCount = additionalArrowCount + 1;
-
         var distanceX = target.getX() - skeleton.getX();
         var distanceZ = target.getZ() - skeleton.getZ();
         var horizontalDistance = Math.sqrt(distanceX * distanceX + distanceZ * distanceZ);
 
-        var spread = AdditionalArrowsSettings.SPREAD_PER_ARROW * additionalArrowCount;
-        var spreadRotation = -spread;
+        var direction = new Vec3(distanceX, horizontalDistance * 0.2F, distanceZ);
 
-        for (var count = 0; count < totalArrowCount; count++) {
-            var arrow = getArrow(projectileStack, pullProgress, bowStack);
+        AdditionalProjectilesUtil.INSTANCE.shootProjectile(
+                skeleton,
+                null,
+                direction,
+                (_) -> getArrow(projectileStack, pullProgress, bowStack),
+                (projectile, spreadVelocity, _) -> {
+                    projectile.shoot(
+                            spreadVelocity.x,
+                            spreadVelocity.y + target.getY(0.3333333333333333) - projectile.getY(),
+                            spreadVelocity.z,
+                            1.6F,
+                            14 - serverWorld.getDifficulty().getId() * 4
+                    );
+                    serverWorld.addFreshEntity(projectile);
 
-            var directionXZ = new Vec3(distanceX, 0, distanceZ).yRot((float) Math.toRadians(spreadRotation));
-            var distanceY = target.getY(0.3333333333333333) - arrow.getY();
-
-            arrow.shoot(
-                    directionXZ.x,
-                    distanceY + horizontalDistance * 0.2F,
-                    directionXZ.z,
-                    1.6F,
-                    14 - serverWorld.getDifficulty().getId() * 4
-            );
-
-            serverWorld.addFreshEntity(arrow);
-
-            spreadRotation += 2 * AdditionalArrowsSettings.SPREAD_PER_ARROW;
-        }
+                    return Unit.INSTANCE;
+                }
+        );
 
         skeleton.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (skeleton.getRandom().nextFloat() * 0.4F + 0.8F));
 
