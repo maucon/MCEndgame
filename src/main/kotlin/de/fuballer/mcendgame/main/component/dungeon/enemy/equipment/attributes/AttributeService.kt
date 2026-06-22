@@ -4,7 +4,8 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.dungeon.enemy.equipment.EquipmentGenerationData
-import de.fuballer.mcendgame.main.util.random.LevelRestrictedRandomOption
+import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
+import de.fuballer.mcendgame.main.component.item.equipment.data.TieredRollableCustomAttribute
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.maucon.mauconframework.di.annotation.Injectable
@@ -16,45 +17,71 @@ import kotlin.random.Random
 class AttributeService {
     fun applyAttributes(
         itemStack: ItemStack,
-        possibleAttributes: List<RandomOption<List<LevelRestrictedRandomOption<RollableCustomAttribute>>>>,
+        attributeOptions: List<RandomOption<TieredRollableCustomAttribute>>,
+        entityEquipmentClass: EnemyEquipmentClass,
         level: Int,
         random: Random,
         slot: EquipmentSlotGroup,
         data: EquipmentGenerationData,
     ) {
-        val customAttributes = selectAttributes(level, possibleAttributes, slot, random, data)
+        val customAttributes = selectAttributes(level, attributeOptions, entityEquipmentClass, slot, random, data)
         itemStack.setCustomAttributes(customAttributes, slot)
     }
 
     private fun selectAttributes(
         level: Int,
-        possibleAttributes: List<RandomOption<List<LevelRestrictedRandomOption<RollableCustomAttribute>>>>,
+        attributeOptions: List<RandomOption<TieredRollableCustomAttribute>>,
+        entityEquipmentClass: EnemyEquipmentClass,
         slot: EquipmentSlotGroup,
         random: Random,
         data: EquipmentGenerationData,
     ): List<CustomAttribute> {
-        val rolledAttributes = getDistinctRolledAttributes(level, possibleAttributes, slot, random, data)
+        val modifiedAttributeOptions = getEquipmentClassAffectedAttributeOptions(attributeOptions, entityEquipmentClass)
+        if (modifiedAttributeOptions.isEmpty()) return listOf()
+
+        val rolledAttributes = getDistinctRolledAttributes(level, modifiedAttributeOptions, slot, random, data)
         if (!data.luckyAttributes) return rolledAttributes
 
-        val rolledAttributesB = getDistinctRolledAttributes(level, possibleAttributes, slot, random, data)
+        val rolledAttributesB = getDistinctRolledAttributes(level, modifiedAttributeOptions, slot, random, data)
         return getBetterRolls(rolledAttributes, rolledAttributesB)
+    }
+
+    private fun getEquipmentClassAffectedAttributeOptions(
+        attributeOptions: List<RandomOption<TieredRollableCustomAttribute>>,
+        entityEquipmentClass: EnemyEquipmentClass,
+    ): List<RandomOption<TieredRollableCustomAttribute>> {
+        val weightFactors = entityEquipmentClass.getAttributeWeightFactors()
+        if (weightFactors.isEmpty()) return attributeOptions
+
+        return attributeOptions.mapNotNull { weightedOption ->
+            val option = weightedOption.option
+            val type = option.type
+
+            val factor = weightFactors.getOrDefault(type, 1.0)
+            if (factor == 1.0) return@mapNotNull weightedOption
+
+            val newWeight = (weightedOption.weight * factor).toInt()
+            if (newWeight <= 0) return@mapNotNull null
+
+            RandomOption(newWeight, option)
+        }
     }
 
     private fun getDistinctRolledAttributes(
         level: Int,
-        possibleAttributes: List<RandomOption<List<LevelRestrictedRandomOption<RollableCustomAttribute>>>>,
+        attributeOptions: List<RandomOption<TieredRollableCustomAttribute>>,
         slot: EquipmentSlotGroup,
         random: Random,
         data: EquipmentGenerationData,
     ): List<CustomAttribute> {
-        var statAmount = AttributeSettings.getAttributeCount(level, random)
+        var statAmount = EnemyEquipmentAttributesSettings.getAttributeCount(level, random)
         data.additionalAttributeProbabilities.forEach {
             if (random.nextDouble() < it) statAmount++
         }
 
-        val pickedAttributeTypes = RandomUtil.pickUnique(possibleAttributes, random, statAmount)
-        val tierRolls = AttributeSettings.getAttributeTierRolls(level, random)
-        val pickedAttributes = pickedAttributeTypes.map { RandomUtil.pickLevelRestricted(it, tierRolls, level, random) }
+        val pickedTieredAttributes = RandomUtil.pickUnique(attributeOptions, random, statAmount)
+        val tierRolls = EnemyEquipmentAttributesSettings.getAttributeTierRolls(level, random)
+        val pickedAttributes = pickedTieredAttributes.map { it.rollTier(tierRolls, level, random) }
 
         return rollAttributes(pickedAttributes, slot, random)
     }

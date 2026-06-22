@@ -1,11 +1,12 @@
 package de.fuballer.mcendgame.main.component.item.equipment.armor
 
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
-import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
 import de.fuballer.mcendgame.main.component.item.equipment.Equipment
+import de.fuballer.mcendgame.main.component.item.equipment.data.AttributeTierData
+import de.fuballer.mcendgame.main.component.item.equipment.data.TieredRollableCustomAttribute
 import de.fuballer.mcendgame.main.component.item.equipment.enchantment.EquipmentEnchantment
 import de.fuballer.mcendgame.main.util.random.LevelRestrictedRandomOption
 import de.fuballer.mcendgame.main.util.random.RandomOption
@@ -60,59 +61,80 @@ enum class Chestplate(
 
     override val rollableCustomAttributes = listOf(
         RandomOption(
-            weight = 1,
-            listOf(
-                LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, RollableCustomAttribute(VanillaAttributeTypes.ARMOR, 3, DoubleBounds(0.5, 1.0))),
-                LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, RollableCustomAttribute(VanillaAttributeTypes.ARMOR, 2, DoubleBounds(1.0, 1.5))),
-                LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, RollableCustomAttribute(VanillaAttributeTypes.ARMOR, 1, DoubleBounds(1.5, 2.0))),
+            weight = 1000,
+            TieredRollableCustomAttribute(
+                VanillaAttributeTypes.ARMOR,
+                listOf(
+                    LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(0.5, 1.0))),
+                    LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, AttributeTierData(2, DoubleBounds(1.0, 1.5))),
+                    LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, AttributeTierData(1, DoubleBounds(1.5, 2.0))),
+                )
             )
         ),
         RandomOption(
-            weight = 1,
-            listOf(
-                LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, RollableCustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 3, DoubleBounds(0.5, 1.5))),
-                LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, RollableCustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 2, DoubleBounds(1.5, 2.5))),
-                LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, RollableCustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 1, DoubleBounds(2.5, 3.0))),
+            weight = 1000,
+            TieredRollableCustomAttribute(
+                VanillaAttributeTypes.ARMOR_TOUGHNESS,
+                listOf(
+                    LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(0.5, 1.5))),
+                    LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, AttributeTierData(2, DoubleBounds(1.5, 2.5))),
+                    LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, AttributeTierData(1, DoubleBounds(2.5, 3.0))),
+                )
             )
         ),
         RandomOption(
-            weight = 1,
-            listOf(
-                LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH, 3, DoubleBounds(0.5, 1.5))),
-                LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH, 2, DoubleBounds(1.5, 2.5))),
-                LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH, 1, DoubleBounds(2.5, 3.0))),
+            weight = 1000,
+            TieredRollableCustomAttribute(
+                VanillaAttributeTypes.MAX_HEALTH,
+                listOf(
+                    LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(0.5, 1.5))),
+                    LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, AttributeTierData(2, DoubleBounds(1.5, 2.5))),
+                    LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, AttributeTierData(1, DoubleBounds(2.5, 3.0))),
+                )
             )
         ),
         RandomOption(
-            weight = 1,
-            listOf(
-                LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, RollableCustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 3, DoubleBounds(0.05, 0.15))),
-                LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, RollableCustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 2, DoubleBounds(0.15, 0.25))),
-                LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, RollableCustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 1, DoubleBounds(0.25, 0.3))),
+            weight = 1000,
+            TieredRollableCustomAttribute(
+                CustomAttributeTypes.SPELL_RESISTANCE,
+                listOf(
+                    LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(0.05, 0.15))),
+                    LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, AttributeTierData(2, DoubleBounds(0.15, 0.25))),
+                    LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, AttributeTierData(1, DoubleBounds(0.25, 0.3))),
+                )
             )
         ),
         RandomOption(
-            weight = 1,
-            listOf(
-                LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, RollableCustomAttribute(CustomAttributeTypes.DODGE, 3, DoubleBounds(0.02, 0.04))),
-                LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, RollableCustomAttribute(CustomAttributeTypes.DODGE, 2, DoubleBounds(0.04, 0.06))),
-                LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, RollableCustomAttribute(CustomAttributeTypes.DODGE, 1, DoubleBounds(0.06, 0.08))),
+            weight = 1000,
+            TieredRollableCustomAttribute(
+                CustomAttributeTypes.DODGE,
+                listOf(
+                    LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(0.02, 0.04))),
+                    LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, AttributeTierData(2, DoubleBounds(0.04, 0.06))),
+                    LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, AttributeTierData(1, DoubleBounds(0.06, 0.08))),
+                )
             )
         ),
         RandomOption(
-            weight = 1,
-            listOf(
-                LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, RollableCustomAttribute(CustomAttributeTypes.PROJECTILE_DODGE, 3, DoubleBounds(0.04, 0.06))),
-                LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, RollableCustomAttribute(CustomAttributeTypes.PROJECTILE_DODGE, 2, DoubleBounds(0.06, 0.08))),
-                LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, RollableCustomAttribute(CustomAttributeTypes.PROJECTILE_DODGE, 1, DoubleBounds(0.08, 0.1))),
+            weight = 1000,
+            TieredRollableCustomAttribute(
+                CustomAttributeTypes.PROJECTILE_DODGE,
+                listOf(
+                    LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(0.04, 0.06))),
+                    LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, AttributeTierData(2, DoubleBounds(0.06, 0.08))),
+                    LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, AttributeTierData(1, DoubleBounds(0.08, 0.1))),
+                )
             )
         ),
         RandomOption(
-            weight = 1,
-            listOf(
-                LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, 3, DoubleBounds(-0.03, -0.01))),
-                LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, 2, DoubleBounds(-0.05, -0.03))),
-                LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, 1, DoubleBounds(-0.07, -0.05))),
+            weight = 1000,
+            TieredRollableCustomAttribute(
+                CustomAttributeTypes.MORE_DAMAGE_TAKEN,
+                listOf(
+                    LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(-0.03, -0.01))),
+                    LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, AttributeTierData(2, DoubleBounds(-0.05, -0.03))),
+                    LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, AttributeTierData(1, DoubleBounds(-0.07, -0.05))),
+                )
             )
         ),
     )

@@ -4,13 +4,13 @@ import de.fuballer.mcendgame.main.util.random.LevelRestrictedRandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import kotlin.random.Random
 
-object AttributeSettings {
+object EnemyEquipmentAttributesSettings {
     fun getAttributeCount(level: Int, random: Random): Int {
         val rolls = 1 + level / 2 + if (random.nextDouble() < (level / 2.0) % 1) 1 else 0
         return RandomUtil.pickLevelRestricted(ATTRIBUTE_COUNT, rolls, level, random)
     }
 
-    val ATTRIBUTE_COUNT = listOf(
+    private val ATTRIBUTE_COUNT = listOf(
         LevelRestrictedRandomOption(weight = 10000, tier = 0, requiredLevel = 0, option = 0),
         LevelRestrictedRandomOption(weight = 10000, tier = 1, requiredLevel = 0, option = 1),
         LevelRestrictedRandomOption(weight = 2400, tier = 2, requiredLevel = 3, option = 2),
