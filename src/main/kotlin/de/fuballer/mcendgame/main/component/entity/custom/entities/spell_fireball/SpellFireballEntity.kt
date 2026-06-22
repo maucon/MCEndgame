@@ -23,7 +23,7 @@ class SpellFireballEntity(
 
     companion object {
         const val INERTIA = 0.99
-        const val GRAVITY = 0.05
+        const val GRAVITY = 0.07
         private const val PARTICLE_COOLDOWN = 1
         private const val TARGET_FIRE_TICKS = 70
     }

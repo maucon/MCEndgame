@@ -114,7 +114,7 @@ class SkeletonMageEntity(
         return velocityVec
     }
 
-    private fun getFireballTravelTicks(distance: Double) = max(1, (distance * 4).pow(0.8).toInt())
+    private fun getFireballTravelTicks(distance: Double) = max(1, (distance * 3).pow(0.8).toInt())
 
     private fun getShootPos() = Vec3(
         x - (bbWidth + 1.0) * 0.5 * sin(yBodyRot * (Math.PI / 180.0)),
