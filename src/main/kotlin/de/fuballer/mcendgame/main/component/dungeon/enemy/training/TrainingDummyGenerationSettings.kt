@@ -103,7 +103,7 @@ object TrainingDummyGenerationSettings {
                             listOf(
                                 CustomAttribute(VanillaAttributeTypes.ARMOR, 0, DoubleRoll(DoubleBounds(1.5))),
                                 CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 0, DoubleRoll(DoubleBounds(2.0))),
-                                CustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 0, DoubleRoll(DoubleBounds(0.2))),
+                                CustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 0, DoubleRoll(DoubleBounds(0.14))),
                             ),
                             EquipmentSlotGroup.ANY,
                         )
@@ -114,7 +114,7 @@ object TrainingDummyGenerationSettings {
                             listOf(
                                 CustomAttribute(VanillaAttributeTypes.ARMOR, 0, DoubleRoll(DoubleBounds(2.0))),
                                 CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 0, DoubleRoll(DoubleBounds(3.0))),
-                                CustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 0, DoubleRoll(DoubleBounds(0.3))),
+                                CustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 0, DoubleRoll(DoubleBounds(0.2))),
                             ),
                             EquipmentSlotGroup.ANY,
                         )
@@ -125,7 +125,7 @@ object TrainingDummyGenerationSettings {
                             listOf(
                                 CustomAttribute(VanillaAttributeTypes.ARMOR, 0, DoubleRoll(DoubleBounds(1.75))),
                                 CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 0, DoubleRoll(DoubleBounds(2.5))),
-                                CustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 0, DoubleRoll(DoubleBounds(0.25))),
+                                CustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 0, DoubleRoll(DoubleBounds(0.17))),
                             ),
                             EquipmentSlotGroup.ANY,
                         )
@@ -136,7 +136,7 @@ object TrainingDummyGenerationSettings {
                             listOf(
                                 CustomAttribute(VanillaAttributeTypes.ARMOR, 0, DoubleRoll(DoubleBounds(1.5))),
                                 CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, 0, DoubleRoll(DoubleBounds(2.0))),
-                                CustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 0, DoubleRoll(DoubleBounds(0.2))),
+                                CustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 0, DoubleRoll(DoubleBounds(0.14))),
                             ),
                             EquipmentSlotGroup.ANY,
                         )

@@ -13,12 +13,12 @@ interface DamageCalculator {
         attacked: LivingEntity,
         source: ExtendedDamageSource,
         event: DamageCalculationCommand,
-    ): Float
+    ): Float = 0F
 
     fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: ExtendedDamageSource,
         event: DamageCalculationCommand,
-    ): Float
+    ): Float = 0F
 }

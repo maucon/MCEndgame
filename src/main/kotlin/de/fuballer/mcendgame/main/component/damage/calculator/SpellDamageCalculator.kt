@@ -11,13 +11,6 @@ import net.minecraft.world.entity.LivingEntity
 object SpellDamageCalculator : DamageCalculator {
     override fun isActive(source: DamageSource) = source.type().isOf(CustomDamageTypes.SPELL)
 
-    override fun calculateAttackDamage(
-        originalDamage: Float,
-        attacked: LivingEntity,
-        source: ExtendedDamageSource,
-        event: DamageCalculationCommand
-    ) = 0f
-
     override fun calculateSpellDamage(
         originalDamage: Float,
         attacked: LivingEntity,

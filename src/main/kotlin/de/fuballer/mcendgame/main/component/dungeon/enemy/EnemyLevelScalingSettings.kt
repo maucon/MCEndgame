@@ -13,10 +13,10 @@ object EnemyLevelScalingSettings {
         CustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(2.5 * level))),
         CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(1.5 * level))),
     ).also {
-        if (level > 5) it.add(
+        if (level >= 5) it.add(
             CustomAttribute(
                 CustomAttributeTypes.SPELL_RESISTANCE,
-                roll = DoubleRoll(DoubleBounds(min(SpellResistanceSettings.LIMIT, 0.1 * (level - 5))))
+                roll = DoubleRoll(DoubleBounds(min(SpellResistanceSettings.LIMIT, 0.04 * (level - 4))))
             )
         )
     }

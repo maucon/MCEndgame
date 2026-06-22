@@ -14,39 +14,36 @@ enum class EnemyEquipmentClass(
         NO_ARMOR,
         NO_WEAPONS,
     ),
-    NO_DODGE(
-        attributeWeightFactors = mapOf(
-            CustomAttributeTypes.DODGE to 0.0,
-            CustomAttributeTypes.PROJECTILE_DODGE to 0.0,
-        )
-    ),
     RANGED,
     MELEE(
-        NO_DODGE,
-    ),
-    NO_ATTACK_DAMAGE(
         attributeWeightFactors = mapOf(
-            VanillaAttributeTypes.ATTACK_DAMAGE to 0.0,
-            VanillaAttributeTypes.INCREASED_ATTACK_DAMAGE to 0.0,
+            CustomAttributeTypes.DODGE to 0.5,
+            CustomAttributeTypes.PROJECTILE_DODGE to 1.2,
         )
     ),
-    NO_SPELL_DAMAGE(
+    LOW_ATTACK_DAMAGE(
         attributeWeightFactors = mapOf(
-            CustomAttributeTypes.SPELL_DAMAGE to 0.0,
-            CustomAttributeTypes.INCREASED_SPELL_DAMAGE to 0.0,
+            VanillaAttributeTypes.ATTACK_DAMAGE to 0.5,
+            VanillaAttributeTypes.INCREASED_ATTACK_DAMAGE to 0.5,
+        )
+    ),
+    LOW_SPELL_DAMAGE(
+        attributeWeightFactors = mapOf(
+            CustomAttributeTypes.SPELL_DAMAGE to 0.5,
+            CustomAttributeTypes.INCREASED_SPELL_DAMAGE to 0.5,
         )
     ),
     RANGED_SPELL_DAMAGE(
         RANGED,
-        NO_ATTACK_DAMAGE,
+        LOW_ATTACK_DAMAGE,
     ),
     MELEE_ATTACK_DAMAGE(
         MELEE,
-        NO_SPELL_DAMAGE,
+        LOW_SPELL_DAMAGE,
     ),
     RANGED_ATTACK_DAMAGE(
         RANGED,
-        NO_SPELL_DAMAGE,
+        LOW_SPELL_DAMAGE,
     );
 
     private val includes = includes.toSet()
