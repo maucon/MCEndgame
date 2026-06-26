@@ -17,6 +17,7 @@ object TotemItems {
     val TOTEM_OF_VANGUARD = TotemItemRegistry.registerTotemItem(::TotemOfVanguardItem, "totem_of_vanguard")
     val TOTEM_OF_RENEWAL = TotemItemRegistry.registerTotemItem(::TotemOfRenewalItem, "totem_of_renewal")
     val TOTEM_OF_TEMPEST = TotemItemRegistry.registerTotemItem(::TotemOfTempestItem, "totem_of_tempest")
+    val TOTEM_OF_DISPELLING = TotemItemRegistry.registerTotemItem(::TotemOfDispellingItem, "totem_of_dispelling")
 
     // effect
     val TOTEM_OF_DEFIANCE = TotemItemRegistry.registerTotemItem(::TotemOfDefianceItem, "totem_of_defiance")

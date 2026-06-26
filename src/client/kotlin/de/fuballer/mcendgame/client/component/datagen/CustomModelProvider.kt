@@ -93,6 +93,7 @@ class CustomModelProvider(
         generator.generateFlatItem(TotemItems.TOTEM_OF_VANGUARD, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(TotemItems.TOTEM_OF_RENEWAL, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(TotemItems.TOTEM_OF_TEMPEST, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(TotemItems.TOTEM_OF_DISPELLING, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(TotemItems.TOTEM_OF_DEFIANCE, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(TotemItems.TOTEM_OF_RECOVERY, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(TotemItems.TOTEM_OF_RIME, ModelTemplates.FLAT_ITEM)
