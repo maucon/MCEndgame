@@ -17,5 +17,8 @@ class CustomEntityTagProvider(
 
         valueLookupBuilder(EntityTypeTags.ZOMBIES)
             .add(CustomEntities.BONECRUSHER)
+
+        valueLookupBuilder(EntityTypeTags.SKELETONS)
+            .add(CustomEntities.SKELETON_MAGE)
     }
 }

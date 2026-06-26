@@ -173,6 +173,7 @@ class CustomItemTagProvider(
             .add(TotemItems.TOTEM_OF_VANGUARD)
             .add(TotemItems.TOTEM_OF_RENEWAL)
             .add(TotemItems.TOTEM_OF_TEMPEST)
+            .add(TotemItems.TOTEM_OF_DISPELLING)
             .add(TotemItems.TOTEM_OF_DEFIANCE)
             .add(TotemItems.TOTEM_OF_RECOVERY)
             .add(TotemItems.TOTEM_OF_RIME)

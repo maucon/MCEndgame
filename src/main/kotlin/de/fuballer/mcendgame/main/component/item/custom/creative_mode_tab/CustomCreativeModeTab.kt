@@ -123,6 +123,7 @@ object CustomCreativeModeTab {
                     output.accept(TotemItems.TOTEM_OF_VANGUARD.getMaxTierStack())
                     output.accept(TotemItems.TOTEM_OF_RENEWAL.getMaxTierStack())
                     output.accept(TotemItems.TOTEM_OF_TEMPEST.getMaxTierStack())
+                    output.accept(TotemItems.TOTEM_OF_DISPELLING.getMaxTierStack())
                     output.accept(TotemItems.TOTEM_OF_DEFIANCE.getMaxTierStack())
                     output.accept(TotemItems.TOTEM_OF_RECOVERY.getMaxTierStack())
                     output.accept(TotemItems.TOTEM_OF_RIME.getMaxTierStack())

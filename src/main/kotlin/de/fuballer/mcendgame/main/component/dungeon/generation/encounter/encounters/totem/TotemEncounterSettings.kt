@@ -52,6 +52,9 @@ object TotemEncounterSettings {
         RandomOption(150, TotemItems.TOTEM_OF_TEMPEST.getStack(0)) to 0,
         RandomOption(50, TotemItems.TOTEM_OF_TEMPEST.getStack(1)) to 5,
         RandomOption(10, TotemItems.TOTEM_OF_TEMPEST.getStack(2)) to 10,
+        RandomOption(150, TotemItems.TOTEM_OF_DISPELLING.getStack(0)) to 0,
+        RandomOption(50, TotemItems.TOTEM_OF_DISPELLING.getStack(1)) to 5,
+        RandomOption(10, TotemItems.TOTEM_OF_DISPELLING.getStack(2)) to 10,
 
         // effect
         RandomOption(100, TotemItems.TOTEM_OF_DEFIANCE.getStack(0)) to 6,
