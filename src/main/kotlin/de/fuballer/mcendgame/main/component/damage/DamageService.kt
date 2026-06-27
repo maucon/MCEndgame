@@ -25,6 +25,7 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 private val DAMAGE_CALCULATORS = listOf(
+    PufferfishTouchCalculator,
     PierceAttackDamageCalculator,
     KineticAttackDamageCalculator,
     SpellDamageCalculator,

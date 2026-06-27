@@ -24,11 +24,4 @@ object GuardianMagicCalculator : DamageCalculator {
         if (event.world.difficulty == Difficulty.HARD) base += 2
         return base
     }
-
-    override fun calculateSpellDamage(
-        originalDamage: Float,
-        attacked: LivingEntity,
-        source: ExtendedDamageSource,
-        event: DamageCalculationCommand
-    ) = 0f
 }

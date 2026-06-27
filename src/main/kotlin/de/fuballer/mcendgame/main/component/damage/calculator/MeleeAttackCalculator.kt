@@ -32,13 +32,6 @@ object MeleeAttackCalculator : DamageCalculator {
         return ((baseDamage * attackDamageMulti * critMulti + enchantmentDamage * attackCooldown) * damageMulti).toFloat()
     }
 
-    override fun calculateSpellDamage(
-        originalDamage: Float,
-        attacked: LivingEntity,
-        source: ExtendedDamageSource,
-        event: DamageCalculationCommand
-    ): Float = 0.0F
-
     private fun calculateBaseAttackDamage(
         event: DamageCalculationCommand,
         attacker: LivingEntity,
