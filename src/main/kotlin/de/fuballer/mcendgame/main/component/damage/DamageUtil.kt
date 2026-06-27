@@ -6,7 +6,6 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.animal.fish.Pufferfish
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 
 object DamageUtil {
@@ -92,7 +91,7 @@ object DamageUtil {
         event: DamageCalculationCommand,
         livingEntity: LivingEntity,
     ): Double {
-        val base = livingEntity.getAttribute(Attributes.ATTACK_DAMAGE)?.baseValue ?: return 0.0
+        val base = livingEntity.getAttribute(Attributes.ATTACK_DAMAGE)?.baseValue ?: 0.0
         return base +
                 getAttackDamageModifierValues(livingEntity, AttributeModifier.Operation.ADD_VALUE).sum() +
                 event.attackDamage.sum()
