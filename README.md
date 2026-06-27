@@ -83,6 +83,11 @@ system.
     <img src="assets/images/killer.png" alt="Killer">
 </details>
 
+### Analytics
+
+MCEndgame collects anonymous gameplay data to help improve the mod. No personal information is collected.
+See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame-fabric/wiki/Analytics) for details on what is collected and how to opt out.
+
 ---
 
 ## Getting Started

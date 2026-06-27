@@ -62,7 +62,7 @@ object CustomAttributesExtensions {
 
     fun ItemStack.getCustomAttributes(): List<CustomAttribute> {
         return get(COMPONENT_TYPE)
-            ?: return emptyList()
+            ?: emptyList()
     }
 
     fun LivingEntity.getAllCustomAttributes(): Map<CustomAttributeType, List<CustomAttribute>> {
