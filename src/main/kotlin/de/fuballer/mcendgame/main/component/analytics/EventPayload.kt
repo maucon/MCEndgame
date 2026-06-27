@@ -1,5 +1,7 @@
 package de.fuballer.mcendgame.main.component.analytics
 
+import com.google.gson.JsonElement
+
 data class EventPayload(
     val eventType: String,
     val modVersion: String,
@@ -34,4 +36,8 @@ data class DungeonPlayerDeathPayload(
     val killerEffects: Map<String, Int>,
 )
 
-data class PayloadItem(val id: String, val enchantments: Map<String, Int>)
+data class PayloadItem(
+    val id: String,
+    val enchantments: Map<String, Int>,
+    val customAttributes: JsonElement,
+)

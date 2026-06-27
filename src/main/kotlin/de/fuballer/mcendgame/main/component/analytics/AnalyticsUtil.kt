@@ -1,5 +1,8 @@
 package de.fuballer.mcendgame.main.component.analytics
 
+import com.mojang.serialization.JsonOps
+import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getCustomAttributes
+import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.entity.EquipmentSlot
@@ -19,7 +22,12 @@ object AnalyticsUtil {
                 it.key.unwrapKey().map { k -> k.identifier().toString() }.orElse(UNKNOWN)!! to it.intValue
             }
             ?: emptyMap()
-        return PayloadItem(id, enchants)
+        val customAttributes = CustomAttribute.CODEC.listOf()
+            .encodeStart(JsonOps.INSTANCE, itemStack.getCustomAttributes())
+            .getOrThrow()
+            .asJsonArray
+            .also { array -> array.forEach { it.asJsonObject.remove("id") } }
+        return PayloadItem(id, enchants, customAttributes)
     }
 
     fun getArmorItems(entity: LivingEntity): List<PayloadItem?> = listOf(

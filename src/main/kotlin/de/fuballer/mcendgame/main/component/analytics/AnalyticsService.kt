@@ -21,9 +21,6 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
 import java.util.*
-import kotlin.concurrent.thread
-
-// add disclaimer in README
 
 private val GSON = Gson()
 private val HTTP = HttpClient.newHttpClient()
@@ -38,14 +35,13 @@ class AnalyticsService(
     private val sessionId = UUID.randomUUID().toString()
 
     @Initializer
-    fun init() {
-        modVersion = FabricLoader.getInstance()
-            .getModContainer(MCEndgame.MOD_ID)
+    fun init(fabricLoader: FabricLoader) {
+        modVersion = fabricLoader.getModContainer(MCEndgame.MOD_ID)
             .map { it.metadata.version.friendlyString }
             .orElse(AnalyticsUtil.UNKNOWN)!!
 
         log.info(
-            "Analytics for MCEndgame are ${if (userConfig.enableAnalytics) "enabled" else "disabled"}. " +
+            "Analytics for MCEndgame are ${if (userConfig.sendAnalytics) "enabled" else "disabled"}. " +
                     "You can change this in '${UserConfig.FILE}'." +
                     " Find out more at https://github.com/maucon/MCEndgame-fabric/wiki/Analytics"
         )
@@ -95,19 +91,18 @@ class AnalyticsService(
     }
 
     private fun sendAnalytics(eventType: EventType, payload: Any) {
+        if (!userConfig.sendAnalytics) return
+
         val httpPayload = EventPayload(eventType.type, modVersion, payload)
 
-        thread {
-            runCatching {
-                val request = HttpRequest.newBuilder()
-                    .uri(URI.create("$ENDPOINT?session=$sessionId"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(GSON.toJson(httpPayload)))
-                    .timeout(Duration.ofSeconds(5))
-                    .build()
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("$ENDPOINT?session=$sessionId"))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(GSON.toJson(httpPayload)))
+            .timeout(Duration.ofSeconds(5))
+            .build()
 
-                HTTP.send(request, HttpResponse.BodyHandlers.discarding())
-            }
-        }
+        HTTP.sendAsync(request, HttpResponse.BodyHandlers.discarding())
+            .exceptionally { null }
     }
 }
