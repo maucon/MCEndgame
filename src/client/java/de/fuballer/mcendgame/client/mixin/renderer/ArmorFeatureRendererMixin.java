@@ -11,64 +11,30 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ArmorFeatureRenderer.class)
 public abstract class ArmorFeatureRendererMixin<S extends BipedEntityRenderState, M extends BipedEntityModel<S>, A extends BipedEntityModel<S>> {
-    @Inject(
+    @Redirect(
             method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;ILnet/minecraft/client/render/entity/state/BipedEntityRenderState;FF)V",
-            at = @At("HEAD"),
-            cancellable = true
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/entity/feature/ArmorFeatureRenderer;renderArmor(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EquipmentSlot;ILnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V"
+            )
     )
-    public void render(MatrixStack matrixStack, OrderedRenderCommandQueue queue, int i, S renderState, float f, float g, CallbackInfo ci) {
-        var stateAccessor = (BipedEntityRenderStateAccessor) renderState;
+    private void mcendgame$redirectRenderArmorPiece(
+            ArmorFeatureRenderer instance,
+            MatrixStack matrices,
+            OrderedRenderCommandQueue queue,
+            ItemStack stack,
+            EquipmentSlot slot,
+            int light,
+            S state
+    ) {
+        var stateAccessor = (BipedEntityRenderStateAccessor) state;
+        if (stateAccessor.mcendgame$getHiddenArmor().contains(slot)) return;
 
-        if (!stateAccessor.mcendgame$getHiddenArmor().contains(EquipmentSlot.CHEST)) {
-            invokeRenderArmor(
-                    matrixStack,
-                    queue,
-                    renderState.equippedChestStack,
-                    EquipmentSlot.CHEST,
-                    renderState.light,
-                    renderState
-            );
-        }
-
-        if (!stateAccessor.mcendgame$getHiddenArmor().contains(EquipmentSlot.LEGS)) {
-            invokeRenderArmor(
-                    matrixStack,
-                    queue,
-                    renderState.equippedLegsStack,
-                    EquipmentSlot.LEGS,
-                    renderState.light,
-                    renderState
-            );
-        }
-
-        if (!stateAccessor.mcendgame$getHiddenArmor().contains(EquipmentSlot.FEET)) {
-            invokeRenderArmor(
-                    matrixStack,
-                    queue,
-                    renderState.equippedFeetStack,
-                    EquipmentSlot.FEET,
-                    renderState.light,
-                    renderState
-            );
-        }
-
-        if (!stateAccessor.mcendgame$getHiddenArmor().contains(EquipmentSlot.HEAD)) {
-            invokeRenderArmor(
-                    matrixStack,
-                    queue,
-                    renderState.equippedHeadStack,
-                    EquipmentSlot.HEAD,
-                    renderState.light,
-                    renderState
-            );
-        }
-
-        ci.cancel();
+        invokeRenderArmor(matrices, queue, stack, slot, light, state);
     }
 
     @Invoker
