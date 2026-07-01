@@ -38,6 +38,7 @@ class BeastweaverEntity(
 ) : PathfinderMob(type, world), GeoEntity, DisableAbleGoalsMob, BlockAbleMovementMob<BeastweaverEntity>, Enemy, CustomAttacksMob<BeastweaverEntity> {
     companion object {
         private val TRANSFORM_BASE_ANIM = RawAnimation.begin().thenLoop("transform.base")
+        private val MAX_TRANSFORM_PROGRESS_PER_TICK = 0.01
 
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf()
 
@@ -74,9 +75,11 @@ class BeastweaverEntity(
             AnimationController<BeakburnEntity>("Transform", 0)
             { test -> test.setAndContinue(TRANSFORM_BASE_ANIM) },
         )
-
-
     }
+
+    private var transformProgress = 0.0
+    private var previousTransformProgress = 0.0
+    fun getTransformProgress(tickProgress: Float) = previousTransformProgress + (transformProgress - previousTransformProgress) * tickProgress
 
     private val attackGoal = CustomAttacksGoal(this)
     private val stayInMeleeRangeGoal = StayInRangeGoal(this, 1.0, 2.5)
@@ -116,9 +119,19 @@ class BeastweaverEntity(
 
     override fun tick() {
         super.tick()
+        tickTransformProgress()
         val world = level() as? ServerLevel ?: return
         tickBlockedMovement()
         tickAttacks(world, this)
+    }
+
+    private fun tickTransformProgress() {
+        previousTransformProgress = transformProgress
+
+        val healthPercentage = (health / maxHealth).coerceIn(0F, 1F)
+        val targetValue = 1 - healthPercentage
+        val change = (targetValue - transformProgress).coerceIn(0.0, MAX_TRANSFORM_PROGRESS_PER_TICK)
+        transformProgress += change
     }
 
     override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.PLAYER_HURT

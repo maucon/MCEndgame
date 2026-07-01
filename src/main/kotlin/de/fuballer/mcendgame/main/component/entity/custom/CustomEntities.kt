@@ -84,7 +84,7 @@ object CustomEntities {
     val BEASTWEAVER = RegistryUtil.registerEntity(
         "beastweaver",
         EntityType.Builder.of(::BeastweaverEntity, MobCategory.MONSTER)
-            .sized(0.8f, 2.1f)
+            .sized(0.8f, 2.05f)
             .eyeHeight(1.7f)
             .clientTrackingRange(8)
             .notInPeaceful()
