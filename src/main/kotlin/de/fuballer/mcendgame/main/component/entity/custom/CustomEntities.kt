@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.main.component.entity.custom
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.arachne.ArachneEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.BeakburnEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
@@ -77,6 +78,14 @@ object CustomEntities {
         EntityType.Builder.of(::BeakburnEntity, MobCategory.MONSTER)
             .sized(1.6f, 2.5f)
             .eyeHeight(2.0f)
+            .clientTrackingRange(8)
+            .notInPeaceful()
+    )
+    val BEASTWEAVER = RegistryUtil.registerEntity(
+        "beastweaver",
+        EntityType.Builder.of(::BeastweaverEntity, MobCategory.MONSTER)
+            .sized(0.8f, 2.1f)
+            .eyeHeight(1.7f)
             .clientTrackingRange(8)
             .notInPeaceful()
     )

@@ -4,6 +4,8 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.arachne.Ara
 import de.fuballer.mcendgame.client.component.entity.custom.entities.arachne.ArachneRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beakburn.BeakburnRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beakburn.BeakburnRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.BeastweaverRenderState
+import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.BeastweaverRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher.BonecrusherRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher.BonecrusherRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.elf_duelist.ElfDuelistRenderState
@@ -79,8 +81,8 @@ object EntityModelRegisterer {
         EntityRenderers.register(CustomEntities.BONECRUSHER) { state -> BonecrusherRenderer<BonecrusherRenderState>(state) }
         EntityRenderers.register(CustomEntities.ELF_DUELIST) { state -> ElfDuelistRenderer<ElfDuelistRenderState>(state) }
         EntityRenderers.register(CustomEntities.BEAKBURN) { state -> BeakburnRenderer<BeakburnRenderState>(state) }
-
-
+        EntityRenderers.register(CustomEntities.BEASTWEAVER) { state -> BeastweaverRenderer<BeastweaverRenderState>(state) }
+        
         EntityRenderers.register(CustomEntities.SCARRED_ONE) { state -> ScarredOneRenderer<ScarredOneRenderState>(state) }
 
         ModelLayerRegistry.registerModelLayer(
