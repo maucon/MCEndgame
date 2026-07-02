@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.monster.zombie.Husk
 
 object HuskStats : EntityTypeStats {
@@ -17,8 +18,8 @@ object HuskStats : EntityTypeStats {
     override val movementSpeed = 0.23
     override val knockbackResistance = 0.0
 
-    override fun applyMisc(entity: Entity) {
-        val huskEntity = entity as? Husk ?: return
+    override fun applyMisc(mob: Mob) {
+        val huskEntity = mob as? Husk ?: return
         huskEntity.isBaby = false
     }
 }
