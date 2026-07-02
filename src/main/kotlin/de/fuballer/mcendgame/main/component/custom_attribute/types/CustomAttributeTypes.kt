@@ -109,7 +109,7 @@ object CustomAttributeTypes {
     // COMPANION
     val WOLF_COMPANION = CustomAttributeType("wolf_companion", AttributeFormats.STRING_ROLL, AttributeFormats.STRING_SHOW_ALL_OPTIONS, AttributeAffinities.BENEFICIAL)
 
-    val SPIDERLING_COMPANIONS = CustomAttributeType("spiderling_companions", AttributeFormats.INT_ROLL, AttributeFormats.INT_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val SPIDERLING_COMPANIONS = CustomAttributeType("spiderling_companions", AttributeFormats.SIGNED_INT_ROLL, AttributeFormats.INT_BOUNDS, AttributeAffinities.BENEFICIAL)
 
     val COMPANION_ATTACK_DAMAGE = CustomAttributeType("companion_attack_damage", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
     val INCREASED_COMPANION_DAMAGE = CustomAttributeType(

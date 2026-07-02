@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.main.mixin.damage;
 
 import de.fuballer.mcendgame.main.component.damage.DifficultyScaling;
-import de.fuballer.mcendgame.main.component.damage.dealing.DamageCalculationConfig;
 import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource;
 import de.fuballer.mcendgame.main.mixin.access.PlayerEntityAccessMixin;
 import net.minecraft.entity.EntityType;
@@ -102,6 +101,10 @@ public abstract class PlayerEntityDamageCalculationMixin extends LivingEntity {
 
         if (this.isInvulnerableTo(world, source)) {
             return;
+        }
+
+        if (!source.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
+            ((LivingEntity) this_).damageArmor(source, amount); // TODO should really be only attack damage part
         }
 
         // amount = this.applyArmorToDamage(source, amount);
