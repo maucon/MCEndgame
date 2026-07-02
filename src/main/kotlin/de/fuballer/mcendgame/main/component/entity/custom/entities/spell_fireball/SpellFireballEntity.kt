@@ -5,6 +5,7 @@ import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
@@ -71,12 +72,13 @@ class SpellFireballEntity(
         discard()
     }
 
-    private fun damageTarget(
-        target: Entity,
-    ) {
+    private fun damageTarget(target: Entity) {
         val livingOwner = getOwner() as? LivingEntity ?: return
-        target.dealSpellDamage(1.0, livingOwner, this)
-        target.remainingFireTicks = TARGET_FIRE_TICKS
+        val damageDealt = target.dealSpellDamage(1.0, livingOwner, this)
+
+        if (damageDealt && (target as? LivingEntity)?.getEffect(MobEffects.FIRE_RESISTANCE) == null) {
+            target.remainingFireTicks = TARGET_FIRE_TICKS
+        }
     }
 
     override fun onHitBlock(blockHitResult: BlockHitResult) {

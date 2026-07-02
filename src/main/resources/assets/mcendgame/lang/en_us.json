@@ -258,7 +258,7 @@
   "attribute.mcendgame.fury_on_kill": " Gain a Stack of Fury on Kill",
   "attribute.mcendgame.resilience_on_damage_taken": " Gain a Stack of Resilience when taking Damage",
   "attribute.mcendgame.wolf_companion": " %s Wolf Companion",
-  "attribute.mcendgame.spiderling_companions": " %s Spiderling Companions",
+  "attribute.mcendgame.spiderling_companions": "%s Spiderling Companions",
   "attribute.mcendgame.companion_attack_damage": "%s Companion Attack Damage",
   "attribute.mcendgame.increased_companion_damage": "%s%% %s Companion Damage",
   "attribute.mcendgame.bow_pull_ticks": "%s Bow Draw Ticks",
