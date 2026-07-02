@@ -1,18 +1,17 @@
 package de.fuballer.mcendgame.main.component.entity.types
 
 import de.fuballer.mcendgame.main.component.dungeon.enemy.potion_effect.PotionEffect
-import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
+import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.entities.skeleton_mage.SkeletonMageEntity
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
 
 object SkeletonMageStats : EntityTypeStats {
     override val type: EntityType<SkeletonMageEntity> = CustomEntities.SKELETON_MAGE
 
-    override val equipmentClass= EnemyEquipmentClass.RANGED_SPELL_DAMAGE
+    override val equipmentClass = EnemyEquipmentClass.RANGED_SPELL_DAMAGE
     override val canBeInvisible = true
 
     override val health = 15.0

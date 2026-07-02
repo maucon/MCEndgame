@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.main.component.entity.types
 
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.monster.zombie.Zombie
