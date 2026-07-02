@@ -103,6 +103,10 @@ public abstract class PlayerDamageCalculationMixin extends LivingEntity {
             return;
         }
 
+        if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+            ((LivingEntity) this_).hurtArmor(source, dmg); // TODO should really be only attack damage part
+        }
+
         // dmg = this.applyArmorToDamage(source, dmg);
         // float finalDamageAfterMitigation = dmg = this.modifyAppliedDamage(source, dmg);
         // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓

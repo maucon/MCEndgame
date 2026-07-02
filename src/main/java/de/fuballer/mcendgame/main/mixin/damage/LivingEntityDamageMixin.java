@@ -260,6 +260,10 @@ public abstract class LivingEntityDamageMixin {
             return;
         }
 
+        if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+            this_.hurtArmor(source, dmg); // TODO should really be only attack damage part
+        }
+
         // dmg = this.applyArmorToDamage(source, dmg);
         // float originalDamage = dmg = this.modifyAppliedDamage(source, dmg);
         // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
