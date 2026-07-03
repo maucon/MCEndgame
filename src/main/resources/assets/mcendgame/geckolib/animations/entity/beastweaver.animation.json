@@ -803,7 +803,7 @@
 			}
 		},
 		"transform.hand_claws": {
-			"animation_length": 0.5,
+			"animation_length": 1,
 			"bones": {
 				"leftArmClawOuterFront": {
 					"position": {
@@ -813,7 +813,7 @@
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"0.5": {
+						"1.0": {
 							"post": {
 								"vector": [0, 0, 0]
 							},
@@ -829,7 +829,7 @@
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"0.5": {
+						"1.0": {
 							"post": {
 								"vector": [0, 0, 0]
 							},
@@ -845,7 +845,7 @@
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"0.5": {
+						"1.0": {
 							"post": {
 								"vector": [0, 0, 0]
 							},
@@ -861,7 +861,7 @@
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"0.5": {
+						"1.0": {
 							"post": {
 								"vector": [0, 0, 0]
 							},
@@ -979,7 +979,7 @@
 			}
 		},
 		"transform.ears": {
-			"animation_length": 1,
+			"animation_length": 1.5,
 			"bones": {
 				"leftEar": {
 					"rotation": {
@@ -989,13 +989,13 @@
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"0.25": {
+						"0.75": {
 							"post": {
 								"vector": [10, 0, 0]
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"0.5": {
+						"1.5": {
 							"post": {
 								"vector": [0, 0, 0]
 							},
@@ -1009,7 +1009,7 @@
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"0.5": {
+						"1.5": {
 							"post": {
 								"vector": [0, 0, 0]
 							},
@@ -1025,13 +1025,13 @@
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"0.25": {
+						"0.75": {
 							"post": {
 								"vector": [10, 0, 0]
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"0.5": {
+						"1.5": {
 							"post": {
 								"vector": [0, 0, 0]
 							},
@@ -1045,7 +1045,7 @@
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"0.5": {
+						"1.5": {
 							"post": {
 								"vector": [0, 0, 0]
 							},

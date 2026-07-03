@@ -45,14 +45,47 @@ class BeastweaverEntity(
         private val TRANSFORM_BASE_ANIM = RawAnimation.begin().thenLoop("transform.base")
         private const val MAX_TRANSFORM_PROGRESS_PER_TICK = 0.01F
 
-        private const val TRANSFORM_EXTRAS_ANIM_CONTROLLED_ID = "Transform Extras"
+        private const val TRANSFORM_SHOULDER_SPIKES_ANIM_CONTROLLER_ID = "Transform Shoulder Spikes"
         private val TRANSFORM_SHOULDER_SPIKES_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.shoulder_spikes")
         private const val TRANSFORM_SHOULDER_SPIKES_ID = "Transform Shoulder Spikes"
 
+        private const val TRANSFORM_ANTLERS_ANIM_CONTROLLER_ID = "Transform Antlers"
+        private val TRANSFORM_ANTLERS_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.antlers")
+        private const val TRANSFORM_ANTLERS_ID = "Transform Antlers"
+
+        private const val TRANSFORM_SNOUT_ANIM_CONTROLLER_ID = "Transform Snout"
+        private val TRANSFORM_SNOUT_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.snout")
+        private const val TRANSFORM_SNOUT_ID = "Transform Snout"
+
+        private const val TRANSFORM_EARS_ANIM_CONTROLLER_ID = "Transform Ears"
+        private val TRANSFORM_EARS_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.ears")
+        private const val TRANSFORM_EARS_ID = "Transform Ears"
+
+        private const val TRANSFORM_HAND_CLAWS_ANIM_CONTROLLER_ID = "Transform Hand Claws"
+        private val TRANSFORM_HAND_CLAWS_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.hand_claws")
+        private const val TRANSFORM_HAND_CLAWS_ID = "Transform Hand Claws"
+
         val TRANSFORM_EXTRAS_DATA = listOf(
             TransformExtrasData(
+                0.1,
+                TRANSFORM_EARS_ANIM_CONTROLLER_ID,
+                TRANSFORM_EARS_ID,
+                hiddenBeforeTrigger = setOf(
+                    "ears",
+                ),
+            ),
+            TransformExtrasData(
+                0.25,
+                TRANSFORM_HAND_CLAWS_ANIM_CONTROLLER_ID,
+                TRANSFORM_HAND_CLAWS_ID,
+                hiddenBeforeTrigger = setOf(
+                    "leftArmClaws",
+                    "rightArmClaws",
+                ),
+            ),
+            TransformExtrasData(
                 0.5,
-                TRANSFORM_EXTRAS_ANIM_CONTROLLED_ID,
+                TRANSFORM_SHOULDER_SPIKES_ANIM_CONTROLLER_ID,
                 TRANSFORM_SHOULDER_SPIKES_ID,
                 hiddenBeforeTrigger = setOf(
                     "leftArmSpikes",
@@ -62,7 +95,24 @@ class BeastweaverEntity(
                     "leftArmPauldronIntact",
                     "rightArmPauldronIntact",
                 ),
-            )
+            ),
+            TransformExtrasData(
+                0.6,
+                TRANSFORM_SNOUT_ANIM_CONTROLLER_ID,
+                TRANSFORM_SNOUT_ID,
+                hiddenBeforeTrigger = setOf(
+                    "snout",
+                ),
+            ),
+            TransformExtrasData(
+                0.75,
+                TRANSFORM_ANTLERS_ANIM_CONTROLLER_ID,
+                TRANSFORM_ANTLERS_ID,
+                hiddenBeforeTrigger = setOf(
+                    "leftAntlerBase",
+                    "rightAntlerBase",
+                ),
+            ),
         )
 
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf()
@@ -98,15 +148,36 @@ class BeastweaverEntity(
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
 
-    private val transformExtrasAnimationController = AnimationController<GeoAnimatable>(TRANSFORM_EXTRAS_ANIM_CONTROLLED_ID) { _ -> PlayState.STOP }
-        .triggerableAnim(TRANSFORM_SHOULDER_SPIKES_ID, TRANSFORM_SHOULDER_SPIKES_ANIM)
+    private val transformShoulderSpikesAnimationController =
+        AnimationController<GeoAnimatable>(TRANSFORM_SHOULDER_SPIKES_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
+            .triggerableAnim(TRANSFORM_SHOULDER_SPIKES_ID, TRANSFORM_SHOULDER_SPIKES_ANIM)
+
+    private val transformAntlersAnimationController =
+        AnimationController<GeoAnimatable>(TRANSFORM_ANTLERS_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
+            .triggerableAnim(TRANSFORM_ANTLERS_ID, TRANSFORM_ANTLERS_ANIM)
+
+    private val transformSnoutAnimationController =
+        AnimationController<GeoAnimatable>(TRANSFORM_SNOUT_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
+            .triggerableAnim(TRANSFORM_SNOUT_ID, TRANSFORM_SNOUT_ANIM)
+
+    private val transformEarsAnimationController =
+        AnimationController<GeoAnimatable>(TRANSFORM_EARS_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
+            .triggerableAnim(TRANSFORM_EARS_ID, TRANSFORM_EARS_ANIM)
+
+    private val transformHandClawsAnimationController =
+        AnimationController<GeoAnimatable>(TRANSFORM_HAND_CLAWS_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
+            .triggerableAnim(TRANSFORM_HAND_CLAWS_ID, TRANSFORM_HAND_CLAWS_ANIM)
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
             AnimationController<BeakburnEntity>("Transform Base", 0)
             { test -> test.setAndContinue(TRANSFORM_BASE_ANIM) },
 
-            transformExtrasAnimationController,
+            transformShoulderSpikesAnimationController,
+            transformAntlersAnimationController,
+            transformSnoutAnimationController,
+            transformEarsAnimationController,
+            transformHandClawsAnimationController,
         )
     }
 
