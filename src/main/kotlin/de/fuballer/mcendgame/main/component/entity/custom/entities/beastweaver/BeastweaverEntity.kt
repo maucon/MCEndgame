@@ -36,6 +36,8 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 
 class BeastweaverEntity(
     type: EntityType<out BeastweaverEntity>,
@@ -46,23 +48,23 @@ class BeastweaverEntity(
         private const val MAX_TRANSFORM_PROGRESS_PER_TICK = 0.01F
 
         private const val TRANSFORM_SHOULDER_SPIKES_ANIM_CONTROLLER_ID = "Transform Shoulder Spikes"
-        private val TRANSFORM_SHOULDER_SPIKES_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.shoulder_spikes")
+        private val TRANSFORM_SHOULDER_SPIKES_ANIM: RawAnimation = RawAnimation.begin().thenPlay("transform.shoulder_spikes")
         private const val TRANSFORM_SHOULDER_SPIKES_ID = "Transform Shoulder Spikes"
 
         private const val TRANSFORM_ANTLERS_ANIM_CONTROLLER_ID = "Transform Antlers"
-        private val TRANSFORM_ANTLERS_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.antlers")
+        private val TRANSFORM_ANTLERS_ANIM: RawAnimation = RawAnimation.begin().thenPlay("transform.antlers")
         private const val TRANSFORM_ANTLERS_ID = "Transform Antlers"
 
         private const val TRANSFORM_SNOUT_ANIM_CONTROLLER_ID = "Transform Snout"
-        private val TRANSFORM_SNOUT_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.snout")
+        private val TRANSFORM_SNOUT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("transform.snout")
         private const val TRANSFORM_SNOUT_ID = "Transform Snout"
 
         private const val TRANSFORM_EARS_ANIM_CONTROLLER_ID = "Transform Ears"
-        private val TRANSFORM_EARS_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.ears")
+        private val TRANSFORM_EARS_ANIM: RawAnimation = RawAnimation.begin().thenPlay("transform.ears")
         private const val TRANSFORM_EARS_ID = "Transform Ears"
 
         private const val TRANSFORM_HAND_CLAWS_ANIM_CONTROLLER_ID = "Transform Hand Claws"
-        private val TRANSFORM_HAND_CLAWS_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.hand_claws")
+        private val TRANSFORM_HAND_CLAWS_ANIM: RawAnimation = RawAnimation.begin().thenPlay("transform.hand_claws")
         private const val TRANSFORM_HAND_CLAWS_ID = "Transform Hand Claws"
 
         val TRANSFORM_EXTRAS_DATA = listOf(
@@ -90,10 +92,20 @@ class BeastweaverEntity(
                 hiddenBeforeTrigger = setOf(
                     "leftArmSpikes",
                     "rightArmSpikes",
+                    "leftArmPauldronRippedFront",
+                    "leftArmPauldronRippedBack",
+                    "rightArmPauldronRippedFront",
+                    "rightArmPauldronRippedBack",
                 ),
                 hiddenAfterTrigger = setOf(
                     "leftArmPauldronIntact",
                     "rightArmPauldronIntact",
+                ),
+                hiddenAfterFinish = setOf(
+                    "leftArmPauldronRippedFront",
+                    "leftArmPauldronRippedBack",
+                    "rightArmPauldronRippedFront",
+                    "rightArmPauldronRippedBack",
                 ),
             ),
             TransformExtrasData(
@@ -130,8 +142,9 @@ class BeastweaverEntity(
                 .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.1)
         }
 
-        val TRANSFORM_PROGRESS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
-        val PREVIOUS_TRANSFORM_PROGRESS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
+        private const val TRANSFORM_PROGRESS_ID = "transform_progress"
+        private val TRANSFORM_PROGRESS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
+        private val PREVIOUS_TRANSFORM_PROGRESS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
     }
 
     override var blockAbleMovementEntity = this
@@ -167,6 +180,18 @@ class BeastweaverEntity(
     private val transformHandClawsAnimationController =
         AnimationController<GeoAnimatable>(TRANSFORM_HAND_CLAWS_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
             .triggerableAnim(TRANSFORM_HAND_CLAWS_ID, TRANSFORM_HAND_CLAWS_ANIM)
+
+    private val transformAnimationControllers = listOf(
+        transformShoulderSpikesAnimationController,
+        transformAntlersAnimationController,
+        transformSnoutAnimationController,
+        transformEarsAnimationController,
+        transformHandClawsAnimationController,
+    )
+
+    private fun getAnimationController(name: String) = transformAnimationControllers.find { it.name == name }
+
+    private fun isControllerActive(name: String) = getAnimationController(name)?.isPlayingTriggeredAnimation == true
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
@@ -270,14 +295,25 @@ class BeastweaverEntity(
     ) {
         fun isTriggered(progress: Float) = progress >= animationTriggerThreshold
 
-        fun getHiddenBones(progress: Float): Set<String> {
+        fun getHiddenBones(progress: Float, entity: BeastweaverEntity): Set<String> {
             if (!isTriggered(progress)) return hiddenBeforeTrigger
-            return hiddenAfterTrigger
+            if (hiddenAfterFinish.isEmpty() || entity.isControllerActive(animControllerId)) return hiddenAfterTrigger
+            return hiddenAfterTrigger + hiddenAfterFinish
         }
     }
 
     fun getHiddenBones(): Set<String> {
         val progress = entityData.get(TRANSFORM_PROGRESS)
-        return TRANSFORM_EXTRAS_DATA.flatMap { it.getHiddenBones(progress) }.toSet()
+        return TRANSFORM_EXTRAS_DATA.flatMap { it.getHiddenBones(progress, this) }.toSet()
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.putFloat(TRANSFORM_PROGRESS_ID, entityData.get(TRANSFORM_PROGRESS))
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        entityData.set(TRANSFORM_PROGRESS, input.getFloatOr(TRANSFORM_PROGRESS_ID, 0F))
     }
 }
