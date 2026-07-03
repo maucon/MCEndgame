@@ -21,6 +21,6 @@ class EntityAnimationQueriesRegisterer {
         { actor -> actor.animatable.getLean(actor.partialTick) }
 
         MolangQueries.setActorVariable<BeastweaverEntity>("query.${MCEndgame.MOD_ID}_transform")
-        { actor -> actor.animatable.getTransformProgress(actor.partialTick) }
+        { actor -> actor.animatable.getTransformProgress(actor.partialTick).toDouble() }
     }
 }

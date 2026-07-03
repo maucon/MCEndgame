@@ -1,10 +1,12 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver
 
+import com.geckolib.animatable.GeoAnimatable
 import com.geckolib.animatable.GeoEntity
 import com.geckolib.animatable.instance.AnimatableInstanceCache
 import com.geckolib.animatable.manager.AnimatableManager
 import com.geckolib.animation.AnimationController
 import com.geckolib.animation.RawAnimation
+import com.geckolib.animation.`object`.PlayState
 import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
@@ -16,6 +18,9 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttac
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
 import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundInstance
 import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -38,7 +43,27 @@ class BeastweaverEntity(
 ) : PathfinderMob(type, world), GeoEntity, DisableAbleGoalsMob, BlockAbleMovementMob<BeastweaverEntity>, Enemy, CustomAttacksMob<BeastweaverEntity> {
     companion object {
         private val TRANSFORM_BASE_ANIM = RawAnimation.begin().thenLoop("transform.base")
-        private val MAX_TRANSFORM_PROGRESS_PER_TICK = 0.01
+        private const val MAX_TRANSFORM_PROGRESS_PER_TICK = 0.01F
+
+        private const val TRANSFORM_EXTRAS_ANIM_CONTROLLED_ID = "Transform Extras"
+        private val TRANSFORM_SHOULDER_SPIKES_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.shoulder_spikes")
+        private const val TRANSFORM_SHOULDER_SPIKES_ID = "Transform Shoulder Spikes"
+
+        val TRANSFORM_EXTRAS_DATA = listOf(
+            TransformExtrasData(
+                0.5,
+                TRANSFORM_EXTRAS_ANIM_CONTROLLED_ID,
+                TRANSFORM_SHOULDER_SPIKES_ID,
+                hiddenBeforeTrigger = setOf(
+                    "leftArmSpikes",
+                    "rightArmSpikes",
+                ),
+                hiddenAfterTrigger = setOf(
+                    "leftArmPauldronIntact",
+                    "rightArmPauldronIntact",
+                ),
+            )
+        )
 
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf()
 
@@ -54,6 +79,9 @@ class BeastweaverEntity(
                 .add(Attributes.SAFE_FALL_DISTANCE, 10.0)
                 .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.1)
         }
+
+        val TRANSFORM_PROGRESS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
+        val PREVIOUS_TRANSFORM_PROGRESS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
     }
 
     override var blockAbleMovementEntity = this
@@ -70,16 +98,29 @@ class BeastweaverEntity(
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
 
+    private val transformExtrasAnimationController = AnimationController<GeoAnimatable>(TRANSFORM_EXTRAS_ANIM_CONTROLLED_ID) { _ -> PlayState.STOP }
+        .triggerableAnim(TRANSFORM_SHOULDER_SPIKES_ID, TRANSFORM_SHOULDER_SPIKES_ANIM)
+
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
-            AnimationController<BeakburnEntity>("Transform", 0)
+            AnimationController<BeakburnEntity>("Transform Base", 0)
             { test -> test.setAndContinue(TRANSFORM_BASE_ANIM) },
+
+            transformExtrasAnimationController,
         )
     }
 
-    private var transformProgress = 0.0
-    private var previousTransformProgress = 0.0
-    fun getTransformProgress(tickProgress: Float) = previousTransformProgress + (transformProgress - previousTransformProgress) * tickProgress
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(TRANSFORM_PROGRESS, 0F)
+        builder.define(PREVIOUS_TRANSFORM_PROGRESS, 0F)
+    }
+
+    fun getTransformProgress(tickProgress: Float): Float {
+        val previous = entityData.get(PREVIOUS_TRANSFORM_PROGRESS)
+        val current = entityData.get(TRANSFORM_PROGRESS)
+        return previous + (current - previous) * tickProgress
+    }
 
     private val attackGoal = CustomAttacksGoal(this)
     private val stayInMeleeRangeGoal = StayInRangeGoal(this, 1.0, 2.5)
@@ -119,22 +160,53 @@ class BeastweaverEntity(
 
     override fun tick() {
         super.tick()
-        tickTransformProgress()
         val world = level() as? ServerLevel ?: return
+        tickTransformProgress()
         tickBlockedMovement()
         tickAttacks(world, this)
     }
 
     private fun tickTransformProgress() {
-        previousTransformProgress = transformProgress
+        val previousProgress = entityData.get(TRANSFORM_PROGRESS)
+        entityData.set(PREVIOUS_TRANSFORM_PROGRESS, previousProgress)
 
         val healthPercentage = (health / maxHealth).coerceIn(0F, 1F)
         val targetValue = 1 - healthPercentage
-        val change = (targetValue - transformProgress).coerceIn(0.0, MAX_TRANSFORM_PROGRESS_PER_TICK)
-        transformProgress += change
+        val change = (targetValue - previousProgress).coerceIn(0.0F, MAX_TRANSFORM_PROGRESS_PER_TICK)
+        entityData.set(TRANSFORM_PROGRESS, previousProgress + change)
+
+        tickTransformExtras()
+    }
+
+    private fun tickTransformExtras() {
+        TRANSFORM_EXTRAS_DATA.forEach { data ->
+            if (!data.isTriggered(entityData.get(TRANSFORM_PROGRESS)) || data.isTriggered(entityData.get(PREVIOUS_TRANSFORM_PROGRESS))) return@forEach
+            triggerAnim(data.animControllerId, data.animId)
+        }
     }
 
     override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.PLAYER_HURT
 
     override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
+
+    data class TransformExtrasData(
+        val animationTriggerThreshold: Double,
+        val animControllerId: String,
+        val animId: String,
+        val hiddenBeforeTrigger: Set<String> = setOf(),
+        val hiddenAfterTrigger: Set<String> = setOf(),
+        val hiddenAfterFinish: Set<String> = setOf(),
+    ) {
+        fun isTriggered(progress: Float) = progress >= animationTriggerThreshold
+
+        fun getHiddenBones(progress: Float): Set<String> {
+            if (!isTriggered(progress)) return hiddenBeforeTrigger
+            return hiddenAfterTrigger
+        }
+    }
+
+    fun getHiddenBones(): Set<String> {
+        val progress = entityData.get(TRANSFORM_PROGRESS)
+        return TRANSFORM_EXTRAS_DATA.flatMap { it.getHiddenBones(progress) }.toSet()
+    }
 }
