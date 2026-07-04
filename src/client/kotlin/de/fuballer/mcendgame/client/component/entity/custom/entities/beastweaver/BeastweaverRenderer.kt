@@ -7,25 +7,62 @@ import com.geckolib.renderer.base.BoneSnapshots
 import com.geckolib.renderer.base.GeoRenderState
 import com.geckolib.renderer.base.RenderPassInfo
 import com.google.common.reflect.TypeToken
-import de.fuballer.mcendgame.client.component.entity.custom.feature.isolated.IsolatedGeoLayer
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
+import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import kotlin.math.PI
-
-private val HIDDEN_BONES = DataTicket.create("hidden_bones", object : TypeToken<Set<String>>() {})
 
 class BeastweaverRenderer<R>(
     context: EntityRendererProvider.Context
 ) : GeoEntityRenderer<BeastweaverEntity, R>(context, BeastweaverModel()) where R : LivingEntityRenderState, R : GeoRenderState {
     init {
-        withRenderLayer(IsolatedGeoLayer(this))
+        withRenderLayer(
+            CustomBonesProgressingTextureGeoLayer(
+                this,
+                listOf(
+                    "leftArmBand",
+                    "rightArmBand",
+                    "belt",
+                    "leftBootBone",
+                    "rightBootBone",
+                ),
+                { renderState -> renderState.getGeckolibData(TRANSFORM_PROGRESS) ?: 0F },
+                mapOf(
+                    0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_leather_0.png"),
+                    0.75F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_leather_1.png"),
+                    0.85F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_leather_2.png"),
+                ),
+                activeThreshold = 0.75F,
+            )
+        )
+        withRenderLayer(
+            CustomBonesProgressingTextureGeoLayer(
+                this,
+                listOf(
+                    "chestSkin",
+                    "breastSkin",
+                ),
+                { renderState -> renderState.getGeckolibData(TRANSFORM_PROGRESS) ?: 0F },
+                mapOf(
+                    0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_upper_body_0.png"),
+                    0.9F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_upper_body_1.png"),
+                ),
+                activeThreshold = 0.9F,
+            )
+        )
+    }
+
+    companion object {
+        private val HIDDEN_BONES = DataTicket.create("hidden_bones", object : TypeToken<Set<String>>() {})
+        private val TRANSFORM_PROGRESS = DataTicket.create("transform_progress", object : TypeToken<Float>() {})
     }
 
     override fun addRenderData(animatable: BeastweaverEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
         super.addRenderData(animatable, relatedObject, renderState, partialTick)
 
         renderState.addGeckolibData(HIDDEN_BONES, animatable.getHiddenBones())
+        renderState.addGeckolibData(TRANSFORM_PROGRESS, animatable.getTransformProgress(partialTick))
     }
 
     override fun adjustModelBonesForRender(renderPassInfo: RenderPassInfo<R>, snapshots: BoneSnapshots) {

@@ -48,6 +48,11 @@
 				{
 					"name": "chest",
 					"parent": "upperBody",
+					"pivot": [0, 17.75, 0]
+				},
+				{
+					"name": "chestSkin",
+					"parent": "chest",
 					"pivot": [0, 17.75, 0],
 					"cubes": [
 						{"origin": [-3.5, 18, -1.5], "size": [7, 6, 3], "inflate": 0.25, "uv": [24, 87]}
@@ -78,7 +83,12 @@
 					"name": "breast",
 					"parent": "chest",
 					"pivot": [0, 22.75, -1.75],
-					"rotation": [-12.5, 0, 0],
+					"rotation": [-12.5, 0, 0]
+				},
+				{
+					"name": "breastSkin",
+					"parent": "breast",
+					"pivot": [0, 22.75, -1.75],
 					"cubes": [
 						{"origin": [-3.5, 18.75, -1.75], "size": [7, 4, 2], "uv": [25, 107]}
 					]
