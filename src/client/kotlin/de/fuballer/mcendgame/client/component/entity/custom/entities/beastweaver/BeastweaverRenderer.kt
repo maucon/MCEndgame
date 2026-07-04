@@ -46,9 +46,28 @@ class BeastweaverRenderer<R>(
                 { renderState -> renderState.getGeckolibData(TRANSFORM_PROGRESS) ?: 0F },
                 mapOf(
                     0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_upper_body_0.png"),
-                    0.9F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_upper_body_1.png"),
+                    0.55F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_upper_body_1.png"),
+                    0.75F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_upper_body_2.png"),
+                    0.95F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_upper_body_3.png"),
                 ),
-                activeThreshold = 0.9F,
+                activeThreshold = 0.55F,
+            )
+        )
+        withRenderLayer(
+            CustomBonesProgressingTextureGeoLayer(
+                this,
+                listOf(
+                    "leftLegUpperSkin",
+                    "rightLegUpperSkin",
+                    "leftLegLowerSkin",
+                    "rightLegLowerSkin",
+                ),
+                { renderState -> renderState.getGeckolibData(TRANSFORM_PROGRESS) ?: 0F },
+                mapOf(
+                    0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_legs_0.png"),
+                    0.85F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_legs_3.png"),
+                ),
+                activeThreshold = 0.85F,
             )
         )
     }
