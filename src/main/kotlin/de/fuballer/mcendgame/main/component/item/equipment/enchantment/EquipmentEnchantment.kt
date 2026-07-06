@@ -112,9 +112,6 @@ enum class EquipmentEnchantment(
     SWEEPING_EDGE_1(Enchantments.SWEEPING_EDGE, 1),
     SWEEPING_EDGE_2(Enchantments.SWEEPING_EDGE, 2),
     SWEEPING_EDGE_3(Enchantments.SWEEPING_EDGE, 3),
-    LUNGE_1(Enchantments.LUNGE, 1),
-    LUNGE_2(Enchantments.LUNGE, 2),
-    LUNGE_3(Enchantments.LUNGE, 3),
 
     // ranged weapons
     FLAME(Enchantments.FLAME, 1),

@@ -3,9 +3,8 @@ package de.fuballer.mcendgame.main.component.dungeon.seed
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType
-import net.minecraft.storage.ReadView
-import net.minecraft.storage.WriteView
-import kotlin.jvm.optionals.getOrNull
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtOps
 
 private const val DUNGEON_SEED_NBT = "PlayerDungeonSeed"
 
@@ -26,10 +25,11 @@ data class PlayerDungeonSeed(
             }
         }
 
-        fun write(seed: PlayerDungeonSeed, view: WriteView) {
-            view.put(DUNGEON_SEED_NBT, CODEC, seed)
+        fun write(seed: PlayerDungeonSeed, nbt: NbtCompound) {
+            nbt.put(DUNGEON_SEED_NBT, CODEC.encodeStart(NbtOps.INSTANCE, seed).result().get())
         }
 
-        fun read(view: ReadView): PlayerDungeonSeed? = view.read(DUNGEON_SEED_NBT, CODEC).getOrNull()
+        fun read(nbt: NbtCompound): PlayerDungeonSeed? =
+            CODEC.parse(NbtOps.INSTANCE, nbt.get(DUNGEON_SEED_NBT)).result().orElse(null)
     }
 }

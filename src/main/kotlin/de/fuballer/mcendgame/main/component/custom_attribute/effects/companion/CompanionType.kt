@@ -53,12 +53,12 @@ enum class CompanionType(
             }
             type.applyExtras(wolf)
 
-            val registry = wolf.entityWorld.registryManager.getOrThrow(RegistryKeys.WOLF_VARIANT)
+            val registry = wolf.entityWorld.registryManager.getWrapperOrThrow(RegistryKeys.WOLF_VARIANT)
             val variantEntry = registry.getOrThrow(type.variant)
-            wolf.setVariant(variantEntry)
+            wolf.variant = variantEntry
             wolf.setCollarColor(type.color)
 
-            wolf.getAttributeInstance(EntityAttributes.SCALE)?.baseValue = type.scale
+            wolf.getAttributeInstance(EntityAttributes.GENERIC_SCALE)?.baseValue = type.scale
         },
     ),
     SPIDERLING(

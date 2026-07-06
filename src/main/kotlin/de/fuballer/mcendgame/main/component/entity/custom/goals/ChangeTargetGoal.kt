@@ -16,7 +16,7 @@ class ChangeTargetGoal<T : MobEntity>(
     private val tryIntervalTicks: Int,
     private val cooldownAfterChange: Int,
     private val targetFilter: Predicate<Entity>,
-    private val range: Double = entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE),
+    private val range: Double = entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE),
 ) : DisableAbleGoal() {
     private var timer = 0
     private var cooldown = 0

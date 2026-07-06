@@ -111,7 +111,7 @@ object DamageUtil {
         event: DamageCalculationCommand,
         livingEntity: LivingEntity,
     ): Double {
-        val base = livingEntity.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE)?.baseValue ?: 0.0
+        val base = livingEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)?.baseValue ?: 0.0
         return base +
                 getAttackDamageModifierValues(livingEntity, EntityAttributeModifier.Operation.ADD_VALUE).sum() +
                 event.attackDamage.sum()
@@ -120,7 +120,7 @@ object DamageUtil {
     fun getAttackDamageModifierValues(
         livingEntity: LivingEntity,
         operation: EntityAttributeModifier.Operation,
-    ) = livingEntity.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE)?.let { instance ->
+    ) = livingEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)?.let { instance ->
         instance.modifiers.filter { it.operation == operation }.map { it.value }
     } ?: listOf()
 }

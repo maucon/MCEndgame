@@ -39,7 +39,7 @@ class FlameBreathAttackService(
         val horizontalDirection = direction.multiply(HORIZONTAL_VECTOR).normalize()
         val horizontalOffset = horizontalDirection.multiply(attacker.width * event.entityWidthOffsetFactor)
         val verticalOffset = Vec3d(0.0, attacker.height * event.entityHeightOffsetFactor, 0.0)
-        val originPoint = attacker.entityPos.add(horizontalOffset).add(verticalOffset)
+        val originPoint = attacker.pos.add(horizontalOffset).add(verticalOffset)
 
         createParticles(world, attacker, originPoint, horizontalDirection, event.delay, event.duration, event.angle)
         playSound(world, originPoint, event.delay, event.duration)
@@ -51,7 +51,7 @@ class FlameBreathAttackService(
         target: Entity?,
     ): Vec3d {
         if (target == null) return attacker.rotationVector.multiply(HORIZONTAL_VECTOR).normalize()
-        return target.entityPos.subtract(attacker.entityPos).multiply(HORIZONTAL_VECTOR).normalize()
+        return target.pos.subtract(attacker.pos).multiply(HORIZONTAL_VECTOR).normalize()
     }
 
     private fun createParticles(
@@ -153,10 +153,10 @@ class FlameBreathAttackService(
                 it != attacker && squaredDistance <= maxDistanceSquared && squaredDistance >= minDistanceSquared
             }
 
-            val attackDamage = if (attacker is LivingEntity) attacker.getAttributeValue(EntityAttributes.ATTACK_DAMAGE) else 1.0
+            val attackDamage = if (attacker is LivingEntity) attacker.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) else 1.0
             val elementalDamage = attackDamage * damageConversion
             for (entity in entities) {
-                val directionVectorToEntity = entity.entityPos.subtract(originPoint).multiply(HORIZONTAL_VECTOR).normalize()
+                val directionVectorToEntity = entity.pos.subtract(originPoint).multiply(HORIZONTAL_VECTOR).normalize()
 
                 val dotProduct = direction.dotProduct(directionVectorToEntity)
                 if (dotProduct >= cosThreshold) {

@@ -22,7 +22,7 @@ class EntityHookEntityPayload(
             PacketCodec.tuple(
                 PacketCodecs.INTEGER, EntityHookEntityPayload::hookerId,
                 PacketCodecs.INTEGER, EntityHookEntityPayload::hookedId,
-                PacketCodecs.BOOLEAN, EntityHookEntityPayload::remove,
+                PacketCodecs.BOOL, EntityHookEntityPayload::remove,
                 ::EntityHookEntityPayload
             )
     }

@@ -28,7 +28,7 @@ class IncreasedMovementSpeedOnKillService {
             val identifier = defaultJava(attributeModifierIdentifierBase + customAttribute.id)
 
             killer.addTemporaryAttributeModifier(
-                EntityAttributes.MOVEMENT_SPEED,
+                EntityAttributes.GENERIC_MOVEMENT_SPEED,
                 identifier,
                 duration,
                 movementSpeed,

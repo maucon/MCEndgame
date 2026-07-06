@@ -25,7 +25,7 @@ class TotemStatueBlock(
     companion object {
         const val ID = "totem_statue"
 
-        private val SHAPE = createColumnShape(8.0, 0.0, 15.0)
+        private val SHAPE = createCuboidShape(4.0, 0.0, 4.0, 12.0, 15.0, 12.0) // TODO 1.21.1
     }
 
     init {

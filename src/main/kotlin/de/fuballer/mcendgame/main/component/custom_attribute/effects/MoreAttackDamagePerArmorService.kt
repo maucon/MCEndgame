@@ -14,7 +14,7 @@ class MoreAttackDamagePerArmorService {
     fun on(cmd: DamageCalculationCommand) {
         val attributes = cmd.damagerAttributes[CustomAttributeTypes.MORE_ATTACK_DAMAGE_PER_ARMOR] ?: return
         val damager = cmd.damager as? LivingEntity ?: return
-        val armor = damager.getAttributeValue(EntityAttributes.ARMOR)
+        val armor = damager.getAttributeValue(EntityAttributes.GENERIC_ARMOR)
         attributes.forEach {
             val damagePerArmor = it.rolls[0].asDoubleRoll().getValue()
             cmd.moreAttackDamage.add(armor * damagePerArmor)

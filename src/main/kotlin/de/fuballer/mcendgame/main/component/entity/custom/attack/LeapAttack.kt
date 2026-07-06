@@ -55,7 +55,7 @@ open class LeapAttack<T>(
         attacker.lookControl.lookAt(existingTarget)
         attacker.bodyYaw = attacker.yaw
 
-        val distanceVector = existingTarget.entityPos.subtract(attacker.entityPos)
+        val distanceVector = existingTarget.pos.subtract(attacker.pos)
         val newVelocity = leapType.calculateVelocity(distanceVector)
         attacker.velocity = newVelocity
         attacker.velocityDirty = true

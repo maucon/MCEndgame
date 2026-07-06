@@ -113,7 +113,7 @@ class EnemyGenerationService(
             enemyEntity,
             type,
             level,
-            dungeonWorld.server!!,
+            dungeonWorld.server,
             isLootGoblin,
             random,
             generateEnemiesCommand,
@@ -127,7 +127,7 @@ class EnemyGenerationService(
     }
 
     private fun applyEliteEffects(entity: MobEntity): Boolean {
-        val healthAttributeInstance = entity.getAttributeInstance(EntityAttributes.MAX_HEALTH)
+        val healthAttributeInstance = entity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)
         val newMaxHealth = healthAttributeInstance?.baseValue!! * EnemyGenerationSettings.ELITE_HEALTH_FACTOR
         healthAttributeInstance.baseValue = newMaxHealth
 
@@ -142,6 +142,6 @@ class EnemyGenerationService(
         random: Random,
     ) {
         val scale = if (isElite) EnemyGenerationSettings.ELITE_SCALE else EnemyGenerationSettings.getRandomScale(random)
-        entity.getAttributeInstance(EntityAttributes.SCALE)?.baseValue = scale
+        entity.getAttributeInstance(EntityAttributes.GENERIC_SCALE)?.baseValue = scale
     }
 }

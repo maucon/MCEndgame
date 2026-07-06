@@ -2,11 +2,11 @@ package de.fuballer.mcendgame.main.component.dungeon.level
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtOps
 import net.minecraft.network.RegistryByteBuf
 import net.minecraft.network.codec.PacketCodec
 import net.minecraft.network.codec.PacketCodecs
-import net.minecraft.storage.ReadView
-import net.minecraft.storage.WriteView
 import kotlin.math.max
 
 private const val DUNGEON_LEVEL_NBT = "PlayerDungeonLevel"
@@ -27,7 +27,7 @@ data class PlayerDungeonLevel(
                 PacketCodecs.VAR_INT, PlayerDungeonLevel::level,
                 PacketCodecs.VAR_INT, PlayerDungeonLevel::levelProgress,
                 PacketCodecs.VAR_INT, PlayerDungeonLevel::highestReached,
-                PacketCodecs.BOOLEAN, PlayerDungeonLevel::locked,
+                PacketCodecs.BOOL, PlayerDungeonLevel::locked,
                 ::PlayerDungeonLevel
             )
 
@@ -43,10 +43,11 @@ data class PlayerDungeonLevel(
         }
 
 
-        fun write(dungeonLevel: PlayerDungeonLevel, view: WriteView) {
-            view.put(DUNGEON_LEVEL_NBT, CODEC, dungeonLevel)
+        fun write(dungeonLevel: PlayerDungeonLevel, nbt: NbtCompound) {
+            nbt.put(DUNGEON_LEVEL_NBT, CODEC.encodeStart(NbtOps.INSTANCE, dungeonLevel).result().get())
         }
 
-        fun read(view: ReadView): PlayerDungeonLevel = view.read(DUNGEON_LEVEL_NBT, CODEC).orElseGet { PlayerDungeonLevel() }
+        fun read(nbt: NbtCompound): PlayerDungeonLevel =
+            CODEC.parse(NbtOps.INSTANCE, nbt.get(DUNGEON_LEVEL_NBT)).result().orElseGet { PlayerDungeonLevel() }
     }
 }

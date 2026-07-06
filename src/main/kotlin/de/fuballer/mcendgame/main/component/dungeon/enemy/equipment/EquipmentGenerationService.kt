@@ -15,7 +15,7 @@ import net.minecraft.component.DataComponentTypes
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemStack
-import net.minecraft.item.equipment.trim.ArmorTrim
+import net.minecraft.item.trim.ArmorTrim
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.server.MinecraftServer
 import kotlin.random.Random
@@ -192,8 +192,8 @@ class EquipmentGenerationService(
         server: MinecraftServer,
         random: Random
     ): ArmorTrim {
-        val materialRegistry = server.registryManager.getOrThrow(RegistryKeys.TRIM_MATERIAL)
-        val patternRegistry = server.registryManager.getOrThrow(RegistryKeys.TRIM_PATTERN)
+        val materialRegistry = server.registryManager.getWrapperOrThrow(RegistryKeys.TRIM_MATERIAL)
+        val patternRegistry = server.registryManager.getWrapperOrThrow(RegistryKeys.TRIM_PATTERN)
 
         val materialKey = RandomUtil.pickOne(EquipmentGenerationSettings.LOOT_GOBLIN_ARMOR_TRIM_MATERIALS, random).option
         val material = materialRegistry.getOrThrow(materialKey)

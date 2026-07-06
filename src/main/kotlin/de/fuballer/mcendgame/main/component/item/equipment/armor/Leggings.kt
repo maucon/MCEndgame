@@ -19,9 +19,6 @@ enum class Leggings(
     LEATHER(
         Items.LEATHER_LEGGINGS,
     ),
-    COPPER(
-        Items.COPPER_LEGGINGS,
-    ),
     GOLDEN(
         Items.GOLDEN_LEGGINGS,
     ),

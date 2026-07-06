@@ -113,7 +113,7 @@ class SlamAttackGoal<T>(
         if (!mob.visibilityCache.canSee(target)) return false
 
         if (targetX == 0.0 && targetY == 0.0 && targetZ == 0.0) return true
-        if (target.entityPos.distanceTo(Vec3d(targetX, targetY, targetZ)) > 1) return true
+        if (target.pos.distanceTo(Vec3d(targetX, targetY, targetZ)) > 1) return true
         if (mob.navigation.isIdle && mob.distanceTo(target) > 1) return true
 
         return mob.random.nextFloat() < 0.05

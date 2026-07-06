@@ -23,7 +23,7 @@ class TrainingDungeonGenerationService(
     @EventSubscriber(sync = true)
     fun on(event: OpenTrainingDungeonButtonPressedEvent) {
         val player = event.player
-        val originWorld = player.entityWorld
+        val originWorld = player.serverWorld
         val dungeonDevicePos = event.dungeonDeviceBlockEntity.pos
         val dungeonDeviceGlobalPos = GlobalPos(originWorld.registryKey, dungeonDevicePos)
 

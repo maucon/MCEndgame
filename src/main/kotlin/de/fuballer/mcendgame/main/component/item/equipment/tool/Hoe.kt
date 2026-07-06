@@ -24,9 +24,6 @@ enum class Hoe(
     STONE(
         Items.STONE_HOE,
     ),
-    COPPER(
-        Items.COPPER_HOE,
-    ),
     IRON(
         Items.IRON_HOE,
     ),

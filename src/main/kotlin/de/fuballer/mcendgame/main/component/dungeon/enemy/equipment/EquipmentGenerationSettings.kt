@@ -12,10 +12,10 @@ import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.fuballer.mcendgame.main.util.random.SortableRandomOption
 import net.minecraft.entity.EquipmentSlot
-import net.minecraft.item.equipment.trim.ArmorTrimMaterial
-import net.minecraft.item.equipment.trim.ArmorTrimMaterials
-import net.minecraft.item.equipment.trim.ArmorTrimPattern
-import net.minecraft.item.equipment.trim.ArmorTrimPatterns
+import net.minecraft.item.trim.ArmorTrimMaterial
+import net.minecraft.item.trim.ArmorTrimMaterials
+import net.minecraft.item.trim.ArmorTrimPattern
+import net.minecraft.item.trim.ArmorTrimPatterns
 import net.minecraft.registry.RegistryKey
 import kotlin.random.Random
 
@@ -100,7 +100,6 @@ object EquipmentGenerationSettings {
     val HELMETS = listOf(
         SortableRandomOption(500, 0, null),
         SortableRandomOption(500, 1, Helmet.LEATHER),
-        SortableRandomOption(500, 2, Helmet.COPPER),
         SortableRandomOption(500, 3, Helmet.GOLDEN),
         SortableRandomOption(500, 4, Helmet.CHAINMAIL),
         SortableRandomOption(500, 5, Helmet.IRON),
@@ -111,7 +110,6 @@ object EquipmentGenerationSettings {
     val CHESTPLATES = listOf(
         SortableRandomOption(500, 0, null),
         SortableRandomOption(500, 1, Chestplate.LEATHER),
-        SortableRandomOption(500, 2, Chestplate.COPPER),
         SortableRandomOption(500, 3, Chestplate.GOLDEN),
         SortableRandomOption(500, 4, Chestplate.CHAINMAIL),
         SortableRandomOption(500, 5, Chestplate.IRON),
@@ -121,7 +119,6 @@ object EquipmentGenerationSettings {
     val LEGGINGS = listOf(
         SortableRandomOption(500, 0, null),
         SortableRandomOption(500, 1, Leggings.LEATHER),
-        SortableRandomOption(500, 2, Leggings.COPPER),
         SortableRandomOption(500, 3, Leggings.GOLDEN),
         SortableRandomOption(500, 4, Leggings.CHAINMAIL),
         SortableRandomOption(500, 5, Leggings.IRON),
@@ -131,7 +128,6 @@ object EquipmentGenerationSettings {
     val BOOTS = listOf(
         SortableRandomOption(500, 0, null),
         SortableRandomOption(500, 1, Boots.LEATHER),
-        SortableRandomOption(500, 2, Boots.COPPER),
         SortableRandomOption(500, 3, Boots.GOLDEN),
         SortableRandomOption(500, 4, Boots.CHAINMAIL),
         SortableRandomOption(500, 5, Boots.IRON),
@@ -155,20 +151,10 @@ object EquipmentGenerationSettings {
         SortableRandomOption(800, 6, Sword.DIAMOND),
         SortableRandomOption(500, 7, Sword.NETHERITE),
     )
-    private val SPEARS = listOf(
-        SortableRandomOption(500, 1, Spear.WOODEN),
-        SortableRandomOption(500, 2, Spear.GOLDEN),
-        SortableRandomOption(500, 3, Spear.STONE),
-        SortableRandomOption(500, 4, Spear.COPPER),
-        SortableRandomOption(500, 5, Spear.IRON),
-        SortableRandomOption(800, 6, Spear.DIAMOND),
-        SortableRandomOption(500, 7, Spear.NETHERITE),
-    )
     private val AXES = listOf(
         SortableRandomOption(500, 1, Axe.WOODEN),
         SortableRandomOption(500, 2, Axe.GOLDEN),
         SortableRandomOption(500, 3, Axe.STONE),
-        SortableRandomOption(500, 4, Axe.COPPER),
         SortableRandomOption(500, 5, Axe.IRON),
         SortableRandomOption(800, 6, Axe.DIAMOND),
         SortableRandomOption(500, 7, Axe.NETHERITE)
@@ -177,7 +163,6 @@ object EquipmentGenerationSettings {
         SortableRandomOption(500, 1, Pickaxe.WOODEN),
         SortableRandomOption(500, 2, Pickaxe.GOLDEN),
         SortableRandomOption(500, 3, Pickaxe.STONE),
-        SortableRandomOption(500, 4, Pickaxe.COPPER),
         SortableRandomOption(500, 5, Pickaxe.IRON),
         SortableRandomOption(800, 6, Pickaxe.DIAMOND),
         SortableRandomOption(500, 7, Pickaxe.NETHERITE)
@@ -186,7 +171,6 @@ object EquipmentGenerationSettings {
         SortableRandomOption(500, 1, Shovel.WOODEN),
         SortableRandomOption(500, 2, Shovel.GOLDEN),
         SortableRandomOption(500, 3, Shovel.STONE),
-        SortableRandomOption(500, 4, Shovel.COPPER),
         SortableRandomOption(500, 5, Shovel.IRON),
         SortableRandomOption(800, 6, Shovel.DIAMOND),
         SortableRandomOption(500, 7, Shovel.NETHERITE),
@@ -195,7 +179,6 @@ object EquipmentGenerationSettings {
         SortableRandomOption(500, 1, Hoe.WOODEN),
         SortableRandomOption(500, 2, Hoe.GOLDEN),
         SortableRandomOption(500, 3, Hoe.STONE),
-        SortableRandomOption(500, 4, Hoe.COPPER),
         SortableRandomOption(500, 5, Hoe.IRON),
         SortableRandomOption(800, 6, Hoe.DIAMOND),
         SortableRandomOption(500, 7, Hoe.NETHERITE),
@@ -211,7 +194,6 @@ object EquipmentGenerationSettings {
     const val OFFHAND_ITEM_PROBABILITY = 0.35
     val MAINHAND_WEAPON_PROBABILITIES = listOf<RandomOption<List<SortableRandomOption<out Equipment>>?>>(
         RandomOption(12, SWORDS),
-        RandomOption(3, SPEARS),
         RandomOption(10, AXES),
         RandomOption(6, PICKAXES),
         RandomOption(6, SHOVELS),
@@ -235,13 +217,12 @@ object EquipmentGenerationSettings {
         RandomOption(9, Shield.SHIELD),
     )
 
-    val LOOT_GOBLIN_ARMOR_TRIM_MATERIALS = listOf<RandomOption<RegistryKey<ArmorTrimMaterial>>>(
+    val LOOT_GOBLIN_ARMOR_TRIM_MATERIALS = listOf(
         RandomOption(1, ArmorTrimMaterials.NETHERITE),
         RandomOption(3, ArmorTrimMaterials.DIAMOND),
         RandomOption(5, ArmorTrimMaterials.EMERALD),
         RandomOption(5, ArmorTrimMaterials.AMETHYST),
         RandomOption(5, ArmorTrimMaterials.QUARTZ),
-        RandomOption(5, ArmorTrimMaterials.RESIN),
         RandomOption(8, ArmorTrimMaterials.GOLD),
         RandomOption(8, ArmorTrimMaterials.IRON),
         RandomOption(8, ArmorTrimMaterials.COPPER),
@@ -249,7 +230,7 @@ object EquipmentGenerationSettings {
         RandomOption(8, ArmorTrimMaterials.LAPIS),
     )
 
-    val LOOT_GOBLIN_ARMOR_TRIM_PATTERNS = listOf<RandomOption<RegistryKey<ArmorTrimPattern>>>(
+    val LOOT_GOBLIN_ARMOR_TRIM_PATTERNS = listOf(
         RandomOption(1, ArmorTrimPatterns.SILENCE), //Ancient City chest 1.2%
         RandomOption(3, ArmorTrimPatterns.WARD),  //Ancient City chest 5%
         RandomOption(5, ArmorTrimPatterns.VEX), //Woodland Mansion chest 50%

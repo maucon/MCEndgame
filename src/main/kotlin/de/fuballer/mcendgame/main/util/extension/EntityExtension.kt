@@ -98,7 +98,7 @@ object EntityExtension {
         return clazz.isInstance(owner)
     }
 
-    fun Entity.centerPos(): Vec3d = entityPos.add(0.0, height.toDouble(), 0.0)
+    fun Entity.centerPos(): Vec3d = pos.add(0.0, height.toDouble(), 0.0)
 
     const val DEFAULT_BOW_FULL_PULL_TICKS = 20
     fun LivingEntity.getBowFullPullTicks(): Int {
@@ -142,7 +142,7 @@ object EntityExtension {
                     if (blockState.isAir) continue
                     if (blockState.isIn(CustomTags.NO_PHASING_SLOW_AND_FOG)) continue
 
-                    val collisionShape = blockState.getCollisionShape(entityWorld, mutable).offset(mutable)
+                    val collisionShape = blockState.getCollisionShape(entityWorld, mutable).offset(mutable.x.toDouble(), mutable.y.toDouble(), mutable.z.toDouble())
                     if (VoxelShapes.matchesAnywhere(collisionShape, boxShape, BooleanBiFunction.AND)) return true
                 }
             }
@@ -154,7 +154,7 @@ object EntityExtension {
         other: Entity,
         maxAngle: Double = 90.0,
     ): Boolean {
-        val distanceVec = other.entityPos.subtract(entityPos).normalize()
+        val distanceVec = other.pos.subtract(pos).normalize()
         val damagedRotationVec = other.getRotationVec(1F).normalize()
 
         val angle = distanceVec.angleDeg(damagedRotationVec)
@@ -207,7 +207,7 @@ object EntityExtension {
 
         val world = entityWorld as? ServerWorld ?: return
         for (serverPlayerEntity in world.players) {
-            if (serverPlayerEntity.squaredDistanceTo(entityPos) < 4096.0) {
+            if (serverPlayerEntity.squaredDistanceTo(pos) < 4096.0) {
                 serverPlayerEntity.networkHandler.sendPacket(EntityVelocityUpdateS2CPacket(id, newVelocity))
             }
         }

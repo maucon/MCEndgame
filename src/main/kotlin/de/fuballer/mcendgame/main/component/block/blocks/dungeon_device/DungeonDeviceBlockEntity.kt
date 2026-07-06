@@ -11,9 +11,9 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.registry.RegistryWrapper
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.storage.ReadView
-import net.minecraft.storage.WriteView
 import net.minecraft.text.Text
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
@@ -39,13 +39,13 @@ class DungeonDeviceBlockEntity(
 
     override fun markDirty() = super<ImplementedInventory>.markDirty(world, pos)
 
-    override fun readData(view: ReadView) {
-        super.readData(view)
-        Inventories.readData(view, this.inventory)
+    override fun readNbt(nbt: NbtCompound?, registryLookup: RegistryWrapper.WrapperLookup?) {
+        super.readNbt(nbt, registryLookup)
+        Inventories.readNbt(nbt, this.inventory, registryLookup)
     }
 
-    override fun writeData(view: WriteView) {
-        super.writeData(view)
-        Inventories.writeData(view, this.inventory)
+    override fun writeNbt(nbt: NbtCompound?, registryLookup: RegistryWrapper.WrapperLookup?) {
+        super.writeNbt(nbt, registryLookup)
+        Inventories.writeNbt(nbt, this.inventory, registryLookup)
     }
 }

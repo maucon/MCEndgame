@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.BlockWithEntity
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.ActionResult
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
@@ -33,8 +32,9 @@ class DungeonDeviceBlock(
 
     override fun onStateReplaced(
         state: BlockState,
-        world: ServerWorld,
+        world: World,
         pos: BlockPos,
+        newState: BlockState,
         moved: Boolean
     ) {
         if (!state.hasBlockEntity()) return
@@ -44,7 +44,7 @@ class DungeonDeviceBlock(
 
         ItemScatterer.spawn(world, pos, dungeonDeviceBlockEntity)
         world.updateComparators(pos, this)
-        super.onStateReplaced(state, world, pos, moved)
+        super.onStateReplaced(state, world, pos, newState, moved)
     }
 
     override fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity): BlockState {

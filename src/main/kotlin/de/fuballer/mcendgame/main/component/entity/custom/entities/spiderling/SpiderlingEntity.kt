@@ -40,16 +40,16 @@ class SpiderlingEntity(
 
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createLivingAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 24.0)
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.4)
-                .add(EntityAttributes.ATTACK_DAMAGE, 3.0)
-                .add(EntityAttributes.ATTACK_KNOCKBACK, 0.3)
-                .add(EntityAttributes.ARMOR, 0.0)
-                .add(EntityAttributes.KNOCKBACK_RESISTANCE, 0.8)
-                .add(EntityAttributes.MOVEMENT_EFFICIENCY, 0.85)
-                .add(EntityAttributes.SAFE_FALL_DISTANCE, 10.0)
-                .add(EntityAttributes.FALL_DAMAGE_MULTIPLIER, 0.1)
-                .add(EntityAttributes.SCALE, 0.5)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 24.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.4)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0)
+                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 0.3)
+                .add(EntityAttributes.GENERIC_ARMOR, 0.0)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.8)
+                .add(EntityAttributes.GENERIC_MOVEMENT_EFFICIENCY, 0.85)
+                .add(EntityAttributes.GENERIC_SAFE_FALL_DISTANCE, 10.0)
+                .add(EntityAttributes.GENERIC_FALL_DAMAGE_MULTIPLIER, 0.1)
+                .add(EntityAttributes.GENERIC_SCALE, 0.5)
         }
 
         class AttackGoal(

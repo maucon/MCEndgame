@@ -62,7 +62,7 @@ class FlameBreathAttack<T>(
         if (target != null) {
             attacker.getLookControl().lookAt(target, 360F, 360F)
 
-            val diff = target.eyePos.subtract(attacker.entityPos)
+            val diff = target.eyePos.subtract(attacker.pos)
 
             val dx = diff.x
             val dy = diff.y

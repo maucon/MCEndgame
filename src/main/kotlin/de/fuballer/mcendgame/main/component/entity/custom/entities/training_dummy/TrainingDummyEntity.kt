@@ -29,10 +29,10 @@ class TrainingDummyEntity(
 
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createLivingAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 10.0)
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.0)
-                .add(EntityAttributes.ARMOR, 0.0)
-                .add(EntityAttributes.KNOCKBACK_RESISTANCE, 1.0)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 10.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.0)
+                .add(EntityAttributes.GENERIC_ARMOR, 0.0)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0)
         }
 
         val LAST_DAMAGE: TrackedData<Float> = DataTracker.registerData(TrainingDummyEntity::class.java, TrackedDataHandlerRegistry.FLOAT)
@@ -111,7 +111,8 @@ class TrainingDummyEntity(
 
     override fun isPushedByFluids() = false
 
-    override fun interact(player: PlayerEntity, hand: Hand): ActionResult {
+
+    override fun interactAt(player: PlayerEntity, hitPos: Vec3d, hand: Hand): ActionResult {
         if (hand != Hand.MAIN_HAND) return super.interact(player, hand)
         if (entityWorld !is ServerWorld) return super.interact(player, hand)
 

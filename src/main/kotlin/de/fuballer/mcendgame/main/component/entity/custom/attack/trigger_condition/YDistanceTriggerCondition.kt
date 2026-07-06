@@ -12,6 +12,6 @@ class YDistanceTriggerCondition(
         target: LivingEntity?,
     ): Boolean {
         if (target == null) return false
-        return (target.entityPos.y - attacker.entityPos.y) in minYOffset..maxYOffset
+        return (target.pos.y - attacker.pos.y) in minYOffset..maxYOffset
     }
 }

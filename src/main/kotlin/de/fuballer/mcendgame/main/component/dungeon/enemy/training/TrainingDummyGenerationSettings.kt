@@ -30,7 +30,7 @@ object TrainingDummyGenerationSettings {
     private var LOADOUTS: List<TrainingDummyLoadout>? = null
 
     private fun populateLoadouts(server: MinecraftServer) {
-        val enchantmentRegistry = server.registryManager.getOrThrow(RegistryKeys.ENCHANTMENT)
+        val enchantmentRegistry = server.registryManager.getWrapperOrThrow(RegistryKeys.ENCHANTMENT)
         val protectionEntry = enchantmentRegistry.getOrThrow(Enchantments.PROTECTION)
 
         LOADOUTS = listOf(

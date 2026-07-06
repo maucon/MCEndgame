@@ -63,7 +63,7 @@ class MovementSpeedModifiersAffectDamageService {
         val attr = customAttributes[attributeType] ?: return listOf()
         val effectiveness = attr.sumOf { it.rolls[0].asDoubleRoll().getValue() }
 
-        val movementSpeedInstance = entity.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED) ?: return listOf()
+        val movementSpeedInstance = entity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED) ?: return listOf()
         return movementSpeedInstance.modifiers
             .filter { it.operation == operation }
             .map { it.value * effectiveness }

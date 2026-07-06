@@ -18,7 +18,7 @@ data class ScarredOneResponsePayload(
         val ID = CustomPayload.Id<ScarredOneResponsePayload>(PAYLOAD_ID)
 
         val CODEC: PacketCodec<RegistryByteBuf, ScarredOneResponsePayload> = PacketCodec.tuple(
-            PacketCodecs.BOOLEAN, ScarredOneResponsePayload::accept,
+            PacketCodecs.BOOL, ScarredOneResponsePayload::accept,
             Uuids.PACKET_CODEC, ScarredOneResponsePayload::uuid,
             ::ScarredOneResponsePayload
         )

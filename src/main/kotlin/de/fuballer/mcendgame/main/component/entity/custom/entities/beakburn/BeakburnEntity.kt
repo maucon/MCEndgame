@@ -41,7 +41,9 @@ import software.bernie.geckolib.animatable.GeoAnimatable
 import software.bernie.geckolib.animatable.GeoEntity
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.animatable.manager.AnimatableManager
+import software.bernie.geckolib.animation.AnimatableManager
 import software.bernie.geckolib.animation.AnimationController
+import software.bernie.geckolib.animation.PlayState
 import software.bernie.geckolib.animation.RawAnimation
 import software.bernie.geckolib.animation.`object`.PlayState
 import software.bernie.geckolib.constant.DefaultAnimations
@@ -225,15 +227,15 @@ class BeakburnEntity(
 
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createLivingAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 35.0)
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.3)
-                .add(EntityAttributes.ATTACK_DAMAGE, 3.0)
-                .add(EntityAttributes.ATTACK_KNOCKBACK, 0.3)
-                .add(EntityAttributes.ARMOR, 0.0)
-                .add(EntityAttributes.KNOCKBACK_RESISTANCE, 0.8)
-                .add(EntityAttributes.MOVEMENT_EFFICIENCY, 0.85)
-                .add(EntityAttributes.SAFE_FALL_DISTANCE, 10.0)
-                .add(EntityAttributes.FALL_DAMAGE_MULTIPLIER, 0.1)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0)
+                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 0.3)
+                .add(EntityAttributes.GENERIC_ARMOR, 0.0)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.8)
+                .add(EntityAttributes.GENERIC_MOVEMENT_EFFICIENCY, 0.85)
+                .add(EntityAttributes.GENERIC_SAFE_FALL_DISTANCE, 10.0)
+                .add(EntityAttributes.GENERIC_FALL_DAMAGE_MULTIPLIER, 0.1)
         }
     }
 

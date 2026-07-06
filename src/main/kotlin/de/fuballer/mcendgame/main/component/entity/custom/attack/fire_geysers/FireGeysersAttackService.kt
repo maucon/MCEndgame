@@ -251,7 +251,7 @@ class FireGeysersAttackService(
         burstDamageConversion: Double,
         durationDamageConversion: Double,
     ) {
-        val attackDamage = if (attacker is LivingEntity) attacker.getAttributeValue(EntityAttributes.ATTACK_DAMAGE) else 1.0
+        val attackDamage = if (attacker is LivingEntity) attacker.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) else 1.0
         val burstElementalDamage = attackDamage * burstDamageConversion
         val durationDamage = attackDamage * durationDamageConversion
 

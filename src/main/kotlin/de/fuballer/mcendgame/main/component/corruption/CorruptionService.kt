@@ -83,7 +83,7 @@ object CorruptionService {
         if (notPresentEnchants.isEmpty()) return stack.copy()
 
         val chosenEnchant = notPresentEnchants.random()
-        val registry = RuntimeConfig.SERVER.registryManager.getOrThrow(RegistryKeys.ENCHANTMENT)
+        val registry = RuntimeConfig.SERVER.registryManager.getWrapperOrThrow(RegistryKeys.ENCHANTMENT)
         val entry = registry.getOptional(chosenEnchant).getOrNull() ?: return stack.copy()
 
         val builder = ItemEnchantmentsComponent.Builder(stack.enchantments)
@@ -149,7 +149,7 @@ object CorruptionService {
         enchants: List<RegistryKey<Enchantment>>,
         getCurses: Boolean,
     ): List<RegistryKey<Enchantment>> {
-        val registry = RuntimeConfig.SERVER.registryManager.getOrThrow(RegistryKeys.ENCHANTMENT)
+        val registry = RuntimeConfig.SERVER.registryManager.getWrapperOrThrow(RegistryKeys.ENCHANTMENT)
         return enchants.filter {
             val entry = registry.getOptional(it).getOrNull() ?: return@filter false
             entry.isIn(EnchantmentTags.CURSE) == getCurses

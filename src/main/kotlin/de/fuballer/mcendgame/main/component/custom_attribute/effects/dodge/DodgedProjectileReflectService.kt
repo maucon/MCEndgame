@@ -11,7 +11,7 @@ import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
-import net.minecraft.entity.PlayerLikeEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.projectile.PersistentProjectileEntity
 import net.minecraft.entity.projectile.ProjectileEntity
 import net.minecraft.entity.projectile.TridentEntity
@@ -37,14 +37,14 @@ class DodgedProjectileReflectService(
             if (!projectile.isAlive) return@delayed
             val world = projectile.entityWorld as? ServerWorld ?: return@delayed
 
-            val rawDirection = if (attacker == null) entity.rotationVector else attacker.eyePos.subtract(projectile.entityPos)
+            val rawDirection = if (attacker == null) entity.rotationVector else attacker.eyePos.subtract(projectile.pos)
             if (rawDirection.lengthSquared() < 1.0E-6) return@delayed
             val newDirection = rawDirection.normalize()
 
             val newVelocity = newDirection.multiply(1.6)
             val newYaw = (Math.toDegrees(kotlin.math.atan2(newVelocity.z, newVelocity.x)) - 90.0).toFloat()
             projectile.yaw = newYaw
-            projectile.lastYaw = newYaw
+            projectile.prevYaw = newYaw
             projectile.velocity = newVelocity
             projectile.velocityDirty = true
 
@@ -53,8 +53,8 @@ class DodgedProjectileReflectService(
                 val stack = projectile.itemStack
 
                 world.registryManager
-                    .getOrThrow(RegistryKeys.ENCHANTMENT)
-                    .getEntry(Enchantments.LOYALTY.value).ifPresent {
+                    .getWrapperOrThrow(RegistryKeys.ENCHANTMENT)
+                    .getOptional(Enchantments.LOYALTY).ifPresent {
                         loyalty = EnchantmentHelper.getLevel(it, stack) > 0
                     }
 
@@ -65,7 +65,7 @@ class DodgedProjectileReflectService(
             (projectile as ProjectileEntityAccessor).`mcendgame$setLeftOwner`(false)
 
             if (projectile is PersistentProjectileEntity) {
-                if (attacker != null && attacker !is PlayerLikeEntity)
+                if (attacker != null && attacker !is PlayerEntity)
                     projectile.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY
                 else {
                     projectile.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED
@@ -80,8 +80,8 @@ class DodgedProjectileReflectService(
         entity: Entity,
         world: ServerWorld,
     ) {
-        val pos = entity.entityPos
-        val soundCategory = if (entity is PlayerLikeEntity) SoundCategory.PLAYERS else SoundCategory.HOSTILE
+        val pos = entity.pos
+        val soundCategory = if (entity is PlayerEntity) SoundCategory.PLAYERS else SoundCategory.HOSTILE
         world.playSound(
             null,
             pos.x,

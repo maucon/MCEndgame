@@ -19,9 +19,6 @@ enum class Chestplate(
     LEATHER(
         Items.LEATHER_CHESTPLATE,
     ),
-    COPPER(
-        Items.COPPER_CHESTPLATE,
-    ),
     GOLDEN(
         Items.GOLDEN_CHESTPLATE,
     ),

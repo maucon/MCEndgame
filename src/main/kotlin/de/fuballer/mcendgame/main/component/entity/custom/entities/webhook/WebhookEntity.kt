@@ -39,7 +39,7 @@ class WebhookEntity(
         val entity = entityHitResult.entity
 
         val damageSource = damageSources.mobProjectile(this, attacker)
-        if (entity.damage(serverWorld, damageSource, 1.0f)) {
+        if (entity.damage(damageSource, 1.0f)) {
             EnchantmentHelper.onTargetDamaged(serverWorld, entity, damageSource)
         }
 

@@ -37,12 +37,12 @@ object EntityUtil {
         type: EntityTypeStats,
     ) {
         val newMaxHealth = type.health
-        entity.getAttributeInstance(EntityAttributes.MAX_HEALTH)?.baseValue = newMaxHealth
+        entity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)?.baseValue = newMaxHealth
         entity.health = newMaxHealth.toFloat()
 
-        entity.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE)?.baseValue = type.attackDamage
-        entity.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED)?.baseValue = type.movementSpeed
-        entity.getAttributeInstance(EntityAttributes.KNOCKBACK_RESISTANCE)?.baseValue = type.knockbackResistance
+        entity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)?.baseValue = type.attackDamage
+        entity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)?.baseValue = type.movementSpeed
+        entity.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)?.baseValue = type.knockbackResistance
     }
 
     private fun clearVehicleAndPassengers(entity: MobEntity) {

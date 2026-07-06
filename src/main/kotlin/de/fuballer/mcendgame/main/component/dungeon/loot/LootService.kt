@@ -47,7 +47,7 @@ class LootService {
 
         if (enemyEntity.isElite()) dropEliteLoot(serverWorld, enemyEntity)
 
-        EquipmentSlot.VALUES
+        EquipmentSlot.entries
             .map { enemyEntity.getEquippedStack(it) }
             .filter {
                 val baseDropProbability = getDropProbability(it, enemyEntity.isLootGoblin())
@@ -57,7 +57,7 @@ class LootService {
                 Random.nextDouble() <= dropProbability
             }
             .onEach { setRandomDurability(it) }
-            .forEach { RuntimeConfig.SERVER.execute { enemyEntity.dropStack(serverWorld, it) } }
+            .forEach { RuntimeConfig.SERVER.execute { enemyEntity.dropStack(it) } }
     }
 
     @EventSubscriber(sync = true)
@@ -75,7 +75,7 @@ class LootService {
         val crystalItems = RandomUtil.pickLevelRestrictedWithRepeats(LootSettings.CRYSTALS, 1, level, finalCrystalCount)
         val itemStacks = crystalItems.map { it.defaultStack }
 
-        RuntimeConfig.SERVER.execute { itemStacks.forEach { bossEntity.dropStack(serverWorld, it) } }
+        RuntimeConfig.SERVER.execute { itemStacks.forEach { bossEntity.dropStack(it) } }
     }
 
     @EventSubscriber(sync = true)
@@ -90,7 +90,7 @@ class LootService {
             val item = it.key
             val itemStack = if (item is UniqueAttributesItemInterface) item.getRolledStack(item) else item.defaultStack
 
-            boss.dropStack(serverWorld, itemStack)
+            boss.dropStack(itemStack)
         }
     }
 
@@ -121,6 +121,6 @@ class LootService {
 
     private fun dropEliteLoot(serverWorld: ServerWorld, entity: LivingEntity) {
         val aspect = RandomUtil.pickOne(LootSettings.ASPECTS).option
-        RuntimeConfig.SERVER.execute { entity.dropStack(serverWorld, aspect.defaultStack) }
+        RuntimeConfig.SERVER.execute { entity.dropStack(aspect.defaultStack) }
     }
 }

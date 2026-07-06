@@ -12,8 +12,8 @@ class FuryEffect : StatusEffect(StatusEffectCategory.BENEFICIAL, 9835540) {
     }
 
     init {
-        addAttributeModifier(EntityAttributes.ATTACK_DAMAGE, ATTRIBUTE_IDENTIFIER, 0.02, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-        addAttributeModifier(EntityAttributes.ATTACK_SPEED, ATTRIBUTE_IDENTIFIER, 0.02, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-        addAttributeModifier(EntityAttributes.MOVEMENT_SPEED, ATTRIBUTE_IDENTIFIER, 0.015, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        addAttributeModifier(EntityAttributes.GENERIC_ATTACK_DAMAGE, ATTRIBUTE_IDENTIFIER, 0.02, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        addAttributeModifier(EntityAttributes.GENERIC_ATTACK_SPEED, ATTRIBUTE_IDENTIFIER, 0.02, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, ATTRIBUTE_IDENTIFIER, 0.015, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
     }
 }

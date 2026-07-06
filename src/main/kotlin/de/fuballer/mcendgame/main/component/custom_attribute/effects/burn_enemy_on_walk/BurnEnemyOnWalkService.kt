@@ -55,7 +55,7 @@ class BurnEnemyOnWalkService(
         world: ServerWorld,
         attribute: CustomAttribute,
     ) {
-        val currentPos = entity.entityPos
+        val currentPos = entity.pos
         val currentTime = world.time
 
         val id = attribute.id
@@ -75,7 +75,7 @@ class BurnEnemyOnWalkService(
         if (!entity.isOnGround) return
         if (entity.hasVehicle()) return
         if (entity.isSwimming) return
-        if (entity.isGliding) return
+        if (entity.isFallFlying) return
         if (entity.isSubmergedIn(FluidTags.WATER)) return
         if (entity.isTouchingWater) return
         if (entity.isClimbing) return

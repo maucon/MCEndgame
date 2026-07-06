@@ -64,6 +64,6 @@ class BossGenerationService {
         random: Random,
     ) {
         val scale = DungeonBossSettings.getRandomScale(random)
-        entity.getAttributeInstance(EntityAttributes.SCALE)?.baseValue = scale
+        entity.getAttributeInstance(EntityAttributes.GENERIC_SCALE)?.baseValue = scale
     }
 }

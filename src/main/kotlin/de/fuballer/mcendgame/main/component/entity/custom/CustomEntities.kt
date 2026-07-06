@@ -25,7 +25,6 @@ object CustomEntities {
             .passengerAttachments(1.8125f)
             .vehicleAttachment(-0.7f)
             .maxTrackingRange(8)
-            .notAllowedInPeaceful()
     )
     val ARACHNE = RegistryUtil.registerEntity(
         "arachne",
@@ -35,7 +34,6 @@ object CustomEntities {
             .passengerAttachments(1.8125f)
             .vehicleAttachment(-0.7f)
             .maxTrackingRange(8)
-            .notAllowedInPeaceful()
     )
     val WEBSHOT = RegistryUtil.registerEntity(
         "webshot",
@@ -53,7 +51,6 @@ object CustomEntities {
             .dimensions(0.7f, 2.99f)
             .eyeHeight(2.85f)
             .maxTrackingRange(8)
-            .notAllowedInPeaceful()
     )
     val ELF_DUELIST = RegistryUtil.registerEntity(
         "elf_duelist",
@@ -61,7 +58,6 @@ object CustomEntities {
             .dimensions(0.7f, 1.9f)
             .eyeHeight(1.8f)
             .maxTrackingRange(8)
-            .notAllowedInPeaceful()
     )
     val BEAKBURN = RegistryUtil.registerEntity(
         "beakburn",
@@ -69,7 +65,6 @@ object CustomEntities {
             .dimensions(1.6f, 2.5f)
             .eyeHeight(2.0f)
             .maxTrackingRange(8)
-            .notAllowedInPeaceful()
     )
     val SCARRED_ONE = RegistryUtil.registerEntity(
         "scarred_one",

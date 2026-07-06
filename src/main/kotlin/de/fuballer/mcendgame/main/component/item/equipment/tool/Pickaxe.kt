@@ -24,9 +24,6 @@ enum class Pickaxe(
     STONE(
         Items.STONE_PICKAXE,
     ),
-    COPPER(
-        Items.COPPER_PICKAXE,
-    ),
     IRON(
         Items.IRON_PICKAXE,
     ),

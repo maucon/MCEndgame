@@ -29,6 +29,7 @@ class DungeonLeaveService {
         player.setInsideDungeon(false)
 
         val world = player.entityWorld
+        if (world !is ServerWorld) return@register
         if (world.isDungeonWorld() && teleportToDungeonExitPos(player, world)) return@register
 
         val respawnTarget = player.getRespawnTarget(true) {}
@@ -44,6 +45,7 @@ class DungeonLeaveService {
     fun on(cmd: GetRespawnCommand) {
         val world = cmd.player.entityWorld
         if (!world.isDungeonWorld()) return
+        if (world !is ServerWorld) return
 
         val exitPos = world.getDungeonExitPos()
         val actualPos = GlobalPos(exitPos.dimension, exitPos.pos.add(0, 1, 0))

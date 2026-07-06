@@ -15,7 +15,6 @@ object DodgeSettings {
         DamageTypes.STARVE,
         DamageTypes.CACTUS,
         DamageTypes.FALL,
-        DamageTypes.ENDER_PEARL,
         DamageTypes.FLY_INTO_WALL,
         DamageTypes.OUT_OF_WORLD,
         DamageTypes.GENERIC,

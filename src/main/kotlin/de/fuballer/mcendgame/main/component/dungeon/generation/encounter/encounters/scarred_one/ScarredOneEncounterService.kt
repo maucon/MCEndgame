@@ -70,8 +70,8 @@ class ScarredOneEncounterService {
         accept: Boolean,
         scarredOneUuid: UUID,
     ) {
-        val world = player.entityWorld
-        val scarredOne = world.getEntity(scarredOneUuid) as? ScarredOneEntity ?: return
+        val world = player.serverWorld
+        val scarredOne = world.getEntityById(scarredOneUuid) as? ScarredOneEntity ?: return
         if (scarredOne.gotResponse) return
 
         scarredOne.respond(player, accept, world)

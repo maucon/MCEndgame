@@ -18,12 +18,12 @@ class Gravebreaker(
         fun createAttributeModifiers(): AttributeModifiersComponent {
             return AttributeModifiersComponent.builder()
                 .add(
-                    EntityAttributes.ATTACK_DAMAGE,
+                    EntityAttributes.GENERIC_ATTACK_DAMAGE,
                     EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, 5.0, EntityAttributeModifier.Operation.ADD_VALUE),
                     AttributeModifierSlot.MAINHAND
                 )
                 .add(
-                    EntityAttributes.ATTACK_SPEED,
+                    EntityAttributes.GENERIC_ATTACK_SPEED,
                     EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, -3.4, EntityAttributeModifier.Operation.ADD_VALUE),
                     AttributeModifierSlot.MAINHAND
                 )

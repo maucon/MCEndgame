@@ -47,6 +47,6 @@ object Portals {
             entity.type = type
             entity.teleportLocation = teleportLocation
         }
-        return ENTITY_TYPE.spawn(world, consumer, BlockPos.ofFloored(pos.x, pos.y, pos.z), SpawnReason.LOAD, false, false)!!
+        return ENTITY_TYPE.spawn(world, consumer, BlockPos.ofFloored(pos.x, pos.y, pos.z), SpawnReason.NATURAL, false, false)!!
     }
 }

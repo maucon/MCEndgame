@@ -37,8 +37,8 @@ class TeleportAttackService<T>(
         val world = attacker.entityWorld
         if (world != target.entityWorld) return
 
-        var targetPos = target.entityPos
-        val adjustDirection = attacker.entityPos.subtract(targetPos).normalize()
+        var targetPos = target.pos
+        val adjustDirection = attacker.pos.subtract(targetPos).normalize()
 
         targetPos = targetPos.add(adjustDirection.multiply(0.5))
         repeat(TARGET_POS_ADJUST_TRIES) {
@@ -56,7 +56,7 @@ class TeleportAttackService<T>(
         entity: Entity,
         pos: Vec3d,
     ): Boolean {
-        val box = entity.boundingBox.offset(pos.subtract(entity.entityPos))
+        val box = entity.boundingBox.offset(pos.subtract(entity.pos))
         return world.isSpaceEmpty(box)
     }
 

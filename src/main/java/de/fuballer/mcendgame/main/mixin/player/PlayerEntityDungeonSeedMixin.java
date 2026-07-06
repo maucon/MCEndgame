@@ -3,8 +3,7 @@ package de.fuballer.mcendgame.main.mixin.player;
 import de.fuballer.mcendgame.main.accessor.PlayerEntityDungeonSeedAccessor;
 import de.fuballer.mcendgame.main.component.dungeon.seed.PlayerDungeonSeed;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -29,14 +28,14 @@ public class PlayerEntityDungeonSeedMixin implements PlayerEntityDungeonSeedAcce
         this.dungeonSeed = dungeonSeed;
     }
 
-    @Inject(method = "writeCustomData", at = @At("TAIL"))
-    private void writeNBT(WriteView view, CallbackInfo ci) {
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    private void writeData(NbtCompound nbt, CallbackInfo ci) {
         if (dungeonSeed == null) return;
-        PlayerDungeonSeed.Companion.write(dungeonSeed, view);
+        PlayerDungeonSeed.Companion.write(dungeonSeed, nbt);
     }
 
-    @Inject(method = "readCustomData", at = @At("TAIL"))
-    private void readNBT(ReadView view, CallbackInfo ci) {
-        dungeonSeed = PlayerDungeonSeed.Companion.read(view);
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    private void readData(NbtCompound nbt, CallbackInfo ci) {
+        dungeonSeed = PlayerDungeonSeed.Companion.read(nbt);
     }
 }

@@ -14,7 +14,7 @@ class ResilienceEffect : StatusEffect(StatusEffectCategory.BENEFICIAL, 1349140) 
     }
 
     init {
-        addAttributeModifier(EntityAttributes.SCALE, ATTRIBUTE_IDENTIFIER, 0.015, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        addAttributeModifier(EntityAttributes.GENERIC_SCALE, ATTRIBUTE_IDENTIFIER, 0.015, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
     }
 
     override fun applyUpdateEffect(world: ServerWorld?, entity: LivingEntity, amplifier: Int): Boolean {

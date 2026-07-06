@@ -28,7 +28,7 @@ class IncreasedMovementSpeedAfterDodgingService {
             val identifier = defaultJava(attributeModifierIdentifierBase + customAttribute.id)
 
             entity.addTemporaryAttributeModifier(
-                EntityAttributes.MOVEMENT_SPEED,
+                EntityAttributes.GENERIC_MOVEMENT_SPEED,
                 identifier,
                 duration,
                 movementSpeed,

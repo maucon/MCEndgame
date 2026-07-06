@@ -64,7 +64,7 @@ class CrystalForgeBlock(
         world: BlockView,
         pos: BlockPos,
         context: ShapeContext,
-    ) = SHAPES_BY_AXIS[(state.get(HorizontalFacingBlock.FACING) as Direction).axis]!!
+    ): K = SHAPES_BY_AXIS[(state.get(HorizontalFacingBlock.FACING) as Direction).axis]!!
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
         builder.add(HorizontalFacingBlock.FACING)

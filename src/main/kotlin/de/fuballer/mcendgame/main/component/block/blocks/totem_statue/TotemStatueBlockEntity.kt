@@ -15,6 +15,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.ItemEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtOps
 import net.minecraft.network.listener.ClientPlayPacketListener
 import net.minecraft.network.packet.Packet
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
@@ -23,8 +24,6 @@ import net.minecraft.registry.RegistryWrapper
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
-import net.minecraft.storage.ReadView
-import net.minecraft.storage.WriteView
 import net.minecraft.util.Uuids
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3i
@@ -186,16 +185,17 @@ class TotemStatueBlockEntity(
         RuntimeConfig.SERVER.execute { world.spawnEntity(itemEntity) }
     }
 
-    override fun writeData(view: WriteView) {
-        super.writeData(view)
-        view.put(DATA_KEY, TotemStatueBlockEntityData.CODEC, TotemStatueBlockEntityData(activeTicks, activeEnemies))
+
+    override fun writeNbt(nbt: NbtCompound, registryLookup: RegistryWrapper.WrapperLookup) {
+        super.writeNbt(nbt, registryLookup)
+        nbt.put(DATA_KEY, TotemStatueBlockEntityData.CODEC.encodeStart(NbtOps.INSTANCE, TotemStatueBlockEntityData(activeTicks, activeEnemies)).result().get())
     }
 
-    override fun readData(view: ReadView) {
-        super.readData(view)
+    override fun readNbt(nbt: NbtCompound, registryLookup: RegistryWrapper.WrapperLookup) {
+        super.readNbt(nbt, registryLookup)
 
-        val data = view.read<TotemStatueBlockEntityData>(DATA_KEY, TotemStatueBlockEntityData.CODEC)
-            .orElseGet { TotemStatueBlockEntityData() }
+        val data = TotemStatueBlockEntityData.CODEC.parse(NbtOps.INSTANCE, nbt.get(DATA_KEY))
+            .result().orElseGet { TotemStatueBlockEntityData() }
         activeTicks = data.activeTicks
         activeEnemies = data.activeEnemies
     }

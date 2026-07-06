@@ -20,7 +20,7 @@ class DungeonBlocksService {
             val stack = player.getStackInHand(hand)
             if (stack.item is BlockItem) return@register ActionResult.FAIL
 
-            if (!world.getBlockState(hitResult.blockPos).isIn(CustomTags.DUNGEON_INTERACTABLE)) return@register ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION
+            if (!world.getBlockState(hitResult.blockPos).isIn(CustomTags.DUNGEON_INTERACTABLE)) return@register ActionResult.PASS
 
             ActionResult.PASS
         }

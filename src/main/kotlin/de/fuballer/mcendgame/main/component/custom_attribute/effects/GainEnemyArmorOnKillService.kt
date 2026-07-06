@@ -21,14 +21,14 @@ class GainEnemyArmorOnKillService {
         val killer = cmd.killer ?: return
         val attributes = killer.getAllCustomAttributes()[CustomAttributeTypes.GAIN_ENEMY_ARMOR_ON_KILL] ?: return
         val killed = cmd.entity
-        val armor = killed.getAttributeValue(EntityAttributes.ARMOR)
+        val armor = killed.getAttributeValue(EntityAttributes.GENERIC_ARMOR)
         attributes.forEach {
             val armorPercent = it.rolls[0].asDoubleRoll().getValue()
             val duration = it.rolls[1].asIntRoll().getValue() * 20
             val identifier = defaultJava(attributeModifierIdentifierBase + it.id + "_" + killed.id)
 
             killer.addTemporaryAttributeModifier(
-                EntityAttributes.ARMOR,
+                EntityAttributes.GENERIC_ARMOR,
                 identifier,
                 duration,
                 armor * armorPercent,

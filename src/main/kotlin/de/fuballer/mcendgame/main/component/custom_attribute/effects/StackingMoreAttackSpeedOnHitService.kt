@@ -35,7 +35,7 @@ class StackingMoreAttackSpeedOnHitService {
             val identifier = defaultJava(attributeModifierIdentifierBase + attribute.id + "_" + UUID.randomUUID())
 
             attacker.addTemporaryAttributeModifier(
-                EntityAttributes.ATTACK_SPEED,
+                EntityAttributes.GENERIC_ATTACK_SPEED,
                 identifier,
                 duration,
                 moreAttackSpeed,

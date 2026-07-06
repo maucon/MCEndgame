@@ -2,11 +2,10 @@ package de.fuballer.mcendgame.main.component.custom_attribute.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import io.netty.buffer.ByteBuf
-import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricTrackedDataRegistry
 import net.minecraft.component.type.AttributeModifierSlot
 import net.minecraft.entity.data.TrackedDataHandler
+import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.network.codec.PacketCodec
 import net.minecraft.network.codec.PacketCodecs
 import net.minecraft.util.Uuids
@@ -74,7 +73,7 @@ data class CustomAttribute(
         val LIST_PACKET_CODEC: PacketCodec<ByteBuf, List<CustomAttribute>> = PACKET_CODEC.collect(PacketCodecs.toList())
 
         val LIST_TRACKED_DATA_HANDLER: TrackedDataHandler<List<CustomAttribute>> = TrackedDataHandler.create(LIST_PACKET_CODEC)
-            .also { FabricTrackedDataRegistry.register(IdentifierUtil.default("custom_attribute_list_data_tracker"), it) }
+            .also { TrackedDataHandlerRegistry.register(it) }
     }
 
     fun getNonZeroRangeCount() = rolls.count { it.hasNonZeroRange() }

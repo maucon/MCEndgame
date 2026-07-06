@@ -5,7 +5,6 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityCollisionHandler
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.entity.player.PlayerEntity
@@ -49,9 +48,7 @@ class DecayingCobwebBlock(
         state: BlockState,
         world: World,
         pos: BlockPos,
-        entity: Entity,
-        handler: EntityCollisionHandler,
-        moved: Boolean,
+        entity: Entity
     ) {
         var vec3d = Vec3d(0.25, 0.05, 0.25)
         if (entity is LivingEntity && entity.hasStatusEffect(StatusEffects.WEAVING)) {

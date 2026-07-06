@@ -58,7 +58,7 @@ object MeleeAttackCalculator : DamageCalculator {
         else DamageUtil.getAttackDamageBaseValue(event, attacker)
 
         if (source.type.isOf(CustomDamageTypes.SWEEPING)) {
-            val sweepingRatio = attacker.getAttributeValue(EntityAttributes.SWEEPING_DAMAGE_RATIO)
+            val sweepingRatio = attacker.getAttributeValue(EntityAttributes.PLAYER_SWEEPING_DAMAGE_RATIO)
             baseDamage = 1.0 + sweepingRatio * baseDamage
         }
 

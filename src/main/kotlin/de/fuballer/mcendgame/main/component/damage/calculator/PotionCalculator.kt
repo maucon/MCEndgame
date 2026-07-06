@@ -7,12 +7,12 @@ import net.minecraft.entity.AreaEffectCloudEntity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.damage.DamageTypes
-import net.minecraft.entity.projectile.thrown.SplashPotionEntity
+import net.minecraft.entity.projectile.thrown.PotionEntity
 import net.minecraft.server.network.ServerPlayerEntity
 
 object PotionCalculator : DamageCalculator {
     override fun isActive(source: DamageSource) = source.type.isOf(DamageTypes.INDIRECT_MAGIC) &&
-            (source.source is SplashPotionEntity || source.source is AreaEffectCloudEntity || source.source is ServerPlayerEntity)
+            (source.source is PotionEntity || source.source is AreaEffectCloudEntity || source.source is ServerPlayerEntity)
 
     override fun calculateAttackDamage(
         originalDamage: Float,

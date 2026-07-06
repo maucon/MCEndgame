@@ -172,7 +172,7 @@ object DamageService {
         var amount = amount
         if (source.isIn(DamageTypeTags.BYPASSES_ARMOR)) return amount
 
-        val armorToughness = entity.getAttributeValue(EntityAttributes.ARMOR_TOUGHNESS).toFloat()
+        val armorToughness = entity.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS).toFloat()
         amount = DamageUtil.reduceAttackDamageByArmor(entity, amount, source, entity.armor.toFloat(), armorToughness)
 
         return amount

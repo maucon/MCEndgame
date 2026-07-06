@@ -34,7 +34,7 @@ class EnchantmentService {
     ): Map<RegistryEntry<Enchantment>, Int> {
         if (enchants.isEmpty()) return mapOf()
 
-        val enchantmentRegistry = server.registryManager.getOrThrow(RegistryKeys.ENCHANTMENT)
+        val enchantmentRegistry = server.registryManager.getWrapperOrThrow(RegistryKeys.ENCHANTMENT)
 
         val pickedEnchantments = mutableMapOf<RegistryEntry<Enchantment>, Int>()
         repeat(EnchantmentSettings.calculateEnchantTries(level)) {

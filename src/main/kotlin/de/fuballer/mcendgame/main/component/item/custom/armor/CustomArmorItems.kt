@@ -28,7 +28,6 @@ import de.fuballer.mcendgame.main.component.item.custom.armor.item.wither_rose.W
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.wither_rose.WitherRoseLeggings
 import de.fuballer.mcendgame.main.component.item.custom.armor.materials.*
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.item.equipment.EquipmentType
 
 @Injectable
 object CustomArmorItems {

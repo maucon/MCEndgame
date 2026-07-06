@@ -4,8 +4,8 @@ import de.fuballer.mcendgame.main.component.custom_attribute.effects.knockback.A
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealGenericAttackDamage
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setShieldsCooldown
 import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.PlayerLikeEntity
 import net.minecraft.entity.mob.MobEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.world.ServerWorld
 import kotlin.math.min
 
@@ -29,10 +29,10 @@ class BasicAttackDamage(
         val damage = getDamage(damager)
         target.dealGenericAttackDamage(damage, damager, blockable)
 
-        if (disableBlockingShield > 0 && target is PlayerLikeEntity && target.isBlocking) target.setShieldsCooldown(disableBlockingShield)
+        if (disableBlockingShield > 0 && target is PlayerEntity && target.isBlocking) target.setShieldsCooldown(disableBlockingShield)
 
         val knockback = getKnockback(damager)
-        val knockbackDirection = target.entityPos.subtract(damager.entityPos).normalize()
+        val knockbackDirection = target.pos.subtract(damager.pos).normalize()
         target.takeKnockbackFrom(damager, knockback, -knockbackDirection.x, -knockbackDirection.z)
 
         return true

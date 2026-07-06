@@ -19,9 +19,6 @@ enum class Helmet(
     LEATHER(
         Items.LEATHER_HELMET,
     ),
-    COPPER(
-        Items.COPPER_HELMET,
-    ),
     GOLDEN(
         Items.GOLDEN_HELMET,
     ),

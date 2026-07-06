@@ -158,13 +158,13 @@ class CompanionService {
         attribute: CustomAttribute,
     ) {
         val world = player.entityWorld
-        val companion = type.entityType.create(world, SpawnReason.MOB_SUMMONED) ?: return
+        val companion = type.entityType.create(world) ?: return
 
-        companion.setPosition(player.entityPos)
-        companion.setTamedBy(player)
+        companion.setPosition(player.pos)
+        companion.setOwner(player)
         companion.setCompanion()
         companion.isInvulnerable = true
-        companion.getAttributeInstance(EntityAttributes.FOLLOW_RANGE)?.baseValue = 24.0
+        companion.getAttributeInstance(EntityAttributes.GENERIC_FOLLOW_RANGE)?.baseValue = 24.0
 
         addGoals(companion)
 

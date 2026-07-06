@@ -16,6 +16,6 @@ class HorizontalDistanceTriggerCondition(
         target: LivingEntity?,
     ): Boolean {
         if (target == null) return false
-        return target.entityPos.subtract(attacker.entityPos).horizontalLengthSquared() in squaredMinHorizontalDistance..squaredMaxHorizontalDistance
+        return target.pos.subtract(attacker.pos).horizontalLengthSquared() in squaredMinHorizontalDistance..squaredMaxHorizontalDistance
     }
 }

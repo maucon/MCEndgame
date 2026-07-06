@@ -25,8 +25,8 @@ object CustomDamageTypes {
         source: Entity? = attacker
     ): DamageSource {
         val damageType = world.registryManager
-            .getOrThrow(RegistryKeys.DAMAGE_TYPE)
-            .getEntry(key.value)
+            .getWrapperOrThrow(RegistryKeys.DAMAGE_TYPE)
+            .getOptional(key)
             .get()
 
         return DamageSource(damageType, source, attacker)

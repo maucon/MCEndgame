@@ -12,6 +12,6 @@ class MoltenRoarEffect : StatusEffect(StatusEffectCategory.BENEFICIAL, 9835540) 
     }
 
     init {
-        addAttributeModifier(EntityAttributes.ATTACK_SPEED, ATTRIBUTE_IDENTIFIER, 0.05, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        addAttributeModifier(EntityAttributes.GENERIC_ATTACK_SPEED, ATTRIBUTE_IDENTIFIER, 0.05, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
     }
 }

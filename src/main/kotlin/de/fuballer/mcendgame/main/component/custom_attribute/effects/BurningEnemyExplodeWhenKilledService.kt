@@ -41,7 +41,7 @@ class BurningEnemyExplodeWhenKilledService {
         damagePercentage: Double,
     ) {
         createParticles(world, killed.centerPos())
-        playSound(world, killed, killed.centerPos())
+        playSound(world, killed)
 
         getNearbyTargets(world, killed, killer)
             .forEach { target -> target.dealElementalSpellDamage(damagePercentage, killer) }
@@ -73,13 +73,9 @@ class BurningEnemyExplodeWhenKilledService {
     private fun playSound(
         world: ServerWorld,
         source: Entity,
-        pos: Vec3d,
     ) {
-        world.playSound(
+        world.playSoundFromEntity(
             source,
-            pos.x,
-            pos.y,
-            pos.z,
             SoundEvents.ENTITY_FIREWORK_ROCKET_BLAST,
             SoundCategory.PLAYERS,
             0.5F,

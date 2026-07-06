@@ -95,7 +95,7 @@ interface HookAttackMob {
     fun pullHookedEntity(
         hooked: Entity
     ) {
-        val direction = hooker.entityPos.subtract(hooked.entityPos)
+        val direction = hooker.pos.subtract(hooked.pos)
         if (direction.lengthSquared() < 1e-6) return
         val normalizedDirection = direction.normalize()
 

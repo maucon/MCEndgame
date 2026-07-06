@@ -29,11 +29,11 @@ class SwampGolemEntity(
 
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createHostileAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 35.0)
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.20)
-                .add(EntityAttributes.ATTACK_DAMAGE, 4.0)
-                .add(EntityAttributes.ARMOR, 5.0)
-                .add(EntityAttributes.KNOCKBACK_RESISTANCE, 0.5)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.20)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0)
+                .add(EntityAttributes.GENERIC_ARMOR, 5.0)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.5)
         }
     }
 

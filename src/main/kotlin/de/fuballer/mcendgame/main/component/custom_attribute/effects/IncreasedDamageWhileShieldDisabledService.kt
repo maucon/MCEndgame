@@ -29,7 +29,7 @@ class IncreasedDamageWhileShieldDisabledService {
         player: PlayerEntity,
         attributes: Map<CustomAttributeType, List<CustomAttribute>>,
     ): List<Double> {
-        if (!player.itemCooldownManager.isCoolingDown(Items.SHIELD.defaultStack)) return listOf() // only check default shield since cooldowns should be synced anyway
+        if (!player.itemCooldownManager.isCoolingDown(Items.SHIELD)) return listOf() // only check default shield since cooldowns should be synced anyway
 
         val attr = attributes[CustomAttributeTypes.INCREASED_DAMAGE_WHILE_SHIELD_DISABLED] ?: return listOf()
         return attr.map { (it.rolls[0] as DoubleRoll).getValue() }

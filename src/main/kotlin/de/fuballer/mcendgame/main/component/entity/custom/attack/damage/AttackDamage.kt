@@ -13,8 +13,8 @@ abstract class AttackDamage(
 ) {
     abstract fun apply(world: ServerWorld, damager: MobEntity, target: LivingEntity?): Boolean
 
-    fun getDamage(damager: MobEntity) = damager.getAttributeValue(EntityAttributes.ATTACK_DAMAGE).toFloat() * damageFactor
-    fun getKnockback(damager: MobEntity) = damager.getAttributeValue(EntityAttributes.ATTACK_KNOCKBACK).toFloat() * knockbackFactor
+    fun getDamage(damager: MobEntity) = damager.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE).toFloat() * damageFactor
+    fun getKnockback(damager: MobEntity) = damager.getAttributeValue(EntityAttributes.GENERIC_ATTACK_KNOCKBACK).toFloat() * knockbackFactor
 
     open fun requiresTarget() = true
 }

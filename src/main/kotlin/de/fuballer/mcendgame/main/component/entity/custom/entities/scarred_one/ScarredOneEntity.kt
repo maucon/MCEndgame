@@ -37,8 +37,8 @@ class ScarredOneEntity(
     companion object {
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createLivingAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 15.0)
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.0)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 15.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.0)
         }
     }
 
