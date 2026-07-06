@@ -25,8 +25,10 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.PathfinderMob
+import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
@@ -275,6 +277,9 @@ class BeastweaverEntity(
             previousTransformProgress = transformProgress
             transformProgress = entityData.get(TRANSFORM_PROGRESS)
 
+            if (transformProgress == previousTransformProgress) return
+            refreshDimensions()
+
             if (transformProgress - previousTransformProgress > MAX_TRANSFORM_PROGRESS_PER_TICK) previousTransformProgress = transformProgress
         } else {
             val healthPercentage = (health / maxHealth).coerceIn(0F, 1F)
@@ -282,6 +287,7 @@ class BeastweaverEntity(
 
             val current = entityData.get(TRANSFORM_PROGRESS)
             val change = (targetValue - current).coerceIn(0.0F, MAX_TRANSFORM_PROGRESS_PER_TICK)
+            if (change <= 0) return
             val updated = current + change
             entityData.set(TRANSFORM_PROGRESS, updated)
 
@@ -333,4 +339,10 @@ class BeastweaverEntity(
         super.readAdditionalSaveData(input)
         entityData.set(TRANSFORM_PROGRESS, input.getFloatOr(TRANSFORM_PROGRESS_ID, 0F))
     }
+
+    override fun getDefaultDimensions(pose: Pose): EntityDimensions {
+        return super.getDefaultDimensions(pose).scale(getTransformModelYScale())
+    }
+
+    private fun getTransformModelYScale() = 1F + entityData.get(TRANSFORM_PROGRESS) * 0.065F
 }
