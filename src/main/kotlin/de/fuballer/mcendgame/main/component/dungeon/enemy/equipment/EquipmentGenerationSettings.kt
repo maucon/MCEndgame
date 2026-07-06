@@ -146,7 +146,6 @@ object EquipmentGenerationSettings {
         SortableRandomOption(500, 1, Sword.WOODEN),
         SortableRandomOption(500, 2, Sword.GOLDEN),
         SortableRandomOption(500, 3, Sword.STONE),
-        SortableRandomOption(500, 4, Sword.COPPER),
         SortableRandomOption(500, 5, Sword.IRON),
         SortableRandomOption(800, 6, Sword.DIAMOND),
         SortableRandomOption(500, 7, Sword.NETHERITE),
