@@ -46,6 +46,8 @@ class BeastweaverEntity(
     world: Level,
 ) : PathfinderMob(type, world), GeoEntity, DisableAbleGoalsMob, BlockAbleMovementMob<BeastweaverEntity>, Enemy, CustomAttacksMob<BeastweaverEntity> {
     companion object {
+        private const val TRANSFORM_ADDITIONAL_SCALE = 0.15F
+
         private val TRANSFORM_BASE_ANIM = RawAnimation.begin().thenLoop("transform.base")
         private const val MAX_TRANSFORM_PROGRESS_PER_TICK = 0.01F
 
@@ -341,8 +343,12 @@ class BeastweaverEntity(
     }
 
     override fun getDefaultDimensions(pose: Pose): EntityDimensions {
-        return super.getDefaultDimensions(pose).scale(getTransformModelYScale())
+        return super.getDefaultDimensions(pose).scale(getTransformDimensionsYScale())
     }
 
-    private fun getTransformModelYScale() = 1F + entityData.get(TRANSFORM_PROGRESS) * 0.065F
+    private fun getTransformDimensionsYScale() = 1F + entityData.get(TRANSFORM_PROGRESS) * 0.065F
+
+    override fun sanitizeScale(scale: Float): Float {
+        return super.sanitizeScale(scale) * 1F + entityData.get(TRANSFORM_PROGRESS) * TRANSFORM_ADDITIONAL_SCALE
+    }
 }
