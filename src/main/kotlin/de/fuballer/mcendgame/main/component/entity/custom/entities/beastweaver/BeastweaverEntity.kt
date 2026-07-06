@@ -48,25 +48,26 @@ class BeastweaverEntity(
         private const val MAX_TRANSFORM_PROGRESS_PER_TICK = 0.01F
 
         private const val TRANSFORM_SHOULDER_SPIKES_ANIM_CONTROLLER_ID = "Transform Shoulder Spikes"
-        private val TRANSFORM_SHOULDER_SPIKES_ANIM: RawAnimation = RawAnimation.begin().thenPlay("transform.shoulder_spikes")
+        private val TRANSFORM_SHOULDER_SPIKES_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.shoulder_spikes")
         private const val TRANSFORM_SHOULDER_SPIKES_ID = "Transform Shoulder Spikes"
 
         private const val TRANSFORM_ANTLERS_ANIM_CONTROLLER_ID = "Transform Antlers"
-        private val TRANSFORM_ANTLERS_ANIM: RawAnimation = RawAnimation.begin().thenPlay("transform.antlers")
+        private val TRANSFORM_ANTLERS_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.antlers")
         private const val TRANSFORM_ANTLERS_ID = "Transform Antlers"
 
         private const val TRANSFORM_SNOUT_ANIM_CONTROLLER_ID = "Transform Snout"
-        private val TRANSFORM_SNOUT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("transform.snout")
+        private val TRANSFORM_SNOUT_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.snout")
         private const val TRANSFORM_SNOUT_ID = "Transform Snout"
 
         private const val TRANSFORM_EARS_ANIM_CONTROLLER_ID = "Transform Ears"
-        private val TRANSFORM_EARS_ANIM: RawAnimation = RawAnimation.begin().thenPlay("transform.ears")
+        private val TRANSFORM_EARS_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.ears")
         private const val TRANSFORM_EARS_ID = "Transform Ears"
 
         private const val TRANSFORM_HAND_CLAWS_ANIM_CONTROLLER_ID = "Transform Hand Claws"
-        private val TRANSFORM_HAND_CLAWS_ANIM: RawAnimation = RawAnimation.begin().thenPlay("transform.hand_claws")
+        private val TRANSFORM_HAND_CLAWS_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("transform.hand_claws")
         private const val TRANSFORM_HAND_CLAWS_ID = "Transform Hand Claws"
 
+        private const val SHOULDER_SPIKES_ANIMATION_THRESHOLD = 0.5
         val TRANSFORM_EXTRAS_DATA = listOf(
             TransformExtrasData(
                 0.1,
@@ -86,7 +87,7 @@ class BeastweaverEntity(
                 ),
             ),
             TransformExtrasData(
-                0.5,
+                SHOULDER_SPIKES_ANIMATION_THRESHOLD,
                 TRANSFORM_SHOULDER_SPIKES_ANIM_CONTROLLER_ID,
                 TRANSFORM_SHOULDER_SPIKES_ID,
                 hiddenBeforeTrigger = setOf(
@@ -144,7 +145,6 @@ class BeastweaverEntity(
 
         private const val TRANSFORM_PROGRESS_ID = "transform_progress"
         private val TRANSFORM_PROGRESS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
-        private val PREVIOUS_TRANSFORM_PROGRESS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
     }
 
     override var blockAbleMovementEntity = this
@@ -160,6 +160,9 @@ class BeastweaverEntity(
 
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
+
+    private var transformProgress = 0F
+    private var previousTransformProgress = 0F
 
     private val transformShoulderSpikesAnimationController =
         AnimationController<GeoAnimatable>(TRANSFORM_SHOULDER_SPIKES_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
@@ -209,13 +212,18 @@ class BeastweaverEntity(
     override fun defineSynchedData(builder: SynchedEntityData.Builder) {
         super.defineSynchedData(builder)
         builder.define(TRANSFORM_PROGRESS, 0F)
-        builder.define(PREVIOUS_TRANSFORM_PROGRESS, 0F)
     }
 
-    fun getTransformProgress(tickProgress: Float): Float {
-        val previous = entityData.get(PREVIOUS_TRANSFORM_PROGRESS)
-        val current = entityData.get(TRANSFORM_PROGRESS)
-        return previous + (current - previous) * tickProgress
+    fun getTransformProgress(tickProgress: Float) = previousTransformProgress + (transformProgress - previousTransformProgress) * tickProgress
+
+    fun getShoulderSpikesAnimTime(tickProgress: Float): Float {
+        val transform = getTransformProgress(tickProgress)
+        if (transform < SHOULDER_SPIKES_ANIMATION_THRESHOLD) return 0F
+
+        val animTime = transformShoulderSpikesAnimationController.currentAnimationTime
+        if (animTime <= 0) return 1F
+
+        return animTime.toFloat()
     }
 
     private val attackGoal = CustomAttacksGoal(this)
@@ -256,27 +264,37 @@ class BeastweaverEntity(
 
     override fun tick() {
         super.tick()
-        val world = level() as? ServerLevel ?: return
         tickTransformProgress()
+        val level = level() as? ServerLevel ?: return
         tickBlockedMovement()
-        tickAttacks(world, this)
+        tickAttacks(level, this)
     }
 
     private fun tickTransformProgress() {
-        val previousProgress = entityData.get(TRANSFORM_PROGRESS)
-        entityData.set(PREVIOUS_TRANSFORM_PROGRESS, previousProgress)
+        if (level().isClientSide) {
+            previousTransformProgress = transformProgress
+            transformProgress = entityData.get(TRANSFORM_PROGRESS)
 
-        val healthPercentage = (health / maxHealth).coerceIn(0F, 1F)
-        val targetValue = 1 - healthPercentage
-        val change = (targetValue - previousProgress).coerceIn(0.0F, MAX_TRANSFORM_PROGRESS_PER_TICK)
-        entityData.set(TRANSFORM_PROGRESS, previousProgress + change)
+            if (transformProgress - previousTransformProgress > MAX_TRANSFORM_PROGRESS_PER_TICK) previousTransformProgress = transformProgress
+        } else {
+            val healthPercentage = (health / maxHealth).coerceIn(0F, 1F)
+            val targetValue = 1 - healthPercentage
 
-        tickTransformExtras()
+            val current = entityData.get(TRANSFORM_PROGRESS)
+            val change = (targetValue - current).coerceIn(0.0F, MAX_TRANSFORM_PROGRESS_PER_TICK)
+            val updated = current + change
+            entityData.set(TRANSFORM_PROGRESS, updated)
+
+            tickTransformExtras(current, updated)
+        }
     }
 
-    private fun tickTransformExtras() {
+    private fun tickTransformExtras(
+        previousProgress: Float,
+        currentProgress: Float,
+    ) {
         TRANSFORM_EXTRAS_DATA.forEach { data ->
-            if (!data.isTriggered(entityData.get(TRANSFORM_PROGRESS)) || data.isTriggered(entityData.get(PREVIOUS_TRANSFORM_PROGRESS))) return@forEach
+            if (!data.isTriggered(currentProgress) || data.isTriggered(previousProgress)) return@forEach
             triggerAnim(data.animControllerId, data.animId)
         }
     }
@@ -303,8 +321,7 @@ class BeastweaverEntity(
     }
 
     fun getHiddenBones(): Set<String> {
-        val progress = entityData.get(TRANSFORM_PROGRESS)
-        return TRANSFORM_EXTRAS_DATA.flatMap { it.getHiddenBones(progress, this) }.toSet()
+        return TRANSFORM_EXTRAS_DATA.flatMap { it.getHiddenBones(transformProgress, this) }.toSet()
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {

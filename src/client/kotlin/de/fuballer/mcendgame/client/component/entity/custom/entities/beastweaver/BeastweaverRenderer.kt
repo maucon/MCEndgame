@@ -65,9 +65,28 @@ class BeastweaverRenderer<R>(
                 { renderState -> renderState.getGeckolibData(TRANSFORM_PROGRESS) ?: 0F },
                 mapOf(
                     0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_legs_0.png"),
-                    0.85F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_legs_3.png"),
+                    0.4F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_legs_1.png"),
+                    0.55F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_legs_2.png"),
+                    0.75F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_legs_3.png"),
                 ),
-                activeThreshold = 0.85F,
+                activeThreshold = 0.4F,
+            )
+        )
+        withRenderLayer(
+            CustomBonesProgressingTextureGeoLayer(
+                this,
+                listOf(
+                    "rightArmUpper",
+                    "rightArmUpperLower",
+                    "leftArmUpper",
+                    "leftArmUpperLower",
+                ),
+                { renderState -> renderState.getGeckolibData(SHOULDER_SPIKES_ANIM_TIME) ?: 0F },
+                mapOf(
+                    0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_shoulder_0.png"),
+                    0.71F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_shoulder_1.png"),
+                ),
+                activeThreshold = 0.71F,
             )
         )
     }
@@ -75,6 +94,7 @@ class BeastweaverRenderer<R>(
     companion object {
         private val HIDDEN_BONES = DataTicket.create("hidden_bones", object : TypeToken<Set<String>>() {})
         private val TRANSFORM_PROGRESS = DataTicket.create("transform_progress", object : TypeToken<Float>() {})
+        private val SHOULDER_SPIKES_ANIM_TIME = DataTicket.create("shoulder_spikes_anim_time", object : TypeToken<Float>() {})
     }
 
     override fun addRenderData(animatable: BeastweaverEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
@@ -82,6 +102,7 @@ class BeastweaverRenderer<R>(
 
         renderState.addGeckolibData(HIDDEN_BONES, animatable.getHiddenBones())
         renderState.addGeckolibData(TRANSFORM_PROGRESS, animatable.getTransformProgress(partialTick))
+        renderState.addGeckolibData(SHOULDER_SPIKES_ANIM_TIME, animatable.getShoulderSpikesAnimTime(partialTick))
     }
 
     override fun adjustModelBonesForRender(renderPassInfo: RenderPassInfo<R>, snapshots: BoneSnapshots) {
