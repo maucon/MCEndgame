@@ -32,10 +32,10 @@ import net.minecraft.world.World
 import software.bernie.geckolib.animatable.GeoAnimatable
 import software.bernie.geckolib.animatable.GeoEntity
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache
-import software.bernie.geckolib.animatable.manager.AnimatableManager
+import software.bernie.geckolib.animation.AnimatableManager
 import software.bernie.geckolib.animation.AnimationController
+import software.bernie.geckolib.animation.PlayState
 import software.bernie.geckolib.animation.RawAnimation
-import software.bernie.geckolib.animation.`object`.PlayState
 import software.bernie.geckolib.constant.DefaultAnimations
 import software.bernie.geckolib.util.GeckoLibUtil
 
@@ -154,13 +154,13 @@ class BonecrusherEntity(
 
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createLivingAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 35.0)
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.2)
-                .add(EntityAttributes.ATTACK_DAMAGE, 7.0)
-                .add(EntityAttributes.ATTACK_KNOCKBACK, 2.0)
-                .add(EntityAttributes.ARMOR, 0.0)
-                .add(EntityAttributes.KNOCKBACK_RESISTANCE, 0.8)
-                .add(EntityAttributes.MOVEMENT_EFFICIENCY, 0.85)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.0)
+                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 2.0)
+                .add(EntityAttributes.GENERIC_ARMOR, 0.0)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.8)
+                .add(EntityAttributes.GENERIC_MOVEMENT_EFFICIENCY, 0.85)
         }
     }
 
@@ -225,13 +225,13 @@ class BonecrusherEntity(
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
-            AnimationController<GeoAnimatable>("Walk/Idle", 5)
+            AnimationController<GeoAnimatable>(this, "Walk/Idle", 5)
             { test -> test.setAndContinue(if (test.isMoving) WALK_ANIM else DefaultAnimations.IDLE) },
-            AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
+            AnimationController<GeoAnimatable>(this, ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
                 .triggerableAnim(HIT_ID, HIT_ANIM)
                 .triggerableAnim(SLAM_ID, SLAM_ANIM)
                 .triggerableAnim(TELEPORT_PRESS_ID, TELEPORT_PRESS_ANIM),
-            AnimationController<GeoAnimatable>(SPIN_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
+            AnimationController<GeoAnimatable>(this, SPIN_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
                 .triggerableAnim(SPIN_ID, SPIN_ANIM)
         )
     }

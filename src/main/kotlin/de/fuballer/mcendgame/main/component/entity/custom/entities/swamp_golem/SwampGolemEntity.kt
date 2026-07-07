@@ -103,9 +103,9 @@ class SwampGolemEntity(
         super.onTrackedDataSet(data)
     }
 
-    override fun rotate(yaw: Float, relativeYaw: Boolean, pitch: Float, relativePitch: Boolean) {
+    override fun setRotation(yaw: Float, pitch: Float) {
         if (isRotationLocked()) return
-        super.rotate(yaw, relativeYaw, pitch, relativePitch)
+        super.setRotation(yaw, pitch)
     }
 
     override fun setYaw(yaw: Float) {

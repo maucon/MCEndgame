@@ -13,9 +13,10 @@ import net.minecraft.sound.SoundEvents
 import kotlin.random.Random
 
 class ScorchEffect : StatusEffect(StatusEffectCategory.BENEFICIAL, 15754270) {
-    override fun applyUpdateEffect(world: ServerWorld, entity: LivingEntity, amplifier: Int): Boolean {
+    override fun applyUpdateEffect(entity: LivingEntity, amplifier: Int): Boolean {
         if (entity.age % 40 != 0) return true
 
+        val world = entity.world as? ServerWorld ?: return true
         val enemies = world.getOtherEntities(entity, entity.boundingBox.expand(5.0))?.filter { it is LivingEntity && it.isEnemy(entity) } ?: return true
         if (enemies.isEmpty()) return true
 

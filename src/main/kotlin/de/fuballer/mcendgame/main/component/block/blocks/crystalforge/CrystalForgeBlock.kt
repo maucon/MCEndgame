@@ -1,9 +1,6 @@
 package de.fuballer.mcendgame.main.component.block.blocks.crystalforge
 
-import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.block.HorizontalFacingBlock
-import net.minecraft.block.ShapeContext
+import net.minecraft.block.*
 import net.minecraft.entity.ai.pathing.NavigationType
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
@@ -14,6 +11,7 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
@@ -24,15 +22,17 @@ class CrystalForgeBlock(
     companion object {
         const val ID = "crystal_forge"
 
-        private val SHAPES_BY_AXIS = VoxelShapes.createHorizontalAxisShapeMap(
-            VoxelShapes.union(
-                createColumnShape(12.0, 0.0, 4.0),
-                createColumnShape(8.0, 10.0, 4.0, 5.0),
-                createColumnShape(4.0, 8.0, 5.0, 10.0),
-                createColumnShape(10.0, 16.0, 10.0, 16.0)
-            )
-        )
+        val BASE_SHAPE: VoxelShape = createCuboidShape(2.0, 0.0, 2.0, 14.0, 4.0, 14.0)
+        val X_STEP_SHAPE: VoxelShape = createCuboidShape(3.0, 4.0, 4.0, 13.0, 5.0, 12.0)
+        val X_STEM_SHAPE: VoxelShape = createCuboidShape(4.0, 5.0, 6.0, 12.0, 10.0, 10.0)
+        val X_FACE_SHAPE: VoxelShape = createCuboidShape(0.0, 10.0, 3.0, 16.0, 16.0, 13.0)
+        val Z_STEP_SHAPE: VoxelShape = createCuboidShape(4.0, 4.0, 3.0, 12.0, 5.0, 13.0)
+        val Z_STEM_SHAPE: VoxelShape = createCuboidShape(6.0, 5.0, 4.0, 10.0, 10.0, 12.0)
+        val Z_FACE_SHAPE: VoxelShape = createCuboidShape(3.0, 10.0, 0.0, 13.0, 16.0, 16.0)
+        val X_AXIS_SHAPE: VoxelShape = VoxelShapes.union(BASE_SHAPE, X_STEP_SHAPE, X_STEM_SHAPE, X_FACE_SHAPE)
+        val Z_AXIS_SHAPE: VoxelShape = VoxelShapes.union(BASE_SHAPE, Z_STEP_SHAPE, Z_STEM_SHAPE, Z_FACE_SHAPE)
     }
+
 
     init {
         defaultState = stateManager.getDefaultState().with(HorizontalFacingBlock.FACING, Direction.NORTH)
@@ -59,12 +59,10 @@ class CrystalForgeBlock(
         return ActionResult.SUCCESS
     }
 
-    override fun getOutlineShape(
-        state: BlockState,
-        world: BlockView,
-        pos: BlockPos,
-        context: ShapeContext,
-    ): K = SHAPES_BY_AXIS[(state.get(HorizontalFacingBlock.FACING) as Direction).axis]!!
+    override fun getOutlineShape(state: BlockState, world: BlockView, pos: BlockPos, context: ShapeContext): VoxelShape {
+        val direction = state.get(AnvilBlock.FACING) as Direction
+        return if (direction.axis == Direction.Axis.X) X_AXIS_SHAPE else Z_AXIS_SHAPE
+    }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
         builder.add(HorizontalFacingBlock.FACING)

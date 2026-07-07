@@ -6,9 +6,11 @@ import kotlin.math.PI
 import kotlin.math.acos
 
 object Vec3dExtension {
+    fun Vec3d.horizontal(): Vec3d = multiply(1.0, 0.0, 1.0)
+
     private fun Vec3d.horizontalAngleDeg(to: Vec3d): Double {
-        val horizontal = horizontal
-        val toHorizontal = to.horizontal
+        val horizontal = horizontal()
+        val toHorizontal = to.horizontal()
 
         val dot = horizontal.dotProduct(toHorizontal)
         val lengthProduct = horizontal.length() * toHorizontal.length()

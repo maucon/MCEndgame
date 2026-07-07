@@ -3,10 +3,11 @@ package de.fuballer.mcendgame.main.component.entity.custom.attack.damage
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.knockback.AttackKnockbackUtil.takeKnockbackFrom
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealGenericAttackDamage
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setShieldsCooldown
+import de.fuballer.mcendgame.main.util.extension.Vec3dExtension.horizontal
 import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.PlayerLikeEntity
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.mob.MobEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.particle.SimpleParticleType
 import net.minecraft.server.world.ServerWorld
@@ -40,14 +41,14 @@ class AreaAttackDamage(
     private var volume: Float = 1F
 
     override fun apply(world: ServerWorld, damager: MobEntity, target: LivingEntity?): Boolean {
-        val forward = damager.getRotationVector(damager.pitch, damager.bodyYaw).horizontal.normalize()
+        val forward = damager.getRotationVector(damager.pitch, damager.bodyYaw).horizontal().normalize()
         val sideways = forward.crossProduct(Vec3d(0.0, 1.0, 0.0))
 
         val scale = getScale(damager)
 
         val targets = getTargets(world, damager, scale).filter {
-            area.contains(it.entityPos.subtract(damager.entityPos), forward, sideways, scale)
-                    || area.contains(it.entityPos.add(0.0, it.height.toDouble(), 0.0).subtract(damager.entityPos), forward, sideways, scale)
+            area.contains(it.pos.subtract(damager.pos), forward, sideways, scale)
+                    || area.contains(it.pos.add(0.0, it.height.toDouble(), 0.0).subtract(damager.pos), forward, sideways, scale)
         }
 
         val slamCenter = area.getCenter(damager, scale, forward, sideways)
@@ -63,7 +64,7 @@ class AreaAttackDamage(
         return true
     }
 
-    private fun getScale(damager: MobEntity) = if (applyScale) damager.getAttributeValue(EntityAttributes.SCALE) else 1.0
+    private fun getScale(damager: MobEntity) = if (applyScale) damager.getAttributeValue(EntityAttributes.GENERIC_SCALE) else 1.0
 
     private fun getTargets(
         world: ServerWorld,
@@ -86,7 +87,7 @@ class AreaAttackDamage(
 
         targets.forEach {
             it.dealGenericAttackDamage(damage, damager, blockable)
-            if (disableBlockingShield > 0 && it is PlayerLikeEntity && it.isBlocking) it.setShieldsCooldown(disableBlockingShield)
+            if (disableBlockingShield > 0 && it is PlayerEntity && it.isBlocking) it.setShieldsCooldown(disableBlockingShield)
             applyKnockback(it, damager, knockback, scale, forward, slamCenter)
         }
     }
@@ -106,12 +107,12 @@ class AreaAttackDamage(
             KnockbackType.FACING -> target.takeKnockbackFrom(damager, knockBackStrength, -forward.x, -forward.z)
 
             KnockbackType.AREA_CENTER -> {
-                val knockbackDirection = target.entityPos.subtract(slamCenter).normalize()
+                val knockbackDirection = target.pos.subtract(slamCenter).normalize()
                 target.takeKnockbackFrom(damager, knockBackStrength, -knockbackDirection.x, -knockbackDirection.z)
             }
 
             KnockbackType.DAMAGER_CENTER -> {
-                val knockbackDirection = target.entityPos.subtract(damager.entityPos).normalize()
+                val knockbackDirection = target.pos.subtract(damager.pos).normalize()
                 target.takeKnockbackFrom(damager, knockBackStrength, -knockbackDirection.x, -knockbackDirection.z)
             }
         }
@@ -232,7 +233,7 @@ class AreaAttackDamage(
             forward: Vec3d,
             sideways: Vec3d,
         ): Vec3d {
-            var center = damager.entityPos
+            var center = damager.pos
 
             val forwardCenter = (forwardOffset + forwardRange / 2) * scale
             center = center.add(forward.multiply(forwardCenter))

@@ -40,12 +40,10 @@ import net.minecraft.world.World
 import software.bernie.geckolib.animatable.GeoAnimatable
 import software.bernie.geckolib.animatable.GeoEntity
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache
-import software.bernie.geckolib.animatable.manager.AnimatableManager
 import software.bernie.geckolib.animation.AnimatableManager
 import software.bernie.geckolib.animation.AnimationController
 import software.bernie.geckolib.animation.PlayState
 import software.bernie.geckolib.animation.RawAnimation
-import software.bernie.geckolib.animation.`object`.PlayState
 import software.bernie.geckolib.constant.DefaultAnimations
 import software.bernie.geckolib.util.GeckoLibUtil
 import kotlin.math.sqrt
@@ -253,7 +251,7 @@ class BeakburnEntity(
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
 
-    private val attackAnimationController = AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
+    private val attackAnimationController = AnimationController<GeoAnimatable>(this, ATTACK_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
         .triggerableAnim(PECK_ID, PECK_ANIM)
         .triggerableAnim(BITE_RIGHT_ID, BITE_RIGHT_ANIM)
         .triggerableAnim(BITE_LEFT_ID, BITE_LEFT_ANIM)
@@ -266,7 +264,7 @@ class BeakburnEntity(
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
-            AnimationController<BeakburnEntity>("Walk/Idle", 5)
+            AnimationController<BeakburnEntity>(this, "Walk/Idle", 5)
             { test -> test.setAndContinue(if (test.isMoving) RUN_ANIM else DefaultAnimations.IDLE) },
 
             attackAnimationController,
@@ -316,7 +314,7 @@ class BeakburnEntity(
         tickAttacks(world, this)
     }
 
-    override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.ENTITY_CAMEL_HUSK_HURT
+    override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.ENTITY_RAVAGER_HURT
 
-    override fun getDeathSound(): SoundEvent = SoundEvents.ENTITY_CAMEL_HUSK_DEATH
+    override fun getDeathSound(): SoundEvent = SoundEvents.ENTITY_RAVAGER_DEATH
 }

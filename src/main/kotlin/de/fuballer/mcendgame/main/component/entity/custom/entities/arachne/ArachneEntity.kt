@@ -12,13 +12,13 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.HookAttackM
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.MeleeAttackMob
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setShieldsCooldown
+import de.fuballer.mcendgame.main.util.extension.Vec3dExtension.horizontal
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setWebbed
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.entity.AnimationState
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.PlayerLikeEntity
 import net.minecraft.entity.ai.RangedAttackMob
 import net.minecraft.entity.ai.goal.ActiveTargetGoal
 import net.minecraft.entity.ai.goal.RevengeGoal
@@ -34,8 +34,6 @@ import net.minecraft.entity.mob.Monster
 import net.minecraft.entity.passive.VillagerEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.projectile.ProjectileEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundEvent
 import net.minecraft.sound.SoundEvents
@@ -96,16 +94,16 @@ class ArachneEntity(
 
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createLivingAttributes()
-                .add(EntityAttributes.FOLLOW_RANGE, 35.0)
-                .add(EntityAttributes.MOVEMENT_SPEED, 0.4)
-                .add(EntityAttributes.STEP_HEIGHT, 1.1)
-                .add(EntityAttributes.SAFE_FALL_DISTANCE, 10.0)
-                .add(EntityAttributes.FALL_DAMAGE_MULTIPLIER, 0.2)
-                .add(EntityAttributes.ATTACK_DAMAGE, 4.0)
-                .add(EntityAttributes.ATTACK_KNOCKBACK, 1.5)
-                .add(EntityAttributes.ARMOR, 0.0)
-                .add(EntityAttributes.KNOCKBACK_RESISTANCE, 0.8)
-                .add(EntityAttributes.MOVEMENT_EFFICIENCY, 0.85)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.4)
+                .add(EntityAttributes.GENERIC_STEP_HEIGHT, 1.1)
+                .add(EntityAttributes.GENERIC_SAFE_FALL_DISTANCE, 10.0)
+                .add(EntityAttributes.GENERIC_FALL_DAMAGE_MULTIPLIER, 0.2)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0)
+                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.5)
+                .add(EntityAttributes.GENERIC_ARMOR, 0.0)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.8)
+                .add(EntityAttributes.GENERIC_MOVEMENT_EFFICIENCY, 0.85)
         }
 
         val ATTACK_POSE: TrackedData<CustomPosesEntity.CustomPose> =
@@ -273,14 +271,16 @@ class ArachneEntity(
         val aimY = target.eyeY - 1.1f
         val addedYVelocity = sqrt(xDistance * xDistance + zDistance * zDistance) * 0.2f
 
+        projectile.setVelocity(
+            xDistance,
+            aimY - projectile.y + addedYVelocity,
+            zDistance,
+            1.6f,
+            2.0f,
+        )
+        serverWorld.spawnEntity(projectile)
+
         changeAttackPose(CustomPosesEntity.CustomPose.SPITTING, 9)// anim is 0.42s
-
-        val itemStack = ItemStack(Items.AIR)
-        ProjectileEntity.spawn(projectile, serverWorld, itemStack)
-        { entity: ProjectileEntity ->
-            entity.setVelocity(xDistance, aimY - entity.y + addedYVelocity, zDistance, 1.6f, 2.0f)
-        }
-
         playSpitSound()
     }
 
@@ -290,7 +290,7 @@ class ArachneEntity(
     ) {
         val serverWorld = entityWorld as? ServerWorld ?: return
         val projectile = WebshotEntity(CustomEntities.WEBSHOT, serverWorld, this)
-        projectile.setDamage(getAttributeValue(EntityAttributes.ATTACK_DAMAGE) / 2.0)
+        projectile.setDamage(getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) / 2.0)
         shootAt(target, projectile)
     }
 
@@ -314,7 +314,7 @@ class ArachneEntity(
         movementMultiplier = multiplier
     }
 
-    override fun handleFallDamage(fallDistance: Double, damagePerDistance: Float, damageSource: DamageSource) = false
+    override fun handleFallDamage(fallDistance: Float, damageMultiplier: Float, damageSource: DamageSource) = false
 
     override fun occludeVibrationSignals() = true
 
@@ -405,20 +405,20 @@ class ArachneEntity(
             boundingBox.expand(MELEE_ATTACK_LENGTH * scale)
         ) { it != this }
 
-        val forward = getRotationVector(pitch, bodyYaw).horizontal.normalize()
+        val forward = getRotationVector(pitch, bodyYaw).horizontal().normalize()
         val sideways = forward.crossProduct(Vec3d(0.0, 1.0, 0.0))
         targets = targets.filter {
-            isInAttackArea(it.entityPos.subtract(entityPos), forward, sideways)
-                    || isInAttackArea(it.eyePos.subtract(entityPos), forward, sideways)
+            isInAttackArea(it.pos.subtract(pos), forward, sideways)
+                    || isInAttackArea(it.eyePos.subtract(pos), forward, sideways)
         }
 
-        val damage = getAttributeValue(EntityAttributes.ATTACK_DAMAGE).toFloat()
-        val knockBackDirection = getRotationVector(pitch, bodyYaw).horizontal.normalize()
-        val knockBackStrength = getAttributeValue(EntityAttributes.ATTACK_KNOCKBACK) * getAttributeValue(EntityAttributes.SCALE)
+        val damage = getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE).toFloat()
+        val knockBackDirection = getRotationVector(pitch, bodyYaw).horizontal().normalize()
+        val knockBackStrength = getAttributeValue(EntityAttributes.GENERIC_ATTACK_KNOCKBACK) * getAttributeValue(EntityAttributes.GENERIC_SCALE)
 
         targets.forEach {
             it.dealGenericAttackDamage(damage, this)
-            if (entityWorld is ServerWorld && it is PlayerLikeEntity && it.isBlocking) it.setShieldsCooldown(MELEE_SHIELD_DISABLE_TIME)
+            if (entityWorld is ServerWorld && it is PlayerEntity && it.isBlocking) it.setShieldsCooldown(MELEE_SHIELD_DISABLE_TIME)
 
             it.setAndSyncVelocity(knockBackDirection.multiply(knockBackStrength))
         }
@@ -433,7 +433,7 @@ class ArachneEntity(
         val sidewaysDistance = relativePos.dotProduct(sideways)
         val heightDistance = relativePos.y
 
-        val scale = getAttributeValue(EntityAttributes.SCALE)
+        val scale = getAttributeValue(EntityAttributes.GENERIC_SCALE)
         if (forwardDistance < width * scale * 0.2 || forwardDistance > MELEE_ATTACK_LENGTH * scale) return false
         if (abs(sidewaysDistance) > MELEE_ATTACK_WIDTH / 2.0 * scale) return false
         if (abs(heightDistance) > MELEE_ATTACK_HEIGHT / 2.0 * scale) return false

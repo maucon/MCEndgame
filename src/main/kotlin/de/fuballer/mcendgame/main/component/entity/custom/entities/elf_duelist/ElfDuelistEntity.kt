@@ -403,11 +403,11 @@ class ElfDuelistEntity(
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
 
-    private val earAnimationController = AnimationController<GeoAnimatable>(EAR_ANIM_CONTROLLED_ID) { _ -> PlayState.STOP }
+    private val earAnimationController = AnimationController<GeoAnimatable>(this, EAR_ANIM_CONTROLLED_ID) { _ -> PlayState.STOP }
         .triggerableAnim(EAR_TWITCH_LEFT_ID, EAR_TWITCH_LEFT_ANIM)
         .triggerableAnim(EAR_TWITCH_RIGHT_ID, EAR_TWITCH_RIGHT_ANIM)
 
-    private val attackAnimationController = AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
+    private val attackAnimationController = AnimationController<GeoAnimatable>(this, ATTACK_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
         .triggerableAnim(STAB_RIGHT_ID, STAB_RIGHT_ANIM)
         .triggerableAnim(STAB_RIGHT_RESET_ID, STAB_RIGHT_RESET_ANIM)
         .triggerableAnim(STAB_LEFT_ID, STAB_LEFT_ANIM)
@@ -432,10 +432,10 @@ class ElfDuelistEntity(
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
-            AnimationController<ElfDuelistEntity>("Walk/Idle", 5)
+            AnimationController<ElfDuelistEntity>(this, "Walk/Idle", 5)
             { test -> test.setAndContinue(if (test.isMoving) DefaultAnimations.WALK else DefaultAnimations.IDLE) },
 
-            AnimationController<ElfDuelistEntity>("Lean", 5)
+            AnimationController<ElfDuelistEntity>(this, "Lean", 5)
             { test -> if (test.isMoving) test.setAndContinue(LEAN_ANIM) else PlayState.STOP },
 
             earAnimationController,
@@ -443,8 +443,8 @@ class ElfDuelistEntity(
         )
     }
 
-    fun getLimbSwingCycle(tickProgress: Float) = sin(limbAnimator.getAnimationProgress(tickProgress) / 1.5)
-    fun getLimbSwingAmplitude(tickProgress: Float) = limbAnimator.getAmplitude(tickProgress).toDouble()
+    fun getLimbSwingCycle(tickProgress: Float) = sin(limbAnimator.getPos(tickProgress) / 1.5)
+    fun getLimbSwingAmplitude(tickProgress: Float) = limbAnimator.getSpeed(tickProgress).toDouble()
 
     fun getLean(tickProgress: Float) = getLimbSwingAmplitude(tickProgress) * if (target == null) 0.5 else 1.0
 

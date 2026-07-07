@@ -26,8 +26,6 @@ typealias VanillaDamageUtil = net.minecraft.entity.DamageUtil
 
 private val DAMAGE_CALCULATORS = listOf(
     PufferfishTouchCalculator,
-    PierceAttackDamageCalculator,
-    KineticAttackDamageCalculator,
     SpellDamageCalculator,
     EnderDragonCalculator,
     WitherSkullCalculator,

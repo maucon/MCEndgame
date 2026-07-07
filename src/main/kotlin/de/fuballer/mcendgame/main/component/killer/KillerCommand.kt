@@ -1,12 +1,12 @@
 package de.fuballer.mcendgame.main.component.killer
 
+import com.mojang.authlib.GameProfile
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.minecraft.command.argument.GameProfileArgumentType
-import net.minecraft.server.PlayerConfigEntry
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.Text
@@ -41,7 +41,7 @@ class KillerCommand(
 
     fun execute(
         context: CommandContext<ServerCommandSource>,
-        killedConfigEntry: PlayerConfigEntry? = null,
+        killedConfigEntry: GameProfile? = null,
     ): Int {
         val player = context.source.player ?: return 0
         val killedUUID = killedConfigEntry?.id ?: player.uuid

@@ -20,7 +20,7 @@ private val SLOT_SPRITES = listOf(
     PlayerScreenHandler.EMPTY_LEGGINGS_SLOT_TEXTURE,
     PlayerScreenHandler.EMPTY_BOOTS_SLOT_TEXTURE,
     Identifier.ofVanilla("container/slot/sword"),
-    PlayerScreenHandler.EMPTY_OFF_HAND_SLOT_TEXTURE,
+    PlayerScreenHandler.EMPTY_OFFHAND_ARMOR_SLOT,
 )
 
 private val EQUIPMENT_SLOTS = mapOf(

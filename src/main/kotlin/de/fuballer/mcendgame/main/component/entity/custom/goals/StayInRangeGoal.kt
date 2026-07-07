@@ -39,7 +39,7 @@ class StayInRangeGoal(
         val target = entity.target ?: return false
         if (!target.isAlive) return false
 
-        if (!entity.isInPositionTargetRange(target.blockPos)) return false
+        if (!entity.isInWalkTargetRange(target.blockPos)) return false
         return target !is PlayerEntity || (!target.isSpectator && !target.isCreative)
     }
 
@@ -102,7 +102,7 @@ class StayInRangeGoal(
 
         if (targetX == 0.0 && targetY == 0.0 && targetZ == 0.0) return true
         val isInRange = entity.squaredDistanceTo(target) < squaredMaxDistance
-        if (target.entityPos.squaredDistanceTo(Vec3d(targetX, targetY, targetZ)) > 1 && !isInRange) return true
+        if (target.pos.squaredDistanceTo(Vec3d(targetX, targetY, targetZ)) > 1 && !isInRange) return true
         if (entity.navigation.isIdle && !isInRange) return true
 
         return false

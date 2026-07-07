@@ -1,10 +1,12 @@
 package de.fuballer.mcendgame.main.component.totem
 
+import com.mojang.datafixers.util.Pair
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItem
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemType
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
+import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.screen.slot.Slot
 import net.minecraft.util.Identifier
 
@@ -19,5 +21,5 @@ class TotemSlot(
 ) : Slot(inventory, index, x, y) {
     override fun canInsert(stack: ItemStack) = (stack.item as? TotemItem)?.type == type
 
-    override fun getBackgroundSprite() = BACKGROUND_SPRITE
+    override fun getBackgroundSprite() = Pair(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, BACKGROUND_SPRITE)
 }

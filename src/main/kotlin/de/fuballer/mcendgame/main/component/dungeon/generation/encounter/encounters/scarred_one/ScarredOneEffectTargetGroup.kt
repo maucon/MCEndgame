@@ -4,7 +4,7 @@ import de.fuballer.mcendgame.main.util.extension.EntityExtension.isOrIsTameableO
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonBoss
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.PlayerLikeEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.text.Text
 import java.util.function.Predicate
 
@@ -15,7 +15,7 @@ enum class ScarredOneEffectTargetGroup(
     val text: Text,
 ) {
     ALLIES(
-        { it.isOrIsTameableOf(PlayerLikeEntity::class.java) },
+        { it.isOrIsTameableOf(PlayerEntity::class.java) },
         Text.translatable(TRANSLATION_KEY_BASE + "allies"),
     ),
     ENEMIES(

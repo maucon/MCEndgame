@@ -15,8 +15,6 @@ object CustomDamageTypes {
     val SPELL: RegistryKey<DamageType> = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default("spell"))
     val GENERIC_ATTACK: RegistryKey<DamageType> = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default("generic_attack"))
     val GENERIC_ATTACK_UNBLOCKABLE: RegistryKey<DamageType> = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default("generic_attack_unblockable"))
-    val PIERCE_ATTACK: RegistryKey<DamageType> = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default("pierce_attack"))
-    val KINETIC_ATTACK: RegistryKey<DamageType> = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, IdentifierUtil.default("kinetic_attack"))
 
     fun of(
         world: World,

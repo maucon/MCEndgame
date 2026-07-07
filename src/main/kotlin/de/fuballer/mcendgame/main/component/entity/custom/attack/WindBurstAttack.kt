@@ -8,10 +8,7 @@ import de.fuballer.mcendgame.main.util.extension.mixin.WindChargeEntityMixinExte
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.mob.MobEntity
-import net.minecraft.entity.projectile.ProjectileEntity
 import net.minecraft.entity.projectile.WindChargeEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.Vec3d
 import software.bernie.geckolib.animatable.GeoEntity
@@ -93,12 +90,15 @@ class WindBurstAttack<T>(
             windCharge.setExplosionPower(projectileExplosionPower)
             windCharge.owner = attacker
             windCharge.setPosition(spawnPos)
+            windCharge.setVelocity(
+                distanceVec.x,
+                distanceVec.y,
+                distanceVec.z,
+                projectileSpeed(),
+                projectileDirectionSpread(distance)
+            )
 
-            val itemStack = ItemStack(Items.AIR)
-            ProjectileEntity.spawn(windCharge, serverWorld, itemStack)
-            { entity: ProjectileEntity ->
-                entity.setVelocity(distanceVec.x, distanceVec.y, distanceVec.z, projectileSpeed(), projectileDirectionSpread(distance))
-            }
+            serverWorld.spawnEntity(windCharge)
         }
     }
 }

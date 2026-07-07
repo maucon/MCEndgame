@@ -18,7 +18,6 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.GlobalPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.TeleportTarget
-import net.minecraft.world.WorldProperties
 
 @Injectable
 class DungeonLeaveService {
@@ -49,10 +48,7 @@ class DungeonLeaveService {
 
         val exitPos = world.getDungeonExitPos()
         val actualPos = GlobalPos(exitPos.dimension, exitPos.pos.add(0, 1, 0))
-        cmd.respawn = ServerPlayerEntity.Respawn(
-            WorldProperties.SpawnPoint(actualPos, 0.0f, 0.0f),
-            true
-        )
+        cmd.teleportTarget = TeleportTarget(world, actualPos.pos.toVec3d(), Vec3d.ZERO, 0.0F, 0.0F) {}
     }
 
     private fun teleportToDungeonExitPos(

@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.main.component.custom_attribute.effects.companion
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
-import de.fuballer.mcendgame.main.component.entity.custom.goals.predicates.ShouldBeAttackedByCompanionsPredicate
+import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
 import de.fuballer.mcendgame.main.messaging.dungeon.WorldAttributeChangedEvent
 import de.fuballer.mcendgame.main.messaging.misc.EquipmentChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerAfterDimensionChangeEvent
@@ -13,6 +13,7 @@ import de.fuballer.mcendgame.main.messaging.server.ServerEndTickEvent
 import de.fuballer.mcendgame.main.util.extension.SlotExtension.isOrIsChildOf
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getTargetSelector
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCompanion
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setCompanion
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
@@ -21,7 +22,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.component.type.AttributeModifierSlot
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.ai.goal.ActiveTargetGoal
 import net.minecraft.entity.ai.goal.AttackWithOwnerGoal
 import net.minecraft.entity.ai.goal.TrackOwnerAttackerGoal
@@ -30,6 +30,7 @@ import net.minecraft.entity.passive.TameableEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.TypeFilter
 import java.util.*
 
@@ -124,7 +125,7 @@ class CompanionService {
         player: ServerPlayerEntity,
         type: Class<out TameableEntity>,
     ) {
-        val world = player.entityWorld ?: return
+        val world = player.entityWorld as? ServerWorld ?: return
 
         val companions = world.getEntitiesByType(TypeFilter.instanceOf(type)) {
             it.isCompanion() && it.owner == player
@@ -191,8 +192,7 @@ class CompanionService {
                 10,
                 false,
                 false,
-                ShouldBeAttackedByCompanionsPredicate(),
-            )
+            ) { target -> target.isDungeonEnemy() && target !is TrainingDummyEntity }
         )
     }
 }

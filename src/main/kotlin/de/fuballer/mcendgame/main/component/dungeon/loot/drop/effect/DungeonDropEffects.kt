@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.main.component.dungeon.loot.drop.effect
 
 import de.fuballer.mcendgame.main.component.dungeon.loot.drop.ItemColor
-import net.minecraft.particle.DragonBreathParticleEffect
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.sound.SoundEvents
 
@@ -21,7 +20,7 @@ object DungeonDropEffects {
     val ASPECT_PLAYER_DROPPED = DungeonDropEffect(glowColor = ItemColor.ASPECT)
 
     val CRYSTAL =
-        DungeonDropEffect(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, DragonBreathParticleEffect.of(ParticleTypes.DRAGON_BREATH, 1.0F), ItemColor.CRYSTAL)
+        DungeonDropEffect(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, ParticleTypes.DRAGON_BREATH, ItemColor.CRYSTAL)
             .withVolume(2F)
             .withParticleCount(20)
             .withParticleSpeed(0.03)

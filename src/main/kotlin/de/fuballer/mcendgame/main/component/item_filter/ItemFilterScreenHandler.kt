@@ -25,7 +25,34 @@ class ItemFilterScreenHandler(
         addFilterItems(filterItems)
 
         val topOffset = 18 + 6 * 18 + 13
-        addPlayerSlots(playerInventory, 8, topOffset)
+
+        //addPlayerSlots(playerInventory, 8, topOffset)
+
+        // Player inventory
+        for (row in 0 until 3) {
+            for (column in 0 until 9) {
+                addSlot(
+                    Slot(
+                        playerInventory,
+                        column + row * 9 + 9,
+                        8 + column * 18,
+                        topOffset + row * 18
+                    )
+                )
+            }
+        }
+
+        // Hotbar
+        for (column in 0 until 9) {
+            addSlot(
+                Slot(
+                    playerInventory,
+                    column,
+                    8 + column * 18,
+                    topOffset + 58
+                )
+            )
+        }
     }
 
     private fun addFilterSlots() {

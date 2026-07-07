@@ -10,20 +10,19 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.mob.MobEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtOps
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
-import net.minecraft.storage.ReadView
-import net.minecraft.storage.WriteView
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.world.World
 import software.bernie.geckolib.animatable.GeoEntity
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache
-import software.bernie.geckolib.animatable.manager.AnimatableManager
+import software.bernie.geckolib.animation.AnimatableManager
 import software.bernie.geckolib.util.GeckoLibUtil
-import kotlin.jvm.optionals.getOrDefault
 import kotlin.random.Random
 
 private const val POSITIVE_EFFECTS_KEY = "positive_effects"
@@ -76,10 +75,7 @@ class ScarredOneEntity(
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
     }
 
-    override fun interact(
-        player: PlayerEntity,
-        hand: Hand
-    ): ActionResult {
+    override fun interactMob(player: PlayerEntity, hand: Hand): ActionResult {
         val world = entityWorld as? ServerWorld ?: return ActionResult.PASS
         val serverPlayer = player as? ServerPlayerEntity ?: return ActionResult.PASS
 
@@ -91,21 +87,34 @@ class ScarredOneEntity(
 
     override fun isPushable() = false
 
-    override fun writeCustomData(view: WriteView) {
-        super.writeCustomData(view)
+    override fun writeCustomDataToNbt(nbt: NbtCompound) {
+        super.writeCustomDataToNbt(nbt)
 
-        view.put(POSITIVE_EFFECTS_KEY, RolledScarredOneEffect.LIST_CODEC, positiveEffects)
-        view.put(NEGATIVE_EFFECTS_KEY, RolledScarredOneEffect.LIST_CODEC, negativeEffects)
+        nbt.put(
+            POSITIVE_EFFECTS_KEY,
+            RolledScarredOneEffect.LIST_CODEC.encodeStart(NbtOps.INSTANCE, positiveEffects).getOrThrow()
+        )
+        nbt.put(
+            NEGATIVE_EFFECTS_KEY,
+            RolledScarredOneEffect.LIST_CODEC.encodeStart(NbtOps.INSTANCE, negativeEffects).getOrThrow()
+        )
 
-        view.putBoolean(GOT_RESPONSE_KEY, gotResponse)
+        nbt.putBoolean(GOT_RESPONSE_KEY, gotResponse)
     }
 
-    override fun readCustomData(view: ReadView) {
-        super.readCustomData(view)
+    override fun readCustomDataFromNbt(nbt: NbtCompound) {
+        super.readCustomDataFromNbt(nbt)
 
-        positiveEffects = view.read(POSITIVE_EFFECTS_KEY, RolledScarredOneEffect.LIST_CODEC).getOrDefault(listOf())
-        negativeEffects = view.read(NEGATIVE_EFFECTS_KEY, RolledScarredOneEffect.LIST_CODEC).getOrDefault(listOf())
+        positiveEffects = RolledScarredOneEffect.LIST_CODEC
+            .parse(NbtOps.INSTANCE, nbt.get(POSITIVE_EFFECTS_KEY))
+            .result()
+            .orElse(listOf())!!
 
-        gotResponse = view.getBoolean(GOT_RESPONSE_KEY, false)
+        negativeEffects = RolledScarredOneEffect.LIST_CODEC
+            .parse(NbtOps.INSTANCE, nbt.get(NEGATIVE_EFFECTS_KEY))
+            .result()
+            .orElse(listOf())!!
+
+        gotResponse = nbt.getBoolean(GOT_RESPONSE_KEY)
     }
 }

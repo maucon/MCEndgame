@@ -6,7 +6,6 @@ import net.minecraft.entity.attribute.EntityAttributeModifier
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.effect.StatusEffect
 import net.minecraft.entity.effect.StatusEffectCategory
-import net.minecraft.server.world.ServerWorld
 
 class ResilienceEffect : StatusEffect(StatusEffectCategory.BENEFICIAL, 1349140) {
     companion object {
@@ -17,7 +16,7 @@ class ResilienceEffect : StatusEffect(StatusEffectCategory.BENEFICIAL, 1349140) 
         addAttributeModifier(EntityAttributes.GENERIC_SCALE, ATTRIBUTE_IDENTIFIER, 0.015, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
     }
 
-    override fun applyUpdateEffect(world: ServerWorld?, entity: LivingEntity, amplifier: Int): Boolean {
+    override fun applyUpdateEffect(entity: LivingEntity, amplifier: Int): Boolean {
         if (entity.age % 20 != 0) return true
 
         if (entity.health < entity.maxHealth) {

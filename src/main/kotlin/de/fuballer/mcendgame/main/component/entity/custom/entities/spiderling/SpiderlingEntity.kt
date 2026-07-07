@@ -19,6 +19,7 @@ import net.minecraft.entity.ai.goal.*
 import net.minecraft.entity.attribute.DefaultAttributeContainer
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.damage.DamageSource
+import net.minecraft.entity.mob.MobEntity
 import net.minecraft.entity.passive.PassiveEntity
 import net.minecraft.entity.passive.TameableEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -28,8 +29,10 @@ import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Box
 import net.minecraft.world.World
 import kotlin.math.max
+import kotlin.math.min
 
 class SpiderlingEntity(
     type: EntityType<out SpiderlingEntity>,
@@ -117,20 +120,18 @@ class SpiderlingEntity(
     override fun createChild(world: ServerWorld, entity: PassiveEntity) = null
 
     // copied from MobEntity but using own MAX_ATTACK_RANGE
-    override fun isInAttackRange(entity: LivingEntity): Boolean {
-        val attackRangeComponent = activeOrMainHandStack.get(DataComponentTypes.ATTACK_RANGE)
-        val maxRange: Double
-        val minRange: Double
-        if (attackRangeComponent == null) {
-            maxRange = MAX_ATTACK_RANGE
-            minRange = 0.0
+    override fun getAttackBox(): Box {
+        val entity = vehicle
+        val box3: Box
+        if (entity != null) {
+            val box = entity.boundingBox
+            val box2 = boundingBox
+            box3 = Box(min(box2.minX, box.minX), box2.minY, min(box2.minZ, box.minZ), max(box2.maxX, box.maxX), box2.maxY, max(box2.maxZ, box.maxZ))
         } else {
-            maxRange = attackRangeComponent.getEffectiveMaxRange(this).toDouble()
-            minRange = attackRangeComponent.getEffectiveMinRange(this).toDouble()
+            box3 = boundingBox
         }
 
-        val box = entity.getHitbox()
-        return this.getAttackBox(maxRange).intersects(box) && (minRange <= 0.0 || !this.getAttackBox(minRange).intersects(box))
+        return box3.expand(MAX_ATTACK_RANGE, 0.0, MAX_ATTACK_RANGE)
     }
 
     override fun pushAway(entity: Entity) {

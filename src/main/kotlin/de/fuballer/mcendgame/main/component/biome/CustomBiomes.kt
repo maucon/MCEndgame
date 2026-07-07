@@ -6,8 +6,6 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.registry.Registerable
 import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.RegistryKeys
-import net.minecraft.world.attribute.BackgroundMusic
-import net.minecraft.world.attribute.EnvironmentAttributes
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.BiomeEffects
 import net.minecraft.world.biome.GenerationSettings
@@ -26,10 +24,14 @@ object CustomBiomes {
             .precipitation(false)
             .temperature(0.5f)
             .downfall(0.0f)
-            .effects(BiomeEffects.Builder().waterColor(0x3F76E4).build())
+            .effects(
+                BiomeEffects.Builder()
+                    .waterColor(0x3F76E4)
+                    .music(CustomSoundEvents.DESERT_DUNGEON_MUSIC_SOUND)
+                    .build()
+            )
             .generationSettings(GenerationSettings.Builder().build())
             .spawnSettings(SpawnSettings.Builder().build())
-            .setEnvironmentAttribute(EnvironmentAttributes.BACKGROUND_MUSIC_AUDIO, BackgroundMusic(CustomSoundEvents.DESERT_DUNGEON_MUSIC_SOUND))
             .build()
     }
 }
