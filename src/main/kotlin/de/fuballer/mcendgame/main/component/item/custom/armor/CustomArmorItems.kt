@@ -8,7 +8,6 @@ import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.Druids
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsChestplate
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsHelmet
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsLeggings
-import de.fuballer.mcendgame.main.component.item.custom.armor.item.emberchant.Emberchant
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.emberreign.Emberreign
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.geistergaloschen.Geistergaloschen
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.gilded_tempest.GildedTempest
@@ -28,32 +27,209 @@ import de.fuballer.mcendgame.main.component.item.custom.armor.item.wither_rose.W
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.wither_rose.WitherRoseLeggings
 import de.fuballer.mcendgame.main.component.item.custom.armor.materials.*
 import de.maucon.mauconframework.di.annotation.Injectable
+import net.minecraft.item.ArmorItem
+import net.minecraft.item.Item
 
 @Injectable
 object CustomArmorItems {
-    val ICEBORNE = UniqueItemRegistry.registerArmorItem(::Iceborne, IceborneArmorMaterial, EquipmentType.HELMET, "iceborne")
-    val BOUND_ABYSS = UniqueItemRegistry.registerArmorItem(::BoundAbyss, BoundAbyssArmorMaterial, EquipmentType.CHESTPLATE, "bound_abyss")
-    val DRUIDS_HELMET = UniqueItemRegistry.registerArmorItem(::DruidsHelmet, DruidsArmorMaterial, EquipmentType.HELMET, "druids_helmet")
-    val DRUIDS_CHESTPLATE = UniqueItemRegistry.registerArmorItem(::DruidsChestplate, DruidsArmorMaterial, EquipmentType.CHESTPLATE, "druids_chestplate")
-    val DRUIDS_LEGGINGS = UniqueItemRegistry.registerArmorItem(::DruidsLeggings, DruidsArmorMaterial, EquipmentType.LEGGINGS, "druids_leggings")
-    val DRUIDS_BOOTS = UniqueItemRegistry.registerArmorItem(::DruidsBoots, DruidsArmorMaterial, EquipmentType.BOOTS, "druids_boots")
-    val EMBERCHANT = UniqueItemRegistry.registerArmorItem(::Emberchant, EmberchantArmorMaterial, EquipmentType.HELMET, "emberchant")
-    val LAMIAS_GIFT = UniqueItemRegistry.registerArmorItem(::LamiasGift, LamiasGiftArmorMaterial, EquipmentType.LEGGINGS, "lamias_gift")
-    val WITHER_ROSE_HELMET = UniqueItemRegistry.registerArmorItem(::WitherRoseHelmet, WitherRoseArmorMaterial, EquipmentType.HELMET, "wither_rose_helmet")
-    val WITHER_ROSE_CHESTPLATE = UniqueItemRegistry.registerArmorItem(::WitherRoseChestplate, WitherRoseArmorMaterial, EquipmentType.CHESTPLATE, "wither_rose_chestplate")
-    val WITHER_ROSE_LEGGINGS = UniqueItemRegistry.registerArmorItem(::WitherRoseLeggings, WitherRoseArmorMaterial, EquipmentType.LEGGINGS, "wither_rose_leggings")
-    val WITHER_ROSE_BOOTS = UniqueItemRegistry.registerArmorItem(::WitherRoseBoots, WitherRoseArmorMaterial, EquipmentType.BOOTS, "wither_rose_boots")
-    val SUEDE_HELMET = UniqueItemRegistry.registerArmorItem(::SuedeHelmet, SuedeArmorMaterial, EquipmentType.HELMET, "suede_helmet")
-    val SUEDE_CHESTPLATE = UniqueItemRegistry.registerArmorItem(::SuedeChestplate, SuedeArmorMaterial, EquipmentType.CHESTPLATE, "suede_chestplate")
-    val SUEDE_LEGGINGS = UniqueItemRegistry.registerArmorItem(::SuedeLeggings, SuedeArmorMaterial, EquipmentType.LEGGINGS, "suede_leggings")
-    val SUEDE_BOOTS = UniqueItemRegistry.registerArmorItem(::SuedeBoots, SuedeArmorMaterial, EquipmentType.BOOTS, "suede_boots")
-    val STONEWARD = UniqueItemRegistry.registerArmorItem(::Stoneward, StonewardArmorMaterial, EquipmentType.LEGGINGS, "stoneward")
-    val MOONSHADOW = UniqueItemRegistry.registerArmorItem(::Moonshadow, MoonshadowArmorMaterial, EquipmentType.BOOTS, "moonshadow")
-    val GEISTERGALOSCHEN = UniqueItemRegistry.registerArmorItem(::Geistergaloschen, GeistergaloschenArmorMaterial, EquipmentType.BOOTS, "geistergaloschen")
-    val VOIDWEAVER = UniqueItemRegistry.registerArmorItem(::Voidweaver, VoidweaverArmorMaterial, EquipmentType.CHESTPLATE, "voidweaver")
-    val ABYSSAL_MASK = UniqueItemRegistry.registerArmorItem(::AbyssalMask, AbyssalMaskArmorMaterial, EquipmentType.HELMET, "abyssal_mask")
-    val GILDED_TEMPEST = UniqueItemRegistry.registerArmorItem(::GildedTempest, GildedTempestArmorMaterial, EquipmentType.LEGGINGS, "gilded_tempest")
-    val WINDSTRIDER = UniqueItemRegistry.registerArmorItem(::Windstrider, WindstriderArmorMaterial, EquipmentType.LEGGINGS, "windstrider")
-    val BROODMOTHER = UniqueItemRegistry.registerArmorItem(::Broodmother, BroodmotherArmorMaterial, EquipmentType.CHESTPLATE, "broodmother")
-    val EMBERREIGN = UniqueItemRegistry.registerArmorItem(::Emberreign, EmberreignArmorMaterial, EquipmentType.BOOTS, "emberreign")
+    val ICEBORNE = UniqueItemRegistry.registerItem(
+        Iceborne(
+            IceborneArmorMaterial.instance,
+            ArmorItem.Type.HELMET,
+            Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(IceborneArmorMaterial.baseDurability))
+        ),
+        "iceborne"
+    )
+    val BOUND_ABYSS = UniqueItemRegistry.registerItem(
+        BoundAbyss(
+            BoundAbyssArmorMaterial.instance,
+            ArmorItem.Type.CHESTPLATE,
+            Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(BoundAbyssArmorMaterial.baseDurability))
+        ),
+        "bound_abyss"
+    )
+    val DRUIDS_HELMET = UniqueItemRegistry.registerItem(
+        DruidsHelmet(
+            DruidsArmorMaterial.instance,
+            ArmorItem.Type.HELMET,
+            Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(DruidsArmorMaterial.baseDurability))
+        ),
+        "druids_helmet"
+    )
+    val DRUIDS_CHESTPLATE = UniqueItemRegistry.registerItem(
+        DruidsChestplate(
+            DruidsArmorMaterial.instance,
+            ArmorItem.Type.HELMET,
+            Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(DruidsArmorMaterial.baseDurability))
+        ),
+        "druids_chestplate"
+    )
+    val DRUIDS_LEGGINGS = UniqueItemRegistry.registerItem(
+        DruidsLeggings(
+            DruidsArmorMaterial.instance,
+            ArmorItem.Type.HELMET,
+            Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(DruidsArmorMaterial.baseDurability))
+        ),
+        "druids_leggings"
+    )
+    val DRUIDS_BOOTS = UniqueItemRegistry.registerItem(
+        DruidsBoots(
+            DruidsArmorMaterial.instance,
+            ArmorItem.Type.HELMET,
+            Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(DruidsArmorMaterial.baseDurability))
+        ),
+        "druids_boots"
+    )
+    val EMBERCHANT = UniqueItemRegistry.registerItem(
+        DruidsBoots(
+            EmberchantArmorMaterial.instance,
+            ArmorItem.Type.HELMET,
+            Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(EmberchantArmorMaterial.baseDurability))
+        ),
+        "emberchant"
+    )
+    val LAMIAS_GIFT = UniqueItemRegistry.registerItem(
+        LamiasGift(
+            LamiasGiftArmorMaterial.instance,
+            ArmorItem.Type.LEGGINGS,
+            Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(LamiasGiftArmorMaterial.baseDurability))
+        ),
+        "lamias_gift"
+    )
+    val WITHER_ROSE_HELMET = UniqueItemRegistry.registerItem(
+        WitherRoseHelmet(
+            WitherRoseArmorMaterial.instance,
+            ArmorItem.Type.HELMET,
+            Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(WitherRoseArmorMaterial.baseDurability))
+        ),
+        "wither_rose_helmet"
+    )
+    val WITHER_ROSE_CHESTPLATE = UniqueItemRegistry.registerItem(
+        WitherRoseChestplate(
+            WitherRoseArmorMaterial.instance,
+            ArmorItem.Type.CHESTPLATE,
+            Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(WitherRoseArmorMaterial.baseDurability))
+        ),
+        "wither_rose_chestplate"
+    )
+    val WITHER_ROSE_LEGGINGS = UniqueItemRegistry.registerItem(
+        WitherRoseLeggings(
+            WitherRoseArmorMaterial.instance,
+            ArmorItem.Type.LEGGINGS,
+            Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(WitherRoseArmorMaterial.baseDurability))
+        ),
+        "wither_rose_leggings"
+    )
+    val WITHER_ROSE_BOOTS = UniqueItemRegistry.registerItem(
+        WitherRoseBoots(
+            WitherRoseArmorMaterial.instance,
+            ArmorItem.Type.BOOTS,
+            Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(WitherRoseArmorMaterial.baseDurability))
+        ),
+        "wither_rose_boots"
+    )
+    val SUEDE_HELMET = UniqueItemRegistry.registerItem(
+        SuedeHelmet(
+            SuedeArmorMaterial.instance,
+            ArmorItem.Type.HELMET,
+            Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(SuedeArmorMaterial.baseDurability))
+        ),
+        "suede_helmet"
+    )
+    val SUEDE_CHESTPLATE = UniqueItemRegistry.registerItem(
+        SuedeChestplate(
+            SuedeArmorMaterial.instance,
+            ArmorItem.Type.CHESTPLATE,
+            Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(SuedeArmorMaterial.baseDurability))
+        ),
+        "suede_chestplate"
+    )
+    val SUEDE_LEGGINGS = UniqueItemRegistry.registerItem(
+        SuedeLeggings(
+            SuedeArmorMaterial.instance,
+            ArmorItem.Type.LEGGINGS,
+            Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(SuedeArmorMaterial.baseDurability))
+        ),
+        "suede_leggings"
+    )
+    val SUEDE_BOOTS = UniqueItemRegistry.registerItem(
+        SuedeBoots(
+            SuedeArmorMaterial.instance,
+            ArmorItem.Type.BOOTS,
+            Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(SuedeArmorMaterial.baseDurability))
+        ),
+        "suede_boots"
+    )
+    val STONEWARD = UniqueItemRegistry.registerItem(
+        Stoneward(
+            StonewardArmorMaterial.instance,
+            ArmorItem.Type.LEGGINGS,
+            Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(StonewardArmorMaterial.baseDurability))
+        ),
+        "stoneward"
+    )
+    val MOONSHADOW = UniqueItemRegistry.registerItem(
+        Moonshadow(
+            MoonshadowArmorMaterial.instance,
+            ArmorItem.Type.BOOTS,
+            Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(MoonshadowArmorMaterial.baseDurability))
+        ),
+        "moonshadow"
+    )
+    val GEISTERGALOSCHEN = UniqueItemRegistry.registerItem(
+        Geistergaloschen(
+            GeistergaloschenArmorMaterial.instance,
+            ArmorItem.Type.BOOTS,
+            Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(GeistergaloschenArmorMaterial.baseDurability))
+        ),
+        "geistergaloschen"
+    )
+    val VOIDWEAVER = UniqueItemRegistry.registerItem(
+        Voidweaver(
+            VoidweaverArmorMaterial.instance,
+            ArmorItem.Type.CHESTPLATE,
+            Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(VoidweaverArmorMaterial.baseDurability))
+        ),
+        "voidweaver"
+    )
+    val ABYSSAL_MASK = UniqueItemRegistry.registerItem(
+        AbyssalMask(
+            AbyssalMaskArmorMaterial.instance,
+            ArmorItem.Type.HELMET,
+            Item.Settings().maxDamage(ArmorItem.Type.HELMET.getMaxDamage(AbyssalMaskArmorMaterial.baseDurability))
+        ),
+        "abyssal_mask"
+    )
+    val GILDED_TEMPEST = UniqueItemRegistry.registerItem(
+        GildedTempest(
+            GildedTempestArmorMaterial.instance,
+            ArmorItem.Type.LEGGINGS,
+            Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(GildedTempestArmorMaterial.baseDurability))
+        ),
+        "gilded_tempest"
+    )
+    val WINDSTRIDER = UniqueItemRegistry.registerItem(
+        Windstrider(
+            WindstriderArmorMaterial.instance,
+            ArmorItem.Type.LEGGINGS,
+            Item.Settings().maxDamage(ArmorItem.Type.LEGGINGS.getMaxDamage(WindstriderArmorMaterial.baseDurability))
+        ),
+        "windstrider"
+    )
+    val BROODMOTHER = UniqueItemRegistry.registerItem(
+        Broodmother(
+            BroodmotherArmorMaterial.instance,
+            ArmorItem.Type.CHESTPLATE,
+            Item.Settings().maxDamage(ArmorItem.Type.CHESTPLATE.getMaxDamage(BroodmotherArmorMaterial.baseDurability))
+        ),
+        "broodmother"
+    )
+    val EMBERREIGN = UniqueItemRegistry.registerItem(
+        Emberreign(
+            EmberreignArmorMaterial.instance,
+            ArmorItem.Type.BOOTS,
+            Item.Settings().maxDamage(ArmorItem.Type.BOOTS.getMaxDamage(EmberreignArmorMaterial.baseDurability))
+        ),
+        "emberreign"
+    )
 }

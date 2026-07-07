@@ -50,7 +50,7 @@ class SlamAttackGoal<T>(
         val target = mob.target ?: return false
         if (!target.isAlive) return false
 
-        if (!mob.isInPositionTargetRange(target.blockPos)) return false
+        if (!mob.isInWalkTargetRange(target.blockPos)) return false
         return target !is PlayerEntity || (!target.isSpectator && !target.isCreative)
     }
 

@@ -4,8 +4,6 @@ import net.minecraft.block.Block
 import net.minecraft.component.ComponentType
 import net.minecraft.entity.EntityType
 import net.minecraft.item.Item
-import net.minecraft.item.equipment.EquipmentAsset
-import net.minecraft.item.equipment.EquipmentAssetKeys
 import net.minecraft.registry.Registry
 import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.RegistryKeys
@@ -18,8 +16,6 @@ object RegistryKeyUtil {
     fun createEntityKey(name: String): RegistryKey<EntityType<*>> = createKey(RegistryKeys.ENTITY_TYPE, name)
 
     fun createDataComponentTypeKey(name: String): RegistryKey<ComponentType<*>> = createKey(RegistryKeys.DATA_COMPONENT_TYPE, name)
-
-    fun createEquipmentAssetKey(name: String): RegistryKey<EquipmentAsset> = createKey(EquipmentAssetKeys.REGISTRY_KEY, name)
 
     private fun <T, R : Registry<T>> createKey(registryKey: RegistryKey<R>, name: String): RegistryKey<T> =
         RegistryKey.of(registryKey, IdentifierUtil.default(name))

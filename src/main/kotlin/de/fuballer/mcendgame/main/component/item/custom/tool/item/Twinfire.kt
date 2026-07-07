@@ -5,11 +5,14 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
+import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesSwordItem
+import de.fuballer.mcendgame.main.component.item.custom.tool.BloodHarvestToolMaterial
+import de.fuballer.mcendgame.main.component.item.custom.tool.TwinfireToolMaterial
 import net.minecraft.component.type.AttributeModifierSlot
 
 class Twinfire(
     settings: Settings,
-) : UniqueAttributesItem(settings) {
+) : UniqueAttributesSwordItem(TwinfireToolMaterial, settings) {
     override fun getCustomAttributes() = listOf(
         getFlatDamageAttribute(),
         RollableCustomAttribute(CustomAttributeTypes.DODGE, 0, DoubleBounds(0.05, 0.08)),

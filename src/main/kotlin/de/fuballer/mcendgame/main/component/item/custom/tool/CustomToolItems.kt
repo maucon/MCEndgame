@@ -17,49 +17,46 @@ import java.util.*
 
 @Injectable
 object CustomToolItems {
-    val BLOODHARVEST = UniqueItemRegistry.registerToolItem(
-        ::Bloodharvest,
-        Item.Settings().sword(CustomToolMaterials.BLOODHARVEST, 7F, -2.4F),
+    val BLOODHARVEST = UniqueItemRegistry.registerItem( // TODO AS -2.4F
+        Bloodharvest(Item.Settings()),
         "bloodharvest"
     )
-    val TWINFIRE = UniqueItemRegistry.registerToolItem(
-        ::Twinfire,
-        Item.Settings().sword(CustomToolMaterials.TWINFIRE, 7F, -2.4F),
+    val TWINFIRE = UniqueItemRegistry.registerItem( // TODO AS -2.4F
+        Twinfire(Item.Settings()),
         "twinfire"
     )
-    val FATESPLITTER = UniqueItemRegistry.registerToolItem(
-        ::Fatesplitter,
-        Item.Settings().axe(CustomToolMaterials.FATESPLITTER, 9F, -3F),
+    val FATESPLITTER = UniqueItemRegistry.registerItem( // TODO AS -3F
+        Fatesplitter(Item.Settings()),
         "fatesplitter"
     )
-    val SERPENTS_FANG = UniqueItemRegistry.registerToolItem(
-        ::SerpentsFang,
-        Item.Settings().sword(CustomToolMaterials.SERPENTS_FANG, 5F, -2.2F),
+    val SERPENTS_FANG = UniqueItemRegistry.registerItem( // TODO AS -2.2F
+        SerpentsFang(Item.Settings()),
         "serpents_fang"
     )
-    val NIGHTREAVER = UniqueItemRegistry.registerToolItem(
-        ::Nightreaver,
-        Item.Settings().sword(CustomToolMaterials.NIGHTREAVER, 5F, -2F),
+    val NIGHTREAVER = UniqueItemRegistry.registerItem( // TODO AS -2F
+        Nightreaver(Item.Settings()),
         "nightreaver"
     )
-    val RADIANT_DAWN = UniqueItemRegistry.registerToolItem(
-        ::RadiantDawn,
-        Item.Settings().sword(CustomToolMaterials.RADIANT_DAWN, 7F, -3.2F),
+    val RADIANT_DAWN = UniqueItemRegistry.registerItem( // TODO AS -3.2F
+        RadiantDawn(Item.Settings()),
         "radiant_dawn"
     )
-    val WINDSTRING = UniqueItemRegistry.registerToolItem(
-        ::Windstring,
-        Item.Settings().maxDamage(500),
+    val WINDSTRING = UniqueItemRegistry.registerItem(
+        Windstring(
+            Item.Settings().maxDamage(500)
+        ),
         "windstring"
     )
-    val HAILSTORM = UniqueItemRegistry.registerToolItem(
-        ::Hailstorm,
-        Item.Settings().maxDamage(500),
+    val HAILSTORM = UniqueItemRegistry.registerItem(
+        Hailstorm(
+            Item.Settings().maxDamage(500),
+        ),
         "hailstorm"
     )
-    val DUSK_PIERCER = UniqueItemRegistry.registerToolItem(
-        ::DuskPiercer,
-        Item.Settings().maxDamage(500),
+    val DUSK_PIERCER = UniqueItemRegistry.registerItem(
+        DuskPiercer(
+            Item.Settings().maxDamage(500),
+        ),
         "dusk_piercer"
     )
     val GRUDGEBEARER = UniqueItemRegistry.registerToolItem(

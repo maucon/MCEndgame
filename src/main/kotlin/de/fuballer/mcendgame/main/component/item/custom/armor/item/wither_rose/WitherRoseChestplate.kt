@@ -4,12 +4,16 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
-import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
+import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesArmorItem
 import net.minecraft.component.type.AttributeModifierSlot
+import net.minecraft.item.ArmorMaterial
+import net.minecraft.registry.entry.RegistryEntry
 
 class WitherRoseChestplate(
+    material: RegistryEntry<ArmorMaterial>,
+    type: Type,
     settings: Settings,
-) : UniqueAttributesItem(settings) {
+) : UniqueAttributesArmorItem(material, type, settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.WITHER_DAMAGE_IMMUNITY, 0),
         RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE_WHILE_WITHERED, 0, DoubleBounds(0.04, 0.06)),

@@ -19,7 +19,6 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getD
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.block.entity.BlockEntity
-import net.minecraft.entity.LazyEntityReference
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.Vec3d
 
@@ -44,7 +43,6 @@ class DungeonPortalService(
 
         RuntimeConfig.SERVER.execute {
             val portals = createEntryPortals(deviceCenterPos, portalType, event.originWorld, dungeonTeleportLocation)
-                .mapNotNull { LazyEntityReference.of(it) }
                 .toMutableList()
 
             val entity = DungeonPortalEntity(deviceId, dungeonWorld, leaveLocation, portals)
@@ -133,7 +131,7 @@ class DungeonPortalService(
         val world = dungeonPortalEntity.leaveLocation.world
 
         dungeonPortalEntity.portals.onEach {
-            LazyEntityReference.resolve(it, world, PortalEntity::class.java)?.discard()
+            it.discard()
         }.clear()
 
         dungeonPortalRepo.delete(dungeonPortalEntity)

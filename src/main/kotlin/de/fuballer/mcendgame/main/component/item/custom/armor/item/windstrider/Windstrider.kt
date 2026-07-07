@@ -4,14 +4,18 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
-import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
+import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesArmorItem
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HidePlayerModelPartArmor
 import net.minecraft.component.type.AttributeModifierSlot
 import net.minecraft.entity.player.PlayerModelPart
+import net.minecraft.item.ArmorMaterial
+import net.minecraft.registry.entry.RegistryEntry
 
 class Windstrider(
+    material: RegistryEntry<ArmorMaterial>,
+    type: Type,
     settings: Settings,
-) : UniqueAttributesItem(settings), HidePlayerModelPartArmor {
+) : UniqueAttributesArmorItem(material, type, settings), HidePlayerModelPartArmor {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.PROJECTILE_DODGE, 0, DoubleBounds(0.3, 0.4)),
         RollableCustomAttribute(CustomAttributeTypes.DODGED_PROJECTILE_REFLECT, 0),

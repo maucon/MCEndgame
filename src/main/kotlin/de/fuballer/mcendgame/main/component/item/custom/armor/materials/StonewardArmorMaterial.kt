@@ -1,28 +1,24 @@
 package de.fuballer.mcendgame.main.component.item.custom.armor.materials
 
-import de.fuballer.mcendgame.main.util.minecraft.RegistryKeyUtil
-import net.minecraft.item.ArmorMaterial
-import net.minecraft.item.equipment.ArmorMaterial
-import net.minecraft.item.equipment.EquipmentAsset
-import net.minecraft.item.equipment.EquipmentType
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.tag.ItemTags
+import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
+import net.minecraft.item.ArmorItem
+import net.minecraft.item.Items
+import net.minecraft.recipe.Ingredient
 import net.minecraft.sound.SoundEvents
 
 object StonewardArmorMaterial : CustomArmorMaterial {
     override val baseDurability = 37
-    override val registryKey: RegistryKey<EquipmentAsset> = RegistryKeyUtil.createEquipmentAssetKey("stoneward")
 
-    override val instance = ArmorMaterial(
-        baseDurability,
+    override val instance = RegistryUtil.registerMaterial(
+        "stoneward",
         mapOf(
-            EquipmentType.LEGGINGS to 6,
+            ArmorItem.Type.LEGGINGS to 6,
         ),
-        15,
+        enchantability = 15,
         SoundEvents.ITEM_ARMOR_EQUIP_GENERIC,
-        3.0f,
-        0.1f,
-        ItemTags.REPAIRS_NETHERITE_ARMOR,
-        registryKey
+        { Ingredient.ofItems(Items.NETHERITE_INGOT) },
+        toughness = 3.0f,
+        knockbackResistance = 0.1f,
+        false
     )
 }

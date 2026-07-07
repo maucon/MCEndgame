@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.SimpleInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandler
+import net.minecraft.screen.slot.Slot
 import net.minecraft.screen.slot.SlotActionType
 
 class TotemScreenHandler(
@@ -22,7 +23,33 @@ class TotemScreenHandler(
         addTotemSlots()
         fillTotemSlots(totems)
 
-        addPlayerSlots(playerInventory, 8, 87)
+        // addPlayerSlots(playerInventory, 8, 87)
+
+        // Player inventory
+        for (row in 0 until 3) {
+            for (column in 0 until 9) {
+                addSlot(
+                    Slot(
+                        playerInventory,
+                        column + row * 9 + 9,
+                        8 + column * 18,
+                        87 + row * 18
+                    )
+                )
+            }
+        }
+
+        // Hotbar
+        for (column in 0 until 9) {
+            addSlot(
+                Slot(
+                    playerInventory,
+                    column,
+                    8 + column * 18,
+                    87 + 58
+                )
+            )
+        }
     }
 
     private fun addTotemSlots() {

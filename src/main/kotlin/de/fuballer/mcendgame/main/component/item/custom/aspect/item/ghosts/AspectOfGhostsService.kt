@@ -47,7 +47,7 @@ object AspectOfGhostsService {
         if (!event.enemyEntity.dropsAspectOfGhosts()) return
 
         val stack = AspectItems.ASPECT_OF_GHOSTS.defaultStack
-        RuntimeConfig.SERVER.execute { event.enemyEntity.dropStack(serverWorld, stack) }
+        RuntimeConfig.SERVER.execute { event.enemyEntity.dropStack(stack) }
     }
 
     @CommandHandler
@@ -69,6 +69,6 @@ object AspectOfGhostsService {
 
         val item = CustomArmorItems.GEISTERGALOSCHEN
         val stack = if (item is UniqueAttributesItemInterface) item.getRolledStack(item) else ItemStack(item)
-        RuntimeConfig.SERVER.execute { event.bossEntity.dropStack(serverWorld, stack) }
+        RuntimeConfig.SERVER.execute { event.bossEntity.dropStack(stack) }
     }
 }

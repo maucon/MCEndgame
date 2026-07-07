@@ -4,15 +4,19 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.IntBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
-import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
+import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesArmorItem
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HideBipedBoneArmor
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HideOtherArmorArmor
 import net.minecraft.component.type.AttributeModifierSlot
 import net.minecraft.entity.EquipmentSlot
+import net.minecraft.item.ArmorMaterial
+import net.minecraft.registry.entry.RegistryEntry
 
 class LamiasGift(
+    material: RegistryEntry<ArmorMaterial>,
+    type: Type,
     settings: Settings,
-) : UniqueAttributesItem(settings), HideBipedBoneArmor, HideOtherArmorArmor {
+) : UniqueAttributesArmorItem(material, type, settings), HideBipedBoneArmor, HideOtherArmorArmor {
     override val hiddenBones = listOf(
         HideBipedBoneArmor.BipedBone.LEGS,
     )

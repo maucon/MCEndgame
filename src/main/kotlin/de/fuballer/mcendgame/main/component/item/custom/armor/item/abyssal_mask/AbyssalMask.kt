@@ -5,14 +5,18 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.custom_attribute.data.StringBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.change_gained_status_effect.ChangeGainedStatusEffectSettings
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
-import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
+import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesArmorItem
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.HidePlayerModelPartArmor
 import net.minecraft.component.type.AttributeModifierSlot
 import net.minecraft.entity.player.PlayerModelPart
+import net.minecraft.item.ArmorMaterial
+import net.minecraft.registry.entry.RegistryEntry
 
 class AbyssalMask(
+    material: RegistryEntry<ArmorMaterial>,
+    type: Type,
     settings: Settings,
-) : UniqueAttributesItem(settings), HidePlayerModelPartArmor {
+) : UniqueAttributesArmorItem(material, type, settings), HidePlayerModelPartArmor {
     override fun getCustomAttributes(): List<RollableCustomAttribute> {
         val chosenConversions = ChangeGainedStatusEffectSettings.getStatusEffectPairs(2)
         val attributes = mutableListOf<RollableCustomAttribute>(

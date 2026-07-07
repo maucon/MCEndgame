@@ -5,11 +5,14 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.IntBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
+import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesSwordItem
+import de.fuballer.mcendgame.main.component.item.custom.tool.BloodHarvestToolMaterial
+import de.fuballer.mcendgame.main.component.item.custom.tool.SerpentsFangToolMaterial
 import net.minecraft.component.type.AttributeModifierSlot
 
 class SerpentsFang(
     settings: Settings,
-) : UniqueAttributesItem(settings) {
+) : UniqueAttributesSwordItem(SerpentsFangToolMaterial, settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.STACKING_MORE_ATTACK_SPEED_ON_MELEE_HIT, 0, listOf(DoubleBounds(0.03, 0.05), IntBounds(4, 6))),
         RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE, 0, listOf(DoubleBounds(-0.2, -0.15))),

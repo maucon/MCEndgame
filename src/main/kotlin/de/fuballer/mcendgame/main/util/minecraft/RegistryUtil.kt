@@ -15,10 +15,8 @@ import net.minecraft.component.ComponentType
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.effect.StatusEffect
-import net.minecraft.item.Item
-import net.minecraft.item.ItemGroup
-import net.minecraft.item.Items
-import net.minecraft.item.equipment.EquipmentType
+import net.minecraft.item.*
+import net.minecraft.recipe.Ingredient
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.registry.RegistryKey
@@ -28,6 +26,7 @@ import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.sound.SoundEvent
 import net.minecraft.util.Rarity
 import net.minecraft.util.math.BlockPos
+import java.util.function.Supplier
 
 object RegistryUtil {
     fun registerItem(factory: (Item.Settings) -> Item, settings: Item.Settings, name: String): Item =
@@ -48,20 +47,6 @@ object RegistryUtil {
 
     fun <T> registerDataComponentType(componentType: ComponentType<T>, name: String): ComponentType<T> =
         Registry.register(Registries.DATA_COMPONENT_TYPE, RegistryKeyUtil.createDataComponentTypeKey(name), componentType)
-
-    fun registerArmorItem(material: CustomArmorMaterial, type: EquipmentType, name: String) =
-        registerItem(
-            ::Item,
-            Item.Settings().armor(material.instance, type),
-            name,
-        )
-
-    fun registerArmorItem(factory: (Item.Settings) -> Item, material: CustomArmorMaterial, type: EquipmentType, name: String) =
-        registerItem(
-            factory,
-            Item.Settings().armor(material.instance, type),
-            name,
-        )
 
     fun <T : ScreenHandler> registerScreenHandler(name: String, screenHandlerType: ScreenHandlerType<T>): ScreenHandlerType<T> =
         Registry.register(Registries.SCREEN_HANDLER, IdentifierUtil.default(name), screenHandlerType)
@@ -87,5 +72,25 @@ object RegistryUtil {
     fun registerSoundEventReference(name: String): RegistryEntry.Reference<SoundEvent> {
         val id = IdentifierUtil.default(name)
         return Registry.registerReference(Registries.SOUND_EVENT, id, SoundEvent.of(id))
+    }
+
+    fun registerMaterial(
+        id: String,
+        defensePoints: Map<ArmorItem.Type, Int>,
+        enchantability: Int,
+        equipSound: RegistryEntry<SoundEvent>,
+        repairIngredientSupplier: Supplier<Ingredient>,
+        toughness: Float,
+        knockbackResistance: Float,
+        dyeable: Boolean
+    ): RegistryEntry<ArmorMaterial> {
+        val layers = listOf( // The ID of the texture layer, the suffix, and whether the layer is dyeable.
+            ArmorMaterial.Layer(IdentifierUtil.default(id), "", dyeable)
+        )
+
+        var material = ArmorMaterial(defensePoints, enchantability, equipSound, repairIngredientSupplier, layers, toughness, knockbackResistance)
+        material = Registry.register(Registries.ARMOR_MATERIAL, IdentifierUtil.default(id), material)
+
+        return RegistryEntry.of(material)
     }
 }

@@ -6,11 +6,14 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItem
+import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesSwordItem
+import de.fuballer.mcendgame.main.component.item.custom.tool.BloodHarvestToolMaterial
+import de.fuballer.mcendgame.main.component.item.custom.tool.RadiantDawnToolMaterial
 import net.minecraft.component.type.AttributeModifierSlot
 
 class RadiantDawn(
     settings: Settings,
-) : UniqueAttributesItem(settings) {
+) : UniqueAttributesSwordItem(RadiantDawnToolMaterial, settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.HEAL_NEARBY_ALLIES_ON_MELEE_HIT, 0, IntBounds(10, 10), DoubleBounds(0.8, 1.2)),
         RollableCustomAttribute(CustomAttributeTypes.INCREASED_HEALING_PER_ELEMENTAL_DAMAGE, 0, DoubleBounds(0.03, 0.05)),

@@ -8,16 +8,18 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.GoatHornItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.registry.tag.InstrumentTags
 import net.minecraft.text.MutableText
 import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
+import net.minecraft.util.TypedActionResult
 import net.minecraft.world.World
 
 abstract class UniqueAttributesHornItem(
     val settings: Settings,
-) : GoatHornItem(settings), UniqueAttributesItemInterface {
+) : GoatHornItem(settings, InstrumentTags.GOAT_HORNS), UniqueAttributesItemInterface {
     companion object {
         const val BASE_KEY = "item.mcendgame.horn."
         const val DESCRIPTION_KEY = BASE_KEY + "description."
@@ -55,18 +57,18 @@ abstract class UniqueAttributesHornItem(
 
     override fun getName(stack: ItemStack): MutableText = super.getName(stack).copy().withColor(getNameColor())
 
-    override fun use(world: World, user: PlayerEntity, hand: Hand): ActionResult {
+    override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
+        val itemStack = user.getStackInHand(hand)
         val result = super.use(world, user, hand)
-        if (result == ActionResult.FAIL) return result
+        if (result.result == ActionResult.FAIL) return result
 
         val command = HornUseCommand(user)
         val cmd = CommandGateway.apply(command)
 
         onUse(world, user, cmd)
 
-        val itemStack = user.getStackInHand(hand)
         val cooldown = (baseCooldown * cmd.getCooldownFactor()).toInt()
-        user.itemCooldownManager.set(itemStack, cooldown)
+        user.itemCooldownManager.set(itemStack.item, cooldown)
 
         return result
     }
