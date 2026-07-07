@@ -46,7 +46,7 @@ class BeastweaverEntity(
     world: Level,
 ) : PathfinderMob(type, world), GeoEntity, DisableAbleGoalsMob, BlockAbleMovementMob<BeastweaverEntity>, Enemy, CustomAttacksMob<BeastweaverEntity> {
     companion object {
-        private const val TRANSFORM_ADDITIONAL_SCALE = 0.15F
+        private const val TRANSFORM_ADDITIONAL_SCALE = 0.25F
 
         private val TRANSFORM_BASE_ANIM = RawAnimation.begin().thenLoop("transform.base")
         private const val MAX_TRANSFORM_PROGRESS_PER_TICK = 0.01F
