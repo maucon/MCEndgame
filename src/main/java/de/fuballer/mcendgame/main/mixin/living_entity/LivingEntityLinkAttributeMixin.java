@@ -8,15 +8,14 @@ import de.fuballer.mcendgame.main.component.custom_attribute.effects.link.LinkSe
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes;
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension;
 import de.fuballer.mcendgame.main.util.extension.EntityExtension;
-import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil;
 import io.netty.buffer.ByteBuf;
 import kotlin.Pair;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricTrackedDataRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandler;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.server.world.ServerWorld;
@@ -56,7 +55,7 @@ public abstract class LivingEntityLinkAttributeMixin implements LivingEntityLink
     private HashSet<UUID> linkedBy = new HashSet<>();
 
     static {
-        FabricTrackedDataRegistry.register(IdentifierUtil.INSTANCE.defaultJava("entity_link_attribute_data_tracker"), UUID_LONG_PAIR_LIST_TRACKED_DATA_HANDLER);
+        TrackedDataHandlerRegistry.register(UUID_LONG_PAIR_LIST_TRACKED_DATA_HANDLER);
     }
 
     @Unique

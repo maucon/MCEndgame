@@ -7,15 +7,15 @@ import de.fuballer.mcendgame.main.mixin.access.EntityAccessMixin;
 import de.maucon.mauconframework.event.EventGateway;
 import it.unimi.dsi.fastutil.doubles.DoubleDoubleImmutablePair;
 import net.minecraft.advancement.criterion.Criteria;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.BlocksAttacksComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.WitchEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.registry.tag.DamageTypeTags;
@@ -46,37 +46,37 @@ public abstract class LivingEntityDamageMixin {
     private long lastDamageTime;
     @Shadow
     private @Nullable DamageSource lastDamageSource;
+    @Shadow
+    protected PlayerEntity attackingPlayer;
 
     @Shadow
-    protected abstract void becomeAngry(DamageSource damageSource);
-
-    @Shadow
-    protected abstract PlayerEntity setAttackingPlayer(DamageSource damageSource);
-
-    @Shadow
-    protected abstract boolean tryUseDeathProtector(DamageSource source);
+    protected int playerHitTimer;
 
     @Shadow
     protected abstract SoundEvent getDeathSound();
 
     @Shadow
-    protected abstract void playThornsSound(DamageSource damageSource);
-
-    @Shadow
     protected abstract void playHurtSound(DamageSource damageSource);
 
     @Shadow
-    protected abstract void applyDamage(ServerWorld world, DamageSource source, float amount);
+    public abstract void setAttacker(@Nullable LivingEntity attacker);
+
+    @Shadow
+    protected abstract void takeShieldHit(LivingEntity livingEntity2);
 
     @Inject(at = @At("HEAD"), method = "damage", cancellable = true)
     protected void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        var value = callDamage(world, source, amount);
+
+        var value = callDamage(source, amount);
         cir.setReturnValue(value);
     }
 
     @Unique
-    private boolean callDamage(ServerWorld world, DamageSource source, float amount) {
+    private boolean callDamage(DamageSource source, float amount) {
         LivingEntity this_ = (LivingEntity) (Object) this;
+
+        if (this_.getWorld().isClient) return false;
+        ServerWorld world = (ServerWorld) this_.getWorld();
 
         var vanillaMoreDamage = new LinkedList<Double>();
         var vanillaMoreDamageTaken = new LinkedList<Double>();
@@ -102,7 +102,10 @@ public abstract class LivingEntityDamageMixin {
         }
         float f = amount;
 
-        float blockedAmount = this_.getDamageBlockedAmount(source, amount);
+        float blockedAmount = 0F;
+        if (this_.blockedByShield(source)) {
+            blockedAmount = amount;
+        }
         amount -= blockedAmount;
         boolean bl2 = bl = blockedAmount > 0.0f;
         ///////////////////////////////////////////////////////////////////////////////////
@@ -158,23 +161,49 @@ public abstract class LivingEntityDamageMixin {
             if (amount <= this.lastDamageTaken) {
                 return false;
             }
-            this.applyDamage(world, source, amount - this.lastDamageTaken);
+            this.applyDamage(source, amount - this.lastDamageTaken);
             this.lastDamageTaken = amount;
             bl22 = false;
         } else {
             this.lastDamageTaken = amount;
             this_.timeUntilRegen = 20;
-            this.applyDamage(world, source, amount);
+            this.applyDamage(source, amount);
             this_.hurtTime = this_.maxHurtTime = 10;
         }
 
-        this.becomeAngry(source);
-        this.setAttackingPlayer(source);
+        Entity entity2 = source.getAttacker();
+        if (entity2 != null) {
+            if (entity2 instanceof LivingEntity livingEntity2) {
+                if (!source.isIn(DamageTypeTags.NO_ANGER) && (!source.isOf(DamageTypes.WIND_CHARGE) || !this_.getType().isIn(EntityTypeTags.NO_ANGER_FROM_WIND_CHARGE))) {
+                    this.setAttacker(livingEntity2);
+                }
+            }
+
+            if (entity2 instanceof PlayerEntity playerEntity) {
+                this.playerHitTimer = 100;
+                this.attackingPlayer = playerEntity;
+            } else if (entity2 instanceof WolfEntity wolfEntity) {
+                if (wolfEntity.isTamed()) {
+                    this.playerHitTimer = 100;
+                    LivingEntity var11 = wolfEntity.getOwner();
+                    if (var11 instanceof PlayerEntity) {
+                        this.attackingPlayer = (PlayerEntity) var11;
+                    } else {
+                        this.attackingPlayer = null;
+                    }
+                }
+            }
+        }
 
         if (bl22) {
-            BlocksAttacksComponent blocksAttacksComponent = this_.getActiveItem().get(DataComponentTypes.BLOCKS_ATTACKS);
-            if (bl && blocksAttacksComponent != null) {
-                blocksAttacksComponent.playBlockSound(world, this_);
+            if (bl && blockedAmount > 0) {
+                this_.damageShield(blockedAmount);
+                if (!source.isIn(DamageTypeTags.IS_PROJECTILE)) {
+                    Entity entity1 = source.getSource();
+                    if (entity1 instanceof LivingEntity livingEntity2) {
+                        this.takeShieldHit(livingEntity2);
+                    }
+                }
             } else {
                 world.sendEntityDamage(this_, source);
             }
@@ -184,8 +213,8 @@ public abstract class LivingEntityDamageMixin {
             if (!source.isIn(DamageTypeTags.NO_KNOCKBACK)) {
                 double d = 0.0;
                 double e = 0.0;
-                Entity entity2 = source.getSource();
-                if (entity2 instanceof ProjectileEntity projectileEntity) {
+                Entity entity22 = source.getSource();
+                if (entity22 instanceof ProjectileEntity projectileEntity) {
                     DoubleDoubleImmutablePair doubleDoubleImmutablePair = projectileEntity.getKnockback(this_, source);
                     d = -doubleDoubleImmutablePair.leftDouble();
                     e = -doubleDoubleImmutablePair.rightDouble();
@@ -200,16 +229,15 @@ public abstract class LivingEntityDamageMixin {
             }
         }
         if (this_.isDead()) {
-            if (!this.tryUseDeathProtector(source)) {
-                if (bl22) {
+            if (!this.tryUseTotem(source)) {
+                if (bl2) {
                     this_.playSound(this.getDeathSound());
-                    this.playThornsSound(source);
                 }
+
                 this_.onDeath(source);
             }
-        } else if (bl22) {
+        } else if (bl2) {
             this.playHurtSound(source);
-            this.playThornsSound(source);
         }
         boolean bl4 = bl3 = !bl || amount > 0.0f;
         if (bl3) {
@@ -222,9 +250,9 @@ public abstract class LivingEntityDamageMixin {
         if ((entity = this_) instanceof ServerPlayerEntity) {
             ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) entity;
             Criteria.ENTITY_HURT_PLAYER.trigger(serverPlayerEntity, source, f, amount, bl);
-            if (blockedAmount > 0.0f && blockedAmount < 3.4028235E37f) {
-                serverPlayerEntity.increaseStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(blockedAmount * 10.0f));
-            }
+//            if (blockedAmount > 0.0f && blockedAmount < 3.4028235E37f) {
+//                serverPlayerEntity.increaseStat(Stats.DAMAGE_BLOCKED_BY_SHIELD, Math.round(blockedAmount * 10.0f));
+//            }
         }
         if ((entity = source.getAttacker()) instanceof ServerPlayerEntity) {
             ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) entity;
@@ -239,12 +267,18 @@ public abstract class LivingEntityDamageMixin {
         return bl3;
     }
 
+    @Shadow
+    protected abstract void applyDamage(DamageSource source, float amount);
+
+    @Shadow
+    protected abstract boolean tryUseTotem(DamageSource source);
+
     /**
      * As we calculate all damage increases and also reductions and mitigations in the *damage* method
      * we need to remove any kind of mitigation of this method, except for absorption amount.
      */
     @Inject(at = @At("HEAD"), method = "applyDamage", cancellable = true)
-    protected void applyDamage(
+    protected void applyDamageMixin(
             DamageSource source,
             float amount,
             CallbackInfo ci

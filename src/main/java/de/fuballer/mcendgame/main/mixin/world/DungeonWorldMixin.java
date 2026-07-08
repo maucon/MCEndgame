@@ -3,7 +3,6 @@ package de.fuballer.mcendgame.main.mixin.world;
 import de.fuballer.mcendgame.main.accessor.DungeonWorldAccessor;
 import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType;
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem;
-import net.minecraft.entity.LazyEntityReference;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -29,7 +28,7 @@ public class DungeonWorldMixin implements DungeonWorldAccessor {
     private int bossesKilled = 0;
 
     @Unique
-    private LazyEntityReference<PlayerEntity> opener;
+    private PlayerEntity opener;
 
     @Unique
     private Map<AspectItem, Integer> aspects = new HashMap<>();
@@ -90,13 +89,13 @@ public class DungeonWorldMixin implements DungeonWorldAccessor {
 
     @Override
     public void mcendgame$setOpener(PlayerEntity opener) {
-        this.opener = LazyEntityReference.of(opener);
+        this.opener = opener;
     }
 
     @Override
     public PlayerEntity mcendgame$getOpener() {
         var world = (World) (Object) this;
-        return LazyEntityReference.getPlayerEntity(opener, world);
+        return opener;
     }
 
     @Override
