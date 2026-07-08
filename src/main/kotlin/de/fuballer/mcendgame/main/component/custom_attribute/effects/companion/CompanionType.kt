@@ -15,6 +15,7 @@ import de.fuballer.mcendgame.main.util.extension.mixin.WolfMixinExtension.setVar
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.TamableAnimal
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.animal.wolf.Wolf
@@ -27,7 +28,7 @@ enum class CompanionType(
     val applyOther: (TamableAnimal, CustomAttribute) -> Unit = { _, _ -> },
 ) {
     WOLF(
-        EntityType.WOLF,
+        EntityTypes.WOLF,
         Wolf::class.java,
         CustomAttributeTypes.WOLF_COMPANION,
         applyOther = applyOther@{ wolf, attribute ->

@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Mob
@@ -105,7 +106,9 @@ class TrainingDummyEntity(
 
     override fun doPush(entity: Entity) {}
 
-    override fun knockback(strength: Double, x: Double, z: Double) {}
+    override fun knockback(power: Double, xd: Double, zd: Double, source: DamageSource, damage: Float) {}
+
+    override fun knockback(power: Double, xd: Double, zd: Double, source: DamageSource, damage: Float, comesFromEffect: Boolean) {}
 
     override fun setDeltaMovement(velocity: Vec3) {}
 

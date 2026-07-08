@@ -3,11 +3,12 @@ package de.fuballer.mcendgame.main.component.entity.types
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.monster.zombie.Zombie
 
 object ZombieStats : EntityTypeStats {
-    override val type: EntityType<Zombie> = EntityType.ZOMBIE
+    override val type: EntityType<Zombie> = EntityTypes.ZOMBIE
 
     override val equipmentClass = EnemyEquipmentClass.MELEE_ATTACK_DAMAGE
     override val canBeInvisible = true

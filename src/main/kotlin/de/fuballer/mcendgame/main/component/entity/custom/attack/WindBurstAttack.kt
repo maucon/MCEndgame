@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
 import de.fuballer.mcendgame.main.util.extension.mixin.WindChargeEntityMixinExtension.setExplosionPower
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.projectile.Projectile
@@ -89,7 +90,7 @@ class WindBurstAttack<T>(
         val distance = distanceVec.length()
 
         repeat(projectileCount(distance)) {
-            val windCharge = WindCharge(EntityType.WIND_CHARGE, serverWorld)
+            val windCharge = WindCharge(EntityTypes.WIND_CHARGE, serverWorld)
             windCharge.setExplosionPower(projectileExplosionPower)
             windCharge.owner = attacker
             windCharge.setPos(spawnPos)

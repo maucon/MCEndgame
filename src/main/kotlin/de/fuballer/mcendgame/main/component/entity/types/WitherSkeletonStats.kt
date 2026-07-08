@@ -3,10 +3,11 @@ package de.fuballer.mcendgame.main.component.entity.types
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.monster.skeleton.WitherSkeleton
 
 object WitherSkeletonStats : EntityTypeStats {
-    override val type: EntityType<WitherSkeleton> = EntityType.WITHER_SKELETON
+    override val type: EntityType<WitherSkeleton> = EntityTypes.WITHER_SKELETON
 
     override val equipmentClass= EnemyEquipmentClass.MELEE_ATTACK_DAMAGE
     override val canBeInvisible = true
