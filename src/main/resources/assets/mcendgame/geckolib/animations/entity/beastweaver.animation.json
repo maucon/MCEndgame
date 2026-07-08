@@ -244,16 +244,6 @@
 					"scale": {
 						"vector": ["(1 - 0.35 * math.max(0, query.mcendgame_transform - 0.5))", "(1 + 0.1 * math.max(0, query.mcendgame_transform - 0.5))", 1]
 					}
-				},
-				"leftAntlerBase": {
-					"scale": {
-						"vector": ["1 + 0.25 * query.mcendgame_transform", "1 + 0.25 * query.mcendgame_transform", "1 + 0.25 * query.mcendgame_transform"]
-					}
-				},
-				"rightAntlerBase": {
-					"scale": {
-						"vector": ["1 + 0.25 * query.mcendgame_transform", "1 + 0.25 * query.mcendgame_transform", "1 + 0.25 * query.mcendgame_transform"]
-					}
 				}
 			}
 		},
@@ -1056,7 +1046,6 @@
 			}
 		},
 		"transform.antlers": {
-			"loop": "hold_on_last_frame",
 			"animation_length": 2.5417,
 			"bones": {
 				"leftAntlerBase": {
@@ -1862,6 +1851,162 @@
 						},
 						"2.5417": {
 							"vector": [1, 1, 1]
+						}
+					}
+				}
+			}
+		},
+		"misc.idle": {
+			"loop": true,
+			"animation_length": 4,
+			"bones": {
+				"upperBody": {
+					"position": {
+						"0.0": {
+							"post": {
+								"vector": [0, -0.05, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
+							"post": {
+								"vector": [0, "0.075 + 0.075 * query.mcendgame_transform", 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"4.0": {
+							"post": {
+								"vector": [0, -0.05, 0]
+							},
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"chest": {
+					"position": {
+						"0.0": {
+							"post": {
+								"vector": [0, -0.03, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
+							"post": {
+								"vector": [0, "0.075 + 0.075 * query.mcendgame_transform", 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"4.0": {
+							"post": {
+								"vector": [0, -0.03, 0]
+							},
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"breast": {
+					"rotation": {
+						"0.0": {
+							"post": {
+								"vector": [0, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
+							"post": {
+								"vector": ["-2.5 - 2.5 * query.mcendgame_transform", 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"4.0": {
+							"post": {
+								"vector": [0, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"leftArm": {
+					"rotation": {
+						"0.0": {
+							"post": {
+								"vector": [0, 0, -2]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
+							"post": {
+								"vector": [0, "-2.5 - 2.5 * query.mcendgame_transform", "-4.5 - 3 * query.mcendgame_transform"]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"4.0": {
+							"post": {
+								"vector": [0, 0, -2]
+							},
+							"lerp_mode": "catmullrom"
+						}
+					},
+					"position": {
+						"0.0": {
+							"post": {
+								"vector": [0, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
+							"post": {
+								"vector": [0, "0.1 + 0.2 * query.mcendgame_transform", 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"4.0": {
+							"post": {
+								"vector": [0, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"rightArm": {
+					"rotation": {
+						"0.0": {
+							"post": {
+								"vector": [0, 0, 2]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
+							"post": {
+								"vector": [0, "2.5 + 2.5 * query.mcendgame_transform", "4.5 + 3 * query.mcendgame_transform"]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"4.0": {
+							"post": {
+								"vector": [0, 0, 2]
+							},
+							"lerp_mode": "catmullrom"
+						}
+					},
+					"position": {
+						"0.0": {
+							"post": {
+								"vector": [0, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
+							"post": {
+								"vector": [0, "0.1 + 0.2 * query.mcendgame_transform", 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"4.0": {
+							"post": {
+								"vector": [0, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
 						}
 					}
 				}

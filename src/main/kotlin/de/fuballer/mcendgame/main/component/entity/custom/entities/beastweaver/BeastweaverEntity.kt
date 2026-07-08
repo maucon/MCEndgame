@@ -7,11 +7,11 @@ import com.geckolib.animatable.manager.AnimatableManager
 import com.geckolib.animation.AnimationController
 import com.geckolib.animation.RawAnimation
 import com.geckolib.animation.`object`.PlayState
+import com.geckolib.constant.DefaultAnimations
 import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
-import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.BeakburnEntity
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
@@ -202,8 +202,14 @@ class BeastweaverEntity(
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
-            AnimationController<BeakburnEntity>("Transform Base", 0)
-            { test -> test.setAndContinue(TRANSFORM_BASE_ANIM) },
+            AnimationController<BeastweaverEntity>("Walk/Idle", 5)
+            { test ->
+                test.setAndContinue(if (test.isMoving) DefaultAnimations.IDLE else DefaultAnimations.IDLE)
+            },
+
+            AnimationController<BeastweaverEntity>("Transform Base", 0)
+            { test -> test.setAndContinue(TRANSFORM_BASE_ANIM) }
+                .additiveAnimations(),
 
             transformShoulderSpikesAnimationController,
             transformAntlersAnimationController,
