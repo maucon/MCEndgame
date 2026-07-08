@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.component.killer.db
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import de.maucon.mauconframework.stereotype.Entity
+import io.netty.buffer.ByteBuf
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.EquipmentSlot
@@ -47,8 +48,14 @@ data class KillerEntity(
                 ).apply(instance, ::KillerEntity)
             }
 
+        val EQUIPMENT_SLOT_PACKET_CODEC: PacketCodec<ByteBuf, EquipmentSlot> =
+            PacketCodecs.indexed(
+                { id -> EquipmentSlot.entries[id] },
+                { slot -> slot.ordinal }
+            )
+
         val EQUIPMENT_MAP_PACKET_CODEC: PacketCodec<RegistryByteBuf, Map<EquipmentSlot, ItemStack>> =
-            PacketCodecs.map(::Object2ObjectOpenHashMap, EquipmentSlot.PACKET_CODEC, ItemStack.PACKET_CODEC)
+            PacketCodecs.map(::Object2ObjectOpenHashMap, EQUIPMENT_SLOT_PACKET_CODEC, ItemStack.PACKET_CODEC)
 
         val STATUS_EFFECTS_PACKET_CODEC: PacketCodec<RegistryByteBuf, List<StatusEffectInstance>> =
             PacketCodecs.collection(::ArrayList, StatusEffectInstance.PACKET_CODEC)

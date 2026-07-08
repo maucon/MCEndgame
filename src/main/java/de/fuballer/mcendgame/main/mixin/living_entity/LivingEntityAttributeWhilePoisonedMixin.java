@@ -30,8 +30,8 @@ public abstract class LivingEntityAttributeWhilePoisonedMixin {
         if (entity.age % 10 != 0) return;
 
         var isPoisoned = entity.hasStatusEffect(StatusEffects.POISON);
-        tickAttributeWhilePoisoned(isPoisoned, EntityAttributes.MOVEMENT_SPEED, CustomAttributeTypes.INSTANCE.getINCREASED_MOVEMENT_SPEED_WHILE_POISONED(), entity);
-        tickAttributeWhilePoisoned(isPoisoned, EntityAttributes.ATTACK_DAMAGE, CustomAttributeTypes.INSTANCE.getINCREASED_ATTACK_DAMAGE_WHILE_POISONED(), entity);
+        tickAttributeWhilePoisoned(isPoisoned, EntityAttributes.GENERIC_MOVEMENT_SPEED, CustomAttributeTypes.INSTANCE.getINCREASED_MOVEMENT_SPEED_WHILE_POISONED(), entity);
+        tickAttributeWhilePoisoned(isPoisoned, EntityAttributes.GENERIC_ATTACK_DAMAGE, CustomAttributeTypes.INSTANCE.getINCREASED_ATTACK_DAMAGE_WHILE_POISONED(), entity);
     }
 
     @Unique

@@ -41,7 +41,8 @@ class TotemService(
     private fun getPlayerTotems(player: PlayerEntity) = playerTotemsRepository.findById(player.uuid)?.totems ?: listOf()
 
     fun savePlayerTotems(player: PlayerEntity, inventory: Inventory) {
-        val entity = PlayerTotemsEntity(player.uuid, inventory.toList())
+        val itemStacks = (0 until inventory.size()).map { slot -> inventory.getStack(slot) }
+        val entity = PlayerTotemsEntity(player.uuid, itemStacks)
         playerTotemsRepository.save(entity)
     }
 

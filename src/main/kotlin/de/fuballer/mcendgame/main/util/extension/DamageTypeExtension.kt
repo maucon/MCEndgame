@@ -7,7 +7,7 @@ import net.minecraft.registry.RegistryKeys
 
 object DamageTypeExtension {
     fun DamageType.isOf(type: RegistryKey<DamageType>): Boolean {
-        val registry = RuntimeConfig.SERVER.registryManager.getOrThrow(RegistryKeys.DAMAGE_TYPE)
+        val registry = RuntimeConfig.SERVER.registryManager.getOptional(RegistryKeys.DAMAGE_TYPE).orElseThrow()
         val key1 = registry.getKey(this).orElse(null)
 
         return key1 == type

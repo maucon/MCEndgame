@@ -23,5 +23,7 @@ data class AuraStatusEffect(
                 Codec.INT.optionalFieldOf("range", 10).forGetter { it.range }
             ).apply(instance, ::AuraStatusEffect)
         }
+
+        val LIST_CODEC = CODEC.listOf()
     }
 }

@@ -2,8 +2,7 @@ package de.fuballer.mcendgame.main.mixin.enemy;
 
 import de.fuballer.mcendgame.main.accessor.LivingEntityDungeonEnemyAccessor;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -43,15 +42,15 @@ public class LivingEntityDungeonEnemyMixin implements LivingEntityDungeonEnemyAc
         dropsAspectOfGhosts = drops;
     }
 
-    @Inject(method = "writeCustomData", at = @At("TAIL"))
-    private void writeNBT(WriteView view, CallbackInfo ci) {
-        if (isDungeonEnemy) view.putBoolean(DUNGEON_ENEMY_NBT, true);
-        if (dropsAspectOfGhosts) view.putBoolean(DROPS_ASPECT_OF_GHOSTS_NBT, true);
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    private void writeNBT(NbtCompound nbt, CallbackInfo ci) {
+        if (isDungeonEnemy) nbt.putBoolean(DUNGEON_ENEMY_NBT, true);
+        if (dropsAspectOfGhosts) nbt.putBoolean(DROPS_ASPECT_OF_GHOSTS_NBT, true);
     }
 
-    @Inject(method = "readCustomData", at = @At("TAIL"))
-    private void readNBT(ReadView view, CallbackInfo ci) {
-        isDungeonEnemy = view.getBoolean(DUNGEON_ENEMY_NBT, false);
-        dropsAspectOfGhosts = view.getBoolean(DROPS_ASPECT_OF_GHOSTS_NBT, false);
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    private void readNBT(NbtCompound nbt, CallbackInfo ci) {
+        isDungeonEnemy = nbt.getBoolean(DUNGEON_ENEMY_NBT);
+        dropsAspectOfGhosts = nbt.getBoolean(DROPS_ASPECT_OF_GHOSTS_NBT);
     }
 }

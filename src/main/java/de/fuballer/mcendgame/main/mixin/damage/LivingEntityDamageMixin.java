@@ -69,7 +69,7 @@ public abstract class LivingEntityDamageMixin {
     protected abstract void applyDamage(ServerWorld world, DamageSource source, float amount);
 
     @Inject(at = @At("HEAD"), method = "damage", cancellable = true)
-    protected void damage(ServerWorld world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    protected void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         var value = callDamage(world, source, amount);
         cir.setReturnValue(value);
     }
@@ -84,7 +84,7 @@ public abstract class LivingEntityDamageMixin {
         Entity entity;
         boolean bl3;
         boolean bl;
-        if (this_.isInvulnerableTo(world, source)) {
+        if (this_.isInvulnerableTo(source)) {
             return false;
         }
         if (this_.isDead()) {
@@ -102,7 +102,7 @@ public abstract class LivingEntityDamageMixin {
         }
         float f = amount;
 
-        float blockedAmount = this_.getDamageBlockedAmount(world, source, amount);
+        float blockedAmount = this_.getDamageBlockedAmount(source, amount);
         amount -= blockedAmount;
         boolean bl2 = bl = blockedAmount > 0.0f;
         ///////////////////////////////////////////////////////////////////////////////////
@@ -216,7 +216,7 @@ public abstract class LivingEntityDamageMixin {
             this.lastDamageSource = source;
             this.lastDamageTime = this_.getEntityWorld().getTime();
             for (StatusEffectInstance statusEffectInstance : this_.getStatusEffects()) {
-                statusEffectInstance.onEntityDamage(world, this_, source, amount);
+                statusEffectInstance.onEntityDamage(this_, source, amount);
             }
         }
         if ((entity = this_) instanceof ServerPlayerEntity) {
@@ -245,7 +245,6 @@ public abstract class LivingEntityDamageMixin {
      */
     @Inject(at = @At("HEAD"), method = "applyDamage", cancellable = true)
     protected void applyDamage(
-            ServerWorld world,
             DamageSource source,
             float amount,
             CallbackInfo ci
@@ -254,7 +253,7 @@ public abstract class LivingEntityDamageMixin {
 
         // region original
         Entity entity;
-        if (this_.isInvulnerableTo(world, source)) {
+        if (this_.isInvulnerableTo(source)) {
             return;
         }
 

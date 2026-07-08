@@ -18,9 +18,8 @@ import net.minecraft.entity.data.TrackedData
 import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.storage.ReadView
-import net.minecraft.storage.WriteView
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtOps
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Arm
 import net.minecraft.util.Hand
@@ -104,9 +103,11 @@ class PortalEntity(
     override fun equipStack(slot: EquipmentSlot?, stack: ItemStack) {}
     override fun getMainArm(): Arm = Arm.RIGHT
 
-    override fun damage(world: ServerWorld, source: DamageSource, amount: Float) = false
+    override fun damage(source: DamageSource, amount: Float) = false
 
-    override fun kill(level: ServerWorld) {
+    override fun getArmorItems(): Iterable<ItemStack> = listOf()
+
+    override fun kill() {
         remove(RemovalReason.KILLED)
     }
 
@@ -115,16 +116,18 @@ class PortalEntity(
         builder.add(TYPE, "default")
     }
 
-    override fun readCustomData(view: ReadView) {
-        super.readCustomData(view)
+    override fun readCustomDataFromNbt(nbt: NbtCompound) {
+        super.readCustomDataFromNbt(nbt)
 
-        if (!view.contains(DATA_KEY)) {
+        if (!nbt.contains(DATA_KEY)) {
             log.info("Marking outdated portal to be removed: $uuid")
             removed = true
             return
         }
 
-        val result = view.read(DATA_KEY, PortalEntityData.CODEC)
+        val result = PortalEntityData.CODEC
+            .parse(NbtOps.INSTANCE, nbt.get(DATA_KEY))
+            .result()
         if (result.isEmpty) {
             log.warn("Cannot load data of portal: $uuid")
             removed = true
@@ -141,15 +144,21 @@ class PortalEntity(
         type = PortalType.getById(data.typeId)
         dataTracker.set(TYPE, data.typeId)
 
-        if (entityWorld.isClient) return
+        if (world.isClient) return
 
         singleUse = data.singleUse
         teleportLocation = data.teleportLocation
     }
 
-    override fun writeCustomData(view: WriteView) {
-        super.writeCustomData(view)
+    override fun writeCustomDataToNbt(nbt: NbtCompound) {
+        super.writeCustomDataToNbt(nbt)
 
-        view.put(DATA_KEY, PortalEntityData.CODEC, PortalEntityData(type.getId(), singleUse, teleportLocation))
+        nbt.put(
+            DATA_KEY,
+            PortalEntityData.CODEC.encodeStart(
+                NbtOps.INSTANCE,
+                PortalEntityData(type.getId(), singleUse, teleportLocation),
+            ).getOrThrow(),
+        )
     }
 }

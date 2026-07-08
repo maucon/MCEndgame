@@ -10,7 +10,6 @@ import net.minecraft.entity.boss.dragon.phase.PhaseType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,7 +34,7 @@ public abstract class EnderDragonEntityDamageCalculationMixin extends LivingEnti
     private PhaseManager phaseManager;
 
     @Inject(at = @At("HEAD"), method = "damagePart", cancellable = true)
-    protected void damagePart(ServerWorld world, EnderDragonPart part, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    protected void damagePart(EnderDragonPart part, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this.phaseManager.getCurrent().getType() == PhaseType.DYING) {
             cir.setReturnValue(false);
         } else {
@@ -66,7 +65,7 @@ public abstract class EnderDragonEntityDamageCalculationMixin extends LivingEnti
                             : new ExtendedDamageSource(source);
 
                     extendedSource.getDamageCalculationConfig().enderDragonDamageReduction(damageReduction);
-                    super.damage(world, extendedSource, amount);
+                    super.damage(extendedSource, amount);
                     //////////////////////////////////////////////////////////////////////////////////////
 
                     if (this.isDead() && !this.phaseManager.getCurrent().isSittingOrHovering()) {

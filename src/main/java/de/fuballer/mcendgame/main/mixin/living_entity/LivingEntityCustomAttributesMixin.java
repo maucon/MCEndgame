@@ -5,11 +5,8 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribut
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,17 +31,17 @@ public class LivingEntityCustomAttributesMixin implements LivingEntityCustomAttr
         builder.add(CUSTOM_ATTRIBUTES, new LinkedList<>());
     }
 
-    @Inject(method = "writeCustomData", at = @At("TAIL"))
-    void writeNbt(WriteView view, CallbackInfo ci) {
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    void writeNbt(NbtCompound nbt, CallbackInfo ci) {
         var attributes = mcendgame$getCustomAttributes();
         if (attributes.isEmpty()) return;
 
-        view.put(CUSTOM_ATTRIBUTES_NBT_KEY, CustomAttribute.Companion.getCODEC().listOf(), attributes);
+        nbt.put(CUSTOM_ATTRIBUTES_NBT_KEY, CustomAttribute.Companion.getLIST_CODEC().encodeStart(NbtOps.INSTANCE, attributes).getOrThrow());
     }
 
-    @Inject(method = "readCustomData", at = @At("TAIL"))
-    void readNbt(ReadView view, CallbackInfo ci) {
-        var attributes = view.read(CUSTOM_ATTRIBUTES_NBT_KEY, CustomAttribute.Companion.getCODEC().listOf()).orElse(List.of());
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    void readNbt(NbtCompound nbt, CallbackInfo ci) {
+        var attributes = CustomAttribute.Companion.getLIST_CODEC().parse(NbtOps.INSTANCE, nbt.get(CUSTOM_ATTRIBUTES_NBT_KEY)).result().orElse(List.of());
 
         var entity = (LivingEntity) (Object) this;
         var dataTracker = entity.getDataTracker();

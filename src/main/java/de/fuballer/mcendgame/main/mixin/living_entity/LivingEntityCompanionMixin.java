@@ -2,8 +2,7 @@ package de.fuballer.mcendgame.main.mixin.living_entity;
 
 import de.fuballer.mcendgame.main.accessor.LivingEntityCompanionAccessor;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,13 +26,13 @@ public class LivingEntityCompanionMixin implements LivingEntityCompanionAccessor
         isCompanion = true;
     }
 
-    @Inject(method = "writeCustomData", at = @At("TAIL"))
-    private void writeNBT(WriteView view, CallbackInfo ci) {
-        if (isCompanion) view.putBoolean(COMPANION_NBT, true);
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    private void writeNBT(NbtCompound nbt, CallbackInfo ci) {
+        if (isCompanion) nbt.putBoolean(COMPANION_NBT, true);
     }
 
-    @Inject(method = "readCustomData", at = @At("TAIL"))
-    private void readNBT(ReadView view, CallbackInfo ci) {
-        isCompanion = view.getBoolean(COMPANION_NBT, false);
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    private void readNBT(NbtCompound nbt, CallbackInfo ci) {
+        isCompanion = nbt.getBoolean(COMPANION_NBT);
     }
 }

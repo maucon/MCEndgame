@@ -1,19 +1,18 @@
 package de.fuballer.mcendgame.client.component.screen
 
 import com.mojang.authlib.GameProfile
+import de.fuballer.mcendgame.main.component.inventory.EmptySpriteSlot
 import de.fuballer.mcendgame.main.component.killer.KillerScreenHandler
 import de.fuballer.mcendgame.main.component.killer.db.KillerEntity
 import de.fuballer.mcendgame.main.util.ColorUtil
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gl.RenderPipelines
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.ingame.HandledScreen
 import net.minecraft.client.gui.screen.ingame.InventoryScreen
 import net.minecraft.client.network.OtherClientPlayerEntity
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.registry.Registries
 import net.minecraft.text.Text
@@ -62,7 +61,7 @@ class KillerScreen(
 
         var livingEntity: LivingEntity
         if (type != EntityType.PLAYER) {
-            livingEntity = type.create(world, SpawnReason.COMMAND) as LivingEntity
+            livingEntity = type.create(world) as LivingEntity
         } else {
             val name = killerEntity.displayName.getOrNull()?.string ?: ""
             val profile = GameProfile(killerEntity.killerUUID, name)
@@ -104,7 +103,6 @@ class KillerScreen(
         val textureY = (height - backgroundHeight) / 2
 
         context.drawTexture(
-            RenderPipelines.GUI_TEXTURED,
             TEXTURE,
             textureX,
             textureY,
@@ -116,7 +114,22 @@ class KillerScreen(
             backgroundHeight,
         )
 
+        drawEmptySlotSprites(context)
+
         drawKillerEntity(context, mouseX, mouseY)
+    }
+
+    private fun drawEmptySlotSprites(context: DrawContext) {
+        for (slot in handler.slots) {
+            if (slot !is EmptySpriteSlot || slot.hasStack()) continue
+            context.drawGuiTexture(
+                slot.sprite,
+                x + slot.x,
+                y + slot.y,
+                16,
+                16
+            )
+        }
     }
 
     private fun drawKillerEntity(

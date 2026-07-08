@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.main.util.minecraft
 
-import de.fuballer.mcendgame.main.component.item.custom.armor.materials.CustomArmorMaterial
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItem
@@ -8,7 +7,6 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntit
 import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.component.ComponentType
@@ -29,21 +27,18 @@ import net.minecraft.util.math.BlockPos
 import java.util.function.Supplier
 
 object RegistryUtil {
-    fun registerItem(factory: (Item.Settings) -> Item, settings: Item.Settings, name: String): Item =
-        Items.register(RegistryKeyUtil.createItemKey(name), factory, settings)
+    fun registerItem(factory: (Item.Settings) -> Item, settings: Item.Settings, id: String): Item =
+        Registry.register(Registries.ITEM, RegistryKey.of(Registries.ITEM.getKey(), IdentifierUtil.default(id)), factory(settings))
 
-    fun registerBlock(factory: (AbstractBlock.Settings) -> Block, settings: AbstractBlock.Settings, name: String): Block =
-        Blocks.register(RegistryKeyUtil.createBlockKey(name), factory, settings)
+    fun registerBlock(factory: (AbstractBlock.Settings) -> Block, settings: AbstractBlock.Settings, id: String): Block =
+        Registry.register(Registries.BLOCK, RegistryKeyUtil.createBlockKey(id), factory(settings))
             .also { Items.register(it) }
 
     fun <T : BlockEntity> registerBlockEntityType(factory: (BlockPos, BlockState) -> T, block: Block, name: String): BlockEntityType<T> =
         Registry.register(Registries.BLOCK_ENTITY_TYPE, IdentifierUtil.default(name), FabricBlockEntityTypeBuilder.create(factory, block).build())
 
-    fun <T : Entity> registerEntity(key: RegistryKey<EntityType<*>>, type: EntityType.Builder<T>): EntityType<T> =
-        Registry.register(Registries.ENTITY_TYPE, key, type.build(key))
-
-    fun <T : Entity> registerEntity(name: String, type: EntityType.Builder<T>): EntityType<T> =
-        registerEntity(RegistryKeyUtil.createEntityKey(name), type)
+    fun <T : Entity> registerEntity(id: String, type: EntityType.Builder<T>): EntityType<T> =
+        Registry.register(Registries.ENTITY_TYPE, id, type.build(id))
 
     fun <T> registerDataComponentType(componentType: ComponentType<T>, name: String): ComponentType<T> =
         Registry.register(Registries.DATA_COMPONENT_TYPE, RegistryKeyUtil.createDataComponentTypeKey(name), componentType)
@@ -57,9 +52,11 @@ object RegistryUtil {
     fun registerStatusEffect(name: String, effect: StatusEffect): RegistryEntry<StatusEffect> =
         Registry.registerReference(Registries.STATUS_EFFECT, IdentifierUtil.default(name), effect)
 
-    fun registerAspectItem(factory: (Item.Settings) -> Item, name: String, rarity: Rarity = Rarity.UNCOMMON) = registerItem(factory, Item.Settings().rarity(rarity), name) as AspectItem
+    fun registerAspectItem(factory: (Item.Settings) -> Item, name: String, rarity: Rarity = Rarity.UNCOMMON) =
+        registerItem(factory, Item.Settings().rarity(rarity), name) as AspectItem
 
-    fun registerCrystalItem(factory: (Item.Settings) -> Item, name: String, rarity: Rarity = Rarity.UNCOMMON) = registerItem(factory, Item.Settings().rarity(rarity), name) as CrystalItem
+    fun registerCrystalItem(factory: (Item.Settings) -> Item, name: String, rarity: Rarity = Rarity.UNCOMMON) =
+        registerItem(factory, Item.Settings().rarity(rarity), name) as CrystalItem
 
     fun registerTotemItem(factory: (Item.Settings) -> Item, name: String, rarity: Rarity = Rarity.UNCOMMON) =
         registerItem(factory, Item.Settings().rarity(rarity).maxCount(1), name) as TotemItem

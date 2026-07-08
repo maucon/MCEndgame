@@ -13,7 +13,6 @@ import de.fuballer.mcendgame.main.util.extension.Vec3dExtension.angleDeg
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.maucon.mauconframework.command.CommandGateway
-import net.minecraft.component.DataComponentTypes
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.LivingEntity
@@ -194,11 +193,8 @@ object EntityExtension {
     }
 
     fun LivingEntity.setShieldsCooldown(cooldown: Float) {
-        val serverWorld = entityWorld as? ServerWorld ?: return
-
-        val shieldStack = Items.SHIELD.defaultStack
-        val blocksAttacksComponent = shieldStack.get(DataComponentTypes.BLOCKS_ATTACKS) ?: return
-        blocksAttacksComponent.applyShieldCooldown(serverWorld, this, cooldown, shieldStack)
+        if (this !is PlayerEntity) return
+        itemCooldownManager.set(Items.SHIELD, (cooldown * 20).toInt())
     }
 
     fun Entity.setAndSyncVelocity(newVelocity: Vec3d) {

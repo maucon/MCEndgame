@@ -5,12 +5,9 @@ import de.fuballer.mcendgame.main.component.custom_attribute.effects.data.AuraSt
 import de.fuballer.mcendgame.main.util.extension.EntityExtension;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.RegistryOps;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -98,25 +95,41 @@ public class LivingEntityAuraMixin implements LivingEntityAuraAccessor {
         }
     }
 
-    @Inject(method = "writeCustomData", at = @At("TAIL"))
-    void writeNBT(WriteView view, CallbackInfo ci) {
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    void writeNBT(NbtCompound nbt, CallbackInfo ci) {
         if (!allyAuraStatusEffects.isEmpty()) {
-            view.put(ALLY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf(), List.copyOf(allyAuraStatusEffects.values()));
+            nbt.put(
+                    ALLY_AURA_STATUS_EFFECTS_NBT,
+                    AuraStatusEffect.Companion.getLIST_CODEC()
+                            .encodeStart(NbtOps.INSTANCE, List.copyOf(allyAuraStatusEffects.values()))
+                            .getOrThrow()
+            );
         }
         if (!enemyAuraStatusEffects.isEmpty()) {
-            view.put(ENEMY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf(), List.copyOf(enemyAuraStatusEffects.values()));
+            nbt.put(
+                    ENEMY_AURA_STATUS_EFFECTS_NBT,
+                    AuraStatusEffect.Companion.getLIST_CODEC()
+                            .encodeStart(NbtOps.INSTANCE, List.copyOf(enemyAuraStatusEffects.values()))
+                            .getOrThrow()
+            );
         }
     }
 
-    @Inject(method = "readCustomData", at = @At("TAIL"))
-    void readNBT(ReadView view, CallbackInfo ci) {
-        List<AuraStatusEffect> allyEffects = view.read(ALLY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf()).orElse(List.of());
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    void readNBT(NbtCompound nbt, CallbackInfo ci) {
+        List<AuraStatusEffect> allyEffects = AuraStatusEffect.Companion.getLIST_CODEC()
+                .parse(NbtOps.INSTANCE, nbt.get(ALLY_AURA_STATUS_EFFECTS_NBT))
+                .result()
+                .orElse(List.of());
         allyAuraStatusEffects.clear();
         for (AuraStatusEffect auraStatusEffect : allyEffects) {
             allyAuraStatusEffects.put(auraStatusEffect.getType(), auraStatusEffect);
         }
 
-        List<AuraStatusEffect> enemyEffects = view.read(ENEMY_AURA_STATUS_EFFECTS_NBT, AuraStatusEffect.Companion.getCODEC().listOf()).orElse(List.of());
+        List<AuraStatusEffect> enemyEffects = AuraStatusEffect.Companion.getLIST_CODEC()
+                .parse(NbtOps.INSTANCE, nbt.get(ENEMY_AURA_STATUS_EFFECTS_NBT))
+                .result()
+                .orElse(List.of());
         enemyAuraStatusEffects.clear();
         for (AuraStatusEffect auraStatusEffect : enemyEffects) {
             enemyAuraStatusEffects.put(auraStatusEffect.getType(), auraStatusEffect);

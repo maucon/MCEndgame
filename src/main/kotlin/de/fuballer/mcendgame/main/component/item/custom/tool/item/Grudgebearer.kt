@@ -6,6 +6,8 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesShieldItem
 import net.minecraft.component.type.AttributeModifierSlot
+import net.minecraft.sound.SoundEvent
+import net.minecraft.sound.SoundEvents
 
 class Grudgebearer(
     settings: Settings,
@@ -17,4 +19,6 @@ class Grudgebearer(
     )
 
     override fun getAttributeModifierSlot() = AttributeModifierSlot.HAND
+
+    override fun getBreakSound(): SoundEvent = SoundEvents.ITEM_SHIELD_BREAK
 }

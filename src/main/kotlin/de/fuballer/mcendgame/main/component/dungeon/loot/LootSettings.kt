@@ -7,6 +7,8 @@ import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
 import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItems
 import de.fuballer.mcendgame.main.util.random.LevelRestrictedRandomOption
 import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.minecraft.entity.EntityType
+import net.minecraft.item.Item
 import kotlin.random.Random
 
 object LootSettings {

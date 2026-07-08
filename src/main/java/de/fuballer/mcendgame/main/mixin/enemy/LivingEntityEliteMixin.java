@@ -2,8 +2,7 @@ package de.fuballer.mcendgame.main.mixin.enemy;
 
 import de.fuballer.mcendgame.main.accessor.LivingEntityEliteAccessor;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,14 +26,14 @@ public class LivingEntityEliteMixin implements LivingEntityEliteAccessor {
         this.isElite = isElite;
     }
 
-    @Inject(method = "writeCustomData", at = @At("TAIL"))
-    private void writeNBT(WriteView view, CallbackInfo ci) {
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    private void writeNBT(NbtCompound nbt, CallbackInfo ci) {
         if (!isElite) return;
-        view.putBoolean(ELITE_NBT, true);
+        nbt.putBoolean(ELITE_NBT, true);
     }
 
-    @Inject(method = "readCustomData", at = @At("TAIL"))
-    private void readNBT(ReadView view, CallbackInfo ci) {
-        isElite = view.getBoolean(ELITE_NBT, false);
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    private void readNBT(NbtCompound nbt, CallbackInfo ci) {
+        isElite = nbt.getBoolean(ELITE_NBT);
     }
 }

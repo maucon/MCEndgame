@@ -36,8 +36,8 @@ public class LookAtEntityGoalPredicateMixin {
     ) {
         TargetPredicate basePredicate = this.targetPredicate.copy();
 
-        this.targetPredicate.setPredicate((entity, world) ->
-                basePredicate.test(world, mob, entity) && canLookAt(mob, entity)
+        this.targetPredicate.setPredicate((entity) ->
+                basePredicate.test(mob, entity) && canLookAt(mob, entity)
         );
     }
 

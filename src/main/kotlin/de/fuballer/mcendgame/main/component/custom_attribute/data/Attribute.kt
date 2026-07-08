@@ -68,6 +68,7 @@ data class CustomAttribute(
                     CustomAttribute(type, tier, rolls, slot, idOpt.orElseGet { UUID.randomUUID() })
                 }
             }
+        val LIST_CODEC = CODEC.listOf()
 
         val PACKET_CODEC: PacketCodec<ByteBuf, CustomAttribute> = PacketCodecs.codec(CODEC)
         val LIST_PACKET_CODEC: PacketCodec<ByteBuf, List<CustomAttribute>> = PACKET_CODEC.collect(PacketCodecs.toList())

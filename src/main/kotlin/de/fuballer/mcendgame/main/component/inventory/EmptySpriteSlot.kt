@@ -10,6 +10,4 @@ class EmptySpriteSlot(
     x: Int,
     y: Int,
     val sprite: Identifier,
-) : Slot(inventory, index, x, y) {
-    override fun getBackgroundSprite() = sprite
-}
+) : Slot(inventory, index, x, y)

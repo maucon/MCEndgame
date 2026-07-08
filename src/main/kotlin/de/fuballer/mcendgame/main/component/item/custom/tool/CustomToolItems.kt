@@ -4,46 +4,50 @@ import de.fuballer.mcendgame.main.component.item.custom.UniqueItemRegistry
 import de.fuballer.mcendgame.main.component.item.custom.tool.item.*
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.component.DataComponentTypes
-import net.minecraft.component.type.BlocksAttacksComponent
-import net.minecraft.component.type.UseCooldownComponent
-import net.minecraft.component.type.WeaponComponent
 import net.minecraft.item.Item
 import net.minecraft.item.MaceItem
-import net.minecraft.registry.tag.DamageTypeTags
-import net.minecraft.registry.tag.ItemTags
-import net.minecraft.sound.SoundEvents
-import net.minecraft.util.Identifier
-import java.util.*
 
 @Injectable
 object CustomToolItems {
     val BLOODHARVEST = UniqueItemRegistry.registerItem( // TODO AS -2.4F
-        Bloodharvest(Item.Settings()),
+        Bloodharvest(
+            Item.Settings(),
+        ),
         "bloodharvest"
     )
     val TWINFIRE = UniqueItemRegistry.registerItem( // TODO AS -2.4F
-        Twinfire(Item.Settings()),
+        Twinfire(
+            Item.Settings(),
+        ),
         "twinfire"
     )
     val FATESPLITTER = UniqueItemRegistry.registerItem( // TODO AS -3F
-        Fatesplitter(Item.Settings()),
+        Fatesplitter(
+            Item.Settings(),
+        ),
         "fatesplitter"
     )
     val SERPENTS_FANG = UniqueItemRegistry.registerItem( // TODO AS -2.2F
-        SerpentsFang(Item.Settings()),
+        SerpentsFang(
+            Item.Settings(),
+        ),
         "serpents_fang"
     )
     val NIGHTREAVER = UniqueItemRegistry.registerItem( // TODO AS -2F
-        Nightreaver(Item.Settings()),
+        Nightreaver(
+            Item.Settings(),
+        ),
         "nightreaver"
     )
     val RADIANT_DAWN = UniqueItemRegistry.registerItem( // TODO AS -3.2F
-        RadiantDawn(Item.Settings()),
+        RadiantDawn(
+            Item.Settings(),
+        ),
         "radiant_dawn"
     )
     val WINDSTRING = UniqueItemRegistry.registerItem(
         Windstring(
-            Item.Settings().maxDamage(500)
+            Item.Settings().maxDamage(500),
         ),
         "windstring"
     )
@@ -59,38 +63,34 @@ object CustomToolItems {
         ),
         "dusk_piercer"
     )
-    val GRUDGEBEARER = UniqueItemRegistry.registerToolItem(
-        ::Grudgebearer,
-        Item.Settings()
-            .maxDamage(336)
-            .component(
-                DataComponentTypes.BLOCKS_ATTACKS,
-                BlocksAttacksComponent(
-                    0.25F,
-                    1.0F,
-                    listOf(BlocksAttacksComponent.DamageReduction(90.0F, Optional.empty(), 0.0F, 1.0F)),
-                    BlocksAttacksComponent.ItemDamage(3.0F, 1.0F, 1.0F),
-                    Optional.of(DamageTypeTags.BYPASSES_SHIELD),
-                    Optional.of(SoundEvents.ITEM_SHIELD_BLOCK),
-                    Optional.of(SoundEvents.ITEM_SHIELD_BREAK),
-                )
-            )
-            .component(
-                DataComponentTypes.USE_COOLDOWN,
-                UseCooldownComponent(0F, Optional.of(Identifier.of("minecraft", "shield")))
-            )
-            .component(DataComponentTypes.BREAK_SOUND, SoundEvents.ITEM_SHIELD_BREAK),
+    val GRUDGEBEARER = UniqueItemRegistry.registerItem(
+        Grudgebearer(
+            Item.Settings().maxDamage(336),
+//            .component(
+//                DataComponentTypes.BLOCKS_ATTACKS,
+//                BlocksAttacksComponent(
+//                    0.25F,
+//                    1.0F,
+//                    listOf(BlocksAttacksComponent.DamageReduction(90.0F, Optional.empty(), 0.0F, 1.0F)),
+//                    BlocksAttacksComponent.ItemDamage(3.0F, 1.0F, 1.0F),
+//                    Optional.of(DamageTypeTags.BYPASSES_SHIELD),
+//                    Optional.of(SoundEvents.ITEM_SHIELD_BLOCK),
+//                    Optional.of(SoundEvents.ITEM_SHIELD_BREAK),
+//                )
+//            )
+        ),
         "grudgebearer"
     )
-    val GRAVEBREAKER = UniqueItemRegistry.registerToolItem(
-        ::Gravebreaker,
-        Item.Settings()
-            .maxDamage(500)
-            .component(DataComponentTypes.TOOL, MaceItem.createToolComponent())
-            .repairable(ItemTags.STONE_TOOL_MATERIALS)
-            .attributeModifiers(Gravebreaker.createAttributeModifiers())
-            .enchantable(15)
-            .component(DataComponentTypes.WEAPON, WeaponComponent(1)),
+    val GRAVEBREAKER = UniqueItemRegistry.registerItem(
+        Gravebreaker(
+            Item.Settings()
+                .maxDamage(500)
+                .component(DataComponentTypes.TOOL, MaceItem.createToolComponent())
+                .attributeModifiers(Gravebreaker.createAttributeModifiers()),
+            //.repairable(ItemTags.STONE_TOOL_MATERIALS)
+            //.enchantable(15)
+            //.component(DataComponentTypes.WEAPON, WeaponComponent(1)),
+        ),
         "gravebreaker"
     )
 }

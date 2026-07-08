@@ -5,9 +5,9 @@ import de.fuballer.mcendgame.main.component.dungeon.enemy.boss.DungeonBossServic
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -67,17 +67,25 @@ public class MobEntityDungeonBossMixin implements MobEntityDungeonBossAccessor {
         }
     }
 
-    @Inject(method = "writeCustomData", at = @At("TAIL"))
-    private void writeCustomData(WriteView view, CallbackInfo ci) {
-        if (isDungeonBoss) view.putBoolean(DUNGEON_BOSS_NBT, true);
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    private void writeCustomData(NbtCompound nbt, CallbackInfo ci) {
+        if (isDungeonBoss) nbt.putBoolean(DUNGEON_BOSS_NBT, true);
         if (spawnPosition != null) {
-            view.put(SPAWN_POSITION_NBT, SpawnPosition.Companion.getCODEC(), spawnPosition);
+            nbt.put(
+                    SPAWN_POSITION_NBT,
+                    SpawnPosition.Companion.getCODEC()
+                            .encodeStart(NbtOps.INSTANCE, spawnPosition)
+                            .getOrThrow()
+            );
         }
     }
 
-    @Inject(method = "readCustomData", at = @At("TAIL"))
-    private void readNBT(ReadView view, CallbackInfo ci) {
-        isDungeonBoss = view.getBoolean(DUNGEON_BOSS_NBT, false);
-        spawnPosition = view.read(SPAWN_POSITION_NBT, SpawnPosition.Companion.getCODEC()).orElse(null);
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    private void readNBT(NbtCompound nbt, CallbackInfo ci) {
+        isDungeonBoss = nbt.getBoolean(DUNGEON_BOSS_NBT);
+        spawnPosition = SpawnPosition.Companion.getCODEC()
+                .parse(NbtOps.INSTANCE, nbt.get(SPAWN_POSITION_NBT))
+                .result()
+                .orElse(null);
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.rule.GameRules;
+import net.minecraft.world.GameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,19 +21,19 @@ public abstract class LivingEntityEventsMixin {
     protected int playerHitTimer;
 
     @Shadow
-    protected abstract void dropEquipment(ServerWorld world, DamageSource damageSource, boolean bl);
+    protected abstract void dropEquipment(ServerWorld world, DamageSource source, boolean causedByPlayer);
 
     @Shadow
-    protected abstract void dropExperience(ServerWorld world, Entity attacker);
+    protected abstract void dropXp(Entity attacker);
 
     @Shadow
-    protected abstract void dropInventory(ServerWorld world);
+    protected abstract void dropInventory();
 
     @Shadow
-    protected abstract boolean shouldDropLoot(ServerWorld world);
+    protected abstract boolean shouldDropLoot();
 
     @Shadow
-    protected abstract void dropLoot(ServerWorld world, DamageSource damageSource, boolean bl);
+    protected abstract void dropLoot(DamageSource damageSource, boolean causedByPlayer);
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;updatePostDeath()V"))
     private void baseTick(CallbackInfo ci) {
@@ -53,13 +53,13 @@ public abstract class LivingEntityEventsMixin {
         var cmd = new LivingEntityDropCommand(livingEntity, causedByPlayer);
         CommandGateway.INSTANCE.apply(cmd);
 
-        if (this.shouldDropLoot(world) && world.getGameRules().getValue(GameRules.DO_MOB_LOOT)) {
-            if (cmd.getDropLoot()) this.dropLoot(world, damageSource, causedByPlayer);
+        if (this.shouldDropLoot() && world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT)) {
+            if (cmd.getDropLoot()) this.dropLoot(damageSource, causedByPlayer);
             if (cmd.getDropEquipment()) this.dropEquipment(world, damageSource, causedByPlayer);
         }
 
-        if (cmd.getDropInventory()) this.dropInventory(world);
-        if (cmd.getDropExperience()) this.dropExperience(world, damageSource.getAttacker());
+        if (cmd.getDropInventory()) this.dropInventory();
+        if (cmd.getDropExperience()) this.dropXp(damageSource.getAttacker());
 
         ci.cancel();
     }

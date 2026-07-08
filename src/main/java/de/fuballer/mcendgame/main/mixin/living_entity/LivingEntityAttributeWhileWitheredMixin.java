@@ -34,7 +34,7 @@ public abstract class LivingEntityAttributeWhileWitheredMixin {
         var isWithered = entity.hasStatusEffect(StatusEffects.WITHER);
         tickAttributeWhileWithered(
                 isWithered,
-                EntityAttributes.ATTACK_DAMAGE,
+                EntityAttributes.GENERIC_ATTACK_DAMAGE,
                 CustomAttributeTypes.INSTANCE.getINCREASED_ATTACK_DAMAGE_WHILE_WITHERED(),
                 entity,
                 increaseAttributeModifierIdentifier,
@@ -42,7 +42,7 @@ public abstract class LivingEntityAttributeWhileWitheredMixin {
         );
         tickAttributeWhileWithered(
                 isWithered,
-                EntityAttributes.ARMOR,
+                EntityAttributes.GENERIC_ARMOR,
                 CustomAttributeTypes.INSTANCE.getARMOR_WHILE_WITHERED(),
                 entity,
                 flatAttributeModifierIdentifier,

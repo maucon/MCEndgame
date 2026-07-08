@@ -9,7 +9,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
@@ -31,8 +30,8 @@ public abstract class PlayerEntityDamageCalculationMixin extends LivingEntity {
     }
 
     @Inject(at = @At("HEAD"), method = "damage", cancellable = true)
-    protected void damage(ServerWorld world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (this.isInvulnerableTo(world, source)) {
+    protected void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (this.isInvulnerableTo(source)) {
             cir.setReturnValue(false);
             return;
         }
@@ -53,6 +52,7 @@ public abstract class PlayerEntityDamageCalculationMixin extends LivingEntity {
         var difficultyScaling = DifficultyScaling.NONE;
         ///////////////////////////////////////////////////////////////////////////////////
 
+        var world = getWorld();
         if (source.isScaledWithDifficulty()) {
             if (world.getDifficulty() == Difficulty.PEACEFUL) {
                 cir.setReturnValue(false);
@@ -81,7 +81,7 @@ public abstract class PlayerEntityDamageCalculationMixin extends LivingEntity {
                 : new ExtendedDamageSource(source);
 
         extendedDamageSource.getDamageCalculationConfig().difficultyScaling(difficultyScaling);
-        cir.setReturnValue(super.damage(world, extendedDamageSource, amount));
+        cir.setReturnValue(super.damage(extendedDamageSource, amount));
         ///////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -92,14 +92,13 @@ public abstract class PlayerEntityDamageCalculationMixin extends LivingEntity {
      */
     @Inject(at = @At("HEAD"), method = "applyDamage", cancellable = true)
     protected void applyDamage(
-            ServerWorld world,
             DamageSource source,
             float amount,
             CallbackInfo ci
     ) {
         PlayerEntity this_ = (PlayerEntity) (Object) this;
 
-        if (this.isInvulnerableTo(world, source)) {
+        if (this.isInvulnerableTo(source)) {
             return;
         }
 

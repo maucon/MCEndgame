@@ -2,8 +2,7 @@ package de.fuballer.mcendgame.main.mixin.player;
 
 import de.fuballer.mcendgame.main.accessor.PlayerEntityInsideDungeonAccessor;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,14 +27,14 @@ public class PlayerEntityInsideDungeonMixin implements PlayerEntityInsideDungeon
         this.isInsideDungeon = isInsideDungeon;
     }
 
-    @Inject(method = "writeCustomData", at = @At("TAIL"))
-    private void writeNBT(WriteView view, CallbackInfo ci) {
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    private void writeNBT(NbtCompound nbt, CallbackInfo ci) {
         if (!isInsideDungeon) return;
-        view.putBoolean(IS_INSIDE_DUNGEON_NBT, true);
+        nbt.putBoolean(IS_INSIDE_DUNGEON_NBT, true);
     }
 
-    @Inject(method = "readCustomData", at = @At("TAIL"))
-    private void readNBT(ReadView view, CallbackInfo ci) {
-        isInsideDungeon = view.getBoolean(IS_INSIDE_DUNGEON_NBT, false);
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    private void readNBT(NbtCompound nbt, CallbackInfo ci) {
+        isInsideDungeon = nbt.getBoolean(IS_INSIDE_DUNGEON_NBT);
     }
 }
