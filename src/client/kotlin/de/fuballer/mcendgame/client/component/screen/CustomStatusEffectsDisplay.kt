@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.client.component.screen
 
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.Hud
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.CommonComponents
@@ -120,7 +120,7 @@ class CustomStatusEffectsDisplay(
         statusEffect: MobEffectInstance,
         wide: Boolean,
     ) {
-        val sprite = Gui.getMobEffectSprite(statusEffect.effect)
+        val sprite = Hud.getMobEffectSprite(statusEffect.effect)
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x + spriteXOffset(wide), yBase + spriteYOffset, spriteSize, spriteSize)
     }
 

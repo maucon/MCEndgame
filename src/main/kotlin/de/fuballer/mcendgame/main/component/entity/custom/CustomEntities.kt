@@ -12,6 +12,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.swamp_golem.S
 import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.webhook.WebhookEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.webshot.WebshotEntity
+import de.fuballer.mcendgame.main.component.portal.PortalEntity
+import de.fuballer.mcendgame.main.component.portal.PortalSettings
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.world.entity.EntityType
@@ -19,8 +21,13 @@ import net.minecraft.world.entity.MobCategory
 
 @Injectable
 object CustomEntities {
+    val PORTAL = RegistryUtil.registerEntity(
+        CustomEntityIds.PORTAL,
+        EntityType.Builder.of(::PortalEntity, MobCategory.MISC)
+            .sized(PortalSettings.DEFAULT_HITBOX_WIDTH, PortalSettings.DEFAULT_HITBOX_HEIGHT)
+    )
     val SWAMP_GOLEM = RegistryUtil.registerEntity(
-        "swamp_golem",
+        CustomEntityIds.SWAMP_GOLEM,
         EntityType.Builder.of(::SwampGolemEntity, MobCategory.MONSTER)
             .sized(0.8f, 1.95f)
             .eyeHeight(1.65f)
@@ -30,7 +37,7 @@ object CustomEntities {
             .notInPeaceful()
     )
     val ARACHNE = RegistryUtil.registerEntity(
-        "arachne",
+        CustomEntityIds.ARACHNE,
         EntityType.Builder.of(::ArachneEntity, MobCategory.MONSTER)
             .sized(1.5f, 1.8f)
             .eyeHeight(1.7f)
@@ -40,24 +47,24 @@ object CustomEntities {
             .notInPeaceful()
     )
     val WEBSHOT = RegistryUtil.registerEntity(
-        "webshot",
+        CustomEntityIds.WEBSHOT,
         EntityType.Builder.of(::WebshotEntity, MobCategory.MISC)
             .sized(0.4f, 0.4f)
     )
     val WEBHOOK = RegistryUtil.registerEntity(
-        "webhook",
+        CustomEntityIds.WEBHOOK,
         EntityType.Builder.of(::WebhookEntity, MobCategory.MISC)
             .sized(0.4f, 0.4f)
             .eyeHeight(0.2f)
     )
     val SPELL_FIREBALL = RegistryUtil.registerEntity(
-        "spell_fireball",
+        CustomEntityIds.SPELL_FIREBALL,
         EntityType.Builder.of(::SpellFireballEntity, MobCategory.MISC)
             .sized(0.4f, 0.4f)
             .eyeHeight(0.2f)
     )
     val BONECRUSHER = RegistryUtil.registerEntity(
-        "bonecrusher",
+        CustomEntityIds.BONECRUSHER,
         EntityType.Builder.of(::BonecrusherEntity, MobCategory.MONSTER)
             .sized(0.7f, 2.99f)
             .eyeHeight(2.85f)
@@ -65,7 +72,7 @@ object CustomEntities {
             .notInPeaceful()
     )
     val ELF_DUELIST = RegistryUtil.registerEntity(
-        "elf_duelist",
+        CustomEntityIds.ELF_DUELIST,
         EntityType.Builder.of(::ElfDuelistEntity, MobCategory.MONSTER)
             .sized(0.7f, 1.9f)
             .eyeHeight(1.8f)
@@ -73,7 +80,7 @@ object CustomEntities {
             .notInPeaceful()
     )
     val BEAKBURN = RegistryUtil.registerEntity(
-        "beakburn",
+        CustomEntityIds.BEAKBURN,
         EntityType.Builder.of(::BeakburnEntity, MobCategory.MONSTER)
             .sized(1.6f, 2.5f)
             .eyeHeight(2.0f)
@@ -81,27 +88,27 @@ object CustomEntities {
             .notInPeaceful()
     )
     val SCARRED_ONE = RegistryUtil.registerEntity(
-        "scarred_one",
+        CustomEntityIds.SCARRED_ONE,
         EntityType.Builder.of(::ScarredOneEntity, MobCategory.MISC)
             .sized(0.6f, 1.95f)
             .clientTrackingRange(10)
     )
     val SPIDERLING = RegistryUtil.registerEntity(
-        "spiderling",
+        CustomEntityIds.SPIDERLING,
         EntityType.Builder.of(::SpiderlingEntity, MobCategory.MISC)
             .sized(0.7f, 0.45f)
             .eyeHeight(0.325f)
             .clientTrackingRange(8)
     )
     val TRAINING_DUMMY = RegistryUtil.registerEntity(
-        "training_dummy",
+        CustomEntityIds.TRAINING_DUMMY,
         EntityType.Builder.of(::TrainingDummyEntity, MobCategory.MISC)
             .sized(0.5F, 1.975F)
             .eyeHeight(1.7775F)
             .clientTrackingRange(10)
     )
     val SKELETON_MAGE = RegistryUtil.registerEntity(
-        "skeleton_mage",
+        CustomEntityIds.SKELETON_MAGE,
         EntityType.Builder.of(::SkeletonMageEntity, MobCategory.MONSTER)
             .sized(0.6F, 1.99F)
             .eyeHeight(1.74F)

@@ -27,7 +27,6 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.webhook.Web
 import de.fuballer.mcendgame.client.component.entity.custom.entities.webshot.WebshotEntityModel
 import de.fuballer.mcendgame.client.component.entity.custom.entities.webshot.WebshotRenderer
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
-import de.fuballer.mcendgame.main.component.portal.Portals
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
@@ -91,6 +90,6 @@ object EntityModelRegisterer {
             LegacyPortalEntityModel.PORTAL,
             LegacyPortalEntityModel::getTexturedModelData
         )
-        EntityRenderers.register(Portals.ENTITY_TYPE, ::PortalRenderer)
+        EntityRenderers.register(CustomEntities.PORTAL, ::PortalRenderer)
     }
 }

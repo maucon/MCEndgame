@@ -5,8 +5,7 @@ import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource;
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDamagedEvent;
 import de.fuballer.mcendgame.main.mixin.access.EntityAccessMixin;
 import de.maucon.mauconframework.event.EventGateway;
-import it.unimi.dsi.fastutil.doubles.DoubleDoubleImmutablePair;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +21,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BlocksAttacks;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -85,8 +83,6 @@ public abstract class LivingEntityDamageMixin {
         // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
         Entity entity;
-        boolean success;
-        boolean blocked;
         if (this_.isInvulnerableTo(level, source)) {
             return false;
         }
@@ -107,10 +103,7 @@ public abstract class LivingEntityDamageMixin {
         ItemStack itemInUse = this_.getUseItem();
         float damageBlocked = this_.applyItemBlocking(level, source, damage);
         damage -= damageBlocked;
-        boolean bl = blocked = damageBlocked > 0.0f;
-        // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-        var shieldBlocked = blocked;
-        // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+        boolean blocked = damageBlocked > 0.0F;
 
         if (source.is(DamageTypeTags.IS_FREEZING) && this_.is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES)) {
             damage *= 5.0f;
@@ -147,7 +140,7 @@ public abstract class LivingEntityDamageMixin {
 
         damageCalculationConfig.getVanillaMoreDamage().addAll(vanillaMoreDamage);
         damageCalculationConfig.getVanillaMoreDamageTaken().addAll(vanillaMoreDamageTaken);
-        damageCalculationConfig.setShieldBlocked(shieldBlocked);
+        damageCalculationConfig.setShieldBlocked(blocked);
 
         var result = DamageService.INSTANCE.calculateFinalDamage(this_, level, extendedSource, damage);
         if (!result.isApplying()) {
@@ -185,21 +178,7 @@ public abstract class LivingEntityDamageMixin {
                 ((EntityAccessMixin) this_).invokeMarkHurt();
             }
             if (!source.is(DamageTypeTags.NO_KNOCKBACK)) {
-                double xd = 0.0;
-                double zd = 0.0;
-                Entity entity2 = source.getDirectEntity();
-                if (entity2 instanceof Projectile projectileEntity) {
-                    DoubleDoubleImmutablePair knockbackDirection = projectileEntity.calculateHorizontalHurtKnockbackDirection(this_, source);
-                    xd = -knockbackDirection.leftDouble();
-                    zd = -knockbackDirection.rightDouble();
-                } else if (source.getSourcePosition() != null) {
-                    xd = source.getSourcePosition().x() - this_.getX();
-                    zd = source.getSourcePosition().z() - this_.getZ();
-                }
-                this_.knockback(0.4f, xd, zd);
-                if (!blocked) {
-                    this_.indicateDamage(xd, zd);
-                }
+                this_.dealDefaultKnockback(source, damage, blocked);
             }
         }
         if (this_.isDeadOrDying()) {
@@ -214,10 +193,11 @@ public abstract class LivingEntityDamageMixin {
             this.playHurtSound(source);
             this.playSecondaryHurtSound(source);
         }
-        boolean bl2 = success = !blocked || damage > 0.0f;
+        boolean success = !blocked || damage > 0.0F;
         if (success) {
             this.lastDamageSource = source;
             this.lastDamageStamp = this_.level().getGameTime();
+
             for (MobEffectInstance effect : this_.getActiveEffects()) {
                 effect.onMobHurt(level, this_, source, damage);
             }

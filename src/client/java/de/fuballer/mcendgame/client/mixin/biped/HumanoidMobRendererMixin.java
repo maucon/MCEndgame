@@ -28,7 +28,7 @@ public class HumanoidMobRendererMixin {
     private static void updateBipedRenderState(
             LivingEntity entity,
             HumanoidRenderState state,
-            float tickDelta,
+            float partialTicks,
             ItemModelResolver itemModelResolver,
             CallbackInfo ci
     ) {
@@ -56,7 +56,7 @@ public class HumanoidMobRendererMixin {
         accessor.mcendgame$setVelocity(entity.getDeltaMovement());
 
         if (EntityExtension.INSTANCE.needsCapeData(entity)) {
-            updateCape(entity, state, tickDelta);
+            updateCape(entity, state, partialTicks);
         }
     }
 

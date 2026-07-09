@@ -21,47 +21,47 @@ object CustomToolItems {
     val BLOODHARVEST = UniqueItemRegistry.registerToolItem(
         ::Bloodharvest,
         Item.Properties().sword(CustomToolMaterials.BLOODHARVEST, 7F, -2.4F),
-        "bloodharvest"
+        CustomToolItemIds.BLOODHARVEST
     )
     val TWINFIRE = UniqueItemRegistry.registerToolItem(
         ::Twinfire,
         Item.Properties().sword(CustomToolMaterials.TWINFIRE, 7F, -2.4F),
-        "twinfire"
+        CustomToolItemIds.TWINFIRE
     )
     val FATESPLITTER = UniqueItemRegistry.registerToolItem(
         ::Fatesplitter,
         Item.Properties().axe(CustomToolMaterials.FATESPLITTER, 9F, -3F),
-        "fatesplitter"
+        CustomToolItemIds.FATESPLITTER
     )
     val SERPENTS_FANG = UniqueItemRegistry.registerToolItem(
         ::SerpentsFang,
         Item.Properties().sword(CustomToolMaterials.SERPENTS_FANG, 5F, -2.2F),
-        "serpents_fang"
+        CustomToolItemIds.SERPENTS_FANG
     )
     val NIGHTREAVER = UniqueItemRegistry.registerToolItem(
         ::Nightreaver,
         Item.Properties().sword(CustomToolMaterials.NIGHTREAVER, 5F, -2F),
-        "nightreaver"
+        CustomToolItemIds.NIGHTREAVER
     )
     val RADIANT_DAWN = UniqueItemRegistry.registerToolItem(
         ::RadiantDawn,
         Item.Properties().sword(CustomToolMaterials.RADIANT_DAWN, 7F, -3.2F),
-        "radiant_dawn"
+        CustomToolItemIds.RADIANT_DAWN
     )
     val WINDSTRING = UniqueItemRegistry.registerToolItem(
         ::Windstring,
         Item.Properties().durability(500),
-        "windstring"
+        CustomToolItemIds.WINDSTRING
     )
     val HAILSTORM = UniqueItemRegistry.registerToolItem(
         ::Hailstorm,
         Item.Properties().durability(500),
-        "hailstorm"
+        CustomToolItemIds.HAILSTORM
     )
     val DUSK_PIERCER = UniqueItemRegistry.registerToolItem(
         ::DuskPiercer,
         Item.Properties().durability(500),
-        "dusk_piercer"
+        CustomToolItemIds.DUSK_PIERCER
     )
     val GRUDGEBEARER = UniqueItemRegistry.registerToolItem(
         ::Grudgebearer,
@@ -84,7 +84,7 @@ object CustomToolItems {
                 UseCooldown(0F, Optional.of(Identifier.fromNamespaceAndPath("minecraft", "shield")))
             )
             .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK),
-        "grudgebearer"
+        CustomToolItemIds.GRUDGEBEARER
     )
     val GRAVEBREAKER = UniqueItemRegistry.registerToolItem(
         ::Gravebreaker,
@@ -95,6 +95,6 @@ object CustomToolItems {
             .attributes(Gravebreaker.createAttributeModifiers())
             .enchantable(15)
             .component(DataComponents.WEAPON, Weapon(1)),
-        "gravebreaker"
+        CustomToolItemIds.GRAVEBREAKER
     )
 }

@@ -44,7 +44,7 @@ object IsolatedIndicatorRenderer {
         val yOffset = (if (isGeoEntity) 0.0 else 1.5) - state.entityType.height - 0.5 // 1.5 moves origin to feet for vanilla entities
         matrices.translate(0.0, yOffset, 0.0)
 
-        val camera = Minecraft.getInstance().gameRenderer.mainCamera
+        val camera = Minecraft.getInstance().gameRenderer.mainCamera()
         matrices.mulPose(Axis.YN.rotationDegrees(state.bodyRot - camera.yRot()))
         matrices.mulPose(Axis.XP.rotationDegrees(camera.xRot()))
 

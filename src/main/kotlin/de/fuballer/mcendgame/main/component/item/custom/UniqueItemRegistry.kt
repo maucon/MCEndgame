@@ -12,25 +12,30 @@ object UniqueItemRegistry {
 
     private val _entries = mutableMapOf<String, Item>()
 
-    fun registerArmorItem(factory: (Item.Properties) -> Item, material: CustomArmorMaterial, type: ArmorType, name: String): Item {
-        val item = RegistryUtil.registerArmorItem(factory, material, type, name)
-        _entries[name] = item
+    fun registerArmorItem(
+        factory: (Item.Properties) -> Item,
+        material: CustomArmorMaterial,
+        type: ArmorType,
+        itemKey: ResourceKey<Item>
+    ): Item {
+        val item = RegistryUtil.registerArmorItem(factory, material, type, itemKey)
+        _entries[itemKey.identifier().path] = item
         return item
     }
 
     fun registerToolItem(
         factory: (Item.Properties) -> Item,
         settings: Item.Properties,
-        name: String
+        itemKey: ResourceKey<Item>
     ): Item {
-        val item = RegistryUtil.registerItem(factory, settings, name)
-        _entries[name] = item
+        val item = RegistryUtil.registerItem(factory, settings, itemKey)
+        _entries[itemKey.identifier().path] = item
         return item
     }
 
     fun registerMiscItem(
         factory: (Item.Properties) -> Item,
         settings: Item.Properties,
-        name: String
-    ) = registerToolItem(factory, settings, name)
+        itemKey: ResourceKey<Item>
+    ) = registerToolItem(factory, settings, itemKey)
 }

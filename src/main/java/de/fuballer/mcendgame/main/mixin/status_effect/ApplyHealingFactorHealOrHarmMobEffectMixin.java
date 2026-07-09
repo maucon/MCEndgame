@@ -11,25 +11,25 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(targets = "net.minecraft.world.effect.HealOrHarmMobEffect")
 public class ApplyHealingFactorHealOrHarmMobEffectMixin {
     @Redirect(
-            method = "applyInstantenousEffect",
+            method = "applyInstantaneousEffect",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;heal(F)V")
     )
-    void modifyHeal(
+    void modifyHeal( // FIXME
             LivingEntity instance,
-            float originalAmount,
-            ServerLevel world,
-            Entity effectEntity,
-            Entity attacker,
-            LivingEntity target,
-            int amplifier,
-            double proximity
+            float heal,
+            ServerLevel serverLevel,
+            Entity source,
+            Entity owner,
+            LivingEntity mob,
+            int amplification,
+            double scale
     ) {
-        if (!(attacker instanceof LivingEntity livingAttacker)) {
-            target.heal(originalAmount);
+        if (!(owner instanceof LivingEntity livingAttacker)) {
+            mob.heal(heal);
             return;
         }
 
         var healingFactor = CustomAttributesExtensions.INSTANCE.getHealingFactor(livingAttacker);
-        target.heal(originalAmount * (float) healingFactor);
+        mob.heal(heal * (float) healingFactor);
     }
 }

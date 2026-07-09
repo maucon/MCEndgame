@@ -47,6 +47,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.util.LightCoordsUtil
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -57,9 +58,9 @@ class CustomHumanoidArmorFeatureRenderer<S : HumanoidRenderState, M : HumanoidMo
     ctx: EntityRendererProvider.Context,
 ) : RenderLayer<S, M>(featureContext) {
     private val armorTransformers: Map<EntityType<out Entity>, EntityArmorTransformer> = mapOf(
-        EntityType.PIGLIN to PiglinArmorTransformer(),
-        EntityType.PIGLIN_BRUTE to PiglinArmorTransformer(),
-        EntityType.ZOMBIFIED_PIGLIN to PiglinArmorTransformer(),
+        EntityTypes.PIGLIN to PiglinArmorTransformer(),
+        EntityTypes.PIGLIN_BRUTE to PiglinArmorTransformer(),
+        EntityTypes.ZOMBIFIED_PIGLIN to PiglinArmorTransformer(),
     )
 
     private val texturedArmorModels: MutableMap<Item, TexturedArmorModel<HumanoidModel<S>>> = mutableMapOf()
@@ -193,7 +194,7 @@ class CustomHumanoidArmorFeatureRenderer<S : HumanoidRenderState, M : HumanoidMo
         slot: EquipmentSlot,
     ) {
         // Note: rendering leggings and boots on endermen is disabled
-        if (bipedEntityRenderState.entityType == EntityType.ENDERMAN && (slot == EquipmentSlot.LEGS || slot == EquipmentSlot.FEET)) return
+        if (bipedEntityRenderState.entityType == EntityTypes.ENDERMAN && (slot == EquipmentSlot.LEGS || slot == EquipmentSlot.FEET)) return
 
         val item = itemStack.item
         val texturedArmorModel = texturedArmorModels[item] ?: return

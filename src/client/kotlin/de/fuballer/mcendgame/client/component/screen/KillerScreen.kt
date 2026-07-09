@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.EntitySpawnReason
-import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Inventory
 import kotlin.jvm.optionals.getOrNull
@@ -59,7 +59,7 @@ class KillerScreen(
         val world = Minecraft.getInstance().level!!
 
         var livingEntity: LivingEntity
-        if (type != EntityType.PLAYER) {
+        if (type != EntityTypes.PLAYER) {
             livingEntity = type.create(world, EntitySpawnReason.COMMAND) as LivingEntity
         } else {
             val name = killerEntity.displayName.getOrNull()?.string ?: ""

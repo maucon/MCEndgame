@@ -13,7 +13,7 @@ class ScarredOneEffectsPayloadHandler {
             val client = context.client()
 
             client.execute {
-                client.setScreen(
+                client.gui.setScreen(
                     ScarredOneScreen(
                         payload.positiveEffects,
                         payload.negativeEffects,

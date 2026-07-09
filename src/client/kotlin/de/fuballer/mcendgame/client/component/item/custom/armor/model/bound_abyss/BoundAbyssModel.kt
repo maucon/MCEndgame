@@ -1,8 +1,6 @@
 package de.fuballer.mcendgame.client.component.item.custom.armor.model.bound_abyss
 
-import com.mojang.blaze3d.vertex.VertexConsumer
 import de.fuballer.mcendgame.client.component.item.custom.ModelPartDataExtension.createEmptyChild
-import de.fuballer.mcendgame.client.component.item.custom.armor.CustomVertexConsumer
 import de.fuballer.mcendgame.client.util.EntityRenderStateMixinExtension.getLowHealthTicks
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.client.model.HumanoidModel
@@ -14,15 +12,12 @@ import net.minecraft.client.model.geom.builders.CubeDeformation
 import net.minecraft.client.model.geom.builders.CubeListBuilder
 import net.minecraft.client.model.geom.builders.LayerDefinition
 import net.minecraft.client.model.geom.builders.MeshDefinition
-import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.entity.state.EntityRenderState
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import org.joml.Vector3f
 
 class BoundAbyssModel<S : HumanoidRenderState>(
     root: ModelPart
-) : HumanoidModel<S>(root), CustomVertexConsumer {
+) : HumanoidModel<S>(root) {
     private val shoulderPadLeft: ModelPart
     private val vambraceLeft: ModelPart
     private val shoulderPadRight: ModelPart
@@ -38,17 +33,6 @@ class BoundAbyssModel<S : HumanoidRenderState>(
         shoulderPadRight = chestplateArmRight.getChild("shoulderPadRight")
         val sleeveRight = chestplateArmRight.getChild("sleeveRight")
         vambraceRight = sleeveRight.getChild("vambraceRight")
-    }
-
-    override fun getVertexConsumer(
-        renderState: EntityRenderState,
-        provider: MultiBufferSource,
-        default: VertexConsumer,
-    ): VertexConsumer {
-        if (renderState !is LivingEntityRenderState) return default
-
-        val effectStrength = renderState.getLowHealthTicks() / 20.0
-        return BoundAbyssVertexConsumer(default, effectStrength)
     }
 
     companion object {
