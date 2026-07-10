@@ -148,7 +148,7 @@ class BeastweaverEntity(
                 BEAR_SWIPE_RIGHT_ANIM_DATA,
                 35,
                 0,
-                DistanceTriggerCondition(3.0),
+                DistanceTriggerCondition(3.0, affectedByScale = true),
                 DelayedAttackDamage(BEAR_SWIPE_RIGHT_ATTACK_DAMAGE, 26),
             )
 

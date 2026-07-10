@@ -6,16 +6,23 @@ import net.minecraft.world.entity.Mob
 class DistanceTriggerCondition(
     private val minDistance: Double,
     private val maxDistance: Double,
-    private val squaredMinDistance: Double = minDistance * minDistance,
-    private val squaredMaxDistance: Double = maxDistance * maxDistance,
+    private val affectedByScale: Boolean = false,
 ) : TriggerCondition() {
-    constructor(maxDistance: Double) : this(0.0, maxDistance)
+    private val squaredMinDistance = minDistance * minDistance
+    private val squaredMaxDistance = maxDistance * maxDistance
+
+    constructor(maxDistance: Double, affectedByScale: Boolean = false) : this(0.0, maxDistance, affectedByScale = affectedByScale)
 
     override fun doesTrigger(
         attacker: Mob,
         target: LivingEntity?,
     ): Boolean {
         if (target == null) return false
-        return attacker.distanceToSqr(target) in squaredMinDistance..squaredMaxDistance
+        if (!affectedByScale) return attacker.distanceToSqr(target) in squaredMinDistance..squaredMaxDistance
+
+        val scale = attacker.scale
+        val scaledMinDistance = minDistance * scale
+        val scaledMaxDistance = maxDistance * scale
+        return attacker.distanceToSqr(target) in (scaledMinDistance * scaledMinDistance)..(scaledMaxDistance * scaledMaxDistance)
     }
 }
