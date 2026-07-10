@@ -86,8 +86,13 @@
 					"rotation": [-12.5, 0, 0]
 				},
 				{
-					"name": "breastSkin",
+					"name": "breastTransform",
 					"parent": "breast",
+					"pivot": [0, 22.75, -1.75]
+				},
+				{
+					"name": "breastSkin",
+					"parent": "breastTransform",
 					"pivot": [0, 22.75, -1.75],
 					"cubes": [
 						{"origin": [-3.5, 18.75, -1.75], "size": [7, 4, 2], "uv": [25, 107]}
@@ -95,7 +100,7 @@
 				},
 				{
 					"name": "breastDress",
-					"parent": "breast",
+					"parent": "breastTransform",
 					"pivot": [0, 22.75, -1.75]
 				},
 				{

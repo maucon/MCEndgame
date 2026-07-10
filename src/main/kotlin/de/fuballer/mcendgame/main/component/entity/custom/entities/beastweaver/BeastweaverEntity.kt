@@ -204,9 +204,9 @@ class BeastweaverEntity(
         controllers.add(
             AnimationController<BeastweaverEntity>("Walk/Idle", 5)
             { test ->
-                test.setAndContinue(if (test.isMoving) DefaultAnimations.IDLE else DefaultAnimations.IDLE)
+                test.setAndContinue(if (test.isMoving) DefaultAnimations.WALK else DefaultAnimations.IDLE)
             },
-
+            
             AnimationController<BeastweaverEntity>("Transform Base", 0)
             { test -> test.setAndContinue(TRANSFORM_BASE_ANIM) }
                 .additiveAnimations(),

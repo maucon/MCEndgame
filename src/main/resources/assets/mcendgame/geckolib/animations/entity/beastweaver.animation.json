@@ -33,11 +33,6 @@
 						]
 					}
 				},
-				"breast": {
-					"rotation": {
-						"vector": ["-10 * query.mcendgame_transform", 0, 0]
-					}
-				},
 				"head": {
 					"rotation": {
 						"vector": ["-10 * math.max(0, query.mcendgame_transform - 0.5)", 0, 0]
@@ -243,6 +238,21 @@
 					},
 					"scale": {
 						"vector": ["(1 - 0.35 * math.max(0, query.mcendgame_transform - 0.5))", "(1 + 0.1 * math.max(0, query.mcendgame_transform - 0.5))", 1]
+					}
+				},
+				"breastTransform": {
+					"rotation": {
+						"vector": ["-10 * query.mcendgame_transform", 0, 0]
+					}
+				},
+				"rightAntlerBaseTransform": {
+					"scale": {
+						"vector": ["1 + 0.25 * query.mcendgame_transform", "1 + 0.25 * query.mcendgame_transform", "1 + 0.25 * query.mcendgame_transform"]
+					}
+				},
+				"leftAntlerBaseTransform": {
+					"scale": {
+						"vector": ["1 + 0.25 * query.mcendgame_transform", "1 + 0.25 * query.mcendgame_transform", "1 + 0.25 * query.mcendgame_transform"]
 					}
 				}
 			}
@@ -2008,6 +2018,53 @@
 							},
 							"lerp_mode": "catmullrom"
 						}
+					}
+				},
+				"snoutBottom": {
+					"rotation": {
+						"0.0": {
+							"post": {
+								"vector": [2.5, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
+							"post": {
+								"vector": [8, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"4.0": {
+							"post": {
+								"vector": [2.5, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						}
+					}
+				}
+			}
+		},
+		"move.walk": {
+			"loop": true,
+			"bones": {
+				"leftArm": {
+					"rotation": {
+						"vector": ["-math.to_deg(1) * math.cos(math.to_deg(query.limb_swing) * 0.6662) * query.limb_swing_amount", 0, 0]
+					}
+				},
+				"rightArm": {
+					"rotation": {
+						"vector": ["-math.to_deg(1) * math.cos(math.to_deg(query.limb_swing) * 0.6662 + 180) * query.limb_swing_amount", 0, 0]
+					}
+				},
+				"leftLeg": {
+					"rotation": {
+						"vector": ["-math.to_deg(1.4) * math.cos(math.to_deg(query.limb_swing) * 0.6662 + 180) * query.limb_swing_amount", 0, 0]
+					}
+				},
+				"rightLeg": {
+					"rotation": {
+						"vector": ["-math.to_deg(1.4) * math.cos(math.to_deg(query.limb_swing) * 0.6662) * query.limb_swing_amount", 0, 0]
 					}
 				}
 			}
