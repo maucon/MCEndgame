@@ -11,7 +11,11 @@ import com.geckolib.constant.DefaultAnimations
 import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
@@ -132,7 +136,25 @@ class BeastweaverEntity(
             ),
         )
 
-        private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf()
+        private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
+
+        private val BEAR_SWIPE_RIGHT_AREA = AreaAttackDamage.DamageArea(3.25, 1.5, 0.75, -0.1, 0.25, 0.5)
+        private val BEAR_SWIPE_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.6F, 1.0, BEAR_SWIPE_RIGHT_AREA, disableBlockingShield = 3F)
+        private val BEAR_SWIPE_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.bear_swipe_right")
+        private const val BEAR_SWIPE_RIGHT_ID = "Bear Swipe Right"
+        private val BEAR_SWIPE_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BEAR_SWIPE_RIGHT_ID)
+        private val BEAR_SWIPE_RIGHT_ATTACK =
+            Attack<BeastweaverEntity>(
+                BEAR_SWIPE_RIGHT_ANIM_DATA,
+                35,
+                0,
+                DistanceTriggerCondition(3.0),
+                DelayedAttackDamage(BEAR_SWIPE_RIGHT_ATTACK_DAMAGE, 26),
+            )
+
+        private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
+            RandomOption(1, BEAR_SWIPE_RIGHT_ATTACK),
+        )
 
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
@@ -196,6 +218,10 @@ class BeastweaverEntity(
         transformHandClawsAnimationController,
     )
 
+    private val attackAnimationController =
+        AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
+            .triggerableAnim(BEAR_SWIPE_RIGHT_ID, BEAR_SWIPE_RIGHT_ANIM)
+
     private fun getAnimationController(name: String) = transformAnimationControllers.find { it.name == name }
 
     private fun isControllerActive(name: String) = getAnimationController(name)?.isPlayingTriggeredAnimation == true
@@ -206,7 +232,7 @@ class BeastweaverEntity(
             { test ->
                 test.setAndContinue(if (test.isMoving) DefaultAnimations.WALK else DefaultAnimations.IDLE)
             },
-            
+
             AnimationController<BeastweaverEntity>("Transform Base", 0)
             { test -> test.setAndContinue(TRANSFORM_BASE_ANIM) }
                 .additiveAnimations(),
@@ -216,6 +242,8 @@ class BeastweaverEntity(
             transformSnoutAnimationController,
             transformEarsAnimationController,
             transformHandClawsAnimationController,
+
+            attackAnimationController,
         )
     }
 
@@ -231,9 +259,19 @@ class BeastweaverEntity(
         if (transform < SHOULDER_SPIKES_ANIMATION_THRESHOLD) return 0F
 
         val animTime = transformShoulderSpikesAnimationController.currentAnimationTime
-        if (animTime <= 0) return 1F
+        if (animTime == 0.0) return 1F
 
-        return animTime.toFloat()
+        return animTime.toFloat() + tickProgress / 20F
+    }
+
+    fun getCurrentAttackAnimName(): String {
+        if (!attackAnimationController.isPlayingTriggeredAnimation) return ""
+        val rawAnim = attackAnimationController.currentRawAnimation ?: return ""
+        return rawAnim.animationStages.firstOrNull()?.animationName ?: ""
+    }
+
+    fun getCurrentAttackAnimTime(tickProgress: Float): Float {
+        return attackAnimationController.currentAnimationTime.toFloat() + tickProgress / 20F
     }
 
     private val attackGoal = CustomAttacksGoal(this)

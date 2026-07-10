@@ -7,6 +7,7 @@ import com.geckolib.renderer.base.BoneSnapshots
 import com.geckolib.renderer.base.GeoRenderState
 import com.geckolib.renderer.base.RenderPassInfo
 import com.google.common.reflect.TypeToken
+import de.fuballer.mcendgame.client.component.render.geo_layers.CustomBonesProgressingTextureGeoLayer
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -89,12 +90,39 @@ class BeastweaverRenderer<R>(
                 activeThreshold = 0.71F,
             )
         )
+        withRenderLayer(
+            BeastweaverSpiritAttackGeoLayer(
+                this,
+                listOf(
+                    "rightBearPaw",
+                ),
+                progress = { renderState ->
+                    renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F
+                },
+                textures = mapOf(
+                    0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_bear_paw_right_0.png"),
+                ),
+                alpha = { progress ->
+                    when {
+                        progress <= 0.25F -> 0F
+                        progress <= 1.05F -> (progress - 0.25F) / (1.05F - 0.25F)
+                        progress <= 1.67F -> 1F
+                        else -> 1F - ((progress - 1.67F) / (1.79F - 1.67F))
+                    }
+                },
+                active = { renderState ->
+                    renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.bear_swipe_right"
+                },
+            )
+        )
     }
 
     companion object {
         private val HIDDEN_BONES = DataTicket.create("hidden_bones", object : TypeToken<Set<String>>() {})
         private val TRANSFORM_PROGRESS = DataTicket.create("transform_progress", object : TypeToken<Float>() {})
         private val SHOULDER_SPIKES_ANIM_TIME = DataTicket.create("shoulder_spikes_anim_time", object : TypeToken<Float>() {})
+        private val CURRENT_ATTACK_NAME = DataTicket.create("current_attack_name", object : TypeToken<String>() {})
+        private val CURRENT_ATTACK_ANIM_TIME = DataTicket.create("current_attack_anim_time", object : TypeToken<Float>() {})
     }
 
     override fun addRenderData(animatable: BeastweaverEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
@@ -103,6 +131,8 @@ class BeastweaverRenderer<R>(
         renderState.addGeckolibData(HIDDEN_BONES, animatable.getHiddenBones())
         renderState.addGeckolibData(TRANSFORM_PROGRESS, animatable.getTransformProgress(partialTick))
         renderState.addGeckolibData(SHOULDER_SPIKES_ANIM_TIME, animatable.getShoulderSpikesAnimTime(partialTick))
+        renderState.addGeckolibData(CURRENT_ATTACK_NAME, animatable.getCurrentAttackAnimName())
+        renderState.addGeckolibData(CURRENT_ATTACK_ANIM_TIME, animatable.getCurrentAttackAnimTime(partialTick))
     }
 
     override fun adjustModelBonesForRender(renderPassInfo: RenderPassInfo<R>, snapshots: BoneSnapshots) {

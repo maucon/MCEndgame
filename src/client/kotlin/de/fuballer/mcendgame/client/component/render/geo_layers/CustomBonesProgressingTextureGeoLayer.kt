@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver
+package de.fuballer.mcendgame.client.component.render.geo_layers
 
 import com.geckolib.GeckoLibConstants
 import com.geckolib.animatable.GeoAnimatable
@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.resources.Identifier
 import java.util.function.BiConsumer
 
-class CustomBonesProgressingTextureGeoLayer<T : GeoAnimatable, O : Any, R : GeoRenderState>(
+open class CustomBonesProgressingTextureGeoLayer<T : GeoAnimatable, O : Any, R : GeoRenderState>(
     renderer: GeoRenderer<T, O, R>,
     val bones: List<String>,
     val progress: (R) -> Float,
@@ -18,7 +18,7 @@ class CustomBonesProgressingTextureGeoLayer<T : GeoAnimatable, O : Any, R : GeoR
     val baseTexture: Identifier = textures[textures.keys.first()]!!,
     val activeThreshold: Float = 0F,
 ) : CustomBoneTextureGeoLayer<T, O, R>(renderer, bones.first(), baseTexture) {
-    private fun isActive(renderState: R) = progress(renderState) >= activeThreshold
+    protected open fun isActive(renderState: R) = progress(renderState) >= activeThreshold
 
     override fun getTextureResource(renderState: R): Identifier {
         val progress = progress(renderState)
@@ -37,9 +37,8 @@ class CustomBonesProgressingTextureGeoLayer<T : GeoAnimatable, O : Any, R : GeoR
                 snapshots.get(bone)
                     .filter { snapshot -> snapshot.bone is CuboidGeoBone && shouldRenderBone(renderPassInfo.renderState()) }
                     .ifPresent { snapshot ->
-                        val skipChildren = snapshot.areChildrenHidden()
                         snapshot.skipRender(true)
-                        snapshot.skipChildrenRender(skipChildren)
+                        snapshot.skipChildrenRender(true)
                     }
             }
         }
@@ -51,16 +50,21 @@ class CustomBonesProgressingTextureGeoLayer<T : GeoAnimatable, O : Any, R : GeoR
         if (!isActive(state)) return
         if (!shouldRenderBone(state)) return
 
+        fun renderBoneAndChildren(bone: GeoBone) {
+            if (bone is CuboidGeoBone) {
+                consumer.accept(bone) { passInfo, renderBone, renderTasks ->
+                    renderBone(passInfo, renderBone, renderTasks)
+                }
+            }
+
+            bone.children().forEach { renderBoneAndChildren(it) }
+        }
+
         bones.forEach { boneName ->
             renderPassInfo.model()
                 .getBone(boneName)
-                .filter { bone -> CuboidGeoBone::class.java.isInstance(bone) }
-                .ifPresentOrElse({ bone ->
-                    consumer.accept(bone) { renderPassInfo, bone, renderTasks ->
-                        renderBone(renderPassInfo, bone, renderTasks)
-                    }
-                }
-                ) { GeckoLibConstants.LOGGER.error("Unable to find bone for CustomBonesProgressingTextureGeoLayer: {}, skipping", boneName) }
+                .ifPresentOrElse({ bone -> renderBoneAndChildren(bone) })
+                { GeckoLibConstants.LOGGER.error("Unable to find bone for CustomBonesProgressingTextureGeoLayer: {}, skipping", boneName) }
         }
     }
 }
