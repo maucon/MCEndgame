@@ -45,6 +45,7 @@ class AreaAttackDamage(
 
         val scale = getScale(damager)
 
+        area.renderOutline(world, damager, forward, sideways, scale)
         val targets = getTargets(world, damager, scale).filter {
             area.contains(it.position().subtract(damager.position()), forward, sideways, scale)
                     || area.contains(it.position().add(0.0, it.bbHeight.toDouble(), 0.0).subtract(damager.position()), forward, sideways, scale)
@@ -264,6 +265,92 @@ class AreaAttackDamage(
         fun getRandomForwardPos(scale: Double) = (forwardRange / 2 * Random.nextDouble().pow(2) * if (Random.nextBoolean()) 1 else -1) * scale
         fun getRandomSidewaysPos(scale: Double) = (sideRange * Random.nextDouble().pow(2) * if (Random.nextBoolean()) 1 else -1) * scale
 
+        // for debugging / dev
+        fun renderOutline(
+            world: ServerLevel,
+            damager: LivingEntity,
+            forward: Vec3,
+            sideways: Vec3,
+            scale: Double,
+        ) {
+            val origin = damager.position()
+                .add(0.0, heightOffset * scale, 0.0)
+
+            val minForward = forwardOffset * scale
+            val maxForward = (forwardOffset + forwardRange) * scale
+
+            val minSide = (-sideRange + sideOffset) * scale
+            val maxSide = (sideRange + sideOffset) * scale
+
+            val minHeight = (-heightRange + heightOffset) * scale
+            val maxHeight = (heightRange + heightOffset) * scale
+
+            fun point(f: Double, s: Double, h: Double): Vec3 {
+                return origin
+                    .add(forward.scale(f))
+                    .add(sideways.scale(s))
+                    .add(0.0, h, 0.0)
+            }
+
+            val corners = arrayOf(
+                point(minForward, minSide, minHeight),
+                point(minForward, maxSide, minHeight),
+                point(maxForward, minSide, minHeight),
+                point(maxForward, maxSide, minHeight),
+                point(minForward, minSide, maxHeight),
+                point(minForward, maxSide, maxHeight),
+                point(maxForward, minSide, maxHeight),
+                point(maxForward, maxSide, maxHeight),
+            )
+
+            val edges = arrayOf(
+                0 to 1,
+                0 to 2,
+                1 to 3,
+                2 to 3,
+
+                4 to 5,
+                4 to 6,
+                5 to 7,
+                6 to 7,
+
+                0 to 4,
+                1 to 5,
+                2 to 6,
+                3 to 7,
+            )
+
+            for ((a, b) in edges) {
+                renderLine(world, corners[a], corners[b])
+            }
+        }
+
+        private fun renderLine(
+            world: ServerLevel,
+            from: Vec3,
+            to: Vec3,
+        ) {
+            val particle = ParticleTypes.END_ROD
+            val distance = from.distanceTo(to)
+            val steps = (distance * 8).toInt().coerceAtLeast(1)
+            for (i in 0..steps) {
+                val t = i.toDouble() / steps
+
+                val pos = from.lerp(to, t)
+
+                world.sendParticles(
+                    particle,
+                    pos.x,
+                    pos.y,
+                    pos.z,
+                    1,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                )
+            }
+        }
     }
 
     enum class KnockbackType {

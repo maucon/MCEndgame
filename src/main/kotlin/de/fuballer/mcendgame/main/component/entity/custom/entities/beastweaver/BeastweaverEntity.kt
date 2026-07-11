@@ -146,10 +146,10 @@ class BeastweaverEntity(
         private val BEAR_SWIPE_RIGHT_ATTACK =
             Attack<BeastweaverEntity>(
                 BEAR_SWIPE_RIGHT_ANIM_DATA,
+                28,
                 35,
-                0,
                 DistanceTriggerCondition(3.0, affectedByScale = true),
-                DelayedAttackDamage(BEAR_SWIPE_RIGHT_ATTACK_DAMAGE, 26),
+                DelayedAttackDamage(BEAR_SWIPE_RIGHT_ATTACK_DAMAGE, 19),
             )
 
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
