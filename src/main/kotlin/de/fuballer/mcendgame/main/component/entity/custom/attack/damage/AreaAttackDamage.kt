@@ -45,7 +45,9 @@ class AreaAttackDamage(
 
         val scale = getScale(damager)
 
-        area.renderOutline(world, damager, forward, sideways, scale)
+        // debug
+        //area.renderOutline(world, damager, forward, sideways, scale)
+
         val targets = getTargets(world, damager, scale).filter {
             area.contains(it.position().subtract(damager.position()), forward, sideways, scale)
                     || area.contains(it.position().add(0.0, it.bbHeight.toDouble(), 0.0).subtract(damager.position()), forward, sideways, scale)

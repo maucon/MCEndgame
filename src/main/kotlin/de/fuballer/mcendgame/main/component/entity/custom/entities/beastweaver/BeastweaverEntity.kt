@@ -138,7 +138,7 @@ class BeastweaverEntity(
 
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
-        private val BEAR_SWIPE_RIGHT_AREA = AreaAttackDamage.DamageArea(3.25, 1.5, 0.75, -0.1, 0.25, 0.5)
+        private val BEAR_SWIPE_RIGHT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 0.75, -0.1, 0.35, 0.5)
         private val BEAR_SWIPE_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.6F, 1.0, BEAR_SWIPE_RIGHT_AREA, disableBlockingShield = 3F)
         private val BEAR_SWIPE_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.bear_swipe_right")
         private const val BEAR_SWIPE_RIGHT_ID = "Bear Swipe Right"

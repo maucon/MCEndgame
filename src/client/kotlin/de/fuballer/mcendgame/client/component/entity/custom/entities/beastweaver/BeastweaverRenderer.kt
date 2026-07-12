@@ -9,9 +9,12 @@ import com.geckolib.renderer.base.RenderPassInfo
 import com.google.common.reflect.TypeToken
 import de.fuballer.mcendgame.client.component.render.geo_layers.CustomBonesProgressingTextureGeoLayer
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
+import de.fuballer.mcendgame.main.util.extension.FloatExtension.clampedLerp
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
+import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import org.joml.Vector3f
 import kotlin.math.PI
 
 class BeastweaverRenderer<R>(
@@ -102,13 +105,38 @@ class BeastweaverRenderer<R>(
                 textures = mapOf(
                     0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_bear_paw_right_0.png"),
                 ),
-                alpha = { progress ->
-                    when {
-                        progress <= 0.25F -> 0F
-                        progress <= 1.05F -> (progress - 0.25F) / (1.05F - 0.25F)
-                        progress <= 1.67F -> 1F
-                        else -> 1F - ((progress - 1.67F) / (1.79F - 1.67F))
+                getGradientOrigin = { beastweaver, partialTick ->
+                    val camera = Minecraft.getInstance().gameRenderer.mainCamera
+                    val entityEyePos = beastweaver.getEyePosition(partialTick)
+                    val cameraPos = camera.position()
+                    Vector3f(
+                        (entityEyePos.x - cameraPos.x).toFloat(),
+                        (entityEyePos.y - cameraPos.y).toFloat(),
+                        (entityEyePos.z - cameraPos.z).toFloat()
+                    )
+                },
+                getGradientBounds = { progress, scale ->
+                    val base = when {
+                        progress < 0.1f -> Pair(-0.1f, 0f)
+
+                        progress < 0.79f -> {
+                            val t = (progress - 0.1f) / (0.79f - 0.1f)
+                            val min = ((t - 0.35f) / 0.65f).clampedLerp(0f, 3f)
+                            val max = t.clampedLerp(0f, 3.1f)
+                            Pair(min, max)
+                        }
+
+                        progress < 1.08f -> Pair(3f, 3.1f)
+
+                        else -> {
+                            val t = (progress - 1.08f) / (1.38f - 1.08f)
+                            val min = t.clampedLerp(3f, -0.1f)
+                            val max = ((t - 0.35f) / 0.65f).clampedLerp(3.1f, 0f)
+                            Pair(min, max)
+                        }
                     }
+
+                    Pair(base.first * scale, base.second * scale)
                 },
                 active = { renderState ->
                     renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.bear_swipe_right"

@@ -41,4 +41,17 @@ object CustomRenderLayers {
             .createRenderSetup();
         RenderType.create("bound_abyss", renderSetup)
     }
+
+    fun beastweaverAttack(texture: Identifier) = BEASTWEAVER_ATTACK.apply(texture)
+    val BEASTWEAVER_ATTACK: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
+        val renderSetup = RenderSetup.builder(CustomRenderPipelines.BEASTWEAVER_ATTACK_PIPELINE)
+            .withTexture("Sampler0", texture)
+            .setOutputTarget(OutputTarget.MAIN_TARGET)
+            .useLightmap()
+            .useOverlay()
+            .sortOnUpload()
+            .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+            .createRenderSetup()
+        RenderType.create("beastweaver_attack", renderSetup)
+    }
 }

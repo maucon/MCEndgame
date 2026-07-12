@@ -27,7 +27,8 @@
     "renderer.ItemStackAttributeRenderMixin",
     "renderer.SkullBlockRendererAccessorMixin",
     "stats.GeneralStatsListWidgetMixin",
-    "stats.StatsScreenMixin"
+    "stats.StatsScreenMixin",
+    "vertex_consumer.BufferBuilderSetVertexElementsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
