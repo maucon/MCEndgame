@@ -24,6 +24,9 @@ import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector4f
 
+private const val MAX_ALPHA = 120
+private val COLOR = ColorUtil.rgbaToInt(255, 255, 255, MAX_ALPHA) // rgb unused
+
 class BeastweaverSpiritAttackGeoLayer<O : Any, R : GeoRenderState>(
     renderer: GeoRenderer<BeastweaverEntity, O, R>,
     bones: List<String>,
@@ -66,39 +69,35 @@ class BeastweaverSpiritAttackGeoLayer<O : Any, R : GeoRenderState>(
         val packedLight = renderPassInfo.packedLight()
         val packedOverlay = renderPassInfo.packedOverlay()
 
-        val renderColor = ColorUtil.rgbaToInt(255, 255, 255, 255)
         val gradientOrigin = renderState.getGeckolibData(BEASTWEAVER_ATTACK_GRADIENT_ORIGIN) ?: Vector3f(0f, 0f, 0f)
         val gradientBounds = renderState.getGeckolibData(BEASTWEAVER_ATTACK_GRADIENT_BOUNDS) ?: Pair(0f, 1f)
 
-        val renderType: RenderType? = getRenderType(renderState, boneTexture)
+        val renderType: RenderType = getRenderType(renderState, boneTexture)
+        renderTasks.submitCustomGeometry(renderPassInfo.poseStack(), renderType) { pose: PoseStack.Pose?, buffer: VertexConsumer? ->
+            val poseStack = renderPassInfo.poseStack()
 
-        if (renderType != null) {
-            renderTasks.submitCustomGeometry(renderPassInfo.poseStack(), renderType) { pose: PoseStack.Pose?, buffer: VertexConsumer? ->
-                val poseStack = renderPassInfo.poseStack()
+            poseStack.pushPose()
+            poseStack.last().set(pose!!)
+            bone.translateAwayFromPivotPoint(poseStack)
 
+            for (cube in (bone as CuboidGeoBone).cubes) {
                 poseStack.pushPose()
-                poseStack.last().set(pose!!)
-                bone.translateAwayFromPivotPoint(poseStack)
-
-                for (cube in (bone as CuboidGeoBone).cubes) {
-                    poseStack.pushPose()
-                    renderCube(
-                        cube,
-                        poseStack,
-                        buffer!!,
-                        packedLight,
-                        packedOverlay,
-                        renderColor,
-                        widthRatio,
-                        heightRatio,
-                        gradientOrigin,
-                        gradientBounds,
-                    )
-                    poseStack.popPose()
-                }
-
+                renderCube(
+                    cube,
+                    poseStack,
+                    buffer!!,
+                    packedLight,
+                    packedOverlay,
+                    COLOR,
+                    widthRatio,
+                    heightRatio,
+                    gradientOrigin,
+                    gradientBounds,
+                )
                 poseStack.popPose()
             }
+
+            poseStack.popPose()
         }
     }
 

@@ -23,7 +23,7 @@ void main() {
 
     float alpha = 1 - smoothstep(gradientBounds[0], gradientBounds[1], distanceToOrigin);
 
-    color.a *= alpha;
+    color.a *= alpha * vertexColor.a;
 
     color *= ColorModulator;
 
