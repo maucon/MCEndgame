@@ -311,10 +311,6 @@ class BeastweaverEntity(
                 test.setAndContinue(if (test.isMoving) DefaultAnimations.WALK else DefaultAnimations.IDLE)
             },
 
-            AnimationController<BeastweaverEntity>("Transform Base", 0)
-            { test -> test.setAndContinue(TRANSFORM_BASE_ANIM) }
-                .additiveAnimations(),
-
             transformShoulderSpikesAnimationController,
             transformAntlersAnimationController,
             transformSnoutAnimationController,
@@ -322,6 +318,10 @@ class BeastweaverEntity(
             transformHandClawsAnimationController,
 
             attackAnimationController,
+
+            AnimationController<BeastweaverEntity>("Transform Base", 0)
+            { test -> test.setAndContinue(TRANSFORM_BASE_ANIM) }
+                .additiveAnimations(),
         )
     }
 
