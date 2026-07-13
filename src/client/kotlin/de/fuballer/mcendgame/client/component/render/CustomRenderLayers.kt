@@ -48,9 +48,8 @@ object CustomRenderLayers {
             .withTexture("Sampler0", texture)
             .setOutputTarget(OutputTarget.MAIN_TARGET)
             .useLightmap()
-            .useOverlay()
             .sortOnUpload()
-            .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+            .setOutline(RenderSetup.OutlineProperty.NONE)
             .createRenderSetup()
         RenderType.create("beastweaver_attack", renderSetup)
     }

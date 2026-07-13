@@ -11,8 +11,8 @@ object CustomVertexFormats {
         .add("UV1", VertexFormatElement.UV1)
         .add("UV2", VertexFormatElement.UV2)
         .add("Normal", VertexFormatElement.NORMAL)
+        .padding(1)
         .add("GradientOrigin", CustomVertexFormatElements.GRADIENT_ORIGIN)
         .add("GradientBounds", CustomVertexFormatElements.GRADIENT_BOUNDS)
-        .padding(1)
         .build()
 }

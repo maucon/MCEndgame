@@ -80,48 +80,14 @@ public abstract class BufferBuilderSetVertexElementsMixin implements BufferBuild
             final float gradStart,
             final float gradEnd
     ) {
-        if (fastFormat) {
-            long pointer = this.beginVertex();
-            MemoryUtil.memPutFloat(pointer + 0L, x);
-            MemoryUtil.memPutFloat(pointer + 4L, y);
-            MemoryUtil.memPutFloat(pointer + 8L, z);
-            putRgba(pointer + 12L, color);
-            MemoryUtil.memPutFloat(pointer + 16L, u);
-            MemoryUtil.memPutFloat(pointer + 20L, v);
-            long lightStart;
-            if (fullFormat) {
-                putPackedUv(pointer + 24L, overlayCoords);
-                lightStart = pointer + 28L;
-            } else {
-                lightStart = pointer + 24L;
-            }
-
-            putPackedUv(lightStart + 0L, lightCoords);
-
-            long gradientOriginStart = lightStart + 4L;
-            if (fullFormat) {
-                gradientOriginStart += 3L;
-                MemoryUtil.memPutByte(lightStart + 4L, normalIntValue(nx));
-                MemoryUtil.memPutByte(lightStart + 5L, normalIntValue(ny));
-                MemoryUtil.memPutByte(lightStart + 6L, normalIntValue(nz));
-            }
-
-            MemoryUtil.memPutFloat(gradientOriginStart + 0L, gradOriginX);
-            MemoryUtil.memPutFloat(gradientOriginStart + 4L, gradOriginY);
-            MemoryUtil.memPutFloat(gradientOriginStart + 8L, gradOriginZ);
-            
-            MemoryUtil.memPutFloat(gradientOriginStart + 12L, gradStart);
-            MemoryUtil.memPutFloat(gradientOriginStart + 16L, gradEnd);
-        } else {
-            addVertex(x, y, z);
-            setColor(color);
-            setUv(u, v);
-            setOverlay(overlayCoords);
-            setLight(lightCoords);
-            setNormal(nx, ny, nz);
-            mcendgame$setGradientOrigin(gradOriginX, gradOriginY, gradOriginZ);
-            mcendgame$setGradientBounds(gradStart, gradEnd);
-        }
+        addVertex(x, y, z);
+        setColor(color);
+        setUv(u, v);
+        setOverlay(overlayCoords);
+        setLight(lightCoords);
+        setNormal(nx, ny, nz);
+        mcendgame$setGradientOrigin(gradOriginX, gradOriginY, gradOriginZ);
+        mcendgame$setGradientBounds(gradStart, gradEnd);
     }
 
     private VertexConsumer mcendgame$setGradientOrigin(float x, float y, float z) {

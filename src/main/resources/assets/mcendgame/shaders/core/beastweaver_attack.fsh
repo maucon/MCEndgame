@@ -19,6 +19,12 @@ out vec4 fragColor;
 void main() {
     vec4 color = texture(Sampler0, texCoord0);
 
+    #ifdef ALPHA_CUTOUT
+        if (color.a < ALPHA_CUTOUT) {
+            discard;
+        }
+    #endif
+
     float distanceToOrigin = distance(modelPosition, gradientOrigin);
 
     float alpha = 1 - smoothstep(gradientBounds[0], gradientBounds[1], distanceToOrigin);
