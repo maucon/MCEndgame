@@ -2,10 +2,9 @@ package de.fuballer.mcendgame.main.component.entity.custom.attack.flame_breath
 
 import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerCondition
-import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
 import de.maucon.mauconframework.event.EventGateway
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
@@ -16,46 +15,15 @@ class FlameBreathAttack<T>(
     totalDuration: Int,
     cooldown: Int,
     trigger: TriggerCondition,
-    damage: List<DelayedAttackDamage>,
+    data: List<DelayedAttackData>,
     val damageConversion: Double = 1.0,
     val delay: Int,
     val duration: Int,
     val angle: Double,
     val entityWidthOffsetFactor: Double,
     val entityHeightOffsetFactor: Double,
-    sounds: List<DelayedSoundData> = listOf(),
     blockMovementDuration: Int = 0,
-) : Attack<T>(animationData, totalDuration, cooldown, trigger, damage, sounds, blockMovementDuration) where T : Mob, T : GeoEntity {
-    constructor(
-        animationData: AttackAnimationData,
-        totalDuration: Int,
-        cooldown: Int,
-        trigger: TriggerCondition,
-        damage: DelayedAttackDamage?,
-        damageConversion: Double = 1.0,
-        delay: Int,
-        duration: Int,
-        angle: Double,
-        entityWidthOffsetFactor: Double,
-        entityHeightOffsetFactor: Double,
-        sounds: List<DelayedSoundData> = listOf(),
-        blockMovementDuration: Int = 0,
-    ) : this(
-        animationData,
-        totalDuration,
-        cooldown,
-        trigger,
-        if (damage != null) listOf(damage) else listOf(),
-        damageConversion,
-        delay,
-        duration,
-        angle,
-        entityWidthOffsetFactor,
-        entityHeightOffsetFactor,
-        sounds,
-        blockMovementDuration,
-    )
-
+) : Attack<T>(animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
     override fun start(attacker: T, target: LivingEntity?) {
         super.start(attacker, target)
 
@@ -70,8 +38,8 @@ class FlameBreathAttack<T>(
 
             val distanceXZ = kotlin.math.sqrt(dx * dx + dz * dz)
 
-            attacker.setYRot((Math.toDegrees(atan2(dz, dx)) - 90.0).toFloat())
-            attacker.setXRot((-Math.toDegrees(atan2(dy, distanceXZ))).toFloat())
+            attacker.yRot = (Math.toDegrees(atan2(dz, dx)) - 90.0).toFloat()
+            attacker.xRot = (-Math.toDegrees(atan2(dy, distanceXZ))).toFloat()
 
             attacker.yBodyRot = attacker.yRot
             attacker.yHeadRot = attacker.yRot

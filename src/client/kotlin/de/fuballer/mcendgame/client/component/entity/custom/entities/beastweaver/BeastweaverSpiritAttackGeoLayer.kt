@@ -30,7 +30,7 @@ class BeastweaverSpiritAttackGeoLayer<O : Any, R : GeoRenderState>(
     progress: (R) -> Float,
     textures: Map<Float, Identifier>,
     val getGradientOrigin: (BeastweaverEntity, Float) -> Vector3f,
-    val getGradientBounds: (Float, Float) -> Pair<Float, Float>,
+    val getGradientBounds: (Float) -> Pair<Float, Float>,
     baseTexture: Identifier = textures[textures.keys.first()]!!,
     val active: (R) -> Boolean = { true },
 ) : CustomBonesProgressingTextureGeoLayer<BeastweaverEntity, O, R>(renderer, bones, progress, textures, baseTexture) {
@@ -49,9 +49,10 @@ class BeastweaverSpiritAttackGeoLayer<O : Any, R : GeoRenderState>(
         val gradientOrigin = getGradientOrigin(animatable, partialTick)
         renderState.addGeckolibData(BEASTWEAVER_ATTACK_GRADIENT_ORIGIN, gradientOrigin)
 
+        val bounds = getGradientBounds(progress(renderState))
         val scale = animatable.scale
-        val bounds = getGradientBounds(progress(renderState), scale)
-        renderState.addGeckolibData(BEASTWEAVER_ATTACK_GRADIENT_BOUNDS, bounds)
+        val scaledBounds = Pair(bounds.first * scale, bounds.second * scale)
+        renderState.addGeckolibData(BEASTWEAVER_ATTACK_GRADIENT_BOUNDS, scaledBounds)
     }
 
     override fun renderBone(renderPassInfo: RenderPassInfo<R>, bone: GeoBone, renderTasks: SubmitNodeCollector) {

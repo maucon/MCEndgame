@@ -115,28 +115,26 @@ class BeastweaverRenderer<R>(
                         (entityEyePos.z - cameraPos.z).toFloat()
                     )
                 },
-                getGradientBounds = { progress, scale ->
-                    val base = when {
+                getGradientBounds = { progress ->
+                    when {
                         progress < 0.1f -> Pair(-0.1f, 0f)
 
                         progress < 0.79f -> {
                             val t = (progress - 0.1f) / (0.79f - 0.1f)
-                            val min = ((t - 0.35f) / 0.65f).clampedLerp(0f, 3f)
-                            val max = t.clampedLerp(0f, 3.1f)
+                            val min = ((t - 0.35f) / 0.65f).clampedLerp(0f, 2.2f)
+                            val max = t.clampedLerp(0f, 2.3f)
                             Pair(min, max)
                         }
 
-                        progress < 1.08f -> Pair(3f, 3.1f)
+                        progress < 1.08f -> Pair(2.5f, 2.6f)
 
                         else -> {
                             val t = (progress - 1.08f) / (1.38f - 1.08f)
-                            val min = t.clampedLerp(3f, -0.1f)
-                            val max = ((t - 0.35f) / 0.65f).clampedLerp(3.1f, 0f)
+                            val min = t.clampedLerp(2.5f, -0.1f)
+                            val max = ((t - 0.35f) / 0.65f).clampedLerp(2.6f, 0f)
                             Pair(min, max)
                         }
                     }
-
-                    Pair(base.first * scale, base.second * scale)
                 },
                 active = { renderState ->
                     renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.bear_swipe_right"

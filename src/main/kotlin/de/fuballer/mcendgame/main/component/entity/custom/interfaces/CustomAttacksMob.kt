@@ -3,12 +3,10 @@ package de.fuballer.mcendgame.main.component.entity.custom.interfaces
 import com.geckolib.animatable.GeoEntity
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
-import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Mob
 
 interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
@@ -19,16 +17,14 @@ interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
 
     val attackCooldowns: MutableMap<Attack<T>, Int>
 
-    val attackDamageInstances: MutableList<AttackDamageInstance>
-    val attackSoundInstances: MutableList<DelayedSoundInstance>
+    val attackDataInstances: MutableList<DelayedAttackDataInstance>
 
     fun tickAttacks(
         world: ServerLevel,
         damager: T,
     ) {
         tickCooldowns()
-        tickAttackDamageInstances(world, damager)
-        tickSoundInstances(world, damager)
+        tickAttackDataInstances(world, damager)
 
         if (attackDuration > 0) {
             --attackDuration
@@ -55,8 +51,7 @@ interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
 
         val target = attacker.target
         attack.start(attacker, target)
-        attackDamageInstances.addAll(attack.getDamageInstances(target))
-        attackSoundInstances.addAll(attack.getSoundInstances())
+        attackDataInstances.addAll(attack.getAttackDataInstances(target))
     }
 
     private fun tickCooldowns() {
@@ -72,28 +67,17 @@ interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
         }
     }
 
-    private fun tickAttackDamageInstances(
+    private fun tickAttackDataInstances(
         world: ServerLevel,
         damager: Mob,
     ) {
-        val toRemove = mutableListOf<AttackDamageInstance>()
-        for (attack in attackDamageInstances) {
-            if (!attack.tick(world, damager)) continue
-            toRemove.add(attack)
+        val toRemove = mutableListOf<DelayedAttackDataInstance>()
+        val target = damager.target
+        for (instance in attackDataInstances) {
+            if (!instance.tick(world, damager, target)) continue
+            toRemove.add(instance)
         }
-        attackDamageInstances.removeAll(toRemove)
-    }
-
-    private fun tickSoundInstances(
-        world: ServerLevel,
-        entity: Entity,
-    ) {
-        val toRemove = mutableListOf<DelayedSoundInstance>()
-        for (sound in attackSoundInstances) {
-            if (!sound.tick(world, entity)) continue
-            toRemove.add(sound)
-        }
-        attackSoundInstances.removeAll(toRemove)
+        attackDataInstances.removeAll(toRemove)
     }
 
     fun getRandomAttack(

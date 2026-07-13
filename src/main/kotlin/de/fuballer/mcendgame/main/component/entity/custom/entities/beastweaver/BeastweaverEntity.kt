@@ -12,15 +12,13 @@ import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.*
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
-import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundInstance
+import de.fuballer.mcendgame.main.component.particle.DirectionalAttackSweepParticleEffect
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -28,6 +26,7 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.EntityType
@@ -44,6 +43,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.Vec3
+import kotlin.random.Random
 
 class BeastweaverEntity(
     type: EntityType<out BeastweaverEntity>,
@@ -149,7 +150,85 @@ class BeastweaverEntity(
                 28,
                 35,
                 DistanceTriggerCondition(3.0, affectedByScale = true),
-                DelayedAttackDamage(BEAR_SWIPE_RIGHT_ATTACK_DAMAGE, 19),
+                data = listOf(
+                    DelayedDamageData(BEAR_SWIPE_RIGHT_ATTACK_DAMAGE, 19),
+
+                    DelayedSoundData(
+                        SoundEvents.RESPAWN_ANCHOR_SET_SPAWN,
+                        { Random.nextDouble(0.5, 0.6).toFloat() },
+                        { Random.nextDouble(1.1, 1.3).toFloat() },
+                        SoundSource.HOSTILE,
+                        2,
+                    ),
+                    DelayedSoundData(
+                        SoundEvents.POLAR_BEAR_WARNING,
+                        { Random.nextDouble(0.5, 0.6).toFloat() },
+                        { Random.nextDouble(0.9, 1.1).toFloat() },
+                        SoundSource.HOSTILE,
+                        18,
+                    ),
+                    DelayedSoundData(
+                        SoundEvents.PLAYER_ATTACK_SWEEP,
+                        { Random.nextDouble(0.8, 0.9).toFloat() },
+                        { Random.nextDouble(0.7, 0.85).toFloat() },
+                        SoundSource.HOSTILE,
+                        18,
+                    ),
+                    DelayedSoundData(
+                        SoundEvents.PLAYER_ATTACK_STRONG,
+                        { Random.nextDouble(0.8, 0.9).toFloat() },
+                        { Random.nextDouble(0.7, 0.85).toFloat() },
+                        SoundSource.HOSTILE,
+                        20,
+                    ),
+
+                    DelayedParticleData(
+                        { _, entity ->
+                            val forward = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
+                            val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
+                            val dir = forward.scale(1.5)
+                                .add(sideways.scale(0.65))
+                                .add(0.0, 0.5 - entity.eyeHeight, 0.0)
+
+                            val scale = entity.scale
+                            DirectionalAttackSweepParticleEffect(1.5 * scale, dir.x, dir.y, dir.z)
+                        },
+                        { entity ->
+                            val forward = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
+                            val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
+                            forward.scale(1.5)
+                                .add(sideways.scale(0.65))
+                                .add(0.0, 0.5, 0.0)
+                        },
+                        1,
+                        { Vec3.ZERO },
+                        1.0,
+                        18,
+                    ),
+                    DelayedParticleData(
+                        { _, entity ->
+                            val forward = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
+                            val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
+                            val dir = forward.scale(1.45)
+                                .add(sideways.scale(0.6))
+                                .add(0.0, 0.65 - entity.eyeHeight, 0.0)
+
+                            val scale = entity.scale
+                            DirectionalAttackSweepParticleEffect(1.35 * scale, dir.x, dir.y, dir.z)
+                        },
+                        { entity ->
+                            val forward = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
+                            val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
+                            forward.scale(1.45)
+                                .add(sideways.scale(0.6))
+                                .add(0.0, 0.65, 0.0)
+                        },
+                        1,
+                        { Vec3.ZERO },
+                        1.0,
+                        18,
+                    ),
+                )
             )
 
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
@@ -181,8 +260,7 @@ class BeastweaverEntity(
     override var attackDuration = 0
     override val attacks = ATTACKS
     override val attackCooldowns: MutableMap<Attack<BeastweaverEntity>, Int> = mutableMapOf()
-    override val attackDamageInstances = mutableListOf<AttackDamageInstance>()
-    override val attackSoundInstances = mutableListOf<DelayedSoundInstance>()
+    override val attackDataInstances = mutableListOf<DelayedAttackDataInstance>()
 
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache

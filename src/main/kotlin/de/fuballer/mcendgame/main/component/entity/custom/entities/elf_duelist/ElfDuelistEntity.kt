@@ -13,15 +13,15 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.LeapAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.BasicAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedLeapDamageData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.*
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
-import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundInstance
 import de.fuballer.mcendgame.main.util.extension.Vec3dExtension.getYaw
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.server.level.ServerLevel
@@ -72,7 +72,9 @@ class ElfDuelistEntity(
                 7,
                 0,
                 DistanceTriggerCondition(3.0),
-                DelayedAttackDamage(ATTACK_DAMAGE, 4),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 4),
+                ),
             )
 
         private val STAB_RIGHT_RESET_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.stab_right_reset")
@@ -84,7 +86,7 @@ class ElfDuelistEntity(
                 7,
                 0,
                 AlwaysTrueTriggerCondition(),
-                null,
+                data = listOf(),
             )
 
         private val STAB_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.stab_left")
@@ -96,7 +98,9 @@ class ElfDuelistEntity(
                 7,
                 0,
                 DistanceTriggerCondition(3.0),
-                DelayedAttackDamage(ATTACK_DAMAGE, 4),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 4)
+                ),
             )
 
         private val STAB_LEFT_RESET_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.stab_left_reset")
@@ -108,7 +112,7 @@ class ElfDuelistEntity(
                 7,
                 0,
                 AlwaysTrueTriggerCondition(),
-                null,
+                data = listOf(),
             )
 
         private val STAB_SWAP_LR_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.stab_swap_left_right")
@@ -120,7 +124,9 @@ class ElfDuelistEntity(
                 7,
                 0,
                 DistanceTriggerCondition(3.0),
-                DelayedAttackDamage(ATTACK_DAMAGE, 4),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 4),
+                ),
             )
 
         private val STAB_SWAP_RL_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.stab_swap_right_left")
@@ -132,7 +138,9 @@ class ElfDuelistEntity(
                 7,
                 0,
                 DistanceTriggerCondition(3.0),
-                DelayedAttackDamage(ATTACK_DAMAGE, 4),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 4),
+                ),
             )
 
         private val UPWARDS_SLICE_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.upwards_slice_left")
@@ -144,7 +152,9 @@ class ElfDuelistEntity(
                 7,
                 0,
                 DistanceTriggerCondition(3.0),
-                DelayedAttackDamage(ATTACK_DAMAGE, 4),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 4),
+                ),
             )
 
         private val UPWARDS_SLICE_LEFT_RESET_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.upwards_slice_left_reset")
@@ -156,7 +166,9 @@ class ElfDuelistEntity(
                 7,
                 0,
                 AlwaysTrueTriggerCondition(),
-                DelayedAttackDamage(ATTACK_DAMAGE, 3),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 3),
+                ),
             )
 
         private val UPWARDS_SLICE_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.upwards_slice_right")
@@ -168,7 +180,9 @@ class ElfDuelistEntity(
                 7,
                 0,
                 DistanceTriggerCondition(3.0),
-                DelayedAttackDamage(ATTACK_DAMAGE, 4),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 4),
+                ),
             )
 
         private val UPWARDS_SLICE_RIGHT_RESET_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.upwards_slice_right_reset")
@@ -180,7 +194,9 @@ class ElfDuelistEntity(
                 7,
                 0,
                 AlwaysTrueTriggerCondition(),
-                DelayedAttackDamage(ATTACK_DAMAGE, 3),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 3),
+                ),
             )
 
         private val UPWARDS_SLICE_BOTH_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.upwards_slice_both")
@@ -192,7 +208,9 @@ class ElfDuelistEntity(
                 15,
                 0,
                 DistanceTriggerCondition(3.0),
-                DelayedAttackDamage(ATTACK_DAMAGE, 4),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 4),
+                ),
             )
 
         private val UPWARDS_SLICE_BOTH_RESET_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.upwards_slice_both_reset")
@@ -204,7 +222,9 @@ class ElfDuelistEntity(
                 7,
                 0,
                 AlwaysTrueTriggerCondition(),
-                DelayedAttackDamage(ATTACK_DAMAGE, 3),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 3),
+                ),
             )
 
         private val DOWNWARDS_SLICE_BOTH_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.downwards_slice_both")
@@ -217,7 +237,9 @@ class ElfDuelistEntity(
                 15,
                 0,
                 DistanceTriggerCondition(3.0),
-                DelayedAttackDamage(DOWNWARDS_SLICE_BOTH_ATTACK_DAMAGE, 0, 3),
+                data = listOf(
+                    DelayedLeapDamageData(DOWNWARDS_SLICE_BOTH_ATTACK_DAMAGE, 0, 3),
+                ),
                 LeapAttack.LeapType.JUMP_BACK,
                 blockMovementDuration = 10,
             )
@@ -231,7 +253,7 @@ class ElfDuelistEntity(
                 7,
                 0,
                 AlwaysTrueTriggerCondition(),
-                null
+                data = listOf()
             )
 
         private val SWEEP_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.sweep_left")
@@ -243,7 +265,9 @@ class ElfDuelistEntity(
                 7,
                 0,
                 DistanceTriggerCondition(3.0),
-                DelayedAttackDamage(ATTACK_DAMAGE, 2),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 2),
+                ),
             )
 
         private val SWEEP_LEFT_RESET_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.sweep_left_reset")
@@ -255,7 +279,7 @@ class ElfDuelistEntity(
                 7,
                 0,
                 AlwaysTrueTriggerCondition(),
-                null,
+                data = listOf(),
             )
 
         private val SWEEP_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.sweep_right")
@@ -267,7 +291,9 @@ class ElfDuelistEntity(
                 7,
                 0,
                 DistanceTriggerCondition(3.0),
-                DelayedAttackDamage(ATTACK_DAMAGE, 2),
+                data = listOf(
+                    DelayedDamageData(ATTACK_DAMAGE, 2),
+                ),
             )
 
         private val SWEEP_RIGHT_RESET_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.sweep_right_reset")
@@ -279,7 +305,7 @@ class ElfDuelistEntity(
                 7,
                 0,
                 AlwaysTrueTriggerCondition(),
-                null,
+                data = listOf(),
             )
 
         private val LEAP_TRIGGER_CONDITION = TriggerConditionGroup(
@@ -311,7 +337,9 @@ class ElfDuelistEntity(
                 15,
                 0,
                 LEAP_TRIGGER_CONDITION,
-                DelayedAttackDamage(ATTACK_DAMAGE, 4, 10),
+                data = listOf(
+                    DelayedLeapDamageData(ATTACK_DAMAGE, 4, 10),
+                ),
                 LeapAttack.LeapType.BASIC,
                 blockMovementDuration = 10
             )
@@ -325,7 +353,9 @@ class ElfDuelistEntity(
                 15,
                 0,
                 LEAP_TRIGGER_CONDITION,
-                DelayedAttackDamage(ATTACK_DAMAGE, 4, 10),
+                data = listOf(
+                    DelayedLeapDamageData(ATTACK_DAMAGE, 4, 10),
+                ),
                 LeapAttack.LeapType.BASIC,
                 blockMovementDuration = 10
             )
@@ -347,7 +377,7 @@ class ElfDuelistEntity(
                 25,
                 200,
                 BACKFLIP_TRIGGER_CONDITION,
-                null,
+                data = listOf(),
                 LeapAttack.LeapType.BACKFLIP,
                 blockMovementDuration = 10
             )
@@ -393,8 +423,7 @@ class ElfDuelistEntity(
     override var attackDuration = 0
     override val attacks = ATTACKS
     override val attackCooldowns: MutableMap<Attack<ElfDuelistEntity>, Int> = mutableMapOf()
-    override val attackDamageInstances = mutableListOf<AttackDamageInstance>()
-    override val attackSoundInstances = mutableListOf<DelayedSoundInstance>()
+    override val attackDataInstances = mutableListOf<DelayedAttackDataInstance>()
 
     override var blockAbleMovementEntity = this
     override var blockedMovementTicks = 0

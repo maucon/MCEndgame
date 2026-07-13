@@ -12,9 +12,9 @@ import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.teleport.TeleportToTargetAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
@@ -22,7 +22,6 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMo
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.TeleportAttackMob
-import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundInstance
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
@@ -59,7 +58,9 @@ class BonecrusherEntity(
             totalDuration = 16,
             cooldown = 0,
             DistanceTriggerCondition(3.0),
-            DelayedAttackDamage(HIT_ATTACK_DAMAGE, 3),
+            data = listOf(
+                DelayedDamageData(HIT_ATTACK_DAMAGE, 3),
+            ),
         )
 
         private val SLAM_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slam")
@@ -74,7 +75,9 @@ class BonecrusherEntity(
             totalDuration = 28,
             cooldown = 100,
             DistanceTriggerCondition(1.5, 4.0),
-            DelayedAttackDamage(SLAM_ATTACK_DAMAGE, 14),
+            data = listOf(
+                DelayedDamageData(SLAM_ATTACK_DAMAGE, 14),
+            ),
             blockMovementDuration = 22,
         )
 
@@ -90,8 +93,10 @@ class BonecrusherEntity(
             totalDuration = 45,
             cooldown = 65,
             DistanceTriggerCondition(6.0, 50.0),
-            DelayedAttackDamage(TELEPORT_PRESS_DAMAGE, 25),
-            teleportDelay = 20,
+            data = listOf(
+                DelayedDamageData(TELEPORT_PRESS_DAMAGE, 25),
+            ),
+            teleportDelayTicks = 20,
             choseLocationDelayTicks = 12,
             blockMovementDuration = 40,
         )
@@ -119,28 +124,28 @@ class BonecrusherEntity(
             getSpinAttackDamage(),
         )
 
-        private fun getSpinAttackDamage(): List<DelayedAttackDamage> {
-            val damage = mutableListOf<DelayedAttackDamage>()
+        private fun getSpinAttackDamage(): List<DelayedDamageData> {
+            val damage = mutableListOf<DelayedDamageData>()
 
             // spin start
-            damage.add(DelayedAttackDamage(SPIN_LEFT_DAMAGE, 5))
-            damage.add(DelayedAttackDamage(SPIN_BACK_DAMAGE, 9))
-            damage.add(DelayedAttackDamage(SPIN_RIGHT_DAMAGE, 13))
+            damage.add(DelayedDamageData(SPIN_LEFT_DAMAGE, 5))
+            damage.add(DelayedDamageData(SPIN_BACK_DAMAGE, 9))
+            damage.add(DelayedDamageData(SPIN_RIGHT_DAMAGE, 13))
 
             // main spin
             for (rot in 0 until SPIN_ATTACK_ROTATIONS) {
                 val base = 16 + (rot * 20 * 2 / 3.0).toInt()
-                damage.add(DelayedAttackDamage(SPIN_FRONT_DAMAGE, base))
-                damage.add(DelayedAttackDamage(SPIN_LEFT_DAMAGE, base + 3))
-                damage.add(DelayedAttackDamage(SPIN_BACK_DAMAGE, base + 6))
-                damage.add(DelayedAttackDamage(SPIN_RIGHT_DAMAGE, base + 10))
+                damage.add(DelayedDamageData(SPIN_FRONT_DAMAGE, base))
+                damage.add(DelayedDamageData(SPIN_LEFT_DAMAGE, base + 3))
+                damage.add(DelayedDamageData(SPIN_BACK_DAMAGE, base + 6))
+                damage.add(DelayedDamageData(SPIN_RIGHT_DAMAGE, base + 10))
             }
 
             // spin end
             val base = 16 + (SPIN_ATTACK_ROTATIONS * 20 * 2 / 3.0).toInt()
-            damage.add(DelayedAttackDamage(SPIN_FRONT_DAMAGE, base))
-            damage.add(DelayedAttackDamage(SPIN_LEFT_DAMAGE, base + 5))
-            damage.add(DelayedAttackDamage(SPIN_BACK_DAMAGE, base + 10))
+            damage.add(DelayedDamageData(SPIN_FRONT_DAMAGE, base))
+            damage.add(DelayedDamageData(SPIN_LEFT_DAMAGE, base + 5))
+            damage.add(DelayedDamageData(SPIN_BACK_DAMAGE, base + 10))
 
             return damage
         }
@@ -171,8 +176,7 @@ class BonecrusherEntity(
     override var attackDuration = 0
     override val attacks = ATTACKS
     override val attackCooldowns: MutableMap<Attack<BonecrusherEntity>, Int> = mutableMapOf()
-    override val attackDamageInstances = mutableListOf<AttackDamageInstance>()
-    override val attackSoundInstances = mutableListOf<DelayedSoundInstance>()
+    override val attackDataInstances = mutableListOf<DelayedAttackDataInstance>()
 
     override var teleportAttackTargetPosition: Vec3? = null
 
