@@ -139,6 +139,68 @@ class BeastweaverEntity(
 
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
+        private val BEAR_SWIPE_SOUND_DATA = listOf(
+            DelayedSoundData(
+                SoundEvents.RESPAWN_ANCHOR_SET_SPAWN,
+                { Random.nextDouble(0.5, 0.6).toFloat() },
+                { Random.nextDouble(1.1, 1.3).toFloat() },
+                SoundSource.HOSTILE,
+                2,
+            ),
+            DelayedSoundData(
+                SoundEvents.POLAR_BEAR_WARNING,
+                { Random.nextDouble(0.5, 0.6).toFloat() },
+                { Random.nextDouble(0.9, 1.1).toFloat() },
+                SoundSource.HOSTILE,
+                18,
+            ),
+            DelayedSoundData(
+                SoundEvents.PLAYER_ATTACK_SWEEP,
+                { Random.nextDouble(0.8, 0.9).toFloat() },
+                { Random.nextDouble(0.7, 0.85).toFloat() },
+                SoundSource.HOSTILE,
+                18,
+            ),
+            DelayedSoundData(
+                SoundEvents.PLAYER_ATTACK_STRONG,
+                { Random.nextDouble(0.8, 0.9).toFloat() },
+                { Random.nextDouble(0.7, 0.85).toFloat() },
+                SoundSource.HOSTILE,
+                20,
+            ),
+        )
+
+        private fun getBearSwipeParticleData(
+            forwards: Double,
+            sideways: Double, // positive -> right
+            height: Double,
+            size: Double,
+        ) = DelayedParticleData(
+            particle = { _, entity ->
+                val forwardsVector = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
+                val sidewaysVector = forwardsVector.cross(Vec3(0.0, 1.0, 0.0))
+
+                val scale = entity.scale
+
+                val dir = forwardsVector.scale(forwards)
+                    .add(sidewaysVector.scale(sideways))
+                    .add(0.0, height * scale - entity.eyeHeight, 0.0)
+
+                DirectionalAttackSweepParticleEffect(size * scale, dir.x, dir.y, dir.z)
+            },
+            offset = { entity ->
+                val forwardsVector = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
+                val sidewaysVector = forwardsVector.cross(Vec3(0.0, 1.0, 0.0))
+                forwardsVector.scale(forwards)
+                    .add(sidewaysVector.scale(sideways))
+                    .add(0.0, height, 0.0)
+            },
+            count = 1,
+            dist = { Vec3.ZERO },
+            speed = 1.0,
+            delay = 18,
+        )
+
         private val BEAR_SWIPE_RIGHT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 0.75, -0.1, 0.35, 0.5)
         private val BEAR_SWIPE_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.6F, 1.0, BEAR_SWIPE_RIGHT_AREA, disableBlockingShield = 3F)
         private val BEAR_SWIPE_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.bear_swipe_right")
@@ -147,92 +209,43 @@ class BeastweaverEntity(
         private val BEAR_SWIPE_RIGHT_ATTACK =
             Attack<BeastweaverEntity>(
                 BEAR_SWIPE_RIGHT_ANIM_DATA,
-                28,
-                35,
+                totalDuration = 28,
+                cooldown = 35,
                 DistanceTriggerCondition(3.0, affectedByScale = true),
                 data = listOf(
                     DelayedDamageData(BEAR_SWIPE_RIGHT_ATTACK_DAMAGE, 19),
 
-                    DelayedSoundData(
-                        SoundEvents.RESPAWN_ANCHOR_SET_SPAWN,
-                        { Random.nextDouble(0.5, 0.6).toFloat() },
-                        { Random.nextDouble(1.1, 1.3).toFloat() },
-                        SoundSource.HOSTILE,
-                        2,
-                    ),
-                    DelayedSoundData(
-                        SoundEvents.POLAR_BEAR_WARNING,
-                        { Random.nextDouble(0.5, 0.6).toFloat() },
-                        { Random.nextDouble(0.9, 1.1).toFloat() },
-                        SoundSource.HOSTILE,
-                        18,
-                    ),
-                    DelayedSoundData(
-                        SoundEvents.PLAYER_ATTACK_SWEEP,
-                        { Random.nextDouble(0.8, 0.9).toFloat() },
-                        { Random.nextDouble(0.7, 0.85).toFloat() },
-                        SoundSource.HOSTILE,
-                        18,
-                    ),
-                    DelayedSoundData(
-                        SoundEvents.PLAYER_ATTACK_STRONG,
-                        { Random.nextDouble(0.8, 0.9).toFloat() },
-                        { Random.nextDouble(0.7, 0.85).toFloat() },
-                        SoundSource.HOSTILE,
-                        20,
-                    ),
+                    *BEAR_SWIPE_SOUND_DATA.toTypedArray(),
 
-                    DelayedParticleData(
-                        { _, entity ->
-                            val forward = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
-                            val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
-                            val dir = forward.scale(1.5)
-                                .add(sideways.scale(0.65))
-                                .add(0.0, 0.5 - entity.eyeHeight, 0.0)
+                    getBearSwipeParticleData(1.5, 0.65, 0.5, 1.5),
+                    getBearSwipeParticleData(1.45, 0.6, 0.65, 1.35),
+                )
+            )
 
-                            val scale = entity.scale
-                            DirectionalAttackSweepParticleEffect(1.5 * scale, dir.x, dir.y, dir.z)
-                        },
-                        { entity ->
-                            val forward = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
-                            val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
-                            forward.scale(1.5)
-                                .add(sideways.scale(0.65))
-                                .add(0.0, 0.5, 0.0)
-                        },
-                        1,
-                        { Vec3.ZERO },
-                        1.0,
-                        18,
-                    ),
-                    DelayedParticleData(
-                        { _, entity ->
-                            val forward = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
-                            val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
-                            val dir = forward.scale(1.45)
-                                .add(sideways.scale(0.6))
-                                .add(0.0, 0.65 - entity.eyeHeight, 0.0)
+        private val BEAR_SWIPE_LEFT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 0.75, -0.1, -0.35, 0.5)
+        private val BEAR_SWIPE_LEFT_ATTACK_DAMAGE = AreaAttackDamage(0.6F, 1.0, BEAR_SWIPE_LEFT_AREA, disableBlockingShield = 3F)
+        private val BEAR_SWIPE_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.bear_swipe_left")
+        private const val BEAR_SWIPE_LEFT_ID = "Bear Swipe Left"
+        private val BEAR_SWIPE_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BEAR_SWIPE_LEFT_ID)
+        private val BEAR_SWIPE_LEFT_ATTACK =
+            Attack<BeastweaverEntity>(
+                BEAR_SWIPE_LEFT_ANIM_DATA,
+                totalDuration = 28,
+                cooldown = 35,
+                DistanceTriggerCondition(3.0, affectedByScale = true),
+                data = listOf(
+                    DelayedDamageData(BEAR_SWIPE_LEFT_ATTACK_DAMAGE, 19),
 
-                            val scale = entity.scale
-                            DirectionalAttackSweepParticleEffect(1.35 * scale, dir.x, dir.y, dir.z)
-                        },
-                        { entity ->
-                            val forward = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
-                            val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
-                            forward.scale(1.45)
-                                .add(sideways.scale(0.6))
-                                .add(0.0, 0.65, 0.0)
-                        },
-                        1,
-                        { Vec3.ZERO },
-                        1.0,
-                        18,
-                    ),
+                    *BEAR_SWIPE_SOUND_DATA.toTypedArray(),
+
+                    getBearSwipeParticleData(1.5, -0.65, 0.5, 1.5),
+                    getBearSwipeParticleData(1.45, -0.6, 0.65, 1.35),
                 )
             )
 
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
             RandomOption(1, BEAR_SWIPE_RIGHT_ATTACK),
+            RandomOption(1, BEAR_SWIPE_LEFT_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -297,8 +310,9 @@ class BeastweaverEntity(
     )
 
     private val attackAnimationController =
-        AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
+        AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 5) { _ -> PlayState.STOP }
             .triggerableAnim(BEAR_SWIPE_RIGHT_ID, BEAR_SWIPE_RIGHT_ANIM)
+            .triggerableAnim(BEAR_SWIPE_LEFT_ID, BEAR_SWIPE_LEFT_ANIM)
 
     private fun getAnimationController(name: String) = transformAnimationControllers.find { it.name == name }
 

@@ -18,11 +18,12 @@ class DistanceTriggerCondition(
         target: LivingEntity?,
     ): Boolean {
         if (target == null) return false
-        if (!affectedByScale) return attacker.distanceToSqr(target) in squaredMinDistance..squaredMaxDistance
+        val squaredDistance = attacker.distanceToSqr(target)
+        if (!affectedByScale) return squaredDistance in squaredMinDistance..squaredMaxDistance
 
         val scale = attacker.scale
         val scaledMinDistance = minDistance * scale
         val scaledMaxDistance = maxDistance * scale
-        return attacker.distanceToSqr(target) in (scaledMinDistance * scaledMinDistance)..(scaledMaxDistance * scaledMaxDistance)
+        return squaredDistance in (scaledMinDistance * scaledMinDistance)..(scaledMaxDistance * scaledMaxDistance)
     }
 }

@@ -93,52 +93,60 @@ class BeastweaverRenderer<R>(
                 activeThreshold = 0.71F,
             )
         )
+
+        val getBearSwipeAttackGradientOrigin: (BeastweaverEntity, Float) -> Vector3f = { beastweaver, partialTick ->
+            val camera = Minecraft.getInstance().gameRenderer.mainCamera
+            val entityEyePos = beastweaver.getEyePosition(partialTick)
+            val cameraPos = camera.position()
+            Vector3f(
+                (entityEyePos.x - cameraPos.x).toFloat(),
+                (entityEyePos.y - cameraPos.y).toFloat(),
+                (entityEyePos.z - cameraPos.z).toFloat()
+            )
+        }
+
+        val getBearSwipeAttackGradientBounds: (Float) -> Pair<Float, Float> = { progress ->
+            when {
+                progress < 0.1f -> Pair(-0.1f, 0f)
+
+                progress < 0.79f -> {
+                    val t = (progress - 0.1f) / (0.79f - 0.1f)
+                    val min = ((t - 0.35f) / 0.65f).clampedLerp(0f, 2.2f)
+                    val max = t.clampedLerp(0f, 2.3f)
+                    Pair(min, max)
+                }
+
+                progress < 1.08f -> Pair(2.5f, 2.6f)
+
+                else -> {
+                    val t = (progress - 1.08f) / (1.38f - 1.08f)
+                    val min = t.clampedLerp(2.5f, -0.1f)
+                    val max = ((t - 0.35f) / 0.65f).clampedLerp(2.6f, 0f)
+                    Pair(min, max)
+                }
+            }
+        }
+
         withRenderLayer(
             BeastweaverSpiritAttackGeoLayer(
                 this,
-                listOf(
-                    "rightBearPaw",
-                ),
-                progress = { renderState ->
-                    renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F
-                },
-                textures = mapOf(
-                    0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_bear_paw_right_0.png"),
-                ),
-                getGradientOrigin = { beastweaver, partialTick ->
-                    val camera = Minecraft.getInstance().gameRenderer.mainCamera
-                    val entityEyePos = beastweaver.getEyePosition(partialTick)
-                    val cameraPos = camera.position()
-                    Vector3f(
-                        (entityEyePos.x - cameraPos.x).toFloat(),
-                        (entityEyePos.y - cameraPos.y).toFloat(),
-                        (entityEyePos.z - cameraPos.z).toFloat()
-                    )
-                },
-                getGradientBounds = { progress ->
-                    when {
-                        progress < 0.1f -> Pair(-0.1f, 0f)
-
-                        progress < 0.79f -> {
-                            val t = (progress - 0.1f) / (0.79f - 0.1f)
-                            val min = ((t - 0.35f) / 0.65f).clampedLerp(0f, 2.2f)
-                            val max = t.clampedLerp(0f, 2.3f)
-                            Pair(min, max)
-                        }
-
-                        progress < 1.08f -> Pair(2.5f, 2.6f)
-
-                        else -> {
-                            val t = (progress - 1.08f) / (1.38f - 1.08f)
-                            val min = t.clampedLerp(2.5f, -0.1f)
-                            val max = ((t - 0.35f) / 0.65f).clampedLerp(2.6f, 0f)
-                            Pair(min, max)
-                        }
-                    }
-                },
-                active = { renderState ->
-                    renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.bear_swipe_right"
-                },
+                listOf("rightBearPaw"),
+                progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
+                textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_bear_paw_right_0.png")),
+                getGradientOrigin = getBearSwipeAttackGradientOrigin,
+                getGradientBounds = getBearSwipeAttackGradientBounds,
+                active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.bear_swipe_right" },
+            )
+        )
+        withRenderLayer(
+            BeastweaverSpiritAttackGeoLayer(
+                this,
+                listOf("leftBearPaw"),
+                progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
+                textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_bear_paw_left_0.png")),
+                getGradientOrigin = getBearSwipeAttackGradientOrigin,
+                getGradientBounds = getBearSwipeAttackGradientBounds,
+                active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.bear_swipe_left" },
             )
         )
     }
