@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.client.component.render
 
 import net.minecraft.client.renderer.rendertype.LayeringTransform
-import net.minecraft.client.renderer.rendertype.OutputTarget
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.resources.Identifier
@@ -20,8 +19,6 @@ object CustomRenderLayers {
     val GHOSTLY: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.GHOSTLY_PIPELINE)
             .withTexture("Sampler0", texture)
-            .setOutputTarget(OutputTarget.MAIN_TARGET)
-            .useLightmap()
             .useOverlay()
             .sortOnUpload()
             .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)

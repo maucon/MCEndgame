@@ -33,9 +33,9 @@ object CustomRenderPipelines {
             .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
             .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
             .withCull(false)
-            .withDepthStencilState(DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, true))
-            .build()
-    ) // FIXME player not rendering
+            .withDepthStencilState(DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, true))
+            .build() // FIXME water not rendering behind it
+    )
 
     val BOUND_ABYSS_PIPELINE: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.MATRICES_FOG_LIGHT_DIR_SNIPPET)
