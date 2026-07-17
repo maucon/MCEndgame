@@ -14,7 +14,7 @@ public class ApplyHealingFactorHealOrHarmMobEffectMixin {
             method = "applyInstantaneousEffect",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;heal(F)V")
     )
-    void modifyHeal( // FIXME
+    void modifyHeal(
             LivingEntity instance,
             float heal,
             ServerLevel serverLevel,

@@ -10,7 +10,7 @@
   ],
   "contact": {
     "homepage": "https://modrinth.com/project/mcendgame/",
-    "sources": "https://github.com/maucon/MCEndgame-fabric"
+    "sources": "https://github.com/maucon/MCEndgame"
   },
   "license": "MIT",
   "icon": "assets/mcendgame/icon.png",

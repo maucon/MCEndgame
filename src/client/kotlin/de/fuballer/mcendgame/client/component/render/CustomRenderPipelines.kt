@@ -22,7 +22,7 @@ object CustomRenderPipelines {
             .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR_LIGHTMAP)
             .withPrimitiveTopology(PrimitiveTopology.TRIANGLE_STRIP)
             .withDepthStencilState(DepthStencilState.DEFAULT)
-            .build() // FIXME water not rendering behind it
+            .build() // FIXME #286 water not rendering behind it
     )
 
     val GHOSTLY_PIPELINE: RenderPipeline = RenderPipelines.register(
@@ -34,7 +34,7 @@ object CustomRenderPipelines {
             .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
             .withCull(false)
             .withDepthStencilState(DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, true))
-            .build() // FIXME water not rendering behind it
+            .build() // FIXME #286 water not rendering behind it
     )
 
     val BOUND_ABYSS_PIPELINE: RenderPipeline = RenderPipelines.register(

@@ -2,7 +2,7 @@
 [![Mod Loader](https://img.shields.io/badge/Loader-Fabric-blue)](https://fabricmc.net/use/installer/)
 [![Modrinth](https://img.shields.io/badge/Modrinth-MCEndgame-green)](https://modrinth.com/mod/mcendgame)
 [![CurseForge](https://img.shields.io/badge/CurseForge-MCEndgame-orange)](https://www.curseforge.com/minecraft/mc-mods/mcendgame)
-[![build](https://github.com/maucon/MCEndgame-fabric/actions/workflows/build.yml/badge.svg)](https://github.com/maucon/MCEndgame-fabric/actions/workflows/build.yml)
+[![build](https://github.com/maucon/MCEndgame/actions/workflows/build.yml/badge.svg)](https://github.com/maucon/MCEndgame/actions/workflows/build.yml)
 [![License](https://img.shields.io/badge/License-MIT-lightblue)](LICENSE)
 
 <div align="center">
@@ -13,9 +13,9 @@
     &middot;
     <a href="https://www.curseforge.com/minecraft/mc-mods/mcendgame">Get it on CurseForge</a>
     &middot;
-    <a href="https://github.com/maucon/MCEndgame-fabric/issues/new?labels=bug&template=bug-report.md">Report Bug</a>
+    <a href="https://github.com/maucon/MCEndgame/issues/new?labels=bug&template=bug-report.md">Report Bug</a>
     &middot;
-    <a href="https://github.com/maucon/MCEndgame-fabric/issues/new?labels=enhancement&template=feature-request.md">Request Feature</a>
+    <a href="https://github.com/maucon/MCEndgame/issues/new?labels=enhancement&template=feature-request.md">Request Feature</a>
   </p>
 </div>
 
@@ -86,7 +86,7 @@ system.
 ### Analytics
 
 MCEndgame collects anonymous gameplay data to help improve the mod. No personal information is collected.
-See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame-fabric/wiki/Analytics) for details on what is collected and how to opt out.
+See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame/wiki/Analytics) for details on what is collected and how to opt out.
 
 ---
 
@@ -96,7 +96,7 @@ See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame-fabric/wiki/An
 
 1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft **26.1.2**
 2. Download [Fabric API](https://modrinth.com/mod/fabric-api)
-3. Download MCEndgame from [Releases](https://github.com/maucon/MCEndgame-fabric/releases), [Modrinth](https://modrinth.com/mod/mcendgame/)
+3. Download MCEndgame from [Releases](https://github.com/maucon/MCEndgame/releases), [Modrinth](https://modrinth.com/mod/mcendgame/)
    or [CurseForge](https://www.curseforge.com/minecraft/mc-mods/mcendgame)
 4. Download all [required dependencies](#dependencies)
 5. Place all `.jar` files into your mods folder
@@ -117,8 +117,8 @@ See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame-fabric/wiki/An
 You can also build the mod yourself:
 
 ```bash
-git clone https://github.com/maucon/MCEndgame-fabric.git
-cd MCEndgame-fabric
+git clone https://github.com/maucon/MCEndgame.git
+cd MCEndgame
 ./gradlew build
 ```
 
