@@ -78,10 +78,22 @@ class CustomBlockTagProvider(
             .add(BlockIds.BAMBOO_SAPLING)
             .add(BlockItemIds.DEAD_BUSH)
             .add(BlockItemIds.REDSTONE_DUST)
+            // region .add(BlockTags.SAPLINGS)
+            // FIXME should be 'BlockTags.SAPLINGS', but the reference seems to be removed? We list the entries for now (https://minecraft.wiki/w/Block_tag_%28Java_Edition%29#saplings)
+            .add(BlockItemIds.ACACIA_SAPLING)
+            .add(BlockItemIds.AZALEA)
+            .add(BlockItemIds.BIRCH_SAPLING)
+            .add(BlockItemIds.CHERRY_SAPLING)
+            .add(BlockItemIds.DARK_OAK_SAPLING)
+            .add(BlockItemIds.FLOWERING_AZALEA)
+            .add(BlockItemIds.JUNGLE_SAPLING)
+            .add(BlockItemIds.MANGROVE_PROPAGULE)
+            .add(BlockItemIds.OAK_SAPLING)
+            .add(BlockItemIds.SPRUCE_SAPLING)
+            // endregion
             .forceAddTag(BlockTags.FLOWERS)
             .forceAddTag(BlockTags.CORALS)
             .forceAddTag(BlockTags.WALL_CORALS)
-//            .forceAddTag(BlockTags.SAPLINGS) // FIXME why in the fuck
             .forceAddTag(BlockTags.CAVE_VINES)
 
         builder(CustomTags.DUNGEON_INTERACTABLE)
