@@ -243,9 +243,75 @@ class BeastweaverEntity(
                 )
             )
 
+        private val TAIL_SWEEP_DAMAGE_DATA = listOf(
+            DelayedDamageData(
+                AreaAttackDamage(0.6F, 3.0, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, -2.25, 0.5), knockbackWhenBlocked = true),
+                minDelay = 20,
+            ),
+            DelayedDamageData(
+                AreaAttackDamage(0.6F, 3.0, AreaAttackDamage.DamageArea(5.0, 1.0, 0.4, 0.1, 0.0, 0.5), knockbackWhenBlocked = true),
+                minDelay = 21,
+            ),
+            DelayedDamageData(
+                AreaAttackDamage(0.6F, 3.0, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, 2.25, 0.5), knockbackWhenBlocked = true),
+                minDelay = 22,
+            ),
+        )
+        private val TAIL_SWEEP_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.tail_sweep")
+        private const val TAIL_SWEEP_ID = "Tail Sweep"
+        private val TAIL_SWEEP_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, TAIL_SWEEP_ID)
+        private val TAIL_SWEEP_ATTACK =
+            Attack<BeastweaverEntity>(
+                TAIL_SWEEP_ANIM_DATA,
+                totalDuration = 30,
+                cooldown = 50,
+                DistanceTriggerCondition(4.5, affectedByScale = true),
+                data = listOf(
+                    *TAIL_SWEEP_DAMAGE_DATA.toTypedArray(),
+
+                    DelayedSoundData(
+                        SoundEvents.AMETHYST_BLOCK_CHIME,
+                        { Random.nextDouble(1.8, 2.0).toFloat() },
+                        { Random.nextDouble(0.9, 1.0).toFloat() },
+                        SoundSource.HOSTILE,
+                        8,
+                    ),
+                    DelayedSoundData(
+                        SoundEvents.BEACON_POWER_SELECT,
+                        { Random.nextDouble(0.5, 0.6).toFloat() },
+                        { Random.nextDouble(0.9, 1.0).toFloat() },
+                        SoundSource.HOSTILE,
+                        8,
+                    ),
+                    DelayedSoundData(
+                        SoundEvents.PLAYER_ATTACK_SWEEP,
+                        { Random.nextDouble(0.9, 1.1).toFloat() },
+                        { Random.nextDouble(0.6, 0.7).toFloat() },
+                        SoundSource.HOSTILE,
+                        19,
+                    ),
+                    DelayedSoundData(
+                        SoundEvents.ENDER_DRAGON_FLAP,
+                        { Random.nextDouble(0.7, 0.8).toFloat() },
+                        { Random.nextDouble(0.9, 1.0).toFloat() },
+                        SoundSource.HOSTILE,
+                        19,
+                    ),
+                    DelayedSoundData(
+                        SoundEvents.EVOKER_CAST_SPELL,
+                        { Random.nextDouble(0.7, 0.8).toFloat() },
+                        { Random.nextDouble(1.0, 1.1).toFloat() },
+                        SoundSource.HOSTILE,
+                        19,
+                    ),
+                ),
+                blockMovementDuration = 30,
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
             RandomOption(1, BEAR_SWIPE_RIGHT_ATTACK),
             RandomOption(1, BEAR_SWIPE_LEFT_ATTACK),
+            RandomOption(1, TAIL_SWEEP_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -253,7 +319,7 @@ class BeastweaverEntity(
                 .add(Attributes.FOLLOW_RANGE, 35.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.3)
                 .add(Attributes.ATTACK_DAMAGE, 3.0)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.3)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.5)
                 .add(Attributes.ARMOR, 0.0)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)
                 .add(Attributes.MOVEMENT_EFFICIENCY, 0.85)
@@ -313,6 +379,7 @@ class BeastweaverEntity(
         AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 5) { _ -> PlayState.STOP }
             .triggerableAnim(BEAR_SWIPE_RIGHT_ID, BEAR_SWIPE_RIGHT_ANIM)
             .triggerableAnim(BEAR_SWIPE_LEFT_ID, BEAR_SWIPE_LEFT_ANIM)
+            .triggerableAnim(TAIL_SWEEP_ID, TAIL_SWEEP_ANIM)
 
     private fun getAnimationController(name: String) = transformAnimationControllers.find { it.name == name }
 

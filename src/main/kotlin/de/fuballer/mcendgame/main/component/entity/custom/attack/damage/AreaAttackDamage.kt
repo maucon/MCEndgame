@@ -26,7 +26,8 @@ class AreaAttackDamage(
     private val knockbackType: KnockbackType = KnockbackType.DAMAGER_CENTER,
     blockable: Boolean = true,
     disableBlockingShield: Float = 0.0F,
-) : AttackDamage(damageFactor, knockbackFactor, blockable, disableBlockingShield) {
+    knockbackWhenBlocked: Boolean = false,
+) : AttackDamage(damageFactor, knockbackFactor, blockable, disableBlockingShield, knockbackWhenBlocked) {
     private var createParticles: Boolean = false
     private var particleCount: Int = 0
     private var particleHeightOffset: Double = 0.0
@@ -46,11 +47,10 @@ class AreaAttackDamage(
         val scale = getScale(damager)
 
         // debug
-        //area.renderOutline(world, damager, forward, sideways, scale)
+        area.renderOutline(world, damager, forward, sideways, scale)
 
         val targets = getTargets(world, damager, scale).filter {
-            area.contains(it.position().subtract(damager.position()), forward, sideways, scale)
-                    || area.contains(it.position().add(0.0, it.bbHeight.toDouble(), 0.0).subtract(damager.position()), forward, sideways, scale)
+            area.intersects(it, damager, forward, sideways, scale)
         }
 
         val slamCenter = area.getCenter(damager, scale, forward, sideways)
@@ -88,9 +88,9 @@ class AreaAttackDamage(
         val knockback = getKnockback(damager)
 
         targets.forEach {
-            it.dealGenericAttackDamage(damage, damager, blockable)
+            val dealtDamage = it.dealGenericAttackDamage(damage, damager, blockable)
             if (disableBlockingShield > 0 && it is Avatar && it.isBlocking) it.setShieldsCooldown(disableBlockingShield)
-            applyKnockback(it, damager, knockback, scale, forward, slamCenter)
+            if (dealtDamage || knockbackWhenBlocked) applyKnockback(it, damager, knockback, scale, forward, slamCenter)
         }
     }
 
@@ -104,6 +104,7 @@ class AreaAttackDamage(
     ) {
         val knockBackStrength = knockback * if (applyScale) scale else 1.0
         target.needsSync = true
+        target.hurtMarked = true
 
         when (knockbackType) {
             KnockbackType.FACING -> target.takeKnockbackFrom(damager, knockBackStrength, -forward.x, -forward.z)
@@ -143,7 +144,7 @@ class AreaAttackDamage(
         scale: Double,
     ) {
         val scaledParticleCount = (particleCount * scale).toInt()
-        for (i in 0 until scaledParticleCount) createParticle(world, slamCenter, forward, sideways, scale)
+        repeat(scaledParticleCount) { createParticle(world, slamCenter, forward, sideways, scale) }
     }
 
     private fun createParticle(
@@ -204,6 +205,36 @@ class AreaAttackDamage(
         private val sideOffset: Double = 0.0, // positive -> right
         private val heightOffset: Double = 0.0, // positive -> up
     ) {
+        fun intersects(
+            entity: LivingEntity,
+            damager: LivingEntity,
+            forward: Vec3,
+            sideways: Vec3,
+            scale: Double
+        ): Boolean {
+            val bb = entity.boundingBox
+
+            val xStep = (bb.maxX - bb.minX) / 2.0
+            val yStep = (bb.maxY - bb.minY) / 2.0
+            val zStep = (bb.maxZ - bb.minZ) / 2.0
+
+            for (x in 0..2) {
+                for (y in 0..2) {
+                    for (z in 0..2) {
+                        val point = Vec3(
+                            bb.minX + x * xStep,
+                            bb.minY + y * yStep,
+                            bb.minZ + z * zStep
+                        )
+
+                        if (contains(point.subtract(damager.position()), forward, sideways, scale)) return true
+                    }
+                }
+            }
+
+            return false
+        }
+
         fun contains(
             relativePos: Vec3,
             forward: Vec3,
@@ -216,15 +247,15 @@ class AreaAttackDamage(
 
             val maxForward = (forwardRange + forwardOffset) * scale
             val minForward = (forwardOffset) * scale
-            if (forwardDistance > maxForward || forwardDistance < minForward) return false
+            if (forwardDistance !in minForward..maxForward) return false
 
             val maxSide = (sideRange + sideOffset) * scale
             val minSide = (-sideRange + sideOffset) * scale
-            if (sidewaysDistance > maxSide || sidewaysDistance < minSide) return false
+            if (sidewaysDistance !in minSide..maxSide) return false
 
             val maxHeight = (heightRange + heightOffset) * scale
             val minHeight = (-heightRange + heightOffset) * scale
-            if (heightDistance > maxHeight || heightDistance < minHeight) return false
+            if (heightDistance !in minHeight..maxHeight) return false
 
             return true
         }

@@ -94,15 +94,19 @@ class BeastweaverRenderer<R>(
             )
         )
 
-        val getBearSwipeAttackGradientOrigin: (BeastweaverEntity, Float) -> Vector3f = { beastweaver, partialTick ->
+        val getCameraRelativeEntityPos: (BeastweaverEntity, Float) -> Vector3f = { beastweaver, partialTick ->
             val camera = Minecraft.getInstance().gameRenderer.mainCamera
-            val entityEyePos = beastweaver.getEyePosition(partialTick)
+            val entityPos = beastweaver.getPosition(partialTick)
             val cameraPos = camera.position()
             Vector3f(
-                (entityEyePos.x - cameraPos.x).toFloat(),
-                (entityEyePos.y - cameraPos.y).toFloat(),
-                (entityEyePos.z - cameraPos.z).toFloat()
+                (entityPos.x - cameraPos.x).toFloat(),
+                (entityPos.y - cameraPos.y).toFloat(),
+                (entityPos.z - cameraPos.z).toFloat()
             )
+        }
+
+        val getCameraRelativeEntityEyePos: (BeastweaverEntity, Float) -> Vector3f = { beastweaver, partialTick ->
+            getCameraRelativeEntityPos(beastweaver, partialTick).add(0f, beastweaver.eyeHeight, 0f)
         }
 
         val getBearSwipeAttackGradientBounds: (Float) -> Pair<Float, Float> = { progress ->
@@ -133,7 +137,7 @@ class BeastweaverRenderer<R>(
                 listOf("rightBearPaw"),
                 progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
                 textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_bear_paw_right_0.png")),
-                getGradientOrigin = getBearSwipeAttackGradientOrigin,
+                getGradientOrigin = getCameraRelativeEntityEyePos,
                 getGradientBounds = getBearSwipeAttackGradientBounds,
                 active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.bear_swipe_right" },
             )
@@ -144,9 +148,41 @@ class BeastweaverRenderer<R>(
                 listOf("leftBearPaw"),
                 progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
                 textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_bear_paw_left_0.png")),
-                getGradientOrigin = getBearSwipeAttackGradientOrigin,
+                getGradientOrigin = getCameraRelativeEntityEyePos,
                 getGradientBounds = getBearSwipeAttackGradientBounds,
                 active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.bear_swipe_left" },
+            )
+        )
+
+        val getTailSweepAttackGradientBounds: (Float) -> Pair<Float, Float> = { progress ->
+            when {
+                progress < 0.7f -> {
+                    val t = progress / 0.7f
+                    val min = ((t - 0.35f) / 0.65f).clampedLerp(0f, 5f)
+                    val max = t.clampedLerp(0f, 5.1f)
+                    Pair(min, max)
+                }
+
+                progress < 1.2f -> Pair(5f, 5.1f)
+
+                else -> {
+                    val t = (progress - 1.2f) / (1.49f - 1.2f)
+                    val min = t.clampedLerp(5f, -0.1f)
+                    val max = ((t - 0.35f) / 0.65f).clampedLerp(5.1f, 0f)
+                    Pair(min, max)
+                }
+            }
+        }
+
+        withRenderLayer(
+            BeastweaverSpiritAttackGeoLayer(
+                this,
+                listOf("dragonTail0"),
+                progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
+                textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_dragon_tail_0.png")),
+                getGradientOrigin = { beastweaver, partialTick -> getCameraRelativeEntityPos(beastweaver, partialTick).add(0f, beastweaver.eyeHeight * 0.5f, 0f) },
+                getGradientBounds = getTailSweepAttackGradientBounds,
+                active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.tail_sweep" },
             )
         )
     }
