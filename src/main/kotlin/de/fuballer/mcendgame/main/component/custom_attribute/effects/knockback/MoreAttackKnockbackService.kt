@@ -12,6 +12,6 @@ class MoreAttackKnockbackService {
     @CommandHandler
     fun on(cmd: LivingEntityKnockbackLivingEntityCommand) {
         val attributes = cmd.attacker.getAllCustomAttributes()[CustomAttributeTypes.MORE_ATTACK_KNOCKBACK] ?: return
-        attributes.forEach { cmd.strength *= 1 + it.rolls[0].asDoubleRoll().getValue() }
+        attributes.forEach { cmd.power *= 1 + it.rolls[0].asDoubleRoll().getValue() }
     }
 }

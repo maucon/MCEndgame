@@ -5,5 +5,5 @@ import net.minecraft.world.entity.LivingEntity
 data class LivingEntityKnockbackLivingEntityCommand(
     val target: LivingEntity,
     val attacker: LivingEntity,
-    var strength: Double,
+    var power: Double,
 )
