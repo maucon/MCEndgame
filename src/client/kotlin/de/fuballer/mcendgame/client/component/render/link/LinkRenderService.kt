@@ -12,7 +12,6 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.LocalPlayer
-import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.core.BlockPos
 import net.minecraft.util.LightCoordsUtil
 import net.minecraft.util.Mth
@@ -36,7 +35,6 @@ class LinkRenderService {
         val client = Minecraft.getInstance()
         val cameraPos = context.gameRenderer().mainCamera().position()
         val tickDelta = client.deltaTracker.getGameTimeDeltaPartialTick(false)
-        RenderPipelines.LEASH
         val player = client.player
         val firstPerson = client.options.cameraType.isFirstPerson
 

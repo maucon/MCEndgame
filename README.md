@@ -1,4 +1,4 @@
-[![Minecraft Version](https://img.shields.io/badge/Minecraft-26.1.2-brightgreen)](https://www.minecraft.net/)
+[![Minecraft Version](https://img.shields.io/badge/Minecraft-26.2-brightgreen)](https://www.minecraft.net/)
 [![Mod Loader](https://img.shields.io/badge/Loader-Fabric-blue)](https://fabricmc.net/use/installer/)
 [![Modrinth](https://img.shields.io/badge/Modrinth-MCEndgame-green)](https://modrinth.com/mod/mcendgame)
 [![CurseForge](https://img.shields.io/badge/CurseForge-MCEndgame-orange)](https://www.curseforge.com/minecraft/mc-mods/mcendgame)
@@ -94,7 +94,7 @@ See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame/wiki/Analytics
 
 ### Installation
 
-1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft **26.1.2**
+1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft **26.2**
 2. Download [Fabric API](https://modrinth.com/mod/fabric-api)
 3. Download MCEndgame from [Releases](https://github.com/maucon/MCEndgame/releases), [Modrinth](https://modrinth.com/mod/mcendgame/)
    or [CurseForge](https://www.curseforge.com/minecraft/mc-mods/mcendgame)
@@ -107,10 +107,10 @@ See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame/wiki/Analytics
 | Dependency                                                                | Version               |
 |---------------------------------------------------------------------------|-----------------------|
 | [Fabric Loader](https://fabricmc.net/use/)                                | ≥ 0.19.3              |
-| [Fabric API](https://modrinth.com/mod/fabric-api)                         | ~0.150.0+26.1.2       |
+| [Fabric API](https://modrinth.com/mod/fabric-api)                         | ~0.154.2+26.2         |
 | [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | ~1.13.12+kotlin.2.4.0 |
-| [Fantasy](https://github.com/NucleoidMC/fantasy)                          | ~0.8.0+26.1.2         |
-| [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.5.1                |
+| [Fantasy](https://github.com/NucleoidMC/fantasy)                          | ~0.8.2+26.2           |
+| [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.5.3                |
 
 ### Building from Source
 

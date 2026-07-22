@@ -8,7 +8,6 @@ import net.minecraft.core.HolderLookup
 import net.minecraft.references.BlockIds
 import net.minecraft.references.BlockItemIds
 import net.minecraft.tags.BlockTags
-import net.minecraft.world.level.block.Blocks
 import java.util.concurrent.CompletableFuture
 
 class CustomBlockTagProvider(
@@ -21,7 +20,6 @@ class CustomBlockTagProvider(
             .add(CustomBlockItemIds.CRYSTAL_FORGE)
             .add(CustomBlockItemIds.TOTEM_STATUE)
 
-        Blocks.OAK_SAPLING
         builder(BlockTags.SWORD_EFFICIENT)
             .add(CustomBlockItemIds.DECAYING_COBWEB)
 

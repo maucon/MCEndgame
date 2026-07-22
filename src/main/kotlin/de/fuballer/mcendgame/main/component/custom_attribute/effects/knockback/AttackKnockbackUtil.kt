@@ -16,7 +16,9 @@ object AttackKnockbackUtil {
         z: Double,
     ) {
         // TODO #287 damage source and amount should be legit
-        val damageType = attacker!!.level().registryAccess()
+        if (attacker == null) return
+
+        val damageType = attacker.level().registryAccess()
             .lookupOrThrow(Registries.DAMAGE_TYPE)
             .get(DamageTypes.GENERIC.identifier())
             .get()
