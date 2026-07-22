@@ -34,6 +34,7 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.Shapes
+import kotlin.math.atan2
 
 object EntityExtension {
     fun LivingEntity.isAlly(entity: Entity): Boolean {
@@ -202,7 +203,7 @@ object EntityExtension {
     }
 
     fun Entity.setAndSyncVelocity(newVelocity: Vec3) {
-        setDeltaMovement(newVelocity)
+        deltaMovement = newVelocity
         needsSync = true
 
         val world = level() as? ServerLevel ?: return
@@ -221,5 +222,14 @@ object EntityExtension {
         if (getItemBySlot(EquipmentSlot.MAINHAND).item is ItemWithCape) return true
         if (getItemBySlot(EquipmentSlot.OFFHAND).item is ItemWithCape) return true
         return false
+    }
+
+    fun Entity.rotateToEntity(target: Entity) {
+        val dx = target.x - x
+        val dz = target.z - z
+        val yaw = (atan2(dz, dx) * 180.0 / Math.PI).toFloat() - 90f
+
+        yRot = yaw
+        yHeadRot = yaw
     }
 }

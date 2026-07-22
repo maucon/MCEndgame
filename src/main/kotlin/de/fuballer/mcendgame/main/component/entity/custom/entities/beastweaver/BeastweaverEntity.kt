@@ -13,12 +13,15 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.*
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.AlwaysTrueTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
 import de.fuballer.mcendgame.main.component.particle.DirectionalAttackSweepParticleEffect
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.rotateToEntity
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -44,6 +47,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import kotlin.math.pow
 import kotlin.random.Random
 
 class BeastweaverEntity(
@@ -245,15 +249,15 @@ class BeastweaverEntity(
 
         private val TAIL_SWEEP_DAMAGE_DATA = listOf(
             DelayedDamageData(
-                AreaAttackDamage(0.6F, 3.0, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, -2.25, 0.5), knockbackWhenBlocked = true),
+                AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, -2.25, 0.5), knockbackWhenBlocked = true),
+                minDelay = 18,
+            ),
+            DelayedDamageData(
+                AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.0, 0.4, 0.1, 0.0, 0.5), knockbackWhenBlocked = true),
                 minDelay = 20,
             ),
             DelayedDamageData(
-                AreaAttackDamage(0.6F, 3.0, AreaAttackDamage.DamageArea(5.0, 1.0, 0.4, 0.1, 0.0, 0.5), knockbackWhenBlocked = true),
-                minDelay = 21,
-            ),
-            DelayedDamageData(
-                AreaAttackDamage(0.6F, 3.0, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, 2.25, 0.5), knockbackWhenBlocked = true),
+                AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, 2.25, 0.5), knockbackWhenBlocked = true),
                 minDelay = 22,
             ),
         )
@@ -308,10 +312,47 @@ class BeastweaverEntity(
                 blockMovementDuration = 30,
             )
 
+        private val WINGS_LAUNCH_AREA = AreaAttackDamage.DamageArea(9.0, 4.5, 0.5, -4.0, 0.0, 0.0)
+        private val WINGS_LAUNCH_ATTACK_DAMAGE = AreaAttackDamage(0.4F, 3.5, WINGS_LAUNCH_AREA)
+        private val WINGS_LAUNCH_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.wings_launch")
+        private const val WINGS_LAUNCH_ID = "Wings Launch"
+        private val WINGS_LAUNCH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, WINGS_LAUNCH_ID)
+        private val WINGS_LAUNCH_ATTACK =
+            Attack<BeastweaverEntity>(
+                WINGS_LAUNCH_ANIM_DATA,
+                totalDuration = 40,
+                cooldown = 100,
+                AlwaysTrueTriggerCondition(),
+                data = listOf(
+                    DelayedDamageData(WINGS_LAUNCH_ATTACK_DAMAGE, 23),
+
+                    DelayedDurationTransformData(0, 40) { level, attacker, target, age ->
+                        target?.also { attacker.rotateToEntity(it) }
+
+                        if (age == 1) {
+                            attacker.isNoGravity = true
+                        } else if (age == 40) attacker.isNoGravity = false
+
+                        if (age <= 16) {
+                            val levitateProgress = age / 16.0
+                            val yVelocity = (1 - levitateProgress) * 0.05
+                            attacker.setAndSyncVelocity(Vec3(0.0, yVelocity, 0.0))
+                        } else if (age in 21..35) {
+                            val t = age - 20
+                            val launchProgress = t / 15.0
+                            val yVelocity = (1 - launchProgress).pow(1.5) * 0.75
+                            attacker.setAndSyncVelocity(Vec3(0.0, yVelocity, 0.0))
+                        }
+                    },
+                ),
+                blockMovementDuration = 40,
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
             RandomOption(1, BEAR_SWIPE_RIGHT_ATTACK),
             RandomOption(1, BEAR_SWIPE_LEFT_ATTACK),
             RandomOption(1, TAIL_SWEEP_ATTACK),
+            RandomOption(1, WINGS_LAUNCH_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -380,6 +421,7 @@ class BeastweaverEntity(
             .triggerableAnim(BEAR_SWIPE_RIGHT_ID, BEAR_SWIPE_RIGHT_ANIM)
             .triggerableAnim(BEAR_SWIPE_LEFT_ID, BEAR_SWIPE_LEFT_ANIM)
             .triggerableAnim(TAIL_SWEEP_ID, TAIL_SWEEP_ANIM)
+            .triggerableAnim(WINGS_LAUNCH_ID, WINGS_LAUNCH_ANIM)
 
     private fun getAnimationController(name: String) = transformAnimationControllers.find { it.name == name }
 

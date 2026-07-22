@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.resources.Identifier
 import org.joml.Matrix4f
+import org.joml.Random
 import org.joml.Vector3f
 import org.joml.Vector4f
 
@@ -49,6 +50,8 @@ class BeastweaverSpiritAttackGeoLayer<O : Any, R : GeoRenderState>(
     override fun isActive(renderState: R) = active(renderState)
 
     override fun addRenderData(animatable: BeastweaverEntity, relatedObject: O?, renderState: R, partialTick: Float) {
+        if (!isActive(renderState)) return
+
         val gradientOrigin = getGradientOrigin(animatable, partialTick)
         renderState.addGeckolibData(BEASTWEAVER_ATTACK_GRADIENT_ORIGIN, gradientOrigin)
 

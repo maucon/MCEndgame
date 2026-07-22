@@ -185,6 +185,38 @@ class BeastweaverRenderer<R>(
                 active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.tail_sweep" },
             )
         )
+
+        val getWingsLaunchAttackGradientBounds: (Float) -> Pair<Float, Float> = { progress ->
+            when {
+                progress < 0.8f -> {
+                    val t = progress / 0.8f
+                    val min = ((t - 0.35f) / 0.65f).clampedLerp(0f, 3.5f)
+                    val max = t.clampedLerp(0f, 3.6f)
+                    Pair(min, max)
+                }
+
+                progress < 1.75f -> Pair(3.5f, 3.6f)
+
+                else -> {
+                    val t = (progress - 1.75f) / (2.0f - 1.75f)
+                    val min = t.clampedLerp(3.5f, -0.1f)
+                    val max = ((t - 0.35f) / 0.65f).clampedLerp(3.6f, 0f)
+                    Pair(min, max)
+                }
+            }
+        }
+
+        withRenderLayer(
+            BeastweaverSpiritAttackGeoLayer(
+                this,
+                listOf("wings"),
+                progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
+                textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_wings_0.png")),
+                getGradientOrigin = { beastweaver, partialTick -> getCameraRelativeEntityPos(beastweaver, partialTick).add(0f, beastweaver.eyeHeight * 0.5f, 0f) },
+                getGradientBounds = getWingsLaunchAttackGradientBounds,
+                active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.wings_launch" },
+            )
+        )
     }
 
     companion object {

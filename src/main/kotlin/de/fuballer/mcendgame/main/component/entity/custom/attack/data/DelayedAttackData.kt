@@ -9,7 +9,7 @@ abstract class DelayedAttackData(
 ) {
     abstract fun getInstance(target: LivingEntity?): DelayedAttackDataInstance?
 
-    abstract fun apply(world: ServerLevel, entity: Mob, target: LivingEntity?)
+    open fun apply(world: ServerLevel, entity: Mob, target: LivingEntity?) {}
 
     open fun shouldCancel(entity: Mob): Boolean = !entity.isAlive
 }
