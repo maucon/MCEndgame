@@ -31,10 +31,7 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.EntityDimensions
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.PathfinderMob
-import net.minecraft.world.entity.Pose
+import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
@@ -316,7 +313,7 @@ class BeastweaverEntity(
         private val WINGS_LAUNCH_ATTACK_DAMAGE = AreaAttackDamage(0.4F, 3.5, WINGS_LAUNCH_AREA)
         private val WINGS_LAUNCH_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.wings_launch")
         private const val WINGS_LAUNCH_ID = "Wings Launch"
-        private val WINGS_LAUNCH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, WINGS_LAUNCH_ID)
+        private val WINGS_LAUNCH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.AIRBORN, ATTACK_ANIM_CONTROLLER_ID, WINGS_LAUNCH_ID)
         private val WINGS_LAUNCH_ATTACK =
             Attack<BeastweaverEntity>(
                 WINGS_LAUNCH_ANIM_DATA,
@@ -329,11 +326,7 @@ class BeastweaverEntity(
                     DelayedDurationTransformData(0, 35) { _, attacker, target, age ->
                         target?.also { attacker.rotateToEntity(it) }
 
-                        if (age == 1) {
-                            attacker.isNoGravity = true
-                        } else if (age == 35) attacker.isNoGravity = false // remove after follow up is added
-
-                        print(age)
+                        if (age == 1) attacker.isNoGravity = true
 
                         if (age <= 16) {
                             val levitateProgress = age / 16.0
@@ -350,11 +343,35 @@ class BeastweaverEntity(
                 blockMovementDuration = 35,
             )
 
+        private val ELEPHANT_STOMP_AREA = AreaAttackDamage.DamageArea(9.0, 4.5, 0.5, -4.0, 0.0, 0.0)
+        private val ELEPHANT_STOMP_ATTACK_DAMAGE = AreaAttackDamage(0.4F, 3.5, ELEPHANT_STOMP_AREA)
+        private val ELEPHANT_STOMP_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.elephant_stomp")
+        private const val ELEPHANT_STOMP_ID = "Elephant Stomp"
+        private val ELEPHANT_STOMP_ANIM_DATA = AttackAnimationData(AttackPose.AIRBORN, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, ELEPHANT_STOMP_ID)
+        private val ELEPHANT_STOMP_ATTACK =
+            Attack<BeastweaverEntity>(
+                ELEPHANT_STOMP_ANIM_DATA,
+                totalDuration = 40,
+                cooldown = 0,
+                AlwaysTrueTriggerCondition(),
+                data = listOf(
+                    DelayedDamageData(ELEPHANT_STOMP_ATTACK_DAMAGE, 26),
+
+                    object : DelayedAttackData(10) {
+                        override fun apply(world: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            entity.isNoGravity = false
+                        }
+                    },
+                ),
+                blockMovementDuration = 40,
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
             RandomOption(1, BEAR_SWIPE_RIGHT_ATTACK),
             RandomOption(1, BEAR_SWIPE_LEFT_ATTACK),
             RandomOption(1, TAIL_SWEEP_ATTACK),
             RandomOption(1, WINGS_LAUNCH_ATTACK),
+            RandomOption(1, ELEPHANT_STOMP_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -424,6 +441,7 @@ class BeastweaverEntity(
             .triggerableAnim(BEAR_SWIPE_LEFT_ID, BEAR_SWIPE_LEFT_ANIM)
             .triggerableAnim(TAIL_SWEEP_ID, TAIL_SWEEP_ANIM)
             .triggerableAnim(WINGS_LAUNCH_ID, WINGS_LAUNCH_ANIM)
+            .triggerableAnim(ELEPHANT_STOMP_ID, ELEPHANT_STOMP_ANIM)
 
     private fun getAnimationController(name: String) = transformAnimationControllers.find { it.name == name }
 

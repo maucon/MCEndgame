@@ -7,7 +7,7 @@ import net.minecraft.world.entity.Mob
 abstract class DelayedAttackData(
     val delay: Int = 0,
 ) {
-    abstract fun getInstance(target: LivingEntity?): DelayedAttackDataInstance?
+    open fun getInstance(target: LivingEntity?): DelayedAttackDataInstance? = DelayedAttackDataInstance(this)
 
     open fun apply(world: ServerLevel, entity: Mob, target: LivingEntity?) {}
 

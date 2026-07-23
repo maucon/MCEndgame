@@ -21,8 +21,6 @@ class DelayedSoundData(
         delay: Int = 0,
     ) : this(sound, { volume }, { pitch }, category, delay)
 
-    override fun getInstance(target: LivingEntity?) = DelayedAttackDataInstance(this)
-
     override fun apply(
         world: ServerLevel,
         entity: Mob,

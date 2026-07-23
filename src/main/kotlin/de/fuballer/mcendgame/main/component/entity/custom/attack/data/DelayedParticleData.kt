@@ -14,8 +14,6 @@ class DelayedParticleData(
     private val speed: Double,
     delay: Int = 0,
 ) : DelayedAttackData(delay) {
-    override fun getInstance(target: LivingEntity?) = DelayedAttackDataInstance(this)
-
     override fun apply(
         world: ServerLevel,
         entity: Mob,
