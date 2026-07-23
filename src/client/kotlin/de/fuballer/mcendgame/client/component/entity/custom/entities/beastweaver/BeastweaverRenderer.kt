@@ -195,10 +195,10 @@ class BeastweaverRenderer<R>(
                     Pair(min, max)
                 }
 
-                progress < 1.75f -> Pair(3.5f, 3.6f)
+                progress < 1.4f -> Pair(3.5f, 3.6f)
 
                 else -> {
-                    val t = (progress - 1.75f) / (2.0f - 1.75f)
+                    val t = (progress - 1.4f) / (1.75f - 1.4f)
                     val min = t.clampedLerp(3.5f, -0.1f)
                     val max = ((t - 0.35f) / 0.65f).clampedLerp(3.6f, 0f)
                     Pair(min, max)

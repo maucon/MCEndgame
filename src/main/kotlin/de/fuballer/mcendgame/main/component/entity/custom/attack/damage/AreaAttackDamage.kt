@@ -47,7 +47,7 @@ class AreaAttackDamage(
         val scale = getScale(damager)
 
         // debug
-        //area.renderOutline(world, damager, forward, sideways, scale)
+        area.renderOutline(world, damager, forward, sideways, scale)
 
         val targets = getTargets(world, damager, scale).filter {
             area.intersects(it, damager, forward, sideways, scale)

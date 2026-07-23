@@ -250,15 +250,15 @@ class BeastweaverEntity(
         private val TAIL_SWEEP_DAMAGE_DATA = listOf(
             DelayedDamageData(
                 AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, -2.25, 0.5), knockbackWhenBlocked = true),
-                minDelay = 18,
+                minDelay = 19,
             ),
             DelayedDamageData(
                 AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.0, 0.4, 0.1, 0.0, 0.5), knockbackWhenBlocked = true),
-                minDelay = 20,
+                minDelay = 22,
             ),
             DelayedDamageData(
                 AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, 2.25, 0.5), knockbackWhenBlocked = true),
-                minDelay = 22,
+                minDelay = 25,
             ),
         )
         private val TAIL_SWEEP_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.tail_sweep")
@@ -320,18 +320,20 @@ class BeastweaverEntity(
         private val WINGS_LAUNCH_ATTACK =
             Attack<BeastweaverEntity>(
                 WINGS_LAUNCH_ANIM_DATA,
-                totalDuration = 40,
+                totalDuration = 35,
                 cooldown = 100,
                 AlwaysTrueTriggerCondition(),
                 data = listOf(
                     DelayedDamageData(WINGS_LAUNCH_ATTACK_DAMAGE, 23),
 
-                    DelayedDurationTransformData(0, 40) { level, attacker, target, age ->
+                    DelayedDurationTransformData(0, 35) { _, attacker, target, age ->
                         target?.also { attacker.rotateToEntity(it) }
 
                         if (age == 1) {
                             attacker.isNoGravity = true
-                        } else if (age == 40) attacker.isNoGravity = false
+                        } else if (age == 35) attacker.isNoGravity = false // remove after follow up is added
+
+                        print(age)
 
                         if (age <= 16) {
                             val levitateProgress = age / 16.0
@@ -340,12 +342,12 @@ class BeastweaverEntity(
                         } else if (age in 21..35) {
                             val t = age - 20
                             val launchProgress = t / 15.0
-                            val yVelocity = (1 - launchProgress).pow(1.5) * 0.75
+                            val yVelocity = (1 - launchProgress).pow(1.5) * 1.0
                             attacker.setAndSyncVelocity(Vec3(0.0, yVelocity, 0.0))
                         }
                     },
                 ),
-                blockMovementDuration = 40,
+                blockMovementDuration = 35,
             )
 
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
