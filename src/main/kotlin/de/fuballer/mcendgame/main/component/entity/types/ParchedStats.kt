@@ -3,10 +3,11 @@ package de.fuballer.mcendgame.main.component.entity.types
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.monster.skeleton.Parched
 
 object ParchedStats : EntityTypeStats {
-    override val type: EntityType<Parched> = EntityType.PARCHED
+    override val type: EntityType<Parched> = EntityTypes.PARCHED
 
     override val equipmentClass= EnemyEquipmentClass.RANGED_ATTACK_DAMAGE
     override val canBeInvisible = true

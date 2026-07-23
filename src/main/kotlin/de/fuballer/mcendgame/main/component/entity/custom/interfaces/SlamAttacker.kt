@@ -35,7 +35,7 @@ interface SlamAttacker : CustomPosesEntity {
         val offset = slamAttacker.lookAngle.normalize().scale(scaledOffset)
         val damageCenter = slamAttacker.position().add(offset)
 
-        val box = AABB(damageCenter, Vec3.ZERO).inflate(scaledRadius) //TODO is this box even used
+        val box = AABB(damageCenter, Vec3.ZERO).inflate(scaledRadius)
         val targets = world.getEntitiesOfClass(LivingEntity::class.java, box) { it != slamAttacker && shouldDamage(it) }
             .filter { damageCenter.distanceTo(it.position()) <= scaledRadius }
 

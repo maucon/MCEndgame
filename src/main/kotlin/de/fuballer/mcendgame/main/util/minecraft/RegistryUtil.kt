@@ -10,6 +10,7 @@ import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.references.BlockItemId
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.effect.MobEffect
@@ -33,9 +34,8 @@ object RegistryUtil {
     fun registerItem(
         factory: (Item.Properties) -> Item,
         settings: Item.Properties,
-        name: String
+        key: ResourceKey<Item>
     ): Item {
-        val key = RegistryKeyUtil.createItemKey(name)
         return Registry.register(
             BuiltInRegistries.ITEM,
             key,
@@ -46,20 +46,17 @@ object RegistryUtil {
     fun registerBlock(
         factory: (BlockBehaviour.Properties) -> Block,
         settings: BlockBehaviour.Properties,
-        name: String
+        blockItemId: BlockItemId
     ): Block {
-        val blockKey = RegistryKeyUtil.createBlockKey(name)
-        val itemKey = RegistryKeyUtil.createItemKey(name)
-
         return Blocks.register(
-            blockKey,
+            blockItemId.block,
             factory,
-            settings.setId(blockKey)
+            settings.setId(blockItemId.block)
         ).also {
             registerItem(
                 { prop -> BlockItem(it, prop) },
-                Item.Properties().setId(itemKey),
-                name
+                Item.Properties().setId(blockItemId.item),
+                blockItemId.item
             )
         }
     }
@@ -70,9 +67,6 @@ object RegistryUtil {
     fun <T : Entity> registerEntity(key: ResourceKey<EntityType<*>>, type: EntityType.Builder<T>): EntityType<T> =
         Registry.register(BuiltInRegistries.ENTITY_TYPE, key, type.build(key))
 
-    fun <T : Entity> registerEntity(name: String, type: EntityType.Builder<T>): EntityType<T> =
-        registerEntity(RegistryKeyUtil.createEntityKey(name), type)
-
     fun <T : Any> registerDataComponentType(componentType: DataComponentType<T>, name: String): DataComponentType<T> =
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, RegistryKeyUtil.createDataComponentTypeKey(name), componentType)
 
@@ -80,12 +74,12 @@ object RegistryUtil {
         factory: (Item.Properties) -> Item,
         material: CustomArmorMaterial,
         type: ArmorType,
-        name: String
+        itemKey: ResourceKey<Item>
     ) = registerItem(
         factory,
         Item.Properties()
             .humanoidArmor(material.instance, type),
-        name,
+        itemKey,
     )
 
     fun <T : AbstractContainerMenu> registerScreenHandler(name: String, screenHandlerType: MenuType<T>): MenuType<T> =
@@ -105,39 +99,41 @@ object RegistryUtil {
 
     fun registerAspectItem(
         factory: (Item.Properties) -> Item,
-        name: String,
+        itemKey: ResourceKey<Item>,
         rarity: Rarity = Rarity.UNCOMMON
     ) = registerItem(
         factory,
         Item.Properties()
             .rarity(rarity),
-        name
+        itemKey
     ) as AspectItem
 
     fun registerCrystalItem(
         factory: (Item.Properties) -> Item,
-        name: String,
+        itemKey: ResourceKey<Item>,
         rarity: Rarity = Rarity.UNCOMMON
     ) = registerItem(
         factory,
         Item.Properties()
             .rarity(rarity),
-        name
+        itemKey
     ) as CrystalItem
 
     fun registerTotemItem(
         factory: (Item.Properties) -> Item,
-        name: String,
+        itemKey: ResourceKey<Item>,
         rarity: Rarity = Rarity.UNCOMMON
     ) = registerItem(
         factory,
         Item.Properties()
             .rarity(rarity)
             .stacksTo(1),
-        name
+        itemKey
     ) as TotemItem
 
-    fun registerSoundEvent(name: String): SoundEvent {
+    fun registerSoundEvent(
+        name: String
+    ): SoundEvent {
         val id = IdentifierUtil.default(name)
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id))
     }

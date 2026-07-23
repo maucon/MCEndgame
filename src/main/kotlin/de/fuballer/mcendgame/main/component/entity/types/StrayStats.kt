@@ -3,10 +3,11 @@ package de.fuballer.mcendgame.main.component.entity.types
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.monster.skeleton.Stray
 
 object StrayStats : EntityTypeStats {
-    override val type: EntityType<Stray> = EntityType.STRAY
+    override val type: EntityType<Stray> = EntityTypes.STRAY
 
     override val equipmentClass= EnemyEquipmentClass.RANGED_ATTACK_DAMAGE
     override val canBeInvisible = true

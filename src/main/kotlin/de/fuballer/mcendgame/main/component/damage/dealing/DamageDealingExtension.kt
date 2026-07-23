@@ -46,6 +46,6 @@ object DamageDealingExtension {
         val config = DamageCalculationConfig(attackAttributes = attributes)
         val extended = ExtendedDamageSource(config, damageSource)
 
-        return this.hurtServer(serverWorld, extended, 420F) // amount does not matter, will be calculated by us
+        return this.hurtServer(serverWorld, extended, 420F) // amount does not matter, will be calculated by us // TODO #287 damage should be set accordingly
     }
 }

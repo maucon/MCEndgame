@@ -21,7 +21,7 @@ object CustomBlocks {
             .explosionResistance(1200F)
             .destroyTime(10F)
             .requiresCorrectToolForDrops(),
-        DungeonDeviceBlock.ID,
+        CustomBlockItemIds.DUNGEON_DEVICE,
     )
 
     val DECAYING_COBWEB = RegistryUtil.registerBlock(
@@ -35,7 +35,7 @@ object CustomBlocks {
             .noLootTable()
             .strength(4.0f)
             .pushReaction(PushReaction.DESTROY),
-        DecayingCobwebBlock.ID,
+        CustomBlockItemIds.DECAYING_COBWEB,
     )
 
     val CRYSTAL_FORGE = RegistryUtil.registerBlock(
@@ -45,7 +45,7 @@ object CustomBlocks {
             .destroyTime(10F)
             .requiresCorrectToolForDrops()
             .noOcclusion(),
-        CrystalForgeBlock.ID,
+        CustomBlockItemIds.CRYSTAL_FORGE,
     )
 
     val TOTEM_STATUE = RegistryUtil.registerBlock(
@@ -55,7 +55,7 @@ object CustomBlocks {
             .destroyTime(10F)
             .requiresCorrectToolForDrops()
             .noOcclusion(),
-        TotemStatueBlock.ID,
+        CustomBlockItemIds.TOTEM_STATUE,
     )
 
     val DUNGEON_ENEMY_BLOCKER = RegistryUtil.registerBlock(
@@ -68,6 +68,6 @@ object CustomBlocks {
             .isValidSpawn(Blocks::never)
             .noTerrainParticles()
             .pushReaction(PushReaction.BLOCK),
-        DungeonEnemyBlockerBlock.ID
+        CustomBlockItemIds.DUNGEON_ENEMY_BLOCKER,
     )
 }

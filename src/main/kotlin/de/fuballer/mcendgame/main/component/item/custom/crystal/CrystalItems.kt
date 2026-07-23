@@ -6,9 +6,9 @@ import de.maucon.mauconframework.di.annotation.Injectable
 
 @Injectable
 object CrystalItems {
-    val CALIBRATION_CRYSTAL = RegistryUtil.registerCrystalItem(::CalibrationCrystalItem, "calibration_crystal")
-    val SACRIFICIAL_CRYSTAL = RegistryUtil.registerCrystalItem(::SacrificeCrystalItem, "sacrifice_crystal")
-    val PERMUTATION_CRYSTAL = RegistryUtil.registerCrystalItem(::PermutationCrystalItem, "permutation_crystal")
-    val REFORGE_CRYSTAL = RegistryUtil.registerCrystalItem(::ReforgeCrystalItem, "reforge_crystal")
-    val CORRUPTION_CRYSTAL = RegistryUtil.registerCrystalItem(::CorruptionCrystalItem, "corruption_crystal")
+    val CALIBRATION_CRYSTAL = RegistryUtil.registerCrystalItem(::CalibrationCrystalItem, CrystalItemIds.CALIBRATION_CRYSTAL)
+    val SACRIFICIAL_CRYSTAL = RegistryUtil.registerCrystalItem(::SacrificeCrystalItem, CrystalItemIds.SACRIFICIAL_CRYSTAL)
+    val PERMUTATION_CRYSTAL = RegistryUtil.registerCrystalItem(::PermutationCrystalItem, CrystalItemIds.PERMUTATION_CRYSTAL)
+    val REFORGE_CRYSTAL = RegistryUtil.registerCrystalItem(::ReforgeCrystalItem, CrystalItemIds.REFORGE_CRYSTAL)
+    val CORRUPTION_CRYSTAL = RegistryUtil.registerCrystalItem(::CorruptionCrystalItem, CrystalItemIds.CORRUPTION_CRYSTAL)
 }

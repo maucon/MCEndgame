@@ -17,20 +17,20 @@ object CustomMiscItems {
         Item.Properties()
             .stacksTo(1)
             .delayedComponent(DataComponents.INSTRUMENT) { context -> InstrumentComponent(context.getOrThrow(Instruments.DREAM_GOAT_HORN)) },
-        "verdant_echo",
+        CustomMiscItemIds.VERDANT_ECHO,
     )
     val MOLTEN_ROAR = UniqueItemRegistry.registerMiscItem(
         ::MoltenRoar,
         Item.Properties()
             .stacksTo(1)
             .delayedComponent(DataComponents.INSTRUMENT) { context -> InstrumentComponent(context.getOrThrow(Instruments.SEEK_GOAT_HORN)) },
-        "molten_roar",
+        CustomMiscItemIds.MOLTEN_ROAR,
     )
     val FRIGID_CRY = UniqueItemRegistry.registerMiscItem(
         ::FrigidCry,
         Item.Properties()
             .stacksTo(1)
             .delayedComponent(DataComponents.INSTRUMENT) { context -> InstrumentComponent(context.getOrThrow(Instruments.FEEL_GOAT_HORN)) },
-        "frigid_cry",
+        CustomMiscItemIds.FRIGID_CRY,
     )
 }

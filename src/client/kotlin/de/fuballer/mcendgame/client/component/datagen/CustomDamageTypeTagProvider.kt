@@ -43,5 +43,13 @@ class CustomDamageTypeTagProvider(
             .addElement(DamageTypes.SWEET_BERRY_BUSH.identifier())
             .addElement(DamageTypes.FALLING_ANVIL.identifier())
             .addElement(DamageTypes.FALLING_STALACTITE.identifier())
+
+        getOrCreateRawBuilder(DamageTypeTags.SULFUR_CUBE_WITH_BLOCK_IMMUNE_TO)
+            .addOptionalElement(CustomDamageTypes.SWEEPING.identifier())
+            .addOptionalElement(CustomDamageTypes.SPELL.identifier())
+            .addOptionalElement(CustomDamageTypes.GENERIC_ATTACK.identifier())
+            .addOptionalElement(CustomDamageTypes.GENERIC_ATTACK_UNBLOCKABLE.identifier())
+            .addOptionalElement(CustomDamageTypes.PIERCE_ATTACK.identifier())
+            .addOptionalElement(CustomDamageTypes.KINETIC_ATTACK.identifier())
     }
 }

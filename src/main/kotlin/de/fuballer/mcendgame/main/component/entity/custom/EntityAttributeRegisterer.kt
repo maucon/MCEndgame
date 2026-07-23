@@ -12,11 +12,13 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dumm
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
+import net.minecraft.world.entity.LivingEntity.createLivingAttributes
 
 @Injectable
 object EntityAttributeRegisterer {
     @Initializer
     fun register() {
+        FabricDefaultAttributeRegistry.register(CustomEntities.PORTAL, createLivingAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.SWAMP_GOLEM, SwampGolemEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.ARACHNE, ArachneEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.BONECRUSHER, BonecrusherEntity.createAttributes())

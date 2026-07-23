@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.client.component.datagen
 
-import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
+import de.fuballer.mcendgame.main.component.entity.custom.CustomEntityIds
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider
 import net.minecraft.core.HolderLookup
@@ -12,13 +12,13 @@ class CustomEntityTagProvider(
     registriesFuture: CompletableFuture<HolderLookup.Provider>,
 ) : FabricTagsProvider.EntityTypeTagsProvider(packOutput, registriesFuture) {
     override fun addTags(wrapperLookup: HolderLookup.Provider) {
-        valueLookupBuilder(EntityTypeTags.ARTHROPOD)
-            .add(CustomEntities.ARACHNE)
+        builder(EntityTypeTags.ARTHROPOD)
+            .add(CustomEntityIds.ARACHNE)
 
-        valueLookupBuilder(EntityTypeTags.ZOMBIES)
-            .add(CustomEntities.BONECRUSHER)
+        builder(EntityTypeTags.ZOMBIES)
+            .add(CustomEntityIds.BONECRUSHER)
 
-        valueLookupBuilder(EntityTypeTags.SKELETONS)
-            .add(CustomEntities.SKELETON_MAGE)
+        builder(EntityTypeTags.SKELETONS)
+            .add(CustomEntityIds.SKELETON_MAGE)
     }
 }

@@ -3,10 +3,11 @@ package de.fuballer.mcendgame.main.component.entity.types
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.monster.skeleton.Bogged
 
 object BoggedStats : EntityTypeStats {
-    override val type: EntityType<Bogged> = EntityType.BOGGED
+    override val type: EntityType<Bogged> = EntityTypes.BOGGED
 
     override val equipmentClass= EnemyEquipmentClass.RANGED_ATTACK_DAMAGE
     override val canBeInvisible = true

@@ -7,7 +7,6 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.arrow.ThrownTrident
 
-// TODO drowned with trident
 object TridentProjectileCalculator : DamageCalculator {
     override fun isActive(source: DamageSource) = source.directEntity is ThrownTrident
 

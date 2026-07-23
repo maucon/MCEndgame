@@ -43,7 +43,7 @@ class AnalyticsService(
         log.info(
             "Analytics for MCEndgame are ${if (userConfig.sendAnalytics) "enabled" else "disabled"}. " +
                     "You can change this in '${UserConfig.FILE}'." +
-                    " Find out more at https://github.com/maucon/MCEndgame-fabric/wiki/Analytics"
+                    " Find out more at https://github.com/maucon/MCEndgame/wiki/Analytics"
         )
     }
 

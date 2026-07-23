@@ -18,7 +18,7 @@ object CustomAttributeUtil {
 
     fun LivingEntity.isHighHealth() = !isLowHealth()
 
-    fun LivingEntity.isFullHealth() = abs(health - maxHealth) < 0.1
+    fun LivingEntity.isFullHealth() = abs(health - maxHealth) < 0.01 // with error margin
 
     fun LivingEntity.canSeeIsolated() = getAllCustomAttributes().keys.any { it in ISOLATED_ATTRIBUTE_TYPES }
 

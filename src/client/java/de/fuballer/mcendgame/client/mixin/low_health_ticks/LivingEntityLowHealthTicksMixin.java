@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.client.mixin.low_health_ticks;
 
 import de.fuballer.mcendgame.client.accessor.LivingEntityLowHealthTicksAccessor;
+import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributeUtil;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,8 +20,7 @@ public class LivingEntityLowHealthTicksMixin implements LivingEntityLowHealthTic
     ) {
         LivingEntity entity = (LivingEntity) (Object) this;
 
-        double percentHealth = entity.getHealth() / entity.getMaxHealth();
-        boolean lowHealth = percentHealth < 0.5; //TODO settings or util class
+        boolean lowHealth = CustomAttributeUtil.INSTANCE.isLowHealth(entity);
         lowHealthTicks20 = Math.clamp(lowHealthTicks20 + (lowHealth ? 1 : -1), 0, 20);
     }
 

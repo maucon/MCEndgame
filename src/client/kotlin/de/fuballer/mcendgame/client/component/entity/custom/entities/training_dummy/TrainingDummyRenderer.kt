@@ -115,7 +115,7 @@ class TrainingDummyRenderer(
 
         texts.forEachIndexed { index, text ->
             val labelPos = Vec3(0.0, state.boundingBoxHeight + TEXT_OFFSET + (texts.size - index) * TEXT_SPACING, 0.0)
-            queue.submitNameTag(matrices, labelPos, 0, text, true, state.lightCoords, state.distanceToCameraSq, cameraRenderState)
+            queue.submitNameTag(matrices, labelPos, 0, text, true, state.lightCoords, cameraRenderState)
         }
     }
 }

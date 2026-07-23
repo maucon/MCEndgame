@@ -9,6 +9,7 @@ import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtensio
 import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
+import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.toCenter
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.core.BlockPos
@@ -112,7 +113,7 @@ class FireGeysersAttackService(
     ) {
         scheduler.repeatingForDuration(delay, 1, indicatorDuration) {
             positions.forEach {
-                val centerPos = it.center.subtract(0.0, 0.2, 0.0)
+                val centerPos = it.toCenter().subtract(0.0, 0.2, 0.0)
                 world.sendParticles(
                     BlockParticleOption(ParticleTypes.BLOCK, world.getBlockState(it.below())),
                     centerPos.x,
@@ -130,7 +131,7 @@ class FireGeysersAttackService(
         val halfIndicatorDuration = indicatorDuration / 2
         scheduler.repeatingForDuration(delay + halfIndicatorDuration, 4, halfIndicatorDuration + pillarDuration) {
             positions.forEach {
-                val centerPos = it.center.subtract(0.0, 0.2, 0.0)
+                val centerPos = it.toCenter().subtract(0.0, 0.2, 0.0)
                 world.sendParticles(
                     ParticleTypes.LAVA,
                     centerPos.x,
@@ -147,7 +148,7 @@ class FireGeysersAttackService(
 
         scheduler.delayed(delay + indicatorDuration) {
             positions.forEach {
-                val centerPos = it.center.subtract(0.0, 0.2, 0.0)
+                val centerPos = it.toCenter().subtract(0.0, 0.2, 0.0)
                 world.sendParticles(
                     ParticleTypes.FLAME,
                     centerPos.x,
@@ -164,7 +165,7 @@ class FireGeysersAttackService(
 
         scheduler.repeatingForDuration(delay + indicatorDuration, 2, pillarDuration) {
             positions.forEach {
-                val centerPos = it.center.subtract(0.0, 0.2, 0.0)
+                val centerPos = it.toCenter().subtract(0.0, 0.2, 0.0)
                 world.sendParticles(
                     BlockParticleOption(ParticleTypes.BLOCK, world.getBlockState(it.below())),
                     centerPos.x,

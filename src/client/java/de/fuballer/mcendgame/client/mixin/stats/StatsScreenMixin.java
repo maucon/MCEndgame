@@ -16,13 +16,13 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class StatsScreenMixin {
     @Shadow
     @Final
-    HeaderAndFooterLayout layout;
+    private HeaderAndFooterLayout layout;
 
     @ModifyArg(
             method = "onStatsUpdated",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/components/tabs/TabNavigationBar$Builder;addTabs([Lnet/minecraft/client/gui/components/tabs/Tab;)Lnet/minecraft/client/gui/components/tabs/TabNavigationBar$Builder;"
+                    target = "Lnet/minecraft/client/gui/components/tabs/MenuTabBar$Builder;addTabs([Lnet/minecraft/client/gui/components/tabs/Tab;)Lnet/minecraft/client/gui/components/tabs/MenuTabBar$Builder;"
             )
     )
     private Tab[] addModTab(Tab[] originalTabs) {
