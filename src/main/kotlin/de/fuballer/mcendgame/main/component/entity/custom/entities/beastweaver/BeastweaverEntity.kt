@@ -20,9 +20,11 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMo
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
 import de.fuballer.mcendgame.main.component.particle.DirectionalAttackSweepParticleEffect
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.findFirstSolidBlockPosBelow
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.rotateToEntity
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
@@ -339,6 +341,42 @@ class BeastweaverEntity(
                             attacker.setAndSyncVelocity(Vec3(0.0, yVelocity, 0.0))
                         }
                     },
+
+                    // TODO add custom particle type that is same as cloud but with no vertical and less volatile horizontal velocity
+                    DelayedParticleData(
+                        particle = { _, _ -> ParticleTypes.CLOUD },
+                        offset = { entity ->
+                            val ground = entity.findFirstSolidBlockPosBelow() ?: return@DelayedParticleData Vec3.ZERO
+                            val distanceToGround = entity.y - (ground.y + 1)
+                            Vec3(0.0, -distanceToGround + 0.35, 0.0)
+                        },
+                        count = 100,
+                        dist = { Vec3.ZERO },
+                        speed = 1.0,
+                        delay = 21,
+                    ),
+
+                    DelayedSoundData(
+                        SoundEvents.AMETHYST_BLOCK_CHIME,
+                        { Random.nextDouble(1.8, 2.0).toFloat() },
+                        { Random.nextDouble(0.9, 1.0).toFloat() },
+                        SoundSource.HOSTILE,
+                        3,
+                    ),
+                    DelayedSoundData(
+                        SoundEvents.ENDER_DRAGON_FLAP,
+                        { Random.nextDouble(1.2, 1.3).toFloat() },
+                        { Random.nextDouble(0.9, 1.0).toFloat() },
+                        SoundSource.HOSTILE,
+                        20,
+                    ),
+                    DelayedSoundData(
+                        SoundEvents.BREEZE_IDLE_GROUND,
+                        { Random.nextDouble(1.2, 1.3).toFloat() },
+                        { Random.nextDouble(0.9, 1.0).toFloat() },
+                        SoundSource.HOSTILE,
+                        13,
+                    ),
                 ),
                 blockMovementDuration = 35,
             )
@@ -362,6 +400,28 @@ class BeastweaverEntity(
                             entity.isNoGravity = false
                         }
                     },
+
+                    DelayedSoundData(
+                        SoundEvents.AMETHYST_BLOCK_CHIME,
+                        { Random.nextDouble(1.8, 2.0).toFloat() },
+                        { Random.nextDouble(0.6, 0.65).toFloat() },
+                        SoundSource.HOSTILE,
+                        3,
+                    ),
+                    DelayedSoundData(
+                        SoundEvents.BREEZE_LAND,
+                        { 1f },
+                        { Random.nextDouble(0.8, 0.85).toFloat() },
+                        SoundSource.HOSTILE,
+                        20,
+                    ),
+                    DelayedSoundData(
+                        SoundEvents.GENERIC_EXPLODE.value(),
+                        { Random.nextDouble(1.2, 1.3).toFloat() },
+                        { Random.nextDouble(0.9, 1.0).toFloat() },
+                        SoundSource.HOSTILE,
+                        26,
+                    ),
                 ),
                 blockMovementDuration = 40,
             )

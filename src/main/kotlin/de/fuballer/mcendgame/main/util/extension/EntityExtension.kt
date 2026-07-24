@@ -14,6 +14,7 @@ import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.maucon.mauconframework.command.CommandGateway
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket
 import net.minecraft.server.level.ServerLevel
@@ -30,11 +31,13 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.Shapes
 import kotlin.math.atan2
+
 
 object EntityExtension {
     fun LivingEntity.isAlly(entity: Entity): Boolean {
@@ -231,5 +234,21 @@ object EntityExtension {
 
         yRot = yaw
         yHeadRot = yaw
+    }
+
+    fun Entity.findFirstSolidBlockPosBelow(): BlockPos? {
+        val pos: BlockPos.MutableBlockPos = blockPosition().mutable()
+        val level = level()
+
+        while (pos.y > level.minY) {
+            pos.move(Direction.DOWN)
+
+            val state: BlockState = level.getBlockState(pos)
+
+            if (state.getCollisionShape(level, pos).isEmpty) continue
+            return pos
+        }
+
+        return null
     }
 }
