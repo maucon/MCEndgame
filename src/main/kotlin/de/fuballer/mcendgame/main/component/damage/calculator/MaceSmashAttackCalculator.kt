@@ -25,7 +25,7 @@ object MaceSmashAttackCalculator : DamageCalculator {
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
     ): Float {
-        val attacker = source.attacker as PlayerEntity
+        val attacker = source.attacker as? PlayerEntity ?: return originalDamage
 
         val baseDamage = DamageUtil.getAttackDamageBaseValue(event, attacker)
         val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
@@ -36,11 +36,12 @@ object MaceSmashAttackCalculator : DamageCalculator {
 
         val fallDistance = attacker.fallDistance
 
-        val density = attacker.entityWorld.registryManager
+        val densityLevel = attacker.entityWorld.registryManager
             .getOrThrow(RegistryKeys.ENCHANTMENT)
-            .getEntry(Enchantments.DENSITY.value).get()
+            .getEntry(Enchantments.DENSITY.value)
+            .map { EnchantmentHelper.getLevel(it, attacker.mainHandStack) }
+            .orElse(0)!!
 
-        val densityLevel = EnchantmentHelper.getLevel(density, attacker.mainHandStack)
         val fallBonus = calculateFallBonus(fallDistance, densityLevel)
 
         return (((baseDamage * attackDamageMulti + fallBonus) * critMulti + enchantmentDamage * attackCooldown) * damageMulti).toFloat()
