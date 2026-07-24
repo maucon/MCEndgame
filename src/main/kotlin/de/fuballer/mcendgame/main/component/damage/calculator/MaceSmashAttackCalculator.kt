@@ -16,6 +16,7 @@ import kotlin.math.min
 object MaceSmashAttackCalculator : DamageCalculator {
     override fun isActive(source: DamageSource): Boolean {
         val attacker = source.source as? PlayerEntity ?: return false
+        if (attacker.mainHandStack.item !is MaceItem) return false
         return MaceItem.shouldDealAdditionalDamage(attacker)
     }
 
