@@ -4,8 +4,10 @@ import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import kotlin.math.PI
 import kotlin.math.acos
+import kotlin.math.cos
+import kotlin.math.sin
 
-object Vec3dExtension {
+object Vec3Extension {
     private fun Vec3.horizontalAngleDeg(to: Vec3): Double {
         val horizontal = horizontal()
         val toHorizontal = to.horizontal()
@@ -34,4 +36,17 @@ object Vec3dExtension {
     }
 
     fun Vec3.angleDeg(other: Vec3) = Math.toDegrees(angleRad(other))
+
+    fun Vec3.rotateHorizontalVectorUpwards(degrees: Double): Vec3 {
+        val radians = Math.toRadians(degrees)
+
+        val horizontalScale = cos(radians)
+        val y = sin(radians)
+
+        return Vec3(
+            x * horizontalScale,
+            length() * y,
+            z * horizontalScale,
+        )
+    }
 }

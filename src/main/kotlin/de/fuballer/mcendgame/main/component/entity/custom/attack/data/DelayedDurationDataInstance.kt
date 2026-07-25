@@ -8,7 +8,7 @@ class DelayedDurationDataInstance(
     private val durationData: DelayedDurationTransformData,
 ) : DelayedAttackDataInstance(durationData) {
     override fun tick(
-        world: ServerLevel,
+        level: ServerLevel,
         entity: Mob,
         target: LivingEntity?,
     ): Boolean {
@@ -18,7 +18,7 @@ class DelayedDurationDataInstance(
         if (age < durationData.durationStart) return false
         if (age > durationData.durationEnd) return true
 
-        durationData.apply(world, entity, target, age)
+        durationData.apply(level, entity, target, age)
         return false
     }
 }

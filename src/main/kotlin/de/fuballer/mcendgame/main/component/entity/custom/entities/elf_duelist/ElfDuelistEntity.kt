@@ -22,7 +22,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
-import de.fuballer.mcendgame.main.util.extension.Vec3dExtension.getYaw
+import de.fuballer.mcendgame.main.util.extension.Vec3Extension.getYaw
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.EntityType

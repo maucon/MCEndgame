@@ -13,14 +13,16 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.*
+import de.fuballer.mcendgame.main.component.entity.custom.attack.debris_explosion.DebrisExplosionAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.AlwaysTrueTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
+import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.component.particle.DirectionalAttackSweepParticleEffect
-import de.fuballer.mcendgame.main.util.extension.EntityExtension.findFirstSolidBlockPosBelow
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.getDistanceToGround
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.rotateToEntity
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import de.fuballer.mcendgame.main.util.random.RandomOption
@@ -144,31 +146,39 @@ class BeastweaverEntity(
 
         private val BEAR_SWIPE_SOUND_DATA = listOf(
             DelayedSoundData(
-                SoundEvents.RESPAWN_ANCHOR_SET_SPAWN,
-                { Random.nextDouble(0.5, 0.6).toFloat() },
-                { Random.nextDouble(1.1, 1.3).toFloat() },
-                SoundSource.HOSTILE,
+                SoundData(
+                    SoundEvents.RESPAWN_ANCHOR_SET_SPAWN,
+                    { Random.nextDouble(0.5, 0.6).toFloat() },
+                    { Random.nextDouble(1.1, 1.3).toFloat() },
+                    SoundSource.HOSTILE,
+                ),
                 2,
             ),
             DelayedSoundData(
-                SoundEvents.POLAR_BEAR_WARNING,
-                { Random.nextDouble(0.5, 0.6).toFloat() },
-                { Random.nextDouble(0.9, 1.1).toFloat() },
-                SoundSource.HOSTILE,
+                SoundData(
+                    SoundEvents.POLAR_BEAR_WARNING,
+                    { Random.nextDouble(0.5, 0.6).toFloat() },
+                    { Random.nextDouble(0.9, 1.1).toFloat() },
+                    SoundSource.HOSTILE,
+                ),
                 18,
             ),
             DelayedSoundData(
-                SoundEvents.PLAYER_ATTACK_SWEEP,
-                { Random.nextDouble(0.8, 0.9).toFloat() },
-                { Random.nextDouble(0.7, 0.85).toFloat() },
-                SoundSource.HOSTILE,
+                SoundData(
+                    SoundEvents.PLAYER_ATTACK_SWEEP,
+                    { Random.nextDouble(0.8, 0.9).toFloat() },
+                    { Random.nextDouble(0.7, 0.85).toFloat() },
+                    SoundSource.HOSTILE,
+                ),
                 18,
             ),
             DelayedSoundData(
-                SoundEvents.PLAYER_ATTACK_STRONG,
-                { Random.nextDouble(0.8, 0.9).toFloat() },
-                { Random.nextDouble(0.7, 0.85).toFloat() },
-                SoundSource.HOSTILE,
+                SoundData(
+                    SoundEvents.PLAYER_ATTACK_STRONG,
+                    { Random.nextDouble(0.8, 0.9).toFloat() },
+                    { Random.nextDouble(0.7, 0.85).toFloat() },
+                    SoundSource.HOSTILE,
+                ),
                 20,
             ),
         )
@@ -179,28 +189,34 @@ class BeastweaverEntity(
             height: Double,
             size: Double,
         ) = DelayedParticleData(
-            particle = { _, entity ->
-                val forwardsVector = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
-                val sidewaysVector = forwardsVector.cross(Vec3(0.0, 1.0, 0.0))
+            ParticleData(
+                particle = { _, entity ->
+                    if (entity !is LivingEntity) return@ParticleData ParticleTypes.ASH
 
-                val scale = entity.scale
+                    val forwardsVector = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
+                    val sidewaysVector = forwardsVector.cross(Vec3(0.0, 1.0, 0.0))
 
-                val dir = forwardsVector.scale(forwards)
-                    .add(sidewaysVector.scale(sideways))
-                    .add(0.0, height * scale - entity.eyeHeight, 0.0)
+                    val scale = entity.scale
 
-                DirectionalAttackSweepParticleEffect(size * scale, dir.x, dir.y, dir.z)
-            },
-            offset = { entity ->
-                val forwardsVector = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
-                val sidewaysVector = forwardsVector.cross(Vec3(0.0, 1.0, 0.0))
-                forwardsVector.scale(forwards)
-                    .add(sidewaysVector.scale(sideways))
-                    .add(0.0, height, 0.0)
-            },
-            count = 1,
-            dist = { Vec3.ZERO },
-            speed = 1.0,
+                    val dir = forwardsVector.scale(forwards)
+                        .add(sidewaysVector.scale(sideways))
+                        .add(0.0, height * scale - entity.eyeHeight, 0.0)
+
+                    DirectionalAttackSweepParticleEffect(size * scale, dir.x, dir.y, dir.z)
+                },
+                offset = { entity ->
+                    if (entity !is LivingEntity) return@ParticleData Vec3.ZERO
+
+                    val forwardsVector = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
+                    val sidewaysVector = forwardsVector.cross(Vec3(0.0, 1.0, 0.0))
+                    forwardsVector.scale(forwards)
+                        .add(sidewaysVector.scale(sideways))
+                        .add(0.0, height, 0.0)
+                },
+                count = 1,
+                dist = { Vec3.ZERO },
+                speed = 1.0,
+            ),
             delay = 18,
         )
 
@@ -273,46 +289,56 @@ class BeastweaverEntity(
                     *TAIL_SWEEP_DAMAGE_DATA.toTypedArray(),
 
                     DelayedSoundData(
-                        SoundEvents.AMETHYST_BLOCK_CHIME,
-                        { Random.nextDouble(1.8, 2.0).toFloat() },
-                        { Random.nextDouble(0.9, 1.0).toFloat() },
-                        SoundSource.HOSTILE,
+                        SoundData(
+                            SoundEvents.AMETHYST_BLOCK_CHIME,
+                            { Random.nextDouble(1.8, 2.0).toFloat() },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
                         8,
                     ),
                     DelayedSoundData(
-                        SoundEvents.BEACON_POWER_SELECT,
-                        { Random.nextDouble(0.5, 0.6).toFloat() },
-                        { Random.nextDouble(0.9, 1.0).toFloat() },
-                        SoundSource.HOSTILE,
+                        SoundData(
+                            SoundEvents.BEACON_POWER_SELECT,
+                            { Random.nextDouble(0.5, 0.6).toFloat() },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
                         8,
                     ),
                     DelayedSoundData(
-                        SoundEvents.PLAYER_ATTACK_SWEEP,
-                        { Random.nextDouble(0.9, 1.1).toFloat() },
-                        { Random.nextDouble(0.6, 0.7).toFloat() },
-                        SoundSource.HOSTILE,
+                        SoundData(
+                            SoundEvents.PLAYER_ATTACK_SWEEP,
+                            { Random.nextDouble(0.9, 1.1).toFloat() },
+                            { Random.nextDouble(0.6, 0.7).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
                         19,
                     ),
                     DelayedSoundData(
-                        SoundEvents.ENDER_DRAGON_FLAP,
-                        { Random.nextDouble(0.7, 0.8).toFloat() },
-                        { Random.nextDouble(0.9, 1.0).toFloat() },
-                        SoundSource.HOSTILE,
+                        SoundData(
+                            SoundEvents.ENDER_DRAGON_FLAP,
+                            { Random.nextDouble(0.7, 0.8).toFloat() },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
                         19,
                     ),
                     DelayedSoundData(
-                        SoundEvents.EVOKER_CAST_SPELL,
-                        { Random.nextDouble(0.7, 0.8).toFloat() },
-                        { Random.nextDouble(1.0, 1.1).toFloat() },
-                        SoundSource.HOSTILE,
+                        SoundData(
+                            SoundEvents.EVOKER_CAST_SPELL,
+                            { Random.nextDouble(0.7, 0.8).toFloat() },
+                            { Random.nextDouble(1.0, 1.1).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
                         19,
                     ),
                 ),
                 blockMovementDuration = 30,
             )
 
-        private val WINGS_LAUNCH_AREA = AreaAttackDamage.DamageArea(9.0, 4.5, 0.5, -4.0, 0.0, 0.0)
-        private val WINGS_LAUNCH_ATTACK_DAMAGE = AreaAttackDamage(0.4F, 3.5, WINGS_LAUNCH_AREA)
+        private val WINGS_LAUNCH_AREA = AreaAttackDamage.DamageArea(10.0, 5.0, 0.75, -5.0, 0.0, 0.5, offsetToGround = true)
+        private val WINGS_LAUNCH_ATTACK_DAMAGE = AreaAttackDamage(0.1F, 3.5, WINGS_LAUNCH_AREA, knockbackWhenBlocked = true)
         private val WINGS_LAUNCH_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.wings_launch")
         private const val WINGS_LAUNCH_ID = "Wings Launch"
         private val WINGS_LAUNCH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.AIRBORN, ATTACK_ANIM_CONTROLLER_ID, WINGS_LAUNCH_ID)
@@ -342,87 +368,125 @@ class BeastweaverEntity(
                         }
                     },
 
-                    // TODO add custom particle type that is same as cloud but with no vertical and less volatile horizontal velocity
                     DelayedParticleData(
-                        particle = { _, _ -> ParticleTypes.CLOUD },
-                        offset = { entity ->
-                            val ground = entity.findFirstSolidBlockPosBelow() ?: return@DelayedParticleData Vec3.ZERO
-                            val distanceToGround = entity.y - (ground.y + 1)
-                            Vec3(0.0, -distanceToGround + 0.35, 0.0)
-                        },
-                        count = 100,
-                        dist = { Vec3.ZERO },
-                        speed = 1.0,
+                        ParticleData(
+                            particle = { _, _ -> CustomParticleTypes.CLOUD_TORUS },
+                            offset = { entity ->
+                                val distanceToGround = entity.getDistanceToGround()
+                                Vec3(0.0, -distanceToGround + 0.35, 0.0)
+                            },
+                            count = 100,
+                            dist = { Vec3(1.0, 0.1, 1.0) },
+                            speed = 1.0,
+                        ),
                         delay = 21,
                     ),
 
                     DelayedSoundData(
-                        SoundEvents.AMETHYST_BLOCK_CHIME,
-                        { Random.nextDouble(1.8, 2.0).toFloat() },
-                        { Random.nextDouble(0.9, 1.0).toFloat() },
-                        SoundSource.HOSTILE,
+                        SoundData(
+                            SoundEvents.AMETHYST_BLOCK_CHIME,
+                            { Random.nextDouble(1.8, 2.0).toFloat() },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
                         3,
                     ),
                     DelayedSoundData(
-                        SoundEvents.ENDER_DRAGON_FLAP,
-                        { Random.nextDouble(1.2, 1.3).toFloat() },
-                        { Random.nextDouble(0.9, 1.0).toFloat() },
-                        SoundSource.HOSTILE,
+                        SoundData(
+                            SoundEvents.ENDER_DRAGON_FLAP,
+                            { Random.nextDouble(1.2, 1.3).toFloat() },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
                         20,
                     ),
                     DelayedSoundData(
-                        SoundEvents.BREEZE_IDLE_GROUND,
-                        { Random.nextDouble(1.2, 1.3).toFloat() },
-                        { Random.nextDouble(0.9, 1.0).toFloat() },
-                        SoundSource.HOSTILE,
+                        SoundData(
+                            SoundEvents.BREEZE_IDLE_GROUND,
+                            { Random.nextDouble(1.2, 1.3).toFloat() },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
                         13,
                     ),
                 ),
                 blockMovementDuration = 35,
             )
 
-        private val ELEPHANT_STOMP_AREA = AreaAttackDamage.DamageArea(9.0, 4.5, 0.5, -4.0, 0.0, 0.0)
-        private val ELEPHANT_STOMP_ATTACK_DAMAGE = AreaAttackDamage(0.4F, 3.5, ELEPHANT_STOMP_AREA)
+        private val ELEPHANT_STOMP_MAIN_EXPLOSION_AREA = AreaAttackDamage.DamageArea(9.0, 4.5, 2.5, -4.0, 0.0, 0.0)
+        private val ELEPHANT_STOMP_MAIN_EXPLOSION_ATTACK_DAMAGE = AreaAttackDamage(1.0F, 2.5, ELEPHANT_STOMP_MAIN_EXPLOSION_AREA)
+        private val ELEPHANT_STOMP_DEBRIS_AREA_AREA = AreaAttackDamage.DamageArea(4.0, 2.0, 2.0, -2.0, 0.0, 0.0)
+        private val ELEPHANT_STOMP_DEBRIS_ATTACK_DAMAGE = AreaAttackDamage(0.5F, 0.5, ELEPHANT_STOMP_DEBRIS_AREA_AREA)
         private val ELEPHANT_STOMP_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.elephant_stomp")
         private const val ELEPHANT_STOMP_ID = "Elephant Stomp"
         private val ELEPHANT_STOMP_ANIM_DATA = AttackAnimationData(AttackPose.AIRBORN, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, ELEPHANT_STOMP_ID)
         private val ELEPHANT_STOMP_ATTACK =
-            Attack<BeastweaverEntity>(
+            DebrisExplosionAttack<BeastweaverEntity>(
                 ELEPHANT_STOMP_ANIM_DATA,
                 totalDuration = 40,
                 cooldown = 0,
                 AlwaysTrueTriggerCondition(),
                 data = listOf(
-                    DelayedDamageData(ELEPHANT_STOMP_ATTACK_DAMAGE, 26),
-
                     object : DelayedAttackData(10) {
-                        override fun apply(world: ServerLevel, entity: Mob, target: LivingEntity?) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
                             entity.isNoGravity = false
                         }
                     },
 
                     DelayedSoundData(
-                        SoundEvents.AMETHYST_BLOCK_CHIME,
-                        { Random.nextDouble(1.8, 2.0).toFloat() },
-                        { Random.nextDouble(0.6, 0.65).toFloat() },
-                        SoundSource.HOSTILE,
+                        SoundData(
+                            SoundEvents.AMETHYST_BLOCK_CHIME,
+                            { Random.nextDouble(1.8, 2.0).toFloat() },
+                            { Random.nextDouble(0.6, 0.65).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
                         3,
                     ),
                     DelayedSoundData(
-                        SoundEvents.BREEZE_LAND,
-                        { 1f },
-                        { Random.nextDouble(0.8, 0.85).toFloat() },
-                        SoundSource.HOSTILE,
+                        SoundData(
+                            SoundEvents.BREEZE_LAND,
+                            { 1f },
+                            { Random.nextDouble(0.8, 0.85).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
                         20,
                     ),
-                    DelayedSoundData(
-                        SoundEvents.GENERIC_EXPLODE.value(),
-                        { Random.nextDouble(1.2, 1.3).toFloat() },
-                        { Random.nextDouble(0.9, 1.0).toFloat() },
-                        SoundSource.HOSTILE,
-                        26,
-                    ),
                 ),
+                delay = 26,
+                mainExplosionDamage = ELEPHANT_STOMP_MAIN_EXPLOSION_ATTACK_DAMAGE,
+                mainExplosionParticles = ParticleData(
+                    particle = { _, _ -> ParticleTypes.EXPLOSION },
+                    offset = { entity ->
+                        val distanceToGround = entity.getDistanceToGround()
+                        Vec3(0.0, -distanceToGround + 0.2, 0.0)
+                    },
+                    count = 30,
+                    dist = { Vec3(3.0, 1.5, 3.0) },
+                    speed = 1.0,
+                ),
+                mainExplosionSound = SoundData(
+                    SoundEvents.GENERIC_EXPLODE.value(),
+                    { Random.nextDouble(1.2, 1.3).toFloat() },
+                    { Random.nextDouble(0.9, 1.0).toFloat() },
+                    SoundSource.HOSTILE,
+                ),
+                debrisExplosionDamage = ELEPHANT_STOMP_DEBRIS_ATTACK_DAMAGE,
+                debrisExplosionParticles = ParticleData(
+                    particle = { _, _ -> ParticleTypes.EXPLOSION },
+                    offset = { Vec3.ZERO },
+                    count = 5,
+                    dist = { Vec3(2.0, 2.0, 2.0) },
+                    speed = 1.0,
+                ),
+                debrisExplosionSound = SoundData(
+                    SoundEvents.GENERIC_EXPLODE.value(),
+                    { Random.nextDouble(0.8, 0.9).toFloat() },
+                    { Random.nextDouble(1.0, 1.1).toFloat() },
+                    SoundSource.HOSTILE,
+                ),
+                debrisCreateRadiusRange = Pair(2.0, 6.0),
+                debrisCreateProbabilityFromDistanceToOrigin = { 0.3 },
+                debrisVelocity = { 1.0 + Random.nextDouble() * 0.3 },
                 blockMovementDuration = 40,
             )
 

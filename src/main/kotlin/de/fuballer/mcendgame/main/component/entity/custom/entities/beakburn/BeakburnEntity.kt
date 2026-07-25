@@ -14,11 +14,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.LeapAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.WindBurstAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.BasicAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedLeapDamageData
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedSoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.*
 import de.fuballer.mcendgame.main.component.entity.custom.attack.fire_geysers.FireGeysersAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.flame_breath.FlameBreathAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
@@ -71,11 +67,11 @@ class BeakburnEntity(
                 DistanceTriggerCondition(3.0),
                 data = listOf(
                     DelayedDamageData(BASIC_ATTACK_DAMAGE, 4),
-                    DelayedSoundData(SoundEvents.NOTE_BLOCK_HAT.value(), { 1F }, { 0.7F + 0.3F * Random.nextFloat() }, SoundSource.HOSTILE, 4),
+                    DelayedSoundData(SoundData(SoundEvents.NOTE_BLOCK_HAT.value(), { 1F }, { 0.7F + 0.3F * Random.nextFloat() }, SoundSource.HOSTILE), 4),
                 ),
             )
 
-        private val BITE_SOUND = DelayedSoundData(SoundEvents.NOTE_BLOCK_HAT.value(), { 1F }, { 0.7F + 0.3F * Random.nextFloat() }, SoundSource.HOSTILE, 6)
+        private val BITE_SOUND = DelayedSoundData(SoundData(SoundEvents.NOTE_BLOCK_HAT.value(), { 1F }, { 0.7F + 0.3F * Random.nextFloat() }, SoundSource.HOSTILE), 6)
         private val BITE_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.bite_right")
         private const val BITE_RIGHT_ID = "Bite Right"
         private val BITE_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BITE_RIGHT_ID)
@@ -186,7 +182,7 @@ class BeakburnEntity(
                 220,
                 DistanceTriggerCondition(3.0, 8.0),
                 data = listOf(
-                    DelayedSoundData(SoundEvents.BREEZE_INHALE, 0.7F, 0.6F, SoundSource.HOSTILE, 0),
+                    DelayedSoundData(SoundData(SoundEvents.BREEZE_INHALE, 0.7F, 0.6F, SoundSource.HOSTILE), 0),
                 ),
                 damageConversion = 0.5,
                 delay = 20,
@@ -207,7 +203,7 @@ class BeakburnEntity(
                 Int.MAX_VALUE,
                 HealthTriggerCondition(0.0, 0.5),
                 data = listOf(
-                    DelayedSoundData(SoundEvents.ENDER_DRAGON_GROWL, { 0.4F }, { 3.5F + 0.3F * Random.nextFloat() }, SoundSource.HOSTILE, 10),
+                    DelayedSoundData(SoundData(SoundEvents.ENDER_DRAGON_GROWL, { 0.4F }, { 3.5F + 0.3F * Random.nextFloat() }, SoundSource.HOSTILE), 10),
                 ),
                 burstDamageConversion = 0.75,
                 durationDamageConversion = 0.4,

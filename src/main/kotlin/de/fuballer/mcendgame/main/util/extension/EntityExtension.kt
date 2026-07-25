@@ -9,7 +9,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dumm
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.ItemWithCape
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.messaging.misc.GainStatusEffectCommand
-import de.fuballer.mcendgame.main.util.extension.Vec3dExtension.angleDeg
+import de.fuballer.mcendgame.main.util.extension.Vec3Extension.angleDeg
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.maucon.mauconframework.command.CommandGateway
@@ -236,7 +236,7 @@ object EntityExtension {
         yHeadRot = yaw
     }
 
-    fun Entity.findFirstSolidBlockPosBelow(): BlockPos? {
+    fun Entity.getDistanceToGround(): Double {
         val pos: BlockPos.MutableBlockPos = blockPosition().mutable()
         val level = level()
 
@@ -246,9 +246,11 @@ object EntityExtension {
             val state: BlockState = level.getBlockState(pos)
 
             if (state.getCollisionShape(level, pos).isEmpty) continue
-            return pos
+
+            val collisionShapeHeight = state.getCollisionShape(level, pos).max(Direction.Axis.Y)
+            return y - (pos.y + collisionShapeHeight)
         }
 
-        return null
+        return 0.0
     }
 }

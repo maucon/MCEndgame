@@ -10,7 +10,7 @@ open class DelayedDamageDataInstance(
     private val damage: AttackDamage,
 ) : DelayedAttackDataInstance(damageData) {
     override fun tick(
-        world: ServerLevel,
+        level: ServerLevel,
         entity: Mob,
         target: LivingEntity?,
     ): Boolean {
@@ -20,6 +20,6 @@ open class DelayedDamageDataInstance(
         if (age < damageData.minDelay) return false
         if (age > damageData.maxDelay) return true
 
-        return damage.apply(world, entity, target)
+        return damage.apply(level, entity, target)
     }
 }

@@ -10,7 +10,7 @@ open class DelayedAttackDataInstance(
     var age = 0
 
     open fun tick(
-        world: ServerLevel,
+        level: ServerLevel,
         entity: Mob,
         target: LivingEntity?,
     ): Boolean {
@@ -19,7 +19,7 @@ open class DelayedAttackDataInstance(
         age++
         if (age < data.delay) return false
 
-        data.apply(world, entity, target)
+        data.apply(level, entity, target)
         return true
     }
 }

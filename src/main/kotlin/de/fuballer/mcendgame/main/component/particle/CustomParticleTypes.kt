@@ -17,6 +17,7 @@ import java.util.function.Function
 object CustomParticleTypes {
     val FLAME_PILLAR = registerSimple("flame_pillar")
     val SMOKE_PILLAR = registerSimple("smoke_pillar")
+    val CLOUD_TORUS = registerSimple("cloud_torus")
     val HORIZONTAL_FLAME_BREATH = registerComplex<HorizontalFlameBreathParticleEffect>(
         "horizontal_flame_breath",
         false,

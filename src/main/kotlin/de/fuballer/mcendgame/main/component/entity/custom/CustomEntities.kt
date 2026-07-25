@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.component.entity.custom
 import de.fuballer.mcendgame.main.component.entity.custom.entities.arachne.ArachneEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.BeakburnEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.block_debris.BlockDebrisEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
@@ -118,4 +119,12 @@ object CustomEntities {
             .clientTrackingRange(8)
             .notInPeaceful()
     )
+    val BLOCK_DEBRIS = RegistryUtil.registerEntity(
+		"block_debris",
+		EntityType.Builder.of(::BlockDebrisEntity, MobCategory.MISC)
+			.noLootTable()
+			.sized(0.98F, 0.98F)
+			.clientTrackingRange(10)
+			.updateInterval(20)
+	);
 }

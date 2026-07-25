@@ -16,11 +16,11 @@ open class DelayedDamageData(
     }
 
     override fun apply(
-        world: ServerLevel,
+        level: ServerLevel,
         entity: Mob,
         target: LivingEntity?,
     ) {
-        damage.apply(world, entity, target)
+        damage.apply(level, entity, target)
     }
 
     override fun shouldCancel(entity: Mob) = false
