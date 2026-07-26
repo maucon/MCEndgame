@@ -6,6 +6,7 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.beakburn.Be
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beakburn.BeakburnRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.BeastweaverRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.BeastweaverRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.beastweaver_wolf.BeastweaverWolfRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.block_debris.BlockDebrisRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher.BonecrusherRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher.BonecrusherRenderer
@@ -97,5 +98,7 @@ object EntityModelRegisterer {
         EntityRenderers.register(Portals.ENTITY_TYPE, ::PortalRenderer)
 
         EntityRenderers.register(CustomEntities.BLOCK_DEBRIS, ::BlockDebrisRenderer)
+
+        EntityRenderers.register(CustomEntities.BEASTWEAVER_WOLF, ::BeastweaverWolfRenderer)
     }
 }

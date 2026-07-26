@@ -322,6 +322,8 @@
   "entity.mcendgame.spiderling": "Spiderling",
   "entity.mcendgame.training_dummy": "Training Dummy",
   "entity.mcendgame.skeleton_mage": "Skeleton Mage",
+  "entity.mcendgame.beastweaver_wolf": "Beastweaver's Wolf",
+  "entity.mcendgame.block_debris": "Block Debris",
 
   "item.mcendgame.decaying_cobweb": "Decaying Cobweb",
   "item.mcendgame.totem_statue": "Totem Statue",

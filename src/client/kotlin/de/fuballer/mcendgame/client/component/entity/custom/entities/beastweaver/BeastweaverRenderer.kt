@@ -9,11 +9,13 @@ import com.geckolib.renderer.base.RenderPassInfo
 import com.google.common.reflect.TypeToken
 import de.fuballer.mcendgame.client.component.render.geo_layers.CustomBonesProgressingTextureGeoLayer
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
+import de.fuballer.mcendgame.main.util.ColorUtil
 import de.fuballer.mcendgame.main.util.extension.FloatExtension.clampedLerp
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import net.minecraft.world.entity.Entity
 import org.joml.Vector3f
 import kotlin.math.PI
 
@@ -94,21 +96,6 @@ class BeastweaverRenderer<R>(
             )
         )
 
-        val getCameraRelativeEntityPos: (BeastweaverEntity, Float) -> Vector3f = { beastweaver, partialTick ->
-            val camera = Minecraft.getInstance().gameRenderer.mainCamera
-            val entityPos = beastweaver.getPosition(partialTick)
-            val cameraPos = camera.position()
-            Vector3f(
-                (entityPos.x - cameraPos.x).toFloat(),
-                (entityPos.y - cameraPos.y).toFloat(),
-                (entityPos.z - cameraPos.z).toFloat()
-            )
-        }
-
-        val getCameraRelativeEntityEyePos: (BeastweaverEntity, Float) -> Vector3f = { beastweaver, partialTick ->
-            getCameraRelativeEntityPos(beastweaver, partialTick).add(0f, beastweaver.eyeHeight, 0f)
-        }
-
         val getBearSwipeAttackGradientBounds: (Float) -> Pair<Float, Float> = { progress ->
             when {
                 progress < 0.1f -> Pair(-0.1f, 0f)
@@ -137,7 +124,7 @@ class BeastweaverRenderer<R>(
                 listOf("rightBearPaw"),
                 progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
                 textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_bear_paw_right_0.png")),
-                getGradientOrigin = getCameraRelativeEntityEyePos,
+                getGradientOrigin = GET_CAMERA_RELATIVE_ENTITY_EYE_POS,
                 getGradientBounds = getBearSwipeAttackGradientBounds,
                 active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.bear_swipe_right" },
             )
@@ -148,7 +135,7 @@ class BeastweaverRenderer<R>(
                 listOf("leftBearPaw"),
                 progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
                 textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_bear_paw_left_0.png")),
-                getGradientOrigin = getCameraRelativeEntityEyePos,
+                getGradientOrigin = GET_CAMERA_RELATIVE_ENTITY_EYE_POS,
                 getGradientBounds = getBearSwipeAttackGradientBounds,
                 active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.bear_swipe_left" },
             )
@@ -180,7 +167,7 @@ class BeastweaverRenderer<R>(
                 listOf("dragonTail0"),
                 progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
                 textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_dragon_tail_0.png")),
-                getGradientOrigin = { beastweaver, partialTick -> getCameraRelativeEntityPos(beastweaver, partialTick).add(0f, beastweaver.eyeHeight * 0.5f, 0f) },
+                getGradientOrigin = { beastweaver, partialTick -> GET_CAMERA_RELATIVE_ENTITY_POS(beastweaver, partialTick).add(0f, beastweaver.eyeHeight * 0.5f, 0f) },
                 getGradientBounds = getTailSweepAttackGradientBounds,
                 active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.tail_sweep" },
             )
@@ -212,7 +199,7 @@ class BeastweaverRenderer<R>(
                 listOf("wings"),
                 progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
                 textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_wings_0.png")),
-                getGradientOrigin = { beastweaver, partialTick -> getCameraRelativeEntityPos(beastweaver, partialTick).add(0f, beastweaver.eyeHeight * 0.5f, 0f) },
+                getGradientOrigin = { beastweaver, partialTick -> GET_CAMERA_RELATIVE_ENTITY_POS(beastweaver, partialTick).add(0f, beastweaver.eyeHeight * 0.5f, 0f) },
                 getGradientBounds = getWingsLaunchAttackGradientBounds,
                 active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.wings_launch" },
             )
@@ -247,7 +234,7 @@ class BeastweaverRenderer<R>(
                 ),
                 progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
                 textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_elephant_legs_0.png")),
-                getGradientOrigin = getCameraRelativeEntityPos,
+                getGradientOrigin = GET_CAMERA_RELATIVE_ENTITY_POS,
                 getGradientBounds = getElephantStompAttackGradientBounds,
                 active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.elephant_stomp" },
             )
@@ -260,6 +247,24 @@ class BeastweaverRenderer<R>(
         private val SHOULDER_SPIKES_ANIM_TIME = DataTicket.create("shoulder_spikes_anim_time", object : TypeToken<Float>() {})
         private val CURRENT_ATTACK_NAME = DataTicket.create("current_attack_name", object : TypeToken<String>() {})
         private val CURRENT_ATTACK_ANIM_TIME = DataTicket.create("current_attack_anim_time", object : TypeToken<Float>() {})
+
+        const val ATTACK_MAX_ALPHA = 120
+        val ATTACK_COLOR = ColorUtil.rgbaToInt(255, 255, 255, ATTACK_MAX_ALPHA) // rgb not used by shader
+
+        val GET_CAMERA_RELATIVE_ENTITY_POS: (Entity, Float) -> Vector3f = { entity, partialTick ->
+            val camera = Minecraft.getInstance().gameRenderer.mainCamera
+            val entityPos = entity.getPosition(partialTick)
+            val cameraPos = camera.position()
+            Vector3f(
+                (entityPos.x - cameraPos.x).toFloat(),
+                (entityPos.y - cameraPos.y).toFloat(),
+                (entityPos.z - cameraPos.z).toFloat()
+            )
+        }
+
+        val GET_CAMERA_RELATIVE_ENTITY_EYE_POS: (Entity, Float) -> Vector3f = { entity, partialTick ->
+            GET_CAMERA_RELATIVE_ENTITY_POS(entity, partialTick).add(0f, entity.eyeHeight, 0f)
+        }
     }
 
     override fun addRenderData(animatable: BeastweaverEntity, relatedObject: Void?, renderState: R, partialTick: Float) {

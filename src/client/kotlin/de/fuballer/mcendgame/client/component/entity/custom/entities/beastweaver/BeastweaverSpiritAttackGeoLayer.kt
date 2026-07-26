@@ -16,17 +16,12 @@ import de.fuballer.mcendgame.client.accessor.BufferBuilderSetVertexElementsAcces
 import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
 import de.fuballer.mcendgame.client.component.render.geo_layers.CustomBonesProgressingTextureGeoLayer
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
-import de.fuballer.mcendgame.main.util.ColorUtil
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.resources.Identifier
 import org.joml.Matrix4f
-import org.joml.Random
 import org.joml.Vector3f
 import org.joml.Vector4f
-
-private const val MAX_ALPHA = 120
-private val COLOR = ColorUtil.rgbaToInt(255, 255, 255, MAX_ALPHA) // rgb unused
 
 class BeastweaverSpiritAttackGeoLayer<O : Any, R : GeoRenderState>(
     renderer: GeoRenderer<BeastweaverEntity, O, R>,
@@ -91,7 +86,7 @@ class BeastweaverSpiritAttackGeoLayer<O : Any, R : GeoRenderState>(
                     buffer!!,
                     packedLight,
                     packedOverlay,
-                    COLOR,
+                    BeastweaverRenderer.ATTACK_COLOR,
                     widthRatio,
                     heightRatio,
                     gradientOrigin,

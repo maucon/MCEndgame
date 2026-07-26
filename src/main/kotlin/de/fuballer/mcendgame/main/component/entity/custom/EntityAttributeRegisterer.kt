@@ -13,6 +13,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dumm
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
+import net.minecraft.world.entity.animal.wolf.Wolf
 
 @Injectable
 object EntityAttributeRegisterer {
@@ -28,5 +29,6 @@ object EntityAttributeRegisterer {
         FabricDefaultAttributeRegistry.register(CustomEntities.SPIDERLING, SpiderlingEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.TRAINING_DUMMY, TrainingDummyEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.SKELETON_MAGE, SkeletonMageEntity.createAttributes())
+        FabricDefaultAttributeRegistry.register(CustomEntities.BEASTWEAVER_WOLF, Wolf.createAttributes())
     }
 }
