@@ -21,7 +21,7 @@ class BeastweaverWolfRenderer(
 ) : MobRenderer<BeastweaverWolfEntity, BeastweaverWolfRenderState, BeastweaverWolfModel>(
     context,
     BeastweaverWolfModel(context.bakeLayer(ModelLayers.WOLF)),
-    0.5F,
+    0.0F,
 ) {
     companion object {
         val TEXTURE = IdentifierUtil.default("textures/entity/beastweaver/beastweaver_wolf/beastweaver_wolf.png")

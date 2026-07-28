@@ -239,15 +239,43 @@ class BeastweaverRenderer<R>(
                 active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.elephant_stomp" },
             )
         )
+
+        val getWolfSummonAttackGradientBounds: (Float) -> Pair<Float, Float> = { progress ->
+            when {
+                progress < 1.5f -> {
+                    val t = progress / 1.2f
+                    val min = ((t - 0.35f) / 0.65f).clampedLerp(-0.05f, 1.2f)
+                    val max = t.clampedLerp(0f, 1.25f)
+                    Pair(min, max)
+                }
+
+                progress < 3.0f -> Pair(1.2f, 1.25f)
+
+                else -> {
+                    val t = (progress - 3.0f) / (3.5f - 3.0f)
+                    val min = t.clampedLerp(1.2f, -0.05f)
+                    val max = ((t - 0.35f) / 0.65f).clampedLerp(1.25f, 0f)
+                    Pair(min, max)
+                }
+            }
+        }
+
+        withRenderLayer(
+            BeastweaverSpiritAttackGeoLayer(
+                this,
+                listOf(
+                    "wolfHead",
+                ),
+                progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
+                textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_wolf_head_0.png")),
+                getGradientOrigin = GET_CAMERA_RELATIVE_ENTITY_EYE_POS,
+                getGradientBounds = getWolfSummonAttackGradientBounds,
+                active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.wolf_summon" },
+            )
+        )
     }
 
     companion object {
-        private val HIDDEN_BONES = DataTicket.create("hidden_bones", object : TypeToken<Set<String>>() {})
-        private val TRANSFORM_PROGRESS = DataTicket.create("transform_progress", object : TypeToken<Float>() {})
-        private val SHOULDER_SPIKES_ANIM_TIME = DataTicket.create("shoulder_spikes_anim_time", object : TypeToken<Float>() {})
-        private val CURRENT_ATTACK_NAME = DataTicket.create("current_attack_name", object : TypeToken<String>() {})
-        private val CURRENT_ATTACK_ANIM_TIME = DataTicket.create("current_attack_anim_time", object : TypeToken<Float>() {})
-
         const val ATTACK_MAX_ALPHA = 120
         val ATTACK_COLOR = ColorUtil.rgbaToInt(255, 255, 255, ATTACK_MAX_ALPHA) // rgb not used by shader
 
@@ -265,6 +293,12 @@ class BeastweaverRenderer<R>(
         val GET_CAMERA_RELATIVE_ENTITY_EYE_POS: (Entity, Float) -> Vector3f = { entity, partialTick ->
             GET_CAMERA_RELATIVE_ENTITY_POS(entity, partialTick).add(0f, entity.eyeHeight, 0f)
         }
+
+        private val HIDDEN_BONES = DataTicket.create("hidden_bones", object : TypeToken<Set<String>>() {})
+        private val TRANSFORM_PROGRESS = DataTicket.create("transform_progress", object : TypeToken<Float>() {})
+        private val SHOULDER_SPIKES_ANIM_TIME = DataTicket.create("shoulder_spikes_anim_time", object : TypeToken<Float>() {})
+        private val CURRENT_ATTACK_NAME = DataTicket.create("current_attack_name", object : TypeToken<String>() {})
+        private val CURRENT_ATTACK_ANIM_TIME = DataTicket.create("current_attack_anim_time", object : TypeToken<Float>() {})
     }
 
     override fun addRenderData(animatable: BeastweaverEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
@@ -280,22 +314,22 @@ class BeastweaverRenderer<R>(
     override fun adjustModelBonesForRender(renderPassInfo: RenderPassInfo<R>, snapshots: BoneSnapshots) {
         super.adjustModelBonesForRender(renderPassInfo, snapshots)
 
-        snapshots.get("head").ifPresent {
-            var pitch = renderPassInfo.getGeckolibData(DataTickets.ENTITY_PITCH)!!
-            pitch = Math.clamp(pitch, -35F, 35F)
-            it.rotX = -pitch * PI.toFloat() / 180F
-
-            var yaw = renderPassInfo.getGeckolibData(DataTickets.ENTITY_YAW)!!
-            yaw = Math.clamp(yaw, -45F, 45F)
-            it.rotY = -yaw * PI.toFloat() / 180F
-        }
-
         val toHide = renderPassInfo.getGeckolibData(HIDDEN_BONES) ?: return
         toHide.forEach { name ->
             snapshots.get(name).ifPresent {
                 it.skipRender(true)
                 it.skipChildrenRender(true)
             }
+        }
+
+        snapshots.get("head").ifPresent {
+            var pitch = renderPassInfo.getGeckolibData(DataTickets.ENTITY_PITCH)!!
+            pitch = Math.clamp(pitch, -35F, 35F)
+            it.rotX += -pitch * PI.toFloat() / 180F
+
+            var yaw = renderPassInfo.getGeckolibData(DataTickets.ENTITY_YAW)!!
+            yaw = Math.clamp(yaw, -45F, 45F)
+            it.rotY += -yaw * PI.toFloat() / 180F
         }
     }
 }

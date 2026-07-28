@@ -16,6 +16,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.*
 import de.fuballer.mcendgame.main.component.entity.custom.attack.debris_explosion.DebrisExplosionAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.AlwaysTrueTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver_wolf.BeastweaverWolfEntity
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
@@ -25,6 +26,9 @@ import de.fuballer.mcendgame.main.component.particle.DirectionalAttackSweepParti
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.getDistanceToGround
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.rotateToEntity
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setCompanion
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setDungeonEnemy
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -41,6 +45,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.animal.wolf.WolfSoundVariants
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
@@ -283,7 +288,7 @@ class BeastweaverEntity(
             Attack<BeastweaverEntity>(
                 TAIL_SWEEP_ANIM_DATA,
                 totalDuration = 30,
-                cooldown = 50,
+                cooldown = 150,
                 DistanceTriggerCondition(4.5, affectedByScale = true),
                 data = listOf(
                     *TAIL_SWEEP_DAMAGE_DATA.toTypedArray(),
@@ -346,7 +351,7 @@ class BeastweaverEntity(
             Attack<BeastweaverEntity>(
                 WINGS_LAUNCH_ANIM_DATA,
                 totalDuration = 35,
-                cooldown = 100,
+                cooldown = 300,
                 AlwaysTrueTriggerCondition(),
                 data = listOf(
                     DelayedDamageData(WINGS_LAUNCH_ATTACK_DAMAGE, 23),
@@ -490,12 +495,54 @@ class BeastweaverEntity(
                 blockMovementDuration = 40,
             )
 
+        private val WOLF_SUMMON_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.wolf_summon")
+        private const val WOLF_SUMMON_ID = "Wolf Summon"
+        private val WOLF_SUMMON_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, WOLF_SUMMON_ID)
+        private val WOLF_SUMMON_ATTACK =
+            Attack<BeastweaverEntity>(
+                WOLF_SUMMON_ANIM_DATA,
+                totalDuration = 70,
+                cooldown = 100,
+                AlwaysTrueTriggerCondition(),
+                data = listOf(
+                    DelayedSummonData(
+                        SummonData(
+                            factory = { level, summoner, target ->
+                                val summon = BeastweaverWolfEntity(level)
+                                summon.setCompanion()
+                                summon.owner = summoner
+                                if (summoner.isDungeonEnemy()) summon.setDungeonEnemy()
+                                summon.target = target
+                                summon
+                            },
+                            getTargets = { level, summoner, target -> if (target == null) listOf() else listOf(target) },
+                            getCountPerTarget = { targetCount -> 3 },
+                            spawnPositionsSearchSteps = 15,
+                            maxSpawnDistanceToTarget = 20.0,
+                        ),
+                        60,
+                    ),
+
+                    DelayedSoundData(
+                        SoundData(
+                            SoundEvents.WOLF_SOUNDS[WolfSoundVariants.SoundSet.ANGRY]!!.adultSounds.growlSound.value(),
+                            { Random.nextDouble(1.2, 1.3).toFloat() },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
+                        25,
+                    ),
+                ),
+                blockMovementDuration = 70,
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
             RandomOption(1, BEAR_SWIPE_RIGHT_ATTACK),
             RandomOption(1, BEAR_SWIPE_LEFT_ATTACK),
             RandomOption(1, TAIL_SWEEP_ATTACK),
             RandomOption(1, WINGS_LAUNCH_ATTACK),
             RandomOption(1, ELEPHANT_STOMP_ATTACK),
+            RandomOption(1, WOLF_SUMMON_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -566,6 +613,7 @@ class BeastweaverEntity(
             .triggerableAnim(TAIL_SWEEP_ID, TAIL_SWEEP_ANIM)
             .triggerableAnim(WINGS_LAUNCH_ID, WINGS_LAUNCH_ANIM)
             .triggerableAnim(ELEPHANT_STOMP_ID, ELEPHANT_STOMP_ANIM)
+            .triggerableAnim(WOLF_SUMMON_ID, WOLF_SUMMON_ANIM)
 
     private fun getAnimationController(name: String) = transformAnimationControllers.find { it.name == name }
 

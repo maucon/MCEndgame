@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealDamage
 import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
+import de.fuballer.mcendgame.main.util.FindBlockPosUtil
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
@@ -51,56 +52,9 @@ class FireGeysersAttackService(
         probability: Double,
         countLimit: Int
     ): List<BlockPos> {
-        val possiblePositions = getPossiblePositions(world, startPos, radius)
+        val possiblePositions = FindBlockPosUtil.findEmptyAboveSolid(world, startPos, radius)
         val count = min((possiblePositions.size * probability).toInt(), countLimit)
         return possiblePositions.shuffled().take(count)
-    }
-
-    private fun getPossiblePositions(
-        world: Level,
-        startPos: BlockPos,
-        radius: Int,
-    ): List<BlockPos> {
-        val squaredRadius = radius * radius
-
-        val possiblePositions = mutableListOf<BlockPos>()
-
-        var heads = listOf(startPos)
-        val checkedPositions = mutableSetOf(startPos)
-        while (heads.isNotEmpty()) {
-            val newHeads = mutableListOf<BlockPos>()
-
-            for (head in heads) {
-                if (head.distSqr(startPos) > squaredRadius) continue
-
-                val below = head.below()
-                val belowState = world.getBlockState(below)
-                if (belowState.isRedstoneConductor(world, below)) {
-                    possiblePositions.add(head)
-                }
-
-                val neighbors = listOf(
-                    head.north(),
-                    head.south(),
-                    head.east(),
-                    head.west(),
-                    head.above(),
-                    head.below()
-                )
-
-                for (neighbor in neighbors) {
-                    if (neighbor in checkedPositions) continue
-                    checkedPositions.add(neighbor)
-
-                    val state = world.getBlockState(neighbor)
-                    if (!state.isRedstoneConductor(world, neighbor)) newHeads.add(neighbor)
-                }
-            }
-
-            heads = newHeads
-        }
-
-        return possiblePositions
     }
 
     private fun createParticles(
