@@ -96,7 +96,7 @@ class BeastweaverWolfRenderer(
         val gradientOrigin = BeastweaverRenderer.GET_CAMERA_RELATIVE_ENTITY_POS(entity, partialTicks).add(0F, entity.bbHeight / 2F, 0F)
         val tickCount = entity.tickCount
         val scale = entity.scale
-        val gradientStart = ((tickCount - 20F) / 40F).coerceIn(0F, 40F).clampedLerp(0F, 1F) * scale
+        val gradientStart = ((tickCount - 20F) / 40F).coerceIn(0F, 1F).clampedLerp(0F, 1F) * scale
         val gradientEnd = (tickCount / 40F).coerceIn(0F, 1F).clampedLerp(0F, 1F) * scale
         state.gradientData = BeastweaverGradientData(gradientOrigin.x, gradientOrigin.y, gradientOrigin.z, gradientStart, gradientEnd)
     }

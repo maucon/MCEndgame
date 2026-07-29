@@ -6,5 +6,12 @@
         "stream": true
       }
     ]
+  },
+  "entity.wolf_howl": {
+    "sounds": [
+      {
+        "name": "mcendgame:entity/wolf_howl"
+      }
+    ]
   }
 }

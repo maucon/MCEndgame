@@ -9,12 +9,19 @@ import com.geckolib.animation.RawAnimation
 import com.geckolib.animation.`object`.PlayState
 import com.geckolib.constant.DefaultAnimations
 import com.geckolib.util.GeckoLibUtil
+import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.addCustomAttribute
+import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
+import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
+import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
+import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
+import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.*
 import de.fuballer.mcendgame.main.component.entity.custom.attack.debris_explosion.DebrisExplosionAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.AlwaysTrueTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.CompanionLimitTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver_wolf.BeastweaverWolfEntity
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
@@ -23,12 +30,16 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttac
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
 import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.component.particle.DirectionalAttackSweepParticleEffect
+import de.fuballer.mcendgame.main.component.sound.CustomSoundEvents
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.getDistanceToGround
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.rotateToEntity
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCompanion
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setCompanion
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setDungeonEnemy
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -45,7 +56,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
-import net.minecraft.world.entity.animal.wolf.WolfSoundVariants
+import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
@@ -53,6 +64,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import kotlin.math.min
 import kotlin.math.pow
 import kotlin.random.Random
 
@@ -495,6 +507,19 @@ class BeastweaverEntity(
                 blockMovementDuration = 40,
             )
 
+        private val GET_WOLF_SUMMON_TARGETS: (ServerLevel, LivingEntity, LivingEntity?) -> List<LivingEntity> = { level, summoner, target ->
+            val targets = if (target == null) mutableSetOf() else mutableSetOf(target)
+            targets.addAll(
+                level.getNearbyEntities(
+                    LivingEntity::class.java,
+                    TargetingConditions.forCombat().selector { entity, _ -> entity.isEnemy(summoner) && !entity.isCompanion() },
+                    summoner,
+                    summoner.boundingBox.inflate(30.0, 10.0, 30.0),
+                )
+            )
+            targets.toList()
+        }
+
         private val WOLF_SUMMON_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.wolf_summon")
         private const val WOLF_SUMMON_ID = "Wolf Summon"
         private val WOLF_SUMMON_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, WOLF_SUMMON_ID)
@@ -503,7 +528,11 @@ class BeastweaverEntity(
                 WOLF_SUMMON_ANIM_DATA,
                 totalDuration = 70,
                 cooldown = 100,
-                AlwaysTrueTriggerCondition(),
+                CompanionLimitTriggerCondition(
+                    companionLimit = { targetCount -> targetCount * 1 },
+                    getTargetCount = { level, summoner, target -> GET_WOLF_SUMMON_TARGETS(level, summoner, target).count() },
+                    50.0,
+                ),
                 data = listOf(
                     DelayedSummonData(
                         SummonData(
@@ -512,20 +541,28 @@ class BeastweaverEntity(
                                 summon.setCompanion()
                                 summon.owner = summoner
                                 if (summoner.isDungeonEnemy()) summon.setDungeonEnemy()
+
+                                summon.addCustomAttribute(CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.4))))
+                                val dungeonLevel = level.getDungeonLevel()
+                                val armor = 6.0 + min(dungeonLevel / 2.0, 14.0)
+                                summon.addCustomAttribute(CustomAttribute(VanillaAttributeTypes.ARMOR, roll = DoubleRoll(DoubleBounds(armor))))
+                                val toughness = ((dungeonLevel - 5) * 2.0).coerceIn(0.0, 10.0)
+                                summon.addCustomAttribute(CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, roll = DoubleRoll(DoubleBounds(toughness))))
+
                                 summon.target = target
                                 summon
                             },
-                            getTargets = { level, summoner, target -> if (target == null) listOf() else listOf(target) },
-                            getCountPerTarget = { targetCount -> 3 },
+                            getTargets = GET_WOLF_SUMMON_TARGETS,
+                            getCountPerTarget = { targetCount -> if (targetCount <= 3) 3 else 2 },
                             spawnPositionsSearchSteps = 15,
-                            maxSpawnDistanceToTarget = 20.0,
+                            maxSpawnDistanceToTarget = 25.0,
                         ),
                         60,
                     ),
 
                     DelayedSoundData(
                         SoundData(
-                            SoundEvents.WOLF_SOUNDS[WolfSoundVariants.SoundSet.ANGRY]!!.adultSounds.growlSound.value(),
+                            CustomSoundEvents.WOLF_HOWL,
                             { Random.nextDouble(1.2, 1.3).toFloat() },
                             { Random.nextDouble(0.9, 1.0).toFloat() },
                             SoundSource.HOSTILE,

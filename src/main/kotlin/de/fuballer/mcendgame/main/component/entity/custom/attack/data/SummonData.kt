@@ -8,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity
 
 data class SummonData(
     private val factory: (ServerLevel, LivingEntity, LivingEntity) -> Entity,
-    private val getTargets: (ServerLevel, Entity, LivingEntity?) -> List<LivingEntity>,
+    private val getTargets: (ServerLevel, LivingEntity, LivingEntity?) -> List<LivingEntity>,
     private val getCountPerTarget: (Int) -> Int,
     private val spawnPositionsSearchSteps: Int,
     private val maxSpawnDistanceToTarget: Double,
