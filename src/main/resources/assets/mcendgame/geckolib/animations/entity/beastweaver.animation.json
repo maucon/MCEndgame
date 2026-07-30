@@ -264,6 +264,11 @@
 					"scale": {
 						"vector": ["(1 + 0.15 * query.mcendgame_transform)", "(1 + 0.15 * query.mcendgame_transform)", "(1 + 0.1 * query.mcendgame_transform)"]
 					}
+				},
+				"rhinoHead": {
+					"scale": {
+						"vector": ["(1 + 0.2 * query.mcendgame_transform)", "(1 + 0.2 * query.mcendgame_transform)", "(1 + 0.2 * query.mcendgame_transform)"]
+					}
 				}
 			}
 		},
@@ -5593,6 +5598,34 @@
 							"lerp_mode": "catmullrom"
 						},
 						"3.5": {
+							"post": {
+								"vector": [0, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						}
+					}
+				}
+			}
+		},
+		"attack.rhino_charge": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"rhinoHead": {
+					"position": {
+						"0.0": {
+							"post": {
+								"vector": [0, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"1.0": {
+							"post": {
+								"vector": [0, 5, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"2.0": {
 							"post": {
 								"vector": [0, 0, 0]
 							},

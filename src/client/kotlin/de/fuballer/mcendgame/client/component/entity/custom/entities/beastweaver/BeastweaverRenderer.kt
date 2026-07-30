@@ -243,7 +243,7 @@ class BeastweaverRenderer<R>(
         val getWolfSummonAttackGradientBounds: (Float) -> Pair<Float, Float> = { progress ->
             when {
                 progress < 1.5f -> {
-                    val t = progress / 1.2f
+                    val t = progress / 1.5f
                     val min = ((t - 0.35f) / 0.65f).clampedLerp(-0.05f, 1.2f)
                     val max = t.clampedLerp(0f, 1.25f)
                     Pair(min, max)
@@ -263,14 +263,37 @@ class BeastweaverRenderer<R>(
         withRenderLayer(
             BeastweaverSpiritAttackGeoLayer(
                 this,
-                listOf(
-                    "wolfHead",
-                ),
+                listOf("wolfHead"),
                 progress = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F },
                 textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_wolf_head_0.png")),
                 getGradientOrigin = GET_CAMERA_RELATIVE_ENTITY_EYE_POS,
                 getGradientBounds = getWolfSummonAttackGradientBounds,
                 active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.wolf_summon" },
+            )
+        )
+
+        val getRhinoChargeAttackGradientBounds: (Float) -> Pair<Float, Float> = { progress ->
+            when {
+                progress < 1.5f -> {
+                    val t = progress / 1.5f
+                    val min = ((t - 0.35f) / 0.65f).clampedLerp(-0.05f, 2.5f)
+                    val max = t.clampedLerp(0f, 2.6f)
+                    Pair(min, max)
+                }
+
+                else -> Pair(2.5f, 2.6f)
+            }
+        }
+
+        withRenderLayer(
+            BeastweaverSpiritAttackGeoLayer(
+                this,
+                listOf("rhinoHead"),
+                progress = { renderState -> renderState.getGeckolibData(RHINO_CHARGE_DURATION) ?: 0F },
+                textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_rhino_head_0.png")),
+                getGradientOrigin = { entity, partialTick -> GET_CAMERA_RELATIVE_ENTITY_POS(entity, partialTick).add(0f, entity.eyeHeight * 0.6f, 0f) },
+                getGradientBounds = getRhinoChargeAttackGradientBounds,
+                active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.rhino_charge" },
             )
         )
     }
@@ -299,6 +322,7 @@ class BeastweaverRenderer<R>(
         private val SHOULDER_SPIKES_ANIM_TIME = DataTicket.create("shoulder_spikes_anim_time", object : TypeToken<Float>() {})
         private val CURRENT_ATTACK_NAME = DataTicket.create("current_attack_name", object : TypeToken<String>() {})
         private val CURRENT_ATTACK_ANIM_TIME = DataTicket.create("current_attack_anim_time", object : TypeToken<Float>() {})
+        private val RHINO_CHARGE_DURATION = DataTicket.create("rhino_charge_duration", object : TypeToken<Float>() {})
     }
 
     override fun addRenderData(animatable: BeastweaverEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
@@ -309,6 +333,7 @@ class BeastweaverRenderer<R>(
         renderState.addGeckolibData(SHOULDER_SPIKES_ANIM_TIME, animatable.getShoulderSpikesAnimTime(partialTick))
         renderState.addGeckolibData(CURRENT_ATTACK_NAME, animatable.getCurrentAttackAnimName())
         renderState.addGeckolibData(CURRENT_ATTACK_ANIM_TIME, animatable.getCurrentAttackAnimTime(partialTick))
+        if (animatable.isRhinoCharging()) renderState.addGeckolibData(RHINO_CHARGE_DURATION, animatable.getRhinoChargeDurationSeconds(partialTick))
     }
 
     override fun adjustModelBonesForRender(renderPassInfo: RenderPassInfo<R>, snapshots: BoneSnapshots) {

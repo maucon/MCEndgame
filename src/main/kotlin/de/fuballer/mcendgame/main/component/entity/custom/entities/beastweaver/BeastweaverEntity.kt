@@ -573,6 +573,24 @@ class BeastweaverEntity(
                 blockMovementDuration = 70,
             )
 
+        private val RHINO_CHARGE_ANIM: RawAnimation = RawAnimation.begin().thenLoop("attack.rhino_charge")
+        private const val RHINO_CHARGE_ID = "Rhino Charge"
+        private val RHINO_CHARGE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, RHINO_CHARGE_ID)
+        private val RHINO_CHARGE_ATTACK =
+            Attack<BeastweaverEntity>(
+                RHINO_CHARGE_ANIM_DATA,
+                totalDuration = -1,
+                cooldown = 100,
+                DistanceTriggerCondition(10.0, 50.0, affectedByScale = false),
+                data = listOf(
+                    object : DelayedAttackData() {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as BeastweaverEntity).startRhinoCharge()
+                        }
+                    },
+                ),
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
             RandomOption(1, BEAR_SWIPE_RIGHT_ATTACK),
             RandomOption(1, BEAR_SWIPE_LEFT_ATTACK),
@@ -580,6 +598,7 @@ class BeastweaverEntity(
             RandomOption(1, WINGS_LAUNCH_ATTACK),
             RandomOption(1, ELEPHANT_STOMP_ATTACK),
             RandomOption(1, WOLF_SUMMON_ATTACK),
+            RandomOption(1, RHINO_CHARGE_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -597,6 +616,8 @@ class BeastweaverEntity(
 
         private const val TRANSFORM_PROGRESS_ID = "transform_progress"
         private val TRANSFORM_PROGRESS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
+
+        private val IS_RHINO_CHARGING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.BOOLEAN)
     }
 
     override var blockAbleMovementEntity = this
@@ -614,6 +635,8 @@ class BeastweaverEntity(
 
     private var transformProgress = 0F
     private var previousTransformProgress = 0F
+
+    private var rhinoChargeDuration = -1
 
     private val transformShoulderSpikesAnimationController =
         AnimationController<GeoAnimatable>(TRANSFORM_SHOULDER_SPIKES_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
@@ -651,6 +674,7 @@ class BeastweaverEntity(
             .triggerableAnim(WINGS_LAUNCH_ID, WINGS_LAUNCH_ANIM)
             .triggerableAnim(ELEPHANT_STOMP_ID, ELEPHANT_STOMP_ANIM)
             .triggerableAnim(WOLF_SUMMON_ID, WOLF_SUMMON_ANIM)
+            .triggerableAnim(RHINO_CHARGE_ID, RHINO_CHARGE_ANIM)
 
     private fun getAnimationController(name: String) = transformAnimationControllers.find { it.name == name }
 
@@ -680,6 +704,14 @@ class BeastweaverEntity(
     override fun defineSynchedData(builder: SynchedEntityData.Builder) {
         super.defineSynchedData(builder)
         builder.define(TRANSFORM_PROGRESS, 0F)
+        builder.define(IS_RHINO_CHARGING, false)
+    }
+
+    override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
+        super.onSyncedDataUpdated(accessor)
+
+        if (!level().isClientSide) return
+        if (IS_RHINO_CHARGING == accessor) rhinoChargeDuration = 0
     }
 
     fun getTransformProgress(tickProgress: Float) = previousTransformProgress + (transformProgress - previousTransformProgress) * tickProgress
@@ -743,6 +775,7 @@ class BeastweaverEntity(
     override fun tick() {
         super.tick()
         tickTransformProgress()
+        tickRhinoCharge()
         val level = level() as? ServerLevel ?: return
         tickBlockedMovement()
         tickAttacks(level, this)
@@ -825,4 +858,28 @@ class BeastweaverEntity(
     override fun sanitizeScale(scale: Float): Float {
         return super.sanitizeScale(scale) * 1F + entityData.get(TRANSFORM_PROGRESS) * TRANSFORM_ADDITIONAL_SCALE
     }
+
+    fun startRhinoCharge() {
+        entityData.set(IS_RHINO_CHARGING, true)
+    }
+
+    fun endRhinoCharge() {
+        entityData.set(IS_RHINO_CHARGING, false)
+        rhinoChargeDuration = 0
+        attackDuration = 0
+    }
+
+    private fun tickRhinoCharge() {
+        if (!isRhinoCharging()) return
+        rhinoChargeDuration++
+
+        val serverLevel = level() as? ServerLevel ?: return
+        if (rhinoChargeDuration > 200) endRhinoCharge()
+
+        // TODO add control for speed, step height, direction, damage, etc
+    }
+
+    fun isRhinoCharging() = entityData.get(IS_RHINO_CHARGING)
+
+    fun getRhinoChargeDurationSeconds(tickProgress: Float) = if (isRhinoCharging()) (rhinoChargeDuration + tickProgress) / 20F else -1F
 }
