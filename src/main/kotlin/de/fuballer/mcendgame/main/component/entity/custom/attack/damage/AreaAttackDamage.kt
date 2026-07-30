@@ -43,32 +43,11 @@ class AreaAttackDamage(
     private var volume: Float = 1F
 
     override fun apply(world: ServerLevel, damager: Mob, target: LivingEntity?): Boolean {
-        val forward = damager.calculateViewVector(damager.xRot, damager.yBodyRot).horizontal().normalize()
-        val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
-
-        val scale = getScale(damager)
-
-        // debug
-        area.renderOutline(world, damager, forward, sideways, scale)
-
-        val targets = getTargets(world, damager, scale).filter {
-            area.intersects(it, damager, forward, sideways, scale)
-        }
-
-        val slamCenter = area.getCenter(damager, scale, forward, sideways)
-
-        dealDamage(targets, damager, scale, forward, slamCenter)
-
-        if (createParticles) createParticles(world, slamCenter, forward, sideways, scale)
-
-        if (!playSound) return true
-        if (soundRequiresHit && targets.isEmpty()) return true
-        playSound(world, slamCenter, scale)
-
+        applyAtOtherEntity(world, damager, damager)
         return true
     }
 
-    fun applyAtOtherEntity(world: ServerLevel, damager: Mob, other: Entity): Boolean {
+    fun applyAtOtherEntity(world: ServerLevel, damager: Mob, other: Entity) {
         val yRot = if (other is LivingEntity) other.yBodyRot else other.yRot
         val forward = other.calculateViewVector(other.xRot, yRot).horizontal().normalize()
         val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
@@ -88,11 +67,9 @@ class AreaAttackDamage(
 
         if (createParticles) createParticles(world, slamCenter, forward, sideways, scale)
 
-        if (!playSound) return true
-        if (soundRequiresHit && targets.isEmpty()) return true
+        if (!playSound) return
+        if (soundRequiresHit && targets.isEmpty()) return
         playSound(world, slamCenter, scale)
-
-        return true
     }
 
     private fun getScale(damager: Mob) = if (applyScale) damager.getAttributeValue(Attributes.SCALE) else 1.0

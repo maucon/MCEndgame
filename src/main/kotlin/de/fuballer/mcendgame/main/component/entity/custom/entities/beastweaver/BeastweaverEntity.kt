@@ -40,6 +40,7 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDu
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setCompanion
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setDungeonEnemy
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
+import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -51,6 +52,7 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
@@ -588,8 +590,55 @@ class BeastweaverEntity(
                             (entity as BeastweaverEntity).startRhinoCharge()
                         }
                     },
+
+                    DelayedSoundData(
+                        SoundData(
+                            SoundEvents.RAVAGER_AMBIENT,
+                            { Random.nextDouble(0.8, 0.85).toFloat() },
+                            { Random.nextDouble(0.95, 1.05).toFloat() },
+                            SoundSource.HOSTILE,
+                        ),
+                        0,
+                    ),
                 ),
             )
+
+        private val IS_RHINO_CHARGING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.BOOLEAN)
+
+        private val RHINO_CHARGE_MOVEMENT_SPEED_MODIFIER_ID = IdentifierUtil.default("rhino_charge_movement_speed")
+        private val RHINO_CHARGE_STEP_HEIGHT_MODIFIER_ID = IdentifierUtil.default("rhino_charge_step_height")
+        private val RHINO_CHARGE_STEP_HEIGHT_MODIFIER = AttributeModifier(
+            RHINO_CHARGE_STEP_HEIGHT_MODIFIER_ID,
+            0.5,
+            AttributeModifier.Operation.ADD_VALUE,
+        )
+
+        private val RHINO_CHARGE_ATTACK_AREA = AreaAttackDamage.DamageArea(3.0, 1.5, 1.25, 0.0, 0.0, 1.0)
+        private val RHINO_CHARGE_ATTACK_DAMAGE = AreaAttackDamage(
+            damageFactor = 0.8f,
+            knockbackFactor = 3.0,
+            area = RHINO_CHARGE_ATTACK_AREA,
+            blockable = false,
+        )
+
+        private val RHINO_CHARGE_STEP_SOUND_DATA = SoundData(
+            SoundEvents.RAVAGER_STEP,
+            { Random.nextDouble(0.9, 1.0).toFloat() },
+            { Random.nextDouble(0.75, 0.85).toFloat() },
+            SoundSource.HOSTILE,
+        )
+        private val RHINO_CHARGE_END_SOUND_DATA = SoundData(
+            SoundEvents.RAVAGER_STUNNED,
+            { 1f },
+            { Random.nextDouble(0.95, 1.0).toFloat() },
+            SoundSource.HOSTILE,
+        )
+        private val RHINO_CHARGE_END_HIT_WALL_SOUND_DATA = SoundData(
+            SoundEvents.RAVAGER_DEATH,
+            { 1f },
+            { Random.nextDouble(0.95, 1.0).toFloat() },
+            SoundSource.HOSTILE,
+        )
 
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
             RandomOption(1, BEAR_SWIPE_RIGHT_ATTACK),
@@ -616,8 +665,6 @@ class BeastweaverEntity(
 
         private const val TRANSFORM_PROGRESS_ID = "transform_progress"
         private val TRANSFORM_PROGRESS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
-
-        private val IS_RHINO_CHARGING: EntityDataAccessor<Boolean> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.BOOLEAN)
     }
 
     override var blockAbleMovementEntity = this
@@ -637,6 +684,7 @@ class BeastweaverEntity(
     private var previousTransformProgress = 0F
 
     private var rhinoChargeDuration = -1
+    private var rhinoChargeStepSoundBuildup = 0.0
 
     private val transformShoulderSpikesAnimationController =
         AnimationController<GeoAnimatable>(TRANSFORM_SHOULDER_SPIKES_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
@@ -744,6 +792,7 @@ class BeastweaverEntity(
 
     init {
         initDynamicGoals()
+        moveControl = BeastweaverMoveControl(this)
     }
 
     private fun initDynamicGoals() {
@@ -861,12 +910,27 @@ class BeastweaverEntity(
 
     fun startRhinoCharge() {
         entityData.set(IS_RHINO_CHARGING, true)
+
+        attributes.getInstance(Attributes.STEP_HEIGHT)?.also { it.addTransientModifier(RHINO_CHARGE_STEP_HEIGHT_MODIFIER) }
     }
 
-    fun endRhinoCharge() {
+    fun endRhinoCharge(hitWall: Boolean) {
+        val level = level() as? ServerLevel ?: return
+
         entityData.set(IS_RHINO_CHARGING, false)
         rhinoChargeDuration = 0
         attackDuration = 0
+
+        attributes.getInstance(Attributes.STEP_HEIGHT)?.also { it.removeModifier(RHINO_CHARGE_STEP_HEIGHT_MODIFIER_ID) }
+        attributes.getInstance(Attributes.MOVEMENT_SPEED)?.also { it.removeModifier(RHINO_CHARGE_MOVEMENT_SPEED_MODIFIER_ID) }
+
+        if (hitWall) {
+            RHINO_CHARGE_END_HIT_WALL_SOUND_DATA.apply(level, this)
+        } else {
+            RHINO_CHARGE_END_SOUND_DATA.apply(level, this)
+        }
+
+        // TODO call start up "attack"
     }
 
     private fun tickRhinoCharge() {
@@ -874,12 +938,39 @@ class BeastweaverEntity(
         rhinoChargeDuration++
 
         val serverLevel = level() as? ServerLevel ?: return
-        if (rhinoChargeDuration > 200) endRhinoCharge()
+        if (rhinoChargeDuration > 200) endRhinoCharge(false)
 
-        // TODO add control for speed, step height, direction, damage, etc
+        val speedMultiplier = getRhinoChargeSpeedMultiplier(rhinoChargeDuration)
+        val moreMovementSpeed = speedMultiplier - 1.0
+        val movementSpeedModifier = AttributeModifier(RHINO_CHARGE_MOVEMENT_SPEED_MODIFIER_ID, moreMovementSpeed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        attributes.getInstance(Attributes.MOVEMENT_SPEED)?.also { it.addOrUpdateTransientModifier(movementSpeedModifier) }
+
+        if (speedMultiplier > 1.0 && tickCount % 2 == 0) RHINO_CHARGE_ATTACK_DAMAGE.apply(serverLevel, this, null)
+
+        // TODO particles
+
+        rhinoChargeStepSoundBuildup += speedMultiplier
+        if (rhinoChargeStepSoundBuildup > 10) {
+            RHINO_CHARGE_STEP_SOUND_DATA.apply(serverLevel, this)
+            rhinoChargeStepSoundBuildup = 0.0
+        }
+
+        // TODO debris blocks
+    }
+
+    private fun getRhinoChargeSpeedMultiplier(ticks: Int): Double {
+        val seconds = ticks / 20.0
+        val t = (seconds / 5.0).coerceIn(0.0, 1.0)
+        val eased = t * t * (3.0 - 2.0 * t)
+        return 0.5 + eased * 1.5
     }
 
     fun isRhinoCharging() = entityData.get(IS_RHINO_CHARGING)
 
     fun getRhinoChargeDurationSeconds(tickProgress: Float) = if (isRhinoCharging()) (rhinoChargeDuration + tickProgress) / 20F else -1F
+
+    override fun knockback(power: Double, xd: Double, zd: Double) {
+        if (isRhinoCharging()) return
+        super.knockback(power, xd, zd)
+    }
 }

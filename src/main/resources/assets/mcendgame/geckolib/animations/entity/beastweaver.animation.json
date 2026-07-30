@@ -5609,9 +5609,35 @@
 		},
 		"attack.rhino_charge": {
 			"loop": true,
-			"animation_length": 2,
+			"animation_length": 1,
 			"bones": {
 				"rhinoHead": {
+					"rotation": {
+						"0.0": {
+							"post": {
+								"vector": [0, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"0.3333": {
+							"post": {
+								"vector": ["5 * query.limb_swing_amount", 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"0.7083": {
+							"post": {
+								"vector": ["-5 * query.limb_swing_amount", 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"1.0": {
+							"post": {
+								"vector": [0, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						}
+					},
 					"position": {
 						"0.0": {
 							"post": {
@@ -5619,15 +5645,37 @@
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"1.0": {
+						"0.5": {
 							"post": {
-								"vector": [0, 5, 0]
+								"vector": [0, "-2 * query.limb_swing_amount", "-4 * query.limb_swing_amount"]
 							},
 							"lerp_mode": "catmullrom"
 						},
-						"2.0": {
+						"1.0": {
 							"post": {
 								"vector": [0, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"rhinoSnoutBottom": {
+					"rotation": {
+						"0.0": {
+							"post": {
+								"vector": [2.5, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"0.3333": {
+							"post": {
+								"vector": [-1, 0, 0]
+							},
+							"lerp_mode": "catmullrom"
+						},
+						"1.0": {
+							"post": {
+								"vector": [2.5, 0, 0]
 							},
 							"lerp_mode": "catmullrom"
 						}
