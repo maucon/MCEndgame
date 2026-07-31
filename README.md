@@ -23,23 +23,39 @@
 
 ## About The Project
 
-**MCEndgame** is a Minecraft Fabric mod that enhances the endgame experience by introducing new layers of progression, challenging dungeons, powerful custom gear, and a deep itemization
-system.
+**MCEndgame** is a Minecraft mod that aims to make Minecraft's endgame more engaging through repeatable dungeon content, meaningful gear progression, and ARPG-inspired itemization.
 
 [Watch the Trailer](https://www.youtube.com/watch?v=R2MLI5XDsfM)
 
 ### Features
 
-- Procedurally generated **dungeons** with adaptive difficulty scaling
-- **Boss** fights featuring unique AI, attack patterns, and animations
-- Custom-designed **armor sets**
-- **Unique equipment** with special effects and custom attributes
-- Dedicated **custom attribute system**
-- **Totem** slots that grant attributes active within dungeons
-- **Crystals** for additional gear modification, usable via the **Crystal Forge**
-- **Aspects** that alter and enhance the dungeon experience
+- **Procedurally generated dungeons with difficulty scaling**
 
-### Commands
+  Dungeons are entered through a Dungeon Device and generated using a room-based system, creating a different layout for each run. They feature custom enemies, including special variants with unique mechanics and loot drops, while difficulty scaling keeps the encounters challenging as players progress.
+
+- **Boss fights with unique AI, attack patterns, and animations**
+
+  Each boss is designed around unique mechanics, requiring players to learn attack patterns and adapt their strategy rather than simply relying on gear progression.
+
+- **Custom armor sets, weapons, and attribute system**
+
+  The mod includes a custom attribute system that allows items to have unique stats and effects beyond Minecraft's vanilla equipment system. This enables more complex itemization and allows gear to be built around different playstyles.
+
+- **Totem slots and dungeon-specific power progression**
+
+  Totems provide additional bonuses while inside dungeons, allowing players to increase their power for endgame content without affecting the balance of the vanilla Minecraft experience outside of dungeons.
+
+- **Crystals and the Crystal Forge**
+
+  Crystals are crafting items used to modify equipment, allowing players to change attribute rolls, upgrade existing attributes, or corrupt items for a chance at unique outcomes with different risks and rewards.
+
+- **Aspects**
+
+  Aspects are items socketed into the Dungeon Device to modify a dungeon before you enter. They can introduce additional bosses, increase enemy strength and loot drops, raise special enemy spawn rates, and more, letting players customize risk and reward for each run.
+
+- **And more...**
+
+### Useful Commands
 
 - `/dungeonfilter` – Configure which item types will not be picked up when in a dungeon
 - `/killer` – See the equipment and status effects of your latest killer
@@ -104,13 +120,13 @@ See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame/wiki/Analytics
 
 ### Dependencies
 
-| Dependency                                                                | Version               |
-|---------------------------------------------------------------------------|-----------------------|
-| [Fabric Loader](https://fabricmc.net/use/)                                | ≥ 0.19.3              |
-| [Fabric API](https://modrinth.com/mod/fabric-api)                         | ~0.154.2+26.2         |
-| [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | ~1.13.12+kotlin.2.4.0 |
-| [Fantasy](https://github.com/NucleoidMC/fantasy)                          | ~0.8.2+26.2           |
-| [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.5.3                |
+| Dependency                                                                | Version                |
+|---------------------------------------------------------------------------|------------------------|
+| [Fabric Loader](https://fabricmc.net/use/)                                | ≥ 0.19.3               |
+| [Fabric API](https://modrinth.com/mod/fabric-api)                         | ≥ 0.152.1+26.2         |
+| [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | ≥ 1.13.12+kotlin.2.4.0 |
+| [Fantasy](https://github.com/NucleoidMC/fantasy)                          | ~0.8.2+26.2            |
+| [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.5.3                 |
 
 ### Building from Source
 
