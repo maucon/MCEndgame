@@ -47,8 +47,8 @@
     "fabricloader": ">=0.19.3",
     "minecraft": "~26.2",
     "java": ">=25",
-    "fabric-api": "~0.154.2+26.2",
-    "fabric-language-kotlin": "~1.13.12+kotlin.2.4.0",
+    "fabric-api": ">=0.152.1+26.2",
+    "fabric-language-kotlin": ">=1.13.12+kotlin.2.4.0",
     "fantasy": "~0.8.2+26.2",
     "geckolib": "~5.5.3"
   }
