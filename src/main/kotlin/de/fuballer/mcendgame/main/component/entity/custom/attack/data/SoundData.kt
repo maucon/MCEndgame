@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.level.Level
 
 data class SoundData(
     private val sound: SoundEvent,
@@ -24,5 +25,13 @@ data class SoundData(
         entity: Entity,
     ) {
         level.playSound(entity, entity.blockPosition(), sound, category, volume(), pitch())
+    }
+
+    fun applyClient(
+        level: Level,
+        entity: Entity,
+        distanceDelay: Boolean,
+    ) {
+        level.playLocalSound(entity.x, entity.y, entity.z, sound, category, volume(), pitch(), distanceDelay)
     }
 }

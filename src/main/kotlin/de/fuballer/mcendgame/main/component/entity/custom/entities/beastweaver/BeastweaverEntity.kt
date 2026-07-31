@@ -33,6 +33,7 @@ import de.fuballer.mcendgame.main.component.particle.DirectionalAttackSweepParti
 import de.fuballer.mcendgame.main.component.sound.CustomSoundEvents
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.getDistanceToGround
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isEnemy
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.isFacingTowards
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.rotateToEntity
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCompanion
@@ -529,7 +530,7 @@ class BeastweaverEntity(
             Attack<BeastweaverEntity>(
                 WOLF_SUMMON_ANIM_DATA,
                 totalDuration = 70,
-                cooldown = 100,
+                cooldown = 600,
                 CompanionLimitTriggerCondition(
                     companionLimit = { targetCount -> targetCount * 1 },
                     getTargetCount = { level, summoner, target -> GET_WOLF_SUMMON_TARGETS(level, summoner, target).count() },
@@ -577,6 +578,8 @@ class BeastweaverEntity(
 
         private val RHINO_CHARGE_ANIM: RawAnimation = RawAnimation.begin().thenLoop("attack.rhino_charge")
         private const val RHINO_CHARGE_ID = "Rhino Charge"
+        private val RHINO_CHARGE_END_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.rhino_charge_end")
+        private const val RHINO_CHARGE_END_ID = "Rhino Charge End"
         private val RHINO_CHARGE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, RHINO_CHARGE_ID)
         private val RHINO_CHARGE_ATTACK =
             Attack<BeastweaverEntity>(
@@ -618,13 +621,21 @@ class BeastweaverEntity(
             damageFactor = 0.8f,
             knockbackFactor = 3.0,
             area = RHINO_CHARGE_ATTACK_AREA,
+            knockbackType = AreaAttackDamage.KnockbackType.BEASTWEAVER_RHINO_CHARGE,
             blockable = false,
+            disableBlockingShield = 5f,
         )
 
         private val RHINO_CHARGE_STEP_SOUND_DATA = SoundData(
-            SoundEvents.RAVAGER_STEP,
+            SoundEvents.POLAR_BEAR_STEP,
             { Random.nextDouble(0.9, 1.0).toFloat() },
-            { Random.nextDouble(0.75, 0.85).toFloat() },
+            { Random.nextDouble(1.0, 1.05).toFloat() },
+            SoundSource.HOSTILE,
+        )
+        private val RHINO_CHARGE_STEP_EXPLODE_SOUND_DATA = SoundData(
+            SoundEvents.GENERIC_EXPLODE.value(),
+            { Random.nextDouble(0.15, 0.16).toFloat() },
+            { Random.nextDouble(0.95, 1.05).toFloat() },
             SoundSource.HOSTILE,
         )
         private val RHINO_CHARGE_END_SOUND_DATA = SoundData(
@@ -685,6 +696,10 @@ class BeastweaverEntity(
 
     private var rhinoChargeDuration = -1
     private var rhinoChargeStepSoundBuildup = 0.0
+    private var rhinoChargeStepSoundRepeatTimer = 0
+    private var rhinoChargeDustParticleBuildup = 0.0
+    private var isRhinoChargeEnding = false
+    private var rhinoChargeEndDuration = 0
 
     private val transformShoulderSpikesAnimationController =
         AnimationController<GeoAnimatable>(TRANSFORM_SHOULDER_SPIKES_ANIM_CONTROLLER_ID) { _ -> PlayState.STOP }
@@ -723,6 +738,7 @@ class BeastweaverEntity(
             .triggerableAnim(ELEPHANT_STOMP_ID, ELEPHANT_STOMP_ANIM)
             .triggerableAnim(WOLF_SUMMON_ID, WOLF_SUMMON_ANIM)
             .triggerableAnim(RHINO_CHARGE_ID, RHINO_CHARGE_ANIM)
+            .triggerableAnim(RHINO_CHARGE_END_ID, RHINO_CHARGE_END_ANIM)
 
     private fun getAnimationController(name: String) = transformAnimationControllers.find { it.name == name }
 
@@ -796,16 +812,17 @@ class BeastweaverEntity(
     }
 
     private fun initDynamicGoals() {
-        goalSelector.addGoal(2, attackGoal)
-        goalSelector.addGoal(3, stayInMeleeRangeGoal)
-        goalSelector.addGoal(4, wanderGoal)
-        goalSelector.addGoal(5, lookAtPlayerGoal)
-        goalSelector.addGoal(5, lookAroundGoal)
+        goalSelector.addGoal(3, attackGoal)
+        goalSelector.addGoal(4, stayInMeleeRangeGoal)
+        goalSelector.addGoal(5, wanderGoal)
+        goalSelector.addGoal(6, lookAtPlayerGoal)
+        goalSelector.addGoal(7, lookAroundGoal)
     }
 
     override fun registerGoals() {
         goalSelector.addGoal(0, FloatGoal(this))
-        goalSelector.addGoal(1, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { e -> e is Player || e is Villager }))
+        goalSelector.addGoal(1, BeastweaverRhinoChargeControlGoal(this))
+        goalSelector.addGoal(2, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { e -> e is Player || e is Villager }))
 
         targetSelector.addGoal(0, HurtByTargetGoal(this))
         targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, true))
@@ -918,7 +935,9 @@ class BeastweaverEntity(
         val level = level() as? ServerLevel ?: return
 
         entityData.set(IS_RHINO_CHARGING, false)
+        isRhinoChargeEnding = false
         rhinoChargeDuration = 0
+        rhinoChargeEndDuration = 0
         attackDuration = 0
 
         attributes.getInstance(Attributes.STEP_HEIGHT)?.also { it.removeModifier(RHINO_CHARGE_STEP_HEIGHT_MODIFIER_ID) }
@@ -926,43 +945,118 @@ class BeastweaverEntity(
 
         if (hitWall) {
             RHINO_CHARGE_END_HIT_WALL_SOUND_DATA.apply(level, this)
-        } else {
-            RHINO_CHARGE_END_SOUND_DATA.apply(level, this)
         }
 
-        // TODO call start up "attack"
+        // TODO call follow-up "attack"
+    }
+
+    private fun startEndingRhinoCharge() {
+        if (isRhinoChargeEnding) return
+
+        isRhinoChargeEnding = true
+        rhinoChargeEndDuration = 0
+
+        val serverLevel = level() as? ServerLevel ?: return
+        RHINO_CHARGE_END_SOUND_DATA.apply(serverLevel, this)
+
+        triggerAnim(ATTACK_ANIM_CONTROLLER_ID, RHINO_CHARGE_END_ID)
     }
 
     private fun tickRhinoCharge() {
         if (!isRhinoCharging()) return
         rhinoChargeDuration++
 
-        val serverLevel = level() as? ServerLevel ?: return
-        if (rhinoChargeDuration > 200) endRhinoCharge(false)
+        val level = level()
+        if (level.isClientSide) tickRhinoChargeClient(level)
+        else tickRhinoChargeServer(level as ServerLevel)
+    }
 
-        val speedMultiplier = getRhinoChargeSpeedMultiplier(rhinoChargeDuration)
+    private fun tickRhinoChargeServer(serverLevel: ServerLevel) {
+        if (isRhinoChargeEnding) rhinoChargeEndDuration++
+        else if (rhinoChargeDuration > 40 && (target == null || !isFacingTowards(target!!))) startEndingRhinoCharge()
+
+        val speedMultiplier = getRhinoChargeSpeedMultiplier(rhinoChargeDuration, rhinoChargeEndDuration)
+        if (isRhinoChargeEnding && speedMultiplier <= 0.1) {
+            endRhinoCharge(false)
+            return
+        }
+
         val moreMovementSpeed = speedMultiplier - 1.0
         val movementSpeedModifier = AttributeModifier(RHINO_CHARGE_MOVEMENT_SPEED_MODIFIER_ID, moreMovementSpeed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
         attributes.getInstance(Attributes.MOVEMENT_SPEED)?.also { it.addOrUpdateTransientModifier(movementSpeedModifier) }
 
         if (speedMultiplier > 1.0 && tickCount % 2 == 0) RHINO_CHARGE_ATTACK_DAMAGE.apply(serverLevel, this, null)
-
-        // TODO particles
-
-        rhinoChargeStepSoundBuildup += speedMultiplier
-        if (rhinoChargeStepSoundBuildup > 10) {
-            RHINO_CHARGE_STEP_SOUND_DATA.apply(serverLevel, this)
-            rhinoChargeStepSoundBuildup = 0.0
-        }
-
-        // TODO debris blocks
     }
 
-    private fun getRhinoChargeSpeedMultiplier(ticks: Int): Double {
-        val seconds = ticks / 20.0
-        val t = (seconds / 5.0).coerceIn(0.0, 1.0)
-        val eased = t * t * (3.0 - 2.0 * t)
-        return 0.5 + eased * 1.5
+    private fun tickRhinoChargeClient(level: Level) {
+        val horizontalMovement = position().subtract(oldPosition()).horizontalDistance()
+
+        rhinoChargeStepSoundBuildup += horizontalMovement
+        if (rhinoChargeStepSoundBuildup > 5) {
+            RHINO_CHARGE_STEP_SOUND_DATA.applyClient(level, this, false)
+            rhinoChargeStepSoundBuildup = 0.0
+            rhinoChargeStepSoundRepeatTimer = 4
+
+            RHINO_CHARGE_STEP_EXPLODE_SOUND_DATA.applyClient(level, this, false)
+            spawnRhinoChargeStepExplodeParticles(level)
+        }
+        if (rhinoChargeStepSoundRepeatTimer > 0 && --rhinoChargeStepSoundRepeatTimer == 0) RHINO_CHARGE_STEP_SOUND_DATA.applyClient(level, this, false)
+
+        rhinoChargeDustParticleBuildup += min(horizontalMovement * horizontalMovement, 1.0)
+        while (rhinoChargeDustParticleBuildup > 0.5) {
+            spawnRhinoChargeSmokeParticles(level)
+            rhinoChargeDustParticleBuildup -= 0.5
+        }
+    }
+
+    private fun spawnRhinoChargeSmokeParticles(level: Level) {
+        level.addAlwaysVisibleParticle(
+            ParticleTypes.CAMPFIRE_COSY_SMOKE,
+            true,
+            x + (random.nextDouble() - 0.5) * 1.5,
+            y + random.nextDouble(),
+            z + (random.nextDouble() - 0.5) * 1.5,
+            0.03,
+            0.05,
+            0.03,
+        )
+        level.addAlwaysVisibleParticle(
+            ParticleTypes.LARGE_SMOKE,
+            true,
+            x + (random.nextDouble() - 0.5) * 1.5,
+            y + random.nextDouble(),
+            z + (random.nextDouble() - 0.5) * 1.5,
+            0.03,
+            0.05,
+            0.03,
+        )
+    }
+
+    private fun spawnRhinoChargeStepExplodeParticles(level: Level) {
+        level.addAlwaysVisibleParticle(
+            ParticleTypes.EXPLOSION,
+            true,
+            x + (random.nextDouble() - 0.5),
+            y + random.nextDouble() * 0.5,
+            z + (random.nextDouble() - 0.5),
+            0.0,
+            0.0,
+            0.0,
+        )
+    }
+
+    private fun getRhinoChargeSpeedMultiplier(
+        ticksSinceStart: Int,
+        ticksSinceEnd: Int,
+    ): Double {
+        val accelerationTicks = ticksSinceStart - ticksSinceEnd
+        val accelerationProgress = (accelerationTicks / 100.0).coerceIn(0.0, 1.0)
+        val easedAcceleration = accelerationProgress * accelerationProgress * (3.0 - 2.0 * accelerationProgress)
+
+        val decelerationProgress = (ticksSinceEnd / 40.0).coerceIn(0.0, 1.0)
+        val easedDeceleration = decelerationProgress * decelerationProgress * (3.0 - 2.0 * decelerationProgress)
+
+        return (0.5 + easedAcceleration * 1.5) * (1 - easedDeceleration)
     }
 
     fun isRhinoCharging() = entityData.get(IS_RHINO_CHARGING)
@@ -973,4 +1067,6 @@ class BeastweaverEntity(
         if (isRhinoCharging()) return
         super.knockback(power, xd, zd)
     }
+
+    fun getRhinoChargeMaxYawChange() = if (!isRhinoCharging()) 360f else if (!isRhinoChargeEnding) 4f else 0f
 }

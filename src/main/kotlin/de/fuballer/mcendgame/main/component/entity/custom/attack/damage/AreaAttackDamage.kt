@@ -55,7 +55,7 @@ class AreaAttackDamage(
         val scale = getScale(damager)
 
         // debug
-        area.renderOutline(world, other, forward, sideways, scale)
+        //area.renderOutline(world, other, forward, sideways, scale)
 
         val targets = getTargets(world, other, scale).filter {
             area.intersects(it, other, forward, sideways, scale)
@@ -63,7 +63,7 @@ class AreaAttackDamage(
 
         val slamCenter = area.getCenter(other, scale, forward, sideways)
 
-        dealDamage(targets, damager, scale, forward, slamCenter)
+        dealDamage(targets, damager, scale, forward, sideways, slamCenter)
 
         if (createParticles) createParticles(world, slamCenter, forward, sideways, scale)
 
@@ -88,6 +88,7 @@ class AreaAttackDamage(
         damager: Mob,
         scale: Double,
         forward: Vec3,
+        sideways: Vec3,
         slamCenter: Vec3,
     ) {
         val damage = getDamage(damager)
@@ -96,7 +97,7 @@ class AreaAttackDamage(
         targets.forEach {
             val dealtDamage = it.dealGenericAttackDamage(damage, damager, blockable)
             if (disableBlockingShield > 0 && it is Avatar && it.isBlocking) it.setShieldsCooldown(disableBlockingShield)
-            if (dealtDamage || knockbackWhenBlocked) applyKnockback(it, damager, knockback, scale, forward, slamCenter)
+            if (dealtDamage || knockbackWhenBlocked) applyKnockback(it, damager, knockback, scale, forward, sideways, slamCenter)
         }
     }
 
@@ -109,6 +110,7 @@ class AreaAttackDamage(
         knockback: Double,
         scale: Double,
         forward: Vec3,
+        sideways: Vec3,
         slamCenter: Vec3,
     ) {
         val knockBackStrength = knockback * if (applyScale) scale else 1.0
@@ -126,6 +128,13 @@ class AreaAttackDamage(
             KnockbackType.DAMAGER_CENTER -> {
                 val knockbackDirection = target.position().subtract(damager.position()).normalize()
                 target.takeKnockbackFrom(damager, knockBackStrength, -knockbackDirection.x, -knockbackDirection.z)
+            }
+
+            KnockbackType.BEASTWEAVER_RHINO_CHARGE -> {
+                val toTarget = target.position().subtract(damager.position()).normalize()
+                val cross = forward.x * toTarget.z - forward.z * toTarget.x
+                val horizontalDirection = if (cross > 0) sideways else sideways.scale(-1.0)
+                target.takeKnockbackFrom(damager, knockBackStrength, -horizontalDirection.x, -0.6, -horizontalDirection.z)
             }
         }
     }
@@ -408,5 +417,6 @@ class AreaAttackDamage(
         FACING,
         DAMAGER_CENTER,
         AREA_CENTER,
+        BEASTWEAVER_RHINO_CHARGE,
     }
 }

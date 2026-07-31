@@ -37,6 +37,7 @@ import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.Shapes
 import kotlin.math.atan2
+import kotlin.math.cos
 
 
 object EntityExtension {
@@ -252,5 +253,20 @@ object EntityExtension {
         }
 
         return 0.0
+    }
+
+    fun Entity.isFacingTowards(
+        other: Entity,
+        maxAngleDegrees: Double = 90.0
+    ): Boolean {
+        val look = lookAngle.normalize()
+        val toTarget = other.position()
+            .subtract(position())
+            .normalize()
+
+        val dot = look.dot(toTarget)
+        val threshold = cos(Math.toRadians(maxAngleDegrees))
+
+        return dot >= threshold
     }
 }
