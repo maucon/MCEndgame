@@ -99,13 +99,13 @@ system.
 
 ### Dependencies
 
-| Dependency                                                                | Version                |
-|---------------------------------------------------------------------------|------------------------|
-| [Fabric Loader](https://fabricmc.net/use/)                                | ≥ 0.18.4               |
-| [Fabric API](https://modrinth.com/mod/fabric-api)                         | ~0.141.3+1.21.11       |
-| [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | ~1.13.11+kotlin.2.3.21 |
-| [Fantasy](https://github.com/NucleoidMC/fantasy)                          | ~0.7.0+1.21.11         |
-| [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.4.4                 |
+| Dependency                                                                | Version                 |
+|---------------------------------------------------------------------------|-------------------------|
+| [Fabric Loader](https://fabricmc.net/use/)                                | ≥ 0.18.4                |
+| [Fabric API](https://modrinth.com/mod/fabric-api)                         | ≥ 0.139.4+1.21.11       |
+| [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | ≥ 1.13.11+kotlin.2.3.21 |
+| [Fantasy](https://github.com/NucleoidMC/fantasy)                          | ~0.7.0+1.21.11          |
+| [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.4.4                  |
 
 ### Building from Source
 
