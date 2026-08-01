@@ -580,6 +580,8 @@ class BeastweaverEntity(
         private const val RHINO_CHARGE_ID = "Rhino Charge"
         private val RHINO_CHARGE_END_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.rhino_charge_end")
         private const val RHINO_CHARGE_END_ID = "Rhino Charge End"
+        private val RHINO_CHARGE_HIT_WALL_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.rhino_charge_hit_wall")
+        private const val RHINO_CHARGE_HIT_WALL_ID = "Rhino Charge Hit Wall"
         private val RHINO_CHARGE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, RHINO_CHARGE_ID)
         private val RHINO_CHARGE_ATTACK =
             Attack<BeastweaverEntity>(
@@ -760,6 +762,7 @@ class BeastweaverEntity(
             .triggerableAnim(WOLF_SUMMON_ID, WOLF_SUMMON_ANIM)
             .triggerableAnim(RHINO_CHARGE_ID, RHINO_CHARGE_ANIM)
             .triggerableAnim(RHINO_CHARGE_END_ID, RHINO_CHARGE_END_ANIM)
+            .triggerableAnim(RHINO_CHARGE_HIT_WALL_ID, RHINO_CHARGE_HIT_WALL_ANIM)
 
     private fun getAnimationController(name: String) = transformAnimationControllers.find { it.name == name }
 
@@ -980,13 +983,16 @@ class BeastweaverEntity(
     ): Boolean {
         if (!horizontalCollision) return false
 
+        endRhinoCharge()
+
         RHINO_CHARGE_HIT_WALL_ATTACK_DAMAGE.apply(serverLevel, this, null)
         RHINO_CHARGE_HIT_WALL_PARTICLE_DATA.apply(serverLevel, this)
         RHINO_CHARGE_HIT_WALL_SOUND_DATA.apply(serverLevel, this)
         RHINO_CHARGE_END_HIT_WALL_SOUND_DATA.apply(serverLevel, this)
 
-        triggerAnim(ATTACK_ANIM_CONTROLLER_ID, RHINO_CHARGE_END_ID)
-        endRhinoCharge()
+        blockedMovementTicks = 55
+        attackDuration = 55
+        triggerAnim(ATTACK_ANIM_CONTROLLER_ID, RHINO_CHARGE_HIT_WALL_ID)
 
         return true
     }
