@@ -625,7 +625,6 @@ class BeastweaverEntity(
             blockable = false,
             disableBlockingShield = 5f,
         )
-
         private val RHINO_CHARGE_STEP_SOUND_DATA = SoundData(
             SoundEvents.POLAR_BEAR_STEP,
             { Random.nextDouble(0.9, 1.0).toFloat() },
@@ -642,6 +641,28 @@ class BeastweaverEntity(
             SoundEvents.RAVAGER_STUNNED,
             { 1f },
             { Random.nextDouble(0.95, 1.0).toFloat() },
+            SoundSource.HOSTILE,
+        )
+
+        private val RHINO_CHARGE_HIT_WALL_ATTACK_AREA = AreaAttackDamage.DamageArea(8.0, 4.0, 3.0, -4.0, 0.0, 1.0)
+        private val RHINO_CHARGE_HIT_WALL_ATTACK_DAMAGE = AreaAttackDamage(
+            damageFactor = 1.0f,
+            knockbackFactor = 4.5,
+            area = RHINO_CHARGE_HIT_WALL_ATTACK_AREA,
+            blockable = false,
+        )
+        private val RHINO_CHARGE_HIT_WALL_PARTICLE_DATA = ParticleData(
+            { _, _ -> ParticleTypes.EXPLOSION },
+            { _ -> Vec3.ZERO },
+            20,
+            { _ -> Vec3(3.0, 3.0, 3.0) },
+            1.0,
+            true,
+        )
+        private val RHINO_CHARGE_HIT_WALL_SOUND_DATA = SoundData(
+            SoundEvents.GENERIC_EXPLODE.value(),
+            { Random.nextDouble(0.8, 0.9).toFloat() },
+            { Random.nextDouble(0.85, 0.9).toFloat() },
             SoundSource.HOSTILE,
         )
         private val RHINO_CHARGE_END_HIT_WALL_SOUND_DATA = SoundData(
@@ -931,9 +952,7 @@ class BeastweaverEntity(
         attributes.getInstance(Attributes.STEP_HEIGHT)?.also { it.addTransientModifier(RHINO_CHARGE_STEP_HEIGHT_MODIFIER) }
     }
 
-    fun endRhinoCharge(hitWall: Boolean) {
-        val level = level() as? ServerLevel ?: return
-
+    fun endRhinoCharge() {
         entityData.set(IS_RHINO_CHARGING, false)
         isRhinoChargeEnding = false
         rhinoChargeDuration = 0
@@ -942,12 +961,6 @@ class BeastweaverEntity(
 
         attributes.getInstance(Attributes.STEP_HEIGHT)?.also { it.removeModifier(RHINO_CHARGE_STEP_HEIGHT_MODIFIER_ID) }
         attributes.getInstance(Attributes.MOVEMENT_SPEED)?.also { it.removeModifier(RHINO_CHARGE_MOVEMENT_SPEED_MODIFIER_ID) }
-
-        if (hitWall) {
-            RHINO_CHARGE_END_HIT_WALL_SOUND_DATA.apply(level, this)
-        }
-
-        // TODO call follow-up "attack"
     }
 
     private fun startEndingRhinoCharge() {
@@ -962,6 +975,22 @@ class BeastweaverEntity(
         triggerAnim(ATTACK_ANIM_CONTROLLER_ID, RHINO_CHARGE_END_ID)
     }
 
+    private fun testRhinoChargeWallHit(
+        serverLevel: ServerLevel,
+    ): Boolean {
+        if (!horizontalCollision) return false
+
+        RHINO_CHARGE_HIT_WALL_ATTACK_DAMAGE.apply(serverLevel, this, null)
+        RHINO_CHARGE_HIT_WALL_PARTICLE_DATA.apply(serverLevel, this)
+        RHINO_CHARGE_HIT_WALL_SOUND_DATA.apply(serverLevel, this)
+        RHINO_CHARGE_END_HIT_WALL_SOUND_DATA.apply(serverLevel, this)
+
+        triggerAnim(ATTACK_ANIM_CONTROLLER_ID, RHINO_CHARGE_END_ID)
+        endRhinoCharge()
+
+        return true
+    }
+
     private fun tickRhinoCharge() {
         if (!isRhinoCharging()) return
         rhinoChargeDuration++
@@ -973,13 +1002,14 @@ class BeastweaverEntity(
 
     private fun tickRhinoChargeServer(serverLevel: ServerLevel) {
         if (isRhinoChargeEnding) rhinoChargeEndDuration++
-        else if (rhinoChargeDuration > 40 && (target == null || !isFacingTowards(target!!))) startEndingRhinoCharge()
+        else if (rhinoChargeDuration > 200 || (rhinoChargeDuration > 40 && (target == null || !isFacingTowards(target!!)))) startEndingRhinoCharge()
 
         val speedMultiplier = getRhinoChargeSpeedMultiplier(rhinoChargeDuration, rhinoChargeEndDuration)
         if (isRhinoChargeEnding && speedMultiplier <= 0.1) {
-            endRhinoCharge(false)
+            endRhinoCharge()
             return
         }
+        if (testRhinoChargeWallHit(serverLevel)) return
 
         val moreMovementSpeed = speedMultiplier - 1.0
         val movementSpeedModifier = AttributeModifier(RHINO_CHARGE_MOVEMENT_SPEED_MODIFIER_ID, moreMovementSpeed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
@@ -1056,7 +1086,7 @@ class BeastweaverEntity(
         val decelerationProgress = (ticksSinceEnd / 40.0).coerceIn(0.0, 1.0)
         val easedDeceleration = decelerationProgress * decelerationProgress * (3.0 - 2.0 * decelerationProgress)
 
-        return (0.5 + easedAcceleration * 1.5) * (1 - easedDeceleration)
+        return (0.5 + easedAcceleration * 1.25) * (1 - easedDeceleration)
     }
 
     fun isRhinoCharging() = entityData.get(IS_RHINO_CHARGING)

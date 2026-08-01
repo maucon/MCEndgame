@@ -50,4 +50,6 @@ class BeastweaverRhinoChargeControlGoal(
             )
         }
     }
+
+    override fun requiresUpdateEveryTick() = true
 }
