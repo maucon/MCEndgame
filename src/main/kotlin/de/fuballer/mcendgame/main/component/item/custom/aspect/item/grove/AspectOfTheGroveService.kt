@@ -34,5 +34,7 @@ object AspectOfTheGroveService {
 
         val stack = CrystalItems.IMITATION_CRYSTAL.defaultInstance
         event.bossEntity.spawnAtLocation(serverWorld, stack)
+
+        // TODO drop more for higher dungeon level
     }
 }

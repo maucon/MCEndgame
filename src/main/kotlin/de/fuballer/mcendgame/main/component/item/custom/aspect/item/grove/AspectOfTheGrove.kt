@@ -20,6 +20,13 @@ class AspectOfTheGrove(
     override val disabledAspects = listOf(
         AspectItems.ASPECT_OF_GHOSTS,
         AspectItems.ASPECT_OF_DUALITY,
-        // TODO go through all and decide
+        AspectItems.ASPECT_OF_TYRANNY,
+        AspectItems.ASPECT_OF_GREED,
+        AspectItems.ASPECT_OF_DOMINION,
+        AspectItems.ASPECT_OF_HORDES,
+        AspectItems.ASPECT_OF_CURIO,
+        AspectItems.ASPECT_OF_FORTUNE,
+        AspectItems.ASPECT_OF_EMINENCE,
+        AspectItems.ASPECT_OF_ANCESTORS,
     )
 }
