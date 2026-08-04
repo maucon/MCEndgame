@@ -90,12 +90,14 @@
   "item.mcendgame.permutation_crystal": "Permutation Crystal",
   "item.mcendgame.reforge_crystal": "Reforge Crystal",
   "item.mcendgame.corruption_crystal": "Corruption Crystal",
+  "item.mcendgame.imitation_crystal": "Imitation Crystal",
 
   "item.mcendgame.crystal.description.calibration": "Randomize all values of an item's attributes",
   "item.mcendgame.crystal.description.sacrifice": "Enhances an attribute by removing another",
   "item.mcendgame.crystal.description.permutation": "Shuffles the rolls of attributes",
   "item.mcendgame.crystal.description.reforge": "Reforges a unique item into a different one",
   "item.mcendgame.crystal.description.corruption": "Corrupts an item with varying results",
+  "item.mcendgame.crystal.description.imitation": "Creates a copy of an item",
 
   "item.mcendgame.totem_of_bastion": "Totem of Bastion",
   "item.mcendgame.totem_of_force": "Totem of Force",
@@ -187,6 +189,7 @@
   "container.mcendgame.crystal_forge.forge_error.no_enhanceable_attribute": "No attribute can be enhanced.",
   "container.mcendgame.crystal_forge.forge_error.not_enough_rolls_to_shuffle": "Not enough rolls to shuffle.",
   "container.mcendgame.crystal_forge.forge_error.all_rolls_equal": "All rolls are equal.",
+  "container.mcendgame.crystal_forge.forge_error.secondary_output_slot_not_empty": "Secondary output slot is not empty.",
 
   "mcendgame.corrupted": "Corrupted",
 

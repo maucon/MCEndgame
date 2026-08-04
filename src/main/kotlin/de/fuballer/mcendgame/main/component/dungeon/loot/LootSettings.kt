@@ -43,6 +43,7 @@ object LootSettings {
         LevelRestrictedRandomOption(5, tier = 0, requiredLevel = 4, CrystalItems.REFORGE_CRYSTAL),
         LevelRestrictedRandomOption(3, tier = 0, requiredLevel = 6, CrystalItems.CORRUPTION_CRYSTAL),
         LevelRestrictedRandomOption(2, tier = 0, requiredLevel = 8, CrystalItems.SACRIFICIAL_CRYSTAL),
+        //LevelRestrictedRandomOption(1, tier = 0, requiredLevel = 10, CrystalItems.IMITATION_CRYSTAL), drops from beastweaver boss
     )
 
     // unaffected by increased loot

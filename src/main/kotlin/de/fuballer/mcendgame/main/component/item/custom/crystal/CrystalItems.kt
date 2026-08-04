@@ -11,4 +11,5 @@ object CrystalItems {
     val PERMUTATION_CRYSTAL = RegistryUtil.registerCrystalItem(::PermutationCrystalItem, "permutation_crystal")
     val REFORGE_CRYSTAL = RegistryUtil.registerCrystalItem(::ReforgeCrystalItem, "reforge_crystal")
     val CORRUPTION_CRYSTAL = RegistryUtil.registerCrystalItem(::CorruptionCrystalItem, "corruption_crystal")
+    val IMITATION_CRYSTAL = RegistryUtil.registerCrystalItem(::ImitationCrystalItem, "imitation_crystal")
 }

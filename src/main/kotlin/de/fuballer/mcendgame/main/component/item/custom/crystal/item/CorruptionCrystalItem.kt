@@ -14,5 +14,5 @@ class CorruptionCrystalItem(
 
     override val description: MutableComponent = Component.translatable(DESCRIPTION_BASE_KEY + "corruption")
 
-    override fun forge(stack: ItemStack) = CorruptionService.corrupt(stack)
+    override fun forge(stack: ItemStack) = CrystalForgeOutput(CorruptionService.corrupt(stack))
 }

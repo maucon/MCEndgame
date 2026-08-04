@@ -81,6 +81,7 @@ class CustomModelProvider(
         generator.generateFlatItem(CrystalItems.PERMUTATION_CRYSTAL, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(CrystalItems.REFORGE_CRYSTAL, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(CrystalItems.CORRUPTION_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.IMITATION_CRYSTAL, ModelTemplates.FLAT_ITEM)
 
         generator.generateFlatItem(TotemItems.TOTEM_OF_BASTION, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(TotemItems.TOTEM_OF_FORCE, ModelTemplates.FLAT_ITEM)

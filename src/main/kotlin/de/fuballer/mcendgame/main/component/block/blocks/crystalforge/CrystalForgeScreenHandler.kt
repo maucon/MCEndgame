@@ -18,10 +18,18 @@ class CrystalForgeScreenHandler(
     private val playerInventory: Inventory,
 ) : AbstractContainerMenu(CustomScreenHandlerTypes.CRYSTAL_FORGE, syncId) {
     private val inputInventory = SimpleContainer(2)
+    private val outputInventory = SimpleContainer(1)
 
     init {
         addSlot(ForgeableEquipmentSlot(inputInventory, 0, 44, 20))
         addSlot(CrystalSlot(inputInventory, 1, 116, 20))
+
+        //secondary output
+        addSlot(object : Slot(outputInventory, 0, 80, 20) {
+            override fun mayPlace(itemStack: ItemStack) = false
+
+            override fun isHighlightable() = isSecondaryOutputSlotFilled()
+        })
 
         // player inventory
         for (row in 0..2) {
@@ -40,7 +48,7 @@ class CrystalForgeScreenHandler(
         val slot = slots[slotIndex]
         if (!slot.hasItem()) return ItemStack.EMPTY
 
-        if (slotIndex >= inputInventory.containerSize) return quickMoveToInputInventory(slot.item)
+        if (slotIndex >= inputInventory.containerSize + outputInventory.containerSize) return quickMoveToInputInventory(slot.item)
         return quickMoveToPlayerInventory(slot.item)
     }
 
@@ -50,7 +58,7 @@ class CrystalForgeScreenHandler(
 
     private fun quickMoveToPlayerInventory(
         itemStack: ItemStack,
-    ) = if (moveItemStackTo(itemStack, inputInventory.containerSize, slots.size, true)) itemStack else ItemStack.EMPTY
+    ) = if (moveItemStackTo(itemStack, inputInventory.containerSize + outputInventory.containerSize, slots.size, true)) itemStack else ItemStack.EMPTY
 
     override fun stillValid(player: Player) = true
 
@@ -64,15 +72,18 @@ class CrystalForgeScreenHandler(
         val crystalStack = inputInventory.getItem(1)
         val crystalItem = crystalStack.item as? CrystalItem ?: return
 
-        if (crystalItem.canForge(toForgeStack) != null) return
+        if (crystalItem.canForge(toForgeStack, isSecondaryOutputSlotFilled()) != null) return
 
         val event = CrystalForgeUsedEvent(playerInventory.player, crystalStack.item)
         EventGateway.publish(event)
 
-        val forgedStack = crystalItem.forge(toForgeStack)
+        val forgeOutput = crystalItem.forge(toForgeStack)
         crystalStack.shrink(1)
-        inputInventory.setItem(0, forgedStack)
+        inputInventory.setItem(0, forgeOutput.main)
+        if (forgeOutput.secondary != null) outputInventory.setItem(0, forgeOutput.secondary)
 
         broadcastChanges()
     }
+
+    private fun isSecondaryOutputSlotFilled() = !outputInventory.getItem(0).isEmpty
 }
