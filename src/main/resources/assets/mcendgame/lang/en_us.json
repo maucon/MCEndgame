@@ -63,6 +63,7 @@
   "item.mcendgame.aspect_of_savagery": "Aspect of Savagery",
   "item.mcendgame.aspect_of_eminence": "Aspect of Eminence",
   "item.mcendgame.aspect_of_ancestors": "Aspect of Ancestors",
+  "item.mcendgame.aspect_of_the_grove": "Aspect of the Grove",
 
   "item.mcendgame.aspect.limit": "Limit: %s",
   "item.mcendgame.aspect.description.tyranny": "Dungeon contains %s additional Elites",
@@ -84,6 +85,8 @@
   "item.mcendgame.aspect.description.savagery_1": "Enemies drop %s%% increased Loot",
   "item.mcendgame.aspect.description.eminence": "Normal Equipment has a %s%% chance for an additional Attribute",
   "item.mcendgame.aspect.description.ancestors": "Dungeon contains an additional Totem Encounter",
+  "item.mcendgame.aspect.description.grove_0": "Dungeon only contains the Beastweaver",
+  "item.mcendgame.aspect.description.grove_1": "Dungeon is at least Level %s",
 
   "item.mcendgame.calibration_crystal": "Calibration Crystal",
   "item.mcendgame.sacrifice_crystal": "Sacrifice Crystal",

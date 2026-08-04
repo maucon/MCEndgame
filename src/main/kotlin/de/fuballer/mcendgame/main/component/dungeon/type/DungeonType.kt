@@ -6,10 +6,7 @@ import de.fuballer.mcendgame.main.component.dungeon.generation.layout.DungeonLay
 import de.fuballer.mcendgame.main.component.dungeon.type.data.RolledDungeonType
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.types.*
-import de.fuballer.mcendgame.main.component.entity.types.boss.ArachneBossStats
-import de.fuballer.mcendgame.main.component.entity.types.boss.BeakburnBossStats
-import de.fuballer.mcendgame.main.component.entity.types.boss.BonecrusherBossStats
-import de.fuballer.mcendgame.main.component.entity.types.boss.ElfDuelistBossStats
+import de.fuballer.mcendgame.main.component.entity.types.boss.*
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import net.minecraft.resources.ResourceKey
@@ -100,6 +97,18 @@ enum class DungeonType(
         enemyCount = 125,
         bossCount = 3,
         biome = CustomBiomes.DESERT_DUNGEON,
+    ),
+    BEASTWEAVER_GROVE(
+        listOf(
+            RandomOption(1, DungeonLayoutType.BEASTWEAVER_GROVE),
+        ),
+        listOf(),
+        listOf(
+            RandomOption(1, BeastweaverBossStats),
+        ),
+        enemyCount = 0,
+        bossCount = 1,
+        biome = Biomes.DARK_FOREST,
     ),
     TRAINING(
         listOf(

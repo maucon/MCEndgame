@@ -71,7 +71,6 @@ class DungeonWorldService(
         dungeonExitPos: GlobalPos,
     ) = create(1, opener, mapOf(), DungeonType.TRAINING, dungeonExitPos, training = true)
 
-
     private fun deleteEmptyWorlds() {
         log.info("Checking for empty worlds")
 
