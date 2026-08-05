@@ -6,28 +6,27 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 
-data class SoundData(
-    private val sound: SoundEvent,
-    private val volume: () -> Float,
-    private val pitch: () -> Float,
-    private val category: SoundSource,
+open class SoundData(
+    protected val sound: SoundEvent,
+    protected val volume: () -> Float,
+    protected val pitch: () -> Float,
+    protected val category: SoundSource,
 ) {
     constructor(
         sound: SoundEvent,
         volume: Float,
         pitch: Float,
         category: SoundSource,
-        delay: Int = 0,
     ) : this(sound, { volume }, { pitch }, category)
 
-    fun apply(
+    open fun apply(
         level: ServerLevel,
         entity: Entity,
     ) {
         level.playSound(entity, entity.blockPosition(), sound, category, volume(), pitch())
     }
 
-    fun applyClient(
+    open fun applyClient(
         level: Level,
         entity: Entity,
         distanceDelay: Boolean,

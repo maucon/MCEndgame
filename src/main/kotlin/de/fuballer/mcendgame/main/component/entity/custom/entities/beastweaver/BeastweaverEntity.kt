@@ -166,38 +166,42 @@ class BeastweaverEntity(
 
         private val BEAR_SWIPE_SOUND_DATA = listOf(
             DelayedSoundData(
-                SoundData(
+                RangeDefinedSoundData(
                     SoundEvents.RESPAWN_ANCHOR_SET_SPAWN,
                     { Random.nextDouble(0.5, 0.6).toFloat() },
                     { Random.nextDouble(1.1, 1.3).toFloat() },
                     SoundSource.HOSTILE,
+                    range = 24.0,
                 ),
                 2,
             ),
             DelayedSoundData(
-                SoundData(
+                RangeDefinedSoundData(
                     SoundEvents.POLAR_BEAR_WARNING,
                     { Random.nextDouble(0.5, 0.6).toFloat() },
                     { Random.nextDouble(0.9, 1.1).toFloat() },
                     SoundSource.HOSTILE,
+                    range = 24.0,
                 ),
                 18,
             ),
             DelayedSoundData(
-                SoundData(
+                RangeDefinedSoundData(
                     SoundEvents.PLAYER_ATTACK_SWEEP,
                     { Random.nextDouble(0.8, 0.9).toFloat() },
                     { Random.nextDouble(0.7, 0.85).toFloat() },
                     SoundSource.HOSTILE,
+                    range = 24.0,
                 ),
                 18,
             ),
             DelayedSoundData(
-                SoundData(
+                RangeDefinedSoundData(
                     SoundEvents.PLAYER_ATTACK_STRONG,
                     { Random.nextDouble(0.8, 0.9).toFloat() },
                     { Random.nextDouble(0.7, 0.85).toFloat() },
                     SoundSource.HOSTILE,
+                    range = 24.0,
                 ),
                 20,
             ),
@@ -309,47 +313,52 @@ class BeastweaverEntity(
                     *TAIL_SWEEP_DAMAGE_DATA.toTypedArray(),
 
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             SoundEvents.AMETHYST_BLOCK_CHIME,
                             { Random.nextDouble(1.8, 2.0).toFloat() },
                             { Random.nextDouble(0.9, 1.0).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 32.0,
                         ),
                         8,
                     ),
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             SoundEvents.BEACON_POWER_SELECT,
                             { Random.nextDouble(0.5, 0.6).toFloat() },
                             { Random.nextDouble(0.9, 1.0).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 32.0,
                         ),
                         8,
                     ),
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             SoundEvents.PLAYER_ATTACK_SWEEP,
                             { Random.nextDouble(0.9, 1.1).toFloat() },
                             { Random.nextDouble(0.6, 0.7).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 32.0,
                         ),
                         19,
                     ),
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             SoundEvents.ENDER_DRAGON_FLAP,
                             { Random.nextDouble(0.7, 0.8).toFloat() },
                             { Random.nextDouble(0.9, 1.0).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 32.0,
                         ),
                         19,
                     ),
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             SoundEvents.EVOKER_CAST_SPELL,
                             { Random.nextDouble(0.7, 0.8).toFloat() },
                             { Random.nextDouble(1.0, 1.1).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 32.0,
                         ),
                         19,
                     ),
@@ -403,29 +412,32 @@ class BeastweaverEntity(
                     ),
 
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             SoundEvents.AMETHYST_BLOCK_CHIME,
                             { Random.nextDouble(1.8, 2.0).toFloat() },
                             { Random.nextDouble(0.9, 1.0).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 32.0,
                         ),
                         3,
                     ),
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             SoundEvents.ENDER_DRAGON_FLAP,
                             { Random.nextDouble(1.2, 1.3).toFloat() },
                             { Random.nextDouble(0.9, 1.0).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 48.0,
                         ),
                         20,
                     ),
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             SoundEvents.BREEZE_IDLE_GROUND,
                             { Random.nextDouble(1.2, 1.3).toFloat() },
                             { Random.nextDouble(0.9, 1.0).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 32.0,
                         ),
                         13,
                     ),
@@ -454,20 +466,22 @@ class BeastweaverEntity(
                     },
 
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             SoundEvents.AMETHYST_BLOCK_CHIME,
                             { Random.nextDouble(1.8, 2.0).toFloat() },
                             { Random.nextDouble(0.6, 0.65).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 48.0,
                         ),
                         3,
                     ),
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             SoundEvents.BREEZE_LAND,
                             { 1f },
                             { Random.nextDouble(0.8, 0.85).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 48.0,
                         ),
                         20,
                     ),
@@ -484,11 +498,12 @@ class BeastweaverEntity(
                     dist = { Vec3(3.0, 1.5, 3.0) },
                     speed = 1.0,
                 ),
-                mainExplosionSound = SoundData(
+                mainExplosionSound = RangeDefinedSoundData(
                     SoundEvents.GENERIC_EXPLODE.value(),
                     { Random.nextDouble(1.2, 1.3).toFloat() },
                     { Random.nextDouble(0.9, 1.0).toFloat() },
                     SoundSource.HOSTILE,
+                    range = 64.0,
                 ),
                 debrisExplosionDamage = ELEPHANT_STOMP_DEBRIS_ATTACK_DAMAGE,
                 debrisExplosionParticles = ParticleData(
@@ -498,11 +513,12 @@ class BeastweaverEntity(
                     dist = { Vec3(2.0, 2.0, 2.0) },
                     speed = 1.0,
                 ),
-                debrisExplosionSound = SoundData(
+                debrisExplosionSound = RangeDefinedSoundData(
                     SoundEvents.GENERIC_EXPLODE.value(),
                     { Random.nextDouble(0.8, 0.9).toFloat() },
                     { Random.nextDouble(1.0, 1.1).toFloat() },
                     SoundSource.HOSTILE,
+                    range = 16.0,
                 ),
                 debrisCreateRadiusRange = Pair(2.0, 6.0),
                 debrisCreateProbabilityFromDistanceToOrigin = { 0.3 },
@@ -564,11 +580,12 @@ class BeastweaverEntity(
                     ),
 
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             CustomSoundEvents.WOLF_HOWL,
                             { Random.nextDouble(1.2, 1.3).toFloat() },
                             { Random.nextDouble(0.9, 1.0).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 64.0,
                         ),
                         25,
                     ),
@@ -597,11 +614,12 @@ class BeastweaverEntity(
                     },
 
                     DelayedSoundData(
-                        SoundData(
+                        RangeDefinedSoundData(
                             SoundEvents.RAVAGER_AMBIENT,
                             { Random.nextDouble(0.8, 0.85).toFloat() },
                             { Random.nextDouble(0.95, 1.05).toFloat() },
                             SoundSource.HOSTILE,
+                            range = 64.0,
                         ),
                         0,
                     ),
@@ -627,23 +645,26 @@ class BeastweaverEntity(
             blockable = false,
             disableBlockingShield = 5f,
         )
-        private val RHINO_CHARGE_STEP_SOUND_DATA = SoundData(
+        private val RHINO_CHARGE_STEP_SOUND_DATA = RangeDefinedSoundData(
             SoundEvents.POLAR_BEAR_STEP,
             { Random.nextDouble(0.9, 1.0).toFloat() },
             { Random.nextDouble(1.0, 1.05).toFloat() },
             SoundSource.HOSTILE,
+            range = 48.0,
         )
-        private val RHINO_CHARGE_STEP_EXPLODE_SOUND_DATA = SoundData(
+        private val RHINO_CHARGE_STEP_EXPLODE_SOUND_DATA = RangeDefinedSoundData(
             SoundEvents.GENERIC_EXPLODE.value(),
             { Random.nextDouble(0.15, 0.16).toFloat() },
             { Random.nextDouble(0.95, 1.05).toFloat() },
             SoundSource.HOSTILE,
+            range = 48.0,
         )
-        private val RHINO_CHARGE_END_SOUND_DATA = SoundData(
+        private val RHINO_CHARGE_END_SOUND_DATA = RangeDefinedSoundData(
             SoundEvents.RAVAGER_STUNNED,
             { 1f },
             { Random.nextDouble(0.95, 1.0).toFloat() },
             SoundSource.HOSTILE,
+            range = 32.0,
         )
 
         private val RHINO_CHARGE_HIT_WALL_ATTACK_AREA = AreaAttackDamage.DamageArea(8.0, 4.0, 3.0, -4.0, 0.0, 1.0)
@@ -661,17 +682,19 @@ class BeastweaverEntity(
             1.0,
             true,
         )
-        private val RHINO_CHARGE_HIT_WALL_SOUND_DATA = SoundData(
+        private val RHINO_CHARGE_HIT_WALL_SOUND_DATA = RangeDefinedSoundData(
             SoundEvents.GENERIC_EXPLODE.value(),
             { Random.nextDouble(0.8, 0.9).toFloat() },
             { Random.nextDouble(0.85, 0.9).toFloat() },
             SoundSource.HOSTILE,
+            range = 48.0,
         )
-        private val RHINO_CHARGE_END_HIT_WALL_SOUND_DATA = SoundData(
+        private val RHINO_CHARGE_END_HIT_WALL_SOUND_DATA = RangeDefinedSoundData(
             SoundEvents.RAVAGER_DEATH,
             { 1f },
             { Random.nextDouble(0.95, 1.0).toFloat() },
             SoundSource.HOSTILE,
+            range = 48.0,
         )
 
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
