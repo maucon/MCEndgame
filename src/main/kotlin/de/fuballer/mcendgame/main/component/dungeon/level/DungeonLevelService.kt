@@ -45,6 +45,7 @@ class DungeonLevelService {
 
         val dungeonPlayerIncreaseProgressCommand = DungeonPlayerIncreaseProgressCommand(aspects)
         val cmd = CommandGateway.apply(dungeonPlayerIncreaseProgressCommand)
+        if (cmd.progressBlocked) return
 
         event.players.forEach { player ->
             val playerDungeonLevel = player.getDungeonLevel()

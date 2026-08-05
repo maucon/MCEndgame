@@ -89,7 +89,7 @@ object CustomEntities {
         EntityType.Builder.of(::BeastweaverEntity, MobCategory.MONSTER)
             .sized(0.8f, 2.05f)
             .eyeHeight(1.7f)
-            .clientTrackingRange(8)
+            .clientTrackingRange(48)
             .notInPeaceful()
     )
     val SCARRED_ONE = RegistryUtil.registerEntity(

@@ -28,5 +28,6 @@ class AspectOfTheGrove(
         AspectItems.ASPECT_OF_FORTUNE,
         AspectItems.ASPECT_OF_EMINENCE,
         AspectItems.ASPECT_OF_ANCESTORS,
+        AspectItems.ASPECT_OF_ZEAL,
     )
 }

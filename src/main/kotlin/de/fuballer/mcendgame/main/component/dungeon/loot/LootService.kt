@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.component.dungeon.loot
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItemInterface
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossCrystalDropCommand
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemyDeathEvent
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDropCommand
@@ -12,6 +13,7 @@ import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonBoss
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isElite
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isLootGoblin
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonAspects
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.maucon.mauconframework.command.CommandGateway
@@ -62,20 +64,22 @@ class LootService {
 
     @EventSubscriber(sync = true)
     fun dropBossCrystals(event: DungeonBossDeathEvent) {
-        val serverWorld = event.world as? ServerLevel ?: return
+        val serverLevel = event.world as? ServerLevel ?: return
 
-        val level = serverWorld.getDungeonLevel()
-        val baseCrystalCount = LootSettings.getBossBaseCrystalCount(level)
+        val dungeonLevel = serverLevel.getDungeonLevel()
+        val baseCrystalCount = LootSettings.getBossBaseCrystalCount(dungeonLevel)
 
         val bossEntity = event.bossEntity
         val lootMultiplier = bossEntity.getTotalCustomAttributeLootMultiplier()
         val empoweredCrystalCount = baseCrystalCount * lootMultiplier
         val finalCrystalCount = empoweredCrystalCount.toInt() + if (Random.nextDouble() < empoweredCrystalCount % 1) 1 else 0
 
-        val crystalItems = RandomUtil.pickLevelRestrictedWithRepeats(LootSettings.CRYSTALS, 1, level, finalCrystalCount)
-        val itemStacks = crystalItems.map { it.defaultInstance }
+        val crystalItems = RandomUtil.pickLevelRestrictedWithRepeats(LootSettings.CRYSTALS, 1, dungeonLevel, finalCrystalCount).toMutableList()
+        val command = DungeonBossCrystalDropCommand(dungeonLevel, serverLevel.getDungeonAspects(), crystalItems, lootMultiplier)
+        val cmd = CommandGateway.apply(command)
+        val itemStacks = cmd.crystalItems.map { it.defaultInstance }
 
-        RuntimeConfig.SERVER.execute { itemStacks.forEach { bossEntity.spawnAtLocation(serverWorld, it) } }
+        RuntimeConfig.SERVER.execute { itemStacks.forEach { bossEntity.spawnAtLocation(serverLevel, it) } }
     }
 
     @EventSubscriber(sync = true)

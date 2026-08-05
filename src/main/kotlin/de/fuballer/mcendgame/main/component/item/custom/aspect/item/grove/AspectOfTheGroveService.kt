@@ -3,15 +3,14 @@ package de.fuballer.mcendgame.main.component.item.custom.aspect.item.grove
 import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonFinalBossDeathEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossCrystalDropCommand
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateCommand
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonPlayerIncreaseProgressCommand
 import de.fuballer.mcendgame.main.messaging.dungeon.SelectDungeonTypeCommand
-import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonAspects
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
-import de.maucon.mauconframework.event.EventSubscriber
-import net.minecraft.server.level.ServerLevel
 import kotlin.math.max
+import kotlin.random.Random
 
 @Injectable
 object AspectOfTheGroveService {
@@ -27,14 +26,22 @@ object AspectOfTheGroveService {
         cmd.dungeonLevel = max(cmd.dungeonLevel, AspectOfTheGrove.MIN_DUNGEON_LEVEL)
     }
 
-    @EventSubscriber(sync = true)
-    fun onDungeonBossDeath(event: DungeonFinalBossDeathEvent) {
-        val serverWorld = event.world as? ServerLevel ?: return
-        if (!serverWorld.getDungeonAspects().contains(AspectItems.ASPECT_OF_THE_GROVE)) return
+    @CommandHandler
+    fun onDungeonBossCrystalDrop(cmd: DungeonBossCrystalDropCommand) {
+        if (!cmd.aspects.contains(AspectItems.ASPECT_OF_THE_GROVE)) return
 
-        val stack = CrystalItems.IMITATION_CRYSTAL.defaultInstance
-        event.bossEntity.spawnAtLocation(serverWorld, stack)
+        val crystalItems = cmd.crystalItems
+        crystalItems.clear()
 
-        // TODO drop more for higher dungeon level
+        val baseProbability = cmd.dungeonLevel / 10.0
+        val finalProbability = baseProbability * cmd.lootMultiplier
+        val count = finalProbability.toInt() + if (Random.nextDouble() < finalProbability % 1) 1 else 0
+        repeat(count) { crystalItems.add(CrystalItems.IMITATION_CRYSTAL) }
+    }
+
+    @CommandHandler
+    fun onIncreaseProgress(cmd: DungeonPlayerIncreaseProgressCommand) {
+        if (!cmd.aspects.contains(AspectItems.ASPECT_OF_THE_GROVE)) return
+        cmd.progressBlocked = true
     }
 }
