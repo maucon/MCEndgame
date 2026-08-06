@@ -69,6 +69,8 @@ dependencies {
     include "org.slf4j:slf4j-api:2.0.17"
     include "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1"
     include "org.javassist:javassist:3.30.2-GA"
+
+    testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
 }
 
 processResources {
@@ -79,13 +81,26 @@ processResources {
     }
 }
 
-
 kotlin {
     jvmToolchain(25)
 }
 
 java {
     withSourcesJar()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		modId = "mod-test-${project.name}"
+		enableGameTests = true // Default is true
+		enableClientGameTests = true // Default is true
+		eula = true // By setting this to true, you agree to the Minecraft EULA.
+	}
 }
 
 jar {
