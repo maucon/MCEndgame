@@ -489,6 +489,16 @@ class BeastweaverEntity(
                         ),
                         20,
                     ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.POLAR_BEAR_STEP,
+                            { 1.5f },
+                            { Random.nextDouble(0.8, 0.85).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 64.0,
+                        ),
+                        26,
+                    ),
                 ),
                 delay = 26,
                 mainExplosionDamage = ELEPHANT_STOMP_MAIN_EXPLOSION_ATTACK_DAMAGE,

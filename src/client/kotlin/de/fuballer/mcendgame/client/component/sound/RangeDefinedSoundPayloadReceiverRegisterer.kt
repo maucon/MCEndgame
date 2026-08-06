@@ -11,7 +11,7 @@ class RangeDefinedSoundPayloadReceiverRegisterer {
     @Initializer
     fun register() {
         ClientPlayNetworking.registerGlobalReceiver(RangeDefinedSoundPayload.ID) { payload, _ ->
-            Sounds.BRIDGE?.playRangeDefinedSound(
+            Sounds.playRangeDefinedSound(
                 payload.sound.value(),
                 payload.category,
                 payload.volume,

@@ -58,7 +58,7 @@ class RangeDefinedSoundData(
         entity: Entity,
         distanceDelay: Boolean,
     ) {
-        Sounds.BRIDGE?.playRangeDefinedSound(
+        Sounds.playRangeDefinedSound(
             sound,
             category,
             volume(),

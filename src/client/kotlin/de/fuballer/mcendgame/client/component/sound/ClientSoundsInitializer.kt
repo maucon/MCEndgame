@@ -8,6 +8,6 @@ import de.maucon.mauconframework.initializer.Initializer
 class ClientSoundsInitializer {
     @Initializer
     fun init() {
-        Sounds.BRIDGE = ClientSoundBridge()
+        Sounds.setPlayer(ClientSoundPlayer())
     }
 }
