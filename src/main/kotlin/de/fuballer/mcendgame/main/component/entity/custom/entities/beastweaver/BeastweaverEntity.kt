@@ -482,7 +482,7 @@ class BeastweaverEntity(
                     DelayedSoundData(
                         RangeDefinedSoundData(
                             SoundEvents.BREEZE_LAND,
-                            { 1f },
+                            { 1.5f },
                             { Random.nextDouble(0.8, 0.85).toFloat() },
                             SoundSource.HOSTILE,
                             range = 48.0,
@@ -710,7 +710,36 @@ class BeastweaverEntity(
             SoundSource.HOSTILE,
             range = 48.0,
         )
-        private val RHINO_CHARGE_ARROW_DEFLECT_ANGLE = 90.0
+        private const val RHINO_CHARGE_ARROW_DEFLECT_ANGLE = 90.0
+
+        private val DEATH_PARTICLE_DATA_SMOKE = ParticleData(
+            particle = { _, _ -> ParticleTypes.LARGE_SMOKE },
+            offset = { _ -> Vec3(0.0, 1.0, 0.0) },
+            count = 30,
+            dist = { Vec3.ZERO },
+            speed = 0.5,
+        )
+        private val DEATH_PARTICLE_DATA__WHITE_SMOKE = ParticleData(
+            particle = { _, _ -> ParticleTypes.WHITE_SMOKE },
+            offset = { _ -> Vec3(0.0, 1.0, 0.0) },
+            count = 100,
+            dist = { Vec3.ZERO },
+            speed = 0.5,
+        )
+        private val DEATH_PARTICLE_DATA_SPORES = ParticleData(
+            particle = { _, _ -> ParticleTypes.SPORE_BLOSSOM_AIR },
+            offset = { _ -> Vec3(0.0, 1.0, 0.0) },
+            count = 100,
+            dist = { Vec3(0.5, 0.5, 0.5) },
+            speed = 1.0,
+        )
+        private val DEATH_SOUND_DATA = RangeDefinedSoundData(
+            SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,
+            { 1f },
+            { 1F },
+            SoundSource.PLAYERS,
+            range = 64.0,
+        )
 
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
             RandomOption(1, BEAR_SWIPE_RIGHT_ATTACK),
@@ -1156,5 +1185,15 @@ class BeastweaverEntity(
         if (angle > RHINO_CHARGE_ARROW_DEFLECT_ANGLE) return ProjectileDeflection.NONE
 
         return ProjectileDeflection.AIM_DEFLECT
+    }
+
+    override fun die(source: DamageSource) {
+        super.die(source)
+
+        val level = level() as? ServerLevel ?: return
+        DEATH_PARTICLE_DATA_SMOKE.apply(level, this)
+        DEATH_PARTICLE_DATA__WHITE_SMOKE.apply(level, this)
+        DEATH_PARTICLE_DATA_SPORES.apply(level, this)
+        DEATH_SOUND_DATA.apply(level, this)
     }
 }
