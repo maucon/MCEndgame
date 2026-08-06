@@ -36,6 +36,7 @@ import de.fuballer.mcendgame.main.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isFacingTowards
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.rotateToEntity
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
+import de.fuballer.mcendgame.main.util.extension.Vec3Extension.getYaw
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCompanion
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setCompanion
@@ -63,10 +64,13 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.ProjectileDeflection
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.random.Random
@@ -696,6 +700,7 @@ class BeastweaverEntity(
             SoundSource.HOSTILE,
             range = 48.0,
         )
+        private val RHINO_CHARGE_ARROW_DEFLECT_ANGLE = 90.0
 
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
             RandomOption(1, BEAR_SWIPE_RIGHT_ATTACK),
@@ -1128,4 +1133,18 @@ class BeastweaverEntity(
     }
 
     fun getRhinoChargeMaxYawChange() = if (!isRhinoCharging()) 360f else if (!isRhinoChargeEnding) 4f else 0f
+
+    override fun deflection(
+        projectile: Projectile,
+    ): ProjectileDeflection {
+        if (!isRhinoCharging()) return ProjectileDeflection.NONE
+
+        val distanceVector = projectile.position().subtract(position())
+        val yawToProj = distanceVector.getYaw()
+        val yawDifference = abs(yBodyRot - yawToProj) % 360
+        val angle = min(yawDifference, 360 - yawDifference)
+        if (angle > RHINO_CHARGE_ARROW_DEFLECT_ANGLE) return ProjectileDeflection.NONE
+
+        return ProjectileDeflection.AIM_DEFLECT
+    }
 }
