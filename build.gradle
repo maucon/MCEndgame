@@ -73,6 +73,11 @@ dependencies {
     include "org.javassist:javassist:3.30.2-GA"
 
     testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
+
+    productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    productionRuntimeMods "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
+    productionRuntimeMods "xyz.nucleoid:fantasy:${fantasy_version}+${minecraft_version}"
+    productionRuntimeMods "com.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
 }
 
 processResources {
