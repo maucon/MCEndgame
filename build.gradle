@@ -112,7 +112,6 @@ java {
 }
 
 jar {
-    // Avoid LICENSE filename collisions when combined with other jars
     from("LICENSE") {
         rename { "${it}_${base.archivesName.get()}" }
     }
@@ -122,10 +121,26 @@ test {
     useJUnitPlatform()
 }
 
+tasks.named("runGameTest") {
+    // create mcendgame.json; disable analytics
+    doFirst {
+        def configFile = file("build/run/gameTest/config/mcendgame.json")
+        configFile.parentFile.mkdirs()
+        configFile.text = '{"sendAnalytics": false}'
+    }
+}
+
 // Runs client gametests on a production-style client (used in CI)
 tasks.register("runProductionClientGameTest", ClientProductionRunTask) {
     jvmArgs.add("-Dfabric.client.gametest")
     jvmArgs.add("-Dfabric.client.gametest.disableNetworkSynchronizer=true")
     useXVFB = true
     dependsOn(tasks.named("gametestJar"))
+
+    // create mcendgame.json; disable analytics
+    doFirst {
+        def configFile = file("build/run/gameTest/config/mcendgame.json")
+        configFile.parentFile.mkdirs()
+        configFile.text = '{"sendAnalytics": false}'
+    }
 }
