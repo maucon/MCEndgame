@@ -121,13 +121,18 @@ test {
     useJUnitPlatform()
 }
 
+def disableAnalyticsConfig(String runDir) {
+    def configFile = file("${runDir}/config/mcendgame.json")
+    configFile.parentFile.mkdirs()
+    configFile.text = '{"sendAnalytics": false}'
+}
+
 tasks.named("runGameTest") {
-    // create mcendgame.json; disable analytics
-    doFirst {
-        def configFile = file("build/run/gameTest/config/mcendgame.json")
-        configFile.parentFile.mkdirs()
-        configFile.text = '{"sendAnalytics": false}'
-    }
+    doFirst { disableAnalyticsConfig("build/run/gameTest") }
+}
+
+tasks.named("runClientGameTest") {
+    doFirst { disableAnalyticsConfig("build/run/clientGameTest") }
 }
 
 // Runs client gametests on a production-style client (used in CI)
@@ -137,10 +142,5 @@ tasks.register("runProductionClientGameTest", ClientProductionRunTask) {
     useXVFB = true
     dependsOn(tasks.named("gametestJar"))
 
-    // create mcendgame.json; disable analytics
-    doFirst {
-        def configFile = file("build/run/gameTest/config/mcendgame.json")
-        configFile.parentFile.mkdirs()
-        configFile.text = '{"sendAnalytics": false}'
-    }
+    doFirst { disableAnalyticsConfig("run") }
 }
