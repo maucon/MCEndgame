@@ -1,3 +1,5 @@
+import net.fabricmc.loom.task.prod.ClientProductionRunTask
+
 plugins {
     id 'net.fabricmc.fabric-loom' version "${loom_version}"
     id "org.jetbrains.kotlin.jvm" version "${kotlin_version}"
@@ -94,13 +96,21 @@ test {
 }
 
 fabricApi {
-	configureTests {
-		createSourceSet = true
-		modId = "mod-test-${project.name}"
-		enableGameTests = true // Default is true
-		enableClientGameTests = true // Default is true
-		eula = true // By setting this to true, you agree to the Minecraft EULA.
-	}
+    configureTests {
+        createSourceSet = true
+        modId = "mod-test-${project.name}"
+        enableGameTests = true // Default is true
+        enableClientGameTests = true // Default is true
+        eula = true // By setting this to true, you agree to the Minecraft EULA.
+    }
+}
+
+tasks.register("runProductionClientGameTest", ClientProductionRunTask) {
+    jvmArgs.add("-Dfabric.client.gametest")
+    // Whether to use XVFB to run the game, using a virtual framebuffer. This is useful for headless CI environments.
+    // Defaults to true only on Linux and when the "CI" environment variable is set.
+    // XVFB must be installed, on Debian-based systems you can install it with: `apt install xvfb`
+    useXVFB = true
 }
 
 jar {
