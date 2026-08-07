@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.world.entity.Entity
 import org.joml.Vector3f
 import kotlin.math.PI
+import kotlin.math.min
 
 class BeastweaverRenderer<R>(
     context: EntityRendererProvider.Context
@@ -313,11 +314,32 @@ class BeastweaverRenderer<R>(
                 active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) == "attack.rhino_charge_end" },
             )
         )
+
+        withRenderLayer(
+            BeastweaverEyesGlowGeoLayer(
+                this,
+                listOf("eyesGlow"),
+                alpha = { renderState ->
+                    val currentAnimDuration = renderState.getGeckolibData(RHINO_CHARGE_DURATION) ?: renderState.getGeckolibData(CURRENT_ATTACK_ANIM_TIME) ?: 0F
+                    val inProgress = (currentAnimDuration / 0.5F).clampedLerp(0F, EYES_GLOW_MAX_ALPHA)
+
+                    val totalAnimDuration = BeastweaverEntity.ANIMATION_DURATIONS[renderState.getGeckolibData(CURRENT_ATTACK_NAME)] ?: 1000F
+                    val untilAnimationEnd = totalAnimDuration - currentAnimDuration
+                    val outProgress = (untilAnimationEnd / 0.25F).clampedLerp(0F, EYES_GLOW_MAX_ALPHA)
+
+                    min(inProgress, outProgress)
+                },
+                textures = mapOf(0F to IdentifierUtil.default("textures/entity/beastweaver/beastweaver_eyes_glow.png")),
+                active = { renderState -> renderState.getGeckolibData(CURRENT_ATTACK_NAME) != null },
+            )
+        )
     }
 
     companion object {
-        const val ATTACK_MAX_ALPHA = 120
+        private const val ATTACK_MAX_ALPHA = 120
         val ATTACK_COLOR = ColorUtil.rgbaToInt(255, 255, 255, ATTACK_MAX_ALPHA) // rgb not used by shader
+
+        private const val EYES_GLOW_MAX_ALPHA = 0.5F
 
         val GET_CAMERA_RELATIVE_ENTITY_POS: (Entity, Float) -> Vector3f = { entity, partialTick ->
             val camera = Minecraft.getInstance().gameRenderer.mainCamera
@@ -330,7 +352,7 @@ class BeastweaverRenderer<R>(
             )
         }
 
-        val GET_CAMERA_RELATIVE_ENTITY_EYE_POS: (Entity, Float) -> Vector3f = { entity, partialTick ->
+        private val GET_CAMERA_RELATIVE_ENTITY_EYE_POS: (Entity, Float) -> Vector3f = { entity, partialTick ->
             GET_CAMERA_RELATIVE_ENTITY_POS(entity, partialTick).add(0f, entity.eyeHeight, 0f)
         }
 
@@ -348,7 +370,7 @@ class BeastweaverRenderer<R>(
         renderState.addGeckolibData(HIDDEN_BONES, animatable.getHiddenBones())
         renderState.addGeckolibData(TRANSFORM_PROGRESS, animatable.getTransformProgress(partialTick))
         renderState.addGeckolibData(SHOULDER_SPIKES_ANIM_TIME, animatable.getShoulderSpikesAnimTime(partialTick))
-        renderState.addGeckolibData(CURRENT_ATTACK_NAME, animatable.getCurrentAttackAnimName())
+        animatable.getCurrentAttackAnimName()?.also { renderState.addGeckolibData(CURRENT_ATTACK_NAME, it) }
         renderState.addGeckolibData(CURRENT_ATTACK_ANIM_TIME, animatable.getCurrentAttackAnimTime(partialTick))
         if (animatable.isRhinoCharging()) renderState.addGeckolibData(RHINO_CHARGE_DURATION, animatable.getRhinoChargeDurationSeconds(partialTick))
     }

@@ -23,7 +23,7 @@ import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector4f
 
-class BeastweaverSpiritAttackGeoLayer<O : Any, R : GeoRenderState>(
+open class BeastweaverSpiritAttackGeoLayer<O : Any, R : GeoRenderState>(
     renderer: GeoRenderer<BeastweaverEntity, O, R>,
     bones: List<String>,
     progress: (R) -> Float,
@@ -56,10 +56,13 @@ class BeastweaverSpiritAttackGeoLayer<O : Any, R : GeoRenderState>(
         renderState.addGeckolibData(BEASTWEAVER_ATTACK_GRADIENT_BOUNDS, scaledBounds)
     }
 
+    open fun getGradientOrigin(renderState: R) = renderState.getGeckolibData(BEASTWEAVER_ATTACK_GRADIENT_ORIGIN) ?: Vector3f(0f, 0f, 0f)
+    open fun getGradientBounds(renderState: R) = renderState.getGeckolibData(BEASTWEAVER_ATTACK_GRADIENT_BOUNDS) ?: Pair(0f, 1f)
+
     override fun renderBone(renderPassInfo: RenderPassInfo<R>, bone: GeoBone, renderTasks: SubmitNodeCollector) {
         val renderState = renderPassInfo.renderState()
         val boneTexture = getTextureResource(renderState)
-        val baseTexture = this.renderer.getTextureLocation(renderState)
+        val baseTexture = renderer.getTextureLocation(renderState)
         val boneTextureSize = RenderUtil.getTextureDimensions(boneTexture)
         val baseTextureSize = RenderUtil.getTextureDimensions(baseTexture)
         val widthRatio = baseTextureSize.firstInt() / boneTextureSize.firstInt().toFloat()
@@ -67,8 +70,8 @@ class BeastweaverSpiritAttackGeoLayer<O : Any, R : GeoRenderState>(
         val packedLight = renderPassInfo.packedLight()
         val packedOverlay = renderPassInfo.packedOverlay()
 
-        val gradientOrigin = renderState.getGeckolibData(BEASTWEAVER_ATTACK_GRADIENT_ORIGIN) ?: Vector3f(0f, 0f, 0f)
-        val gradientBounds = renderState.getGeckolibData(BEASTWEAVER_ATTACK_GRADIENT_BOUNDS) ?: Pair(0f, 1f)
+        val gradientOrigin = getGradientOrigin(renderState)
+        val gradientBounds = getGradientBounds(renderState)
 
         val renderType: RenderType = getRenderType(renderState, boneTexture)
         renderTasks.submitCustomGeometry(renderPassInfo.poseStack(), renderType) { pose: PoseStack.Pose?, buffer: VertexConsumer? ->

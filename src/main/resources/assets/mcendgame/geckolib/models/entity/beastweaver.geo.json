@@ -148,6 +148,14 @@
 					]
 				},
 				{
+					"name": "eyesGlow",
+					"parent": "headTransform",
+					"pivot": [0, 24.25, -0.1],
+					"cubes": [
+						{"origin": [-2, 26.25, -4.1], "size": [4, 1, 0], "uv": [30, 80]}
+					]
+				},
+				{
 					"name": "hair",
 					"parent": "headTransform",
 					"pivot": [0, 24.25, 0],

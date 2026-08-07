@@ -751,6 +751,18 @@ class BeastweaverEntity(
             RandomOption(1, RHINO_CHARGE_ATTACK),
         )
 
+        val ANIMATION_DURATIONS = mapOf(
+            BEAR_SWIPE_LEFT_ANIM.animationStages.first().animationName to 1.38F,
+            BEAR_SWIPE_RIGHT_ANIM.animationStages.first().animationName to 1.38F,
+            TAIL_SWEEP_ANIM.animationStages.first().animationName to 1.46F,
+            WINGS_LAUNCH_ANIM.animationStages.first().animationName to 1.75F,
+            ELEPHANT_STOMP_ANIM.animationStages.first().animationName to 2.0F,
+            WOLF_SUMMON_ANIM.animationStages.first().animationName to 3.5F,
+            RHINO_CHARGE_ANIM.animationStages.first().animationName to 1000F,
+            RHINO_CHARGE_END_ANIM.animationStages.first().animationName to 2.0F,
+            RHINO_CHARGE_HIT_WALL_ANIM.animationStages.first().animationName to 2.75F,
+        )
+
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
                 .add(Attributes.FOLLOW_RANGE, 35.0)
@@ -881,10 +893,10 @@ class BeastweaverEntity(
         return animTime.toFloat() + tickProgress / 20F
     }
 
-    fun getCurrentAttackAnimName(): String {
-        if (!attackAnimationController.isPlayingTriggeredAnimation) return ""
-        val rawAnim = attackAnimationController.currentRawAnimation ?: return ""
-        return rawAnim.animationStages.firstOrNull()?.animationName ?: ""
+    fun getCurrentAttackAnimName(): String? {
+        if (!attackAnimationController.isPlayingTriggeredAnimation) return null
+        val rawAnim = attackAnimationController.currentRawAnimation ?: return null
+        return rawAnim.animationStages.firstOrNull()?.animationName ?: null
     }
 
     fun getCurrentAttackAnimTime(tickProgress: Float): Float {
