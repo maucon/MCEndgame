@@ -33,6 +33,9 @@
         "value": "de.fuballer.mcendgame.client.MCEndgameDataGenerator",
         "adapter": "kotlin"
       }
+    ],
+    "fabric-client-gametest": [
+      "de.fuballer.mcendgame.client.MCEndgameClientGameTest"
     ]
   },
   "mixins": [
