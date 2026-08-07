@@ -55,7 +55,7 @@ jobs:
         id: artifact-upload
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
-          name: Artifacts
+          name: 'build-jars'
           path: build/libs/
 
       - name: Notify webhook
@@ -108,4 +108,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
+          name: 'test-screenshots'
           path: run/screenshots/
