@@ -98,8 +98,11 @@ jobs:
       - name: Grant gradle permissions
         run: chmod +x ./gradlew
 
+      - name: Run datagen
+        run: ./gradlew runDatagen
+
       - name: Run client game tests
-        run: ./gradlew runDatagen runProductionClientGameTest
+        run: ./gradlew runProductionClientGameTest
 
       - name: Upload test screenshots
         if: always()
