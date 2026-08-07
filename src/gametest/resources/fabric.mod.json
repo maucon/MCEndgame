@@ -3,7 +3,6 @@
   "id": "mcendgame-test",
   "version": "1.0.0-test",
   "name": "MCEndgame-Test",
-  "icon": "assets/mcendgame/icon.png",
   "environment": "*",
   "entrypoints": {
     "fabric-gametest": [
