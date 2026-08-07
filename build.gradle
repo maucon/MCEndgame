@@ -6,7 +6,7 @@ plugins {
 }
 
 version = mod_version
-group = maven_group
+group = project_group
 
 base {
     archivesName = archives_base_name
@@ -51,6 +51,13 @@ fabricApi {
     configureDataGeneration {
         client = true
     }
+    configureTests {
+        createSourceSet = true
+        modId = "${project.name}-test"
+        enableGameTests = true
+        enableClientGameTests = true
+        eula = true
+    }
 }
 
 tasks.register("gametestJar", Jar) {
@@ -79,8 +86,6 @@ dependencies {
 
     testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
 
-    productionRuntimeMods files(tasks.named("gametestJar"))
-
     productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
     productionRuntimeMods "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
     productionRuntimeMods "xyz.nucleoid:fantasy:${fantasy_version}+${minecraft_version}"
@@ -103,28 +108,19 @@ java {
     withSourcesJar()
 }
 
-test {
-    useJUnitPlatform()
-}
-
-fabricApi {
-    configureTests {
-        createSourceSet = true
-        modId = "mod-test-${project.name}"
-        enableGameTests = true // Default is true
-        enableClientGameTests = true // Default is true
-        eula = true // By setting this to true, you agree to the Minecraft EULA.
-    }
-}
-
-tasks.register("runProductionClientGameTest", ClientProductionRunTask) {
-    jvmArgs.add("-Dfabric.client.gametest")
-    useXVFB = true
-    dependsOn(tasks.named("gametestJar"))
-}
-
 jar {
     from("LICENSE") {
         rename { "${it}_${base.archivesName.get()}" }
     }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.register("runProductionClientGameTest", ClientProductionRunTask) {
+    jvmArgs.add("-Dfabric.client.gametest")
+    jvmArgs.add("-Dfabric.client.gametest.disableNetworkSynchronizer=true")
+    useXVFB = true
+    dependsOn(tasks.named("gametestJar"))
 }
