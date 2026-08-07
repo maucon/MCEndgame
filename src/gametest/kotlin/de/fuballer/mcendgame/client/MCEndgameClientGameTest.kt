@@ -7,6 +7,7 @@ import net.minecraft.world.phys.Vec3
 @Suppress("UnstableApiUsage")
 class MCEndgameClientGameTest : FabricClientGameTest {
     override fun runTest(context: ClientGameTestContext) {
+        // TODO disable mcendgame telemetry
         context.worldBuilder().create().use { singleplayer ->
             singleplayer.clientLevel.waitForChunksRender()
             val pos = singleplayer.server.computeOnServer<Vec3, RuntimeException> { server ->

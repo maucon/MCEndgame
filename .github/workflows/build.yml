@@ -99,7 +99,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run client game tests
-        run: ./gradlew runProductionClientGameTest
+        run: ./gradlew runDatagen runProductionClientGameTest
 
       - name: Upload test screenshots
         if: always()
