@@ -53,6 +53,11 @@ fabricApi {
     }
 }
 
+tasks.register("gametestJar", Jar) {
+    from sourceSets.gametest.output
+    archiveClassifier = "gametest"
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
 
@@ -73,6 +78,8 @@ dependencies {
     include "org.javassist:javassist:3.30.2-GA"
 
     testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
+
+    productionRuntimeMods files(tasks.named("gametestJar"))
 
     productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
     productionRuntimeMods "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
@@ -112,10 +119,8 @@ fabricApi {
 
 tasks.register("runProductionClientGameTest", ClientProductionRunTask) {
     jvmArgs.add("-Dfabric.client.gametest")
-    // Whether to use XVFB to run the game, using a virtual framebuffer. This is useful for headless CI environments.
-    // Defaults to true only on Linux and when the "CI" environment variable is set.
-    // XVFB must be installed, on Debian-based systems you can install it with: `apt install xvfb`
     useXVFB = true
+    dependsOn(tasks.named("gametestJar"))
 }
 
 jar {

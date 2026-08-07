@@ -7,10 +7,10 @@
   "environment": "*",
   "entrypoints": {
     "fabric-gametest": [
-      "de.fuballer.mcendgame.main.MCEndgameGameTest"
+      "de.fuballer.mcendgame.test.main.MCEndgameGameTest"
     ],
     "fabric-client-gametest": [
-      "de.fuballer.mcendgame.client.MCEndgameClientGameTest"
+      "de.fuballer.mcendgame.test.client.MCEndgameClientGameTest"
     ]
   }
 }
