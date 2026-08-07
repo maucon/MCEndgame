@@ -1,4 +1,10 @@
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+registries:
+  github-maucon:
+    type: maven-repository
+    url: https://maven.pkg.github.com
+    username: x-access-token
+    password: ${{secrets.MAUCON_PACKAGES_TOKEN}}
 
 version: 2
 updates:

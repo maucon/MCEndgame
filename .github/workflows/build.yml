@@ -104,18 +104,8 @@ jobs:
       - name: Run client game tests
         run: ./gradlew runProductionClientGameTest
 
-      - name: Debug
-        if: always()
-        run: |
-          echo "--- ls build ---"
-          ls -la build || echo "build/ does not exist"
-          echo "--- ls build/run ---"
-          ls -la build/run || echo "build/run/ does not exist"
-          echo "--- find all png ---"
-          find . -name "*.png" 2>/dev/null || echo "no png files found"
-
       - name: Upload test screenshots
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
-          path: build/run/clientGameTest/screenshots
+          path: run/screenshots/
