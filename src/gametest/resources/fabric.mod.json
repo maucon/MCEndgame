@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "mcendgame-test",
+  "version": "1.0.0-test",
+  "name": "MCEndgame-Test",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": [
+      "de.fuballer.mcendgame.test.main.MCEndgameGameTest"
+    ],
+    "fabric-client-gametest": [
+      "de.fuballer.mcendgame.test.client.MCEndgameClientGameTest"
+    ]
+  }
+}

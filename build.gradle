@@ -1,10 +1,12 @@
+import net.fabricmc.loom.task.prod.ClientProductionRunTask
+
 plugins {
     id 'net.fabricmc.fabric-loom' version "${loom_version}"
     id "org.jetbrains.kotlin.jvm" version "${kotlin_version}"
 }
 
 version = mod_version
-group = maven_group
+group = project_group
 
 base {
     archivesName = archives_base_name
@@ -27,6 +29,7 @@ repositories {
                 url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
             }
         }
+        // Restrict to GeckoLib's group only
         filter { includeGroupAndSubgroups('com.geckolib') }
     }
 }
@@ -49,6 +52,19 @@ fabricApi {
     configureDataGeneration {
         client = true
     }
+    configureTests {
+        createSourceSet = true
+        modId = "${project.name}-test"
+        enableGameTests = true
+        enableClientGameTests = true
+        eula = true
+    }
+}
+
+// Jar of gametest classes, for loading in the production test run
+tasks.register("gametestJar", Jar) {
+    from sourceSets.gametest.output
+    archiveClassifier = "gametest"
 }
 
 dependencies {
@@ -57,18 +73,26 @@ dependencies {
     implementation "net.fabricmc:fabric-loader:${loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
     implementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
-
     implementation "xyz.nucleoid:fantasy:${fantasy_version}+${minecraft_version}"
     implementation "com.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
-
     implementation "de.maucon:maucon-framework:2.0.1"
 
+    // Bundled into the release jar
     include "de.maucon:maucon-framework:2.0.1"
     include "org.jetbrains.kotlin:kotlin-reflect"
     include "org.reflections:reflections:0.10.2"
     include "org.slf4j:slf4j-api:2.0.17"
     include "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1"
     include "org.javassist:javassist:3.30.2-GA"
+
+    testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
+
+    // CI-only: mods loaded for the production client gametest run
+    productionRuntimeMods files(tasks.named("gametestJar")) // our own gametest mod
+    productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    productionRuntimeMods "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
+    productionRuntimeMods "xyz.nucleoid:fantasy:${fantasy_version}+${minecraft_version}"
+    productionRuntimeMods "com.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
 }
 
 processResources {
@@ -78,7 +102,6 @@ processResources {
         expand "version": version
     }
 }
-
 
 kotlin {
     jvmToolchain(25)
@@ -92,4 +115,32 @@ jar {
     from("LICENSE") {
         rename { "${it}_${base.archivesName.get()}" }
     }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+def disableAnalyticsConfig(String runDir) {
+    def configFile = file("${runDir}/config/mcendgame.json")
+    configFile.parentFile.mkdirs()
+    configFile.text = '{"sendAnalytics": false}'
+}
+
+tasks.named("runGameTest") {
+    doFirst { disableAnalyticsConfig("build/run/gameTest") }
+}
+
+tasks.named("runClientGameTest") {
+    doFirst { disableAnalyticsConfig("build/run/clientGameTest") }
+}
+
+// Runs client gametests on a production-style client (used in CI)
+tasks.register("runProductionClientGameTest", ClientProductionRunTask) {
+    jvmArgs.add("-Dfabric.client.gametest")
+    jvmArgs.add("-Dfabric.client.gametest.disableNetworkSynchronizer=true")
+    useXVFB = true
+    dependsOn(tasks.named("gametestJar"))
+
+    doFirst { disableAnalyticsConfig("run") }
 }

@@ -65,7 +65,7 @@ jobs:
         env:
           GITHUB_PACKAGES_NAME: ${{ github.actor }}
           GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew build --no-daemon --no-parallel -Dorg.gradle.workers.max=1 -Dorg.gradle.jvmargs=-Xmx3g
+        run: ./gradlew build -x test -x runGameTest --no-daemon --no-parallel -Dorg.gradle.workers.max=1 -Dorg.gradle.jvmargs=-Xmx3g
       # endregion
 
       - name: Perform CodeQL Analysis
