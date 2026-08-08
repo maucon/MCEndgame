@@ -4,13 +4,14 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCo
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.TamableAnimal
+import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 
 class CompanionLimitTriggerCondition(
     private val companionLimit: (Int) -> Int,
     private val getTargetCount: (ServerLevel, Mob, LivingEntity?) -> Int,
     private val searchRange: Double,
+    private val filter: (LivingEntity) -> Boolean = { true },
 ) : TriggerCondition() {
     override fun doesTrigger(attacker: Mob, target: LivingEntity?): Boolean {
         val level = attacker.level() as? ServerLevel ?: return false
@@ -18,8 +19,12 @@ class CompanionLimitTriggerCondition(
         val companionLimit = companionLimit(targetCount)
 
         val companionCount = level.getNearbyEntities(
-            TamableAnimal::class.java,
-            TargetingConditions.forNonCombat().selector { entity, _ -> entity.isCompanion() && (entity as TamableAnimal).owner == attacker },
+            LivingEntity::class.java,
+            TargetingConditions.forNonCombat().selector { entity, _ ->
+                filter(entity)
+                        && entity.isCompanion()
+                        && (entity as? OwnableEntity)?.owner == attacker
+            },
             attacker,
             attacker.boundingBox.inflate(searchRange),
         ).count()

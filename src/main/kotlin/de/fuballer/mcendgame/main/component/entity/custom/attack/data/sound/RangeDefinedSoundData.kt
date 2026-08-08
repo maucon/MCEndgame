@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.entity.custom.attack.data
+package de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound
 
 import de.fuballer.mcendgame.main.component.sound.RangeDefinedSoundPayload
 import de.fuballer.mcendgame.main.component.sound.Sounds

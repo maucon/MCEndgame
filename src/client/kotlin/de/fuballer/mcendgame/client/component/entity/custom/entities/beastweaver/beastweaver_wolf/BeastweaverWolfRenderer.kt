@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.client.accessor.SubmitNodeStorageAccessor
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.BeastweaverGradientData
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.BeastweaverRenderer
 import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
-import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver_wolf.BeastweaverWolfEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_wolf.BeastweaverWolfEntity
 import de.fuballer.mcendgame.main.util.extension.FloatExtension.clampedLerp
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.client.model.geom.ModelLayers

@@ -15,6 +15,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.LeapAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.WindBurstAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.BasicAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.*
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.SoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.fire_geysers.FireGeysersAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.flame_breath.FlameBreathAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition

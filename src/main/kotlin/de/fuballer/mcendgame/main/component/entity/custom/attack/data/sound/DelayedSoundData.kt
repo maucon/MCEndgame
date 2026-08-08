@@ -1,5 +1,6 @@
-package de.fuballer.mcendgame.main.component.entity.custom.attack.data
+package de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound
 
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob

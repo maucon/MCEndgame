@@ -19,11 +19,19 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.*
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.DelayedParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.summon.DelayedSummonData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.summon.SummonPerTargetData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.debris_explosion.DebrisExplosionAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.AlwaysTrueTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.CompanionLimitTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
-import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver_wolf.BeastweaverWolfEntity
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.HealthTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_wolf.BeastweaverWolfEntity
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
@@ -540,7 +548,7 @@ class BeastweaverEntity(
                 blockMovementDuration = 40,
             )
 
-        private val GET_WOLF_SUMMON_TARGETS: (ServerLevel, LivingEntity, LivingEntity?) -> List<LivingEntity> = { level, summoner, target ->
+        private val GET_SUMMON_TARGETS: (ServerLevel, LivingEntity, LivingEntity?) -> List<LivingEntity> = { level, summoner, target ->
             val targets = if (target == null) mutableSetOf() else mutableSetOf(target)
             targets.addAll(
                 level.getNearbyEntities(
@@ -563,12 +571,13 @@ class BeastweaverEntity(
                 cooldown = 600,
                 CompanionLimitTriggerCondition(
                     companionLimit = { targetCount -> targetCount * 1 },
-                    getTargetCount = { level, summoner, target -> GET_WOLF_SUMMON_TARGETS(level, summoner, target).count() },
-                    50.0,
+                    getTargetCount = { level, summoner, target -> GET_SUMMON_TARGETS(level, summoner, target).count() },
+                    searchRange = 50.0,
+                    filter = { entity -> entity is BeastweaverWolfEntity }
                 ),
                 data = listOf(
                     DelayedSummonData(
-                        SummonData(
+                        SummonPerTargetData(
                             factory = { level, summoner, target ->
                                 val summon = BeastweaverWolfEntity(level)
                                 summon.setCompanion()
@@ -585,7 +594,7 @@ class BeastweaverEntity(
                                 summon.target = target
                                 summon
                             },
-                            getTargets = GET_WOLF_SUMMON_TARGETS,
+                            getTargets = GET_SUMMON_TARGETS,
                             getCountPerTarget = { targetCount -> if (targetCount <= 3) 3 else 2 },
                             spawnPositionsSearchSteps = 15,
                             maxSpawnDistanceToTarget = 25.0,
@@ -605,6 +614,50 @@ class BeastweaverEntity(
                     ),
                 ),
                 blockMovementDuration = 70,
+            )
+
+        private val SUMMON_VINES_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.summon_vines")
+        private const val SUMMON_VINES_ID = "Summon Vines"
+        private val SUMMON_VINES_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SUMMON_VINES_ID)
+        private val SUMMON_VINES_ATTACK =
+            Attack<BeastweaverEntity>(
+                SUMMON_VINES_ANIM_DATA,
+                totalDuration = 95,
+                cooldown = 6000,
+                HealthTriggerCondition(0.0, 0.5),
+                data = listOf(
+                    DelayedDurationTransformData(0, 80) { _, attacker, _, age ->
+                        if (age == 1) attacker.isNoGravity = true
+
+                        if (age <= 80) {
+                            val levitateProgress = age / 80.0
+                            val yVelocity = (1 - levitateProgress) * 0.02
+                            attacker.setAndSyncVelocity(Vec3(0.0, yVelocity, 0.0))
+
+                            if (age == 80) attacker.isNoGravity = false
+                        }
+                    },
+
+                    DelayedSummonData(
+                        SummonPerTargetData(
+                            factory = { level, summoner, target ->
+                                val summon = BeastweaverVineEntity(level)
+                                summon.setCompanion()
+                                summon.setOwner(summoner)
+                                if (summoner.isDungeonEnemy()) summon.setDungeonEnemy()
+
+                                summon.target = target
+                                summon
+                            },
+                            getTargets = GET_SUMMON_TARGETS,
+                            getCountPerTarget = { targetCount -> (15 + targetCount * 8) / targetCount },
+                            spawnPositionsSearchSteps = 48,
+                            maxSpawnDistanceToTarget = 32.0,
+                        ),
+                        60,
+                    ),
+                ),
+                blockMovementDuration = 95,
             )
 
         private val RHINO_CHARGE_ANIM: RawAnimation = RawAnimation.begin().thenLoop("attack.rhino_charge")
@@ -748,6 +801,7 @@ class BeastweaverEntity(
             RandomOption(1, WINGS_LAUNCH_ATTACK),
             RandomOption(1, ELEPHANT_STOMP_ATTACK),
             RandomOption(1, WOLF_SUMMON_ATTACK),
+            RandomOption(1000, SUMMON_VINES_ATTACK),
             RandomOption(1, RHINO_CHARGE_ATTACK),
         )
 
@@ -758,6 +812,7 @@ class BeastweaverEntity(
             WINGS_LAUNCH_ANIM.animationStages.first().animationName to 1.75F,
             ELEPHANT_STOMP_ANIM.animationStages.first().animationName to 2.0F,
             WOLF_SUMMON_ANIM.animationStages.first().animationName to 3.5F,
+            SUMMON_VINES_ANIM.animationStages.first().animationName to 4.75F,
             RHINO_CHARGE_ANIM.animationStages.first().animationName to 1000F,
             RHINO_CHARGE_END_ANIM.animationStages.first().animationName to 2.0F,
             RHINO_CHARGE_HIT_WALL_ANIM.animationStages.first().animationName to 2.75F,
@@ -839,6 +894,7 @@ class BeastweaverEntity(
             .triggerableAnim(WINGS_LAUNCH_ID, WINGS_LAUNCH_ANIM)
             .triggerableAnim(ELEPHANT_STOMP_ID, ELEPHANT_STOMP_ANIM)
             .triggerableAnim(WOLF_SUMMON_ID, WOLF_SUMMON_ANIM)
+            .triggerableAnim(SUMMON_VINES_ID, SUMMON_VINES_ANIM)
             .triggerableAnim(RHINO_CHARGE_ID, RHINO_CHARGE_ANIM)
             .triggerableAnim(RHINO_CHARGE_END_ID, RHINO_CHARGE_END_ANIM)
             .triggerableAnim(RHINO_CHARGE_HIT_WALL_ID, RHINO_CHARGE_HIT_WALL_ANIM)
@@ -1016,6 +1072,8 @@ class BeastweaverEntity(
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
         entityData.set(TRANSFORM_PROGRESS, input.getFloatOr(TRANSFORM_PROGRESS_ID, 0F))
+
+        isNoGravity = false
     }
 
     override fun getDefaultDimensions(pose: Pose): EntityDimensions {

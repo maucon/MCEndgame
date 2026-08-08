@@ -1,11 +1,12 @@
-package de.fuballer.mcendgame.main.component.entity.custom.attack.data
+package de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle
 
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 
-class DelayedSummonData(
-    private val summonData: SummonData,
+class DelayedParticleData(
+    private val particleData: ParticleData,
     delay: Int = 0,
 ) : DelayedAttackData(delay) {
     override fun apply(
@@ -13,6 +14,6 @@ class DelayedSummonData(
         entity: Mob,
         target: LivingEntity?,
     ) {
-        summonData.apply(level, entity, target)
+        particleData.apply(level, entity)
     }
 }

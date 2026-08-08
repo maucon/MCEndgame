@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.debris_explosion
 
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.ParticleData
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.SoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.SoundData
 import de.fuballer.mcendgame.main.component.entity.custom.entities.block_debris.BlockDebrisEntity
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
 import de.fuballer.mcendgame.main.util.extension.Vec3Extension.rotateHorizontalVectorUpwards

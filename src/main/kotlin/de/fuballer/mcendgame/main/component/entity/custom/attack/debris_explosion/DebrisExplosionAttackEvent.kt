@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.debris_explosion
 
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.ParticleData
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.SoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.SoundData
 import net.minecraft.world.entity.Mob
 
 data class DebrisExplosionAttackEvent(

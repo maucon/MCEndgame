@@ -5,8 +5,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.ParticleData
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.SoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.SoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerCondition
 import de.maucon.mauconframework.event.EventGateway
 import net.minecraft.world.entity.LivingEntity

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.entity.custom.attack.data
+package de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle
 
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.server.level.ServerLevel

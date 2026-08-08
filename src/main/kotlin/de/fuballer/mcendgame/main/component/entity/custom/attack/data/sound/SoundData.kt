@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.entity.custom.attack.data
+package de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound
 
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent

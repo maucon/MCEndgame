@@ -3,7 +3,8 @@ package de.fuballer.mcendgame.main.component.entity.custom
 import de.fuballer.mcendgame.main.component.entity.custom.entities.arachne.ArachneEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.BeakburnEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
-import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver_wolf.BeastweaverWolfEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_wolf.BeastweaverWolfEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.block_debris.BlockDebrisEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
@@ -84,14 +85,6 @@ object CustomEntities {
             .clientTrackingRange(8)
             .notInPeaceful()
     )
-    val BEASTWEAVER = RegistryUtil.registerEntity(
-        "beastweaver",
-        EntityType.Builder.of(::BeastweaverEntity, MobCategory.MONSTER)
-            .sized(0.8f, 2.05f)
-            .eyeHeight(1.7f)
-            .clientTrackingRange(48)
-            .notInPeaceful()
-    )
     val SCARRED_ONE = RegistryUtil.registerEntity(
         "scarred_one",
         EntityType.Builder.of(::ScarredOneEntity, MobCategory.MISC)
@@ -129,12 +122,27 @@ object CustomEntities {
             .clientTrackingRange(10)
             .updateInterval(20)
     )
+    val BEASTWEAVER = RegistryUtil.registerEntity(
+        "beastweaver",
+        EntityType.Builder.of(::BeastweaverEntity, MobCategory.MONSTER)
+            .sized(0.8f, 2.05f)
+            .eyeHeight(1.7f)
+            .clientTrackingRange(16)
+            .notInPeaceful()
+    )
     val BEASTWEAVER_WOLF = RegistryUtil.registerEntity(
         "beastweaver_wolf",
         EntityType.Builder.of(::BeastweaverWolfEntity, MobCategory.CREATURE)
             .sized(0.6F, 0.85F)
             .eyeHeight(0.68F)
             .passengerAttachments(Vec3(0.0, 0.81875, -0.0625))
+            .clientTrackingRange(10)
+    )
+    val BEASTWEAVER_VINE = RegistryUtil.registerEntity(
+        "beastweaver_vine",
+        EntityType.Builder.of(::BeastweaverVineEntity, MobCategory.CREATURE)
+            .sized(0.4F, 2.5F)
+            .eyeHeight(2.0F)
             .clientTrackingRange(10)
     )
 }

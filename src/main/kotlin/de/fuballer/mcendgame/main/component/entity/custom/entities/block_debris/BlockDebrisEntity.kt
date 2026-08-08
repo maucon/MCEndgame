@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.block_debris
 
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.ParticleData
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.SoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.SoundData
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener

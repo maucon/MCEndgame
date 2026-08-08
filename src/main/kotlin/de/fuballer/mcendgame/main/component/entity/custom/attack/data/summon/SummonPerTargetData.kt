@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.entity.custom.attack.data
+package de.fuballer.mcendgame.main.component.entity.custom.attack.data.summon
 
 import de.fuballer.mcendgame.main.util.FindBlockPosUtil
 import net.minecraft.core.BlockPos
@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 
-data class SummonData(
+data class SummonPerTargetData(
     private val factory: (ServerLevel, LivingEntity, LivingEntity) -> Entity,
     private val getTargets: (ServerLevel, LivingEntity, LivingEntity?) -> List<LivingEntity>,
     private val getCountPerTarget: (Int) -> Int,

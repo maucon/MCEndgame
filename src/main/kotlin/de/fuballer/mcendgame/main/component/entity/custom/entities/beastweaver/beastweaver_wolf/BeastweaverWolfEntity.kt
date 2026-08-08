@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver_wolf
+package de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_wolf
 
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import net.minecraft.server.level.ServerLevel

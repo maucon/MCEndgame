@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.component.entity.custom
 import de.fuballer.mcendgame.main.component.entity.custom.entities.arachne.ArachneEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.BeakburnEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
@@ -24,11 +25,12 @@ object EntityAttributeRegisterer {
         FabricDefaultAttributeRegistry.register(CustomEntities.BONECRUSHER, BonecrusherEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.ELF_DUELIST, ElfDuelistEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.BEAKBURN, BeakburnEntity.createAttributes())
-        FabricDefaultAttributeRegistry.register(CustomEntities.BEASTWEAVER, BeastweaverEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.SCARRED_ONE, ScarredOneEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.SPIDERLING, SpiderlingEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.TRAINING_DUMMY, TrainingDummyEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.SKELETON_MAGE, SkeletonMageEntity.createAttributes())
+        FabricDefaultAttributeRegistry.register(CustomEntities.BEASTWEAVER, BeastweaverEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.BEASTWEAVER_WOLF, Wolf.createAttributes())
+        FabricDefaultAttributeRegistry.register(CustomEntities.BEASTWEAVER_VINE, BeastweaverVineEntity.createAttributes())
     }
 }
