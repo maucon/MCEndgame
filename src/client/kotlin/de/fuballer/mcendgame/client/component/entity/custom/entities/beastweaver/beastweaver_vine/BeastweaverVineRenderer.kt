@@ -8,6 +8,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.b
 import de.fuballer.mcendgame.main.util.extension.FloatExtension.clampedLerp
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import kotlin.math.cos
+import kotlin.math.sin
 
 class BeastweaverVineRenderer<R>(
     context: EntityRendererProvider.Context
@@ -24,12 +26,25 @@ class BeastweaverVineRenderer<R>(
         super.adjustModelBonesForRender(renderPassInfo, snapshots)
 
         val state = renderPassInfo.renderState()
-        val age = state.ageInTicks + state.partialTick
+        val age = state.ageInTicks // already includes partial tick
 
-        BONE_DATA.forEach { data ->
-            snapshots.get(data.name).ifPresent {
-                val preEmergedYOffset = (1 - (age - data.emergeDelay) / BONE_EMERGE_DURATION).clampedLerp(0F, 6F)
-                it.translateY -= preEmergedYOffset
+        BONE_DATA.forEachIndexed { index, data ->
+            snapshots.get(data.name).ifPresent { bone ->
+                val emergeProgress = ((age - data.emergeDelay) / BONE_EMERGE_DURATION).coerceIn(0F, 1F)
+
+                val preEmergedYOffset = (1F - emergeProgress).clampedLerp(0F, 6F)
+                bone.translateY -= preEmergedYOffset
+
+                if (emergeProgress > 0F) {
+                    val movementTime = age * 0.08
+                    val phase = index * 0.6
+
+                    val swayX = sin(movementTime + phase) * 4 * emergeProgress
+                    val swayZ = cos(movementTime * 0.8 + phase) * 5 * emergeProgress
+
+                    bone.rotX = Math.toRadians(swayX).toFloat()
+                    bone.rotZ = Math.toRadians(swayZ).toFloat()
+                }
             }
         }
     }

@@ -11,6 +11,8 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -114,6 +116,15 @@ class BeastweaverVineEntity(
     }
 
     override fun getOwnerReference(): EntityReference<LivingEntity>? = entityData.get(OWNER_DATA).orElse(null)
+
+    override fun isPushable() = false
+
+    override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
+        if (source.`is`(DamageTypes.GENERIC_KILL)) return false
+        if (source.`is`(DamageTypes.FELL_OUT_OF_WORLD)) return false
+        if (source.`is`(DamageTypes.OUTSIDE_BORDER)) return false
+        return true
+    }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
