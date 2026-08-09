@@ -23,7 +23,9 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.D
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.summon.DelayedDurationSummonData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.summon.DelayedSummonData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.summon.DurationSummonData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.summon.SummonPerTargetData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.debris_explosion.DebrisExplosionAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.AlwaysTrueTriggerCondition
@@ -638,23 +640,22 @@ class BeastweaverEntity(
                         }
                     },
 
-                    DelayedSummonData(
-                        SummonPerTargetData(
-                            factory = { level, summoner, target ->
+                    DelayedDurationSummonData(
+                        durationStart = 0,
+                        durationEnd = 40,
+                        DurationSummonData(
+                            factory = { level, summoner ->
                                 val summon = BeastweaverVineEntity(level)
                                 summon.setCompanion()
                                 summon.setOwner(summoner)
                                 if (summoner.isDungeonEnemy()) summon.setDungeonEnemy()
-
-                                summon.target = target
                                 summon
                             },
                             getTargets = GET_SUMMON_TARGETS,
-                            getCountPerTarget = { targetCount -> (15 + targetCount * 8) / targetCount },
+                            getCount = { targetCount -> 15 + targetCount * 8 },
                             spawnPositionsSearchSteps = 48,
-                            maxSpawnDistanceToTarget = 32.0,
+                            minDistanceBetweenSummons = 5.0,
                         ),
-                        60,
                     ),
                 ),
                 blockMovementDuration = 95,

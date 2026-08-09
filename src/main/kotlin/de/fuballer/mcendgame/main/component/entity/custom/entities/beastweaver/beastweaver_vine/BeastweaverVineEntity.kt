@@ -5,9 +5,12 @@ import com.geckolib.animatable.instance.AnimatableInstanceCache
 import com.geckolib.animatable.manager.AnimatableManager
 import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
+import net.minecraft.core.particles.BlockParticleOption
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -16,6 +19,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import java.util.*
+import kotlin.jvm.optionals.getOrDefault
 
 class BeastweaverVineEntity(
     type: EntityType<out BeastweaverVineEntity>,
@@ -34,7 +38,13 @@ class BeastweaverVineEntity(
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
         }
 
-        val DATA_OWNERUUID_ID = SynchedEntityData.defineId(BeastweaverVineEntity::class.java, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE)
+        private const val OWNER_DATA_ID = "owner"
+        private val OWNER_DATA = SynchedEntityData.defineId(BeastweaverVineEntity::class.java, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE)
+
+        private const val EMERGING_DATA_ID = "emerging"
+        val EMERGING_DATA = SynchedEntityData.defineId(BeastweaverVineEntity::class.java, EntityDataSerializers.INT)
+
+        const val EMERGE_DURATION_TICKS = 40
     }
 
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
@@ -42,7 +52,8 @@ class BeastweaverVineEntity(
 
     override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
         super.defineSynchedData(entityData)
-        entityData.define(DATA_OWNERUUID_ID, Optional.empty())
+        entityData.define(OWNER_DATA, Optional.empty())
+        entityData.define(EMERGING_DATA, 0)
     }
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
@@ -52,9 +63,45 @@ class BeastweaverVineEntity(
     override fun baseTick() {
         super.baseTick()
 
+        tickEmerging()
+
         val level = level() as? ServerLevel ?: return
         val owner = owner
         if (owner == null || !owner.isAlive) kill(level)
+    }
+
+    private fun tickEmerging() {
+        val emergeTicks = entityData.get(EMERGING_DATA)
+        if (emergeTicks > EMERGE_DURATION_TICKS) return
+
+        val level = level()
+        if (level !is ServerLevel) {
+            val pos = blockPosition().below()
+            val state = level.getBlockState(pos)
+            level.addParticle(
+                BlockParticleOption(ParticleTypes.BLOCK, state),
+                x,
+                y + 0.1,
+                z,
+                0.0,
+                0.1,
+                0.0
+            )
+            if (emergeTicks % 4 == 0) {
+                level.playLocalSound(
+                    x,
+                    y,
+                    z,
+                    state.soundType.hitSound,
+                    SoundSource.BLOCKS,
+                    0.75F,
+                    0.9F + 0.2F * random.nextFloat(),
+                    false
+                )
+            }
+        } else {
+            entityData.set(EMERGING_DATA, emergeTicks + 1)
+        }
     }
 
     fun setOwner(owner: LivingEntity) {
@@ -63,20 +110,26 @@ class BeastweaverVineEntity(
     }
 
     fun setOwnerReference(owner: EntityReference<LivingEntity>?) {
-        entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(owner))
+        entityData.set(OWNER_DATA, Optional.ofNullable(owner))
     }
 
-    override fun getOwnerReference(): EntityReference<LivingEntity>? = entityData.get(DATA_OWNERUUID_ID).orElse(null)
+    override fun getOwnerReference(): EntityReference<LivingEntity>? = entityData.get(OWNER_DATA).orElse(null)
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
-        EntityReference.store(ownerReference, output, "Owner")
+
+        EntityReference.store(ownerReference, output, OWNER_DATA_ID)
+
+        output.putInt(EMERGING_DATA_ID, entityData.get(EMERGING_DATA))
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
-        val owner = EntityReference.readWithOldOwnerConversion<LivingEntity>(input, "Owner", level())
-        if (owner == null) entityData.set(DATA_OWNERUUID_ID, Optional.empty())
-        else entityData.set(DATA_OWNERUUID_ID, Optional.of(owner))
+
+        val owner = EntityReference.readWithOldOwnerConversion<LivingEntity>(input, OWNER_DATA_ID, level())
+        if (owner == null) entityData.set(OWNER_DATA, Optional.empty())
+        else entityData.set(OWNER_DATA, Optional.of(owner))
+
+        entityData.set(EMERGING_DATA, input.getInt(EMERGING_DATA_ID).getOrDefault(0))
     }
 }

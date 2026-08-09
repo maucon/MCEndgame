@@ -21,6 +21,11 @@
 				{
 					"name": "vine0",
 					"parent": "vine",
+					"pivot": [0, 5, 0]
+				},
+				{
+					"name": "vine0_rot",
+					"parent": "vine0",
 					"pivot": [0, 5, 0],
 					"rotation": [0, -45, 0],
 					"cubes": [
@@ -35,7 +40,6 @@
 					"name": "vine1",
 					"parent": "vine0",
 					"pivot": [0, 10.5, 0],
-					"rotation": [0, 45, 0],
 					"cubes": [
 						{"origin": [-2, 10, -2], "size": [4, 6, 4], "uv": [8, 91]},
 						{"origin": [-5, 10, 0], "size": [3, 6, 0], "uv": [0, 95]},
@@ -47,6 +51,11 @@
 				{
 					"name": "vine2",
 					"parent": "vine1",
+					"pivot": [0, 15.5, 0]
+				},
+				{
+					"name": "vine2_rot",
+					"parent": "vine2",
 					"pivot": [0, 15.5, 0],
 					"rotation": [0, -45, 0],
 					"cubes": [
@@ -61,7 +70,6 @@
 					"name": "vine3",
 					"parent": "vine2",
 					"pivot": [0, 21, 0],
-					"rotation": [0, 45, 0],
 					"cubes": [
 						{"origin": [-2, 21, -2], "size": [4, 6, 4], "uv": [8, 65]},
 						{"origin": [-5, 21, 0], "size": [3, 6, 0], "uv": [0, 69]},
@@ -73,6 +81,11 @@
 				{
 					"name": "vine4",
 					"parent": "vine3",
+					"pivot": [0, 26.5, 0]
+				},
+				{
+					"name": "vine4_rot",
+					"parent": "vine4",
 					"pivot": [0, 26.5, 0],
 					"rotation": [0, -45, 0],
 					"cubes": [
@@ -87,7 +100,6 @@
 					"name": "vine5",
 					"parent": "vine4",
 					"pivot": [0, 32, 0],
-					"rotation": [0, 45, 0],
 					"cubes": [
 						{"origin": [-2, 32, -2], "size": [4, 6, 4], "uv": [8, 39]},
 						{"origin": [0, 32, 2], "size": [0, 6, 3], "uv": [26, 34]},
@@ -99,6 +111,11 @@
 				{
 					"name": "vine6",
 					"parent": "vine5",
+					"pivot": [0, 38, 0]
+				},
+				{
+					"name": "vine6_rot",
+					"parent": "vine6",
 					"pivot": [0, 38, 0],
 					"rotation": [0, -45, 0],
 					"cubes": [
@@ -113,7 +130,6 @@
 					"name": "vine7",
 					"parent": "vine6",
 					"pivot": [0, 43, 0],
-					"rotation": [0, 45, 0],
 					"cubes": [
 						{"origin": [-1.5, 43, -1.5], "size": [3, 6, 3], "uv": [10, 14]},
 						{"origin": [0, 43, 1.5], "size": [0, 6, 3], "uv": [26, 8]},
@@ -125,6 +141,11 @@
 				{
 					"name": "vine8",
 					"parent": "vine7",
+					"pivot": [0, 49, 0]
+				},
+				{
+					"name": "vine8_rot",
+					"parent": "vine8",
 					"pivot": [0, 49, 0],
 					"rotation": [0, -45, 0],
 					"cubes": [
