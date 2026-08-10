@@ -22,6 +22,7 @@ enum class DungeonType(
     val enemyCount: Int,
     val bossCount: Int,
     val biome: ResourceKey<Biome>,
+    val gameTime: Int = 18000,
     val applyMisc: (List<LivingEntity>) -> Unit = {},
 ) { // Note: dungeon seed uses ordinal to save dungeon type
     STRONGHOLD(
@@ -72,7 +73,7 @@ enum class DungeonType(
         enemyCount = 125,
         bossCount = 3,
         biome = Biomes.NETHER_WASTES,
-        { enemies -> enemies.forEach { it.addEffect(PotionEffect.FIRE_RESISTANCE.getEffectInstance(false)) } },
+        applyMisc = { enemies -> enemies.forEach { it.addEffect(PotionEffect.FIRE_RESISTANCE.getEffectInstance(false)) } },
     ),
     DESERT(
         listOf(
@@ -108,7 +109,8 @@ enum class DungeonType(
         ),
         enemyCount = 0,
         bossCount = 1,
-        biome = Biomes.DARK_FOREST,
+        biome = CustomBiomes.BEASTWEAVER_GROVE_DUNGEON,
+        gameTime = 14700,
     ),
     TRAINING(
         listOf(

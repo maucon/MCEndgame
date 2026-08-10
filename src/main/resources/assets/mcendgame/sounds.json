@@ -7,6 +7,14 @@
       }
     ]
   },
+  "beastweaver_grove_music": {
+    "sounds": [
+      {
+        "name": "mcendgame:music/beastweaver_grove_music",
+        "stream": true
+      }
+    ]
+  },
   "entity.wolf_howl": {
     "sounds": [
       {
