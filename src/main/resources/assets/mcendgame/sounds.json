@@ -1,4 +1,12 @@
 {
+  "stronghold_dungeon_music": {
+    "sounds": [
+      {
+        "name": "mcendgame:music/stronghold_dungeon_music",
+        "stream": true
+      }
+    ]
+  },
   "desert_dungeon_music": {
     "sounds": [
       {

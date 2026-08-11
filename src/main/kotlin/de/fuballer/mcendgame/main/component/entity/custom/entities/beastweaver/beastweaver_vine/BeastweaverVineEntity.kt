@@ -17,9 +17,11 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.Vec3
 import java.util.*
 import kotlin.jvm.optionals.getOrDefault
 
@@ -32,7 +34,7 @@ class BeastweaverVineEntity(
     companion object {
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
-                .add(Attributes.FOLLOW_RANGE, 10.0)
+                .add(Attributes.FOLLOW_RANGE, 2.5)
                 .add(Attributes.MOVEMENT_SPEED, 0.0)
                 .add(Attributes.ATTACK_DAMAGE, 3.0)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.5)
@@ -47,7 +49,12 @@ class BeastweaverVineEntity(
         val EMERGING_DATA = SynchedEntityData.defineId(BeastweaverVineEntity::class.java, EntityDataSerializers.INT)
 
         const val EMERGE_DURATION_TICKS = 40
+        const val ATTACK_DURATION_TICKS = 40
+        const val ATTACK_DAMAGE_DELAY = 25
     }
+
+    var attackTime = -1
+    var offsetToTarget = Vec3.ZERO
 
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
@@ -59,7 +66,11 @@ class BeastweaverVineEntity(
     }
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
+        targetSelector.addGoal(0, BeastweaverVineNearestAttackableTargetGoal(this, Player::class.java))
+    }
 
+    override fun registerGoals() {
+        super.registerGoals()
     }
 
     override fun baseTick() {
@@ -70,6 +81,8 @@ class BeastweaverVineEntity(
         val level = level() as? ServerLevel ?: return
         val owner = owner
         if (owner == null || !owner.isAlive) kill(level)
+
+        tickAttack(level)
     }
 
     private fun tickEmerging() {
@@ -104,6 +117,24 @@ class BeastweaverVineEntity(
         } else {
             entityData.set(EMERGING_DATA, emergeTicks + 1)
         }
+    }
+
+    private fun tickAttack(level: ServerLevel) {
+        if (attackTime >= 0) {
+            if (++attackTime > ATTACK_DURATION_TICKS) {
+                attackTime = -1
+                return
+            }
+
+            if (attackTime == ATTACK_DAMAGE_DELAY) dealAttackDamage(level)
+        } else if (target?.isAlive == true) {
+            attackTime = 0
+            offsetToTarget = target!!.position().subtract(position())
+        }
+    }
+
+    private fun dealAttackDamage(level: ServerLevel) {
+
     }
 
     fun setOwner(owner: LivingEntity) {

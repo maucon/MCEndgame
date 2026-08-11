@@ -21,6 +21,8 @@ class CustomRegistryProvider(
             .ifPresent(entries::add)
 
         val biomes = registries.lookupOrThrow(Registries.BIOME)
+        biomes.get(CustomBiomes.STRONGHOLD_DUNGEON)
+            .ifPresent(entries::add)
         biomes.get(CustomBiomes.DESERT_DUNGEON)
             .ifPresent(entries::add)
         biomes.get(CustomBiomes.BEASTWEAVER_GROVE_DUNGEON)

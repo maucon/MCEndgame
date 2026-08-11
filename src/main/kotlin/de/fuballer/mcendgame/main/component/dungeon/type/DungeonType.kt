@@ -48,7 +48,7 @@ enum class DungeonType(
         ),
         enemyCount = 125,
         bossCount = 3,
-        biome = Biomes.PLAINS,
+        biome = CustomBiomes.STRONGHOLD_DUNGEON,
     ),
     NETHER(
         listOf(
