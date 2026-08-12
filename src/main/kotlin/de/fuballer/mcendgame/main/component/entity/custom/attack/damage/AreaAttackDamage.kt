@@ -43,25 +43,38 @@ class AreaAttackDamage(
     private var volume: Float = 1F
 
     override fun apply(world: ServerLevel, damager: Mob, target: LivingEntity?): Boolean {
-        applyAtOtherEntity(world, damager, damager)
+        applyAtEntity(world, damager, damager)
         return true
     }
 
-    fun applyAtOtherEntity(world: ServerLevel, damager: Mob, other: Entity) {
-        val yRot = if (other is LivingEntity) other.yBodyRot else other.yRot
-        val forward = other.calculateViewVector(other.xRot, yRot).horizontal().normalize()
+    fun applyRotated(world: ServerLevel, damager: Mob, rad: Float) {
+        applyAtEntity(world, damager, damager, rad)
+    }
+
+    fun applyAtEntity(
+        world: ServerLevel,
+        damager: Mob,
+        at: Entity,
+        extraRotRad: Float = 0F,
+    ) {
+        val yRot = if (at is LivingEntity) at.yBodyRot else at.yRot
+        val forward = at
+            .calculateViewVector(at.xRot, yRot)
+            .horizontal()
+            .yRot(extraRotRad)
+            .normalize()
         val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
 
         val scale = getScale(damager)
 
         // debug
-        //area.renderOutline(world, other, forward, sideways, scale)
+        area.renderOutline(world, at, forward, sideways, scale)
 
-        val targets = getTargets(world, other, scale).filter {
-            area.intersects(it, other, forward, sideways, scale)
+        val targets = getTargets(world, at, scale).filter {
+            area.intersects(it, at, forward, sideways, scale)
         }
 
-        val slamCenter = area.getCenter(other, scale, forward, sideways)
+        val slamCenter = area.getCenter(at, scale, forward, sideways)
 
         dealDamage(targets, damager, scale, forward, sideways, slamCenter)
 

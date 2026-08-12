@@ -6,8 +6,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 data class AttackAnimationData(
     val startPose: AttackPose,
     val endPose: AttackPose,
-    val animControllerId: String,
-    val animId: String,
+    private val animControllerId: String,
+    private val animId: String,
 ) {
     fun triggerAnimation(animateAble: GeoEntity) = animateAble.triggerAnim(animControllerId, animId)
 }

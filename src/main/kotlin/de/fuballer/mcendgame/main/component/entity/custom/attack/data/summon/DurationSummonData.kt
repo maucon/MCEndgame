@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.data.summon
 
-import de.fuballer.mcendgame.main.util.FindBlockPosUtil
+import de.fuballer.mcendgame.main.util.BlockPosUtil
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
@@ -13,6 +13,7 @@ data class DurationSummonData(
     private val getCount: (Int) -> Int,
     private val spawnPositionsSearchSteps: Int,
     private val minDistanceBetweenSummons: Double = 1.0,
+    private val validSpawnPosition: (ServerLevel, BlockPos) -> Boolean = { _, _ -> true },
 ) {
     private val minDistanceBetweenSummonsSquared = minDistanceBetweenSummons * minDistanceBetweenSummons
 
@@ -34,7 +35,8 @@ data class DurationSummonData(
         durationEnd: Int = durationStart,
     ): Map<BlockPos, Int> {
         val summonerBlockPos = BlockPos.containing(summoner.position())
-        val possiblePositions = FindBlockPosUtil.findEmptyAboveSolid(level, summonerBlockPos, spawnPositionsSearchSteps)
+        val possiblePositions = BlockPosUtil.findEmptyAboveSolid(level, summonerBlockPos, spawnPositionsSearchSteps)
+            .filter { validSpawnPosition(level, it) }
 
         val targets = getTargets(level, summoner, target).size
         val summonCount = getCount(targets)

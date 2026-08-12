@@ -32,6 +32,9 @@ class BeastweaverVineRenderer<R>(
             )
         }
 
+        private const val ATTACK_SWAY_REMOVE_DURATION = 1F
+        private const val ATTACK_SWAY_INTRODUCE_DURATION = 1F
+
         private val EMERGING_TICKS = DataTicket.create("emerging_ticks", object : TypeToken<Int>() {})
         private val IS_ATTACKING = DataTicket.create("is_attacking", object : TypeToken<Boolean>() {})
         private val ATTACK_ANIM_TIME_SEC = DataTicket.create("attack_anim_time", object : TypeToken<Float>() {})
@@ -64,7 +67,8 @@ class BeastweaverVineRenderer<R>(
         val attackAnimTimeSec = state.getGeckolibData(ATTACK_ANIM_TIME_SEC) ?: 0F
 
         val swayData = state.getGeckolibData(RANDOM_SWAY_DATA) ?: return
-        val swayStrength = if (!isAttacking) 1F else 1F - min((attackAnimTimeSec / 0.5F), (2.42F - attackAnimTimeSec) / 0.5F).coerceIn(0.0F, 1.0F)
+        val swayStrength = if (!isAttacking) 1F
+        else 1F - min(attackAnimTimeSec / ATTACK_SWAY_REMOVE_DURATION, (2.42F - attackAnimTimeSec) / ATTACK_SWAY_INTRODUCE_DURATION).coerceIn(0.0F, 1.0F)
 
         val rotationToTargetRad = state.getGeckolibData(ROTATION_TO_TARGET_RAD)?.toDouble() ?: 0.0
         val xRotToTarget = -cos(rotationToTargetRad)

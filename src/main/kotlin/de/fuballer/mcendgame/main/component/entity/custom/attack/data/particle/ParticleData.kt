@@ -18,6 +18,14 @@ data class ParticleData(
         level: ServerLevel,
         entity: Entity,
     ) {
+        applyWithCount(level, entity, count)
+    }
+
+    fun applyWithCount(
+        level: ServerLevel,
+        entity: Entity,
+        overrideCount: Int,
+    ) {
         var adjustedOffset = offset(entity)
         if (applyScale && entity is LivingEntity) {
             adjustedOffset = adjustedOffset.scale(entity.scale.toDouble())
@@ -29,7 +37,7 @@ data class ParticleData(
             pos.x,
             pos.y,
             pos.z,
-            count,
+            overrideCount,
             d.x,
             d.y,
             d.z,

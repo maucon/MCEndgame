@@ -1,9 +1,11 @@
 package de.fuballer.mcendgame.main.util
 
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
 
-object FindBlockPosUtil {
+object BlockPosUtil {
     fun findEmptyAboveSolid(
         level: Level,
         startPos: BlockPos,
@@ -50,5 +52,19 @@ object FindBlockPosUtil {
         }
 
         return possiblePositions
+    }
+
+    fun getHighestY(
+        level: ServerLevel,
+        pos: BlockPos,
+    ): Double? {
+        val state = level.getBlockState(pos)
+
+        val shape = state.getCollisionShape(level, pos)
+        if (shape.isEmpty) return null
+
+        val worldShape = shape.move(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
+
+        return worldShape.max(Direction.Axis.Y)
     }
 }

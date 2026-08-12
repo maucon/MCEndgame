@@ -157,7 +157,7 @@ class BlockDebrisEntity(
     private fun explode(
         serverLevel: ServerLevel,
     ) {
-        owner?.let { explosionDamage?.applyAtOtherEntity(serverLevel, owner!!, this) }
+        owner?.let { explosionDamage?.applyAtEntity(serverLevel, owner!!, this) }
         explosionParticles?.apply(serverLevel, this)
         explosionSound?.apply(serverLevel, this)
 

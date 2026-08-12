@@ -9,12 +9,14 @@ import com.geckolib.animation.RawAnimation
 import com.geckolib.animation.`object`.PlayState
 import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
@@ -39,19 +41,48 @@ class BeastweaverVineEntity(
     constructor(level: Level) : this(CustomEntities.BEASTWEAVER_VINE, level)
 
     companion object {
+        const val EMERGE_DURATION_TICKS = 40
+        const val DEATH_DURATION_TICKS = 40
+        const val ATTACK_DURATION_TICKS = 57
+        const val ATTACK_DAMAGE_DELAY = 25
+
+        private const val MIN_MAX_LIFETIME = 500
+        private const val MAX_MAX_LIFETIME = 600
+
+        private const val MAX_DEATH_DELAY_AFTER_OWNER_DEATH = ATTACK_DURATION_TICKS + 40
+
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
         private val SLAM_ATTACK_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slam")
         private const val SLAM_ATTACK_ID = "Slam Attack"
+        private val SLAM_ATTACK_AREA = AreaAttackDamage.DamageArea(4.5, 1.5, 1.0, -0.5, 0.0, 0.5)
+        private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(
+            damageFactor = 1.0f,
+            knockbackFactor = 1.0,
+            area = SLAM_ATTACK_AREA,
+            blockable = true,
+        ).setParticles(
+            25,
+            0.6,
+            ParticleTypes.CLOUD,
+            0.5,
+        ).setSound(
+            false,
+            SoundEvents.ROOTED_DIRT_BREAK,
+            0.85F,
+            1.4F,
+        )
 
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
                 .add(Attributes.FOLLOW_RANGE, 4.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.0)
-                .add(Attributes.ATTACK_DAMAGE, 3.0)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.5)
+                .add(Attributes.ATTACK_DAMAGE, 4.0)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.0)
                 .add(Attributes.ARMOR, 0.0)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
         }
+
+        private const val LIFETIME_ID = "lifetime"
 
         private const val OWNER_DATA_ID = "owner"
         private val OWNER_DATA = SynchedEntityData.defineId(BeastweaverVineEntity::class.java, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE)
@@ -60,16 +91,14 @@ class BeastweaverVineEntity(
         val EMERGING_TICKS_DATA = SynchedEntityData.defineId(BeastweaverVineEntity::class.java, EntityDataSerializers.INT)
 
         val RAD_ROTATION_TO_TARGET_DATA = SynchedEntityData.defineId(BeastweaverVineEntity::class.java, EntityDataSerializers.FLOAT)
-
-        const val EMERGE_DURATION_TICKS = 40
-        const val DEATH_DURATION_TICKS = 40
-        const val ATTACK_DURATION_TICKS = 50
-        const val ATTACK_DAMAGE_DELAY = 27
     }
 
-    var attackTime = -1
+    private val maxLifetime = Random.nextInt(MIN_MAX_LIFETIME, MAX_MAX_LIFETIME)
+    private var lifetime = 0
+
+    private var attackTime = -1
     var emergingTicksClient = 0
-    var delayUntilStartDeath = -1
+    private var delayUntilStartDeath = -1
 
     val swayData = BeastweaverVineSwayData()
 
@@ -110,11 +139,7 @@ class BeastweaverVineEntity(
         tickEmerging()
 
         val level = level() as? ServerLevel ?: return
-        val owner = owner
-        if (delayUntilStartDeath == 0) health = 0F
-        else if (delayUntilStartDeath > 0) delayUntilStartDeath--
-        else if (owner?.isAlive != true) delayUntilStartDeath = Random.nextInt(20)
-
+        tickShouldDie()
         tickAttack(level)
     }
 
@@ -134,6 +159,14 @@ class BeastweaverVineEntity(
         if (emergingTicksClient > EMERGE_DURATION_TICKS) return
         playEmergeAndDeathEffects(level, emergingTicksClient)
         emergingTicksClient++
+    }
+
+    private fun tickShouldDie() {
+        if (health <= 0F) return
+
+        if (++lifetime > maxLifetime || delayUntilStartDeath == 0) health = 0F
+        else if (delayUntilStartDeath > 0) delayUntilStartDeath--
+        else if (owner?.isAlive != true) delayUntilStartDeath = Random.nextInt(ATTACK_DURATION_TICKS, MAX_DEATH_DELAY_AFTER_OWNER_DEATH)
     }
 
     override fun tickDeath() {
@@ -187,7 +220,7 @@ class BeastweaverVineEntity(
             }
 
             if (attackTime == ATTACK_DAMAGE_DELAY) dealAttackDamage(level)
-        } else if (target?.isAlive == true) {
+        } else if (target?.isAlive == true && delayUntilStartDeath < 0 && lifetime + ATTACK_DURATION_TICKS <= maxLifetime) {
             attackTime = 0
             triggerAnim(ATTACK_ANIM_CONTROLLER_ID, SLAM_ATTACK_ID)
 
@@ -202,7 +235,7 @@ class BeastweaverVineEntity(
     }
 
     private fun dealAttackDamage(level: ServerLevel) {
-
+        SLAM_ATTACK_DAMAGE.applyRotated(level, this, -entityData.get(RAD_ROTATION_TO_TARGET_DATA))
     }
 
     fun setOwner(owner: LivingEntity) {
@@ -230,6 +263,7 @@ class BeastweaverVineEntity(
 
         EntityReference.store(ownerReference, output, OWNER_DATA_ID)
 
+        output.putInt(LIFETIME_ID, lifetime)
         output.putInt(EMERGING_TICKS_DATA_ID, entityData.get(EMERGING_TICKS_DATA))
     }
 
@@ -240,6 +274,7 @@ class BeastweaverVineEntity(
         if (owner == null) entityData.set(OWNER_DATA, Optional.empty())
         else entityData.set(OWNER_DATA, Optional.of(owner))
 
+        lifetime = input.getInt(LIFETIME_ID).getOrDefault(0)
         entityData.set(EMERGING_TICKS_DATA, input.getInt(EMERGING_TICKS_DATA_ID).getOrDefault(0))
     }
 }

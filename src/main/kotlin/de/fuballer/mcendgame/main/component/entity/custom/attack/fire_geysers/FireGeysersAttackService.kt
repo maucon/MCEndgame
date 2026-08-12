@@ -8,7 +8,7 @@ import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealDamage
 import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
-import de.fuballer.mcendgame.main.util.FindBlockPosUtil
+import de.fuballer.mcendgame.main.util.BlockPosUtil
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
@@ -52,7 +52,7 @@ class FireGeysersAttackService(
         probability: Double,
         countLimit: Int
     ): List<BlockPos> {
-        val possiblePositions = FindBlockPosUtil.findEmptyAboveSolid(world, startPos, radius)
+        val possiblePositions = BlockPosUtil.findEmptyAboveSolid(world, startPos, radius)
         val count = min((possiblePositions.size * probability).toInt(), countLimit)
         return possiblePositions.shuffled().take(count)
     }
