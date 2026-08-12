@@ -25,6 +25,7 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 private val DAMAGE_CALCULATORS = listOf(
+    CreeperExplosionCalculator,
     PufferfishTouchCalculator,
     PierceAttackDamageCalculator,
     KineticAttackDamageCalculator,
@@ -126,7 +127,7 @@ object DamageService {
         var attackDamage = damageCalculator.calculateAttackDamage(originalDamage, attacked, source, cmd)
         var spellDamage = damageCalculator.calculateSpellDamage(originalDamage, attacked, source, cmd)
 
-        log.debug("${attacked.javaClass.simpleName} [${damageCalculator.javaClass.simpleName}]: originalDamage: $originalDamage --> calculated damage: ${attackDamage + spellDamage} ($attackDamage + $spellDamage)")
+        log.info("${attacked.javaClass.simpleName} [${damageCalculator.javaClass.simpleName}]: originalDamage: $originalDamage --> calculated damage: ${attackDamage + spellDamage} ($attackDamage + $spellDamage)")
 
         attackDamage = calculateAttackDamageReduction(attackDamage, attacked, source, cmd)
         spellDamage = calculateSpellDamageReduction(spellDamage, attacked, source, cmd)
