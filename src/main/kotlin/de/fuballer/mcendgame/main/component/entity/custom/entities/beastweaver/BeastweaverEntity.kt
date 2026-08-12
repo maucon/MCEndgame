@@ -953,7 +953,7 @@ class BeastweaverEntity(
     fun getCurrentAttackAnimName(): String? {
         if (!attackAnimationController.isPlayingTriggeredAnimation) return null
         val rawAnim = attackAnimationController.currentRawAnimation ?: return null
-        return rawAnim.animationStages.firstOrNull()?.animationName ?: null
+        return rawAnim.animationStages.firstOrNull()?.animationName
     }
 
     fun getCurrentAttackAnimTime(tickProgress: Float): Float {

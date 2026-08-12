@@ -365,8 +365,6 @@ class BeastweaverRenderer<R>(
     }
 
     override fun addRenderData(animatable: BeastweaverEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
-        super.addRenderData(animatable, relatedObject, renderState, partialTick)
-
         renderState.addGeckolibData(HIDDEN_BONES, animatable.getHiddenBones())
         renderState.addGeckolibData(TRANSFORM_PROGRESS, animatable.getTransformProgress(partialTick))
         renderState.addGeckolibData(SHOULDER_SPIKES_ANIM_TIME, animatable.getShoulderSpikesAnimTime(partialTick))
