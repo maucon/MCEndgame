@@ -72,7 +72,7 @@ class AreaAttackDamage(
         val scale = getScale(damager)
 
         // debug
-        area.renderOutline(world, at, forward, sideways, scale)
+        //area.renderOutline(world, at, forward, sideways, scale)
 
         val targets = getTargets(world, at, scale).filter {
             area.intersects(it, at, forward, sideways, scale)
@@ -80,13 +80,13 @@ class AreaAttackDamage(
 
         val slamCenter = area.getCenter(at, scale, forward, sideways)
 
-        dealDamage(targets, damager, scale, forward, sideways, slamCenter)
+        val damagedTargets = dealDamage(targets, damager, scale, forward, sideways, slamCenter)
 
         if (createParticles) createParticles(world, slamCenter, forward, sideways, scale)
 
         val hitTargets = targets.isNotEmpty()
         if (playSound && !(soundRequiresHit && !hitTargets)) playSound(world, slamCenter, scale)
-        if (applyStatusEffects && hitTargets) applyStatusEffects(targets)
+        if (applyStatusEffects && hitTargets) applyStatusEffects(damagedTargets)
     }
 
     private fun getScale(damager: Mob) = if (applyScale) damager.getAttributeValue(Attributes.SCALE) else 1.0
@@ -107,15 +107,18 @@ class AreaAttackDamage(
         forward: Vec3,
         sideways: Vec3,
         slamCenter: Vec3,
-    ) {
+    ): List<LivingEntity> {
         val damage = getDamage(damager)
         val knockback = getKnockback(damager)
 
+        val damagedTargets = mutableListOf<LivingEntity>()
         targets.forEach {
             val dealtDamage = it.dealGenericAttackDamage(damage, damager, blockable)
+            if (dealtDamage) damagedTargets.add(it)
             if (disableBlockingShield > 0 && it is Avatar && it.isBlocking) it.setShieldsCooldown(disableBlockingShield)
             if (dealtDamage || knockbackWhenBlocked) applyKnockback(it, damager, knockback, scale, forward, sideways, slamCenter)
         }
+        return damagedTargets
     }
 
     // TODO
