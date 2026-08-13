@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 
 class FireGeysersAttack<T>(
+    id: String,
     animationData: AttackAnimationData,
     totalDuration: Int,
     cooldown: Int,
@@ -24,7 +25,7 @@ class FireGeysersAttack<T>(
     val pillarDuration: Int,
     val geyserCountLimit: Int = Int.MAX_VALUE,
     blockMovementDuration: Int = 0,
-) : Attack<T>(animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
+) : Attack<T>(id, animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
 
     override fun start(attacker: T, target: LivingEntity?) {
         super.start(attacker, target)

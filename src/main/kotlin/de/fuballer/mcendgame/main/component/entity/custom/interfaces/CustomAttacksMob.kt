@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.interfaces
 
 import com.geckolib.animatable.GeoEntity
+import com.mojang.serialization.Codec
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
@@ -8,8 +9,15 @@ import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Mob
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 
 interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
+    companion object {
+        private const val ATTACK_COOLDOWNS_ID = "attack_cooldowns"
+        private val ATTACK_COOLDOWNS_MAP_CODEC: Codec<Map<String, Int>> = Codec.unboundedMap(Codec.STRING, Codec.INT)
+    }
+
     var attackPose: AttackPose
     var attackDuration: Int
 
@@ -101,4 +109,20 @@ interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
         if (possibleAttacks.isNotEmpty()) return RandomUtil.pickOne(possibleAttacks).option
         return null
     }
+
+    fun addAttackCooldownsSaveData(output: ValueOutput) {
+        val idCdMap = attackCooldowns.mapKeys { (attack, _) -> attack.id }
+        output.store(ATTACK_COOLDOWNS_ID, ATTACK_COOLDOWNS_MAP_CODEC, idCdMap)
+    }
+
+    fun readAttackCooldownsSaveData(input: ValueInput) {
+        input.read(ATTACK_COOLDOWNS_ID, ATTACK_COOLDOWNS_MAP_CODEC).ifPresent {
+            it.forEach { (id, cd) ->
+                val attack = getAttackFromId(id) ?: return@forEach
+                attackCooldowns[attack] = cd
+            }
+        }
+    }
+
+    private fun getAttackFromId(id: String) = attacks.firstOrNull { it.option.id == id }?.option
 }

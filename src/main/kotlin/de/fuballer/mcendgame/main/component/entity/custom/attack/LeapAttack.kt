@@ -13,6 +13,7 @@ import kotlin.math.max
 import kotlin.math.sqrt
 
 open class LeapAttack<T>(
+    id: String,
     animationData: AttackAnimationData,
     totalDuration: Int,
     cooldown: Int,
@@ -20,7 +21,7 @@ open class LeapAttack<T>(
     data: List<DelayedAttackData>,
     private val leapType: LeapType,
     blockMovementDuration: Int = 0,
-) : Attack<T>(animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
+) : Attack<T>(id, animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
 
     override fun start(
         attacker: T,

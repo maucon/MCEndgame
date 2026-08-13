@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 
 class TeleportToTargetAttack<T>(
+    id: String,
     animationData: AttackAnimationData,
     totalDuration: Int,
     cooldown: Int,
@@ -19,7 +20,7 @@ class TeleportToTargetAttack<T>(
     val teleportDelayTicks: Int,
     val choseLocationDelayTicks: Int,
     blockMovementDuration: Int = 0,
-) : Attack<T>(animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
+) : Attack<T>(id, animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
 
     override fun start(attacker: T, target: LivingEntity?) {
         super.start(attacker, target)

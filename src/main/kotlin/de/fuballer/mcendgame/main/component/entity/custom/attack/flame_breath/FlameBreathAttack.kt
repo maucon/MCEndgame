@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Mob
 import kotlin.math.atan2
 
 class FlameBreathAttack<T>(
+    id: String,
     animationData: AttackAnimationData,
     totalDuration: Int,
     cooldown: Int,
@@ -23,7 +24,7 @@ class FlameBreathAttack<T>(
     val entityWidthOffsetFactor: Double,
     val entityHeightOffsetFactor: Double,
     blockMovementDuration: Int = 0,
-) : Attack<T>(animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
+) : Attack<T>(id, animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
     override fun start(attacker: T, target: LivingEntity?) {
         super.start(attacker, target)
 

@@ -36,6 +36,8 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 
 class BonecrusherEntity(
@@ -54,6 +56,7 @@ class BonecrusherEntity(
         private val HIT_ATTACK_DAMAGE = AreaAttackDamage(0.7F, 0.35, HIT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING)
         private val HIT_ANIMATION_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, HIT_ID)
         private val HIT_ATTACK = Attack<BonecrusherEntity>(
+            HIT_ID,
             HIT_ANIMATION_DATA,
             totalDuration = 16,
             cooldown = 0,
@@ -71,6 +74,7 @@ class BonecrusherEntity(
             .setSound(false, SoundEvents.GENERIC_EXPLODE.value(), 1F, 1F)
         private val SLAM_ANIMATION_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLAM_ID)
         private val SLAM_ATTACK = Attack<BonecrusherEntity>(
+            SLAM_ID,
             SLAM_ANIMATION_DATA,
             totalDuration = 28,
             cooldown = 100,
@@ -89,6 +93,7 @@ class BonecrusherEntity(
             .setSound(false, SoundEvents.GENERIC_EXPLODE.value(), 1F, 1F)
         private val TELEPORT_PRESS_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, TELEPORT_PRESS_ID)
         private val TELEPORT_PRESS_ATTACK = TeleportToTargetAttack<BonecrusherEntity>(
+            TELEPORT_PRESS_ID,
             TELEPORT_PRESS_DATA,
             totalDuration = 45,
             cooldown = 65,
@@ -117,6 +122,7 @@ class BonecrusherEntity(
         private val SPIN_RIGHT_DAMAGE = AreaAttackDamage(1F, 0.25, SPIN_RIGHT_AREA, knockbackType = AreaAttackDamage.KnockbackType.DAMAGER_CENTER, disableBlockingShield = 5F)
         private val SPIN_ANIMATION_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, SPIN_ANIM_CONTROLLER_ID, SPIN_ID)
         private val SPIN_ATTACK = Attack<BonecrusherEntity>(
+            SPIN_ID,
             SPIN_ANIMATION_DATA,
             50 + 13 * SPIN_ATTACK_ROTATIONS,
             50 + 13 * SPIN_ATTACK_ROTATIONS + 200,
@@ -238,5 +244,15 @@ class BonecrusherEntity(
             AnimationController<GeoAnimatable>(SPIN_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
                 .triggerableAnim(SPIN_ID, SPIN_ANIM)
         )
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        addAttackCooldownsSaveData(output)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        readAttackCooldownsSaveData(input)
     }
 }

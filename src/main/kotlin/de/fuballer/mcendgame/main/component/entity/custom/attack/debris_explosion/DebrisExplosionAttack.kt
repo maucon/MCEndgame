@@ -13,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 
 class DebrisExplosionAttack<T>(
+    id: String,
     animationData: AttackAnimationData,
     totalDuration: Int,
     cooldown: Int,
@@ -29,7 +30,7 @@ class DebrisExplosionAttack<T>(
     val debrisCreateProbabilityFromDistanceToOrigin: (Double) -> Double,
     val debrisVelocity: () -> Double,
     blockMovementDuration: Int = 0,
-) : Attack<T>(animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
+) : Attack<T>(id, animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
 
     override fun start(attacker: T, target: LivingEntity?) {
         super.start(attacker, target)

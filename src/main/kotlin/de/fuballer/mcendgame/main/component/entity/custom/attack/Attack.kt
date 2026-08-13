@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 
 open class Attack<T>(
+    val id: String,
     val animationData: AttackAnimationData,
     val totalDuration: Int,
     val cooldown: Int,

@@ -14,7 +14,10 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.LeapAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.WindBurstAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.BasicAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.data.*
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedLeapDamageData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.SoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.fire_geysers.FireGeysersAttack
@@ -44,6 +47,8 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -63,6 +68,7 @@ class BeakburnEntity(
         private val PECK_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, PECK_ID)
         private val PECK_ATTACK =
             Attack<BeakburnEntity>(
+                PECK_ID,
                 PECK_ANIM_DATA,
                 10 + 2,
                 0,
@@ -79,6 +85,7 @@ class BeakburnEntity(
         private val BITE_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BITE_RIGHT_ID)
         private val BITE_RIGHT_ATTACK =
             Attack<BeakburnEntity>(
+                BITE_RIGHT_ID,
                 BITE_RIGHT_ANIM_DATA,
                 13 + 2,
                 0,
@@ -94,6 +101,7 @@ class BeakburnEntity(
         private val BITE_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BITE_LEFT_ID)
         private val BITE_LEFT_ATTACK =
             Attack<BeakburnEntity>(
+                BITE_LEFT_ID,
                 BITE_LEFT_ANIM_DATA,
                 13 + 2,
                 0,
@@ -109,6 +117,7 @@ class BeakburnEntity(
         private val WING_SWIPE_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, WING_SWIPE_RIGHT_ID)
         private val WING_SWIPE_RIGHT_ATTACK =
             Attack<BeakburnEntity>(
+                WING_SWIPE_RIGHT_ID,
                 WING_SWIPE_RIGHT_ANIM_DATA,
                 13 + 2,
                 0,
@@ -123,6 +132,7 @@ class BeakburnEntity(
         private val WING_SWIPE_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, WING_SWIPE_LEFT_ID)
         private val WING_SWIPE_LEFT_ATTACK =
             Attack<BeakburnEntity>(
+                WING_SWIPE_LEFT_ID,
                 WING_SWIPE_LEFT_ANIM_DATA,
                 13 + 2,
                 0,
@@ -145,6 +155,7 @@ class BeakburnEntity(
         private val POUNCE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, POUNCE_ID)
         private val POUNCE_ATTACK =
             LeapAttack<BeakburnEntity>(
+                POUNCE_ID,
                 POUNCE_ANIM_DATA,
                 20 + 4,
                 0,
@@ -161,6 +172,7 @@ class BeakburnEntity(
         private val WIND_BURST_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, WIND_BURST_ID)
         private val WIND_BURST_ATTACK =
             WindBurstAttack<BeakburnEntity>(
+                WIND_BURST_ID,
                 WIND_BURST_ANIM_DATA,
                 20 + 3,
                 80,
@@ -179,6 +191,7 @@ class BeakburnEntity(
         private val BREATH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BREATH_ID)
         private val BREATH_ATTACK =
             FlameBreathAttack<BeakburnEntity>(
+                BREATH_ID,
                 BREATH_ANIM_DATA,
                 60 + 5,
                 220,
@@ -200,6 +213,7 @@ class BeakburnEntity(
         private val ULTIMATE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, ULTIMATE_ID)
         private val ULTIMATE_ATTACK =
             FireGeysersAttack<BeakburnEntity>(
+                ULTIMATE_ID,
                 ULTIMATE_ANIM_DATA,
                 43 + 5,
                 Int.MAX_VALUE,
@@ -322,4 +336,14 @@ class BeakburnEntity(
     override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.CAMEL_HUSK_HURT
 
     override fun getDeathSound(): SoundEvent = SoundEvents.CAMEL_HUSK_DEATH
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        addAttackCooldownsSaveData(output)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        readAttackCooldownsSaveData(input)
+    }
 }

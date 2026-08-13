@@ -263,6 +263,7 @@ class BeastweaverEntity(
         private val BEAR_SWIPE_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BEAR_SWIPE_RIGHT_ID)
         private val BEAR_SWIPE_RIGHT_ATTACK =
             Attack<BeastweaverEntity>(
+                BEAR_SWIPE_RIGHT_ID,
                 BEAR_SWIPE_RIGHT_ANIM_DATA,
                 totalDuration = 28,
                 cooldown = 35,
@@ -284,6 +285,7 @@ class BeastweaverEntity(
         private val BEAR_SWIPE_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BEAR_SWIPE_LEFT_ID)
         private val BEAR_SWIPE_LEFT_ATTACK =
             Attack<BeastweaverEntity>(
+                BEAR_SWIPE_LEFT_ID,
                 BEAR_SWIPE_LEFT_ANIM_DATA,
                 totalDuration = 28,
                 cooldown = 35,
@@ -317,6 +319,7 @@ class BeastweaverEntity(
         private val TAIL_SWEEP_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, TAIL_SWEEP_ID)
         private val TAIL_SWEEP_ATTACK =
             Attack<BeastweaverEntity>(
+                TAIL_SWEEP_ID,
                 TAIL_SWEEP_ANIM_DATA,
                 totalDuration = 30,
                 cooldown = 150,
@@ -391,6 +394,7 @@ class BeastweaverEntity(
         private val WINGS_LAUNCH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.AIRBORN, ATTACK_ANIM_CONTROLLER_ID, WINGS_LAUNCH_ID)
         private val WINGS_LAUNCH_ATTACK =
             Attack<BeastweaverEntity>(
+                WINGS_LAUNCH_ID,
                 WINGS_LAUNCH_ANIM_DATA,
                 totalDuration = 35,
                 cooldown = 300,
@@ -478,6 +482,7 @@ class BeastweaverEntity(
         private val ELEPHANT_STOMP_ANIM_DATA = AttackAnimationData(AttackPose.AIRBORN, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, ELEPHANT_STOMP_ID)
         private val ELEPHANT_STOMP_ATTACK =
             DebrisExplosionAttack<BeastweaverEntity>(
+                ELEPHANT_STOMP_ID,
                 ELEPHANT_STOMP_ANIM_DATA,
                 totalDuration = 40,
                 cooldown = 0,
@@ -578,6 +583,7 @@ class BeastweaverEntity(
         private val WOLF_SUMMON_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, WOLF_SUMMON_ID)
         private val WOLF_SUMMON_ATTACK =
             Attack<BeastweaverEntity>(
+                WOLF_SUMMON_ID,
                 WOLF_SUMMON_ANIM_DATA,
                 totalDuration = 70,
                 cooldown = 800,
@@ -655,6 +661,7 @@ class BeastweaverEntity(
         private val SUMMON_VINES_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SUMMON_VINES_ID)
         private val SUMMON_VINES_ATTACK =
             Attack<BeastweaverEntity>(
+                SUMMON_VINES_ID,
                 SUMMON_VINES_ANIM_DATA,
                 totalDuration = 95,
                 cooldown = 1000,
@@ -724,7 +731,9 @@ class BeastweaverEntity(
                 blockMovementDuration = 95,
             )
 
+        private const val SUMMON_TARGETED_VINE_ID = "Summon Targeted Vine"
         private val SUMMON_TARGETED_VINE_ATTACK = Attack<BeastweaverEntity>(
+            SUMMON_TARGETED_VINE_ID,
             animationData = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, "", ""),
             totalDuration = 10,
             cooldown = 50,
@@ -755,6 +764,7 @@ class BeastweaverEntity(
         private val RHINO_CHARGE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, RHINO_CHARGE_ID)
         private val RHINO_CHARGE_ATTACK =
             Attack<BeastweaverEntity>(
+                RHINO_CHARGE_ID,
                 RHINO_CHARGE_ANIM_DATA,
                 totalDuration = -1,
                 cooldown = 400,
@@ -857,7 +867,9 @@ class BeastweaverEntity(
         )
         private const val RHINO_CHARGE_ARROW_DEFLECT_ANGLE = 90.0
 
+        private const val SPEED_BOOST_ID = "Speed Boost"
         private val SPEED_BOOST_ATTACK = Attack<BeastweaverEntity>(
+            SPEED_BOOST_ID,
             animationData = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, "", ""),
             totalDuration = 0,
             cooldown = 400,
@@ -866,7 +878,7 @@ class BeastweaverEntity(
                 DelayedStatusEffectData(
                     StatusEffectData(
                         type = MobEffects.SPEED,
-                        amplifier = 1,
+                        amplifier = 0,
                         duration = 100,
                         particles = false,
                     ),
@@ -1369,11 +1381,15 @@ class BeastweaverEntity(
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
         output.putFloat(TRANSFORM_PROGRESS_ID, entityData.get(TRANSFORM_PROGRESS))
+
+        addAttackCooldownsSaveData(output)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
         entityData.set(TRANSFORM_PROGRESS, input.getFloatOr(TRANSFORM_PROGRESS_ID, 0F))
+
+        readAttackCooldownsSaveData(input)
 
         isNoGravity = false
     }

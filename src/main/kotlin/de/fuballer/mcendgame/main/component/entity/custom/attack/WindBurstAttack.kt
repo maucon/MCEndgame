@@ -18,6 +18,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class WindBurstAttack<T>(
+    id: String,
     animationData: AttackAnimationData,
     totalDuration: Int,
     cooldown: Int,
@@ -29,7 +30,7 @@ class WindBurstAttack<T>(
     private val projectileDirectionSpread: (distance: Double) -> Float,
     private val projectileExplosionPower: Float,
     blockMovementDuration: Int = 0,
-) : LeapAttack<T>(animationData, totalDuration, cooldown, trigger, data, leapType, blockMovementDuration) where T : Mob, T : GeoEntity {
+) : LeapAttack<T>(id, animationData, totalDuration, cooldown, trigger, data, leapType, blockMovementDuration) where T : Mob, T : GeoEntity {
 
     override fun start(
         attacker: T,

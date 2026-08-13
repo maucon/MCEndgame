@@ -38,6 +38,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.ProjectileDeflection
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.sin
@@ -68,6 +70,7 @@ class ElfDuelistEntity(
         private val STAB_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.STAB_RIGHT, ATTACK_ANIM_CONTROLLER_ID, STAB_RIGHT_ID)
         private val STAB_RIGHT_ATTACK =
             Attack<ElfDuelistEntity>(
+                STAB_RIGHT_ID,
                 STAB_RIGHT_ANIM_DATA,
                 7,
                 0,
@@ -82,6 +85,7 @@ class ElfDuelistEntity(
         private val STAB_RIGHT_RESET_ANIM_DATA = AttackAnimationData(AttackPose.STAB_RIGHT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, STAB_RIGHT_RESET_ID)
         private val STAB_RIGHT_RESET_ATTACK =
             Attack<ElfDuelistEntity>(
+                STAB_RIGHT_RESET_ID,
                 STAB_RIGHT_RESET_ANIM_DATA,
                 7,
                 0,
@@ -94,6 +98,7 @@ class ElfDuelistEntity(
         private val STAB_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.STAB_LEFT, ATTACK_ANIM_CONTROLLER_ID, STAB_LEFT_ID)
         private val STAB_LEFT_ATTACK =
             Attack<ElfDuelistEntity>(
+                STAB_LEFT_ID,
                 STAB_LEFT_ANIM_DATA,
                 7,
                 0,
@@ -108,6 +113,7 @@ class ElfDuelistEntity(
         private val STAB_LEFT_RESET_ANIM_DATA = AttackAnimationData(AttackPose.STAB_LEFT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, STAB_LEFT_RESET_ID)
         private val STAB_LEFT_RESET_ATTACK =
             Attack<ElfDuelistEntity>(
+                STAB_LEFT_RESET_ID,
                 STAB_LEFT_RESET_ANIM_DATA,
                 7,
                 0,
@@ -120,6 +126,7 @@ class ElfDuelistEntity(
         private val STAB_SWAP_LR_ANIM_DATA = AttackAnimationData(AttackPose.STAB_LEFT, AttackPose.STAB_RIGHT, ATTACK_ANIM_CONTROLLER_ID, STAB_SWAP_LR_ID)
         private val STAB_SWAP_LR_ATTACK =
             Attack<ElfDuelistEntity>(
+                STAB_SWAP_LR_ID,
                 STAB_SWAP_LR_ANIM_DATA,
                 7,
                 0,
@@ -134,6 +141,7 @@ class ElfDuelistEntity(
         private val STAB_SWAP_RL_ANIM_DATA = AttackAnimationData(AttackPose.STAB_RIGHT, AttackPose.STAB_LEFT, ATTACK_ANIM_CONTROLLER_ID, STAB_SWAP_RL_ID)
         private val STAB_SWAP_RL_ATTACK =
             Attack<ElfDuelistEntity>(
+                STAB_SWAP_RL_ID,
                 STAB_SWAP_RL_ANIM_DATA,
                 7,
                 0,
@@ -148,6 +156,7 @@ class ElfDuelistEntity(
         private val UPWARDS_SLICE_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.UPWARDS_SLICE_LEFT, ATTACK_ANIM_CONTROLLER_ID, UPWARDS_SLICE_LEFT_ID)
         private val UPWARDS_SLICE_LEFT_ATTACK =
             Attack<ElfDuelistEntity>(
+                UPWARDS_SLICE_LEFT_ID,
                 UPWARDS_SLICE_LEFT_ANIM_DATA,
                 7,
                 0,
@@ -162,6 +171,7 @@ class ElfDuelistEntity(
         private val UPWARDS_SLICE_LEFT_RESET_ANIM_DATA = AttackAnimationData(AttackPose.UPWARDS_SLICE_LEFT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, UPWARDS_SLICE_LEFT_RESET_ID)
         private val UPWARDS_SLICE_LEFT_RESET_ATTACK =
             Attack<ElfDuelistEntity>(
+                UPWARDS_SLICE_LEFT_RESET_ID,
                 UPWARDS_SLICE_LEFT_RESET_ANIM_DATA,
                 7,
                 0,
@@ -176,6 +186,7 @@ class ElfDuelistEntity(
         private val UPWARDS_SLICE_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.UPWARDS_SLICE_RIGHT, ATTACK_ANIM_CONTROLLER_ID, UPWARDS_SLICE_RIGHT_ID)
         private val UPWARDS_SLICE_RIGHT_ATTACK =
             Attack<ElfDuelistEntity>(
+                UPWARDS_SLICE_RIGHT_ID,
                 UPWARDS_SLICE_RIGHT_ANIM_DATA,
                 7,
                 0,
@@ -190,6 +201,7 @@ class ElfDuelistEntity(
         private val UPWARDS_SLICE_RIGHT_RESET_ANIM_DATA = AttackAnimationData(AttackPose.UPWARDS_SLICE_RIGHT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, UPWARDS_SLICE_RIGHT_RESET_ID)
         private val UPWARDS_SLICE_RIGHT_RESET_ATTACK =
             Attack<ElfDuelistEntity>(
+                UPWARDS_SLICE_RIGHT_RESET_ID,
                 UPWARDS_SLICE_RIGHT_RESET_ANIM_DATA,
                 7,
                 0,
@@ -204,6 +216,7 @@ class ElfDuelistEntity(
         private val UPWARDS_SLICE_BOTH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.UPWARDS_SLICE_BOTH, ATTACK_ANIM_CONTROLLER_ID, UPWARDS_SLICE_BOTH_ID)
         private val UPWARDS_SLICE_BOTH_ATTACK =
             Attack<ElfDuelistEntity>(
+                UPWARDS_SLICE_BOTH_ID,
                 UPWARDS_SLICE_BOTH_ANIM_DATA,
                 15,
                 0,
@@ -218,6 +231,7 @@ class ElfDuelistEntity(
         private val UPWARDS_SLICE_BOTH_RESET_ANIM_DATA = AttackAnimationData(AttackPose.UPWARDS_SLICE_BOTH, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, UPWARDS_SLICE_BOTH_RESET_ID)
         private val UPWARDS_SLICE_BOTH_RESET_ATTACK =
             Attack<ElfDuelistEntity>(
+                UPWARDS_SLICE_BOTH_RESET_ID,
                 UPWARDS_SLICE_BOTH_RESET_ANIM_DATA,
                 7,
                 0,
@@ -233,6 +247,7 @@ class ElfDuelistEntity(
         private val DOWNWARDS_SLICE_BOTH_ATTACK_DAMAGE = BasicAttackDamage(0.6F, 2.0, 20.0, disableBlockingShield = 5F)
         private val DOWNWARDS_SLICE_BOTH_ATTACK =
             LeapAttack<ElfDuelistEntity>(
+                DOWNWARDS_SLICE_BOTH_ID,
                 DOWNWARDS_SLICE_BOTH_ANIM_DATA,
                 15,
                 0,
@@ -249,6 +264,7 @@ class ElfDuelistEntity(
         private val DOWNWARDS_SLICE_BOTH_RESET_ANIM_DATA = AttackAnimationData(AttackPose.DOWNWARDS_SLICE_BOTH, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, DOWNWARDS_SLICE_BOTH_RESET_ID)
         private val DOWNWARDS_SLICE_BOTH_RESET_ATTACK =
             Attack<ElfDuelistEntity>(
+                DOWNWARDS_SLICE_BOTH_RESET_ID,
                 DOWNWARDS_SLICE_BOTH_RESET_ANIM_DATA,
                 7,
                 0,
@@ -261,6 +277,7 @@ class ElfDuelistEntity(
         private val SWEEP_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.UPWARDS_SLICE_LEFT, AttackPose.SWEEP_LEFT, ATTACK_ANIM_CONTROLLER_ID, SWEEP_LEFT_ID)
         private val SWEEP_LEFT_ATTACK =
             Attack<ElfDuelistEntity>(
+                SWEEP_LEFT_ID,
                 SWEEP_LEFT_ANIM_DATA,
                 7,
                 0,
@@ -275,6 +292,7 @@ class ElfDuelistEntity(
         private val SWEEP_LEFT_RESET_ANIM_DATA = AttackAnimationData(AttackPose.SWEEP_LEFT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SWEEP_LEFT_RESET_ID)
         private val SWEEP_LEFT_RESET_ATTACK =
             Attack<ElfDuelistEntity>(
+                SWEEP_LEFT_RESET_ID,
                 SWEEP_LEFT_RESET_ANIM_DATA,
                 7,
                 0,
@@ -287,6 +305,7 @@ class ElfDuelistEntity(
         private val SWEEP_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.UPWARDS_SLICE_RIGHT, AttackPose.SWEEP_RIGHT, ATTACK_ANIM_CONTROLLER_ID, SWEEP_RIGHT_ID)
         private val SWEEP_RIGHT_ATTACK =
             Attack<ElfDuelistEntity>(
+                SWEEP_RIGHT_ID,
                 SWEEP_RIGHT_ANIM_DATA,
                 7,
                 0,
@@ -301,6 +320,7 @@ class ElfDuelistEntity(
         private val SWEEP_RIGHT_RESET_ANIM_DATA = AttackAnimationData(AttackPose.SWEEP_RIGHT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SWEEP_RIGHT_RESET_ID)
         private val SWEEP_RIGHT_RESET_ATTACK =
             Attack<ElfDuelistEntity>(
+                SWEEP_RIGHT_RESET_ID,
                 SWEEP_RIGHT_RESET_ANIM_DATA,
                 7,
                 0,
@@ -333,6 +353,7 @@ class ElfDuelistEntity(
         private val LEAP_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.STAB_RIGHT, ATTACK_ANIM_CONTROLLER_ID, LEAP_RIGHT_ID)
         private val LEAP_RIGHT_ATTACK =
             LeapAttack<ElfDuelistEntity>(
+                LEAP_RIGHT_ID,
                 LEAP_RIGHT_ANIM_DATA,
                 15,
                 0,
@@ -349,6 +370,7 @@ class ElfDuelistEntity(
         private val LEAP_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.STAB_LEFT, ATTACK_ANIM_CONTROLLER_ID, LEAP_LEFT_ID)
         private val LEAP_LEFT_ATTACK =
             LeapAttack<ElfDuelistEntity>(
+                LEAP_LEFT_ID,
                 LEAP_LEFT_ANIM_DATA,
                 15,
                 0,
@@ -373,6 +395,7 @@ class ElfDuelistEntity(
         private val BACKFLIP_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BACKFLIP_ID)
         private val BACKFLIP_ATTACK =
             LeapAttack<ElfDuelistEntity>(
+                BACKFLIP_ID,
                 BACKFLIP_ANIM_DATA,
                 25,
                 200,
@@ -544,5 +567,15 @@ class ElfDuelistEntity(
         attack(this, attack)
 
         return ProjectileDeflection.REVERSE
+    }
+    
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        addAttackCooldownsSaveData(output)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        readAttackCooldownsSaveData(input)
     }
 }
