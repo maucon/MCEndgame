@@ -63,10 +63,10 @@ class BeastweaverVineEntity(
             area = SLAM_ATTACK_AREA,
             blockable = true,
         ).setParticles(
-            25,
+            10,
             0.6,
             ParticleTypes.CLOUD,
-            0.5,
+            0.1,
         ).setSound(
             false,
             SoundEvents.ROOTED_DIRT_BREAK,
