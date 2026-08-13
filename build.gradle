@@ -59,7 +59,7 @@ dependencies {
     implementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
 
     implementation "xyz.nucleoid:fantasy:0.8.0+${minecraft_version}"
-    implementation "com.geckolib:geckolib-fabric-${minecraft_version}:5.5.1"
+    implementation "com.geckolib:geckolib-fabric-${minecraft_version}:5.5.2"
     implementation "de.maucon:maucon-framework:2.0.1"
 
     include "de.maucon:maucon-framework:2.0.1"
