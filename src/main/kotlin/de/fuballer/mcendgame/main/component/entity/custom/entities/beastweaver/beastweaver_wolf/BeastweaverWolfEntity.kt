@@ -8,6 +8,10 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.FloatGoal
+import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.animal.wolf.Wolf
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.player.Player
@@ -27,6 +31,14 @@ class BeastweaverWolfEntity(
                 .add(Attributes.MAX_HEALTH, 20.0)
                 .add(Attributes.ATTACK_DAMAGE, 4.0)
                 .add(Attributes.FOLLOW_RANGE, 48.0)
+    }
+
+    override fun registerGoals() {
+        goalSelector.addGoal(1, FloatGoal(this))
+        goalSelector.addGoal(2, LeapAtTargetGoal(this, 0.4F))
+        goalSelector.addGoal(3, MeleeAttackGoal(this, 1.0, true))
+
+        targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Player::class.java, 10, false, false, null))
     }
 
     private val maxDuration = 500 + random.nextDouble() * 50

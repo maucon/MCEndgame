@@ -303,15 +303,15 @@ class BeastweaverEntity(
         private val TAIL_SWEEP_DAMAGE_DATA = listOf(
             DelayedDamageData(
                 AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, -2.25, 0.5), knockbackWhenBlocked = true),
-                minDelay = 19,
+                minDelay = 18,
             ),
             DelayedDamageData(
                 AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.0, 0.4, 0.1, 0.0, 0.5), knockbackWhenBlocked = true),
-                minDelay = 22,
+                minDelay = 19,
             ),
             DelayedDamageData(
                 AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, 2.25, 0.5), knockbackWhenBlocked = true),
-                minDelay = 25,
+                minDelay = 20,
             ),
         )
         private val TAIL_SWEEP_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.tail_sweep")
@@ -1010,7 +1010,7 @@ class BeastweaverEntity(
     )
 
     private val attackAnimationController =
-        AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 5) { _ -> PlayState.STOP }
+        AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
             .triggerableAnim(BEAR_SWIPE_RIGHT_ID, BEAR_SWIPE_RIGHT_ANIM)
             .triggerableAnim(BEAR_SWIPE_LEFT_ID, BEAR_SWIPE_LEFT_ANIM)
             .triggerableAnim(TAIL_SWEEP_ID, TAIL_SWEEP_ANIM)
