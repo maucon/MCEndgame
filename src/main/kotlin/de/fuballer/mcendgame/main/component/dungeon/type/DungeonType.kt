@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.main.component.dungeon.type.data.RolledDungeonType
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.types.*
 import de.fuballer.mcendgame.main.component.entity.types.boss.*
+import de.fuballer.mcendgame.main.component.entity.types.special.FoxStats
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import net.minecraft.resources.ResourceKey
@@ -103,7 +104,9 @@ enum class DungeonType(
         listOf(
             RandomOption(1, DungeonLayoutType.BEASTWEAVER_GROVE),
         ),
-        listOf(),
+        listOf(
+            RandomOption(1, FoxStats),
+        ),
         listOf(
             RandomOption(1, BeastweaverBossStats),
         ),
