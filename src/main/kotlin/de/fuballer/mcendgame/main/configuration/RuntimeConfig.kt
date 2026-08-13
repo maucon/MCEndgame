@@ -5,10 +5,10 @@ import com.mojang.serialization.JsonOps
 import de.fuballer.mcendgame.main.messaging.server.ServerStartingEvent
 import de.maucon.mauconframework.di.annotation.Configuration
 import de.maucon.mauconframework.event.EventSubscriber
+import de.fuballer.mcendgame.main.fantasy.Fantasy
 import net.minecraft.resources.RegistryOps
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.storage.LevelResource
-import xyz.nucleoid.fantasy.Fantasy
 import java.nio.file.Path
 
 @Configuration

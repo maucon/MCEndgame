@@ -3,3 +3,11 @@ accessWidener v2 official
 # Custom stats tab
 accessible class net/minecraft/client/gui/screens/achievement/StatsScreen$StatisticsTab
 accessible class net/minecraft/client/gui/screens/achievement/StatsScreen$GeneralStatisticsList
+
+# fantasy
+accessible method net/minecraft/world/clock/ServerClockManager <init> (Lnet/minecraft/world/clock/PackedClockStates;)V
+accessible class net/minecraft/world/clock/ServerClockManager$ClockInstance
+accessible method net/minecraft/world/clock/ServerClockManager getGameTime ()J
+accessible method net/minecraft/world/clock/ServerClockManager getInstance (Lnet/minecraft/core/Holder;)Lnet/minecraft/world/clock/ServerClockManager$ClockInstance;
+extendable	method	net/minecraft/world/clock/ServerClockManager modifyClock (Lnet/minecraft/core/Holder;Ljava/util/function/Consumer;)V
+accessible field net/minecraft/server/level/ServerLevel tickTime Z
