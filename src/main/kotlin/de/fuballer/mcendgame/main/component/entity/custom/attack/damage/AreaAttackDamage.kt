@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.main.component.entity.custom.attack.damage
 
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.knockback.AttackKnockbackUtil.takeKnockbackFrom
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealGenericAttackDamage
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.status_effect.StatusEffectData
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.getDistanceToGround
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setShieldsCooldown
 import net.minecraft.core.particles.ParticleTypes
@@ -42,6 +43,9 @@ class AreaAttackDamage(
     private var pitch: Float = 1F
     private var volume: Float = 1F
 
+    private var applyStatusEffects: Boolean = false
+    private var statusEffects: List<StatusEffectData> = listOf()
+
     override fun apply(world: ServerLevel, damager: Mob, target: LivingEntity?): Boolean {
         applyAtEntity(world, damager, damager)
         return true
@@ -80,9 +84,9 @@ class AreaAttackDamage(
 
         if (createParticles) createParticles(world, slamCenter, forward, sideways, scale)
 
-        if (!playSound) return
-        if (soundRequiresHit && targets.isEmpty()) return
-        playSound(world, slamCenter, scale)
+        val hitTargets = targets.isNotEmpty()
+        if (playSound && !(soundRequiresHit && !hitTargets)) playSound(world, slamCenter, scale)
+        if (applyStatusEffects && hitTargets) applyStatusEffects(targets)
     }
 
     private fun getScale(damager: Mob) = if (applyScale) damager.getAttributeValue(Attributes.SCALE) else 1.0
@@ -224,6 +228,22 @@ class AreaAttackDamage(
             scaledVolume,
             pitch
         )
+    }
+
+    fun setStatusEffects(
+        vararg effects: StatusEffectData,
+    ): AreaAttackDamage {
+        applyStatusEffects = true
+        statusEffects = effects.toList()
+        return this
+    }
+
+    private fun applyStatusEffects(targets: List<LivingEntity>) {
+        targets.forEach { target ->
+            statusEffects.forEach { effectData ->
+                effectData.apply(target)
+            }
+        }
     }
 
     override fun requiresTarget() = false

@@ -10,6 +10,7 @@ import com.geckolib.animation.`object`.PlayState
 import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.status_effect.StatusEffectData
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -20,6 +21,7 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageTypes
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -70,6 +72,9 @@ class BeastweaverVineEntity(
             SoundEvents.ROOTED_DIRT_BREAK,
             0.85F,
             1.4F,
+        ).setStatusEffects(
+            StatusEffectData(MobEffects.POISON, 1, 100),
+            StatusEffectData(MobEffects.SLOWNESS, 0, 200),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
