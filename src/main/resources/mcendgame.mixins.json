@@ -76,6 +76,7 @@
     "phasing.EntityBlockPhasingMixin",
     "phasing.LivingEntityBlockPhasingMixin",
     "phasing.LivingEntityEntityPhasingMixin",
+    "player.PlayerAncientBlightMixin",
     "player.PlayerDungeonLevelMixin",
     "player.PlayerDungeonSeedMixin",
     "player.PlayerInsideDungeonMixin",
