@@ -47,7 +47,6 @@
     "fantasy.clock.ClockInstanceAccessor",
     "fantasy.clock.PlayerListMixin",
     "fantasy.clock.ServerClockManagerMixin",
-    "fantasy.registry.LevelStemMixin",
     "fantasy.registry.MappedRegistryMixin",
     "fantasy.registry.WorldGenSettingsMixin",
     "filter.ItemEntityFilterMixin",

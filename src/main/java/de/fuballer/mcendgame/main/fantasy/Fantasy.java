@@ -152,9 +152,7 @@ public final class Fantasy {
         List<RuntimeLevel> temporaryLevels = new ArrayList<>();
         for (ServerLevel level : this.server.getAllLevels()) {
             if (level instanceof RuntimeLevel runtimeLevel) {
-                if (runtimeLevel.style == RuntimeLevel.Style.TEMPORARY) {
-                    temporaryLevels.add(runtimeLevel);
-                }
+                temporaryLevels.add(runtimeLevel);
             }
         }
         return temporaryLevels;

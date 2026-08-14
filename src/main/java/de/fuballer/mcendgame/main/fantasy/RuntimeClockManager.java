@@ -10,6 +10,7 @@ import net.minecraft.world.clock.ClockNetworkState;
 import net.minecraft.world.clock.PackedClockStates;
 import net.minecraft.world.clock.ServerClockManager;
 import net.minecraft.world.clock.WorldClock;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.function.BooleanSupplier;
@@ -25,7 +26,7 @@ public class RuntimeClockManager extends ServerClockManager {
     }
 
     @Override
-    public void init(MinecraftServer server) {
+    public void init(@NonNull MinecraftServer server) {
         super.init(server);
         this.server = server;
     }
@@ -59,7 +60,7 @@ public class RuntimeClockManager extends ServerClockManager {
     }
 
     @Override
-    public ClientboundSetTimePacket createFullSyncPacket() {
+    public @NonNull ClientboundSetTimePacket createFullSyncPacket() {
         return new ClientboundSetTimePacket(this.getGameTime(), Util.mapValues(((ServerClockManagerExtension) this).fantasy$getClocks(), (clock) -> this.packNetworkState(clock, this.server)));
     }
 

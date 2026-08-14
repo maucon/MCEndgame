@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(PlayerList.class)
 public class PlayerListMixin {
     @WrapOperation(method = "sendLevelInfo", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;clockManager()Lnet/minecraft/world/clock/ServerClockManager;"))
-    private ServerClockManager replaceClockManager(MinecraftServer instance, Operation<ServerClockManager> original, @Local(argsOnly = true) ServerLevel level) {
+    private ServerClockManager replaceClockManager(MinecraftServer instance, Operation<ServerClockManager> original, @Local(argsOnly = true, name = "level") ServerLevel level) {
         return level.clockManager();
     }
 }

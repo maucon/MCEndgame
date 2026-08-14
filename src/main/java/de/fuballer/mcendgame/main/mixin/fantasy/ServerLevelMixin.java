@@ -44,7 +44,7 @@ public abstract class ServerLevelMixin implements FantasyLevelAccess {
     }
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-    private void tick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
+    private void tick(BooleanSupplier haveTime, CallbackInfo ci) {
         boolean shouldTick = this.fantasy$tickWhenEmpty || !this.isLevelEmpty();
         if (shouldTick) {
             this.fantasy$tickTimeout = TICK_TIMEOUT;

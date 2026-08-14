@@ -24,6 +24,7 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -58,7 +59,7 @@ public class VoidChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    protected MapCodec<? extends ChunkGenerator> codec() {
+    protected @NonNull MapCodec<? extends ChunkGenerator> codec() {
         return CODEC;
     }
 

@@ -1,13 +1,10 @@
 package de.fuballer.mcendgame.main.component.dungeon.world
 
-import de.fuballer.mcendgame.main.component.dimension.CustomDimensions
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
 import de.fuballer.mcendgame.main.fantasy.RuntimeLevelConfig
 import de.fuballer.mcendgame.main.fantasy.util.VoidChunkGenerator
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.resources.ResourceKey
-import net.minecraft.world.Difficulty
-import net.minecraft.world.clock.WorldClocks
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.gamerules.GameRules
 import java.util.*
@@ -19,10 +16,8 @@ object DungeonWorldSettings {
     fun getWorldConfig(
         biome: ResourceKey<Biome>,
     ): RuntimeLevelConfig = RuntimeLevelConfig()
-        .setDimensionType(CustomDimensions.DUNGEON)
-        .setDifficulty(Difficulty.HARD)
         .setGenerator(VoidChunkGenerator(RuntimeConfig.SERVER, biome))
-        .setClockTime(WorldClocks.OVERWORLD, 14700)
+        .setClockTime(14700)
         .setGameRule(GameRules.KEEP_INVENTORY, true)
         .setGameRule(GameRules.MOB_GRIEFING, false)
         .setGameRule(GameRules.SPAWN_MOBS, false)
