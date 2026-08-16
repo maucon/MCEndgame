@@ -269,4 +269,6 @@ object EntityExtension {
 
         return dot >= threshold
     }
+
+    fun LivingEntity.getHealthPercentage() = health / maxHealth
 }

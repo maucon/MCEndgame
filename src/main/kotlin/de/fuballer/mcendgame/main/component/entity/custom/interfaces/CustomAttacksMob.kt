@@ -55,7 +55,7 @@ interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
         attackDuration = attack.totalDuration
         attackPose = attack.animationData.endPose
 
-        attackCooldowns[attack] = attack.cooldown
+        attackCooldowns[attack] = attack.cooldown(attacker)
 
         val target = attacker.target
         attack.start(attacker, target)

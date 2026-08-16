@@ -45,6 +45,7 @@ import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.component.particle.DirectionalAttackSweepParticleEffect
 import de.fuballer.mcendgame.main.component.sound.CustomSoundEvents
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.getDistanceToGround
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.getHealthPercentage
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isEnemy
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isFacingTowards
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.rotateToEntity
@@ -281,7 +282,7 @@ class BeastweaverEntity(
                 BEAR_SWIPE_RIGHT_ID,
                 BEAR_SWIPE_RIGHT_ANIM_DATA,
                 totalDuration = 28,
-                cooldown = 35,
+                cooldown = { mob -> 29 + (10 * mob.getHealthPercentage()).toInt() },
                 DistanceTriggerCondition(3.0, affectedByScale = true),
                 data = listOf(
                     DelayedDamageData(BEAR_SWIPE_RIGHT_ATTACK_DAMAGE, 19),
@@ -303,7 +304,7 @@ class BeastweaverEntity(
                 BEAR_SWIPE_LEFT_ID,
                 BEAR_SWIPE_LEFT_ANIM_DATA,
                 totalDuration = 28,
-                cooldown = 35,
+                cooldown = { mob -> 29 + (10 * mob.getHealthPercentage()).toInt() },
                 DistanceTriggerCondition(3.0, affectedByScale = true),
                 data = listOf(
                     DelayedDamageData(BEAR_SWIPE_LEFT_ATTACK_DAMAGE, 19),
@@ -337,7 +338,7 @@ class BeastweaverEntity(
                 TAIL_SWEEP_ID,
                 TAIL_SWEEP_ANIM_DATA,
                 totalDuration = 30,
-                cooldown = 150,
+                cooldown = { mob -> 100 + (50 * mob.getHealthPercentage()).toInt() },
                 TriggerConditionGroup(
                     TriggerConditionGroup.TriggerConditionJoinType.AND,
                     listOf(
@@ -412,10 +413,11 @@ class BeastweaverEntity(
                 WINGS_LAUNCH_ID,
                 WINGS_LAUNCH_ANIM_DATA,
                 totalDuration = 35,
-                cooldown = 300,
+                cooldown = { mob -> 200 + (100 * mob.getHealthPercentage()).toInt() },
                 TriggerConditionGroup(
                     TriggerConditionGroup.TriggerConditionJoinType.AND,
                     listOf(
+                        HealthTriggerCondition(0.0, 0.85),
                         CanMoveUpTriggerCondition(6.0),
                         HorizontalDistanceTriggerCondition(8.0, affectedByScale = true),
                     )
@@ -601,7 +603,7 @@ class BeastweaverEntity(
                 WOLF_SUMMON_ID,
                 WOLF_SUMMON_ANIM_DATA,
                 totalDuration = 70,
-                cooldown = 800,
+                cooldown = { mob -> 600 + (200 * mob.getHealthPercentage()).toInt() },
                 CompanionLimitTriggerCondition(
                     companionLimit = { targetCount -> targetCount * 1 },
                     getTargetCount = { level, summoner, target -> GET_SUMMON_TARGETS(level, summoner, target).count() },
@@ -672,19 +674,8 @@ class BeastweaverEntity(
                 SUMMON_VINES_ID,
                 SUMMON_VINES_ANIM_DATA,
                 totalDuration = 95,
-                cooldown = 1000,
-                TriggerConditionGroup(
-                    TriggerConditionGroup.TriggerConditionJoinType.AND,
-                    listOf(
-                        HealthTriggerCondition(0.0, 0.5),
-                        CompanionLimitTriggerCondition(
-                            companionLimit = { _ -> 10 },
-                            getTargetCount = { _, _, _ -> 0 },
-                            searchRange = 50.0,
-                            filter = { entity -> entity is BeastweaverVineEntity }
-                        ),
-                    ),
-                ),
+                cooldown = { mob -> 800 + (200 * mob.getHealthPercentage()).toInt() },
+                HealthTriggerCondition(0.0, 0.65),
                 data = listOf(
                     DelayedDurationTransformData(0, 80) { _, attacker, _, age ->
                         if (age == 1) attacker.isNoGravity = true
@@ -775,7 +766,7 @@ class BeastweaverEntity(
                 RHINO_CHARGE_ID,
                 RHINO_CHARGE_ANIM_DATA,
                 totalDuration = -1,
-                cooldown = 400,
+                cooldown = { mob -> 300 + (100 * mob.getHealthPercentage()).toInt() },
                 TriggerConditionGroup(
                     TriggerConditionGroup.TriggerConditionJoinType.AND,
                     listOf(
@@ -880,7 +871,7 @@ class BeastweaverEntity(
             SPEED_BOOST_ID,
             animationData = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, "", ""),
             totalDuration = 0,
-            cooldown = 400,
+            cooldown = { mob -> 200 + (200 * mob.getHealthPercentage()).toInt() },
             AttackOnCooldownTriggerCondition(RHINO_CHARGE_ATTACK, 100),
             listOf(
                 DelayedStatusEffectData(

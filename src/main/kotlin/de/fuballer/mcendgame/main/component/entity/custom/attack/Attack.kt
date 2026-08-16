@@ -12,11 +12,21 @@ open class Attack<T>(
     val id: String,
     val animationData: AttackAnimationData,
     val totalDuration: Int,
-    val cooldown: Int,
+    val cooldown: (Mob) -> Int,
     private val trigger: TriggerCondition,
     private val data: List<DelayedAttackData>,
     private val blockMovementDuration: Int = 0,
 ) where T : Mob, T : GeoEntity {
+    constructor(
+        id: String,
+        animationData: AttackAnimationData,
+        totalDuration: Int,
+        cooldown: Int,
+        trigger: TriggerCondition,
+        data: List<DelayedAttackData>,
+        blockMovementDuration: Int = 0,
+    ) : this(id, animationData, totalDuration, { cooldown }, trigger, data, blockMovementDuration)
+
     open fun canStart(
         attacker: Mob,
         target: LivingEntity?,

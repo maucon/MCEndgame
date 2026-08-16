@@ -8,7 +8,6 @@ import com.geckolib.animation.AnimationController
 import com.geckolib.animation.RawAnimation
 import com.geckolib.animation.`object`.PlayState
 import com.geckolib.util.GeckoLibUtil
-import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.status_effect.StatusEffectData
 import net.minecraft.core.particles.BlockParticleOption
@@ -40,8 +39,6 @@ class BeastweaverVineEntity(
     type: EntityType<out BeastweaverVineEntity>,
     level: Level,
 ) : Mob(type, level), GeoEntity, Enemy, OwnableEntity {
-    constructor(level: Level) : this(CustomEntities.BEASTWEAVER_VINE, level)
-
     companion object {
         const val EMERGE_DURATION_TICKS = 40
         const val DEATH_DURATION_TICKS = 40
