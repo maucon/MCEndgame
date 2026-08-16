@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.entity.types.boss
+package de.fuballer.mcendgame.main.component.entity.types.boss.beastweaver
 
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
@@ -12,7 +12,7 @@ object BeastweaverBossStats : EntityTypeStats {
     override val equipmentClass = EnemyEquipmentClass.NO_EQUIPMENT
     override val canBeInvisible = false
 
-    override val health = 200.0
+    override val health = 1300.0
     override val attackDamage = 10.0
     override val movementSpeed = 0.35
     override val knockbackResistance = 0.8

@@ -58,7 +58,7 @@ class BeastweaverVineEntity(
         private const val SLAM_ATTACK_ID = "Slam Attack"
         private val SLAM_ATTACK_AREA = AreaAttackDamage.DamageArea(4.5, 1.5, 1.0, -0.5, 0.0, 0.5)
         private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(
-            damageFactor = 1.0f,
+            damageFactor = 0.5f,
             knockbackFactor = 1.0,
             area = SLAM_ATTACK_AREA,
             blockable = true,

@@ -9,12 +9,14 @@ import com.geckolib.animation.RawAnimation
 import com.geckolib.animation.`object`.PlayState
 import com.geckolib.constant.DefaultAnimations
 import com.geckolib.util.GeckoLibUtil
+import de.fuballer.mcendgame.main.component.boss_event.BossEventType
+import de.fuballer.mcendgame.main.component.boss_event.BossEventTypePayload
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.addCustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
-import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
+import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
@@ -29,12 +31,16 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.status_eff
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.summon.*
 import de.fuballer.mcendgame.main.component.entity.custom.attack.debris_explosion.DebrisExplosionAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.*
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.can_not_reach_target.CanNotReachTargetTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.can_not_reach_target.CanNotReachTargetTriggerConditionInterface
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_wolf.BeastweaverWolfEntity
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
+import de.fuballer.mcendgame.main.component.entity.types.boss.beastweaver.BeastweaverVineStats
+import de.fuballer.mcendgame.main.component.entity.types.boss.beastweaver.BeastweaverWolfStats
 import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.component.particle.DirectionalAttackSweepParticleEffect
 import de.fuballer.mcendgame.main.component.sound.CustomSoundEvents
@@ -48,17 +54,23 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCo
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setCompanion
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setDungeonEnemy
-import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
+import de.fuballer.mcendgame.main.util.minecraft.EntityUtil
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.ChatFormatting
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.server.level.ServerBossEvent
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.util.Mth
+import net.minecraft.world.BossEvent
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.*
@@ -68,6 +80,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation
+import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
@@ -86,7 +100,8 @@ import kotlin.random.Random
 class BeastweaverEntity(
     type: EntityType<out BeastweaverEntity>,
     world: Level,
-) : PathfinderMob(type, world), GeoEntity, DisableAbleGoalsMob, BlockAbleMovementMob<BeastweaverEntity>, Enemy, CustomAttacksMob<BeastweaverEntity> {
+) : PathfinderMob(type, world), GeoEntity, DisableAbleGoalsMob, BlockAbleMovementMob<BeastweaverEntity>, Enemy, CustomAttacksMob<BeastweaverEntity>,
+    CanNotReachTargetTriggerConditionInterface {
     companion object {
         private const val TRANSFORM_ADDITIONAL_SCALE = 0.25F
 
@@ -302,15 +317,15 @@ class BeastweaverEntity(
 
         private val TAIL_SWEEP_DAMAGE_DATA = listOf(
             DelayedDamageData(
-                AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, -2.25, 0.5), knockbackWhenBlocked = true),
+                AreaAttackDamage(1.0F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, -2.25, 0.5), knockbackWhenBlocked = true),
                 minDelay = 18,
             ),
             DelayedDamageData(
-                AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.0, 0.4, 0.1, 0.0, 0.5), knockbackWhenBlocked = true),
+                AreaAttackDamage(1.0F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.0, 0.4, 0.1, 0.0, 0.5), knockbackWhenBlocked = true),
                 minDelay = 19,
             ),
             DelayedDamageData(
-                AreaAttackDamage(0.6F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, 2.25, 0.5), knockbackWhenBlocked = true),
+                AreaAttackDamage(1.0F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, 2.25, 0.5), knockbackWhenBlocked = true),
                 minDelay = 20,
             ),
         )
@@ -474,7 +489,7 @@ class BeastweaverEntity(
             )
 
         private val ELEPHANT_STOMP_MAIN_EXPLOSION_AREA = AreaAttackDamage.DamageArea(9.0, 4.5, 2.5, -4.0, 0.0, 0.0)
-        private val ELEPHANT_STOMP_MAIN_EXPLOSION_ATTACK_DAMAGE = AreaAttackDamage(1.0F, 2.5, ELEPHANT_STOMP_MAIN_EXPLOSION_AREA)
+        private val ELEPHANT_STOMP_MAIN_EXPLOSION_ATTACK_DAMAGE = AreaAttackDamage(1.5F, 2.5, ELEPHANT_STOMP_MAIN_EXPLOSION_AREA)
         private val ELEPHANT_STOMP_DEBRIS_AREA_AREA = AreaAttackDamage.DamageArea(4.0, 2.0, 2.0, -2.0, 0.0, 0.0)
         private val ELEPHANT_STOMP_DEBRIS_ATTACK_DAMAGE = AreaAttackDamage(0.5F, 0.5, ELEPHANT_STOMP_DEBRIS_AREA_AREA)
         private val ELEPHANT_STOMP_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.elephant_stomp")
@@ -597,21 +612,15 @@ class BeastweaverEntity(
                     DelayedSummonData(
                         SummonScatteredPerTargetData(
                             factory = { level, summoner, target ->
-                                val summon = BeastweaverWolfEntity(level)
-                                summon.setCompanion()
-                                summon.owner = summoner
+                                val summon = EntityUtil.spawnEntityWithStats(level, BeastweaverWolfStats, SpawnPosition.at(summoner))
                                 if (summoner.isDungeonEnemy()) summon.setDungeonEnemy()
-
                                 summon.addCustomAttribute(CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.4))))
-                                val dungeonLevel = level.getDungeonLevel()
-                                val armor = 6.0 + min(dungeonLevel / 2.0, 14.0)
-                                summon.addCustomAttribute(CustomAttribute(VanillaAttributeTypes.ARMOR, roll = DoubleRoll(DoubleBounds(armor))))
-                                val toughness = ((dungeonLevel - 5) * 2.0).coerceIn(0.0, 10.0)
-                                summon.addCustomAttribute(CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, roll = DoubleRoll(DoubleBounds(toughness))))
 
                                 summon.getAttribute(Attributes.SCALE)?.baseValue = Random.nextDouble(0.9, 1.1)
 
+                                summon.setCompanion()
                                 summon.target = target
+                                (summon as? BeastweaverWolfEntity)?.owner = summoner
                                 summon
                             },
                             getTargets = GET_SUMMON_TARGETS,
@@ -645,12 +654,11 @@ class BeastweaverEntity(
         )
 
         private val VINE_FACTORY: (ServerLevel, LivingEntity) -> Entity = { level, summoner ->
-            val summon = BeastweaverVineEntity(level)
+            val summon = EntityUtil.spawnEntityWithStats(level, BeastweaverVineStats, SpawnPosition.at(summoner)) as BeastweaverVineEntity
             summon.setCompanion()
             summon.setOwner(summoner)
             if (summoner.isDungeonEnemy()) summon.setDungeonEnemy()
 
-            summon.addCustomAttribute(CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.4))))
             summon.getAttribute(Attributes.SCALE)?.baseValue = Random.nextDouble(0.9, 1.3)
 
             summon
@@ -807,7 +815,7 @@ class BeastweaverEntity(
 
         private val RHINO_CHARGE_ATTACK_AREA = AreaAttackDamage.DamageArea(3.0, 1.5, 1.25, 0.0, 0.0, 1.0)
         private val RHINO_CHARGE_ATTACK_DAMAGE = AreaAttackDamage(
-            damageFactor = 0.8f,
+            damageFactor = 1.0f,
             knockbackFactor = 3.0,
             area = RHINO_CHARGE_ATTACK_AREA,
             knockbackType = AreaAttackDamage.KnockbackType.BEASTWEAVER_RHINO_CHARGE,
@@ -838,7 +846,7 @@ class BeastweaverEntity(
 
         private val RHINO_CHARGE_HIT_WALL_ATTACK_AREA = AreaAttackDamage.DamageArea(8.0, 4.0, 3.0, -4.0, 0.0, 1.0)
         private val RHINO_CHARGE_HIT_WALL_ATTACK_DAMAGE = AreaAttackDamage(
-            damageFactor = 1.0f,
+            damageFactor = 1.4f,
             knockbackFactor = 4.5,
             area = RHINO_CHARGE_HIT_WALL_ATTACK_AREA,
             blockable = false,
@@ -968,8 +976,21 @@ class BeastweaverEntity(
     override val attackCooldowns: MutableMap<Attack<BeastweaverEntity>, Int> = mutableMapOf()
     override val attackDataInstances = mutableListOf<DelayedAttackDataInstance>()
 
+    private val bossEvent: ServerBossEvent =
+        ServerBossEvent(
+            Mth.createInsecureUUID(random),
+            displayName.copy()
+                .withStyle(ChatFormatting.WHITE)
+                .withStyle(ChatFormatting.BOLD),
+            BossEvent.BossBarColor.GREEN,
+            BossEvent.BossBarOverlay.PROGRESS,
+        )
+
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
+
+    private val canNotReachTargetTriggerConditionNavigation: PathNavigation = GroundPathNavigation(this, level())
+    override fun getCanNotReachTargetTriggerConditionNavigation() = canNotReachTargetTriggerConditionNavigation
 
     private var transformProgress = 0F
     private var previousTransformProgress = 0F
@@ -1124,9 +1145,12 @@ class BeastweaverEntity(
         super.tick()
         tickTransformProgress()
         tickRhinoCharge()
+
         val level = level() as? ServerLevel ?: return
         tickBlockedMovement()
         tickAttacks(level, this)
+
+        bossEvent.setProgress(health / maxHealth)
     }
 
     private fun tickTransformProgress() {
@@ -1392,5 +1416,18 @@ class BeastweaverEntity(
         readAttackCooldownsSaveData(input)
 
         isNoGravity = false
+    }
+
+    override fun startSeenByPlayer(player: ServerPlayer) {
+        super.startSeenByPlayer(player)
+        bossEvent.addPlayer(player)
+        
+        val payload = BossEventTypePayload(bossEvent.id, BossEventType.BEASTWEAVER)
+        ServerPlayNetworking.send(player, payload)
+    }
+
+    override fun stopSeenByPlayer(player: ServerPlayer) {
+        super.stopSeenByPlayer(player)
+        bossEvent.removePlayer(player)
     }
 }

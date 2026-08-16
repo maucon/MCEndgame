@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.main.component.dungeon.type.data.RolledDungeonType
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.types.*
 import de.fuballer.mcendgame.main.component.entity.types.boss.*
+import de.fuballer.mcendgame.main.component.entity.types.boss.beastweaver.BeastweaverBossStats
 import de.fuballer.mcendgame.main.component.entity.types.special.FoxStats
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
