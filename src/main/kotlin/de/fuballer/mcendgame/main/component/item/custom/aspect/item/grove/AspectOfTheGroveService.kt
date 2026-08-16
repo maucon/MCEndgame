@@ -3,10 +3,7 @@ package de.fuballer.mcendgame.main.component.item.custom.aspect.item.grove
 import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossCrystalDropCommand
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateCommand
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonPlayerIncreaseProgressCommand
-import de.fuballer.mcendgame.main.messaging.dungeon.SelectDungeonTypeCommand
+import de.fuballer.mcendgame.main.messaging.dungeon.*
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import kotlin.math.max
@@ -43,5 +40,11 @@ object AspectOfTheGroveService {
     fun onIncreaseProgress(cmd: DungeonPlayerIncreaseProgressCommand) {
         if (!cmd.aspects.contains(AspectItems.ASPECT_OF_THE_GROVE)) return
         cmd.progressBlocked = true
+    }
+
+    @CommandHandler
+    fun onDecreaseProgress(cmd: DungeonPlayerDecreaseProgressCommand) {
+        if (!cmd.aspects.contains(AspectItems.ASPECT_OF_THE_GROVE)) return
+        cmd.decreaseBlocked = true
     }
 }

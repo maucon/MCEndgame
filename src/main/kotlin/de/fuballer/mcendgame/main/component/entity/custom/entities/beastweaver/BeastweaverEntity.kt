@@ -1402,6 +1402,24 @@ class BeastweaverEntity(
         DEATH_SOUND_DATA.apply(level, this)
     }
 
+    override fun setNoAi(flag: Boolean) {
+        super.setNoAi(flag)
+        bossEvent.isVisible = !flag
+    }
+
+    override fun startSeenByPlayer(player: ServerPlayer) {
+        super.startSeenByPlayer(player)
+        bossEvent.addPlayer(player)
+
+        val payload = BossEventTypePayload(bossEvent.id, BossEventType.BEASTWEAVER)
+        ServerPlayNetworking.send(player, payload)
+    }
+
+    override fun stopSeenByPlayer(player: ServerPlayer) {
+        super.stopSeenByPlayer(player)
+        bossEvent.removePlayer(player)
+    }
+
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
         output.putFloat(TRANSFORM_PROGRESS_ID, entityData.get(TRANSFORM_PROGRESS))
@@ -1416,18 +1434,5 @@ class BeastweaverEntity(
         readAttackCooldownsSaveData(input)
 
         isNoGravity = false
-    }
-
-    override fun startSeenByPlayer(player: ServerPlayer) {
-        super.startSeenByPlayer(player)
-        bossEvent.addPlayer(player)
-        
-        val payload = BossEventTypePayload(bossEvent.id, BossEventType.BEASTWEAVER)
-        ServerPlayNetworking.send(player, payload)
-    }
-
-    override fun stopSeenByPlayer(player: ServerPlayer) {
-        super.stopSeenByPlayer(player)
-        bossEvent.removePlayer(player)
     }
 }
