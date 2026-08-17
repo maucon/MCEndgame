@@ -52,14 +52,14 @@ interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
         attacker: T,
         attack: Attack<T>,
     ) {
-        attackDuration = attack.totalDuration
+        attackDuration = attack.getTotalDuration(attacker)
         attackPose = attack.animationData.endPose
 
         attackCooldowns[attack] = attack.cooldown(attacker)
 
         val target = attacker.target
         attack.start(attacker, target)
-        attackDataInstances.addAll(attack.getAttackDataInstances(target))
+        attackDataInstances.addAll(attack.getAttackDataInstances(attacker, target))
     }
 
     private fun tickCooldowns() {
@@ -125,4 +125,6 @@ interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
     }
 
     private fun getAttackFromId(id: String) = attacks.firstOrNull { it.option.id == id }?.option
+
+    fun setAttackAnimationSpeed(attackSpeed: Float) {}
 }

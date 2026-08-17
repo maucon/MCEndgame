@@ -10,9 +10,12 @@ open class DelayedDamageData(
     val minDelay: Int,
     val maxDelay: Int = minDelay,
 ) : DelayedAttackData() {
-    override fun getInstance(target: LivingEntity?): DelayedAttackDataInstance? {
+    override fun getInstance(
+        target: LivingEntity?,
+        attackSpeed: Double,
+    ): DelayedAttackDataInstance? {
         if (damage.requiresTarget() && target == null) return null
-        return DelayedDamageDataInstance(this, damage)
+        return DelayedDamageDataInstance(this, damage, attackSpeed)
     }
 
     override fun apply(

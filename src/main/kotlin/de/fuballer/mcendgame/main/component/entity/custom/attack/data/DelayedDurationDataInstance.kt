@@ -6,7 +6,11 @@ import net.minecraft.world.entity.Mob
 
 class DelayedDurationDataInstance(
     private val durationData: DelayedDurationTransformData,
-) : DelayedAttackDataInstance(durationData) {
+    attackSpeed: Double,
+) : DelayedAttackDataInstance(durationData, attackSpeed) {
+    private val durationStart = (durationData.durationStart / attackSpeed).toInt()
+    private val durationEnd = (durationData.durationEnd / attackSpeed).toInt()
+
     override fun tick(
         level: ServerLevel,
         entity: Mob,
@@ -15,10 +19,10 @@ class DelayedDurationDataInstance(
         if (durationData.shouldCancel(entity)) return true
 
         age++
-        if (age < durationData.durationStart) return false
-        if (age > durationData.durationEnd) return true
+        if (age < durationStart) return false
+        if (age > durationEnd) return true
 
-        durationData.apply(level, entity, target, age)
+        durationData.apply(level, entity, target, age, attackSpeed)
         return false
     }
 }

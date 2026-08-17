@@ -8,7 +8,10 @@ import net.minecraft.world.entity.Mob
 
 class DelayedDurationSummonDataInstance(
     private val durationSummonData: DelayedDurationSummonData,
-) : DelayedAttackDataInstance(durationSummonData) {
+    attackSpeed: Double,
+) : DelayedAttackDataInstance(durationSummonData, attackSpeed) {
+    private val durationStart = (durationSummonData.durationStart / attackSpeed).toInt()
+    private val durationEnd = (durationSummonData.durationEnd / attackSpeed).toInt()
     var summonLocations: Map<BlockPos, Int>? = null
 
     override fun tick(
@@ -18,11 +21,11 @@ class DelayedDurationSummonDataInstance(
     ): Boolean {
         if (durationSummonData.shouldCancel(entity)) return true
 
-        if (summonLocations == null) summonLocations = durationSummonData.getSpawnPositionsWithDelay(level, entity, target)
+        if (summonLocations == null) summonLocations = durationSummonData.getSpawnPositionsWithDelay(level, entity, target, durationStart, durationEnd)
 
         age++
-        if (age < durationSummonData.durationStart) return false
-        if (age > durationSummonData.durationEnd) return true
+        if (age < durationStart) return false
+        if (age > durationEnd) return true
 
         summonLocations!!
             .filter { (_, delay) -> delay == age }

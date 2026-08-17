@@ -32,7 +32,7 @@ data class DurationSummonData(
         summoner: LivingEntity,
         target: LivingEntity?,
         durationStart: Int,
-        durationEnd: Int = durationStart,
+        durationEnd: Int,
     ): Map<BlockPos, Int> {
         val summonerBlockPos = BlockPos.containing(summoner.position())
         val possiblePositions = BlockPosUtil.findEmptyAboveSolid(level, summonerBlockPos, spawnPositionsSearchSteps)

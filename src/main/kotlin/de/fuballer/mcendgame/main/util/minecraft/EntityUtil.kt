@@ -17,8 +17,9 @@ object EntityUtil {
         world: ServerLevel,
         type: EntityTypeStats,
         location: SpawnPosition,
+        reason: EntitySpawnReason = EntitySpawnReason.STRUCTURE,
     ): Mob {
-        val entity = type.type.spawn(world, location.blockPos(), EntitySpawnReason.STRUCTURE)
+        val entity = type.type.spawn(world, location.blockPos(), reason)
             ?: throw Exception("Couldn't  spawn entity of type: ${type.type}, in world: $world")
 
         clearVehicleAndPassengers(entity)

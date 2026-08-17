@@ -8,7 +8,11 @@ import net.minecraft.world.entity.Mob
 open class DelayedDamageDataInstance(
     private val damageData: DelayedDamageData,
     private val damage: AttackDamage,
-) : DelayedAttackDataInstance(damageData) {
+    attackSpeed: Double,
+) : DelayedAttackDataInstance(damageData, attackSpeed) {
+    private var minDelay = (damageData.minDelay / attackSpeed).toInt()
+    private var maxDelay = (damageData.maxDelay / attackSpeed).toInt()
+
     override fun tick(
         level: ServerLevel,
         entity: Mob,
@@ -17,8 +21,8 @@ open class DelayedDamageDataInstance(
         if (damageData.shouldCancel(entity)) return true
 
         age++
-        if (age < damageData.minDelay) return false
-        if (age > damageData.maxDelay) return true
+        if (age < minDelay) return false
+        if (age > maxDelay) return true
 
         return damage.apply(level, entity, target)
     }

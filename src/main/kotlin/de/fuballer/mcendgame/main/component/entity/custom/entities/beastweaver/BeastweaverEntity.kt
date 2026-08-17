@@ -101,7 +101,12 @@ import kotlin.random.Random
 class BeastweaverEntity(
     type: EntityType<out BeastweaverEntity>,
     world: Level,
-) : PathfinderMob(type, world), GeoEntity, DisableAbleGoalsMob, BlockAbleMovementMob<BeastweaverEntity>, Enemy, CustomAttacksMob<BeastweaverEntity>,
+) : PathfinderMob(type, world),
+    GeoEntity,
+    DisableAbleGoalsMob,
+    BlockAbleMovementMob<BeastweaverEntity>,
+    Enemy,
+    CustomAttacksMob<BeastweaverEntity>,
     CanNotReachTargetTriggerConditionInterface {
     companion object {
         private const val TRANSFORM_ADDITIONAL_SCALE = 0.25F
@@ -191,6 +196,12 @@ class BeastweaverEntity(
         )
 
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
+
+        private fun getHealthBasedAttackSpeed(
+            mob: Mob,
+            healthPercentageStart: Double,
+            maxIncrease: Double,
+        ) = mob.getHealthPercentage().let { 1.0 + maxIncrease * (healthPercentageStart - it).coerceAtLeast(0.0) / healthPercentageStart }
 
         private val BEAR_SWIPE_SOUND_DATA = listOf(
             DelayedSoundData(
@@ -291,7 +302,8 @@ class BeastweaverEntity(
 
                     getBearSwipeParticleData(1.5, 0.65, 0.5, 1.5),
                     getBearSwipeParticleData(1.45, 0.6, 0.65, 1.35),
-                )
+                ),
+                attackSpeed = { mob -> getHealthBasedAttackSpeed(mob, healthPercentageStart = 0.5, maxIncrease = 0.45) },
             )
 
         private val BEAR_SWIPE_LEFT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, -0.35, 0.75)
@@ -313,7 +325,8 @@ class BeastweaverEntity(
 
                     getBearSwipeParticleData(1.5, -0.65, 0.5, 1.5),
                     getBearSwipeParticleData(1.45, -0.6, 0.65, 1.35),
-                )
+                ),
+                attackSpeed = { mob -> getHealthBasedAttackSpeed(mob, healthPercentageStart = 0.5, maxIncrease = 0.45) },
             )
 
         private val TAIL_SWEEP_DAMAGE_DATA = listOf(
@@ -401,6 +414,7 @@ class BeastweaverEntity(
                     ),
                 ),
                 blockMovementDuration = 30,
+                attackSpeed = { mob -> getHealthBasedAttackSpeed(mob, healthPercentageStart = 0.5, maxIncrease = 0.35) },
             )
 
         private val WINGS_LAUNCH_AREA = AreaAttackDamage.DamageArea(10.0, 5.0, 0.75, -5.0, 0.0, 0.5, offsetToGround = true)
@@ -425,7 +439,7 @@ class BeastweaverEntity(
                 data = listOf(
                     DelayedDamageData(WINGS_LAUNCH_ATTACK_DAMAGE, 23),
 
-                    DelayedDurationTransformData(0, 35) { _, attacker, target, age ->
+                    DelayedDurationTransformData(0, 35) { _, attacker, target, age, _ ->
                         target?.also { attacker.rotateToEntity(it) }
 
                         if (age == 1) attacker.isNoGravity = true
@@ -614,7 +628,7 @@ class BeastweaverEntity(
                     DelayedSummonData(
                         SummonScatteredPerTargetData(
                             factory = { level, summoner, target ->
-                                val summon = EntityUtil.spawnEntityWithStats(level, BeastweaverWolfStats, SpawnPosition.at(summoner))
+                                val summon = EntityUtil.spawnEntityWithStats(level, BeastweaverWolfStats, SpawnPosition.at(summoner), EntitySpawnReason.MOB_SUMMONED)
                                 if (summoner.isDungeonEnemy()) summon.setDungeonEnemy()
                                 summon.addCustomAttribute(CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.4))))
 
@@ -645,6 +659,7 @@ class BeastweaverEntity(
                     ),
                 ),
                 blockMovementDuration = 70,
+                attackSpeed = { mob -> getHealthBasedAttackSpeed(mob, healthPercentageStart = 0.5, maxIncrease = 0.4) },
             )
 
         private val SUMMON_VINES_PARTICLE_DATA = ParticleData(
@@ -656,7 +671,7 @@ class BeastweaverEntity(
         )
 
         private val VINE_FACTORY: (ServerLevel, LivingEntity) -> Entity = { level, summoner ->
-            val summon = EntityUtil.spawnEntityWithStats(level, BeastweaverVineStats, SpawnPosition.at(summoner)) as BeastweaverVineEntity
+            val summon = EntityUtil.spawnEntityWithStats(level, BeastweaverVineStats, SpawnPosition.at(summoner), EntitySpawnReason.MOB_SUMMONED) as BeastweaverVineEntity
             summon.setCompanion()
             summon.setOwner(summoner)
             if (summoner.isDungeonEnemy()) summon.setDungeonEnemy()
@@ -677,15 +692,16 @@ class BeastweaverEntity(
                 cooldown = { mob -> 800 + (200 * mob.getHealthPercentage()).toInt() },
                 HealthTriggerCondition(0.0, 0.65),
                 data = listOf(
-                    DelayedDurationTransformData(0, 80) { _, attacker, _, age ->
+                    DelayedDurationTransformData(0, 80) { _, attacker, _, age, attackSpeed ->
                         if (age == 1) attacker.isNoGravity = true
 
-                        if (age <= 80) {
-                            val levitateProgress = age / 80.0
-                            val yVelocity = (1 - levitateProgress) * 0.02
+                        val endAge = (80 / attackSpeed).toInt()
+                        if (age <= endAge) {
+                            val levitateProgress = age / endAge.toDouble()
+                            val yVelocity = (1 - levitateProgress) * 0.02 * attackSpeed
                             attacker.setAndSyncVelocity(Vec3(0.0, yVelocity, 0.0))
 
-                            if (age == 80) attacker.isNoGravity = false
+                            if (age == endAge) attacker.isNoGravity = false
                         }
                     },
 
@@ -711,8 +727,8 @@ class BeastweaverEntity(
                     DelayedDurationTransformData(
                         durationStart = 8,
                         durationEnd = 40,
-                    ) { level, mob, _, age ->
-                        val particleCount = age / 8
+                    ) { level, mob, _, age, attackSpeed ->
+                        val particleCount = (age * attackSpeed).toInt() / 8
                         SUMMON_VINES_PARTICLE_DATA.applyWithCount(level, mob, particleCount)
                     },
 
@@ -728,6 +744,7 @@ class BeastweaverEntity(
                     ),
                 ),
                 blockMovementDuration = 95,
+                attackSpeed = { mob -> getHealthBasedAttackSpeed(mob, healthPercentageStart = 0.5, maxIncrease = 0.75) },
             )
 
         private const val SUMMON_TARGETED_VINE_ID = "Summon Targeted Vine"
@@ -955,6 +972,8 @@ class BeastweaverEntity(
 
         private const val TRANSFORM_PROGRESS_ID = "transform_progress"
         private val TRANSFORM_PROGRESS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
+
+        private val ATTACK_ANIMATION_SPEED: EntityDataAccessor<Float> = SynchedEntityData.defineId(BeastweaverEntity::class.java, EntityDataSerializers.FLOAT)
     }
 
     override var blockAbleMovementEntity = this
@@ -1059,10 +1078,15 @@ class BeastweaverEntity(
         )
     }
 
+    override fun setAttackAnimationSpeed(attackSpeed: Float) {
+        entityData.set(ATTACK_ANIMATION_SPEED, attackSpeed)
+    }
+
     override fun defineSynchedData(builder: SynchedEntityData.Builder) {
         super.defineSynchedData(builder)
         builder.define(TRANSFORM_PROGRESS, 0F)
         builder.define(IS_RHINO_CHARGING, false)
+        builder.define(ATTACK_ANIMATION_SPEED, 1F)
     }
 
     override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
@@ -1070,6 +1094,7 @@ class BeastweaverEntity(
 
         if (!level().isClientSide) return
         if (IS_RHINO_CHARGING == accessor) rhinoChargeDuration = 0
+        if (ATTACK_ANIMATION_SPEED == accessor) attackAnimationController.animationSpeed = entityData.get(ATTACK_ANIMATION_SPEED).toDouble()
     }
 
     fun getTransformProgress(tickProgress: Float) = previousTransformProgress + (transformProgress - previousTransformProgress) * tickProgress

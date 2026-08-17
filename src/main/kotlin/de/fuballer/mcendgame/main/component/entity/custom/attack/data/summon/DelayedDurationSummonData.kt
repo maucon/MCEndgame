@@ -8,11 +8,14 @@ import net.minecraft.world.entity.LivingEntity
 
 class DelayedDurationSummonData(
     val durationStart: Int,
-    val durationEnd: Int = durationStart,
+    val durationEnd: Int,
     private val summonData: DurationSummonData,
     delay: Int = 0,
 ) : DelayedAttackData(delay) {
-    override fun getInstance(target: LivingEntity?): DelayedAttackDataInstance = DelayedDurationSummonDataInstance(this)
+    override fun getInstance(
+        target: LivingEntity?,
+        attackSpeed: Double,
+    ): DelayedAttackDataInstance = DelayedDurationSummonDataInstance(this, attackSpeed)
 
     fun summon(
         level: ServerLevel,
@@ -26,5 +29,7 @@ class DelayedDurationSummonData(
         level: ServerLevel,
         summoner: LivingEntity,
         target: LivingEntity?,
-    ) = summonData.getSpawnPositionsWithDelay(level, summoner, target, durationStart, durationEnd)
+        start: Int,
+        end: Int,
+    ) = summonData.getSpawnPositionsWithDelay(level, summoner, target, start, end)
 }
