@@ -38,7 +38,7 @@ object EntityUtil {
         return entity
     }
 
-    private fun setStats(
+    fun setStats(
         entity: Mob,
         type: EntityTypeStats,
     ) {

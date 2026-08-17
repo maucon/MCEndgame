@@ -93,7 +93,12 @@ class BeastweaverVineEntity(
         val EMERGING_TICKS_DATA = SynchedEntityData.defineId(BeastweaverVineEntity::class.java, EntityDataSerializers.INT)
 
         val RAD_ROTATION_TO_TARGET_DATA = SynchedEntityData.defineId(BeastweaverVineEntity::class.java, EntityDataSerializers.FLOAT)
+
+        private val ATTACK_ANIMATION_SPEED_DATA = SynchedEntityData.defineId(BeastweaverVineEntity::class.java, EntityDataSerializers.FLOAT)
     }
+
+    private var attackDurationTicks = ATTACK_DURATION_TICKS
+    private var attackDamageDelay = ATTACK_DAMAGE_DELAY
 
     private val maxLifetime = Random.nextInt(MIN_MAX_LIFETIME, MAX_MAX_LIFETIME)
     private var lifetime = 0
@@ -112,11 +117,13 @@ class BeastweaverVineEntity(
         entityData.define(OWNER_DATA, Optional.empty())
         entityData.define(EMERGING_TICKS_DATA, 0)
         entityData.define(RAD_ROTATION_TO_TARGET_DATA, 0F)
+        entityData.define(ATTACK_ANIMATION_SPEED_DATA, 1F)
     }
 
     override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
         super.onSyncedDataUpdated(accessor)
         if (accessor == EMERGING_TICKS_DATA) emergingTicksClient = max(emergingTicksClient, entityData.get(EMERGING_TICKS_DATA))
+        if (accessor == ATTACK_ANIMATION_SPEED_DATA) attackAnimationController.animationSpeed = entityData.get(ATTACK_ANIMATION_SPEED_DATA).toDouble()
     }
 
     private val attackAnimationController =
@@ -168,7 +175,7 @@ class BeastweaverVineEntity(
 
         if (++lifetime > maxLifetime || delayUntilStartDeath == 0) health = 0F
         else if (delayUntilStartDeath > 0) delayUntilStartDeath--
-        else if (owner?.isAlive != true) delayUntilStartDeath = Random.nextInt(ATTACK_DURATION_TICKS, MAX_DEATH_DELAY_AFTER_OWNER_DEATH)
+        else if (owner?.isAlive != true) delayUntilStartDeath = Random.nextInt(attackDurationTicks, MAX_DEATH_DELAY_AFTER_OWNER_DEATH)
     }
 
     override fun tickDeath() {
@@ -216,15 +223,14 @@ class BeastweaverVineEntity(
 
         if (attackTime >= 0) {
             attackTime++
-            if (attackTime > ATTACK_DURATION_TICKS) {
+            if (attackTime > attackDurationTicks) {
                 attackTime = -1
                 return
             }
 
-            if (attackTime == ATTACK_DAMAGE_DELAY) dealAttackDamage(level)
-        } else if (target?.isAlive == true && delayUntilStartDeath < 0 && lifetime + ATTACK_DURATION_TICKS <= maxLifetime) {
+            if (attackTime == attackDamageDelay) dealAttackDamage(level)
+        } else if (target?.isAlive == true && delayUntilStartDeath < 0 && lifetime + attackDurationTicks <= maxLifetime) {
             attackTime = 0
-            triggerAnim(ATTACK_ANIM_CONTROLLER_ID, SLAM_ATTACK_ID)
 
             val toTargetHorizontal = target!!.position().subtract(position()).horizontal().normalize()
             val facingHorizontal = lookAngle.horizontal().normalize()
@@ -233,6 +239,8 @@ class BeastweaverVineEntity(
             val angleRad = atan2(cross, facingHorizontal.dot(toTargetHorizontal))
 
             entityData.set(RAD_ROTATION_TO_TARGET_DATA, angleRad.toFloat())
+
+            triggerAnim(ATTACK_ANIM_CONTROLLER_ID, SLAM_ATTACK_ID)
         }
     }
 
@@ -278,5 +286,11 @@ class BeastweaverVineEntity(
 
         lifetime = input.getInt(LIFETIME_ID).getOrDefault(0)
         entityData.set(EMERGING_TICKS_DATA, input.getInt(EMERGING_TICKS_DATA_ID).getOrDefault(0))
+    }
+
+    fun setAttackSpeed(attackSpeed: Double) {
+        attackDurationTicks = (ATTACK_DURATION_TICKS / attackSpeed).toInt()
+        attackDamageDelay = (ATTACK_DAMAGE_DELAY / attackSpeed).toInt()
+        entityData.set(ATTACK_ANIMATION_SPEED_DATA, attackSpeed.toFloat())
     }
 }

@@ -16,7 +16,6 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribut
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
-import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
@@ -197,11 +196,12 @@ class BeastweaverEntity(
 
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
-        private fun getHealthBasedAttackSpeed(
-            mob: Mob,
-            healthPercentageStart: Double,
-            maxIncrease: Double,
-        ) = mob.getHealthPercentage().let { 1.0 + maxIncrease * (healthPercentageStart - it).coerceAtLeast(0.0) / healthPercentageStart }
+        private fun getLowHealthBasedValue(
+            entity: LivingEntity,
+            base: Double = 1.0,
+            healthPercentageStart: Double = 0.5,
+            maxAdded: Double,
+        ) = entity.getHealthPercentage().let { base + maxAdded * (healthPercentageStart - it).coerceAtLeast(0.0) / healthPercentageStart }
 
         private val BEAR_SWIPE_SOUND_DATA = listOf(
             DelayedSoundData(
@@ -303,7 +303,7 @@ class BeastweaverEntity(
                     getBearSwipeParticleData(1.5, 0.65, 0.5, 1.5),
                     getBearSwipeParticleData(1.45, 0.6, 0.65, 1.35),
                 ),
-                attackSpeed = { mob -> getHealthBasedAttackSpeed(mob, healthPercentageStart = 0.5, maxIncrease = 0.45) },
+                attackSpeed = { mob -> getLowHealthBasedValue(mob, maxAdded = 0.45) },
             )
 
         private val BEAR_SWIPE_LEFT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, -0.35, 0.75)
@@ -326,7 +326,7 @@ class BeastweaverEntity(
                     getBearSwipeParticleData(1.5, -0.65, 0.5, 1.5),
                     getBearSwipeParticleData(1.45, -0.6, 0.65, 1.35),
                 ),
-                attackSpeed = { mob -> getHealthBasedAttackSpeed(mob, healthPercentageStart = 0.5, maxIncrease = 0.45) },
+                attackSpeed = { mob -> getLowHealthBasedValue(mob, maxAdded = 0.45) },
             )
 
         private val TAIL_SWEEP_DAMAGE_DATA = listOf(
@@ -414,7 +414,7 @@ class BeastweaverEntity(
                     ),
                 ),
                 blockMovementDuration = 30,
-                attackSpeed = { mob -> getHealthBasedAttackSpeed(mob, healthPercentageStart = 0.5, maxIncrease = 0.35) },
+                attackSpeed = { mob -> getLowHealthBasedValue(mob, maxAdded = 0.35) },
             )
 
         private val WINGS_LAUNCH_AREA = AreaAttackDamage.DamageArea(10.0, 5.0, 0.75, -5.0, 0.0, 0.5, offsetToGround = true)
@@ -609,6 +609,8 @@ class BeastweaverEntity(
             targets.toList()
         }
 
+        private val WOLF_SUMMON_MOVEMENT_SPEED_IDENTIFIER = IdentifierUtil.default("beastweaver_wolf_summon_movement_speed")
+        private val WOLF_SUMMON_MAX_HEALTH_IDENTIFIER = IdentifierUtil.default("beastweaver_wolf_summon_max_health")
         private val WOLF_SUMMON_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.wolf_summon")
         private const val WOLF_SUMMON_ID = "Wolf Summon"
         private val WOLF_SUMMON_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, WOLF_SUMMON_ID)
@@ -628,16 +630,27 @@ class BeastweaverEntity(
                     DelayedSummonData(
                         SummonScatteredPerTargetData(
                             factory = { level, summoner, target ->
-                                val summon = EntityUtil.spawnEntityWithStats(level, BeastweaverWolfStats, SpawnPosition.at(summoner), EntitySpawnReason.MOB_SUMMONED)
-                                if (summoner.isDungeonEnemy()) summon.setDungeonEnemy()
-                                summon.addCustomAttribute(CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.4))))
+                                val wolf = BeastweaverWolfEntity(CustomEntities.BEASTWEAVER_WOLF, level)
+                                EntityUtil.setStats(wolf, BeastweaverWolfStats)
 
-                                summon.getAttribute(Attributes.SCALE)?.baseValue = Random.nextDouble(0.9, 1.1)
+                                if (summoner.isDungeonEnemy()) wolf.setDungeonEnemy()
+                                wolf.addCustomAttribute(CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.4))))
 
-                                summon.setCompanion()
-                                summon.target = target
-                                (summon as? BeastweaverWolfEntity)?.owner = summoner
-                                summon
+                                val moreSpeed = getLowHealthBasedValue(summoner, base = 0.0, maxAdded = 0.25)
+                                val speedModifier = AttributeModifier(WOLF_SUMMON_MOVEMENT_SPEED_IDENTIFIER, moreSpeed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                                wolf.attributes.getInstance(Attributes.MOVEMENT_SPEED)?.also { it.addPermanentModifier(speedModifier) }
+
+                                val moreMaxHealth = getLowHealthBasedValue(summoner, base = 0.0, maxAdded = 0.5)
+                                val maxHealthModifier = AttributeModifier(WOLF_SUMMON_MAX_HEALTH_IDENTIFIER, moreMaxHealth, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                                wolf.attributes.getInstance(Attributes.MAX_HEALTH)?.also { it.addPermanentModifier(maxHealthModifier) }
+
+                                val scale = getLowHealthBasedValue(summoner, base = Random.nextDouble(0.9, 1.1), maxAdded = 0.2)
+                                wolf.getAttribute(Attributes.SCALE)?.baseValue = scale
+
+                                wolf.setCompanion()
+                                wolf.owner = summoner
+                                wolf.target = target
+                                wolf
                             },
                             getTargets = GET_SUMMON_TARGETS,
                             getCountPerTarget = { targetCount -> if (targetCount <= 3) 3 else 2 },
@@ -659,7 +672,7 @@ class BeastweaverEntity(
                     ),
                 ),
                 blockMovementDuration = 70,
-                attackSpeed = { mob -> getHealthBasedAttackSpeed(mob, healthPercentageStart = 0.5, maxIncrease = 0.4) },
+                attackSpeed = { mob -> getLowHealthBasedValue(mob, maxAdded = 0.4) },
             )
 
         private val SUMMON_VINES_PARTICLE_DATA = ParticleData(
@@ -671,14 +684,20 @@ class BeastweaverEntity(
         )
 
         private val VINE_FACTORY: (ServerLevel, LivingEntity) -> Entity = { level, summoner ->
-            val summon = EntityUtil.spawnEntityWithStats(level, BeastweaverVineStats, SpawnPosition.at(summoner), EntitySpawnReason.MOB_SUMMONED) as BeastweaverVineEntity
-            summon.setCompanion()
-            summon.setOwner(summoner)
-            if (summoner.isDungeonEnemy()) summon.setDungeonEnemy()
+            val vine = BeastweaverVineEntity(CustomEntities.BEASTWEAVER_VINE, level)
+            EntityUtil.setStats(vine, BeastweaverVineStats)
 
-            summon.getAttribute(Attributes.SCALE)?.baseValue = Random.nextDouble(0.9, 1.3)
+            vine.setCompanion()
+            vine.setOwner(summoner)
+            if (summoner.isDungeonEnemy()) vine.setDungeonEnemy()
 
-            summon
+            val scale = getLowHealthBasedValue(summoner, base = Random.nextDouble(0.9, 1.3), maxAdded = 0.5)
+            vine.getAttribute(Attributes.SCALE)?.baseValue = scale
+
+            val attackSpeed = getLowHealthBasedValue(summoner, maxAdded = 0.5)
+            vine.setAttackSpeed(attackSpeed)
+
+            vine
         }
 
         private val SUMMON_VINES_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.summon_vines")
@@ -744,7 +763,7 @@ class BeastweaverEntity(
                     ),
                 ),
                 blockMovementDuration = 95,
-                attackSpeed = { mob -> getHealthBasedAttackSpeed(mob, healthPercentageStart = 0.5, maxIncrease = 0.75) },
+                attackSpeed = { mob -> getLowHealthBasedValue(mob, maxAdded = 0.75) },
             )
 
         private const val SUMMON_TARGETED_VINE_ID = "Summon Targeted Vine"
