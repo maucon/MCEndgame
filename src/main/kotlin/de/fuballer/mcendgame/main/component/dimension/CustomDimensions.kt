@@ -48,7 +48,7 @@ object CustomDimensions {
 
         return DimensionType(
             false, // hasFixedTime
-            false, // hasSkyLight
+            true, // hasSkyLight
             false, // hasCeiling
             false, // hasEnderDragonFight
             1.0, // coordinateScale
