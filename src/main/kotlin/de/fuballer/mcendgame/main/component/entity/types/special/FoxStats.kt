@@ -2,8 +2,8 @@ package de.fuballer.mcendgame.main.component.entity.types.special
 
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.animal.fox.Fox
 
 object FoxStats : EntityTypeStats {
@@ -17,7 +17,7 @@ object FoxStats : EntityTypeStats {
     override val movementSpeed = 0.3
     override val knockbackResistance = 0.0
 
-    override fun applyMisc(entity: Entity) {
+    override fun applyMisc(entity: LivingEntity) {
         entity.isInvulnerable = true
     }
 }
