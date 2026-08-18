@@ -110,7 +110,7 @@ See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame-fabric/wiki/An
 | [Fabric API](https://modrinth.com/mod/fabric-api)                         | ≥ 0.145.4+26.1.2       |
 | [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | ≥ 1.13.12+kotlin.2.4.0 |
 | [Fantasy](https://github.com/NucleoidMC/fantasy)                          | ~0.8.0+26.1.2          |
-| [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.5.1                 |
+| [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.5.2                 |
 
 ### Building from Source
 
