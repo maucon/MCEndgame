@@ -4,13 +4,30 @@ import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
 import de.fuballer.mcendgame.main.messaging.dungeon.*
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
+import de.maucon.mauconframework.event.EventSubscriber
+import net.minecraft.server.level.ServerLevel
 import kotlin.math.max
 import kotlin.random.Random
 
 @Injectable
 object AspectOfTheGroveService {
+    @EventSubscriber(sync = true)
+    fun dropAspectOfTheGrove(event: DungeonBossDeathEvent) {
+        val serverLevel = event.world as? ServerLevel ?: return
+
+        val dungeonLevel = serverLevel.getDungeonLevel()
+        if (dungeonLevel < AspectOfTheGrove.MIN_DROP_LEVEL) return
+
+        val dropProbability = AspectOfTheGrove.getDropProbability(dungeonLevel)
+        if (Random.nextDouble() > dropProbability) return
+
+        val stack = AspectItems.ASPECT_OF_THE_GROVE.defaultInstance
+        event.bossEntity.spawnAtLocation(serverLevel, stack)
+    }
+
     @CommandHandler
     fun onSelectDungeonType(cmd: SelectDungeonTypeCommand) {
         if (!cmd.aspects.contains(AspectItems.ASPECT_OF_THE_GROVE)) return

@@ -9,6 +9,11 @@ class AspectOfTheGrove(
 ) : AspectItem(settings) {
     companion object {
         const val MIN_DUNGEON_LEVEL = 10
+
+        const val MIN_DROP_LEVEL = 10
+        private const val BASE_DROP_PROBABILITY = 0.05
+        private const val DROP_PROBABILITY_PER_LEVEL = 0.0025
+        fun getDropProbability(level: Int) = if (level < MIN_DROP_LEVEL) 0.0 else BASE_DROP_PROBABILITY + DROP_PROBABILITY_PER_LEVEL * (level - MIN_DROP_LEVEL)
     }
 
     override val tier = 0
