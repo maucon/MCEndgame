@@ -17,7 +17,7 @@ class IgnoreMarkerStructureProcessor : StructureProcessor() {
         currentBlockInfo: StructureTemplate.StructureBlockInfo,
         data: StructurePlaceSettings
     ): StructureTemplate.StructureBlockInfo? {
-        return if (DungeonGenerationSettings.MARKER_BLOCKS.contains(originalBlockInfo.state.block)) {
+        return if (DungeonGenerationSettings.IGNORED_BLOCKS.contains(originalBlockInfo.state.block)) {
             null
         } else {
             super.processBlock(world, pos, pivot, originalBlockInfo, currentBlockInfo, data)
