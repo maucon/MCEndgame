@@ -3,8 +3,8 @@ package de.fuballer.mcendgame.main.component.dungeon.enemy
 import de.fuballer.mcendgame.main.component.dungeon.enemy.equipment.EquipmentGenerationService
 import de.fuballer.mcendgame.main.component.dungeon.enemy.potion_effect.PotionEffectService
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
-import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
+import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemiesGeneratedCommand
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateEnemiesCommand
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setDungeonEnemy
@@ -120,7 +120,7 @@ class EnemyGenerationService(
             generateEnemiesCommand,
         )
 
-        potionEffectService.addEffects(enemyEntity, level, type.canBeInvisible, random)
+        if (type.canHaveEffects) potionEffectService.addEffects(enemyEntity, level, type.canBeInvisible, random)
 
         enemyEntity.heal(1000F)
 
