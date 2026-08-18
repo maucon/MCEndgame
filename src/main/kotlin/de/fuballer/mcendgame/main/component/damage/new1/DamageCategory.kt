@@ -19,18 +19,18 @@ enum class DamageCategory {
             var damageResisted = 0f
 
             if (!source.`is`(DamageTypeTags.BYPASSES_ARMOR)) {
-                amount = DamageUtil.reduceDamageByArmor(attacked, damage, source)
+                amount = DamageUtil.reduceDamageByArmor(attacked, amount, source)
             }
             if (!source.`is`(DamageTypeTags.BYPASSES_ENCHANTMENTS)) {
-                amount = DamageUtil.reduceDamageByProtectionEnchantment(attacked, damage, source)
+                amount = DamageUtil.reduceDamageByProtectionEnchantment(attacked, amount, source)
             }
             if (!source.`is`(DamageTypeTags.BYPASSES_EFFECTS)) {
                 if (attacked.hasEffect(MobEffects.RESISTANCE) && !source.`is`(DamageTypeTags.BYPASSES_RESISTANCE)) {
-                    damageResisted = DamageUtil.getDamageReductionByResistanceEffect(attacked, damage)
+                    damageResisted = DamageUtil.getDamageReductionByResistanceEffect(attacked, amount)
                     amount -= damageResisted
                 }
             }
-            amount -= DamageUtil.reduceDamageByDamageTakenAttribute(damage, cmd)
+            amount -= DamageUtil.reduceDamageByDamageTakenAttribute(amount, cmd)
 
             return DamageReductionResult(amount, damageResisted)
         }
@@ -46,15 +46,15 @@ enum class DamageCategory {
 
             var amount = DamageUtil.reduceDamageBySpellResistance(damage, cmd)
             if (!source.`is`(DamageTypeTags.BYPASSES_ENCHANTMENTS)) {
-                amount = DamageUtil.reduceDamageByProtectionEnchantment(attacked, damage, source)
+                amount = DamageUtil.reduceDamageByProtectionEnchantment(attacked, amount, source)
             }
             if (!source.`is`(DamageTypeTags.BYPASSES_EFFECTS)) {
                 if (attacked.hasEffect(MobEffects.RESISTANCE) && !source.`is`(DamageTypeTags.BYPASSES_RESISTANCE)) {
-                    damageResisted = DamageUtil.getDamageReductionByResistanceEffect(attacked, damage)
+                    damageResisted = DamageUtil.getDamageReductionByResistanceEffect(attacked, amount)
                     amount -= damageResisted
                 }
             }
-            amount -= DamageUtil.reduceDamageByDamageTakenAttribute(damage, cmd)
+            amount -= DamageUtil.reduceDamageByDamageTakenAttribute(amount, cmd)
 
             return DamageReductionResult(amount, damageResisted)
         }

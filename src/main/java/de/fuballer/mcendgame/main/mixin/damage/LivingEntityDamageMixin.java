@@ -142,18 +142,22 @@ public abstract class LivingEntityDamageMixin {
             boolean withinIFrames = (float) this_.invulnerableTime > 10.0F && !source.is(DamageTypeTags.BYPASSES_COOLDOWN);
             EntityMixinExtension.INSTANCE.setInInvulnerabilityFrames(this_, withinIFrames);
 
-            this.actuallyHurt(level, finalSource, damage); // use DamageSourceResult
+            var tookFullDamage = true;
+            if (withinIFrames) {
+                if (!EntityMixinExtension.INSTANCE.getLastHitWasApplied(this_)) {
+                    // hit was fully absorbed by the "bigger hit wins"
+                    return false;
+                }
 
-            if (withinIFrames && !EntityMixinExtension.INSTANCE.getLastHitWasApplied(this_)) {
-                // hit was fully absorbed by the "bigger hit wins"
-                return false;
-            }
-            boolean tookFullDamage = !withinIFrames;
-            if (!withinIFrames) {
+                this.actuallyHurt(level, finalSource, damage - this.lastHurt);
+                tookFullDamage = false;
+            } else {
                 this_.invulnerableTime = 20;
+                this.actuallyHurt(level, finalSource, damage);
                 this_.hurtDuration = 10;
                 this_.hurtTime = this_.hurtDuration;
             }
+
             //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
             //boolean tookFullDamage = true;
@@ -262,37 +266,12 @@ public abstract class LivingEntityDamageMixin {
 
         if (!this_.isInvulnerableTo(level, source)) {
             //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-            var damageReductionResult = DamageService.INSTANCE.calculateIncomingDamage(this_, source, dmg);
-            float reducedTotal = damageReductionResult.getDamage();
-
-            EntityMixinExtension.INSTANCE.setLastHitWasApplied(this_, true);
-
-            var damageToApply = reducedTotal;
-            if (EntityMixinExtension.INSTANCE.isInInvulnerabilityFrames(this_)) {
-                boolean isStronger = reducedTotal > this.lastHurt;
-                EntityMixinExtension.INSTANCE.setLastHitWasApplied(this_, isStronger);
-                if (!isStronger) return;
-                damageToApply = reducedTotal - this.lastHurt;
+            var damageOptional = DamageService.INSTANCE.applyDamage(this_, source, dmg);
+            if (damageOptional.isEmpty()) {
+                return;
             }
-            this.lastHurt = reducedTotal;
-
-            System.out.println(reducedTotal);
-            System.out.println(dmg + " : " + damageToApply);
-            dmg = damageToApply;
-
-
-            // from LivingEntity.getDamageAfterArmorAbsorb
-            if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-                this_.hurtArmor(source, dmg); // TODO only ATTACK_DAMAGE part?
-            }
-
-            var damageResisted = damageReductionResult.getResistedDamage(); // TODO why
-            // from LivingEntity.getDamageAfterMagicAbsorb
-            if (this_ instanceof ServerPlayer) {
-                ((ServerPlayer) this_).awardStat(Stats.DAMAGE_RESISTED, Math.round(damageResisted * 10.0F));
-            } else if (source.getEntity() instanceof ServerPlayer) {
-                ((ServerPlayer) source.getEntity()).awardStat(Stats.DAMAGE_DEALT_RESISTED, Math.round(damageResisted * 10.0F));
-            }
+            System.out.println(damageOptional.get() + " : " + dmg);
+            dmg = damageOptional.get();
             //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             //dmg = this_.getDamageAfterArmorAbsorb(source, dmg);
             //dmg = this_.getDamageAfterMagicAbsorb(source, dmg);

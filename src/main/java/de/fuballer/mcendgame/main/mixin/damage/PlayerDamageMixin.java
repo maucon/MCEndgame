@@ -4,21 +4,17 @@ import de.fuballer.mcendgame.main.component.damage.DifficultyScaling;
 import de.fuballer.mcendgame.main.component.damage.new1.DamageService;
 import de.fuballer.mcendgame.main.component.damage.new1.DamageSourceDraft;
 import de.fuballer.mcendgame.main.mixin.access.PlayerAccessMixin;
-import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,9 +23,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
 public abstract class PlayerDamageMixin extends LivingEntity {
-    @Shadow
-    public abstract Abilities getAbilities();
-
     protected PlayerDamageMixin(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
     }
@@ -82,6 +75,7 @@ public abstract class PlayerDamageMixin extends LivingEntity {
 
                 //return damage == 0.0F ? false : super.hurtServer(level, source, damage);
                 // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                // Make source a DamageSourceDraft if not already
                 var draftSource = source instanceof DamageSourceDraft d ? d : new DamageSourceDraft(source);
                 draftSource.getVanillaDamageContext().setDifficultyScaling(difficultyScaling);
                 return super.hurtServer(level, draftSource, damage);
@@ -102,33 +96,11 @@ public abstract class PlayerDamageMixin extends LivingEntity {
 
         if (!this.isInvulnerableTo(level, source)) {
             //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-            var damageReductionResult = DamageService.INSTANCE.calculateIncomingDamage(this_, source, dmg);
-            float reducedTotal = damageReductionResult.getDamage();
-
-            EntityMixinExtension.INSTANCE.setLastHitWasApplied(this_, true);
-
-            var damageToApply = reducedTotal;
-            if (EntityMixinExtension.INSTANCE.isInInvulnerabilityFrames(this_)) {
-                boolean isStronger = reducedTotal > this.lastHurt;
-                EntityMixinExtension.INSTANCE.setLastHitWasApplied(this_, isStronger);
-                if (!isStronger) return;
-                damageToApply = reducedTotal - this.lastHurt;
+            var damageOptional = DamageService.INSTANCE.applyDamage(this_, source, dmg);
+            if (damageOptional.isEmpty()) {
+                return;
             }
-            this.lastHurt = reducedTotal;
-            dmg = damageToApply;
-
-            // from LivingEntity.getDamageAfterArmorAbsorb
-            if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-                ((LivingEntity) this_).hurtArmor(source, dmg); // TODO only ATTACK_DAMAGE part?
-            }
-
-            var damageResisted = damageReductionResult.getResistedDamage(); // TODO why
-            // from LivingEntity.getDamageAfterMagicAbsorb
-            if (this_ instanceof ServerPlayer) {
-                ((ServerPlayer) this_).awardStat(Stats.DAMAGE_RESISTED, Math.round(damageResisted * 10.0F));
-            } else if (source.getEntity() instanceof ServerPlayer) {
-                ((ServerPlayer) source.getEntity()).awardStat(Stats.DAMAGE_DEALT_RESISTED, Math.round(damageResisted * 10.0F));
-            }
+            dmg = damageOptional.get();
             //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             //dmg = this.getDamageAfterArmorAbsorb(source, dmg);
             //dmg = this.getDamageAfterMagicAbsorb(source, dmg);

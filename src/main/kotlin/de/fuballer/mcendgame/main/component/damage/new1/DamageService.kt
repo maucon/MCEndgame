@@ -7,11 +7,23 @@ import de.fuballer.mcendgame.main.component.damage.calculator.BaseDamageCalculat
 import de.fuballer.mcendgame.main.component.damage.dodge.DodgeCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.ignore_damage.IgnoreDamageCommand
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDodgedEvent
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getLastHurt
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getLastResisted
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isInInvulnerabilityFrames
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setLastHitWasApplied
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setLastHurt
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setLastResisted
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.event.EventGateway
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.stats.Stats
+import net.minecraft.tags.DamageTypeTags
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.LivingEntity
+import java.util.*
+import kotlin.math.max
+import kotlin.math.roundToInt
 
 // TODO   if (damageCalculationConfig.isArmadilloDamageReduction) {
 //            combinedDamage = (combinedDamage - 1f) / 2f
@@ -64,7 +76,7 @@ object DamageService {
         victim: LivingEntity,
         serverLevel: ServerLevel,
         damageSource: DamageSourceDraft,
-        damage: Float,
+        damage: Float, // for debug
     ): DamageSourceResult {
         log.info("createDamageSourceResult - ${victim.javaClass.simpleName} - ${damageSource.javaClass.simpleName}")
 
@@ -110,21 +122,51 @@ object DamageService {
         return DamageSourceResult.Applied(damageInstance, cmd, damageSource)
     }
 
-    fun calculateIncomingDamage(
-        victim: LivingEntity,
+    /**
+     * Has side effects, only use in damage-related mixins.
+     */
+    fun applyDamage(
+        entity: LivingEntity,
         source: DamageSource,
-        damage: Float
-    ): DamageReductionResult {
-        log.info("calculateReducedDamage - ${victim.javaClass.simpleName} - ${source.javaClass.simpleName}")
-        if (source !is DamageSourceResult.Applied) {
-            // todo log/debug
-            return DamageReductionResult.zero()
+        damage: Float // for debug
+    ): Optional<Float> {
+        var dmg = damage
+
+        val damageReductionResult = calculateIncomingDamage(entity, source, dmg)
+        val reducedTotal = damageReductionResult.damage
+        val resistedTotal = damageReductionResult.resistedDamage
+
+        entity.setLastHitWasApplied(true)
+
+        var damageToApply = reducedTotal
+        var damageResisted = resistedTotal
+        if (entity.isInInvulnerabilityFrames()) {
+            val isStronger = reducedTotal > entity.getLastHurt()
+            entity.setLastHitWasApplied(isStronger)
+
+            if (!isStronger) return Optional.empty();
+
+            damageToApply = reducedTotal - entity.getLastHurt()
+            damageResisted = max(0f, resistedTotal - entity.getLastResisted())
         }
-        log.info(source.damageInstance.toString())
+        entity.setLastHurt(reducedTotal)
+        entity.setLastResisted(resistedTotal)
 
-        // TODO event? command? LivingEntityDamagedEvent?
+        dmg = damageToApply
 
-        return source.damageInstance.getAfterDamageReduction(victim, source, source.damageCalculationCommand)
+        // from LivingEntity.getDamageAfterArmorAbsorb
+        if (!source.`is`(DamageTypeTags.BYPASSES_ARMOR)) {
+            entity.hurtArmor(source, dmg) // TODO only ATTACK_DAMAGE part?
+        }
+
+        // from LivingEntity.getDamageAfterMagicAbsorb
+        if (entity is ServerPlayer) {
+            entity.awardStat(Stats.DAMAGE_RESISTED, (damageResisted * 10.0f).roundToInt())
+        } else if (source.entity is ServerPlayer) {
+            (source.entity as ServerPlayer).awardStat(Stats.DAMAGE_DEALT_RESISTED, (damageResisted * 10.0f).roundToInt())
+        }
+
+        return Optional.of(dmg)
     }
 
     private fun isDamageIgnored(
@@ -157,5 +199,22 @@ object DamageService {
         }
 
         return false
+    }
+
+    private fun calculateIncomingDamage(
+        victim: LivingEntity,
+        source: DamageSource,
+        damage: Float // for debug
+    ): DamageReductionResult {
+        log.info("calculateReducedDamage - ${victim.javaClass.simpleName} - ${source.javaClass.simpleName}")
+        if (source !is DamageSourceResult.Applied) {
+            // todo log/debug
+            return DamageReductionResult.zero()
+        }
+        log.info(source.damageInstance.toString())
+
+        // TODO event? command? LivingEntityDamagedEvent?
+
+        return source.damageInstance.getAfterDamageReduction(victim, source, source.damageCalculationCommand)
     }
 }

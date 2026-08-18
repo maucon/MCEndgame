@@ -182,4 +182,24 @@ object EntityMixinExtension {
         val accessor = this as LivingEntityDamageAccessor
         return accessor.`mcendgame$lastHitWasApplied`()
     }
+
+    fun LivingEntity.setLastResisted(value: Float) {
+        val accessor = this as LivingEntityDamageAccessor
+        accessor.`mcendgame$setLastResisted`(value)
+    }
+
+    fun LivingEntity.getLastResisted(): Float {
+        val accessor = this as LivingEntityDamageAccessor
+        return accessor.`mcendgame$getLastResisted`()
+    }
+
+    fun LivingEntity.setLastHurt(value: Float) {
+        val accessor = this as LivingEntityDamageAccessor
+        accessor.`mcendgame$setLastHurt`(value)
+    }
+
+    fun LivingEntity.getLastHurt(): Float {
+        val accessor = this as LivingEntityDamageAccessor
+        return accessor.`mcendgame$getLastHurt`()
+    }
 }
