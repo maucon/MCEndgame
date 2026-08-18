@@ -54,8 +54,8 @@ object CustomBiomes {
     private fun createBeastweaverDungeon(): Biome {
         return Biome.BiomeBuilder()
             .hasPrecipitation(false)
-            .temperature(0.5f)
-            .downfall(0.0f)
+            .temperature(0.75f)
+            .downfall(0.8f)
             .specialEffects(BiomeSpecialEffects.Builder().waterColor(0x3F9B5F).build())
             .generationSettings(BiomeGenerationSettings.PlainBuilder().build())
             .mobSpawnSettings(MobSpawnSettings.Builder().build())
