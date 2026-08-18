@@ -421,7 +421,7 @@ class BeastweaverEntity(
         private val WINGS_LAUNCH_ATTACK_DAMAGE = AreaAttackDamage(0.1F, 3.5, WINGS_LAUNCH_AREA, knockbackWhenBlocked = true)
         private val WINGS_LAUNCH_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.wings_launch")
         private const val WINGS_LAUNCH_ID = "Wings Launch"
-        private val WINGS_LAUNCH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.AIRBORN, ATTACK_ANIM_CONTROLLER_ID, WINGS_LAUNCH_ID)
+        private val WINGS_LAUNCH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.AIRBORNE, ATTACK_ANIM_CONTROLLER_ID, WINGS_LAUNCH_ID)
         private val WINGS_LAUNCH_ATTACK =
             Attack<BeastweaverEntity>(
                 WINGS_LAUNCH_ID,
@@ -510,7 +510,7 @@ class BeastweaverEntity(
         private val ELEPHANT_STOMP_DEBRIS_ATTACK_DAMAGE = AreaAttackDamage(0.5F, 0.5, ELEPHANT_STOMP_DEBRIS_AREA_AREA)
         private val ELEPHANT_STOMP_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.elephant_stomp")
         private const val ELEPHANT_STOMP_ID = "Elephant Stomp"
-        private val ELEPHANT_STOMP_ANIM_DATA = AttackAnimationData(AttackPose.AIRBORN, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, ELEPHANT_STOMP_ID)
+        private val ELEPHANT_STOMP_ANIM_DATA = AttackAnimationData(AttackPose.AIRBORNE, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, ELEPHANT_STOMP_ID)
         private val ELEPHANT_STOMP_ATTACK =
             DebrisExplosionAttack<BeastweaverEntity>(
                 ELEPHANT_STOMP_ID,

@@ -17,7 +17,7 @@ class CanNotReachTargetTriggerCondition(
         val path = navigation.createPath(target, reach) ?: return false
 
         val nodeCount = path.nodeCount
-        if (nodeCount == 0) return attacker.distanceTo(target) > maxDistanceSqr
+        if (nodeCount == 0) return attacker.distanceToSqr(target) > maxDistanceSqr
         val destinyPos = path.getEntityPosAtNode(attacker, nodeCount - 1)
 
         val sqrDistance = destinyPos.distanceToSqr(target.position())

@@ -65,6 +65,7 @@ class CrystalForgeScreenHandler(
     override fun removed(player: Player) {
         super.removed(player)
         clearContainer(player, inputInventory)
+        clearContainer(player, outputInventory)
     }
 
     fun forge() {

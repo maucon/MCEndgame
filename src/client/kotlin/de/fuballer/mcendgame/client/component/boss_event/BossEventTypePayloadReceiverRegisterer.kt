@@ -6,7 +6,7 @@ import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 
 @Injectable
-object RangeDefinedSoundPayloadReceiverRegisterer {
+object BossEventTypePayloadReceiverRegisterer {
     @Initializer
     fun register() {
         ClientPlayNetworking.registerGlobalReceiver(BossEventTypePayload.ID) { payload, _ ->
