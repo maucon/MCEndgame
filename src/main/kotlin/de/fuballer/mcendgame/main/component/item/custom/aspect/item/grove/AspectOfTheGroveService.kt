@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
 import de.fuballer.mcendgame.main.messaging.dungeon.*
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonAspects
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
@@ -20,6 +21,7 @@ object AspectOfTheGroveService {
 
         val dungeonLevel = serverLevel.getDungeonLevel()
         if (dungeonLevel < AspectOfTheGrove.MIN_DROP_LEVEL) return
+        if (serverLevel.getDungeonAspects().contains(AspectItems.ASPECT_OF_THE_GROVE)) return
 
         val dropProbability = AspectOfTheGrove.getDropProbability(dungeonLevel)
         if (Random.nextDouble() > dropProbability) return
