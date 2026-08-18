@@ -13,4 +13,5 @@ object CustomStatusEffects {
     val SCORCH = RegistryUtil.registerStatusEffect("scorch", ScorchEffect())
     val VERDANT_ECHO = RegistryUtil.registerStatusEffect("verdant_echo", VerdantEchoEffect())
     val MOLTEN_ROAR = RegistryUtil.registerStatusEffect("molten_roar", MoltenRoarEffect())
+    val ANCIENT_BLIGHT = RegistryUtil.registerStatusEffect("ancient_blight", AncientBlightEffect())
 }

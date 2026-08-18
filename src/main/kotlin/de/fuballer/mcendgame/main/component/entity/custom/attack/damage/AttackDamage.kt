@@ -10,6 +10,7 @@ abstract class AttackDamage(
     private val knockbackFactor: Double,
     val blockable: Boolean = true,
     val disableBlockingShield: Float = 0.0F,
+    val knockbackWhenBlocked: Boolean = false,
 ) {
     abstract fun apply(world: ServerLevel, damager: Mob, target: LivingEntity?): Boolean
 

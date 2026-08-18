@@ -27,12 +27,13 @@ object LootSettings {
         RandomOption(80, AspectItems.ASPECT_OF_CURIO),
         RandomOption(100, AspectItems.ASPECT_OF_GREED),
         RandomOption(50, AspectItems.ASPECT_OF_FORTUNE),
-        //RandomOption(5, AspectItems.ASPECT_OF_GHOSTS), doesn't drop default [AspectOfGhostsService]
+        //RandomOption(1, AspectItems.ASPECT_OF_GHOSTS), doesn't drop default [AspectOfGhostsService]
         RandomOption(75, AspectItems.ASPECT_OF_FORTITUDE),
         RandomOption(75, AspectItems.ASPECT_OF_SAVAGERY),
         RandomOption(15, AspectItems.ASPECT_OF_EMINENCE),
         RandomOption(50, AspectItems.ASPECT_OF_ANCESTORS),
         RandomOption(50, AspectItems.ASPECT_OF_DUALITY),
+        //RandomOption(1, AspectItems.ASPECT_OF_THE_GROVE), doesn't drop default [AspectOfTheGroveService]
     )
 
     fun getBossBaseCrystalCount(dungeonLevel: Int) = dungeonLevel / 7.0 + Random.nextDouble(dungeonLevel / 5.0)
@@ -43,6 +44,7 @@ object LootSettings {
         LevelRestrictedRandomOption(5, tier = 0, requiredLevel = 4, CrystalItems.REFORGE_CRYSTAL),
         LevelRestrictedRandomOption(3, tier = 0, requiredLevel = 6, CrystalItems.CORRUPTION_CRYSTAL),
         LevelRestrictedRandomOption(2, tier = 0, requiredLevel = 8, CrystalItems.SACRIFICIAL_CRYSTAL),
+        //LevelRestrictedRandomOption(1, tier = 0, requiredLevel = 10, CrystalItems.IMITATION_CRYSTAL), drops from beastweaver boss
     )
 
     // unaffected by increased loot

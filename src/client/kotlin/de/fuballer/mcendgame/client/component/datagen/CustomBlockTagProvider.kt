@@ -76,6 +76,8 @@ class CustomBlockTagProvider(
             .add(BlockIds.BAMBOO_SAPLING)
             .add(BlockItemIds.DEAD_BUSH)
             .add(BlockItemIds.REDSTONE_DUST)
+            .add(BlockItemIds.BUSH)
+            .add(BlockItemIds.FIREFLY_BUSH)
             // region .add(BlockTags.SAPLINGS)
             // FIXME should be 'BlockTags.SAPLINGS', but the reference seems to be removed? We list the entries for now (https://minecraft.wiki/w/Block_tag_%28Java_Edition%29#saplings)
             .add(BlockItemIds.ACACIA_SAPLING)

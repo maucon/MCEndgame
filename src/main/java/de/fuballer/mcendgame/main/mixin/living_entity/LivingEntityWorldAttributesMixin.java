@@ -11,13 +11,23 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public class LivingEntityWorldAttributesMixin implements LivingEntityWorldAttributesAccessor {
+public abstract class LivingEntityWorldAttributesMixin implements LivingEntityWorldAttributesAccessor {
+    @Shadow
+    public abstract float getMaxHealth();
+
+    @Shadow
+    public abstract void setHealth(float health);
+
+    @Shadow
+    public abstract float getHealth();
+
     @Unique
     private int appliedWorldAttributesUpdate = 0;
 
@@ -31,6 +41,8 @@ public class LivingEntityWorldAttributesMixin implements LivingEntityWorldAttrib
 
         var latestUpdate = WorldMixinExtension.INSTANCE.getAttributeUpdateCount(world);
         if (latestUpdate <= appliedWorldAttributesUpdate) return;
+
+        var oldMaxHealth = getMaxHealth();
 
         var history = WorldMixinExtension.INSTANCE.getVanillaTypeAttributesHistory(world, entity);
         for (VanillaTypeWorldAttributeInstance updateInstance : history) {
@@ -55,6 +67,9 @@ public class LivingEntityWorldAttributesMixin implements LivingEntityWorldAttrib
                 attributeInstance.removeModifier(identifier);
             }
         }
+
+        var newMaxHealth = getMaxHealth();
+        if (oldMaxHealth < newMaxHealth) setHealth(getHealth() + (newMaxHealth - oldMaxHealth));
 
         appliedWorldAttributesUpdate = latestUpdate;
     }

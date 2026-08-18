@@ -27,7 +27,7 @@ object CustomRenderPipelines {
 
     val GHOSTLY_PIPELINE: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
-            .withLocation("pipeline/entity_translucent_emissive")
+            .withLocation("pipeline/ghostly")
             .withShaderDefine("ALPHA_CUTOUT", 0.1f)
             .withShaderDefine("PER_FACE_LIGHTING")
             .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
@@ -50,6 +50,21 @@ object CustomRenderPipelines {
             .withShaderDefine("ALPHA_CUTOUT", 0.1F)
             .withShaderDefine("NO_OVERLAY")
             .withShaderDefine("PER_FACE_LIGHTING")
+            .withCull(false)
+            .build()
+    )
+
+    val BEASTWEAVER_ATTACK_PIPELINE: RenderPipeline = RenderPipelines.register(
+        RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
+            .withLocation(IdentifierUtil.default("pipeline/beastweaver_attack"))
+            .withVertexShader(IdentifierUtil.default("core/beastweaver_attack"))
+            .withFragmentShader(IdentifierUtil.default("core/beastweaver_attack"))
+            .withShaderDefine("ALPHA_CUTOUT", 0.1f)
+            .withSampler("Sampler0")
+            .withVertexFormat(CustomVertexFormats.BEASTWEAVER_ATTACK, VertexFormat.Mode.QUADS)
+            .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withDepthStencilState(DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, true))
+            .withShaderDefine("NO_OVERLAY")
             .withCull(false)
             .build()
     )

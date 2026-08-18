@@ -16,8 +16,11 @@ class CalibrationCrystalItem(
 
     override val description: MutableComponent = Component.translatable(DESCRIPTION_BASE_KEY + "calibration")
 
-    override fun canForge(stack: ItemStack): MutableComponent? {
-        val cannotForgeReason = super.canForge(stack)
+    override fun canForge(
+        stack: ItemStack,
+        secondaryOutputSlotFilled: Boolean,
+    ): MutableComponent? {
+        val cannotForgeReason = super.canForge(stack, secondaryOutputSlotFilled)
         if (cannotForgeReason != null) return cannotForgeReason
 
         val attributes = stack.getCustomAttributes().filter { it.hasNonZeroRange() }
@@ -26,15 +29,15 @@ class CalibrationCrystalItem(
         return null
     }
 
-    override fun forge(stack: ItemStack): ItemStack {
+    override fun forge(stack: ItemStack): CrystalForgeOutput {
         val newStack = stack.copy()
 
         val oldAttributes = stack.getCustomAttributes()
-        if (oldAttributes.isEmpty()) return newStack
+        if (oldAttributes.isEmpty()) return CrystalForgeOutput(newStack)
 
         val newAttributes = oldAttributes.map { it.getRerolled() }
         newStack.updateCustomAttributes(newAttributes)
 
-        return newStack
+        return CrystalForgeOutput(newStack)
     }
 }

@@ -9,11 +9,12 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dumm
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.ItemWithCape
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.messaging.misc.GainStatusEffectCommand
-import de.fuballer.mcendgame.main.util.extension.Vec3dExtension.angleDeg
+import de.fuballer.mcendgame.main.util.extension.Vec3Extension.angleDeg
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.maucon.mauconframework.command.CommandGateway
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket
 import net.minecraft.server.level.ServerLevel
@@ -30,10 +31,14 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.Shapes
+import kotlin.math.atan2
+import kotlin.math.cos
+
 
 object EntityExtension {
     fun LivingEntity.isAlly(entity: Entity): Boolean {
@@ -202,7 +207,7 @@ object EntityExtension {
     }
 
     fun Entity.setAndSyncVelocity(newVelocity: Vec3) {
-        setDeltaMovement(newVelocity)
+        deltaMovement = newVelocity
         needsSync = true
 
         val world = level() as? ServerLevel ?: return
@@ -222,4 +227,48 @@ object EntityExtension {
         if (getItemBySlot(EquipmentSlot.OFFHAND).item is ItemWithCape) return true
         return false
     }
+
+    fun Entity.rotateToEntity(target: Entity) {
+        val dx = target.x - x
+        val dz = target.z - z
+        val yaw = (atan2(dz, dx) * 180.0 / Math.PI).toFloat() - 90f
+
+        yRot = yaw
+        yHeadRot = yaw
+    }
+
+    fun Entity.getDistanceToGround(): Double {
+        val pos: BlockPos.MutableBlockPos = blockPosition().mutable()
+        val level = level()
+
+        while (pos.y > level.minY) {
+            pos.move(Direction.DOWN)
+
+            val state: BlockState = level.getBlockState(pos)
+
+            if (state.getCollisionShape(level, pos).isEmpty) continue
+
+            val collisionShapeHeight = state.getCollisionShape(level, pos).max(Direction.Axis.Y)
+            return y - (pos.y + collisionShapeHeight)
+        }
+
+        return 0.0
+    }
+
+    fun Entity.isFacingTowards(
+        other: Entity,
+        maxAngleDegrees: Double = 90.0
+    ): Boolean {
+        val look = lookAngle.normalize()
+        val toTarget = other.position()
+            .subtract(position())
+            .normalize()
+
+        val dot = look.dot(toTarget)
+        val threshold = cos(Math.toRadians(maxAngleDegrees))
+
+        return dot >= threshold
+    }
+
+    fun LivingEntity.getHealthPercentage() = health / maxHealth
 }

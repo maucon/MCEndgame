@@ -9,6 +9,7 @@ import de.fuballer.mcendgame.main.component.item.custom.aspect.item.fortitude.As
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.fortune.AspectOfFortune
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.ghosts.AspectOfGhosts
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.greed.AspectOfGreed
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.grove.AspectOfTheGrove
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.hordes.AspectOfHordes
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.impatience.AspectOfImpatience
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.savagery.AspectOfSavagery
@@ -33,4 +34,5 @@ object AspectItems {
     val ASPECT_OF_EMINENCE = RegistryUtil.registerAspectItem(::AspectOfEminence, AspectItemIds.ASPECT_OF_EMINENCE)
     val ASPECT_OF_ANCESTORS = RegistryUtil.registerAspectItem(::AspectOfAncestors, AspectItemIds.ASPECT_OF_ANCESTORS)
     val ASPECT_OF_DUALITY = RegistryUtil.registerAspectItem(::AspectOfDuality, AspectItemIds.ASPECT_OF_DUALITY)
+    val ASPECT_OF_THE_GROVE = RegistryUtil.registerAspectItem(::AspectOfTheGrove, "aspect_of_the_grove") // beastweaver FIXME
 }

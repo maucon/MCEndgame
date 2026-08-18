@@ -1,17 +1,23 @@
 package de.fuballer.mcendgame.main.component.entity.custom.interfaces
 
 import com.geckolib.animatable.GeoEntity
+import com.mojang.serialization.Codec
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
-import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Mob
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 
 interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
+    companion object {
+        private const val ATTACK_COOLDOWNS_ID = "attack_cooldowns"
+        private val ATTACK_COOLDOWNS_MAP_CODEC: Codec<Map<String, Int>> = Codec.unboundedMap(Codec.STRING, Codec.INT)
+    }
+
     var attackPose: AttackPose
     var attackDuration: Int
 
@@ -19,16 +25,14 @@ interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
 
     val attackCooldowns: MutableMap<Attack<T>, Int>
 
-    val attackDamageInstances: MutableList<AttackDamageInstance>
-    val attackSoundInstances: MutableList<DelayedSoundInstance>
+    val attackDataInstances: MutableList<DelayedAttackDataInstance>
 
     fun tickAttacks(
         world: ServerLevel,
         damager: T,
     ) {
         tickCooldowns()
-        tickAttackDamageInstances(world, damager)
-        tickSoundInstances(world, damager)
+        tickAttackDataInstances(world, damager)
 
         if (attackDuration > 0) {
             --attackDuration
@@ -48,15 +52,14 @@ interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
         attacker: T,
         attack: Attack<T>,
     ) {
-        attackDuration = attack.totalDuration
+        attackDuration = attack.getTotalDuration(attacker)
         attackPose = attack.animationData.endPose
 
-        attackCooldowns[attack] = attack.cooldown
+        attackCooldowns[attack] = attack.cooldown(attacker)
 
         val target = attacker.target
         attack.start(attacker, target)
-        attackDamageInstances.addAll(attack.getDamageInstances(target))
-        attackSoundInstances.addAll(attack.getSoundInstances())
+        attackDataInstances.addAll(attack.getAttackDataInstances(attacker, target))
     }
 
     private fun tickCooldowns() {
@@ -72,28 +75,17 @@ interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
         }
     }
 
-    private fun tickAttackDamageInstances(
+    private fun tickAttackDataInstances(
         world: ServerLevel,
         damager: Mob,
     ) {
-        val toRemove = mutableListOf<AttackDamageInstance>()
-        for (attack in attackDamageInstances) {
-            if (!attack.tick(world, damager)) continue
-            toRemove.add(attack)
+        val toRemove = mutableListOf<DelayedAttackDataInstance>()
+        val target = damager.target
+        for (instance in attackDataInstances) {
+            if (!instance.tick(world, damager, target)) continue
+            toRemove.add(instance)
         }
-        attackDamageInstances.removeAll(toRemove)
-    }
-
-    private fun tickSoundInstances(
-        world: ServerLevel,
-        entity: Entity,
-    ) {
-        val toRemove = mutableListOf<DelayedSoundInstance>()
-        for (sound in attackSoundInstances) {
-            if (!sound.tick(world, entity)) continue
-            toRemove.add(sound)
-        }
-        attackSoundInstances.removeAll(toRemove)
+        attackDataInstances.removeAll(toRemove)
     }
 
     fun getRandomAttack(
@@ -117,4 +109,22 @@ interface CustomAttacksMob<T> where T : Mob, T : GeoEntity {
         if (possibleAttacks.isNotEmpty()) return RandomUtil.pickOne(possibleAttacks).option
         return null
     }
+
+    fun addAttackCooldownsSaveData(output: ValueOutput) {
+        val idCdMap = attackCooldowns.mapKeys { (attack, _) -> attack.id }
+        output.store(ATTACK_COOLDOWNS_ID, ATTACK_COOLDOWNS_MAP_CODEC, idCdMap)
+    }
+
+    fun readAttackCooldownsSaveData(input: ValueInput) {
+        input.read(ATTACK_COOLDOWNS_ID, ATTACK_COOLDOWNS_MAP_CODEC).ifPresent {
+            it.forEach { (id, cd) ->
+                val attack = getAttackFromId(id) ?: return@forEach
+                attackCooldowns[attack] = cd
+            }
+        }
+    }
+
+    private fun getAttackFromId(id: String) = attacks.firstOrNull { it.option.id == id }?.option
+
+    fun setAttackAnimationSpeed(attackSpeed: Float) {}
 }

@@ -6,10 +6,9 @@ import de.fuballer.mcendgame.main.component.dungeon.generation.layout.DungeonLay
 import de.fuballer.mcendgame.main.component.dungeon.type.data.RolledDungeonType
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.types.*
-import de.fuballer.mcendgame.main.component.entity.types.boss.ArachneBossStats
-import de.fuballer.mcendgame.main.component.entity.types.boss.BeakburnBossStats
-import de.fuballer.mcendgame.main.component.entity.types.boss.BonecrusherBossStats
-import de.fuballer.mcendgame.main.component.entity.types.boss.ElfDuelistBossStats
+import de.fuballer.mcendgame.main.component.entity.types.boss.*
+import de.fuballer.mcendgame.main.component.entity.types.boss.beastweaver.BeastweaverBossStats
+import de.fuballer.mcendgame.main.component.entity.types.special.FoxStats
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import net.minecraft.resources.ResourceKey
@@ -25,6 +24,7 @@ enum class DungeonType(
     val enemyCount: Int,
     val bossCount: Int,
     val biome: ResourceKey<Biome>,
+    val gameTime: Int = 18000,
     val applyMisc: (List<LivingEntity>) -> Unit = {},
 ) { // Note: dungeon seed uses ordinal to save dungeon type
     STRONGHOLD(
@@ -50,7 +50,7 @@ enum class DungeonType(
         ),
         enemyCount = 125,
         bossCount = 3,
-        biome = Biomes.PLAINS,
+        biome = CustomBiomes.STRONGHOLD_DUNGEON,
     ),
     NETHER(
         listOf(
@@ -75,7 +75,7 @@ enum class DungeonType(
         enemyCount = 125,
         bossCount = 3,
         biome = Biomes.NETHER_WASTES,
-        { enemies -> enemies.forEach { it.addEffect(PotionEffect.FIRE_RESISTANCE.getEffectInstance(false)) } },
+        applyMisc = { enemies -> enemies.forEach { it.addEffect(PotionEffect.FIRE_RESISTANCE.getEffectInstance(false)) } },
     ),
     DESERT(
         listOf(
@@ -100,6 +100,21 @@ enum class DungeonType(
         enemyCount = 125,
         bossCount = 3,
         biome = CustomBiomes.DESERT_DUNGEON,
+    ),
+    BEASTWEAVER_GROVE(
+        listOf(
+            RandomOption(1, DungeonLayoutType.BEASTWEAVER_GROVE),
+        ),
+        listOf(
+            RandomOption(1, FoxStats),
+        ),
+        listOf(
+            RandomOption(1, BeastweaverBossStats),
+        ),
+        enemyCount = 0,
+        bossCount = 1,
+        biome = CustomBiomes.BEASTWEAVER_GROVE_DUNGEON,
+        gameTime = 14700,
     ),
     TRAINING(
         listOf(
