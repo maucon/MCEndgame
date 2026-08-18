@@ -2,6 +2,8 @@ package de.fuballer.mcendgame.main.component.entity.custom.attack.damage
 
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.knockback.AttackKnockbackUtil.takeKnockbackFrom
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealGenericAttackDamage
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.status_effect.StatusEffectData
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.getDistanceToGround
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setShieldsCooldown
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.particles.SimpleParticleType
@@ -10,6 +12,7 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.Avatar
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -26,7 +29,8 @@ class AreaAttackDamage(
     private val knockbackType: KnockbackType = KnockbackType.DAMAGER_CENTER,
     blockable: Boolean = true,
     disableBlockingShield: Float = 0.0F,
-) : AttackDamage(damageFactor, knockbackFactor, blockable, disableBlockingShield) {
+    knockbackWhenBlocked: Boolean = false,
+) : AttackDamage(damageFactor, knockbackFactor, blockable, disableBlockingShield, knockbackWhenBlocked) {
     private var createParticles: Boolean = false
     private var particleCount: Int = 0
     private var particleHeightOffset: Double = 0.0
@@ -39,39 +43,61 @@ class AreaAttackDamage(
     private var pitch: Float = 1F
     private var volume: Float = 1F
 
+    private var applyStatusEffects: Boolean = false
+    private var statusEffects: List<StatusEffectData> = listOf()
+
     override fun apply(world: ServerLevel, damager: Mob, target: LivingEntity?): Boolean {
-        val forward = damager.calculateViewVector(damager.xRot, damager.yBodyRot).horizontal().normalize()
+        applyAtEntity(world, damager, damager)
+        return true
+    }
+
+    fun applyRotated(world: ServerLevel, damager: Mob, rad: Float) {
+        applyAtEntity(world, damager, damager, rad)
+    }
+
+    fun applyAtEntity(
+        world: ServerLevel,
+        damager: Mob,
+        at: Entity,
+        extraRotRad: Float = 0F,
+    ) {
+        val yRot = if (at is LivingEntity) at.yBodyRot else at.yRot
+        val forward = at
+            .calculateViewVector(at.xRot, yRot)
+            .horizontal()
+            .yRot(extraRotRad)
+            .normalize()
         val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
 
         val scale = getScale(damager)
 
-        val targets = getTargets(world, damager, scale).filter {
-            area.contains(it.position().subtract(damager.position()), forward, sideways, scale)
-                    || area.contains(it.position().add(0.0, it.bbHeight.toDouble(), 0.0).subtract(damager.position()), forward, sideways, scale)
+        // debug
+        //area.renderOutline(world, at, forward, sideways, scale)
+
+        val targets = getTargets(world, at, scale).filter {
+            area.intersects(it, at, forward, sideways, scale)
         }
 
-        val slamCenter = area.getCenter(damager, scale, forward, sideways)
+        val slamCenter = area.getCenter(at, scale, forward, sideways)
 
-        dealDamage(targets, damager, scale, forward, slamCenter)
+        val damagedTargets = dealDamage(targets, damager, scale, forward, sideways, slamCenter)
 
         if (createParticles) createParticles(world, slamCenter, forward, sideways, scale)
 
-        if (!playSound) return true
-        if (soundRequiresHit && targets.isEmpty()) return true
-        playSound(world, slamCenter, scale)
-
-        return true
+        val hitTargets = targets.isNotEmpty()
+        if (playSound && !(soundRequiresHit && !hitTargets)) playSound(world, slamCenter, scale)
+        if (applyStatusEffects && hitTargets) applyStatusEffects(damagedTargets)
     }
 
     private fun getScale(damager: Mob) = if (applyScale) damager.getAttributeValue(Attributes.SCALE) else 1.0
 
     private fun getTargets(
         world: ServerLevel,
-        damager: LivingEntity,
+        originEntity: Entity,
         scale: Double,
     ): List<LivingEntity> {
-        val box = area.getAxisAlignedBox(damager, scale)
-        return world.getEntitiesOfClass(LivingEntity::class.java, box) { it != damager }
+        val box = area.getAxisAlignedBox(originEntity, scale)
+        return world.getEntitiesOfClass(LivingEntity::class.java, box) { it != originEntity }
     }
 
     private fun dealDamage(
@@ -79,28 +105,37 @@ class AreaAttackDamage(
         damager: Mob,
         scale: Double,
         forward: Vec3,
+        sideways: Vec3,
         slamCenter: Vec3,
-    ) {
+    ): List<LivingEntity> {
         val damage = getDamage(damager)
         val knockback = getKnockback(damager)
 
+        val damagedTargets = mutableListOf<LivingEntity>()
         targets.forEach {
-            it.dealGenericAttackDamage(damage, damager, blockable)
+            val dealtDamage = it.dealGenericAttackDamage(damage, damager, blockable)
+            if (dealtDamage) damagedTargets.add(it)
             if (disableBlockingShield > 0 && it is Avatar && it.isBlocking) it.setShieldsCooldown(disableBlockingShield)
-            applyKnockback(it, damager, knockback, scale, forward, slamCenter)
+            if (dealtDamage || knockbackWhenBlocked) applyKnockback(it, damager, knockback, scale, forward, sideways, slamCenter)
         }
+        return damagedTargets
     }
 
+    // TODO
+    //  this currently is not capable of applying knockback from a secondary entities position
+    //  AREA_CENTER works and is currently the only used for that case
     private fun applyKnockback(
         target: LivingEntity,
         damager: LivingEntity,
         knockback: Double,
         scale: Double,
         forward: Vec3,
+        sideways: Vec3,
         slamCenter: Vec3,
     ) {
         val knockBackStrength = knockback * if (applyScale) scale else 1.0
         target.needsSync = true
+        target.hurtMarked = true
 
         when (knockbackType) {
             KnockbackType.FACING -> target.takeKnockbackFrom(damager, knockBackStrength, -forward.x, -forward.z)
@@ -113,6 +148,13 @@ class AreaAttackDamage(
             KnockbackType.DAMAGER_CENTER -> {
                 val knockbackDirection = target.position().subtract(damager.position()).normalize()
                 target.takeKnockbackFrom(damager, knockBackStrength, -knockbackDirection.x, -knockbackDirection.z)
+            }
+
+            KnockbackType.BEASTWEAVER_RHINO_CHARGE -> {
+                val toTarget = target.position().subtract(damager.position()).normalize()
+                val cross = forward.x * toTarget.z - forward.z * toTarget.x
+                val horizontalDirection = if (cross > 0) sideways else sideways.scale(-1.0)
+                target.takeKnockbackFrom(damager, knockBackStrength, -horizontalDirection.x, -0.6, -horizontalDirection.z)
             }
         }
     }
@@ -140,7 +182,7 @@ class AreaAttackDamage(
         scale: Double,
     ) {
         val scaledParticleCount = (particleCount * scale).toInt()
-        for (i in 0 until scaledParticleCount) createParticle(world, slamCenter, forward, sideways, scale)
+        repeat(scaledParticleCount) { createParticle(world, slamCenter, forward, sideways, scale) }
     }
 
     private fun createParticle(
@@ -191,6 +233,22 @@ class AreaAttackDamage(
         )
     }
 
+    fun setStatusEffects(
+        vararg effects: StatusEffectData,
+    ): AreaAttackDamage {
+        applyStatusEffects = true
+        statusEffects = effects.toList()
+        return this
+    }
+
+    private fun applyStatusEffects(targets: List<LivingEntity>) {
+        targets.forEach { target ->
+            statusEffects.forEach { effectData ->
+                effectData.apply(target)
+            }
+        }
+    }
+
     override fun requiresTarget() = false
 
     class DamageArea(
@@ -200,8 +258,44 @@ class AreaAttackDamage(
         private val forwardOffset: Double = 0.0, // positive -> forward
         private val sideOffset: Double = 0.0, // positive -> right
         private val heightOffset: Double = 0.0, // positive -> up
+        private val offsetToGround: Boolean = false,
     ) {
-        fun contains(
+        fun intersects(
+            entity: LivingEntity,
+            originEntity: Entity,
+            forward: Vec3,
+            sideways: Vec3,
+            scale: Double
+        ): Boolean {
+            val bb = entity.boundingBox
+
+            val xStep = (bb.maxX - bb.minX) / 2.0
+            val yStep = (bb.maxY - bb.minY) / 2.0
+            val zStep = (bb.maxZ - bb.minZ) / 2.0
+
+            val distanceToGround = if (offsetToGround) originEntity.getDistanceToGround() else 0.0
+
+            for (x in 0..2) {
+                for (y in 0..2) {
+                    for (z in 0..2) {
+                        val point = Vec3(
+                            bb.minX + x * xStep,
+                            bb.minY + y * yStep,
+                            bb.minZ + z * zStep
+                        )
+
+                        val areaOrigin = if (!offsetToGround) originEntity.position() else originEntity.position().subtract(0.0, distanceToGround, 0.0)
+                        val relativePoint = point.subtract(areaOrigin)
+
+                        if (contains(relativePoint, forward, sideways, scale)) return true
+                    }
+                }
+            }
+
+            return false
+        }
+
+        private fun contains(
             relativePos: Vec3,
             forward: Vec3,
             sideways: Vec3,
@@ -213,26 +307,26 @@ class AreaAttackDamage(
 
             val maxForward = (forwardRange + forwardOffset) * scale
             val minForward = (forwardOffset) * scale
-            if (forwardDistance > maxForward || forwardDistance < minForward) return false
+            if (forwardDistance !in minForward..maxForward) return false
 
             val maxSide = (sideRange + sideOffset) * scale
             val minSide = (-sideRange + sideOffset) * scale
-            if (sidewaysDistance > maxSide || sidewaysDistance < minSide) return false
+            if (sidewaysDistance !in minSide..maxSide) return false
 
             val maxHeight = (heightRange + heightOffset) * scale
             val minHeight = (-heightRange + heightOffset) * scale
-            if (heightDistance > maxHeight || heightDistance < minHeight) return false
+            if (heightDistance !in minHeight..maxHeight) return false
 
             return true
         }
 
         fun getCenter(
-            damager: LivingEntity,
+            originEntity: Entity,
             scale: Double,
             forward: Vec3,
             sideways: Vec3,
         ): Vec3 {
-            var center = damager.position()
+            var center = originEntity.position()
 
             val forwardCenter = (forwardOffset + forwardRange / 2) * scale
             center = center.add(forward.scale(forwardCenter))
@@ -240,17 +334,20 @@ class AreaAttackDamage(
             val sidewaysCenter = sideOffset * scale
             center = center.add(sideways.scale(sidewaysCenter))
 
+            if (offsetToGround) center = center.subtract(0.0, originEntity.getDistanceToGround(), 0.0)
+
             return center
         }
 
         fun getAxisAlignedBox(
-            damager: LivingEntity,
+            originEntity: Entity,
             scale: Double,
         ): AABB {
             val hD = getMaxHorizontalDistance(scale)
-            val x = damager.x
-            val y = damager.y + heightOffset
-            val z = damager.z
+            val x = originEntity.x
+            var y = originEntity.y + heightOffset
+            if (offsetToGround) y -= originEntity.getDistanceToGround()
+            val z = originEntity.z
             return AABB(x - hD, y - heightRange - 3, z - hD, x + hD, y + heightRange, z + hD) // -3 accounts for height of most mobs
         }
 
@@ -264,11 +361,98 @@ class AreaAttackDamage(
         fun getRandomForwardPos(scale: Double) = (forwardRange / 2 * Random.nextDouble().pow(2) * if (Random.nextBoolean()) 1 else -1) * scale
         fun getRandomSidewaysPos(scale: Double) = (sideRange * Random.nextDouble().pow(2) * if (Random.nextBoolean()) 1 else -1) * scale
 
+        // for debugging / dev
+        fun renderOutline(
+            world: ServerLevel,
+            originEntity: Entity,
+            forward: Vec3,
+            sideways: Vec3,
+            scale: Double,
+        ) {
+            var origin = originEntity.position()
+            if (offsetToGround) origin = origin.subtract(0.0, originEntity.getDistanceToGround(), 0.0)
+
+            val minForward = forwardOffset * scale
+            val maxForward = (forwardOffset + forwardRange) * scale
+
+            val minSide = (-sideRange + sideOffset) * scale
+            val maxSide = (sideRange + sideOffset) * scale
+
+            val minHeight = (-heightRange + heightOffset) * scale
+            val maxHeight = (heightRange + heightOffset) * scale
+
+            fun point(f: Double, s: Double, h: Double): Vec3 {
+                return origin
+                    .add(forward.scale(f))
+                    .add(sideways.scale(s))
+                    .add(0.0, h, 0.0)
+            }
+
+            val corners = arrayOf(
+                point(minForward, minSide, minHeight),
+                point(minForward, maxSide, minHeight),
+                point(maxForward, minSide, minHeight),
+                point(maxForward, maxSide, minHeight),
+                point(minForward, minSide, maxHeight),
+                point(minForward, maxSide, maxHeight),
+                point(maxForward, minSide, maxHeight),
+                point(maxForward, maxSide, maxHeight),
+            )
+
+            val edges = arrayOf(
+                0 to 1,
+                0 to 2,
+                1 to 3,
+                2 to 3,
+
+                4 to 5,
+                4 to 6,
+                5 to 7,
+                6 to 7,
+
+                0 to 4,
+                1 to 5,
+                2 to 6,
+                3 to 7,
+            )
+
+            for ((a, b) in edges) {
+                renderLine(world, corners[a], corners[b])
+            }
+        }
+
+        private fun renderLine(
+            world: ServerLevel,
+            from: Vec3,
+            to: Vec3,
+        ) {
+            val particle = ParticleTypes.END_ROD
+            val distance = from.distanceTo(to)
+            val steps = (distance * 8).toInt().coerceAtLeast(1)
+            for (i in 0..steps) {
+                val t = i.toDouble() / steps
+
+                val pos = from.lerp(to, t)
+
+                world.sendParticles(
+                    particle,
+                    pos.x,
+                    pos.y,
+                    pos.z,
+                    1,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                )
+            }
+        }
     }
 
     enum class KnockbackType {
         FACING,
         DAMAGER_CENTER,
         AREA_CENTER,
+        BEASTWEAVER_RHINO_CHARGE,
     }
 }

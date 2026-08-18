@@ -29,6 +29,7 @@ object CustomStats {
     val PERMUTATION_CRYSTAL_USED = CustomStatsRegistry.register("permutation_crystal_used", StatFormatter.DEFAULT)
     val REFORGE_CRYSTAL_USED = CustomStatsRegistry.register("reforge_crystal_used", StatFormatter.DEFAULT)
     val CORRUPTION_CRYSTAL_USED = CustomStatsRegistry.register("corruption_crystal_used", StatFormatter.DEFAULT)
+    val IMITATION_CRYSTAL_USED = CustomStatsRegistry.register("imitation_crystal_used", StatFormatter.DEFAULT)
 
     // Scarred One
     val SCARRED_ONE_ACCEPTED = CustomStatsRegistry.register("scarred_one_accepted", StatFormatter.DEFAULT)

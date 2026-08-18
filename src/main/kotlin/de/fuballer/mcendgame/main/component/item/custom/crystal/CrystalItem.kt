@@ -24,6 +24,8 @@ abstract class CrystalItem(
 
     abstract val description: MutableComponent
 
+    open fun producesSecondaryOutput() = false
+
     override fun getDefaultInstance(): ItemStack {
         val stack = super.defaultInstance
 
@@ -36,12 +38,23 @@ abstract class CrystalItem(
 
     override fun getName(stack: ItemStack): MutableComponent = super.getName(stack).copy().withColor(ItemColor.CRYSTAL.intColor)
 
-    open fun canForge(stack: ItemStack): MutableComponent? {
+    open fun canForge(
+        stack: ItemStack,
+        secondaryOutputSlotFilled: Boolean,
+    ): MutableComponent? {
         if (stack.isEmpty) return CrystalForgeSettings.getForgeErrorText("no_item")
         if (!stack.isForgeable()) return CrystalForgeSettings.getForgeErrorText("item_not_forgeable")
         if (stack.isCorrupted()) return CrystalForgeSettings.getForgeErrorText("item_corrupted")
+        if (secondaryOutputSlotFilled && producesSecondaryOutput()) return CrystalForgeSettings.getForgeErrorText("secondary_output_slot_not_empty")
         return null
     }
 
-    abstract fun forge(stack: ItemStack): ItemStack
+    abstract fun forge(stack: ItemStack): CrystalForgeOutput
+
+    data class CrystalForgeOutput(
+        val main: ItemStack,
+        val secondary: ItemStack?,
+    ) {
+        constructor(stack: ItemStack) : this(stack, null)
+    }
 }

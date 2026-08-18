@@ -160,6 +160,7 @@ class CustomItemTagProvider(
             .add(CrystalItems.CALIBRATION_CRYSTAL)
             .add(CrystalItems.PERMUTATION_CRYSTAL)
             .add(CrystalItems.SACRIFICIAL_CRYSTAL)
+            .add(CrystalItems.IMITATION_CRYSTAL)
 
         valueLookupBuilder(CustomTags.TOTEM)
             .add(TotemItems.TOTEM_OF_BASTION)

@@ -16,8 +16,11 @@ class PermutationCrystalItem(
 
     override val description: MutableComponent = Component.translatable(DESCRIPTION_BASE_KEY + "permutation")
 
-    override fun canForge(stack: ItemStack): MutableComponent? {
-        val cannotForgeReason = super.canForge(stack)
+    override fun canForge(
+        stack: ItemStack,
+        secondaryOutputSlotFilled: Boolean,
+    ): MutableComponent? {
+        val cannotForgeReason = super.canForge(stack, secondaryOutputSlotFilled)
         if (cannotForgeReason != null) return cannotForgeReason
 
         val attributes = stack.getCustomAttributes()
@@ -31,14 +34,14 @@ class PermutationCrystalItem(
         return null
     }
 
-    override fun forge(stack: ItemStack): ItemStack {
+    override fun forge(stack: ItemStack): CrystalForgeOutput {
         val newStack = stack.copy()
 
         val oldAttributes = stack.getCustomAttributes()
-        if (oldAttributes.isEmpty()) return newStack
+        if (oldAttributes.isEmpty()) return CrystalForgeOutput(newStack)
 
         val oldRolls = oldAttributes.flatMap { it.getPercentRolls() }
-        if (oldRolls.size < 2) return newStack
+        if (oldRolls.size < 2) return CrystalForgeOutput(newStack)
 
         var shuffledRolls: List<Double>
         if (oldRolls.distinct().size > 1) {
@@ -62,6 +65,6 @@ class PermutationCrystalItem(
 
         newStack.updateCustomAttributes(newAttributes)
 
-        return newStack
+        return CrystalForgeOutput(newStack)
     }
 }

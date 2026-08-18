@@ -10,7 +10,11 @@ interface BlockAbleMovementMob<T> where T : Mob, T : DisableAbleGoalsMob {
     fun tickBlockedMovement() {
         updateAirborneBlocked()
 
-        if (isMovementBlocked()) blockAbleMovementEntity.moveControl.strafe(0F, 0F)
+        if (isMovementBlocked()){
+            blockAbleMovementEntity.moveControl.strafe(0F, 0F)
+            blockAbleMovementEntity.navigation.stop()
+            blockAbleMovementEntity.moveControl.setWait()
+        }
 
         if (blockedMovementTicks <= 0) return
         if (--blockedMovementTicks > 0) return
@@ -19,9 +23,13 @@ interface BlockAbleMovementMob<T> where T : Mob, T : DisableAbleGoalsMob {
 
     fun updateAirborneBlocked() {
         if (!blockedMovementAirborne) return
-        if (!blockAbleMovementEntity.onGround() && !blockAbleMovementEntity.isInLiquid) return
-        blockedMovementAirborne = false
-        blockAbleMovementEntity.updateGoals()
+        if (blockAbleMovementEntity.onGround()
+            || blockAbleMovementEntity.isInLiquid
+            || blockAbleMovementEntity.onClimbable()
+        ) {
+            blockedMovementAirborne = false
+            blockAbleMovementEntity.updateGoals()
+        }
     }
 
     fun blockMovement(ticks: Int) {
@@ -32,6 +40,7 @@ interface BlockAbleMovementMob<T> where T : Mob, T : DisableAbleGoalsMob {
 
         blockAbleMovementEntity.updateGoals()
         blockAbleMovementEntity.navigation.stop()
+        blockAbleMovementEntity.moveControl.setWait()
     }
 
     fun isMovementBlocked() = blockedMovementTicks > 0 || blockedMovementAirborne

@@ -1,41 +1,33 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack
 
 import com.geckolib.animatable.GeoEntity
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
-import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 
 open class Attack<T>(
+    val id: String,
     val animationData: AttackAnimationData,
-    val totalDuration: Int,
-    val cooldown: Int,
+    private val totalDuration: Int,
+    val cooldown: (Mob) -> Int,
     private val trigger: TriggerCondition,
-    private val damage: List<DelayedAttackDamage>,
-    private val sounds: List<DelayedSoundData> = listOf(),
+    private val data: List<DelayedAttackData>,
     private val blockMovementDuration: Int = 0,
+    private val attackSpeed: (Mob) -> Double = { 1.0 },
 ) where T : Mob, T : GeoEntity {
     constructor(
+        id: String,
         animationData: AttackAnimationData,
         totalDuration: Int,
         cooldown: Int,
         trigger: TriggerCondition,
-        damage: DelayedAttackDamage?,
-        sounds: List<DelayedSoundData> = listOf(),
+        data: List<DelayedAttackData>,
         blockMovementDuration: Int = 0,
-    ) : this(
-        animationData,
-        totalDuration,
-        cooldown,
-        trigger,
-        if (damage != null) listOf(damage) else listOf(),
-        sounds,
-        blockMovementDuration,
-    )
+        attackSpeed: (Mob) -> Double = { 1.0 },
+    ) : this(id, animationData, totalDuration, { cooldown }, trigger, data, blockMovementDuration, attackSpeed)
 
     open fun canStart(
         attacker: Mob,
@@ -46,30 +38,16 @@ open class Attack<T>(
         attacker: T,
         target: LivingEntity?,
     ) {
-        animationData.triggerAnimation(attacker)
+        animationData.triggerAnimation(attacker, attackSpeed(attacker))
 
         if (blockMovementDuration == 0) return
         val blockAbleMovementMob = attacker as? BlockAbleMovementMob<*> ?: return
-        blockAbleMovementMob.blockMovement(blockMovementDuration)
+        blockAbleMovementMob.blockMovement(getBlockMovementDuration(attacker))
     }
 
-    open fun getDamageInstances(
-        target: LivingEntity?,
-    ): List<AttackDamageInstance> {
-        val instances = mutableListOf<AttackDamageInstance>()
-        damage.forEach {
-            if (it.damage.requiresTarget() && target == null) return@forEach
+    open fun getAttackDataInstances(attacker: T, target: LivingEntity?) = data.mapNotNull { it.getInstance(target, attackSpeed(attacker)) }
 
-            val damageInstance = getDamageInstance(target, it)
-            instances.add(damageInstance)
-        }
-        return instances
-    }
+    fun getTotalDuration(attacker: T) = (totalDuration / attackSpeed(attacker)).toInt()
 
-    open fun getDamageInstance(
-        target: LivingEntity?,
-        delayedDamage: DelayedAttackDamage,
-    ) = AttackDamageInstance(delayedDamage.minDelay, delayedDamage.maxDelay, target, delayedDamage.damage)
-
-    open fun getSoundInstances() = sounds.map(DelayedSoundData::getInstance)
+    private fun getBlockMovementDuration(attacker: T) = (blockMovementDuration / attackSpeed(attacker)).toInt()
 }

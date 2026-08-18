@@ -63,6 +63,7 @@
   "item.mcendgame.aspect_of_savagery": "Aspect of Savagery",
   "item.mcendgame.aspect_of_eminence": "Aspect of Eminence",
   "item.mcendgame.aspect_of_ancestors": "Aspect of Ancestors",
+  "item.mcendgame.aspect_of_the_grove": "Aspect of the Grove",
 
   "item.mcendgame.aspect.limit": "Limit: %s",
   "item.mcendgame.aspect.description.tyranny": "Dungeon contains %s additional Elites",
@@ -84,18 +85,22 @@
   "item.mcendgame.aspect.description.savagery_1": "Enemies drop %s%% increased Loot",
   "item.mcendgame.aspect.description.eminence": "Normal Equipment has a %s%% chance for an additional Attribute",
   "item.mcendgame.aspect.description.ancestors": "Dungeon contains an additional Totem Encounter",
+  "item.mcendgame.aspect.description.grove_0": "Dungeon only contains the Beastweaver",
+  "item.mcendgame.aspect.description.grove_1": "Dungeon is at least Level %s",
 
   "item.mcendgame.calibration_crystal": "Calibration Crystal",
   "item.mcendgame.sacrifice_crystal": "Sacrifice Crystal",
   "item.mcendgame.permutation_crystal": "Permutation Crystal",
   "item.mcendgame.reforge_crystal": "Reforge Crystal",
   "item.mcendgame.corruption_crystal": "Corruption Crystal",
+  "item.mcendgame.imitation_crystal": "Imitation Crystal",
 
   "item.mcendgame.crystal.description.calibration": "Randomize all values of an item's attributes",
   "item.mcendgame.crystal.description.sacrifice": "Enhances an attribute by removing another",
   "item.mcendgame.crystal.description.permutation": "Shuffles the rolls of attributes",
   "item.mcendgame.crystal.description.reforge": "Reforges a unique item into a different one",
   "item.mcendgame.crystal.description.corruption": "Corrupts an item with varying results",
+  "item.mcendgame.crystal.description.imitation": "Creates a copy of an item",
 
   "item.mcendgame.totem_of_bastion": "Totem of Bastion",
   "item.mcendgame.totem_of_force": "Totem of Force",
@@ -187,6 +192,7 @@
   "container.mcendgame.crystal_forge.forge_error.no_enhanceable_attribute": "No attribute can be enhanced.",
   "container.mcendgame.crystal_forge.forge_error.not_enough_rolls_to_shuffle": "Not enough rolls to shuffle.",
   "container.mcendgame.crystal_forge.forge_error.all_rolls_equal": "All rolls are equal.",
+  "container.mcendgame.crystal_forge.forge_error.secondary_output_slot_not_empty": "Secondary output slot is not empty.",
 
   "mcendgame.corrupted": "Corrupted",
 
@@ -306,6 +312,7 @@
   "effect.mcendgame.scorch": "Scorch",
   "effect.mcendgame.verdant_echo": "Verdant Echo",
   "effect.mcendgame.molten_roar": "Molten Roar",
+  "effect.mcendgame.ancient_blight": "Ancient Blight",
 
   "entity.mcendgame.unknown": "Unknown",
   "entity.mcendgame.swamp_golem": "Swamp Golem",
@@ -317,10 +324,14 @@
   "entity.mcendgame.portal": "Portal",
   "entity.mcendgame.bonecrusher": "Bonecrusher",
   "entity.mcendgame.beakburn": "Beakburn",
+  "entity.mcendgame.beastweaver": "Beastweaver",
   "entity.mcendgame.scarred_one": "Scarred One",
   "entity.mcendgame.spiderling": "Spiderling",
   "entity.mcendgame.training_dummy": "Training Dummy",
   "entity.mcendgame.skeleton_mage": "Skeleton Mage",
+  "entity.mcendgame.beastweaver_wolf": "Beastweaver's Wolf",
+  "entity.mcendgame.beastweaver_vine": "Beastweaver's Vine",
+  "entity.mcendgame.block_debris": "Block Debris",
 
   "item.mcendgame.decaying_cobweb": "Decaying Cobweb",
   "item.mcendgame.totem_statue": "Totem Statue",

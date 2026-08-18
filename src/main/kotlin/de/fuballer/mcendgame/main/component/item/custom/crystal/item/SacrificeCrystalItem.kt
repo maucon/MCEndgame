@@ -26,8 +26,11 @@ class SacrificeCrystalItem(
 
     override val description: MutableComponent = Component.translatable(DESCRIPTION_BASE_KEY + "sacrifice")
 
-    override fun canForge(stack: ItemStack): MutableComponent? {
-        val cannotForgeReason = super.canForge(stack)
+    override fun canForge(
+        stack: ItemStack,
+        secondaryOutputSlotFilled: Boolean,
+    ): MutableComponent? {
+        val cannotForgeReason = super.canForge(stack, secondaryOutputSlotFilled)
         if (cannotForgeReason != null) return cannotForgeReason
 
         if (stack.item is UniqueAttributesItemInterface) return CrystalForgeSettings.getForgeErrorText("cannot_forge_unique")
@@ -39,14 +42,14 @@ class SacrificeCrystalItem(
         return null
     }
 
-    override fun forge(stack: ItemStack): ItemStack {
+    override fun forge(stack: ItemStack): CrystalForgeOutput {
         val newStack = stack.copy()
 
         val oldAttributes = stack.getCustomAttributes()
-        if (oldAttributes.size < 2) return newStack
+        if (oldAttributes.size < 2) return CrystalForgeOutput(newStack)
 
         val enhanceableAttributes = oldAttributes.filter { it.canBeEnhanced() }
-        val toEnhance = enhanceableAttributes.randomOrNull() ?: return newStack
+        val toEnhance = enhanceableAttributes.randomOrNull() ?: return CrystalForgeOutput(newStack)
 
         val remainingAttributes = oldAttributes.filter { it != toEnhance }
         val sacrifice = remainingAttributes.random()
@@ -58,6 +61,6 @@ class SacrificeCrystalItem(
         newAttributes.add(enhanced)
         newStack.updateCustomAttributes(newAttributes)
 
-        return newStack
+        return CrystalForgeOutput(newStack)
     }
 }

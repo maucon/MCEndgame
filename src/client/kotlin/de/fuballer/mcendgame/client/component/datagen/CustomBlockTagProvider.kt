@@ -80,6 +80,8 @@ class CustomBlockTagProvider(
             .add(Blocks.BAMBOO_SAPLING)
             .add(Blocks.DEAD_BUSH)
             .add(Blocks.REDSTONE_WIRE)
+            .add(Blocks.BUSH)
+            .add(Blocks.FIREFLY_BUSH)
 
         valueLookupBuilder(CustomTags.DUNGEON_INTERACTABLE)
             .add(CustomBlocks.TOTEM_STATUE)

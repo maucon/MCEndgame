@@ -50,6 +50,6 @@
     "fabric-api": ">=0.145.4+26.1.2",
     "fabric-language-kotlin": ">=1.13.12+kotlin.2.4.0",
     "fantasy": "~0.8.0+26.1.2",
-    "geckolib": "~5.5.1"
+    "geckolib": "~5.5.2"
   }
 }

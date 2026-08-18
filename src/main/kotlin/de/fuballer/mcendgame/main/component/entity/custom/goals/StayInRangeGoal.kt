@@ -99,7 +99,6 @@ class StayInRangeGoal(
         if (updateCountdownTicks > 0) return false
         if (!entity.sensing.hasLineOfSight(target)) return false
 
-
         if (targetX == 0.0 && targetY == 0.0 && targetZ == 0.0) return true
         val isInRange = entity.distanceToSqr(target) < squaredMaxDistance
         if (target.position().distanceToSqr(Vec3(targetX, targetY, targetZ)) > 1 && !isInRange) return true

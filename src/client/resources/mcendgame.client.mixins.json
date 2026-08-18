@@ -19,6 +19,12 @@
     "living_entity.isolated.LivingEntityRendererIsolatedMixin",
     "living_entity.isolated.LivingEntityRenderStateIsolatedMixin",
     "low_health_ticks.LivingEntityLowHealthTicksMixin",
+    "model_submit.ModelFeatureRendererBeastweaverGradientMixin",
+    "model_submit.ModelPartBeastweaverGradientMixin",
+    "model_submit.ModelPartCubeBeastweaverGradientMixin",
+    "model_submit.ModelSubmitMixin",
+    "model_submit.SubmitNodeCollectionMixin",
+    "model_submit.SubmitNodeStorageMixin",
     "phasing.BackgroundRendererBlockPhasingMixin",
     "phasing.LevelRendererBlockPhasingMixin",
     "phasing.ScreenEffectRendererBlockPhasingMixin",
@@ -27,9 +33,14 @@
     "renderer.ItemStackAttributeRenderMixin",
     "renderer.SkullBlockRendererAccessorMixin",
     "stats.GeneralStatsListWidgetMixin",
-    "stats.StatsScreenMixin"
+    "stats.StatsScreenMixin",
+    "vertex_consumer.BufferBuilderSetVertexElementsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "boss_event.BossHealthOverlayMixin",
+    "sound.RangeDefinedSoundEngineMixin"
+  ]
 }

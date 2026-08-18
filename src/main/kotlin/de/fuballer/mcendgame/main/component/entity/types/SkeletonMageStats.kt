@@ -6,7 +6,7 @@ import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.entities.skeleton_mage.SkeletonMageEntity
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.LivingEntity
 
 object SkeletonMageStats : EntityTypeStats {
     override val type: EntityType<SkeletonMageEntity> = CustomEntities.SKELETON_MAGE
@@ -21,7 +21,7 @@ object SkeletonMageStats : EntityTypeStats {
     override val movementSpeed = 0.25
     override val knockbackResistance = 0.0
 
-    override fun applyMisc(mob: Mob) {
-        mob.addEffect(PotionEffect.FIRE_RESISTANCE.getEffectInstance(particles = false))
+    override fun applyMisc(entity: LivingEntity) {
+        entity.addEffect(PotionEffect.FIRE_RESISTANCE.getEffectInstance(particles = false))
     }
 }

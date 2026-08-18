@@ -17,8 +17,11 @@ class ReforgeCrystalItem(
 
     override val description: MutableComponent = Component.translatable(DESCRIPTION_BASE_KEY + "reforge")
 
-    override fun canForge(stack: ItemStack): MutableComponent? {
-        val cannotForgeReason = super.canForge(stack)
+    override fun canForge(
+        stack: ItemStack,
+        secondaryOutputSlotFilled: Boolean,
+    ): MutableComponent? {
+        val cannotForgeReason = super.canForge(stack, secondaryOutputSlotFilled)
         if (cannotForgeReason != null) return cannotForgeReason
 
         if (stack.item !is UniqueAttributesItemInterface) return CrystalForgeSettings.getForgeErrorText("can_only_forge_unique")
@@ -26,13 +29,14 @@ class ReforgeCrystalItem(
         return null
     }
 
-    override fun forge(stack: ItemStack): ItemStack {
+    override fun forge(stack: ItemStack): CrystalForgeOutput {
         var uniqueItem: Item
         do {
             uniqueItem = EquipmentGenerationSettings.getRandomUniqueEquipment(tagsExactMatch = false)!!.item
         } while (uniqueItem == stack.item)
 
         val uniqueInterface = uniqueItem as UniqueAttributesItemInterface
-        return uniqueInterface.getRolledStack(uniqueItem)
+        val newStack = uniqueInterface.getRolledStack(uniqueItem)
+        return CrystalForgeOutput(newStack)
     }
 }

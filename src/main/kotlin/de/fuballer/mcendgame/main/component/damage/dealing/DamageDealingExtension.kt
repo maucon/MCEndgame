@@ -31,7 +31,7 @@ object DamageDealingExtension {
         val damageSource = CustomDamageTypes.of(serverWorld, damageType, attacker)
         val extended = ExtendedDamageSource(DamageCalculationConfig(), damageSource)
 
-        return this.hurtServer(serverWorld, extended, amount)
+        return hurtServer(serverWorld, extended, amount)
     }
 
     fun Entity.dealDamage(
