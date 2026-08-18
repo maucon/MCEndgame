@@ -15,13 +15,13 @@ object DamageDealingExtension {
         damagePercentage: Double,
         causingEntity: Entity,
         directEntity: Entity? = causingEntity,
-    ) {
+    ): Boolean {
         val attributes = listOf(
             CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, rolls = listOf(DoubleRoll(DoubleBounds(damagePercentage - 1)))),
             CustomAttribute(CustomAttributeTypes.NO_ATTACK_DAMAGE),
         )
 
-        dealDamage(attributes, CustomDamageTypes.SPELL, causingEntity, directEntity)
+        return dealDamage(attributes, CustomDamageTypes.SPELL, causingEntity, directEntity)
     }
 
     fun Entity.dealGenericAttackDamage(amount: Float, attacker: Entity, blockable: Boolean = true): Boolean {
@@ -39,13 +39,13 @@ object DamageDealingExtension {
         damageType: ResourceKey<DamageType>,
         causingEntity: Entity,
         directEntity: Entity? = causingEntity,
-    ) {
-        val serverWorld = level() as? ServerLevel ?: return
+    ): Boolean {
+        val serverWorld = level() as? ServerLevel ?: return false
 
         val damageSource = CustomDamageTypes.of(serverWorld, damageType, causingEntity, directEntity)
         val config = DamageCalculationConfig(attackAttributes = attributes)
         val extended = ExtendedDamageSource(config, damageSource)
 
-        this.hurtServer(serverWorld, extended, 420F) // amount does not matter, will be calculated by us
+        return this.hurtServer(serverWorld, extended, 420F) // amount does not matter, will be calculated by us
     }
 }

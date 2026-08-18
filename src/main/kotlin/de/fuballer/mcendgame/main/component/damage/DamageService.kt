@@ -25,6 +25,7 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 private val DAMAGE_CALCULATORS = listOf(
+    CreeperExplosionCalculator,
     PufferfishTouchCalculator,
     PierceAttackDamageCalculator,
     KineticAttackDamageCalculator,
@@ -44,6 +45,7 @@ private val DAMAGE_CALCULATORS = listOf(
     ThornsCalculator,
     MagicDamageCalculator,
     PotionCalculator,
+    MaceSmashAttackCalculator,
     MeleeAttackCalculator,
     ShulkerBulletCalculator,
     OtherProjectilesCalculator, // do not move
@@ -171,8 +173,6 @@ object DamageService {
     ): Float {
         var amount = amount
         if (source.`is`(DamageTypeTags.BYPASSES_ARMOR)) return amount
-
-        entity.hurtArmor(source, amount)
 
         val armorToughness = entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS).toFloat()
         amount = DamageUtil.reduceAttackDamageByArmor(entity, amount, source, entity.armorValue.toFloat(), armorToughness)
