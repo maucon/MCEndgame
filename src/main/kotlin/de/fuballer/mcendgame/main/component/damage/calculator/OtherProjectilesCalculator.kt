@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.main.component.damage.calculator
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
-import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.Projectile
@@ -12,17 +11,7 @@ import net.minecraft.world.entity.projectile.Projectile
 object OtherProjectilesCalculator : DamageCalculator {
     override fun isActive(source: DamageSource) = source.directEntity is Projectile
 
-    override fun calculateAttackDamage(
-        originalDamage: Float,
-        attacked: LivingEntity,
-        source: ExtendedDamageSource,
-        event: DamageCalculationCommand
-    ) = 0.0f
-
-    override fun calculateSpellDamage(
-        originalDamage: Float,
-        attacked: LivingEntity,
-        source: ExtendedDamageSource,
-        event: DamageCalculationCommand
-    ) = 0.0f
+    override fun calculateDamage(originalDamage: Float, attacked: LivingEntity, source: DamageSource, event: DamageCalculationCommand): Float {
+        return 0f
+    }
 }

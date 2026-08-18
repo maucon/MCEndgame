@@ -1,13 +1,11 @@
 package de.fuballer.mcendgame.main.accessor;
 
-import net.minecraft.world.damagesource.DamageSource;
-
 public interface LivingEntityDamageAccessor {
-    void mcendgame$setLastDamageSource(DamageSource damageSource);
+    boolean mcendgame$isInInvulnerabilityFrames();
 
-    void mcendgame$setLastDamageTime(long time);
+    void mcendgame$setInInvulnerabilityFrames(boolean value);
 
-    void mcendgame$playThornsSound(DamageSource damageSource);
+    boolean mcendgame$lastHitWasApplied();
 
-    boolean mcendgame$tryUseDeathProtector(DamageSource source);
+    void mcendgame$setLastHitWasApplied(boolean value);
 }

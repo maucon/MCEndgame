@@ -137,7 +137,7 @@ object EntityMixinExtension {
 
     fun LivingEntity.setDungeonBossSpawnPosition(spawnPosition: SpawnPosition) {
         val accessor = this as MobEntityDungeonBossAccessor
-        return accessor.`mcendgame$setSpawnPosition`(spawnPosition)
+        accessor.`mcendgame$setSpawnPosition`(spawnPosition)
     }
 
     fun LivingEntity.getDungeonBossSpawnPosition(): SpawnPosition {
@@ -162,4 +162,24 @@ object EntityMixinExtension {
     fun LivingEntity.getHitbox(): AABB = (this as LivingEntityAccessor).`mcendgame$invokeGetHitbox`()
 
     fun Mob.getTargetSelector(): GoalSelector = (this as MobAccessor).`mcendgame$getTargetSelector`()
+
+    fun LivingEntity.setInInvulnerabilityFrames(value: Boolean) {
+        val accessor = this as LivingEntityDamageAccessor
+        accessor.`mcendgame$setInInvulnerabilityFrames`(value)
+    }
+
+    fun LivingEntity.isInInvulnerabilityFrames(): Boolean {
+        val accessor = this as LivingEntityDamageAccessor
+        return accessor.`mcendgame$isInInvulnerabilityFrames`()
+    }
+
+    fun LivingEntity.setLastHitWasApplied(value: Boolean) {
+        val accessor = this as LivingEntityDamageAccessor
+        accessor.`mcendgame$setLastHitWasApplied`(value)
+    }
+
+    fun LivingEntity.getLastHitWasApplied(): Boolean {
+        val accessor = this as LivingEntityDamageAccessor
+        return accessor.`mcendgame$lastHitWasApplied`()
+    }
 }

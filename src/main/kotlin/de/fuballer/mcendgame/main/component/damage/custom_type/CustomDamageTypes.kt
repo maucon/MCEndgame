@@ -21,7 +21,7 @@ object CustomDamageTypes {
     fun of(
         world: Level,
         key: ResourceKey<DamageType>,
-        causingEntity: Entity,
+        causingEntity: Entity?,
         directEntity: Entity? = causingEntity,
     ): DamageSource {
         val damageType = world.registryAccess()

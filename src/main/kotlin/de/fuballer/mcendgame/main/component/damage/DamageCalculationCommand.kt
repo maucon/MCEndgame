@@ -3,9 +3,9 @@ package de.fuballer.mcendgame.main.component.damage
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttributeType
-import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.wasLastAttackCritical
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
@@ -49,7 +49,7 @@ data class DamageCalculationCommand(
         fun of(
             damaged: LivingEntity,
             world: ServerLevel,
-            source: ExtendedDamageSource,
+            source: DamageSource,
             attackAttributes: List<CustomAttribute>,
             shieldBlocking: Boolean,
         ): DamageCalculationCommand {

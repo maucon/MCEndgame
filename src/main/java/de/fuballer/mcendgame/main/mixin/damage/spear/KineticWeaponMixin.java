@@ -16,7 +16,7 @@ public class KineticWeaponMixin {
             method = "damageEntities",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;stabAttack(Lnet/minecraft/world/entity/EquipmentSlot;Lnet/minecraft/world/entity/Entity;FZZZ)Z")
     )
-    public void setPierceType(ItemStack stack, int remainingUseTicks, LivingEntity user, EquipmentSlot slot, CallbackInfo ci) {
+    public void setPierceType(ItemStack stack, int ticksRemaining, LivingEntity livingEntity, EquipmentSlot equipmentSlot, CallbackInfo ci) {
         PierceContext.CURRENT.set(PierceContext.PierceType.KINETIC);
     }
 }

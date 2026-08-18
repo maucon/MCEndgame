@@ -1,35 +1,77 @@
 package de.fuballer.mcendgame.main.component.damage
 
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.SpellResistanceSettings
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.util.Mth
+import net.minecraft.world.damagesource.CombatRules
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.enchantment.EnchantmentHelper
+import kotlin.math.min
 
 object DamageUtil {
-    fun reduceAttackDamageByArmor(
-        armorWearer: LivingEntity,
+    /**
+     * Returns the reduced amount
+     */
+    fun reduceDamageByArmor(
+        victim: LivingEntity,
         damageAmount: Float,
-        damageSource: DamageSource,
-        armor: Float,
-        armorToughness: Float
+        damageSource: DamageSource
     ): Float {
-        val armorReductionReduction = 2.0f + armorToughness / 4.0f
-        val effectiveArmor = Mth.clamp(armor - damageAmount / armorReductionReduction, armor * 0.2f, 20.0f)
-        var damageReduction = effectiveArmor / 25.0f
-        val itemStack = damageSource.weaponItem
-        if (itemStack != null && armorWearer.level() is ServerLevel) {
-            damageReduction =
-                Mth.clamp(EnchantmentHelper.modifyArmorEffectiveness(armorWearer.level() as ServerLevel, itemStack, armorWearer, damageSource, damageReduction), 0.0f, 1.0f)
-        }
+        // there is a vanilla livingEntity.armorValue, but it rounds the armor down - we do not want that
+        val armor = victim.getAttributeValue(Attributes.ARMOR).toFloat()
+        val armorToughness = victim.getAttributeValue(Attributes.ARMOR_TOUGHNESS).toFloat()
 
-        val damageMultiplier = 1.0f - damageReduction
-        return damageAmount * damageMultiplier
+        // this also includes calculating the reduced armor effectiveness (e.g. Breach enchantment)
+        return CombatRules.getDamageAfterAbsorb(victim, damageAmount, damageSource, armor, armorToughness)
     }
 
-    fun applyDamageTakenAttributes(
+    /**
+     * Returns the reduced amount
+     */
+    fun reduceDamageByProtectionEnchantment(
+        victim: LivingEntity,
+        damageAmount: Float,
+        damageSource: DamageSource
+    ): Float {
+        val serverWorld = victim.level() as? ServerLevel ?: return damageAmount
+        val protectionAmount = EnchantmentHelper.getDamageProtection(serverWorld, victim, damageSource)
+        return CombatRules.getDamageAfterMagicAbsorb(damageAmount, protectionAmount)
+    }
+
+    /**
+     * Returns the amount of damage resisted
+     */
+    fun getDamageReductionByResistanceEffect(
+        victim: LivingEntity,
+        damageAmount: Float
+    ): Float {
+        val resistance = (victim.getEffect(MobEffects.RESISTANCE)?.amplifier ?: -1) + 1
+        val resistancePercent = resistance * 0.2f
+
+        return min(damageAmount * resistancePercent, damageAmount)
+    }
+
+    /**
+     * Returns the reduced amount
+     */
+    fun reduceDamageBySpellResistance(
+        damageAmount: Float,
+        cmd: DamageCalculationCommand,
+    ): Float {
+        var amount = damageAmount
+        val spellResistance = min(SpellResistanceSettings.LIMIT, cmd.spellResistance.sum()).toFloat()
+        amount *= 1 - spellResistance
+
+        return amount
+    }
+
+    /**
+     * Returns the amount of damage resisted
+     */
+    fun reduceDamageByDamageTakenAttribute(
         damageAmount: Float,
         cmd: DamageCalculationCommand,
     ): Float {
@@ -39,7 +81,7 @@ object DamageUtil {
         var totalFactor = increasedDamage * moreDamage
         totalFactor = totalFactor.coerceAtLeast(0.0)
 
-        return (damageAmount * totalFactor).toFloat()
+        return (damageAmount * (1 - totalFactor)).toFloat()
     }
 
     fun calculateAttackDamageMultiplier(

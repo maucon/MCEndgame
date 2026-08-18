@@ -15,7 +15,7 @@ public class PiercingWeaponMixin {
             method = "attack",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;stabAttack(Lnet/minecraft/world/entity/EquipmentSlot;Lnet/minecraft/world/entity/Entity;FZZZ)Z")
     )
-    public void setWeaponType(LivingEntity attacker, EquipmentSlot slot, CallbackInfo ci) {
+    public void setWeaponType(LivingEntity attacker, EquipmentSlot hand, CallbackInfo ci) {
         PierceContext.CURRENT.set(PierceContext.PierceType.PIERCE);
     }
 }

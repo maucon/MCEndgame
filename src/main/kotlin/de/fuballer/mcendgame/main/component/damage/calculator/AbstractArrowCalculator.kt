@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.main.component.damage.calculator
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
-import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
 import de.fuballer.mcendgame.main.util.extension.mixin.PersistentProjectileEntityMixinExtension.getDamage
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageSource
@@ -17,10 +16,10 @@ import kotlin.random.Random
 object AbstractArrowCalculator : DamageCalculator {
     override fun isActive(source: DamageSource) = source.directEntity is AbstractArrow
 
-    override fun calculateAttackDamage(
+    override fun calculateDamage(
         originalDamage: Float,
         attacked: LivingEntity,
-        source: ExtendedDamageSource,
+        source: DamageSource,
         event: DamageCalculationCommand
     ): Float {
         val attacker = source.entity as? LivingEntity ?: return originalDamage
@@ -35,13 +34,6 @@ object AbstractArrowCalculator : DamageCalculator {
         return ((arrowDamage + criticalDamage) * damageMulti).toFloat()
     }
 
-    override fun calculateSpellDamage(
-        originalDamage: Float,
-        attacked: LivingEntity,
-        source: ExtendedDamageSource,
-        event: DamageCalculationCommand
-    ): Float = 0.0F
-
     private fun calculateBaseAttackDamage(source: DamageSource): Double {
         val persistentProjectile = source.directEntity as AbstractArrow
         return persistentProjectile.getDamage()
@@ -54,9 +46,9 @@ object AbstractArrowCalculator : DamageCalculator {
         return EnchantmentHelper.modifyDamage(attacker.level() as ServerLevel, weaponStack, attacked, source, 0.0F).toDouble()
     }
 
-    private fun calculateCriticalDamage(event: DamageCalculationCommand, amount: Double): Int {
-        if (!event.isCritical) return 0
-        val critMultiDamage = amount * event.criticalDamageMulti.sum()
+    private fun calculateCriticalDamage(cmd: DamageCalculationCommand, amount: Double): Int {
+        if (!cmd.isCritical) return 0
+        val critMultiDamage = amount * cmd.criticalDamageMulti.sum()
         return Random.nextInt(amount.toInt() / 2 + 2) + critMultiDamage.toInt()
     }
 

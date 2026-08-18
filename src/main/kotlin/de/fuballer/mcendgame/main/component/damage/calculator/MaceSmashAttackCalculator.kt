@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.main.component.damage.calculator
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
-import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getAttackCooldownMultiplier
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.damagesource.DamageSource
@@ -20,10 +19,10 @@ object MaceSmashAttackCalculator : DamageCalculator {
         return MaceItem.canSmashAttack(attacker)
     }
 
-    override fun calculateAttackDamage(
+    override fun calculateDamage(
         originalDamage: Float,
         attacked: LivingEntity,
-        source: ExtendedDamageSource,
+        source: DamageSource,
         event: DamageCalculationCommand
     ): Float {
         val attacker = source.entity as? Player ?: return originalDamage

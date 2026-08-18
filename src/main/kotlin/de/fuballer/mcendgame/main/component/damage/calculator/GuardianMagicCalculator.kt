@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.main.component.damage.calculator
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
-import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
 import de.fuballer.mcendgame.main.util.extension.DamageTypeExtension.isOf
 import net.minecraft.world.Difficulty
 import net.minecraft.world.damagesource.DamageSource
@@ -13,10 +12,10 @@ import net.minecraft.world.entity.monster.Guardian
 object GuardianMagicCalculator : DamageCalculator {
     override fun isActive(source: DamageSource) = source.directEntity is Guardian && source.type().isOf(DamageTypes.INDIRECT_MAGIC)
 
-    override fun calculateAttackDamage(
+    override fun calculateDamage(
         originalDamage: Float,
         attacked: LivingEntity,
-        source: ExtendedDamageSource,
+        source: DamageSource,
         event: DamageCalculationCommand
     ): Float {
         var base = 1f

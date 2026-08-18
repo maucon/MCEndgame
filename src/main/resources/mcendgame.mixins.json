@@ -25,7 +25,7 @@
     "damage.LivingEntityDamageAccessorMixin",
     "damage.LivingEntityDamageMixin",
     "damage.PlayerAttackMixin",
-    "damage.PlayerDamageCalculationMixin",
+    "damage.PlayerDamageMixin",
     "damage.PlayerSweepingAttackMixin",
     "damage.spear.KineticWeaponMixin",
     "damage.spear.LivingEntityPierceMixin",

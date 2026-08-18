@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.mixin.damage;
 
-import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource;
+import de.fuballer.mcendgame.main.component.damage.new1.DamageSourceDraft;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,11 +27,10 @@ public abstract class ArmadilloDamageCalculationMixin extends LivingEntity {
             name = "source"
     )
     private DamageSource onModifyDamageSource(DamageSource source) {
-        var extendedSource = source instanceof ExtendedDamageSource
-                ? (ExtendedDamageSource) source
-                : new ExtendedDamageSource(source);
-
-        extendedSource.getDamageCalculationConfig().armadilloDamageReduction(isScared());
-        return extendedSource;
+        var draftSource = source instanceof DamageSourceDraft d ? d : new DamageSourceDraft(source);
+        if (isScared()) {
+            // TODO set draftSource.armadilloDamage reduction
+        }
+        return draftSource;
     }
 }
