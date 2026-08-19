@@ -11,7 +11,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
-import java.util.*
+import kotlin.random.Random
 
 object BeastweaverBossStats : EntityTypeStats {
     override val type: EntityType<BeastweaverEntity> = CustomEntities.BEASTWEAVER
