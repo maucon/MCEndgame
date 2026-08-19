@@ -12,6 +12,7 @@ import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import de.maucon.mauconframework.initializer.Initializer
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.core.GlobalPos
 import net.minecraft.server.level.ServerLevel
@@ -19,20 +20,38 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.portal.TeleportTransition
 import net.minecraft.world.level.storage.LevelData
 import net.minecraft.world.phys.Vec3
+import java.util.UUID
 
 @Injectable
 class DungeonLeaveService {
+    private val playersToProcess = mutableSetOf<UUID>()
+
     @Initializer
     fun onPlayerJoin() = ServerPlayConnectionEvents.JOIN.register { handler, _, _ ->
-        val player = handler.player
-        if (!player.isInsideDungeon()) return@register
-        player.setInsideDungeon(false)
+        playersToProcess += handler.player.uuid
+    }
 
-        val world = player.level()
-        if (world.isDungeonWorld() && teleportToDungeonExitPos(player, world)) return@register
+    @Initializer
+    fun onServerTick() = ServerTickEvents.END_SERVER_TICK.register { server ->
+        if (playersToProcess.isEmpty()) return@register
 
-        val respawnTarget = player.findRespawnPositionAndUseSpawnBlock(true) {}
-        player.teleport(respawnTarget)
+        val players = playersToProcess.toList()
+        playersToProcess.clear()
+
+        for (uuid in players) {
+            val player = server.playerList.getPlayer(uuid) ?: continue
+            if (!player.isInsideDungeon()) continue
+
+            val world = player.level()
+            if (world.isDungeonWorld() && teleportToDungeonExitPos(player, world)) {
+                player.setInsideDungeon(false)
+                continue
+            }
+
+            val respawnTarget = player.findRespawnPositionAndUseSpawnBlock(true) {}
+            player.teleport(respawnTarget)
+            player.setInsideDungeon(false)
+        }
     }
 
     @EventSubscriber(sync = true)

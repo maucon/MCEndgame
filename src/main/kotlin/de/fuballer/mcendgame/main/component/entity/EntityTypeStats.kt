@@ -9,6 +9,8 @@ interface EntityTypeStats {
 
     val equipmentClass: EnemyEquipmentClass
     val canBeInvisible: Boolean
+    val canHaveEffects: Boolean
+        get() = true
 
     val health: Double
     val attackDamage: Double

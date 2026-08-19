@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 class BeastweaverVineNearestAttackableTargetGoal<T : LivingEntity>(
     mob: Mob,
     targetType: Class<T>,
-) : NearestAttackableTargetGoal<T>(mob, targetType, 0, true, false, null) {
+) : NearestAttackableTargetGoal<T>(mob, targetType, 0, false, false, null) {
     override fun getFollowDistance(): Double {
         return super.getFollowDistance() * mob.getAttributeValue(Attributes.SCALE)
     }
