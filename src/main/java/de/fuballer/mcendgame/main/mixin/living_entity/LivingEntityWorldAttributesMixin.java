@@ -10,6 +10,8 @@ import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,6 +32,8 @@ public abstract class LivingEntityWorldAttributesMixin implements LivingEntityWo
 
     @Unique
     private int appliedWorldAttributesUpdate = 0;
+    @Unique
+    private int appliedWorldAttributesUpdatePersistent = 0;
 
     @Inject(
             method = "tick",
@@ -46,7 +50,10 @@ public abstract class LivingEntityWorldAttributesMixin implements LivingEntityWo
 
         var history = WorldMixinExtension.INSTANCE.getVanillaTypeAttributesHistory(world, entity);
         for (VanillaTypeWorldAttributeInstance updateInstance : history) {
-            if (updateInstance.getUpdate() <= appliedWorldAttributesUpdate) continue;
+            var update = updateInstance.getUpdate();
+            if (update <= appliedWorldAttributesUpdate) continue;
+
+            if (update <= appliedWorldAttributesUpdatePersistent) oldMaxHealth = getMaxHealth();
 
             var updateAttribute = updateInstance.getAttribute();
             var type = (VanillaAttributeType) updateAttribute.getType();
@@ -72,10 +79,21 @@ public abstract class LivingEntityWorldAttributesMixin implements LivingEntityWo
         if (oldMaxHealth < newMaxHealth) setHealth(getHealth() + (newMaxHealth - oldMaxHealth));
 
         appliedWorldAttributesUpdate = latestUpdate;
+        appliedWorldAttributesUpdatePersistent = latestUpdate;
     }
 
     @Override
     public void mcendgame$resetWorldAttributesUpdate() {
         appliedWorldAttributesUpdate = 0;
+    }
+
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    void addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
+        output.putInt("appliedWorldAttributesUpdatePersistent", appliedWorldAttributesUpdatePersistent);
+    }
+
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    void readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
+        appliedWorldAttributesUpdatePersistent = input.getInt("appliedWorldAttributesUpdatePersistent").orElse(0);
     }
 }
