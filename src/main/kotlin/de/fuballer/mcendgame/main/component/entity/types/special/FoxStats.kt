@@ -12,6 +12,8 @@ object FoxStats : EntityTypeStats {
 
     override val equipmentClass = EnemyEquipmentClass.NO_EQUIPMENT
     override val canBeInvisible = false
+    override val canHaveEffects: Boolean
+        get() = false
 
     override val health = 10.0
     override val attackDamage = 4.0

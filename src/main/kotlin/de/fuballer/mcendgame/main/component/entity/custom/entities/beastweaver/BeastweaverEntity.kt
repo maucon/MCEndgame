@@ -978,7 +978,7 @@ class BeastweaverEntity(
 
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
-                .add(Attributes.FOLLOW_RANGE, 35.0)
+                .add(Attributes.FOLLOW_RANGE, 128.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.3)
                 .add(Attributes.ATTACK_DAMAGE, 3.0)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.5)
@@ -987,6 +987,7 @@ class BeastweaverEntity(
                 .add(Attributes.MOVEMENT_EFFICIENCY, 0.85)
                 .add(Attributes.SAFE_FALL_DISTANCE, 10.0)
                 .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.1)
+                .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 0.65)
         }
 
         private const val TRANSFORM_PROGRESS_ID = "transform_progress"
@@ -1164,7 +1165,6 @@ class BeastweaverEntity(
 
         targetSelector.addGoal(0, HurtByTargetGoal(this))
         targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, false))
-        targetSelector.addGoal(2, NearestAttackableTargetGoal(this, Villager::class.java, false))
     }
 
     override fun updateGoals() {

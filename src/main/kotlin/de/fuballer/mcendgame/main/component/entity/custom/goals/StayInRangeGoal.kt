@@ -39,7 +39,6 @@ class StayInRangeGoal(
         val target = entity.target ?: return false
         if (!target.isAlive) return false
 
-        if (!entity.isWithinHome(target.blockPosition())) return false
         return target !is Player || (!target.isSpectator && !target.isCreative)
     }
 
