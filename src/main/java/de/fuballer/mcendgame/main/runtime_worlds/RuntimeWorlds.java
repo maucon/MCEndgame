@@ -11,8 +11,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.portal.TeleportTransition;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.io.FileUtils;
@@ -81,25 +83,34 @@ public final class RuntimeWorlds {
             return;
         }
 
+        List<ServerPlayer> players = new ArrayList<>(level.players());
         var exitPos = WorldMixinExtension.INSTANCE.getDungeonExitPos(level);
         var targetWorld = RuntimeConfig.SERVER.getLevel(exitPos.dimension());
 
         if (targetWorld == null) {
-            // FIXME what to do?
+            ServerLevel spawnLevel = this.server.findRespawnDimension();
+            LevelData.RespawnData spawnPoint = this.server.getRespawnData();
+
+            for (ServerPlayer player : players) {
+                Vec3 pos = Vec3.atBottomCenterOf(player.adjustSpawnLocation(spawnLevel, spawnPoint.pos()));
+                player.teleport(new TeleportTransition(spawnLevel, pos, Vec3.ZERO, spawnPoint.yaw(), spawnPoint.pitch(), TeleportTransition.DO_NOTHING));
+            }
             return;
         }
 
-        var teleportTarget = new TeleportTransition(
+        Vec3 exitVec = BlockPosExtension.INSTANCE.toVec3d(exitPos.pos()).add(0.5, 1.0, 0.5);
+        TeleportTransition target = new TeleportTransition(
                 targetWorld,
-                BlockPosExtension.INSTANCE.toVec3d(exitPos.pos()).add(0.5, 1.0, 0.5),
+                exitVec,
                 Vec3.ZERO,
                 0.0F,
                 0.0F,
                 TeleportTransition.DO_NOTHING
         );
 
-        new ArrayList<>(level.players())
-                .forEach(player -> player.teleport(teleportTarget));
+        for (ServerPlayer player : players) {
+            player.teleport(target);
+        }
     }
 
     private void onServerStopping() {
