@@ -226,6 +226,7 @@
   "attribute.mcendgame.dodged_projectile_reflect": " Dodged Projectiles are Reflected",
   "attribute.mcendgame.projectile_dodge": " %s%% Projectile Dodge",
   "attribute.mcendgame.more_damage_taken": " %s%% %s Damage taken",
+  "attribute.mcendgame.more_damage_taken_while_on_fire": " %s%% %s Damage taken while on Fire",
   "attribute.mcendgame.spell_damage": "%s Spell Damage",
   "attribute.mcendgame.increased_damage": "%s%% %s Damage",
   "attribute.mcendgame.more_damage": " %s%% %s Damage",

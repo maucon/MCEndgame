@@ -505,9 +505,9 @@ class BeastweaverEntity(
             )
 
         private val ELEPHANT_STOMP_MAIN_EXPLOSION_AREA = AreaAttackDamage.DamageArea(9.0, 4.5, 2.5, -4.0, 0.0, 0.0)
-        private val ELEPHANT_STOMP_MAIN_EXPLOSION_ATTACK_DAMAGE = AreaAttackDamage(1.5F, 2.5, ELEPHANT_STOMP_MAIN_EXPLOSION_AREA)
+        private val ELEPHANT_STOMP_MAIN_EXPLOSION_ATTACK_DAMAGE = AreaAttackDamage(3.0F, 2.5, ELEPHANT_STOMP_MAIN_EXPLOSION_AREA, blockable = false)
         private val ELEPHANT_STOMP_DEBRIS_AREA_AREA = AreaAttackDamage.DamageArea(4.0, 2.0, 2.0, -2.0, 0.0, 0.0)
-        private val ELEPHANT_STOMP_DEBRIS_ATTACK_DAMAGE = AreaAttackDamage(0.5F, 0.5, ELEPHANT_STOMP_DEBRIS_AREA_AREA)
+        private val ELEPHANT_STOMP_DEBRIS_ATTACK_DAMAGE = AreaAttackDamage(1.0F, 0.5, ELEPHANT_STOMP_DEBRIS_AREA_AREA, blockable = false)
         private val ELEPHANT_STOMP_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.elephant_stomp")
         private const val ELEPHANT_STOMP_ID = "Elephant Stomp"
         private val ELEPHANT_STOMP_ANIM_DATA = AttackAnimationData(AttackPose.AIRBORNE, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, ELEPHANT_STOMP_ID)
@@ -619,7 +619,7 @@ class BeastweaverEntity(
                 WOLF_SUMMON_ID,
                 WOLF_SUMMON_ANIM_DATA,
                 totalDuration = 70,
-                cooldown = { mob -> 600 + (200 * mob.getHealthPercentage()).toInt() },
+                cooldown = { mob -> 900 + (300 * mob.getHealthPercentage()).toInt() },
                 CompanionLimitTriggerCondition(
                     companionLimit = { targetCount -> targetCount * 1 },
                     getTargetCount = { level, summoner, target -> GET_SUMMON_TARGETS(level, summoner, target).count() },
@@ -842,7 +842,7 @@ class BeastweaverEntity(
 
         private val RHINO_CHARGE_ATTACK_AREA = AreaAttackDamage.DamageArea(3.0, 1.5, 1.25, 0.0, 0.0, 1.0)
         private val RHINO_CHARGE_ATTACK_DAMAGE = AreaAttackDamage(
-            damageFactor = 1.0f,
+            damageFactor = 1.25f,
             knockbackFactor = 3.0,
             area = RHINO_CHARGE_ATTACK_AREA,
             knockbackType = AreaAttackDamage.KnockbackType.BEASTWEAVER_RHINO_CHARGE,
@@ -873,7 +873,7 @@ class BeastweaverEntity(
 
         private val RHINO_CHARGE_HIT_WALL_ATTACK_AREA = AreaAttackDamage.DamageArea(8.0, 4.0, 3.0, -4.0, 0.0, 1.0)
         private val RHINO_CHARGE_HIT_WALL_ATTACK_DAMAGE = AreaAttackDamage(
-            damageFactor = 1.4f,
+            damageFactor = 1.8f,
             knockbackFactor = 4.5,
             area = RHINO_CHARGE_HIT_WALL_ATTACK_AREA,
             blockable = false,
@@ -1151,17 +1151,17 @@ class BeastweaverEntity(
     }
 
     private fun initDynamicGoals() {
-        goalSelector.addGoal(3, attackGoal)
-        goalSelector.addGoal(4, stayInMeleeRangeGoal)
+        goalSelector.addGoal(2, attackGoal)
+        goalSelector.addGoal(3, stayInMeleeRangeGoal)
         goalSelector.addGoal(5, wanderGoal)
         goalSelector.addGoal(6, lookAtPlayerGoal)
         goalSelector.addGoal(7, lookAroundGoal)
     }
 
     override fun registerGoals() {
-        goalSelector.addGoal(0, FloatGoal(this))
-        goalSelector.addGoal(1, BeastweaverRhinoChargeControlGoal(this))
-        goalSelector.addGoal(2, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { e -> e is Player || e is Villager }))
+        goalSelector.addGoal(0, BeastweaverRhinoChargeControlGoal(this))
+        goalSelector.addGoal(1, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { e -> e is Player || e is Villager }))
+        goalSelector.addGoal(4, FloatGoal(this))
 
         targetSelector.addGoal(0, HurtByTargetGoal(this))
         targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, false))
