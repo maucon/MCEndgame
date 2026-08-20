@@ -53,8 +53,6 @@ public abstract class LivingEntityWorldAttributesMixin implements LivingEntityWo
             var update = updateInstance.getUpdate();
             if (update <= appliedWorldAttributesUpdate) continue;
 
-            if (update <= appliedWorldAttributesUpdatePersistent) oldMaxHealth = getMaxHealth();
-
             var updateAttribute = updateInstance.getAttribute();
             var type = (VanillaAttributeType) updateAttribute.getType();
             var attributeInstance = entity.getAttribute(type.getAttribute());
@@ -73,6 +71,8 @@ public abstract class LivingEntityWorldAttributesMixin implements LivingEntityWo
             } else {
                 attributeInstance.removeModifier(identifier);
             }
+
+            if (update <= appliedWorldAttributesUpdatePersistent) oldMaxHealth = getMaxHealth();
         }
 
         var newMaxHealth = getMaxHealth();
