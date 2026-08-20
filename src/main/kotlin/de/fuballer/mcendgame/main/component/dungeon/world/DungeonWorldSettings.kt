@@ -3,11 +3,9 @@ package de.fuballer.mcendgame.main.component.dungeon.world
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
 import de.fuballer.mcendgame.main.runtime_worlds.RuntimeLevelConfig
 import de.fuballer.mcendgame.main.runtime_worlds.util.VoidChunkGenerator
-import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.gamerules.GameRules
-import java.util.*
 
 object DungeonWorldSettings {
     const val EMPTY_WORLD_CHECK_PERIOD = 10 * 60 * 20 // ticks
@@ -37,7 +35,4 @@ object DungeonWorldSettings {
         .setGameRule(GameRules.SPAWN_WARDENS, false)
         .setGameRule(GameRules.SPREAD_VINES, false)
         .setGameRule(GameRules.UNIVERSAL_ANGER, false)
-
-    const val DUNGEON_WORLD_PREFIX = "dungeon-world"
-    fun generateIdentifier() = IdentifierUtil.default("$DUNGEON_WORLD_PREFIX-${UUID.randomUUID()}")
 }

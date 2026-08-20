@@ -50,7 +50,7 @@ class DungeonWorldService(
         training: Boolean = false,
     ): ServerLevel {
         val dungeonWorld = RuntimeConfig.RUNTIME_WORLDS
-            .openTemporaryLevel(DungeonWorldSettings.generateIdentifier(), DungeonWorldSettings.getWorldConfig(dungeonType.biome))
+            .openTemporaryDungeon(DungeonWorldSettings.getWorldConfig(dungeonType.biome))
             .asLevel()
 
         dungeonWorld.setDungeonLevel(dungeonLevel)

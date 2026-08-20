@@ -31,7 +31,8 @@
 
 - **Procedurally generated dungeons with difficulty scaling**
 
-  Dungeons are entered through a Dungeon Device and generated using a room-based system, creating a different layout for each run. They feature custom enemies, including special variants with unique mechanics and loot drops, while difficulty scaling keeps the encounters challenging as players progress.
+  Dungeons are entered through a Dungeon Device and generated using a room-based system, creating a different layout for each run. They feature custom enemies, including special variants
+  with unique mechanics and loot drops, while difficulty scaling keeps the encounters challenging as players progress.
 
 - **Boss fights with unique AI, attack patterns, and animations**
 
@@ -39,19 +40,23 @@
 
 - **Custom armor sets, weapons, and attribute system**
 
-  The mod includes a custom attribute system that allows items to have unique stats and effects beyond Minecraft's vanilla equipment system. This enables more complex itemization and allows gear to be built around different playstyles.
+  The mod includes a custom attribute system that allows items to have unique stats and effects beyond Minecraft's vanilla equipment system. This enables more complex itemization and allows
+  gear to be built around different playstyles.
 
 - **Totem slots and dungeon-specific power progression**
 
-  Totems provide additional bonuses while inside dungeons, allowing players to increase their power for endgame content without affecting the balance of the vanilla Minecraft experience outside of dungeons.
+  Totems provide additional bonuses while inside dungeons, allowing players to increase their power for endgame content without affecting the balance of the vanilla Minecraft experience
+  outside of dungeons.
 
 - **Crystals and the Crystal Forge**
 
-  Crystals are crafting items used to modify equipment, allowing players to change attribute rolls, upgrade existing attributes, or corrupt items for a chance at unique outcomes with different risks and rewards.
+  Crystals are crafting items used to modify equipment, allowing players to change attribute rolls, upgrade existing attributes, or corrupt items for a chance at unique outcomes with
+  different risks and rewards.
 
 - **Aspects**
 
-  Aspects are items socketed into the Dungeon Device to modify a dungeon before you enter. They can introduce additional bosses, increase enemy strength and loot drops, raise special enemy spawn rates, and more, letting players customize risk and reward for each run.
+  Aspects are items socketed into the Dungeon Device to modify a dungeon before you enter. They can introduce additional bosses, increase enemy strength and loot drops, raise special enemy
+  spawn rates, and more, letting players customize risk and reward for each run.
 
 - **And more...**
 
@@ -125,7 +130,6 @@ See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame/wiki/Analytics
 | [Fabric Loader](https://fabricmc.net/use/)                                | ≥ 0.19.3               |
 | [Fabric API](https://modrinth.com/mod/fabric-api)                         | ≥ 0.152.1+26.2         |
 | [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | ≥ 1.13.12+kotlin.2.4.0 |
-| [Fantasy](https://github.com/NucleoidMC/runtimeWorlds)                          | ~0.8.2+26.2            |
 | [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.5.3                 |
 
 ### Building from Source

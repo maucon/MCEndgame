@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.main.configuration.RuntimeConfig;
 import de.fuballer.mcendgame.main.mixin.runtime_worlds.MinecraftServerAccess;
 import de.fuballer.mcendgame.main.util.extension.BlockPosExtension;
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension;
+import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -22,8 +23,11 @@ import org.apache.commons.io.FileUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public final class RuntimeWorlds {
+    public static final String DUNGEON_WORLD_PREFIX = "dungeon-world";
+
     private static RuntimeWorlds instance;
 
     private final MinecraftServer server;
@@ -55,7 +59,8 @@ public final class RuntimeWorlds {
         return instance;
     }
 
-    public RuntimeLevelHandle openTemporaryLevel(Identifier key, RuntimeLevelConfig config) {
+    public RuntimeLevelHandle openTemporaryDungeon(RuntimeLevelConfig config) {
+        var key = this.generateIdentifier();
         RuntimeLevel level = this.addTemporaryLevel(key, config);
         return new RuntimeLevelHandle(level);
     }
@@ -76,6 +81,10 @@ public final class RuntimeWorlds {
         this.kickPlayers(level);
         this.levelManager.delete(level);
         return true;
+    }
+
+    private Identifier generateIdentifier() {
+        return IdentifierUtil.INSTANCE.defaultJava(DUNGEON_WORLD_PREFIX + "-" + UUID.randomUUID());
     }
 
     private void kickPlayers(ServerLevel level) {
