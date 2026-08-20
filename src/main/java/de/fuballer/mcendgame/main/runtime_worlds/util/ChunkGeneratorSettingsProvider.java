@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.fantasy.util;
+package de.fuballer.mcendgame.main.runtime_worlds.util;
 
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import org.jetbrains.annotations.Nullable;

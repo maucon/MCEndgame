@@ -1,12 +1,13 @@
-package de.fuballer.mcendgame.main.fantasy;
+package de.fuballer.mcendgame.main.runtime_worlds;
 
 import com.google.common.collect.ImmutableList;
-import de.fuballer.mcendgame.main.mixin.fantasy.MinecraftServerAccess;
+import de.fuballer.mcendgame.main.mixin.runtime_worlds.MinecraftServerAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProgressListener;
 import net.minecraft.util.Util;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.clock.ServerClockManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.LevelStem;
@@ -21,17 +22,16 @@ public class RuntimeLevel extends ServerLevel {
     private final GameRules rules;
     @Nullable
     private final ServerClockManager clockManager;
+    private final Difficulty difficulty;
 
-    protected RuntimeLevel(MinecraftServer server, ResourceKey<Level> dimension, RuntimeLevelConfig config) {
-        LevelStem dimensionOptions = config.createDimensionOptions(server);
+    protected RuntimeLevel(MinecraftServer server, ResourceKey<Level> dimension, RuntimeLevelConfig config, LevelStem dimensionOptions) {
         WorldData worldData = server.getWorldData();
-        worldData.setDifficulty(config.getDifficulty());
 
         GameRules gameRules = new GameRules(worldData.enabledFeatures());
-
         config.getGameRules().applyTo(gameRules, null);
 
         this.clockManager = config.getClockManager(server, gameRules);
+        this.difficulty = config.getDifficulty();
 
         super(
                 server, Util.backgroundExecutor(), ((MinecraftServerAccess) server).getStorageSource(),
@@ -56,9 +56,14 @@ public class RuntimeLevel extends ServerLevel {
 
     @Override
     protected void tickTime() {
-        if (this.tickTime && this.clockManager instanceof RuntimeClockManager clockManager) {
-            clockManager.tickFromLevel(this);
+        if (this.tickTime && this.clockManager instanceof RuntimeClockManager manager) {
+            manager.tickFromLevel(this);
         }
+    }
+
+    @Override
+    public @NonNull Difficulty getDifficulty() {
+        return difficulty;
     }
 
     @Override

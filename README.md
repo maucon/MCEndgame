@@ -125,7 +125,7 @@ See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame/wiki/Analytics
 | [Fabric Loader](https://fabricmc.net/use/)                                | ≥ 0.19.3               |
 | [Fabric API](https://modrinth.com/mod/fabric-api)                         | ≥ 0.152.1+26.2         |
 | [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | ≥ 1.13.12+kotlin.2.4.0 |
-| [Fantasy](https://github.com/NucleoidMC/fantasy)                          | ~0.8.2+26.2            |
+| [Fantasy](https://github.com/NucleoidMC/runtimeWorlds)                          | ~0.8.2+26.2            |
 | [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.5.3                 |
 
 ### Building from Source
@@ -166,6 +166,6 @@ Should you have any questions or encounter any difficulties, please don't hesita
 
 * [FabricMC](https://fabricmc.net/)
 * [Geckolib](https://modrinth.com/mod/geckolib/versions)
-* [NucleoidMC/fantasy](https://github.com/NucleoidMC/fantasy)
+* [NucleoidMC/runtimeWorlds](https://github.com/NucleoidMC/runtimeWorlds)
 * [Path of Exile](https://www.pathofexile.com/)
 * [Best README Template](https://github.com/othneildrew/Best-README-Template)

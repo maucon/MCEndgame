@@ -1,26 +1,27 @@
-package de.fuballer.mcendgame.main.fantasy;
+package de.fuballer.mcendgame.main.runtime_worlds;
 
-import de.fuballer.mcendgame.main.mixin.fantasy.MinecraftServerAccess;
+import com.mojang.logging.LogUtils;
+import de.fuballer.mcendgame.main.mixin.runtime_worlds.MinecraftServerAccess;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.ProgressListener;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import org.apache.commons.io.FileUtils;
-import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 
 final class RuntimeLevelManager {
+    private final Logger LOG = LogUtils.getLogger();
+
     private final MinecraftServer server;
     private final MinecraftServerAccess serverAccess;
 
@@ -40,7 +41,7 @@ final class RuntimeLevelManager {
             }
         }
 
-        RuntimeLevel level = new RuntimeLevel(this.server, levelKey, config);
+        RuntimeLevel level = new RuntimeLevel(this.server, levelKey, config, options);
 
         this.serverAccess.getLevels().put(level.dimension(), level);
         ServerLevelEvents.LOAD.invoker().onLevelLoad(this.server, level);
@@ -58,7 +59,13 @@ final class RuntimeLevelManager {
             ServerLevelEvents.UNLOAD.invoker().onLevelUnload(this.server, level);
 
             MappedRegistry<LevelStem> dimensionsRegistry = getDimensionsRegistry(this.server);
-            this.unregister((RuntimeLevel) level, dimensionKey, dimensionsRegistry, true);
+            this.unregister(dimensionKey, dimensionsRegistry);
+
+            try {
+                level.close();
+            } catch (IOException e) {
+                LOG.error("Exception closing the level", e);
+            }
 
             LevelStorageSource.LevelStorageAccess session = this.serverAccess.getStorageSource();
             File levelDirectory = session.getDimensionPath(dimensionKey).toFile();
@@ -66,7 +73,7 @@ final class RuntimeLevelManager {
                 try {
                     FileUtils.deleteDirectory(levelDirectory);
                 } catch (IOException e) {
-                    Fantasy.LOGGER.warn("Failed to delete level directory", e);
+                    LOG.warn("Failed to delete level directory", e);
                     try {
                         FileUtils.forceDeleteOnExit(levelDirectory);
                     } catch (IOException ignored) {
@@ -76,40 +83,7 @@ final class RuntimeLevelManager {
         }
     }
 
-    void unload(ServerLevel level) {
-        ResourceKey<Level> dimensionKey = level.dimension();
-
-        if (this.serverAccess.getLevels().remove(dimensionKey, level)) {
-            level.save(new ProgressListener() {
-                @Override
-                public void progressStartNoAbort(@NonNull Component title) {
-                }
-
-                @Override
-                public void progressStart(@NonNull Component title) {
-                }
-
-                @Override
-                public void progressStage(@NonNull Component task) {
-                }
-
-                @Override
-                public void progressStagePercentage(int percentage) {
-                }
-
-                @Override
-                public void stop() {
-                }
-            }, true, false);
-
-            ServerLevelEvents.UNLOAD.invoker().onLevelUnload(RuntimeLevelManager.this.server, level);
-
-            MappedRegistry<LevelStem> dimensionsRegistry = getDimensionsRegistry(RuntimeLevelManager.this.server);
-            this.unregister((RuntimeLevel) level, dimensionKey, dimensionsRegistry, false);
-        }
-    }
-
-    private void unregister(RuntimeLevel level, ResourceKey<Level> dimensionKey, MappedRegistry<LevelStem> dimensionsRegistry, boolean alwaysDelete) {
+    private void unregister(ResourceKey<Level> dimensionKey, MappedRegistry<LevelStem> dimensionsRegistry) {
         RemoveFromRegistry.remove(dimensionsRegistry, dimensionKey.identifier());
     }
 

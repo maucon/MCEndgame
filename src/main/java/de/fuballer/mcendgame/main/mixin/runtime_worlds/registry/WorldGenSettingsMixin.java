@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.mixin.fantasy.registry;
+package de.fuballer.mcendgame.main.mixin.runtime_worlds.registry;
 
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.dimension.LevelStem;
@@ -21,7 +21,7 @@ public class WorldGenSettingsMixin {
             ),
             index = 1
     )
-    private static WorldDimensions fantasy$wrapWorldGenSettings(WorldDimensions original) {
+    private static WorldDimensions mcendgame$wrapWorldGenSettings(WorldDimensions original) {
         var saveDimensions = Map.<ResourceKey<LevelStem>, LevelStem>of();
         return new WorldDimensions(saveDimensions);
     }

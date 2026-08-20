@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.component.dungeon.world
 
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
-import de.fuballer.mcendgame.main.fantasy.RuntimeLevelConfig
-import de.fuballer.mcendgame.main.fantasy.util.VoidChunkGenerator
+import de.fuballer.mcendgame.main.runtime_worlds.RuntimeLevelConfig
+import de.fuballer.mcendgame.main.runtime_worlds.util.VoidChunkGenerator
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.biome.Biome

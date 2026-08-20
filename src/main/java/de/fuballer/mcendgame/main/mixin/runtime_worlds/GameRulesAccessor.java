@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.mixin.fantasy;
+package de.fuballer.mcendgame.main.mixin.runtime_worlds;
 
 import net.minecraft.world.level.gamerules.GameRuleMap;
 import net.minecraft.world.level.gamerules.GameRules;

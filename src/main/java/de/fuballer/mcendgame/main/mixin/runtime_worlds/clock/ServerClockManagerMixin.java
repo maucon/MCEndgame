@@ -1,8 +1,8 @@
-package de.fuballer.mcendgame.main.mixin.fantasy.clock;
+package de.fuballer.mcendgame.main.mixin.runtime_worlds.clock;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import de.fuballer.mcendgame.main.fantasy.ServerClockManagerExtension;
+import de.fuballer.mcendgame.main.runtime_worlds.ServerClockManagerExtension;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +23,7 @@ public abstract class ServerClockManagerMixin implements ServerClockManagerExten
     private Map<Holder<WorldClock>, ServerClockManager.ClockInstance> clocks;
 
     @Override
-    public Map<Holder<WorldClock>, ServerClockManager.ClockInstance> fantasy$getClocks() {
+    public Map<Holder<WorldClock>, ServerClockManager.ClockInstance> mcendgame$getClocks() {
         return this.clocks;
     }
 

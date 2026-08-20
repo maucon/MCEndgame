@@ -1,9 +1,9 @@
-package de.fuballer.mcendgame.main.mixin.fantasy;
+package de.fuballer.mcendgame.main.mixin.runtime_worlds;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import de.fuballer.mcendgame.main.fantasy.FantasyLevelAccess;
-import de.fuballer.mcendgame.main.fantasy.RuntimeLevel;
+import de.fuballer.mcendgame.main.accessor.ServerLevelAccessor;
+import de.fuballer.mcendgame.main.runtime_worlds.RuntimeLevel;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerChunkCache;
@@ -23,14 +23,14 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 
 @Mixin(ServerLevel.class)
-public abstract class ServerLevelMixin implements FantasyLevelAccess {
+public abstract class ServerLevelMixin implements ServerLevelAccessor {
     @Unique
     private static final int TICK_TIMEOUT = 20 * 15;
 
     @Unique
-    private boolean fantasy$tickWhenEmpty = true;
+    private boolean mcendgame$tickWhenEmpty = true;
     @Unique
-    private int fantasy$tickTimeout;
+    private int mcendgame$tickTimeout;
 
     @Shadow
     public abstract List<ServerPlayer> players();
@@ -39,29 +39,31 @@ public abstract class ServerLevelMixin implements FantasyLevelAccess {
     public abstract ServerChunkCache getChunkSource();
 
     @Override
-    public void fantasy$setTickWhenEmpty(boolean tickWhenEmpty) {
-        this.fantasy$tickWhenEmpty = tickWhenEmpty;
+    public void mcendgame$setTickWhenEmpty(boolean tickWhenEmpty) {
+        this.mcendgame$tickWhenEmpty = tickWhenEmpty;
     }
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void tick(BooleanSupplier haveTime, CallbackInfo ci) {
-        boolean shouldTick = this.fantasy$tickWhenEmpty || !this.isLevelEmpty();
+        boolean shouldTick = this.mcendgame$tickWhenEmpty || this.isLevelNotEmpty();
         if (shouldTick) {
-            this.fantasy$tickTimeout = TICK_TIMEOUT;
-        } else if (this.fantasy$tickTimeout-- <= 0) {
+            this.mcendgame$tickTimeout = TICK_TIMEOUT;
+        } else if (this.mcendgame$tickTimeout > 0) {
+            this.mcendgame$tickTimeout--;
+        } else {
             ci.cancel();
         }
     }
 
     @Override
-    public boolean fantasy$shouldTick() {
-        boolean shouldTick = this.fantasy$tickWhenEmpty || !this.isLevelEmpty();
-        return shouldTick || this.fantasy$tickTimeout > 0;
+    public boolean mcendgame$shouldTick() {
+        boolean shouldTick = this.mcendgame$tickWhenEmpty || this.isLevelNotEmpty();
+        return shouldTick || this.mcendgame$tickTimeout > 0;
     }
 
     @Unique
-    private boolean isLevelEmpty() {
-        return this.players().isEmpty() && this.getChunkSource().getLoadedChunksCount() <= 0;
+    private boolean isLevelNotEmpty() {
+        return !this.players().isEmpty() || this.getChunkSource().getLoadedChunksCount() > 0;
     }
 
     @Redirect(

@@ -1,8 +1,8 @@
-package de.fuballer.mcendgame.main.fantasy;
+package de.fuballer.mcendgame.main.runtime_worlds;
 
 import com.google.common.base.Preconditions;
 import de.fuballer.mcendgame.main.component.dimension.CustomDimensions;
-import de.fuballer.mcendgame.main.fantasy.util.GameRuleStore;
+import de.fuballer.mcendgame.main.runtime_worlds.util.GameRuleStore;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -19,8 +19,8 @@ import java.util.Map;
 
 public final class RuntimeLevelConfig {
     private final ResourceKey<DimensionType> dimensionTypeKey = CustomDimensions.INSTANCE.getDUNGEON();
-    private final Difficulty difficulty = Difficulty.HARD;
     private final GameRuleStore gameRules = new GameRuleStore();
+    private final Difficulty difficulty = Difficulty.HARD;
     private ChunkGenerator generator = null;
     private int clockTime = 0;
 
@@ -37,10 +37,6 @@ public final class RuntimeLevelConfig {
     public <T> RuntimeLevelConfig setGameRule(GameRule<T> key, T value) {
         this.gameRules.set(key, value);
         return this;
-    }
-
-    public Difficulty getDifficulty() {
-        return difficulty;
     }
 
     public LevelStem createDimensionOptions(MinecraftServer server) {
@@ -69,5 +65,9 @@ public final class RuntimeLevelConfig {
         clockManager.init(server);
 
         return clockManager;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
     }
 }

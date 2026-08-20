@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.mixin.fantasy.clock;
+package de.fuballer.mcendgame.main.mixin.runtime_worlds.clock;
 
 import net.minecraft.world.clock.ServerClockManager;
 import org.spongepowered.asm.mixin.Mixin;

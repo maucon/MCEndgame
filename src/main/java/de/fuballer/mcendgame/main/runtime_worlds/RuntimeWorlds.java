@@ -1,88 +1,56 @@
-package de.fuballer.mcendgame.main.fantasy;
+package de.fuballer.mcendgame.main.runtime_worlds;
 
 import com.google.common.base.Preconditions;
-import de.fuballer.mcendgame.main.mixin.fantasy.MinecraftServerAccess;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import de.fuballer.mcendgame.main.configuration.RuntimeConfig;
+import de.fuballer.mcendgame.main.mixin.runtime_worlds.MinecraftServerAccess;
+import de.fuballer.mcendgame.main.util.extension.BlockPosExtension;
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.portal.TeleportTransition;
-import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-public final class Fantasy {
-    public static final Logger LOGGER = LogManager.getLogger(Fantasy.class);
-
-    private static Fantasy instance;
+public final class RuntimeWorlds {
+    private static RuntimeWorlds instance;
 
     private final MinecraftServer server;
     private final MinecraftServerAccess serverAccess;
 
     private final RuntimeLevelManager levelManager;
 
-    private final Set<ServerLevel> deletionQueue = new ReferenceOpenHashSet<>();
-    private final Set<ServerLevel> unloadingQueue = new ReferenceOpenHashSet<>();
-
     static {
-        ServerTickEvents.START_SERVER_TICK.register(server -> {
-            Fantasy fantasy = get(server);
-            fantasy.tick();
-        });
-
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
-            Fantasy fantasy = get(server);
-            fantasy.onServerStopping();
+            RuntimeWorlds runtimeWorlds = create(server);
+            runtimeWorlds.onServerStopping();
         });
     }
 
-    private Fantasy(MinecraftServer server) {
+    private RuntimeWorlds(MinecraftServer server) {
         this.server = server;
         this.serverAccess = (MinecraftServerAccess) server;
 
         this.levelManager = new RuntimeLevelManager(server);
     }
 
-    /**
-     * Gets the {@link Fantasy} instance for the given server instance.
-     *
-     * @param server the server to work with
-     * @return the {@link Fantasy} instance to work with runtime dimensions
-     */
-    public static Fantasy get(MinecraftServer server) {
+    public static RuntimeWorlds create(MinecraftServer server) {
         Preconditions.checkState(server.isSameThread(), "cannot create levels from off-thread!");
 
         if (instance == null || instance.server != server) {
-            instance = new Fantasy(server);
+            instance = new RuntimeWorlds(server);
         }
 
         return instance;
-    }
-
-    private void tick() {
-        Set<ServerLevel> deletionQueue = this.deletionQueue;
-        if (!deletionQueue.isEmpty()) {
-            deletionQueue.removeIf(this::tickDeleteLevel);
-        }
-
-        Set<ServerLevel> unloadingQueue = this.unloadingQueue;
-        if (!unloadingQueue.isEmpty()) {
-            unloadingQueue.removeIf(this::tickUnloadLevel);
-        }
     }
 
     public RuntimeLevelHandle openTemporaryLevel(Identifier key, RuntimeLevelConfig config) {
@@ -108,36 +76,30 @@ public final class Fantasy {
         return true;
     }
 
-    public boolean tickUnloadLevel(ServerLevel level) {
-        if (this.isLevelActive(level) && !level.getChunkSource().chunkMap.hasWork()) {
-            this.levelManager.unload(level);
-            return true;
-        } else {
-            this.kickPlayers(level);
-            return false;
-        }
-    }
-
     private void kickPlayers(ServerLevel level) {
         if (level.players().isEmpty()) {
             return;
         }
 
-        ServerLevel spawnLevel = this.server.findRespawnDimension();
-        LevelData.RespawnData spawnPoint = this.server.getRespawnData();
+        var exitPos = WorldMixinExtension.INSTANCE.getDungeonExitPos(level);
+        var targetWorld = RuntimeConfig.SERVER.getLevel(exitPos.dimension());
 
-        List<ServerPlayer> players = new ArrayList<>(level.players());
-
-        for (ServerPlayer player : players) {
-            Vec3 pos = Vec3.atBottomCenterOf(player.adjustSpawnLocation(spawnLevel, spawnPoint.pos()));
-            TeleportTransition target = new TeleportTransition(spawnLevel, pos, Vec3.ZERO, spawnPoint.yaw(), spawnPoint.pitch(), TeleportTransition.DO_NOTHING);
-
-            player.teleport(target);
+        if (targetWorld == null) {
+            // FIXME what to do?
+            return;
         }
-    }
 
-    private boolean isLevelActive(ServerLevel level) {
-        return level.players().isEmpty() && level.getChunkSource().getLoadedChunksCount() <= 0;
+        var teleportTarget = new TeleportTransition(
+                targetWorld,
+                BlockPosExtension.INSTANCE.toVec3d(exitPos.pos()).add(0.5, 1.0, 0.5),
+                Vec3.ZERO,
+                0.0F,
+                0.0F,
+                TeleportTransition.DO_NOTHING
+        );
+
+        new ArrayList<>(level.players())
+                .forEach(player -> player.teleport(teleportTarget));
     }
 
     private void onServerStopping() {

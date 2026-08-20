@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.fantasy;
+package de.fuballer.mcendgame.main.runtime_worlds;
 
 import net.minecraft.core.Holder;
 import net.minecraft.world.clock.ServerClockManager;
@@ -7,9 +7,8 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
 
-@ApiStatus.Internal
 public interface ServerClockManagerExtension {
-    default Map<Holder<WorldClock>, ServerClockManager.ClockInstance> fantasy$getClocks() {
+    default Map<Holder<WorldClock>, ServerClockManager.ClockInstance> mcendgame$getClocks() {
         throw new UnsupportedOperationException("Implemented via Mixin.");
     }
 }

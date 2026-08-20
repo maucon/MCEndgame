@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.mixin.fantasy.clock;
+package de.fuballer.mcendgame.main.mixin.runtime_worlds.clock;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

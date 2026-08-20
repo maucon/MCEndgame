@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.fantasy.util;
+package de.fuballer.mcendgame.main.runtime_worlds.util;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
@@ -87,12 +87,12 @@ public class VoidChunkGenerator extends ChunkGenerator {
 
     @Override
     public int getMinY() {
-        return 0;
+        return -64;
     }
 
     @Override
     public int getBaseHeight(int x, int z, Heightmap.Types heightmap, LevelHeightAccessor world, RandomState noiseConfig) {
-        return 0;
+        return 384;
     }
 
     @Override

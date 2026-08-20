@@ -1,11 +1,8 @@
-package de.fuballer.mcendgame.main.fantasy.util;
-
-import org.jetbrains.annotations.ApiStatus;
+package de.fuballer.mcendgame.main.runtime_worlds.util;
 
 import java.util.Collection;
 import java.util.Iterator;
 
-@ApiStatus.Internal
 public final class SafeIterator<T> implements Iterator<T> {
     private final Object[] values;
     private int index = 0;
@@ -19,6 +16,7 @@ public final class SafeIterator<T> implements Iterator<T> {
         return this.values.length > this.index;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T next() {
         return (T) this.values[this.index++];

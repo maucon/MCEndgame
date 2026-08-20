@@ -1,6 +1,6 @@
-package de.fuballer.mcendgame.main.fantasy;
+package de.fuballer.mcendgame.main.runtime_worlds;
 
-import de.fuballer.mcendgame.main.mixin.fantasy.clock.ClockInstanceAccessor;
+import de.fuballer.mcendgame.main.mixin.runtime_worlds.clock.ClockInstanceAccessor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
 import net.minecraft.server.MinecraftServer;
@@ -34,7 +34,7 @@ public class RuntimeClockManager extends ServerClockManager {
     @Override
     public void tick() {
         if (this.advanceTime.getAsBoolean()) {
-            ((ServerClockManagerExtension) this).fantasy$getClocks().values().forEach(ClockInstance::tick);
+            ((ServerClockManagerExtension) this).mcendgame$getClocks().values().forEach(ClockInstance::tick);
             this.setDirty();
         }
     }
@@ -61,7 +61,7 @@ public class RuntimeClockManager extends ServerClockManager {
 
     @Override
     public @NonNull ClientboundSetTimePacket createFullSyncPacket() {
-        return new ClientboundSetTimePacket(this.getGameTime(), Util.mapValues(((ServerClockManagerExtension) this).fantasy$getClocks(), (clock) -> this.packNetworkState(clock, this.server)));
+        return new ClientboundSetTimePacket(this.getGameTime(), Util.mapValues(((ServerClockManagerExtension) this).mcendgame$getClocks(), (clock) -> this.packNetworkState(clock, this.server)));
     }
 
     protected ClockNetworkState packNetworkState(ClockInstance instance, final MinecraftServer server) {

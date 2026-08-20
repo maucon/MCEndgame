@@ -1,8 +1,8 @@
-package de.fuballer.mcendgame.main.mixin.fantasy;
+package de.fuballer.mcendgame.main.mixin.runtime_worlds;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import de.fuballer.mcendgame.main.fantasy.util.SafeIterator;
+import de.fuballer.mcendgame.main.runtime_worlds.util.SafeIterator;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -36,7 +36,7 @@ public abstract class MinecraftServerMixin {
     private ServerClockManager clockManager;
 
     @Redirect(method = "tickChildren", at = @At(value = "INVOKE", target = "Ljava/lang/Iterable;iterator()Ljava/util/Iterator;", ordinal = 0), require = 0)
-    private Iterator<ServerLevel> fantasy$copyBeforeTicking(Iterable<ServerLevel> instance) {
+    private Iterator<ServerLevel> mcendgame$copyBeforeTicking(Iterable<ServerLevel> instance) {
         return new SafeIterator<>((Collection<ServerLevel>) instance);
     }
 
