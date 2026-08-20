@@ -37,10 +37,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityDamageMixin {
-    private static final Logger log = LoggerFactory.getLogger(LivingEntityDamageMixin.class);
-    @Unique
-    private boolean lastHitWasApplied = true;
-
     @Shadow
     protected float lastHurt;
     @Shadow
