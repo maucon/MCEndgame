@@ -12,6 +12,7 @@ import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import de.maucon.mauconframework.initializer.Initializer
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
@@ -19,20 +20,38 @@ import net.minecraft.util.math.GlobalPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.TeleportTarget
 import net.minecraft.world.WorldProperties
+import java.util.*
 
 @Injectable
 class DungeonLeaveService {
+    private val playersToProcess = mutableSetOf<UUID>()
+
     @Initializer
     fun onPlayerJoin() = ServerPlayConnectionEvents.JOIN.register { handler, _, _ ->
-        val player = handler.player
-        if (!player.isInsideDungeon()) return@register
-        player.setInsideDungeon(false)
+        playersToProcess += handler.player.uuid
+    }
 
-        val world = player.entityWorld
-        if (world.isDungeonWorld() && teleportToDungeonExitPos(player, world)) return@register
+    @Initializer
+    fun onServerTick() = ServerTickEvents.END_SERVER_TICK.register { server ->
+        if (playersToProcess.isEmpty()) return@register
 
-        val respawnTarget = player.getRespawnTarget(true) {}
-        player.teleportTo(respawnTarget)
+        val players = playersToProcess.toList()
+        playersToProcess.clear()
+
+        for (uuid in players) {
+            val player = server.playerManager.getPlayer(uuid) ?: continue
+            if (!player.isInsideDungeon()) continue
+
+            val world = player.entityWorld
+            if (world.isDungeonWorld() && teleportToDungeonExitPos(player, world)) {
+                player.setInsideDungeon(false)
+                continue
+            }
+
+            val respawnTarget = player.getRespawnTarget(true) {}
+            player.teleportTo(respawnTarget)
+            player.setInsideDungeon(false)
+        }
     }
 
     @EventSubscriber(sync = true)
