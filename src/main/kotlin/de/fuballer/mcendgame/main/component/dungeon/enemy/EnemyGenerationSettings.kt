@@ -5,7 +5,6 @@ import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.SortableRandomOption
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
-import kotlin.math.pow
 import kotlin.random.Random
 
 object EnemyGenerationSettings {
@@ -57,6 +56,4 @@ object EnemyGenerationSettings {
     const val ELITE_HEALTH_FACTOR = 2.5
     fun randomElite(random: Random) = random.nextDouble() < ELITE_PROBABILITY
     fun getEliteStatusEffect() = MobEffectInstance(MobEffects.RAID_OMEN, MobEffectInstance.INFINITE_DURATION, 0, false, true)
-
-    fun getRandomScale(random: Random) = 1.0 + 0.2 * random.nextDouble().pow(3) * if (random.nextBoolean()) 1 else -1
 }

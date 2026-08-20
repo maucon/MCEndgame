@@ -108,7 +108,7 @@ class EnemyGenerationService(
             applyEliteEffects(enemyEntity)
         }
 
-        setScale(enemyEntity, isElite, random)
+        setScale(enemyEntity, type, isElite, random)
 
         equipmentGenerationService.generate(
             enemyEntity,
@@ -139,10 +139,11 @@ class EnemyGenerationService(
 
     private fun setScale(
         entity: Mob,
+        type: EntityTypeStats,
         isElite: Boolean,
         random: Random,
     ) {
-        val scale = if (isElite) EnemyGenerationSettings.ELITE_SCALE else EnemyGenerationSettings.getRandomScale(random)
+        val scale = if (isElite) EnemyGenerationSettings.ELITE_SCALE else type.getRandomScale(random)
         entity.getAttribute(Attributes.SCALE)?.baseValue = scale
     }
 }
