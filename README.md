@@ -3,7 +3,7 @@
 [![Modrinth](https://img.shields.io/badge/Modrinth-MCEndgame-green)](https://modrinth.com/mod/mcendgame)
 [![CurseForge](https://img.shields.io/badge/CurseForge-MCEndgame-orange)](https://www.curseforge.com/minecraft/mc-mods/mcendgame)
 [![build](https://github.com/maucon/MCEndgame/actions/workflows/build.yml/badge.svg)](https://github.com/maucon/MCEndgame/actions/workflows/build.yml)
-[![License](https://img.shields.io/badge/License-MIT-lightblue)](LICENSE)
+[![License](https://img.shields.io/badge/License-LGPLv3-lightblue)](LICENSE)
 
 <div align="center">
   <img src="assets/images/banner.png" alt="MCEndgame Banner" width="850">
@@ -156,7 +156,8 @@ If you have a feature request or found a bug, please open an issue. If you'd lik
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU Lesser General Public License v3.0 (LGPLv3).
+See [LICENSE](LICENSE) and [LICENSE.GPL](LICENSE.GPL) for details.
 
 ## Contact
 
