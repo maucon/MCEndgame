@@ -170,6 +170,6 @@ Should you have any questions or encounter any difficulties, please don't hesita
 
 * [FabricMC](https://fabricmc.net/)
 * [Geckolib](https://modrinth.com/mod/geckolib/versions)
-* [NucleoidMC/runtimeWorlds](https://github.com/NucleoidMC/runtimeWorlds)
+* [NucleoidMC/fantasy](https://github.com/NucleoidMC/fantasy)
 * [Path of Exile](https://www.pathofexile.com/)
 * [Best README Template](https://github.com/othneildrew/Best-README-Template)
