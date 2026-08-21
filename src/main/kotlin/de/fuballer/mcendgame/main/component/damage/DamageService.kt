@@ -46,6 +46,7 @@ private val DAMAGE_CALCULATORS = listOf(
     MagicDamageCalculator,
     PotionCalculator,
     MaceSmashAttackCalculator,
+    GenericAttackCalculator,
     MeleeAttackCalculator,
     ShulkerBulletCalculator,
     OtherProjectilesCalculator, // do not move
