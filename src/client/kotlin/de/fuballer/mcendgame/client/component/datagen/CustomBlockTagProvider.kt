@@ -7,8 +7,14 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider
 import net.minecraft.core.HolderLookup
 import net.minecraft.references.BlockIds
 import net.minecraft.references.BlockItemIds
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.Identifier
+import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.BlockTags
 import java.util.concurrent.CompletableFuture
+
+// https://modrinth.com/mod/pneumono_gravestones
+private val GRAVESTONES_GRAVESTONE_TECHNICAL = ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("gravestones", "gravestone_technical"))
 
 class CustomBlockTagProvider(
     packOutput: FabricPackOutput,
