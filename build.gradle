@@ -115,6 +115,9 @@ jar {
     from("LICENSE") {
         rename { "${it}_${base.archivesName.get()}" }
     }
+    from("LICENSE.GPL") {
+        rename { "${it}_${base.archivesName.get()}" }
+    }
 }
 
 test {
