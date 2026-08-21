@@ -22,8 +22,8 @@ class ScorchEffect : MobEffect(MobEffectCategory.BENEFICIAL, 15754270) {
         if (enemies.isEmpty()) return true
 
         for (enemy in enemies) {
+            if (!enemy.dealGenericAttackDamage(2f, entity)) continue
             enemy.remainingFireTicks = 60
-            enemy.dealGenericAttackDamage(2f, entity)
 
             spawnParticles(world, enemy, 3, 0.2)
         }
