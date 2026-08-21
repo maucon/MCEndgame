@@ -157,7 +157,7 @@ If you have a feature request or found a bug, please open an issue. If you'd lik
 ## License
 
 This project is licensed under the GNU Lesser General Public License v3.0 (LGPLv3).
-See [License](LICENSE) and [LICENSE.GPL](LICENSE.GPL) for details.
+See [LICENSE](LICENSE) and [LICENSE.GPL](LICENSE.GPL) for details.
 
 ## Contact
 
