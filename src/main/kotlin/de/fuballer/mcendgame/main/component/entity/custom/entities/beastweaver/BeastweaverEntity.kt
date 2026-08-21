@@ -284,7 +284,7 @@ class BeastweaverEntity(
         )
 
         private val BEAR_SWIPE_RIGHT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
-        private val BEAR_SWIPE_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.6F, 1.0, BEAR_SWIPE_RIGHT_AREA, disableBlockingShield = 3F)
+        private val BEAR_SWIPE_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, BEAR_SWIPE_RIGHT_AREA, disableBlockingShield = 3F)
         private val BEAR_SWIPE_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.bear_swipe_right")
         private const val BEAR_SWIPE_RIGHT_ID = "Bear Swipe Right"
         private val BEAR_SWIPE_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BEAR_SWIPE_RIGHT_ID)
@@ -307,7 +307,7 @@ class BeastweaverEntity(
             )
 
         private val BEAR_SWIPE_LEFT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, -0.35, 0.75)
-        private val BEAR_SWIPE_LEFT_ATTACK_DAMAGE = AreaAttackDamage(0.6F, 1.0, BEAR_SWIPE_LEFT_AREA, disableBlockingShield = 3F)
+        private val BEAR_SWIPE_LEFT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, BEAR_SWIPE_LEFT_AREA, disableBlockingShield = 3F)
         private val BEAR_SWIPE_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.bear_swipe_left")
         private const val BEAR_SWIPE_LEFT_ID = "Bear Swipe Left"
         private val BEAR_SWIPE_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BEAR_SWIPE_LEFT_ID)
@@ -331,15 +331,15 @@ class BeastweaverEntity(
 
         private val TAIL_SWEEP_DAMAGE_DATA = listOf(
             DelayedDamageData(
-                AreaAttackDamage(1.0F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, -2.25, 0.5), knockbackWhenBlocked = true),
+                AreaAttackDamage(1.5F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, -2.25, 0.5), knockbackWhenBlocked = true),
                 minDelay = 18,
             ),
             DelayedDamageData(
-                AreaAttackDamage(1.0F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.0, 0.4, 0.1, 0.0, 0.5), knockbackWhenBlocked = true),
+                AreaAttackDamage(1.5F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.0, 0.4, 0.1, 0.0, 0.5), knockbackWhenBlocked = true),
                 minDelay = 19,
             ),
             DelayedDamageData(
-                AreaAttackDamage(1.0F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, 2.25, 0.5), knockbackWhenBlocked = true),
+                AreaAttackDamage(1.5F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, 2.25, 0.5), knockbackWhenBlocked = true),
                 minDelay = 20,
             ),
         )
@@ -504,7 +504,7 @@ class BeastweaverEntity(
                 blockMovementDuration = 35,
             )
 
-        private val ELEPHANT_STOMP_MAIN_EXPLOSION_AREA = AreaAttackDamage.DamageArea(9.0, 4.5, 2.5, -4.0, 0.0, 0.0)
+        private val ELEPHANT_STOMP_MAIN_EXPLOSION_AREA = AreaAttackDamage.DamageArea(9.0, 4.5, 2.5, -4.5, 0.0, 0.0)
         private val ELEPHANT_STOMP_MAIN_EXPLOSION_ATTACK_DAMAGE = AreaAttackDamage(3.0F, 2.5, ELEPHANT_STOMP_MAIN_EXPLOSION_AREA, blockable = false)
         private val ELEPHANT_STOMP_DEBRIS_AREA_AREA = AreaAttackDamage.DamageArea(4.0, 2.0, 2.0, -2.0, 0.0, 0.0)
         private val ELEPHANT_STOMP_DEBRIS_ATTACK_DAMAGE = AreaAttackDamage(1.0F, 0.5, ELEPHANT_STOMP_DEBRIS_AREA_AREA, blockable = false)
