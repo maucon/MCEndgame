@@ -5,9 +5,15 @@ import de.fuballer.mcendgame.main.component.tags.CustomTags
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider
 import net.minecraft.block.Blocks
+import net.minecraft.registry.RegistryKey
+import net.minecraft.registry.RegistryKeys
 import net.minecraft.registry.RegistryWrapper
 import net.minecraft.registry.tag.BlockTags
+import net.minecraft.util.Identifier
 import java.util.concurrent.CompletableFuture
+
+// https://modrinth.com/mod/pneumono_gravestones
+private val GRAVESTONES_GRAVESTONE_TECHNICAL = RegistryKey.of(RegistryKeys.BLOCK, Identifier.of("gravestones", "gravestone_technical"))
 
 class CustomBlockTagProvider(
     dataOutput: FabricDataOutput,
@@ -81,11 +87,17 @@ class CustomBlockTagProvider(
             .add(Blocks.DEAD_BUSH)
             .add(Blocks.REDSTONE_WIRE)
 
+        builder(CustomTags.DUNGEON_BREAKABLE)
+            .addOptional(GRAVESTONES_GRAVESTONE_TECHNICAL)
+
         valueLookupBuilder(CustomTags.DUNGEON_INTERACTABLE)
             .add(CustomBlocks.TOTEM_STATUE)
             .forceAddTag(BlockTags.BUTTONS)
             .add(Blocks.REDSTONE_WIRE)
             .add(Blocks.LEVER)
+
+        builder(CustomTags.DUNGEON_INTERACTABLE)
+            .addOptional(GRAVESTONES_GRAVESTONE_TECHNICAL)
 
         valueLookupBuilder(CustomTags.PHASING_BLOCKING)
             .add(Blocks.BARRIER)
