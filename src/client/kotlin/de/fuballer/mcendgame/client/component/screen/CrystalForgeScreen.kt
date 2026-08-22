@@ -20,6 +20,7 @@ import kotlin.math.pow
 import kotlin.math.sin
 
 private val TEXTURE = IdentifierUtil.default("textures/gui/container/crystal_forge.png")
+private val TEXTURE_SECONDARY = IdentifierUtil.default("textures/gui/container/crystal_forge_secondary.png")
 private val FORGE_BUTTON_TEXT = Component.translatable("${CrystalForgeSettings.CONTAINER_BASE_KEY}forge_button")
 
 private const val FORGE_ANIMATION_DURATION = 10.0
@@ -38,10 +39,7 @@ class CrystalForgeScreen(
 
     private var forgeAnimationTime = -1F
     private var forgeAnimationColor = Color.WHITE
-    private var forgeAnimationX1 = 0
-    private var forgeAnimationY1 = 0
-    private var forgeAnimationX2 = 0
-    private var forgeAnimationY2 = 0
+    private var animateSecondaryOutputSlot = false
 
     override fun init() {
         super.init()
@@ -61,14 +59,6 @@ class CrystalForgeScreen(
             font
         )
         addRenderableWidget(forgeErrorText)
-
-        val toForgeSlot: Slot = menu.slots[0]
-        val toForgeSlotX = (width - imageWidth) / 2 + toForgeSlot.x
-        val toForgeSlotY = (height - imageHeight) / 2 + toForgeSlot.y
-        forgeAnimationX1 = toForgeSlotX - 2
-        forgeAnimationY1 = toForgeSlotY - 2
-        forgeAnimationX2 = toForgeSlotX + 18
-        forgeAnimationY2 = toForgeSlotY + 18
     }
 
     override fun extractContents(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, deltaTicks: Float) {
@@ -89,7 +79,7 @@ class CrystalForgeScreen(
 
         graphics.blit(
             RenderPipelines.GUI_TEXTURED,
-            TEXTURE,
+            if (!isSecondaryOutputSlotFilled()) TEXTURE else TEXTURE_SECONDARY,
             textureX,
             textureY,
             0.0f,
@@ -100,11 +90,14 @@ class CrystalForgeScreen(
             imageHeight,
         )
 
-        drawForgeAnimation(graphics, deltaTicks)
+        val animationSlots = mutableListOf(menu.slots[0])
+        if (animateSecondaryOutputSlot && isSecondaryOutputSlotFilled()) animationSlots.add(menu.slots[2])
+        drawForgeAnimation(graphics, animationSlots, deltaTicks)
     }
 
     private fun drawForgeAnimation(
         graphics: GuiGraphicsExtractor,
+        slots: List<Slot>,
         deltaTicks: Float,
     ) {
         if (forgeAnimationTime >= 0) {
@@ -113,14 +106,25 @@ class CrystalForgeScreen(
 
             val bgAlpha = (pulse * 100).toInt()
             val bgColor = ColorUtil.rgbaToInt(forgeAnimationColor.red, forgeAnimationColor.green, forgeAnimationColor.blue, bgAlpha)
-            graphics.fill(forgeAnimationX1 + 1, forgeAnimationY1 + 1, forgeAnimationX2 - 1, forgeAnimationY2 - 1, bgColor)
 
             val outlineAlpha = (pulse * 255).toInt()
             val outlineColor = ColorUtil.rgbaToInt(forgeAnimationColor.red, forgeAnimationColor.green, forgeAnimationColor.blue, outlineAlpha)
-            graphics.fill(forgeAnimationX1, forgeAnimationY1, forgeAnimationX2, forgeAnimationY1 + 1, outlineColor)
-            graphics.fill(forgeAnimationX1, forgeAnimationY2 - 1, forgeAnimationX2, forgeAnimationY2, outlineColor)
-            graphics.fill(forgeAnimationX1, forgeAnimationY1 + 1, forgeAnimationX1 + 1, forgeAnimationY2 - 1, outlineColor)
-            graphics.fill(forgeAnimationX2 - 1, forgeAnimationY1 + 1, forgeAnimationX2, forgeAnimationY2 - 1, outlineColor)
+
+            slots.forEach { slot ->
+                val toForgeSlotX = (width - imageWidth) / 2 + slot.x
+                val toForgeSlotY = (height - imageHeight) / 2 + slot.y
+                val forgeAnimationX1 = toForgeSlotX - 2
+                val forgeAnimationY1 = toForgeSlotY - 2
+                val forgeAnimationX2 = toForgeSlotX + 18
+                val forgeAnimationY2 = toForgeSlotY + 18
+
+                graphics.fill(forgeAnimationX1 + 1, forgeAnimationY1 + 1, forgeAnimationX2 - 1, forgeAnimationY2 - 1, bgColor)
+
+                graphics.fill(forgeAnimationX1, forgeAnimationY1, forgeAnimationX2, forgeAnimationY1 + 1, outlineColor)
+                graphics.fill(forgeAnimationX1, forgeAnimationY2 - 1, forgeAnimationX2, forgeAnimationY2, outlineColor)
+                graphics.fill(forgeAnimationX1, forgeAnimationY1 + 1, forgeAnimationX1 + 1, forgeAnimationY2 - 1, outlineColor)
+                graphics.fill(forgeAnimationX2 - 1, forgeAnimationY1 + 1, forgeAnimationX2, forgeAnimationY2 - 1, outlineColor)
+            }
 
             forgeAnimationTime += deltaTicks
             if (forgeAnimationTime >= FORGE_ANIMATION_DURATION) forgeAnimationTime = -1F
@@ -137,7 +141,7 @@ class CrystalForgeScreen(
             return
         }
 
-        val cannotForgeReason = crystalItem.canForge(toForgeStack)
+        val cannotForgeReason = crystalItem.canForge(toForgeStack, isSecondaryOutputSlotFilled())
         if (cannotForgeReason != null) {
             forgeErrorText.message = cannotForgeReason
         } else {
@@ -146,6 +150,9 @@ class CrystalForgeScreen(
 
             forgeAnimationTime = 0F
             forgeAnimationColor = crystalItem.forgeColor
+            animateSecondaryOutputSlot = crystalItem.producesSecondaryOutput()
         }
     }
+
+    private fun isSecondaryOutputSlotFilled() = !menu.slots[2].item.isEmpty
 }

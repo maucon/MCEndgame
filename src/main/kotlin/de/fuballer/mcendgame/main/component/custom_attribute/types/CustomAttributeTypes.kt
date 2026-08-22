@@ -31,6 +31,7 @@ object CustomAttributeTypes {
             AttributeFormats.PERCENT_AND_INT_BOUNDS,
             AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL
         )
+    val MORE_DAMAGE_TAKEN_WHILE_ON_FIRE= CustomAttributeType("more_damage_taken_while_on_fire", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
 
     // OFFENSE
     val SPELL_DAMAGE = CustomAttributeType("spell_damage", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)

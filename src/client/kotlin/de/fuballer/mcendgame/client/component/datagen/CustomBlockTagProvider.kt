@@ -5,10 +5,16 @@ import de.fuballer.mcendgame.main.component.tags.CustomTags
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider
 import net.minecraft.core.HolderLookup
+import net.minecraft.core.registries.Registries
 import net.minecraft.references.BlockIds
 import net.minecraft.references.BlockItemIds
+import net.minecraft.resources.Identifier
+import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.BlockTags
 import java.util.concurrent.CompletableFuture
+
+// https://modrinth.com/mod/pneumono_gravestones
+private val GRAVESTONES_GRAVESTONE_TECHNICAL = ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("gravestones", "gravestone_technical"))
 
 class CustomBlockTagProvider(
     packOutput: FabricPackOutput,
@@ -76,6 +82,8 @@ class CustomBlockTagProvider(
             .add(BlockIds.BAMBOO_SAPLING)
             .add(BlockItemIds.DEAD_BUSH)
             .add(BlockItemIds.REDSTONE_DUST)
+            .add(BlockItemIds.BUSH)
+            .add(BlockItemIds.FIREFLY_BUSH)
             // region .add(BlockTags.SAPLINGS)
             // FIXME should be 'BlockTags.SAPLINGS', but the reference seems to be removed? We list the entries for now (https://minecraft.wiki/w/Block_tag_%28Java_Edition%29#saplings)
             .add(BlockItemIds.ACACIA_SAPLING)
@@ -93,12 +101,16 @@ class CustomBlockTagProvider(
             .forceAddTag(BlockTags.CORALS)
             .forceAddTag(BlockTags.WALL_CORALS)
             .forceAddTag(BlockTags.CAVE_VINES)
+            // region external mod blocks
+            .addOptional(GRAVESTONES_GRAVESTONE_TECHNICAL)
 
         builder(CustomTags.DUNGEON_INTERACTABLE)
             .add(CustomBlockItemIds.TOTEM_STATUE)
             .add(BlockItemIds.REDSTONE_DUST)
             .add(BlockItemIds.LEVER)
             .forceAddTag(BlockTags.BUTTONS)
+            // region external mod blocks
+            .addOptional(GRAVESTONES_GRAVESTONE_TECHNICAL)
 
         builder(CustomTags.PHASING_BLOCKING)
             .add(BlockItemIds.BARRIER)

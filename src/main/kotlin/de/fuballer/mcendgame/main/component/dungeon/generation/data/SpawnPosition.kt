@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.toBlockPos
 import net.minecraft.core.Vec3i
+import net.minecraft.world.entity.Entity
 
 data class SpawnPosition(
     val pos: Vec3i,
@@ -12,6 +13,8 @@ data class SpawnPosition(
     fun blockPos() = pos.toBlockPos()
 
     companion object {
+        fun at(entity: Entity) = SpawnPosition(entity.blockPosition(), 0.0)
+
         val CODEC: Codec<SpawnPosition> = RecordCodecBuilder.create { instance ->
             instance.group(
                 Vec3i.CODEC

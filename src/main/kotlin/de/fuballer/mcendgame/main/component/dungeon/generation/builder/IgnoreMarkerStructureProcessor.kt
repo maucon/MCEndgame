@@ -21,7 +21,7 @@ class IgnoreMarkerStructureProcessor : StructureProcessor {
         processedBlockInfo: StructureTemplate.StructureBlockInfo,
         settings: StructurePlaceSettings
     ): StructureTemplate.StructureBlockInfo? {
-        return if (DungeonGenerationSettings.MARKER_BLOCKS.contains(processedBlockInfo.state.block)) {
+        return if (DungeonGenerationSettings.IGNORED_BLOCKS.contains(processedBlockInfo.state.block)) {
             null
         } else {
             super.processBlock(level, targetPosition, referencePos, templateRelativePos, processedBlockInfo, settings)

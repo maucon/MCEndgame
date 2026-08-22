@@ -73,6 +73,7 @@ class CustomModelProvider(
         generator.generateFlatItem(AspectItems.ASPECT_OF_HORDES, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_IMPATIENCE, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_SAVAGERY, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_THE_GROVE, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_TYRANNY, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_ZEAL, ModelTemplates.FLAT_ITEM)
 
@@ -81,6 +82,7 @@ class CustomModelProvider(
         generator.generateFlatItem(CrystalItems.PERMUTATION_CRYSTAL, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(CrystalItems.REFORGE_CRYSTAL, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(CrystalItems.CORRUPTION_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.IMITATION_CRYSTAL, ModelTemplates.FLAT_ITEM)
 
         generator.generateFlatItem(TotemItems.TOTEM_OF_BASTION, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(TotemItems.TOTEM_OF_FORCE, ModelTemplates.FLAT_ITEM)

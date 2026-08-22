@@ -18,4 +18,8 @@ object CustomEntityIds {
     val SPIDERLING = RegistryKeyUtil.createEntityKey("spiderling")
     val TRAINING_DUMMY = RegistryKeyUtil.createEntityKey("training_dummy")
     val SKELETON_MAGE = RegistryKeyUtil.createEntityKey("skeleton_mage")
+    val BLOCK_DEBRIS = RegistryKeyUtil.createEntityKey("block_debris")
+    val BEASTWEAVER = RegistryKeyUtil.createEntityKey("beastweaver")
+    val BEASTWEAVER_WOLF = RegistryKeyUtil.createEntityKey("beastweaver_wolf")
+    val BEASTWEAVER_VINE = RegistryKeyUtil.createEntityKey("beastweaver_vine")
 }

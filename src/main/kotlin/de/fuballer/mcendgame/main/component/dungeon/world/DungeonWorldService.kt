@@ -50,7 +50,13 @@ class DungeonWorldService(
         training: Boolean = false,
     ): ServerLevel {
         val dungeonWorld = RuntimeConfig.FANTASY
-            .openTemporaryLevel(DungeonWorldSettings.generateIdentifier(), DungeonWorldSettings.getWorldConfig(dungeonType.biome))
+            .openTemporaryLevel(
+                DungeonWorldSettings.generateIdentifier(),
+                DungeonWorldSettings.getWorldConfig(
+                    dungeonType.biome,
+                    dungeonType.gameTime,
+                )
+            )
             .asLevel()
 
         dungeonWorld.setDungeonLevel(dungeonLevel)
@@ -70,7 +76,6 @@ class DungeonWorldService(
         opener: Player,
         dungeonExitPos: GlobalPos,
     ) = create(1, opener, mapOf(), DungeonType.TRAINING, dungeonExitPos, training = true)
-
 
     private fun deleteEmptyWorlds() {
         log.info("Checking for empty worlds")

@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.component.dungeon.level
 import de.fuballer.mcendgame.main.component.dungeon.completion.DungeonCompletedEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.ClientDungeonLevelUpdateEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonPlayerDeathEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonPlayerDecreaseProgressCommand
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonPlayerIncreaseProgressCommand
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getDungeonLevel
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.setDungeonLevel
@@ -22,9 +23,16 @@ class DungeonLevelService {
         if (event.isClient) return
 
         val player = event.player
-        if ((player.level() as ServerLevel).isTrainingDungeon()) return
-        val playerDungeonLevel = player.getDungeonLevel()
+        val dungeonWorld = event.player.level() as ServerLevel
+        val aspects = dungeonWorld.getDungeonAspects()
 
+        if (dungeonWorld.isTrainingDungeon()) return
+
+        val decreaseProgressCommand = DungeonPlayerDecreaseProgressCommand(aspects)
+        val cmd = CommandGateway.apply(decreaseProgressCommand)
+        if (cmd.decreaseBlocked) return
+
+        val playerDungeonLevel = player.getDungeonLevel()
         if (playerDungeonLevel.locked && playerDungeonLevel.level <= DungeonLevelSettings.getClientSetLevelLimit(playerDungeonLevel.highestReached)) {
             player.sendSystemMessage(DungeonLevelSettings.REGRESS_LOCKED_MESSAGE)
             return
@@ -45,6 +53,7 @@ class DungeonLevelService {
 
         val dungeonPlayerIncreaseProgressCommand = DungeonPlayerIncreaseProgressCommand(aspects)
         val cmd = CommandGateway.apply(dungeonPlayerIncreaseProgressCommand)
+        if (cmd.progressBlocked) return
 
         event.players.forEach { player ->
             val playerDungeonLevel = player.getDungeonLevel()

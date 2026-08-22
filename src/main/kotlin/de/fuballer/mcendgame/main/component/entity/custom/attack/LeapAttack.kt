@@ -1,12 +1,10 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack
 
 import com.geckolib.animatable.GeoEntity
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.LeapAttackDamageInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
-import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.phys.Vec3
@@ -15,34 +13,15 @@ import kotlin.math.max
 import kotlin.math.sqrt
 
 open class LeapAttack<T>(
+    id: String,
     animationData: AttackAnimationData,
     totalDuration: Int,
     cooldown: Int,
     trigger: TriggerCondition,
-    damage: List<DelayedAttackDamage>,
+    data: List<DelayedAttackData>,
     private val leapType: LeapType,
-    sounds: List<DelayedSoundData> = listOf(),
     blockMovementDuration: Int = 0,
-) : Attack<T>(animationData, totalDuration, cooldown, trigger, damage, sounds, blockMovementDuration) where T : Mob, T : GeoEntity {
-    constructor(
-        animationData: AttackAnimationData,
-        totalDuration: Int,
-        cooldown: Int,
-        trigger: TriggerCondition,
-        damage: DelayedAttackDamage?,
-        leapType: LeapType,
-        sounds: List<DelayedSoundData> = listOf(),
-        blockMovementDuration: Int = 0,
-    ) : this(
-        animationData,
-        totalDuration,
-        cooldown,
-        trigger,
-        if (damage != null) listOf(damage) else listOf(),
-        leapType,
-        sounds,
-        blockMovementDuration,
-    )
+) : Attack<T>(id, animationData, totalDuration, cooldown, trigger, data, blockMovementDuration) where T : Mob, T : GeoEntity {
 
     override fun start(
         attacker: T,
@@ -57,17 +36,12 @@ open class LeapAttack<T>(
 
         val distanceVector = existingTarget.position().subtract(attacker.position())
         val newVelocity = leapType.calculateVelocity(distanceVector)
-        attacker.setDeltaMovement(newVelocity)
+        attacker.deltaMovement = newVelocity
         attacker.needsSync = true
 
         val blockAbleMovementMob = attacker as? BlockAbleMovementMob<*> ?: return
         blockAbleMovementMob.setAirborneBlocked()
     }
-
-    override fun getDamageInstance(
-        target: LivingEntity?,
-        delayedDamage: DelayedAttackDamage,
-    ) = LeapAttackDamageInstance(delayedDamage.minDelay, delayedDamage.maxDelay, target, delayedDamage.damage)
 
     enum class LeapType(
         private val horizontalDistanceVelocityFactor: ((Double) -> Double),

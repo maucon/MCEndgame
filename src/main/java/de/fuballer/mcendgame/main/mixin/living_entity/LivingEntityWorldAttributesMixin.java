@@ -10,14 +10,27 @@ import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public class LivingEntityWorldAttributesMixin implements LivingEntityWorldAttributesAccessor {
+public abstract class LivingEntityWorldAttributesMixin implements LivingEntityWorldAttributesAccessor {
+    @Shadow
+    public abstract float getMaxHealth();
+
+    @Shadow
+    public abstract void setHealth(float health);
+
+    @Shadow
+    public abstract float getHealth();
+
     @Unique
     private int appliedWorldAttributesUpdate = 0;
 
@@ -32,9 +45,12 @@ public class LivingEntityWorldAttributesMixin implements LivingEntityWorldAttrib
         var latestUpdate = WorldMixinExtension.INSTANCE.getAttributeUpdateCount(world);
         if (latestUpdate <= appliedWorldAttributesUpdate) return;
 
+        var oldMaxHealth = getMaxHealth();
+
         var history = WorldMixinExtension.INSTANCE.getVanillaTypeAttributesHistory(world, entity);
         for (VanillaTypeWorldAttributeInstance updateInstance : history) {
-            if (updateInstance.getUpdate() <= appliedWorldAttributesUpdate) continue;
+            var update = updateInstance.getUpdate();
+            if (update <= appliedWorldAttributesUpdate) continue;
 
             var updateAttribute = updateInstance.getAttribute();
             var type = (VanillaAttributeType) updateAttribute.getType();
@@ -50,11 +66,16 @@ public class LivingEntityWorldAttributesMixin implements LivingEntityWorldAttrib
                         ((DoubleRoll) updateAttribute.getRolls().getFirst()).getValue(),
                         type.getScaleType()
                 );
-                attributeInstance.addTransientModifier(modifier);
+
+                if (entity instanceof Player) attributeInstance.addTransientModifier(modifier);
+                else attributeInstance.addPermanentModifier(modifier);
             } else {
                 attributeInstance.removeModifier(identifier);
             }
         }
+
+        var newMaxHealth = getMaxHealth();
+        if (oldMaxHealth < newMaxHealth) setHealth(getHealth() + (newMaxHealth - oldMaxHealth));
 
         appliedWorldAttributesUpdate = latestUpdate;
     }
@@ -62,5 +83,19 @@ public class LivingEntityWorldAttributesMixin implements LivingEntityWorldAttrib
     @Override
     public void mcendgame$resetWorldAttributesUpdate() {
         appliedWorldAttributesUpdate = 0;
+    }
+
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    void addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
+        var entity = (LivingEntity) (Object) this;
+        if (entity instanceof Player) return;
+        output.putInt("appliedWorldAttributesUpdate", appliedWorldAttributesUpdate);
+    }
+
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    void readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
+        var entity = (LivingEntity) (Object) this;
+        if (entity instanceof Player) return;
+        appliedWorldAttributesUpdate = input.getInt("appliedWorldAttributesUpdate").orElse(0);
     }
 }

@@ -17,6 +17,7 @@ import java.util.function.Function
 object CustomParticleTypes {
     val FLAME_PILLAR = registerSimple("flame_pillar")
     val SMOKE_PILLAR = registerSimple("smoke_pillar")
+    val CLOUD_TORUS = registerSimple("cloud_torus")
     val HORIZONTAL_FLAME_BREATH = registerComplex<HorizontalFlameBreathParticleEffect>(
         "horizontal_flame_breath",
         false,
@@ -28,6 +29,12 @@ object CustomParticleTypes {
         false,
         { _ -> MoveToTargetFlameParticleEffect.CODEC },
         { _ -> MoveToTargetFlameParticleEffect.PACKET_CODEC },
+    )
+    val DIRECTIONAL_SWEEP_ATTACK = registerComplex<DirectionalAttackSweepParticleEffect>(
+        "directional_sweep_attack",
+        true,
+        { _ -> DirectionalAttackSweepParticleEffect.CODEC },
+        { _ -> DirectionalAttackSweepParticleEffect.PACKET_CODEC },
     )
 
     private fun registerSimple(name: String): SimpleParticleType =

@@ -1,9 +1,32 @@
 {
+  "stronghold_dungeon_music": {
+    "sounds": [
+      {
+        "name": "mcendgame:music/stronghold_dungeon_music",
+        "stream": true
+      }
+    ]
+  },
   "desert_dungeon_music": {
     "sounds": [
       {
         "name": "mcendgame:music/desert_dungeon_music",
         "stream": true
+      }
+    ]
+  },
+  "beastweaver_grove_music": {
+    "sounds": [
+      {
+        "name": "mcendgame:music/beastweaver_grove_music",
+        "stream": true
+      }
+    ]
+  },
+  "entity.wolf_howl": {
+    "sounds": [
+      {
+        "name": "mcendgame:entity/wolf_howl"
       }
     ]
   }

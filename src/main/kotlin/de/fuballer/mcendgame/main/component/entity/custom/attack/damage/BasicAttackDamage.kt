@@ -27,13 +27,17 @@ class BasicAttackDamage(
         if (squaredDistance > squaredHitRange) return false
 
         val damage = getDamage(damager)
-        target.dealGenericAttackDamage(damage, damager, blockable)
+        val dealtDamage = target.dealGenericAttackDamage(damage, damager, blockable)
 
         if (disableBlockingShield > 0 && target is Avatar && target.isBlocking) target.setShieldsCooldown(disableBlockingShield)
 
-        val knockback = getKnockback(damager)
-        val knockbackDirection = target.position().subtract(damager.position()).normalize()
-        target.takeKnockbackFrom(damager, knockback, -knockbackDirection.x, -knockbackDirection.z)
+        if (dealtDamage || knockbackWhenBlocked) {
+            val knockback = getKnockback(damager)
+            val knockbackDirection = target.position().subtract(damager.position()).normalize()
+            target.takeKnockbackFrom(damager, knockback, -knockbackDirection.x, -knockbackDirection.z)
+            target.needsSync = true
+            target.hurtMarked = true
+        }
 
         return true
     }
