@@ -269,53 +269,66 @@ class AreaAttackDamage(
         ): Boolean {
             val bb = entity.boundingBox
 
-            val xStep = (bb.maxX - bb.minX) / 2.0
-            val yStep = (bb.maxY - bb.minY) / 2.0
-            val zStep = (bb.maxZ - bb.minZ) / 2.0
+            val areaOrigin = if (!offsetToGround) originEntity.position() else originEntity.position().subtract(0.0, originEntity.getDistanceToGround(), 0.0)
 
-            val distanceToGround = if (offsetToGround) originEntity.getDistanceToGround() else 0.0
-
-            for (x in 0..2) {
-                for (y in 0..2) {
-                    for (z in 0..2) {
-                        val point = Vec3(
-                            bb.minX + x * xStep,
-                            bb.minY + y * yStep,
-                            bb.minZ + z * zStep
-                        )
-
-                        val areaOrigin = if (!offsetToGround) originEntity.position() else originEntity.position().subtract(0.0, distanceToGround, 0.0)
-                        val relativePoint = point.subtract(areaOrigin)
-
-                        if (contains(relativePoint, forward, sideways, scale)) return true
-                    }
-                }
-            }
-
-            return false
+            if (!intersectsVertical(bb, areaOrigin, scale)) return false
+            return intersectsHorizontal(bb, areaOrigin, forward, sideways, scale)
         }
 
-        private fun contains(
-            relativePos: Vec3,
+        private fun intersectsVertical(
+            boundingBox: AABB,
+            areaOrigin: Vec3,
+            scale: Double,
+        ): Boolean {
+            val entityMinHeight = boundingBox.minY - areaOrigin.y
+            val entityMaxHeight = boundingBox.maxY - areaOrigin.y
+
+            val areaMinHeight = (-heightRange + heightOffset) * scale
+            val areaMaxHeight = (heightRange + heightOffset) * scale
+
+            return entityMinHeight <= areaMaxHeight && entityMaxHeight >= areaMinHeight
+        }
+
+        // using Separating Axis Theorem
+        private fun intersectsHorizontal(
+            boundingBox: AABB,
+            areaOrigin: Vec3,
             forward: Vec3,
             sideways: Vec3,
             scale: Double,
         ): Boolean {
-            val forwardDistance = relativePos.dot(forward)
-            val sidewaysDistance = relativePos.dot(sideways)
-            val heightDistance = relativePos.y
+            val areaHalfForward = forwardRange * scale / 2.0
+            val areaHalfSide = sideRange * scale
+            val areaCenter = areaOrigin
+                .add(forward.scale((forwardOffset + forwardRange / 2.0) * scale))
+                .add(sideways.scale(sideOffset * scale))
 
-            val maxForward = (forwardRange + forwardOffset) * scale
-            val minForward = (forwardOffset) * scale
-            if (forwardDistance !in minForward..maxForward) return false
+            val entityHalfX = (boundingBox.maxX - boundingBox.minX) / 2.0
+            val entityHalfZ = (boundingBox.maxZ - boundingBox.minZ) / 2.0
+            val entityCenter = Vec3(
+                boundingBox.minX + entityHalfX,
+                0.0,
+                boundingBox.minZ + entityHalfZ,
+            )
 
-            val maxSide = (sideRange + sideOffset) * scale
-            val minSide = (-sideRange + sideOffset) * scale
-            if (sidewaysDistance !in minSide..maxSide) return false
+            val delta = entityCenter.subtract(Vec3(areaCenter.x, 0.0, areaCenter.z))
 
-            val maxHeight = (heightRange + heightOffset) * scale
-            val minHeight = (-heightRange + heightOffset) * scale
-            if (heightDistance !in minHeight..maxHeight) return false
+            val axes = listOf(
+                forward,
+                sideways,
+                Vec3(1.0, 0.0, 0.0),
+                Vec3(0.0, 0.0, 1.0),
+            )
+
+            for (axis in axes) {
+                val axis2D = Vec3(axis.x, 0.0, axis.z).normalize()
+                val distance = abs(delta.dot(axis2D))
+
+                val areaRadius = areaHalfForward * abs(forward.dot(axis2D)) + areaHalfSide * abs(sideways.dot(axis2D))
+                val entityRadius = entityHalfX * abs(axis2D.x) + entityHalfZ * abs(axis2D.z)
+
+                if (distance > areaRadius + entityRadius) return false
+            }
 
             return true
         }
@@ -348,7 +361,14 @@ class AreaAttackDamage(
             var y = originEntity.y + heightOffset
             if (offsetToGround) y -= originEntity.getDistanceToGround()
             val z = originEntity.z
-            return AABB(x - hD, y - heightRange - 3, z - hD, x + hD, y + heightRange, z + hD) // -3 accounts for height of most mobs
+            return AABB(
+                x - hD,
+                (y - heightRange) * scale,
+                z - hD,
+                x + hD,
+                (y + heightRange) * scale,
+                z + hD,
+            )
         }
 
         private fun getMaxHorizontalDistance(scale: Double): Double {
