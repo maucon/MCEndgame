@@ -121,8 +121,8 @@ class BurnEnemyOnWalkService(
 
         scheduler.delayed(sparkTravelTime) {
             if (target.isDeadOrDying) return@delayed
+            if (!target.dealSpellDamage(spellPercent, entity)) return@delayed
             target.igniteForSeconds(BurnEnemyOnWalkSettings.BURN_DURATION)
-            target.dealSpellDamage(spellPercent, entity)
         }
     }
 
