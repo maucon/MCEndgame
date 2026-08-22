@@ -74,15 +74,15 @@ dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
     implementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
     implementation "com.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
-    implementation "de.maucon:maucon-framework:2.0.1"
+    implementation "de.maucon:maucon-framework:2.0.2"
 
     // Bundled into the release jar
-    include "de.maucon:maucon-framework:2.0.1"
-    include "org.jetbrains.kotlin:kotlin-reflect"
+    include "de.maucon:maucon-framework:2.0.2"
+    include "org.jetbrains.kotlin:kotlin-reflect:2.4.0"
     include "org.reflections:reflections:0.10.2"
-    include "org.slf4j:slf4j-api:2.0.17"
-    include "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1"
-    include "org.javassist:javassist:3.30.2-GA"
+    include "org.slf4j:slf4j-api:2.0.18"
+    include "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0"
+    include "org.javassist:javassist:3.32.0-GA"
 
     testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
 
@@ -111,6 +111,9 @@ java {
 
 jar {
     from("LICENSE") {
+        rename { "${it}_${base.archivesName.get()}" }
+    }
+    from("LICENSE.GPL") {
         rename { "${it}_${base.archivesName.get()}" }
     }
 }
