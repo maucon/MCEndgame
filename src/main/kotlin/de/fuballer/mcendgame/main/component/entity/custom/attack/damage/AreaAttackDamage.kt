@@ -72,7 +72,7 @@ class AreaAttackDamage(
         val scale = getScale(damager)
 
         // debug
-        area.renderOutline(world, at, forward, sideways, scale)
+        //area.renderOutline(world, at, forward, sideways, scale)
 
         val targets = getTargets(world, at, scale).filter {
             area.intersects(it, at, forward, sideways, scale)
@@ -361,7 +361,14 @@ class AreaAttackDamage(
             var y = originEntity.y + heightOffset
             if (offsetToGround) y -= originEntity.getDistanceToGround()
             val z = originEntity.z
-            return AABB(x - hD, y - heightRange - 3, z - hD, x + hD, y + heightRange, z + hD) // -3 accounts for height of most mobs
+            return AABB(
+                x - hD,
+                (y - heightRange) * scale,
+                z - hD,
+                x + hD,
+                (y + heightRange) * scale,
+                z + hD,
+            )
         }
 
         private fun getMaxHorizontalDistance(scale: Double): Double {

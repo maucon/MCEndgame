@@ -17,7 +17,6 @@ object GenericAttackCalculator : DamageCalculator {
         source: ExtendedDamageSource,
         event: DamageCalculationCommand
     ): Float {
-        println(originalDamage)
         val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
         return (originalDamage * damageMulti).toFloat()
     }
