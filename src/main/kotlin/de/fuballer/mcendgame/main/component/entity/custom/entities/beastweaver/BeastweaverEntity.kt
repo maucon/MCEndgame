@@ -505,7 +505,7 @@ class BeastweaverEntity(
             )
 
         private val ELEPHANT_STOMP_MAIN_EXPLOSION_AREA = AreaAttackDamage.DamageArea(9.0, 4.5, 2.5, -4.5, 0.0, 0.0)
-        private val ELEPHANT_STOMP_MAIN_EXPLOSION_ATTACK_DAMAGE = AreaAttackDamage(3.0F, 2.5, ELEPHANT_STOMP_MAIN_EXPLOSION_AREA, blockable = false)
+        private val ELEPHANT_STOMP_MAIN_EXPLOSION_ATTACK_DAMAGE = AreaAttackDamage(2.0F, 2.5, ELEPHANT_STOMP_MAIN_EXPLOSION_AREA, blockable = false)
         private val ELEPHANT_STOMP_DEBRIS_AREA_AREA = AreaAttackDamage.DamageArea(4.0, 2.0, 2.0, -2.0, 0.0, 0.0)
         private val ELEPHANT_STOMP_DEBRIS_ATTACK_DAMAGE = AreaAttackDamage(1.0F, 0.5, ELEPHANT_STOMP_DEBRIS_AREA_AREA, blockable = false)
         private val ELEPHANT_STOMP_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.elephant_stomp")
