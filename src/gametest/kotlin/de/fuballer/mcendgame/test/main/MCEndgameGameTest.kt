@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 
 class MCEndgameGameTest {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(this::class.java.simpleName)
+        private val LOG = LoggerFactory.getLogger(this::class.java.simpleName)
     }
 
     @GameTest
@@ -25,10 +25,17 @@ class MCEndgameGameTest {
             val id = BuiltInRegistries.ENTITY_TYPE.getKey(entityType)
             if (id == Identifier.withDefaultNamespace("player")) continue
 
-            LOGGER.info("Spawning {}", id)
+            LOG.info("Spawning {}", id)
             helper.spawn(entityType, 0, 0, 0)
         }
 
         helper.succeed()
+    }
+
+    @GameTest
+    fun testDungeonOpenAndJoin(helper: GameTestHelper) {
+        LOG.info("Running dungeon open & join flow")
+        DungeonOpenAndJoinGameTest.testPlayerOpensAndJoinsDungeon(helper)
+        LOG.info("Dungeon open & join flow finished successfully")
     }
 }
