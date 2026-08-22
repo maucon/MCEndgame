@@ -5,9 +5,9 @@ import de.fuballer.mcendgame.main.component.tags.CustomTags
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider
 import net.minecraft.core.HolderLookup
+import net.minecraft.core.registries.Registries
 import net.minecraft.references.BlockIds
 import net.minecraft.references.BlockItemIds
-import net.minecraft.core.registries.Registries
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.BlockTags
@@ -101,12 +101,16 @@ class CustomBlockTagProvider(
             .forceAddTag(BlockTags.CORALS)
             .forceAddTag(BlockTags.WALL_CORALS)
             .forceAddTag(BlockTags.CAVE_VINES)
+            // region external mod blocks
+            .addOptional(GRAVESTONES_GRAVESTONE_TECHNICAL)
 
         builder(CustomTags.DUNGEON_INTERACTABLE)
             .add(CustomBlockItemIds.TOTEM_STATUE)
             .add(BlockItemIds.REDSTONE_DUST)
             .add(BlockItemIds.LEVER)
             .forceAddTag(BlockTags.BUTTONS)
+            // region external mod blocks
+            .addOptional(GRAVESTONES_GRAVESTONE_TECHNICAL)
 
         builder(CustomTags.PHASING_BLOCKING)
             .add(BlockItemIds.BARRIER)
