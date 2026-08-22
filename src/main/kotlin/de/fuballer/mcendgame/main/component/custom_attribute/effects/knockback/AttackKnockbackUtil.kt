@@ -42,11 +42,21 @@ object AttackKnockbackUtil {
         y: Double,
         z: Double,
     ) {
-        if (attacker !is LivingEntity) return knockback(strength, x, z)
+        // TODO #287 damage source and amount should be legit
+        if (attacker == null) return
+
+        val damageType = attacker.level().registryAccess()
+            .lookupOrThrow(Registries.DAMAGE_TYPE)
+            .get(DamageTypes.GENERIC.identifier())
+            .get()
+        val source = DamageSource(damageType)
+        val damage = 0F
+
+        if (attacker !is LivingEntity) return knockback(strength, x, z, source, damage)
 
         val command = LivingEntityKnockbackLivingEntityCommand(this, attacker, strength)
         val cmd = CommandGateway.apply(command)
-        var power = cmd.strength
+        var power = cmd.power
 
         // similar to LivingEntity.knockback() but with custom y velocity
         power *= 1.0 - getAttributeValue(Attributes.KNOCKBACK_RESISTANCE)

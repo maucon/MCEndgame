@@ -1,13 +1,14 @@
 package de.fuballer.mcendgame.client.mixin.model_submit;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.fuballer.mcendgame.client.accessor.ModelSubmitAccessor;
+import de.fuballer.mcendgame.client.accessor.ModelFeatureRendererSubmitAccessor;
 import de.fuballer.mcendgame.client.accessor.SubmitNodeCollectionAccessor;
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.BeastweaverGradientData;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.SubmitNodeCollection;
-import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.feature.phase.SimpleFeatureRenderPhase;
+import net.minecraft.client.renderer.feature.phase.TranslucentFeatureRenderPhase;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.jspecify.annotations.Nullable;
@@ -18,11 +19,12 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(SubmitNodeCollection.class)
 public class SubmitNodeCollectionMixin implements SubmitNodeCollectionAccessor {
     @Shadow
-    private boolean wasUsed;
+    @Final
+    public TranslucentFeatureRenderPhase translucentModels;
 
     @Shadow
     @Final
-    private ModelFeatureRenderer.Storage modelSubmits;
+    public SimpleFeatureRenderPhase solid;
 
     @Override
     public <S> void mcendgame$submitBeastweaverGradientModel(
@@ -38,13 +40,12 @@ public class SubmitNodeCollectionMixin implements SubmitNodeCollectionAccessor {
             ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay,
             BeastweaverGradientData gradientData
     ) {
-        wasUsed = true;
-        SubmitNodeStorage.ModelSubmit<S> modelSubmit = new SubmitNodeStorage.ModelSubmit<>(
-                poseStack.last().copy(), model, state, lightCoords, overlayCoords, tintedColor, sprite, outlineColor, crumblingOverlay
+        PoseStack.Pose pose = poseStack.last().copy();
+        ModelFeatureRenderer.Submit<S> submit = new ModelFeatureRenderer.Submit<>(
+                renderType, pose, model, state, lightCoords, overlayCoords, tintedColor, sprite, null
         );
+        ((ModelFeatureRendererSubmitAccessor) (Object) submit).mcendgame$setBeastweaverGradientData(gradientData);
 
-        ((ModelSubmitAccessor) (Object) modelSubmit).mcendgame$setBeastweaverGradientData(gradientData);
-
-        modelSubmits.add(renderType, modelSubmit);
+        translucentModels.submit(submit);
     }
 }

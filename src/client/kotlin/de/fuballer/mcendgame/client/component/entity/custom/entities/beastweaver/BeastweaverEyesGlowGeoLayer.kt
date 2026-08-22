@@ -53,7 +53,7 @@ class BeastweaverEyesGlowGeoLayer<O : Any, R : GeoRenderState>(
         val alpha = renderState.getGeckolibData(BEASTWEAVER_EYES_GLOW_ALPHA) ?: 0F
         val color = ColorUtil.rgbaToInt(255, 255, 255, (alpha * 255).toInt())
 
-        val renderType: RenderType = getRenderType(renderState, boneTexture) ?: return
+        val renderType: RenderType = getRenderType(renderState, boneTexture)
         renderTasks.submitCustomGeometry(renderPassInfo.poseStack(), renderType) { pose: PoseStack.Pose?, buffer: VertexConsumer? ->
             val poseStack = renderPassInfo.poseStack()
 

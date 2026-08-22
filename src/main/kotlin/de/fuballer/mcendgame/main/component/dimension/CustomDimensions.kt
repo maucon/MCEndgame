@@ -30,10 +30,11 @@ object CustomDimensions {
         val timelines = context.lookup(Registries.TIMELINE)
         val clocks = context.lookup(Registries.WORLD_CLOCK)
 
-        context.register(DUNGEON, createDungeonDimensionType(timelines, clocks))
+        context.register(DUNGEON, createDungeonDimensionType(context, timelines, clocks))
     }
 
     private fun createDungeonDimensionType(
+        context: BootstrapContext<DimensionType>,
         timelines: HolderGetter<Timeline>,
         clocks: HolderGetter<WorldClock>,
     ): DimensionType {
@@ -46,6 +47,9 @@ object CustomDimensions {
             .set(EnvironmentAttributes.BED_RULE, BedRule.CAN_SLEEP_WHEN_DARK)
             .build()
 
+        val blockLookup = context.lookup(Registries.BLOCK)
+        val infiniburn = blockLookup.getOrThrow(BlockTags.INFINIBURN_OVERWORLD)
+
         return DimensionType(
             false, // hasFixedTime
             true, // hasSkyLight
@@ -55,7 +59,7 @@ object CustomDimensions {
             -64, // minY
             384, // height
             384, // logicalHeight
-            BlockTags.INFINIBURN_OVERWORLD, // infiniburn
+            infiniburn, // infiniburn
             0.0F, // ambientLight
             DimensionType.MonsterSettings(UniformInt.of(0, 7), 0), // monsterSettings
             DimensionType.Skybox.OVERWORLD, // skybox

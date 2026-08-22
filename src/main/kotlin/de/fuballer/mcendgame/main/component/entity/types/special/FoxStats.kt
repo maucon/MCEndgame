@@ -3,11 +3,12 @@ package de.fuballer.mcendgame.main.component.entity.types.special
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.animal.fox.Fox
 
 object FoxStats : EntityTypeStats {
-    override val type: EntityType<Fox> = EntityType.FOX
+    override val type: EntityType<Fox> = EntityTypes.FOX
 
     override val equipmentClass = EnemyEquipmentClass.NO_EQUIPMENT
     override val canBeInvisible = false

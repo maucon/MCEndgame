@@ -342,7 +342,7 @@ class BeastweaverRenderer<R>(
         private const val EYES_GLOW_MAX_ALPHA = 0.5F
 
         val GET_CAMERA_RELATIVE_ENTITY_POS: (Entity, Float) -> Vector3f = { entity, partialTick ->
-            val camera = Minecraft.getInstance().gameRenderer.mainCamera
+            val camera = Minecraft.getInstance().gameRenderer.mainCamera()
             val entityPos = entity.getPosition(partialTick)
             val cameraPos = camera.position()
             Vector3f(

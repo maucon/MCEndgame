@@ -122,7 +122,7 @@ object CustomEntities {
             .notInPeaceful()
     )
     val BLOCK_DEBRIS = RegistryUtil.registerEntity(
-        "block_debris",
+        CustomEntityIds.BLOCK_DEBRIS,
         EntityType.Builder.of(::BlockDebrisEntity, MobCategory.MISC)
             .noLootTable()
             .sized(0.98F, 0.98F)
@@ -130,7 +130,7 @@ object CustomEntities {
             .updateInterval(20)
     )
     val BEASTWEAVER = RegistryUtil.registerEntity(
-        "beastweaver",
+        CustomEntityIds.BEASTWEAVER,
         EntityType.Builder.of(::BeastweaverEntity, MobCategory.MONSTER)
             .sized(0.8f, 2.05f)
             .eyeHeight(1.7f)
@@ -138,7 +138,7 @@ object CustomEntities {
             .notInPeaceful()
     )
     val BEASTWEAVER_WOLF = RegistryUtil.registerEntity(
-        "beastweaver_wolf",
+        CustomEntityIds.BEASTWEAVER_WOLF,
         EntityType.Builder.of(::BeastweaverWolfEntity, MobCategory.CREATURE)
             .sized(0.6F, 0.85F)
             .eyeHeight(0.68F)
@@ -146,7 +146,7 @@ object CustomEntities {
             .clientTrackingRange(10)
     )
     val BEASTWEAVER_VINE = RegistryUtil.registerEntity(
-        "beastweaver_vine",
+        CustomEntityIds.BEASTWEAVER_VINE,
         EntityType.Builder.of(::BeastweaverVineEntity, MobCategory.CREATURE)
             .sized(0.4F, 2.5F)
             .eyeHeight(2.0F)

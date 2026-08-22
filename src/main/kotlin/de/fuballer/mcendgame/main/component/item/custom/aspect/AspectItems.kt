@@ -34,5 +34,5 @@ object AspectItems {
     val ASPECT_OF_EMINENCE = RegistryUtil.registerAspectItem(::AspectOfEminence, AspectItemIds.ASPECT_OF_EMINENCE)
     val ASPECT_OF_ANCESTORS = RegistryUtil.registerAspectItem(::AspectOfAncestors, AspectItemIds.ASPECT_OF_ANCESTORS)
     val ASPECT_OF_DUALITY = RegistryUtil.registerAspectItem(::AspectOfDuality, AspectItemIds.ASPECT_OF_DUALITY)
-    val ASPECT_OF_THE_GROVE = RegistryUtil.registerAspectItem(::AspectOfTheGrove, "aspect_of_the_grove") // beastweaver FIXME
+    val ASPECT_OF_THE_GROVE = RegistryUtil.registerAspectItem(::AspectOfTheGrove, AspectItemIds.ASPECT_OF_THE_GROVE)
 }

@@ -10,4 +10,5 @@ object CrystalItemIds {
     val PERMUTATION_CRYSTAL = RegistryKeyUtil.createItemKey("permutation_crystal")
     val REFORGE_CRYSTAL = RegistryKeyUtil.createItemKey("reforge_crystal")
     val CORRUPTION_CRYSTAL = RegistryKeyUtil.createItemKey("corruption_crystal")
+    val IMITATION_CRYSTAL = RegistryKeyUtil.createItemKey("imitation_crystal")
 }

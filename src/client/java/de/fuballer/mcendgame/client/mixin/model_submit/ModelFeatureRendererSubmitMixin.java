@@ -1,13 +1,13 @@
 package de.fuballer.mcendgame.client.mixin.model_submit;
 
-import de.fuballer.mcendgame.client.accessor.ModelSubmitAccessor;
+import de.fuballer.mcendgame.client.accessor.ModelFeatureRendererSubmitAccessor;
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.BeastweaverGradientData;
-import net.minecraft.client.renderer.SubmitNodeStorage;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(SubmitNodeStorage.ModelSubmit.class)
-public class ModelSubmitMixin implements ModelSubmitAccessor {
+@Mixin(ModelFeatureRenderer.Submit.class)
+public class ModelFeatureRendererSubmitMixin implements ModelFeatureRendererSubmitAccessor {
     @Unique
     private BeastweaverGradientData beastweaverGradientData = null;
 

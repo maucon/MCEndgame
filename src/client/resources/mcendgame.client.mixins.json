@@ -22,7 +22,7 @@
     "model_submit.ModelFeatureRendererBeastweaverGradientMixin",
     "model_submit.ModelPartBeastweaverGradientMixin",
     "model_submit.ModelPartCubeBeastweaverGradientMixin",
-    "model_submit.ModelSubmitMixin",
+    "model_submit.ModelFeatureRendererSubmitMixin",
     "model_submit.SubmitNodeCollectionMixin",
     "model_submit.SubmitNodeStorageMixin",
     "phasing.BackgroundRendererBlockPhasingMixin",

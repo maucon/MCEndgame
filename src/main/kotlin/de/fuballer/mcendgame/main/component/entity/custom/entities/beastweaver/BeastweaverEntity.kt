@@ -1406,9 +1406,9 @@ class BeastweaverEntity(
 
     fun getRhinoChargeDurationSeconds(tickProgress: Float) = if (isRhinoCharging()) (rhinoChargeDuration + tickProgress) / 20F else -1F
 
-    override fun knockback(power: Double, xd: Double, zd: Double) {
+    override fun knockback(power: Double, xd: Double, zd: Double, source: DamageSource, damage: Float, comesFromEffect: Boolean) {
         if (isRhinoCharging()) return
-        super.knockback(power, xd, zd)
+        super.knockback(power, xd, zd, source, damage, comesFromEffect)
     }
 
     fun getRhinoChargeMaxYawChange() = if (!isRhinoCharging()) 360f else if (!isRhinoChargeEnding) 4f else 0f

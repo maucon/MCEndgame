@@ -11,5 +11,5 @@ object CrystalItems {
     val PERMUTATION_CRYSTAL = RegistryUtil.registerCrystalItem(::PermutationCrystalItem, CrystalItemIds.PERMUTATION_CRYSTAL)
     val REFORGE_CRYSTAL = RegistryUtil.registerCrystalItem(::ReforgeCrystalItem, CrystalItemIds.REFORGE_CRYSTAL)
     val CORRUPTION_CRYSTAL = RegistryUtil.registerCrystalItem(::CorruptionCrystalItem, CrystalItemIds.CORRUPTION_CRYSTAL)
-    val IMITATION_CRYSTAL = RegistryUtil.registerCrystalItem(::ImitationCrystalItem, "imitation_crystal") // beastweaver FIXME
+    val IMITATION_CRYSTAL = RegistryUtil.registerCrystalItem(::ImitationCrystalItem, CrystalItemIds.IMITATION_CRYSTAL)
 }
