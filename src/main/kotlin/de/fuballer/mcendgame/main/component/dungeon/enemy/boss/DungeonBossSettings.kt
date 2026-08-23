@@ -48,14 +48,14 @@ object DungeonBossSettings {
     val DEFAULT_DEATH_PARTICLES = listOf(
         ParticleData(
             particle = { _, _ -> ParticleTypes.LARGE_SMOKE },
-            offset = { _ -> Vec3(0.0, 1.0, 0.0) },
+            offset = { entity -> Vec3(0.0, (entity.bbHeight / 2).toDouble(), 0.0) },
             count = 20,
             dist = { Vec3.ZERO },
             speed = 0.5,
         ),
         ParticleData(
             particle = { _, _ -> ParticleTypes.WHITE_SMOKE },
-            offset = { _ -> Vec3(0.0, 1.0, 0.0) },
+            offset = { entity -> Vec3(0.0, (entity.bbHeight / 2).toDouble(), 0.0) },
             count = 50,
             dist = { Vec3.ZERO },
             speed = 0.5,
