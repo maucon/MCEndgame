@@ -86,5 +86,9 @@ object AnalyticsUtil {
         .encodeStart(JsonOps.INSTANCE, effects)
         .getOrThrow()
         .asJsonArray
-        .also { array -> array.forEach { it.asJsonObject.remove("id") } }
+        .also { array ->
+            array.forEach {
+                it.asJsonObject.getAsJsonObject("attribute").remove("id")
+            }
+        }
 }

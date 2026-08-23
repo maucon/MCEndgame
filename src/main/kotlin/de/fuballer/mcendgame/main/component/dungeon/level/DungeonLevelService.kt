@@ -14,6 +14,7 @@ import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.server.level.ServerLevel
+import kotlin.math.max
 
 @Injectable
 class DungeonLevelService {
@@ -39,10 +40,10 @@ class DungeonLevelService {
 
         val current = playerDungeonLevelToInt(playerDungeonLevel)
         val decreased = current - cmd.decrease
-        val result = intToPlayerDungeonLevel(decreased)
-        player.setDungeonLevel(result)
+        val newPlayerDungeonLevel = intToPlayerDungeonLevel(decreased, playerDungeonLevel)
+        player.setDungeonLevel(newPlayerDungeonLevel)
 
-        player.sendSystemMessage(DungeonLevelSettings.getRegressMessage(result.level, result.levelProgress))
+        player.sendSystemMessage(DungeonLevelSettings.getRegressMessage(newPlayerDungeonLevel.level, newPlayerDungeonLevel.levelProgress))
     }
 
     @EventSubscriber(sync = true)
@@ -70,10 +71,10 @@ class DungeonLevelService {
 
             val current = playerDungeonLevelToInt(playerDungeonLevel)
             val increased = current + cmd.progressGranted
-            val result = intToPlayerDungeonLevel(increased)
-            player.setDungeonLevel(result)
+            val newPlayerDungeonLevel = intToPlayerDungeonLevel(increased, playerDungeonLevel)
+            player.setDungeonLevel(newPlayerDungeonLevel)
 
-            player.sendSystemMessage(DungeonLevelSettings.getProgressMessage(result.level, result.levelProgress))
+            player.sendSystemMessage(DungeonLevelSettings.getProgressMessage(newPlayerDungeonLevel.level, newPlayerDungeonLevel.levelProgress))
         }
     }
 
@@ -99,10 +100,16 @@ class DungeonLevelService {
 
     private fun playerDungeonLevelToInt(level: PlayerDungeonLevel) = (level.level - 1) * DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD + level.levelProgress
 
-    private fun intToPlayerDungeonLevel(int: Int) = int.coerceAtLeast(0).let {
+    private fun intToPlayerDungeonLevel(
+        int: Int,
+        originalDungeonLevel: PlayerDungeonLevel,
+    ) = int.coerceAtLeast(0).let {
+        val newLevel = it / DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD + 1
         PlayerDungeonLevel(
-            it / DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD + 1,
+            newLevel,
             it % DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD,
+            max(newLevel, originalDungeonLevel.highestReached),
+            originalDungeonLevel.locked,
         )
     }
 }
