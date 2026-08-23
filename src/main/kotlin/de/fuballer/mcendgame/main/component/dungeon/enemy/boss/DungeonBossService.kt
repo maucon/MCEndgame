@@ -25,7 +25,10 @@ object DungeonBossService {
 
         playBossDeathEffects(world, event.bossEntity)
 
-        if (world.getBossesKilled() < world.getTotalBossCount()) return
+        val finalBoss = world.getBossesKilled() == world.getTotalBossCount()
+        sendBossKilledMessage(world, finalBoss)
+
+        if (!finalBoss) return
         val finalBossKilledEvent = DungeonFinalBossDeathEvent.of(event)
         EventGateway.publish(finalBossKilledEvent)
     }
@@ -44,6 +47,13 @@ object DungeonBossService {
 
         cmd.sounds.forEach { it.apply(level, boss) }
         cmd.particles.forEach { it.apply(level, boss) }
+    }
+
+    private fun sendBossKilledMessage(
+        level: ServerLevel,
+        finalBoss: Boolean,
+    ) {
+        level.players().forEach { it.sendSystemMessage(DungeonBossSettings.getBossKilledMessage(finalBoss)) }
     }
 
     @EventSubscriber(sync = true)

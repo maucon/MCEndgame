@@ -6,15 +6,18 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.SoundData
+import net.minecraft.ChatFormatting
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.phys.Vec3
 
 object DungeonBossSettings {
     const val MORE_LOOT_PER_KILLED_BOSS = 0.25
-    const val LESS_DAMAGE_TAKEN_PER_KILLED_BOSS = 0.15
-    const val MORE_DAMAGE_PER_KILLED_BOSS = 0.1
+    const val LESS_DAMAGE_TAKEN_PER_KILLED_BOSS = 0.1
+    const val MORE_DAMAGE_PER_KILLED_BOSS = 0.05
 
     fun getAttributePerKilledBoss(bossesKilled: Int) = listOf(
         getMoreLootAttribute(bossesKilled),
@@ -60,5 +63,15 @@ object DungeonBossSettings {
             dist = { Vec3.ZERO },
             speed = 0.5,
         )
+    )
+
+    private val BOSS_KILLED_MESSAGE_PREFIX: MutableComponent = Component.translatable("text.mcendgame.dungeon.boss_killed")
+        .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
+
+    fun getBossKilledMessage(final: Boolean): Component = BOSS_KILLED_MESSAGE_PREFIX.copy().append(
+        if (final) Component.translatable("text.mcendgame.dungeon.no_bosses_remaining")
+            .withStyle { style -> style.withBold(false).withColor(ChatFormatting.RED) }
+        else Component.translatable("text.mcendgame.dungeon.remaining_bosses_enhanced")
+            .withStyle { style -> style.withBold(false).withColor(ChatFormatting.AQUA) }
     )
 }

@@ -352,6 +352,10 @@
   "text.mcendgame.dungeon_level.progress": " You are now Level: %s, Progress %s/%s",
   "text.mcendgame.dungeon_level.regress": " You are now Level: %s, Progress %s/%s",
 
+  "text.mcendgame.dungeon.boss_killed": "Boss killed!",
+  "text.mcendgame.dungeon.remaining_bosses_enhanced": " Remaining Bosses are enhanced.",
+  "text.mcendgame.dungeon.no_bosses_remaining": " No remaining Bosses.",
+
   "text.mcendgame.dungeon.device.level": "Level: %s",
 
   "text.mcendgame.scarred_one.effect_targets.enemies": "Enemies gain:",
