@@ -8,9 +8,11 @@ import de.fuballer.mcendgame.main.configuration.RuntimeConfig
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
 import de.fuballer.mcendgame.main.messaging.server.ServerStartedEvent
 import de.fuballer.mcendgame.main.messaging.server.ServerStoppingEvent
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setCreationTime
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setDungeonAspects
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setDungeonExitPos
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setDungeonLevel
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setDungeonSeed
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setDungeonType
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setOpener
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.setTrainingDungeon
@@ -44,6 +46,7 @@ class DungeonWorldService(
     fun create(
         dungeonLevel: Int,
         opener: Player,
+        dungeonSeed: Long,
         affectingAspects: Map<AspectItem, Int>,
         dungeonType: DungeonType,
         dungeonExitPos: GlobalPos,
@@ -59,7 +62,9 @@ class DungeonWorldService(
             )
             .asLevel()
 
+        dungeonWorld.setDungeonSeed(dungeonSeed)
         dungeonWorld.setDungeonLevel(dungeonLevel)
+        dungeonWorld.setCreationTime(dungeonWorld.gameTime)
         dungeonWorld.setOpener(opener)
         dungeonWorld.setDungeonAspects(affectingAspects)
         dungeonWorld.setDungeonType(dungeonType)
@@ -75,7 +80,7 @@ class DungeonWorldService(
     fun createTraining(
         opener: Player,
         dungeonExitPos: GlobalPos,
-    ) = create(1, opener, mapOf(), DungeonType.TRAINING, dungeonExitPos, training = true)
+    ) = create(1, opener, 0L, mapOf(), DungeonType.TRAINING, dungeonExitPos, training = true)
 
     private fun deleteEmptyWorlds() {
         log.info("Checking for empty worlds")
