@@ -1,8 +1,14 @@
 package de.fuballer.mcendgame.main.component.item.custom.aspect.item.grove
 
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.phys.Vec3
 
 class AspectOfTheGrove(
     settings: Properties,
@@ -14,6 +20,37 @@ class AspectOfTheGrove(
         private const val BASE_DROP_PROBABILITY = 0.05
         private const val DROP_PROBABILITY_PER_LEVEL = 0.0025
         fun getDropProbability(level: Int) = if (level < MIN_DROP_LEVEL) 0.0 else BASE_DROP_PROBABILITY + DROP_PROBABILITY_PER_LEVEL * (level - MIN_DROP_LEVEL)
+
+        val BOSS_DEATH_SOUND = RangeDefinedSoundData(
+            SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,
+            { 1f },
+            { 1F },
+            SoundSource.PLAYERS,
+            range = 64.0,
+        )
+        val BOSS_DEATH_PARTICLES = listOf(
+            ParticleData(
+                particle = { _, _ -> ParticleTypes.LARGE_SMOKE },
+                offset = { _ -> Vec3(0.0, 1.0, 0.0) },
+                count = 30,
+                dist = { Vec3.ZERO },
+                speed = 0.5,
+            ),
+            ParticleData(
+                particle = { _, _ -> ParticleTypes.WHITE_SMOKE },
+                offset = { _ -> Vec3(0.0, 1.0, 0.0) },
+                count = 100,
+                dist = { Vec3.ZERO },
+                speed = 0.5,
+            ),
+            ParticleData(
+                particle = { _, _ -> ParticleTypes.SPORE_BLOSSOM_AIR },
+                offset = { _ -> Vec3(0.0, 1.0, 0.0) },
+                count = 100,
+                dist = { Vec3(0.5, 0.5, 0.5) },
+                speed = 1.0,
+            ),
+        )
     }
 
     override val tier = 0

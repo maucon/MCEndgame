@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.item.custom.aspect.item.grove
 
+import de.fuballer.mcendgame.main.component.dungeon.enemy.boss.DungeonBossDeathEffectsCommand
 import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
@@ -65,5 +66,15 @@ object AspectOfTheGroveService {
     fun onDecreaseProgress(cmd: DungeonPlayerDecreaseProgressCommand) {
         if (!cmd.aspects.contains(AspectItems.ASPECT_OF_THE_GROVE)) return
         cmd.decreaseBlocked = true
+    }
+
+    @CommandHandler
+    fun onDungeonBossDeathEffects(cmd: DungeonBossDeathEffectsCommand) {
+        if (!cmd.level.getDungeonAspects().contains(AspectItems.ASPECT_OF_THE_GROVE)) return
+
+        cmd.sounds.clear()
+        cmd.sounds.add(AspectOfTheGrove.BOSS_DEATH_SOUND)
+        cmd.particles.clear()
+        cmd.particles.addAll(AspectOfTheGrove.BOSS_DEATH_PARTICLES)
     }
 }

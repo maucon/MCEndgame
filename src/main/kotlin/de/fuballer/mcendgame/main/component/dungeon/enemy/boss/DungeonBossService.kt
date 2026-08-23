@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDu
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getBossesKilled
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getTotalBossCount
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.increaseBossesKilled
+import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventGateway
 import de.maucon.mauconframework.event.EventSubscriber
@@ -22,9 +23,27 @@ object DungeonBossService {
         val world = event.world as? ServerLevel ?: return
         world.increaseBossesKilled()
 
+        playBossDeathEffects(world, event.bossEntity)
+
         if (world.getBossesKilled() < world.getTotalBossCount()) return
         val finalBossKilledEvent = DungeonFinalBossDeathEvent.of(event)
         EventGateway.publish(finalBossKilledEvent)
+    }
+
+    private fun playBossDeathEffects(
+        level: ServerLevel,
+        boss: Mob,
+    ) {
+        val command = DungeonBossDeathEffectsCommand(
+            level,
+            boss,
+            DungeonBossSettings.DEFAULT_DEATH_SOUNDS.toMutableList(),
+            DungeonBossSettings.DEFAULT_DEATH_PARTICLES.toMutableList(),
+        )
+        val cmd = CommandGateway.apply(command)
+
+        cmd.sounds.forEach { it.apply(level, boss) }
+        cmd.particles.forEach { it.apply(level, boss) }
     }
 
     @EventSubscriber(sync = true)
@@ -41,7 +60,7 @@ object DungeonBossService {
         boss: Mob,
         activatedBy: Player? = null,
     ) {
-        boss.setNoAi(false)
+        boss.isNoAi = false
         enhanceBoss(boss)
 
         if (activatedBy == null) return
