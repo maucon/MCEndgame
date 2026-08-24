@@ -37,7 +37,6 @@ class KillerScreen(
     var killer: LivingEntity? = null
     var trimmedTitle: Component? = null
 
-
     init {
         statusEffectsDisplay.backgroundHeight = 24
         statusEffectsDisplay.smallWidth = 24
@@ -49,7 +48,7 @@ class KillerScreen(
         statusEffectsDisplay.renderDurationText = false
         statusEffectsDisplay.isWide = { false }
 
-        handler.killerEntity?.let { killer = getKillerEntityAsLivingEntity(it) }
+        killer = getKillerEntityAsLivingEntity(handler.killerEntity)
     }
 
     private fun getKillerEntityAsLivingEntity(
@@ -80,7 +79,7 @@ class KillerScreen(
         deltaTicks: Float
     ) {
         super.extractContents(graphics, mouseX, mouseY, deltaTicks)
-        val effects = menu.killerEntity?.statusEffects ?: listOf()
+        val effects = menu.killerEntity.statusEffects
         statusEffectsDisplay.drawStatusEffects(
             graphics,
             leftPos + imageWidth + 1,

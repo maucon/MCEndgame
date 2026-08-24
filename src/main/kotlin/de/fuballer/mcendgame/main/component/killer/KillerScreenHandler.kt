@@ -7,7 +7,6 @@ import de.fuballer.mcendgame.main.component.screen.CustomScreenHandlerTypes
 import net.minecraft.resources.Identifier
 import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.ContainerInput
@@ -34,10 +33,9 @@ private val EQUIPMENT_SLOTS = mapOf(
 
 class KillerScreenHandler(
     syncId: Int,
-    playerInventory: Inventory,
     payload: KillerEntityPayload,
 ) : AbstractContainerMenu(CustomScreenHandlerTypes.KILLER, syncId) {
-    var killerEntity: KillerEntity? = null
+    var killerEntity: KillerEntity
     private val killerInventory = SimpleContainer(6)
 
     init {

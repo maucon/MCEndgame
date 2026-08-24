@@ -22,7 +22,7 @@ object CustomScreenHandlerTypes {
     ).also { RegistryUtil.registerScreenHandler(DungeonDeviceBlock.ID, it) }
 
     val KILLER = ExtendedMenuType(
-        { syncId, inventory, payload -> KillerScreenHandler(syncId, inventory, payload = payload) },
+        { syncId, _, payload -> KillerScreenHandler(syncId, payload = payload) },
         KillerEntityPayload.CODEC,
     ).also { RegistryUtil.registerScreenHandler("killer", it) }
 
