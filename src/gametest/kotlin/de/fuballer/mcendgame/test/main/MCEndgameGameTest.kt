@@ -34,8 +34,6 @@ class MCEndgameGameTest {
 
     @GameTest
     fun testDungeonOpenAndJoin(helper: GameTestHelper) {
-        LOG.info("Running dungeon open & join flow")
         DungeonOpenAndJoinGameTest.testPlayerOpensAndJoinsDungeon(helper)
-        LOG.info("Dungeon open & join flow finished successfully")
     }
 }

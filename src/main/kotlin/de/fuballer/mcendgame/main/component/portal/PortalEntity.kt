@@ -57,7 +57,7 @@ class PortalEntity(
     }
 
     init {
-        this.setNoGravity(true)
+        this.isNoGravity = true
         isInvulnerable = true
         noPhysics = true
     }

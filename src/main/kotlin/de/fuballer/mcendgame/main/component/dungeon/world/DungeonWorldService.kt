@@ -49,9 +49,8 @@ class DungeonWorldService(
         dungeonExitPos: GlobalPos,
         training: Boolean = false,
     ): ServerLevel {
-        // TODO fix
         val dungeonWorld = RuntimeConfig.RUNTIME_WORLDS
-            .openTemporaryDungeon(DungeonWorldSettings.getWorldConfig(dungeonType.biome))
+            .openTemporaryDungeon(DungeonWorldSettings.getWorldConfig(dungeonType.biome, dungeonType.gameTime))
             .asLevel()
 
         dungeonWorld.setDungeonLevel(dungeonLevel)

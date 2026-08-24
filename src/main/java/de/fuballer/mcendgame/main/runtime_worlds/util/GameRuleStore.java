@@ -15,8 +15,8 @@ public final class GameRuleStore {
         this.rules.put(key, value);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T get(GameRule<T> key) {
-        //noinspection unchecked
         return (T) this.rules.get(key);
     }
 
@@ -28,11 +28,11 @@ public final class GameRuleStore {
         return this.rules.isEmpty();
     }
 
+    @SuppressWarnings("unchecked")
     public void applyTo(GameRules rules, @Nullable MinecraftServer server) {
-        Reference2ObjectMaps.fastForEach(this.rules, entry -> {
-            //noinspection unchecked
-            rules.set((GameRule<? super Object>) entry.getKey(), entry.getValue(), server);
-        });
-
+        Reference2ObjectMaps.fastForEach(
+                this.rules,
+                entry -> rules.set((GameRule<? super Object>) entry.getKey(), entry.getValue(), server)
+        );
     }
 }

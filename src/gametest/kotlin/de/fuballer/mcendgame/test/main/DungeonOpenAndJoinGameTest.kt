@@ -71,7 +71,7 @@ object DungeonOpenAndJoinGameTest {
             ?: throw helper.assertionException("Opening the dungeon should generate a dungeon world")
         LOG.info(
             "Dungeon world generated: {} (dungeon level {}, boss count {}, opener {})",
-            dungeonWorld.dimension().toString(),
+            dungeonWorld.dimension().identifier().path,
             dungeonWorld.getDungeonLevel(),
             dungeonWorld.getTotalBossCount(),
             dungeonWorld.getOpener().gameProfile.name,
@@ -117,7 +117,7 @@ object DungeonOpenAndJoinGameTest {
             helper.assertTrue(player.isInsideDungeon(), "The player should be tracked as inside a dungeon")
             helper.assertTrue(dungeonWorld.getOpener() === player, "The dungeon world should remember its opener")
 
-            LOG.info("Player joined the dungeon world {}, test succeeded", dungeonWorld.dimension().toString())
+            LOG.info("Player joined the dungeon world {}, test succeeded", dungeonWorld.dimension().identifier().path)
             helper.succeed()
         }
     }
