@@ -379,5 +379,22 @@
   "training_dummy.last_damage" : "Last ",
   "training_dummy.highest_damage" : "Best ",
   "training_dummy.damage_sum" : "Total ",
-  "training_dummy.damage_duration" : "Time "
+  "training_dummy.damage_duration" : "Time ",
+
+  "tag.item.mcendgame.dungeon_disabled": "Dungeon Disabled",
+  "tag.item.mcendgame.diamond_gear": "Diamond Gear",
+  "tag.item.mcendgame.netherite_gear": "Netherite Gear",
+  "tag.item.mcendgame.bow": "Bow",
+  "tag.item.mcendgame.shield": "Shield",
+  "tag.item.mcendgame.mace": "Mace",
+  "tag.item.mcendgame.dungeon_drop_disabled": "Dungeon Drop Disabled",
+  "tag.item.mcendgame.crystal": "Crystal",
+  "tag.item.mcendgame.totem": "Totem",
+  "tag.item.mcendgame.repairs_spider_armor": "Repairs Spider Armor",
+  "tag.item.mcendgame.dungeon_breakable": "Dungeon Breakable",
+  "tag.item.mcendgame.dungeon_interactable": "Dungeon Interactable",
+  "tag.item.mcendgame.phasing_blocking": "Phasing Blocking",
+  "tag.item.mcendgame.no_phasing_slow_and_fog": "No Phasing Slow and Fog",
+  "tag.item.mcendgame.melee_attack": "Melee Attack",
+  "tag.item.mcendgame.block_phasing_immune": "Block Phasing Immune"
 }
