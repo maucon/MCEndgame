@@ -15,13 +15,31 @@ import net.minecraft.world.level.biome.MobSpawnSettings
 
 @Injectable
 object CustomBiomes {
-    val DESERT_DUNGEON: ResourceKey<Biome> = ResourceKey.create(Registries.BIOME, IdentifierUtil.default("desert_dungeon"))
+    val STRONGHOLD_DUNGEON: ResourceKey<Biome> = of("stronghold_dungeon")
+    val DESERT_DUNGEON: ResourceKey<Biome> = of("desert_dungeon")
+    val BEASTWEAVER_GROVE_DUNGEON: ResourceKey<Biome> = of("beastweaver_grove")
+
+    private fun of(id: String) = ResourceKey.create(Registries.BIOME, IdentifierUtil.default(id))
 
     fun bootstrap(context: BootstrapContext<Biome>) {
+        context.register(STRONGHOLD_DUNGEON, createStrongholdDungeon())
         context.register(DESERT_DUNGEON, createDesertDungeon())
+        context.register(BEASTWEAVER_GROVE_DUNGEON, createBeastweaverDungeon())
     }
 
-    fun createDesertDungeon(): Biome {
+    private fun createStrongholdDungeon(): Biome {
+        return Biome.BiomeBuilder()
+            .hasPrecipitation(false)
+            .temperature(0.5f)
+            .downfall(0.0f)
+            .specialEffects(BiomeSpecialEffects.Builder().waterColor(0x3A4654).build())
+            .generationSettings(BiomeGenerationSettings.PlainBuilder().build())
+            .mobSpawnSettings(MobSpawnSettings.Builder().build())
+            .setAttribute(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic(CustomSoundEvents.STRONGHOLD_DUNGEON_MUSIC_SOUND))
+            .build()
+    }
+
+    private fun createDesertDungeon(): Biome {
         return Biome.BiomeBuilder()
             .hasPrecipitation(false)
             .temperature(0.5f)
@@ -30,6 +48,18 @@ object CustomBiomes {
             .generationSettings(BiomeGenerationSettings.PlainBuilder().build())
             .mobSpawnSettings(MobSpawnSettings.Builder().build())
             .setAttribute(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic(CustomSoundEvents.DESERT_DUNGEON_MUSIC_SOUND))
+            .build()
+    }
+
+    private fun createBeastweaverDungeon(): Biome {
+        return Biome.BiomeBuilder()
+            .hasPrecipitation(false)
+            .temperature(0.75f)
+            .downfall(0.8f)
+            .specialEffects(BiomeSpecialEffects.Builder().waterColor(0x3F9B5F).build())
+            .generationSettings(BiomeGenerationSettings.PlainBuilder().build())
+            .mobSpawnSettings(MobSpawnSettings.Builder().build())
+            .setAttribute(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic(CustomSoundEvents.BEASTWEAVER_GROVE_MUSIC_SOUND))
             .build()
     }
 }

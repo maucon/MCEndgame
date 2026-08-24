@@ -10,4 +10,5 @@ enum class AttackPose {
     DOWNWARDS_SLICE_BOTH,
     SWEEP_LEFT,
     SWEEP_RIGHT,
+    AIRBORNE,
 }

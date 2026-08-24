@@ -49,6 +49,7 @@ class DungeonWorldService(
         dungeonExitPos: GlobalPos,
         training: Boolean = false,
     ): ServerLevel {
+        // TODO fix
         val dungeonWorld = RuntimeConfig.RUNTIME_WORLDS
             .openTemporaryDungeon(DungeonWorldSettings.getWorldConfig(dungeonType.biome))
             .asLevel()
@@ -70,7 +71,6 @@ class DungeonWorldService(
         opener: Player,
         dungeonExitPos: GlobalPos,
     ) = create(1, opener, mapOf(), DungeonType.TRAINING, dungeonExitPos, training = true)
-
 
     private fun deleteEmptyWorlds() {
         log.info("Checking for empty worlds")

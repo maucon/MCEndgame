@@ -11,7 +11,9 @@ class CustomParticleFactoryRegisterer {
     fun init() {
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.FLAME_PILLAR, FlamePillarParticle::Factory)
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.SMOKE_PILLAR, SmokePillarParticle::Factory)
+        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.CLOUD_TORUS, CloudTorusParticle::Factory)
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.HORIZONTAL_FLAME_BREATH, HorizontalFlameBreathParticle::Factory)
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.MOVE_TO_TARGET_FLAME, MoveToTargetFlameParticle::Factory)
+        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.DIRECTIONAL_SWEEP_ATTACK, DirectionalAttackSweepParticle::Factory)
     }
 }

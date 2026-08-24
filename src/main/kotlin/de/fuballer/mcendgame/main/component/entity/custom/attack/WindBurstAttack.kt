@@ -1,10 +1,9 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack
 
 import com.geckolib.animatable.GeoEntity
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerCondition
-import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundData
 import de.fuballer.mcendgame.main.util.extension.mixin.WindChargeEntityMixinExtension.setExplosionPower
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.EntityType
@@ -20,46 +19,19 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class WindBurstAttack<T>(
+    id: String,
     animationData: AttackAnimationData,
     totalDuration: Int,
     cooldown: Int,
     trigger: TriggerCondition,
-    damage: List<DelayedAttackDamage>,
+    data: List<DelayedAttackData>,
     leapType: LeapType,
     private val projectileCount: (distance: Double) -> Int,
     private val projectileSpeed: () -> Float,
     private val projectileDirectionSpread: (distance: Double) -> Float,
     private val projectileExplosionPower: Float,
-    sounds: List<DelayedSoundData> = listOf(),
     blockMovementDuration: Int = 0,
-) : LeapAttack<T>(animationData, totalDuration, cooldown, trigger, damage, leapType, sounds, blockMovementDuration) where T : Mob, T : GeoEntity {
-    constructor(
-        animationData: AttackAnimationData,
-        totalDuration: Int,
-        cooldown: Int,
-        trigger: TriggerCondition,
-        damage: DelayedAttackDamage?,
-        leapType: LeapType,
-        projectileCount: (distance: Double) -> Int,
-        projectileSpeed: () -> Float,
-        projectileDirectionSpread: (distance: Double) -> Float,
-        projectileExplosionPower: Float,
-        sounds: List<DelayedSoundData> = listOf(),
-        blockMovementDuration: Int = 0,
-    ) : this(
-        animationData,
-        totalDuration,
-        cooldown,
-        trigger,
-        if (damage != null) listOf(damage) else listOf(),
-        leapType,
-        projectileCount,
-        projectileSpeed,
-        projectileDirectionSpread,
-        projectileExplosionPower,
-        sounds,
-        blockMovementDuration,
-    )
+) : LeapAttack<T>(id, animationData, totalDuration, cooldown, trigger, data, leapType, blockMovementDuration) where T : Mob, T : GeoEntity {
 
     override fun start(
         attacker: T,

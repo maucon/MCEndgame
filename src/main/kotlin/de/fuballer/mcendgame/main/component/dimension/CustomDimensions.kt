@@ -20,7 +20,6 @@ import net.minecraft.world.level.dimension.DimensionType
 import net.minecraft.world.timeline.Timeline
 import java.util.*
 
-
 @Injectable
 object CustomDimensions {
     val DUNGEON: ResourceKey<DimensionType> = ResourceKey.create(Registries.DIMENSION_TYPE, IdentifierUtil.default("dungeon"))
@@ -51,7 +50,7 @@ object CustomDimensions {
 
         return DimensionType(
             false, // hasFixedTime
-            false, // hasSkyLight
+            true, // hasSkyLight
             false, // hasCeiling
             false, // hasEnderDragonFight
             1.0, // coordinateScale

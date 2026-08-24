@@ -48,7 +48,7 @@ class BossGenerationService {
         val bossEntity = EntityUtil.spawnEntityWithStats(dungeonWorld, type, spawnPosition)
 
         bossEntity.setPersistenceRequired()
-        setScale(bossEntity, random)
+        setScale(bossEntity, type, random)
 
         bossEntity.setNoAi(true)
 
@@ -61,9 +61,10 @@ class BossGenerationService {
 
     private fun setScale(
         entity: Mob,
+        type: EntityTypeStats,
         random: Random,
     ) {
-        val scale = DungeonBossSettings.getRandomScale(random)
+        val scale = type.getRandomScale(random)
         entity.getAttribute(Attributes.SCALE)?.baseValue = scale
     }
 }

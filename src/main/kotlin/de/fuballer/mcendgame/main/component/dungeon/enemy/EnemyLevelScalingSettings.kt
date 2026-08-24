@@ -10,7 +10,7 @@ import kotlin.math.min
 
 object EnemyLevelScalingSettings {
     fun getEnemyLevelAttributes(level: Int) = mutableListOf(
-        CustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(2.5 * level))),
+        CustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(2.0 * level))),
         CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(1.5 * level))),
     ).also {
         if (level >= 5) it.add(

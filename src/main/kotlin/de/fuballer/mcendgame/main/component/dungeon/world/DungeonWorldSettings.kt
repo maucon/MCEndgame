@@ -13,9 +13,10 @@ object DungeonWorldSettings {
 
     fun getWorldConfig(
         biome: ResourceKey<Biome>,
+        gameTime: Int,
     ): RuntimeLevelConfig = RuntimeLevelConfig()
         .setGenerator(VoidChunkGenerator(RuntimeConfig.SERVER, biome))
-        .setClockTime(14700)
+        .setClockTime(gameTime)
         .setGameRule(GameRules.KEEP_INVENTORY, true)
         .setGameRule(GameRules.MOB_GRIEFING, false)
         .setGameRule(GameRules.SPAWN_MOBS, false)

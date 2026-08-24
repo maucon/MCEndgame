@@ -91,6 +91,7 @@ object CustomCreativeModeTab {
                     output.accept(AspectItems.ASPECT_OF_EMINENCE.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_ANCESTORS.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_DUALITY.defaultInstance)
+                    output.accept(AspectItems.ASPECT_OF_THE_GROVE.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(
@@ -104,6 +105,7 @@ object CustomCreativeModeTab {
                     output.accept(CrystalItems.PERMUTATION_CRYSTAL.defaultInstance)
                     output.accept(CrystalItems.REFORGE_CRYSTAL.defaultInstance)
                     output.accept(CrystalItems.CORRUPTION_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.IMITATION_CRYSTAL.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(

@@ -10,10 +10,7 @@ import de.fuballer.mcendgame.main.component.dungeon.world.DungeonWorldService
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectService
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateCommand
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGeneratedEvent
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGeneratingEvent
-import de.fuballer.mcendgame.main.messaging.dungeon.OpenDungeonButtonPressedEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.*
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getDungeonLevel
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
@@ -43,7 +40,9 @@ class DungeonGenerationService(
 
         val playerDungeonLevel = player.getDungeonLevel().level
         val seed = playerSeed.seed
-        val dungeonType = playerSeed.type
+
+        val dungeonTypeCommand = SelectDungeonTypeCommand(playerSeed.type, affectingAspects)
+        val dungeonType = CommandGateway.apply(dungeonTypeCommand).dungeonType
 
         val random = Random(seed)
 

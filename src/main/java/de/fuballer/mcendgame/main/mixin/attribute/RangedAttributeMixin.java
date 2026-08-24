@@ -17,14 +17,21 @@ public class RangedAttributeMixin {
     private double maxValue;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void setArmorMax(
+    private void setAttributeMax(
             String descriptionId,
             double defaultValue,
             double minValue,
             double maxValue,
             CallbackInfo ci
     ) {
-        if (!descriptionId.equals("attribute.name.armor")) return;
-        this.maxValue = 2048.0;
+        switch (descriptionId) {
+            case "attribute.name.armor",
+                 "attribute.name.armor_toughness":
+                this.maxValue = 2048.0;
+                break;
+            case "attribute.name.max_health":
+                this.maxValue = Double.MAX_VALUE;
+                break;
+        }
     }
 }

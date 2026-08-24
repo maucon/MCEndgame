@@ -39,7 +39,6 @@ class StayInRangeGoal(
         val target = entity.target ?: return false
         if (!target.isAlive) return false
 
-        if (!entity.isWithinHome(target.blockPosition())) return false
         return target !is Player || (!target.isSpectator && !target.isCreative)
     }
 
@@ -97,8 +96,6 @@ class StayInRangeGoal(
         target: LivingEntity
     ): Boolean {
         if (updateCountdownTicks > 0) return false
-        if (!entity.sensing.hasLineOfSight(target)) return false
-
 
         if (targetX == 0.0 && targetY == 0.0 && targetZ == 0.0) return true
         val isInRange = entity.distanceToSqr(target) < squaredMaxDistance

@@ -1,31 +1,25 @@
 package de.fuballer.mcendgame.main.component.dungeon.enemy
 
-import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.addCustomAttributes
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemiesGeneratedCommand
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGeneratedEvent
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonBoss
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.addCustomAttribute
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
-import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
+import de.maucon.mauconframework.event.EventSubscriber
 
 @Injectable
 class EnemyLevelScalingService {
-    @CommandHandler
-    fun on(command: DungeonEnemiesGeneratedCommand) {
-        val level = command.world.getDungeonLevel()
+    @EventSubscriber
+    fun on(event: DungeonGeneratedEvent) {
+        val dungeonWorld = event.dungeonWorld
+        val level = dungeonWorld.getDungeonLevel()
 
-        val levelAttributes = EnemyLevelScalingSettings.getEnemyLevelAttributes(level)
-        val enemies = command.enemies
-        enemies.forEach {
-            it.addCustomAttributes(levelAttributes)
-            it.health = it.maxHealth
+        EnemyLevelScalingSettings.getEnemyLevelAttributes(level).forEach { attribute ->
+            dungeonWorld.addCustomAttribute(attribute) { it.isDungeonEnemy() }
         }
-
-        val bosses = enemies.filter { it.isDungeonBoss() }
-        if (bosses.isEmpty()) return
-        val bossAttributes = EnemyLevelScalingSettings.getBossLevelAttributes(level)
-        bosses.forEach {
-            it.addCustomAttributes(bossAttributes)
-            it.health = it.maxHealth
+        EnemyLevelScalingSettings.getBossLevelAttributes(level).forEach { attribute ->
+            dungeonWorld.addCustomAttribute(attribute) { it.isDungeonBoss() }
         }
     }
 }

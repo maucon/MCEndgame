@@ -19,8 +19,9 @@ class SingleRoomLayoutGenerator(
         val room = PlaceableRoom(roomType, Vec3i.ZERO, 0)
         val startPos = requireNotNull(roomType.markerPoints.startPos) { "Start room '${roomType.path}' is missing markerPoints.startPos" }
         val spawnPos = SpawnPosition(startPos, -90.0)
-        val dummyPos = roomType.markerPoints.bossPos // using same marker as boss for now
+        val bossPos = roomType.markerPoints.bossPos
+        val enemyPos = roomType.markerPoints.monsterPos
 
-        return Layout(spawnPos, mutableListOf(room), listOf(), dummyPos, listOf(), listOf())
+        return Layout(spawnPos, mutableListOf(room), enemyPos, bossPos, listOf(), listOf())
     }
 }

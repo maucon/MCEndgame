@@ -12,9 +12,9 @@ import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.DelayedAttackDamage
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.instance.AttackDamageInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.teleport.TeleportToTargetAttack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
@@ -22,7 +22,6 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMo
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.TeleportAttackMob
-import de.fuballer.mcendgame.main.component.entity.custom.sound.DelayedSoundInstance
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
@@ -37,6 +36,8 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 
 class BonecrusherEntity(
@@ -55,26 +56,32 @@ class BonecrusherEntity(
         private val HIT_ATTACK_DAMAGE = AreaAttackDamage(0.7F, 0.35, HIT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING)
         private val HIT_ANIMATION_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, HIT_ID)
         private val HIT_ATTACK = Attack<BonecrusherEntity>(
+            HIT_ID,
             HIT_ANIMATION_DATA,
             totalDuration = 16,
             cooldown = 0,
             DistanceTriggerCondition(3.0),
-            DelayedAttackDamage(HIT_ATTACK_DAMAGE, 3),
+            data = listOf(
+                DelayedDamageData(HIT_ATTACK_DAMAGE, 3),
+            ),
         )
 
         private val SLAM_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slam")
         private const val SLAM_ID = "Slam"
         private val SLAM_AREA = AreaAttackDamage.DamageArea(6.0, 3.0, 1.5, 0.5, 0.0, 0.5)
-        private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(1.2F, 1.0, SLAM_AREA, knockbackType = AreaAttackDamage.KnockbackType.AREA_CENTER, blockable = false)
+        private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(1.5F, 1.0, SLAM_AREA, knockbackType = AreaAttackDamage.KnockbackType.AREA_CENTER, blockable = false)
             .setParticles(100, 0.25, ParticleTypes.CRIT, 0.5)
             .setSound(false, SoundEvents.GENERIC_EXPLODE.value(), 1F, 1F)
         private val SLAM_ANIMATION_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLAM_ID)
         private val SLAM_ATTACK = Attack<BonecrusherEntity>(
+            SLAM_ID,
             SLAM_ANIMATION_DATA,
             totalDuration = 28,
             cooldown = 100,
             DistanceTriggerCondition(1.5, 4.0),
-            DelayedAttackDamage(SLAM_ATTACK_DAMAGE, 14),
+            data = listOf(
+                DelayedDamageData(SLAM_ATTACK_DAMAGE, 14),
+            ),
             blockMovementDuration = 22,
         )
 
@@ -86,12 +93,15 @@ class BonecrusherEntity(
             .setSound(false, SoundEvents.GENERIC_EXPLODE.value(), 1F, 1F)
         private val TELEPORT_PRESS_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, TELEPORT_PRESS_ID)
         private val TELEPORT_PRESS_ATTACK = TeleportToTargetAttack<BonecrusherEntity>(
+            TELEPORT_PRESS_ID,
             TELEPORT_PRESS_DATA,
             totalDuration = 45,
             cooldown = 65,
             DistanceTriggerCondition(6.0, 50.0),
-            DelayedAttackDamage(TELEPORT_PRESS_DAMAGE, 25),
-            teleportDelay = 20,
+            data = listOf(
+                DelayedDamageData(TELEPORT_PRESS_DAMAGE, 25),
+            ),
+            teleportDelayTicks = 20,
             choseLocationDelayTicks = 12,
             blockMovementDuration = 40,
         )
@@ -112,6 +122,7 @@ class BonecrusherEntity(
         private val SPIN_RIGHT_DAMAGE = AreaAttackDamage(1F, 0.25, SPIN_RIGHT_AREA, knockbackType = AreaAttackDamage.KnockbackType.DAMAGER_CENTER, disableBlockingShield = 5F)
         private val SPIN_ANIMATION_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, SPIN_ANIM_CONTROLLER_ID, SPIN_ID)
         private val SPIN_ATTACK = Attack<BonecrusherEntity>(
+            SPIN_ID,
             SPIN_ANIMATION_DATA,
             50 + 13 * SPIN_ATTACK_ROTATIONS,
             50 + 13 * SPIN_ATTACK_ROTATIONS + 200,
@@ -119,28 +130,28 @@ class BonecrusherEntity(
             getSpinAttackDamage(),
         )
 
-        private fun getSpinAttackDamage(): List<DelayedAttackDamage> {
-            val damage = mutableListOf<DelayedAttackDamage>()
+        private fun getSpinAttackDamage(): List<DelayedDamageData> {
+            val damage = mutableListOf<DelayedDamageData>()
 
             // spin start
-            damage.add(DelayedAttackDamage(SPIN_LEFT_DAMAGE, 5))
-            damage.add(DelayedAttackDamage(SPIN_BACK_DAMAGE, 9))
-            damage.add(DelayedAttackDamage(SPIN_RIGHT_DAMAGE, 13))
+            damage.add(DelayedDamageData(SPIN_LEFT_DAMAGE, 5))
+            damage.add(DelayedDamageData(SPIN_BACK_DAMAGE, 9))
+            damage.add(DelayedDamageData(SPIN_RIGHT_DAMAGE, 13))
 
             // main spin
             for (rot in 0 until SPIN_ATTACK_ROTATIONS) {
                 val base = 16 + (rot * 20 * 2 / 3.0).toInt()
-                damage.add(DelayedAttackDamage(SPIN_FRONT_DAMAGE, base))
-                damage.add(DelayedAttackDamage(SPIN_LEFT_DAMAGE, base + 3))
-                damage.add(DelayedAttackDamage(SPIN_BACK_DAMAGE, base + 6))
-                damage.add(DelayedAttackDamage(SPIN_RIGHT_DAMAGE, base + 10))
+                damage.add(DelayedDamageData(SPIN_FRONT_DAMAGE, base))
+                damage.add(DelayedDamageData(SPIN_LEFT_DAMAGE, base + 3))
+                damage.add(DelayedDamageData(SPIN_BACK_DAMAGE, base + 6))
+                damage.add(DelayedDamageData(SPIN_RIGHT_DAMAGE, base + 10))
             }
 
             // spin end
             val base = 16 + (SPIN_ATTACK_ROTATIONS * 20 * 2 / 3.0).toInt()
-            damage.add(DelayedAttackDamage(SPIN_FRONT_DAMAGE, base))
-            damage.add(DelayedAttackDamage(SPIN_LEFT_DAMAGE, base + 5))
-            damage.add(DelayedAttackDamage(SPIN_BACK_DAMAGE, base + 10))
+            damage.add(DelayedDamageData(SPIN_FRONT_DAMAGE, base))
+            damage.add(DelayedDamageData(SPIN_LEFT_DAMAGE, base + 5))
+            damage.add(DelayedDamageData(SPIN_BACK_DAMAGE, base + 10))
 
             return damage
         }
@@ -171,8 +182,7 @@ class BonecrusherEntity(
     override var attackDuration = 0
     override val attacks = ATTACKS
     override val attackCooldowns: MutableMap<Attack<BonecrusherEntity>, Int> = mutableMapOf()
-    override val attackDamageInstances = mutableListOf<AttackDamageInstance>()
-    override val attackSoundInstances = mutableListOf<DelayedSoundInstance>()
+    override val attackDataInstances = mutableListOf<DelayedAttackDataInstance>()
 
     override var teleportAttackTargetPosition: Vec3? = null
 
@@ -234,5 +244,15 @@ class BonecrusherEntity(
             AnimationController<GeoAnimatable>(SPIN_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
                 .triggerableAnim(SPIN_ID, SPIN_ANIM)
         )
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        addAttackCooldownsSaveData(output)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        readAttackCooldownsSaveData(input)
     }
 }
