@@ -129,7 +129,7 @@ class TrainingDummyEntity(
         val killerEntityPayload = KillerEntityPayload(killerEntity)
 
         val screenHandlerFactory = KillerScreenHandlerFactory(killerEntityPayload, displayName)
-        { syncId, playerInventory, _ -> KillerScreenHandler(syncId, playerInventory, killerEntityPayload) }
+        { syncId, _, _ -> KillerScreenHandler(syncId, killerEntityPayload) }
 
         player.openMenu(screenHandlerFactory)
 

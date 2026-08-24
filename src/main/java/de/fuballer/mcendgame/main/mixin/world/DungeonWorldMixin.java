@@ -22,7 +22,11 @@ public class DungeonWorldMixin implements DungeonWorldAccessor {
     @Unique
     private boolean isCompleted = false;
     @Unique
+    private long dungeonSeed = 0L;
+    @Unique
     private int level = 0;
+    @Unique
+    private long creationTime = 0L;
     @Unique
     private int totalBossCount = 0;
     @Unique
@@ -59,6 +63,16 @@ public class DungeonWorldMixin implements DungeonWorldAccessor {
     }
 
     @Override
+    public long mcendgame$getDungeonSeed() {
+        return dungeonSeed;
+    }
+
+    @Override
+    public void mcendgame$setDungeonSeed(long dungeonSeed) {
+        this.dungeonSeed = dungeonSeed;
+    }
+
+    @Override
     public int mcendgame$getLevel() {
         return level;
     }
@@ -66,6 +80,16 @@ public class DungeonWorldMixin implements DungeonWorldAccessor {
     @Override
     public void mcendgame$setLevel(int level) {
         this.level = level;
+    }
+
+    @Override
+    public long mcendgame$getCreationTime() {
+        return creationTime;
+    }
+
+    @Override
+    public void mcendgame$setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
     }
 
     @Override

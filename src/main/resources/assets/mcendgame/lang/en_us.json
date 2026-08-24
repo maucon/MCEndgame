@@ -149,6 +149,7 @@
   "stat.mcendgame.permutation_crystal_used": "Permutation Crystal used",
   "stat.mcendgame.reforge_crystal_used": "Reforge Crystal used",
   "stat.mcendgame.corruption_crystal_used": "Corruption Crystal used",
+  "stat.mcendgame.imitation_crystal_used": "Imitation Crystal used",
   "stat.mcendgame.scarred_one_accepted": "Scarred One pact accepted",
   "stat.mcendgame.scarred_one_declined": "Scarred One pact declined",
   "stat.mcendgame.portals_used": "Portals used",
@@ -156,7 +157,6 @@
   "stat.mcendgame.totem_encounters_activated": "Totem encounters activated",
 
   "container.mcendgame.totem.title": "Totems",
-
   "container.mcendgame.filter.title": "Dungeon Filter / Blacklist",
 
   "item.mcendgame.dungeon_device": "Dungeon Device",
@@ -350,7 +350,11 @@
   "text.mcendgame.dungeon_level.locked": " Dungeon level is locked!",
   "text.mcendgame.dungeon_level.no_progress": " Dungeon level is too low to grant progress!",
   "text.mcendgame.dungeon_level.progress": " You are now Level: %s, Progress %s/%s",
-  "text.mcendgame.dungeon_level.regress": " You are now Level: %s",
+  "text.mcendgame.dungeon_level.regress": " You are now Level: %s, Progress %s/%s",
+
+  "text.mcendgame.dungeon.boss_killed": "Boss killed!",
+  "text.mcendgame.dungeon.remaining_bosses_enhanced": " Remaining Bosses are enhanced.",
+  "text.mcendgame.dungeon.no_bosses_remaining": " No remaining Bosses.",
 
   "text.mcendgame.dungeon.device.level": "Level: %s",
 
@@ -375,5 +379,22 @@
   "training_dummy.last_damage" : "Last ",
   "training_dummy.highest_damage" : "Best ",
   "training_dummy.damage_sum" : "Total ",
-  "training_dummy.damage_duration" : "Time "
+  "training_dummy.damage_duration" : "Time ",
+
+  "tag.item.mcendgame.dungeon_disabled": "Dungeon Disabled",
+  "tag.item.mcendgame.diamond_gear": "Diamond Gear",
+  "tag.item.mcendgame.netherite_gear": "Netherite Gear",
+  "tag.item.mcendgame.bow": "Bow",
+  "tag.item.mcendgame.shield": "Shield",
+  "tag.item.mcendgame.mace": "Mace",
+  "tag.item.mcendgame.dungeon_drop_disabled": "Dungeon Drop Disabled",
+  "tag.item.mcendgame.crystal": "Crystal",
+  "tag.item.mcendgame.totem": "Totem",
+  "tag.item.mcendgame.repairs_spider_armor": "Repairs Spider Armor",
+  "tag.item.mcendgame.dungeon_breakable": "Dungeon Breakable",
+  "tag.item.mcendgame.dungeon_interactable": "Dungeon Interactable",
+  "tag.item.mcendgame.phasing_blocking": "Phasing Blocking",
+  "tag.item.mcendgame.no_phasing_slow_and_fog": "No Phasing Slow and Fog",
+  "tag.item.mcendgame.melee_attack": "Melee Attack",
+  "tag.item.mcendgame.block_phasing_immune": "Block Phasing Immune"
 }

@@ -16,6 +16,8 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
@@ -144,4 +146,6 @@ class SpiderlingEntity(
     override fun playStepSound(pos: BlockPos, state: BlockState) {
         playSound(SoundEvents.SPIDER_STEP, 0.15f, 1.0f)
     }
+
+    override fun mobInteract(player: Player, hand: InteractionHand) = InteractionResult.PASS
 }

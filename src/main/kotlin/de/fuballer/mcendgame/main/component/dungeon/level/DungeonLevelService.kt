@@ -30,7 +30,7 @@ class DungeonLevelService {
 
         val decreaseProgressCommand = DungeonPlayerDecreaseProgressCommand(aspects)
         val cmd = CommandGateway.apply(decreaseProgressCommand)
-        if (cmd.decreaseBlocked) return
+        if (cmd.decreaseBlocked || cmd.decrease <= 0) return
 
         val playerDungeonLevel = player.getDungeonLevel()
         if (playerDungeonLevel.locked && playerDungeonLevel.level <= DungeonLevelSettings.getClientSetLevelLimit(playerDungeonLevel.highestReached)) {
@@ -38,11 +38,12 @@ class DungeonLevelService {
             return
         }
 
-        playerDungeonLevel.level = max(playerDungeonLevel.level - 1, 1)
-        playerDungeonLevel.levelProgress = 0
+        val current = playerDungeonLevelToInt(playerDungeonLevel)
+        val decreased = current - cmd.decrease
+        val newPlayerDungeonLevel = intToPlayerDungeonLevel(decreased, playerDungeonLevel)
+        player.setDungeonLevel(newPlayerDungeonLevel)
 
-        player.setDungeonLevel(playerDungeonLevel)
-        player.sendSystemMessage(DungeonLevelSettings.getRegressMessage(playerDungeonLevel.level, playerDungeonLevel.levelProgress))
+        player.sendSystemMessage(DungeonLevelSettings.getRegressMessage(newPlayerDungeonLevel.level, newPlayerDungeonLevel.levelProgress))
     }
 
     @EventSubscriber(sync = true)
@@ -68,13 +69,12 @@ class DungeonLevelService {
                 return@forEach
             }
 
-            val helpLevelProgress = (playerDungeonLevel.levelProgress + cmd.progressGranted)
-            playerDungeonLevel.level += helpLevelProgress / DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD
-            playerDungeonLevel.levelProgress = helpLevelProgress % DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD
-            playerDungeonLevel.highestReached = max(playerDungeonLevel.highestReached, playerDungeonLevel.level)
+            val current = playerDungeonLevelToInt(playerDungeonLevel)
+            val increased = current + cmd.progressGranted
+            val newPlayerDungeonLevel = intToPlayerDungeonLevel(increased, playerDungeonLevel)
+            player.setDungeonLevel(newPlayerDungeonLevel)
 
-            player.setDungeonLevel(playerDungeonLevel)
-            player.sendSystemMessage(DungeonLevelSettings.getProgressMessage(playerDungeonLevel.level, playerDungeonLevel.levelProgress))
+            player.sendSystemMessage(DungeonLevelSettings.getProgressMessage(newPlayerDungeonLevel.level, newPlayerDungeonLevel.levelProgress))
         }
     }
 
@@ -96,5 +96,20 @@ class DungeonLevelService {
         serverLevel.locked = clientLevel.locked
 
         player.setDungeonLevel(serverLevel)
+    }
+
+    private fun playerDungeonLevelToInt(level: PlayerDungeonLevel) = (level.level - 1) * DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD + level.levelProgress
+
+    private fun intToPlayerDungeonLevel(
+        int: Int,
+        originalDungeonLevel: PlayerDungeonLevel,
+    ) = int.coerceAtLeast(0).let {
+        val newLevel = it / DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD + 1
+        PlayerDungeonLevel(
+            newLevel,
+            it % DungeonLevelSettings.LEVEL_INCREASE_THRESHOLD,
+            max(newLevel, originalDungeonLevel.highestReached),
+            originalDungeonLevel.locked,
+        )
     }
 }

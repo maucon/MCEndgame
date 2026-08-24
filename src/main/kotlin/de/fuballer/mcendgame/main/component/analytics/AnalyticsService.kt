@@ -3,10 +3,15 @@ package de.fuballer.mcendgame.main.component.analytics
 import com.google.gson.Gson
 import de.fuballer.mcendgame.main.MCEndgame
 import de.fuballer.mcendgame.main.component.config.UserConfig
+import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneDespawnEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemyDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonPlayerDeathEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerAfterDimensionChangeEvent
+import de.fuballer.mcendgame.main.messaging.totem_encounter.TotemEncounterActivatedEvent
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
-import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isElite
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isLootGoblin
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.di.annotation.Logging
 import de.maucon.mauconframework.event.EventSubscriber
@@ -14,6 +19,7 @@ import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.LivingEntity
 import org.slf4j.Logger
 import java.net.URI
 import java.net.http.HttpClient
@@ -51,16 +57,11 @@ class AnalyticsService(
     fun on(event: PlayerAfterDimensionChangeEvent) {
         if (event.oldWorld.isDungeonWorld() || !event.newWorld.isDungeonWorld()) return
 
-        val player = event.player
-
         sendAnalytics(
             eventType = EventType.DUNGEON_JOIN,
             payload = DungeonJoinPayload(
-                gamemode = player.gameMode()?.name ?: AnalyticsUtil.UNKNOWN,
-                dungeonLevel = event.newWorld.getDungeonLevel(),
-                armor = AnalyticsUtil.getArmorItems(player),
-                hotbar = AnalyticsUtil.getHotbarItems(player),
-                offhand = AnalyticsUtil.getOffhandItems(player)
+                dungeon = AnalyticsUtil.getDungeonData(event.newWorld),
+                player = AnalyticsUtil.getPlayerLoadoutData(event.player),
             )
         )
     }
@@ -68,24 +69,93 @@ class AnalyticsService(
     @EventSubscriber
     fun on(event: DungeonPlayerDeathEvent) {
         if (event.isClient) return
-        val killer = event.killer ?: return
 
         val player = event.player
-        val world = player.level() as? ServerLevel ?: return
+        val level = player.level() as? ServerLevel ?: return
 
         sendAnalytics(
             eventType = EventType.PLAYER_DUNGEON_DEATH,
             payload = DungeonPlayerDeathPayload(
-                dungeonLevel = world.getDungeonLevel(),
-                playerArmor = AnalyticsUtil.getArmorItems(player),
-                playerMainhand = AnalyticsUtil.getMainhandItems(player),
-                playerOffhand = AnalyticsUtil.getOffhandItems(player),
-                playerEffects = AnalyticsUtil.getActiveEffects(player),
-                killerEntity = BuiltInRegistries.ENTITY_TYPE.getKey(killer.type).toString(),
-                killerArmor = AnalyticsUtil.getArmorItems(killer),
-                killerMainhand = AnalyticsUtil.getMainhandItems(killer),
-                killerOffhand = AnalyticsUtil.getOffhandItems(killer),
-                killerEffects = AnalyticsUtil.getActiveEffects(killer),
+                dungeon = AnalyticsUtil.getDungeonData(level),
+                player = AnalyticsUtil.getPlayerLoadoutData(event.player),
+                killer = event.killer?.let { AnalyticsUtil.getEntityLoadoutData(it) },
+            )
+        )
+    }
+
+    @EventSubscriber
+    fun on(event: DungeonBossDeathEvent) {
+        if (event.isClient) return
+
+        val level = event.world as? ServerLevel ?: return
+
+        sendAnalytics(
+            eventType = EventType.DUNGEON_BOSS_KILLED,
+            payload = DungeonBossKilledPayload(
+                dungeon = AnalyticsUtil.getDungeonData(level),
+                boss = BuiltInRegistries.ENTITY_TYPE.getKey(event.bossEntity.type).toString(),
+                players = level.players().map { AnalyticsUtil.getPlayerLoadoutData(it) },
+            )
+        )
+    }
+
+    @EventSubscriber
+    fun on(event: DungeonEnemyDeathEvent) {
+        if (event.isClient) return
+
+        val level = event.world as? ServerLevel ?: return
+
+        val entity = event.enemyEntity
+        if (entity.isLootGoblin()) sendLootGoblinKilledAnalytics(level, entity)
+        if (entity.isElite()) sendEliteKilledAnalytics(level, entity)
+    }
+
+    private fun sendLootGoblinKilledAnalytics(level: ServerLevel, goblin: LivingEntity) {
+        sendAnalytics(
+            eventType = EventType.LOOT_GOBLIN_KILLED,
+            payload = SpecialEnemyKilledPayload(
+                dungeon = AnalyticsUtil.getDungeonData(level),
+                enemyLoadout = AnalyticsUtil.getEntityLoadoutData(goblin)
+            )
+        )
+    }
+
+    private fun sendEliteKilledAnalytics(level: ServerLevel, goblin: LivingEntity) {
+        sendAnalytics(
+            eventType = EventType.ELITE_KILLED,
+            payload = SpecialEnemyKilledPayload(
+                dungeon = AnalyticsUtil.getDungeonData(level),
+                enemyLoadout = AnalyticsUtil.getEntityLoadoutData(goblin)
+            )
+        )
+    }
+
+    @EventSubscriber
+    fun on(event: TotemEncounterActivatedEvent) {
+        val level = event.player.level() as? ServerLevel ?: return
+        sendAnalytics(
+            eventType = EventType.TOTEM_ENCOUNTER_STARTED,
+            payload = AnalyticsUtil.getDungeonData(level),
+        )
+    }
+
+    @EventSubscriber
+    fun on(event: ScarredOneDespawnEvent) {
+        val level = event.player.level()
+
+        val scarredOne = event.entity
+        val positive = scarredOne.positiveEffects
+        val negative = scarredOne.negativeEffects
+
+        sendAnalytics(
+            eventType = EventType.SCARRED_ONE_SELECTED,
+            payload = ScarredOneSelectedPayload(
+                dungeon = AnalyticsUtil.getDungeonData(level),
+                scarredOne = ScarredOnePayload(
+                    accepted = event.accepted,
+                    positiveEffects = AnalyticsUtil.getScarredOneEffectsJson(positive),
+                    negativeEffects = AnalyticsUtil.getScarredOneEffectsJson(negative),
+                ),
             )
         )
     }
