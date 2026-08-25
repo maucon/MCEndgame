@@ -41,6 +41,7 @@ private val CREEPER_POS = Vec3(4.5, 2.0, 0.5)
 private val CHARGED_CREEPER_POS = Vec3(6.5, 2.0, 0.5)
 private const val DAMAGE_EPSILON = 0.01f
 private const val EXPLOSION_DAMAGE_EPSILON = 0.1f
+private val SMASH_TEST_HEIGHTS = listOf(2.0, 3.0, 5.0, 8.0, 12.0, 20.0)
 
 private val LOG = LoggerFactory.getLogger(VanillaDamageGameTest::class.java)
 
@@ -132,7 +133,7 @@ class VanillaDamageGameTest {
         pufferfish.playerTouch(player)
         val actualDamage = healthBefore - player.health
 
-        LOG.info("Expected {} pufferfish sting damage, player took {}", expectedDamage, actualDamage)
+        LOG.info("Result: expected {} pufferfish sting damage, player took {}", expectedDamage, actualDamage)
         helper.assertDamageEquals(actualDamage, expectedDamage, "Pufferfish sting damage")
         helper.succeed()
     }
@@ -226,6 +227,14 @@ class VanillaDamageGameTest {
 
         helper.assertPlayerAttackDamage(zombie)
     }
+
+    @GameTest(maxTicks = 200)
+    fun playerDensityMaceSmashDealsVanillaDamage(helper: GameTestHelper) {
+        LOG.info("Testing vanilla density mace smash damage from different heights")
+        helper.prepareNormalDifficulty()
+
+        helper.assertDensityMaceSmashDamage()
+    }
 }
 
 private fun GameTestHelper.prepareNormalDifficulty() {
@@ -288,8 +297,43 @@ private fun GameTestHelper.assertPlayerAttackDamage(
             player.attack(victim)
             val actualDamage = healthBefore - victim.health
 
-            LOG.info("Expected {} damage (raw {}), victim took {}", expectedDamage, rawPlayerDamage, actualDamage)
+            LOG.info("Result: expected {} damage, victim took {} (raw {})", expectedDamage, actualDamage, rawPlayerDamage)
             assertDamageEquals(actualDamage, expectedDamage, "Player attack damage")
+        }
+        .thenSucceed()
+}
+
+private fun GameTestHelper.assertDensityMaceSmashDamage() {
+    val mace = createDensityMace(level = 2)
+    val player = createDamageablePlayer()
+    player.setItemSlot(EquipmentSlot.MAINHAND, mace)
+
+    // Wait until the player has ticked once so the mace's attack damage modifier is applied.
+    startSequence()
+        .thenWaitUntil { assertTrue(player.tickCount > 0, "Player should have ticked before the attack") }
+        .thenExecute {
+            for (height in SMASH_TEST_HEIGHTS) {
+                val husk = spawnWithNoFreeWill(EntityTypes.HUSK, DEFAULT_VICTIM_POS)
+                prepareVictim(husk)
+                // High max health so the husk survives even the highest smash.
+                husk.getAttribute(Attributes.MAX_HEALTH)?.baseValue = 500.0
+                husk.health = husk.maxHealth
+
+                player.prepareFullAttack(mace)
+                player.fallDistance = height
+                player.setOnGround(false)
+
+                val source = player.weaponItem.getDamageSource(player)
+                val rawPlayerDamage = getSmashAttackRawDamage(player, husk, source)
+                val expectedDamage = expectedDamageAfterReductions(level, husk, rawPlayerDamage, source)
+
+                val healthBefore = husk.health
+                player.attack(husk)
+                val actualDamage = healthBefore - husk.health
+
+                LOG.info("Result (density mace smash from {} blocks): expected {} damage, victim took {} (raw {})", height, expectedDamage, actualDamage, rawPlayerDamage)
+                assertDamageEquals(actualDamage, expectedDamage, "Density mace smash damage from $height blocks")
+            }
         }
         .thenSucceed()
 }
@@ -317,6 +361,22 @@ private fun getFullAttackRawDamage(
     val itemBonus = player.weaponItem.item.getAttackDamageBonus(victim, scaledBaseDamage, source)
 
     return scaledBaseDamage + itemBonus
+}
+
+private fun getSmashAttackRawDamage(
+    player: ServerPlayer,
+    victim: LivingEntity,
+    source: DamageSource,
+): Float {
+    val baseDamage = player.getAttributeValue(Attributes.ATTACK_DAMAGE).toFloat()
+    val cooldown = player.getAttackStrengthScale(0.5f)
+    val baseDamageScale = 0.2f + cooldown * cooldown * 0.8f
+    val scaledBaseDamage = baseDamage * baseDamageScale
+    // For a mace this already includes the smash factor and the Density bonus
+    // (EnchantmentHelper.modifyFallBasedDamage) scaled by the fall distance.
+    val smashBonus = player.weaponItem.item.getAttackDamageBonus(victim, scaledBaseDamage, source)
+    // A falling smash attack is always a critical hit (1.5x).
+    return (scaledBaseDamage + smashBonus) * 1.5f
 }
 
 private fun expectedDamageAfterReductions(
@@ -375,7 +435,7 @@ private fun GameTestHelper.assertCreeperExplosionDamage(player: ServerPlayer, cr
         .thenWaitUntil { assertTrue(!creeper.isAlive, "Creeper should have exploded") }
         .thenExecute {
             val actualDamage = healthBefore - player.health
-            LOG.info("Expected {} explosion damage (raw {}), player took {}", expectedDamage, rawExplosionDamage, actualDamage)
+            LOG.info("Result: expected {} explosion damage, player took {} (raw {})", expectedDamage, actualDamage, rawExplosionDamage)
             assertDamageEquals(actualDamage, expectedDamage, "Creeper explosion damage", EXPLOSION_DAMAGE_EPSILON)
         }
         .thenSucceed()
@@ -404,6 +464,14 @@ private fun GameTestHelper.createBreachMace(): ItemStack {
         .getOrThrow(Enchantments.BREACH)
 
     return ItemStack(Items.MACE).apply { enchant(breach, 1) }
+}
+
+private fun GameTestHelper.createDensityMace(level: Int): ItemStack {
+    val density = this.level.registryAccess()
+        .lookupOrThrow(Registries.ENCHANTMENT)
+        .getOrThrow(Enchantments.DENSITY)
+
+    return ItemStack(Items.MACE).apply { enchant(density, level) }
 }
 
 private fun GameTestHelper.createProtectionArmorStack(item: Item, level: Int): ItemStack {
