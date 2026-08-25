@@ -22,8 +22,10 @@ public class LivingEntityPierceMixin {
     )
     private DamageSource modifyDamageSource(DamageSource original) {
         var world = Objects.requireNonNull(original.getEntity()).level();
-        var pierceType = Objects.requireNonNull(PierceContext.CURRENT.get());
-        PierceContext.CURRENT.remove();
+        var pierceType = PierceContext.CURRENT.get();
+        if (pierceType == null) {
+            return original;
+        }
 
         var damageType = switch (pierceType) {
             case PIERCE -> CustomDamageTypes.INSTANCE.getPIERCE_ATTACK();

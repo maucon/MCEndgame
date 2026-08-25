@@ -22,7 +22,10 @@ public class PlayerPierceMixin {
     )
     private DamageSource modifyDamageSource(DamageSource original) {
         var world = Objects.requireNonNull(original.getEntity()).level();
-        var pierceType = Objects.requireNonNull(PierceContext.CURRENT.get());
+        var pierceType = PierceContext.CURRENT.get();
+        if (pierceType == null) {
+            return original;
+        }
         PierceContext.CURRENT.remove();
 
         var damageType = switch (pierceType) {
