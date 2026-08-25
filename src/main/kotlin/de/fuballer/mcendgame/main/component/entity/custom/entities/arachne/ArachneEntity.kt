@@ -96,6 +96,9 @@ class ArachneEntity(
         const val MELEE_ATTACK_WIDTH = 3.0
         const val MELEE_ATTACK_HEIGHT = 3
 
+        const val MELEE_DAMAGE_FACTOR = 1.1F
+        const val PROJECTILE_DAMAGE_FACTOR = 0.75F
+
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
                 .add(Attributes.FOLLOW_RANGE, 35.0)
@@ -299,11 +302,13 @@ class ArachneEntity(
         pullProgress: Float,
     ) {
         val serverLevel = level() as? ServerLevel ?: return
+        val baseDamage = getAttributeValue(Attributes.ATTACK_DAMAGE)
+        val damage = baseDamage * PROJECTILE_DAMAGE_FACTOR
         shootAt(
             target,
             { WebshotEntity(CustomEntities.WEBSHOT, serverLevel, this) },
             { projectile ->
-                (projectile as? AbstractArrow)?.setBaseDamage(getAttributeValue(Attributes.ATTACK_DAMAGE) / 2.0)
+                (projectile as? AbstractArrow)?.setBaseDamage(damage)
             },
             serverLevel,
         )
@@ -432,7 +437,8 @@ class ArachneEntity(
                     || isInAttackArea(it.eyePosition.subtract(position()), forward, sideways)
         }
 
-        val damage = getAttributeValue(Attributes.ATTACK_DAMAGE).toFloat()
+        val baseDamage = getAttributeValue(Attributes.ATTACK_DAMAGE).toFloat()
+        val damage = baseDamage * MELEE_DAMAGE_FACTOR
         val knockBackDirection = calculateViewVector(xRot, yBodyRot).horizontal().normalize()
         val knockBackStrength = getAttributeValue(Attributes.ATTACK_KNOCKBACK) * getAttributeValue(Attributes.SCALE)
 

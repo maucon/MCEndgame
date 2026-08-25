@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 @Suppress("UnstableApiUsage")
 class MCEndgameClientGameTest : FabricClientGameTest {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(this::class.java.simpleName)
+        private val LOG = LoggerFactory.getLogger(this::class.java.simpleName)
     }
 
     override fun runTest(context: ClientGameTestContext) {
@@ -26,7 +26,7 @@ class MCEndgameClientGameTest : FabricClientGameTest {
                 val id = BuiltInRegistries.ENTITY_TYPE.getKey(entityType)
                 if (id == Identifier.withDefaultNamespace("player")) continue
 
-                LOGGER.info("Spawning {}", id)
+                LOG.info("Spawning {}", id)
                 singleplayer.server.runCommand(
                     "summon $id ${pos.x} ${pos.y} ${pos.z + 10}"
                 )

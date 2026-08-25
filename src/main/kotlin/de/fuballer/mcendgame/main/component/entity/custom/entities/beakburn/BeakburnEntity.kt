@@ -61,7 +61,7 @@ class BeakburnEntity(
 
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
-        private val BASIC_ATTACK_DAMAGE = BasicAttackDamage(0.45F, 1.0, 3.5)
+        private val BASIC_ATTACK_DAMAGE = BasicAttackDamage(0.55F, 1.0, 3.5)
 
         private val PECK_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.peck")
         private const val PECK_ID = "Peck"

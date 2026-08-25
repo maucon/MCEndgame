@@ -24,7 +24,7 @@ class KillerService(
         val killerName = killerEntity.displayName.getOrNull() ?: Component.translatable("entity.mcendgame.unknown")
 
         val screenHandlerFactory = KillerScreenHandlerFactory(killerEntityPayload, killerName)
-        { syncId, playerInventory, _ -> KillerScreenHandler(syncId, playerInventory, killerEntityPayload) }
+        { syncId, _, _ -> KillerScreenHandler(syncId, killerEntityPayload) }
 
         commandExecutor.openMenu(screenHandlerFactory)
 

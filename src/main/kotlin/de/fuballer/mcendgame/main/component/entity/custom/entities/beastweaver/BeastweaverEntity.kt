@@ -284,7 +284,7 @@ class BeastweaverEntity(
         )
 
         private val BEAR_SWIPE_RIGHT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
-        private val BEAR_SWIPE_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, BEAR_SWIPE_RIGHT_AREA, disableBlockingShield = 3F)
+        private val BEAR_SWIPE_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, BEAR_SWIPE_RIGHT_AREA)
         private val BEAR_SWIPE_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.bear_swipe_right")
         private const val BEAR_SWIPE_RIGHT_ID = "Bear Swipe Right"
         private val BEAR_SWIPE_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BEAR_SWIPE_RIGHT_ID)
@@ -307,7 +307,7 @@ class BeastweaverEntity(
             )
 
         private val BEAR_SWIPE_LEFT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, -0.35, 0.75)
-        private val BEAR_SWIPE_LEFT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, BEAR_SWIPE_LEFT_AREA, disableBlockingShield = 3F)
+        private val BEAR_SWIPE_LEFT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, BEAR_SWIPE_LEFT_AREA)
         private val BEAR_SWIPE_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.bear_swipe_left")
         private const val BEAR_SWIPE_LEFT_ID = "Bear Swipe Left"
         private val BEAR_SWIPE_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, BEAR_SWIPE_LEFT_ID)
@@ -331,15 +331,15 @@ class BeastweaverEntity(
 
         private val TAIL_SWEEP_DAMAGE_DATA = listOf(
             DelayedDamageData(
-                AreaAttackDamage(1.5F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, -2.25, 0.5), knockbackWhenBlocked = true),
+                AreaAttackDamage(1.5F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, -2.25, 0.5), disableBlockingShield = 5F, knockbackWhenBlocked = true),
                 minDelay = 18,
             ),
             DelayedDamageData(
-                AreaAttackDamage(1.5F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.0, 0.4, 0.1, 0.0, 0.5), knockbackWhenBlocked = true),
+                AreaAttackDamage(1.5F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.0, 0.4, 0.1, 0.0, 0.5), disableBlockingShield = 5F, knockbackWhenBlocked = true),
                 minDelay = 19,
             ),
             DelayedDamageData(
-                AreaAttackDamage(1.5F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, 2.25, 0.5), knockbackWhenBlocked = true),
+                AreaAttackDamage(1.5F, 2.5, AreaAttackDamage.DamageArea(5.0, 1.25, 0.4, 0.1, 2.25, 0.5), disableBlockingShield = 5F, knockbackWhenBlocked = true),
                 minDelay = 20,
             ),
         )
@@ -921,35 +921,6 @@ class BeastweaverEntity(
             ),
         )
 
-        private val DEATH_PARTICLE_DATA_SMOKE = ParticleData(
-            particle = { _, _ -> ParticleTypes.LARGE_SMOKE },
-            offset = { _ -> Vec3(0.0, 1.0, 0.0) },
-            count = 30,
-            dist = { Vec3.ZERO },
-            speed = 0.5,
-        )
-        private val DEATH_PARTICLE_DATA__WHITE_SMOKE = ParticleData(
-            particle = { _, _ -> ParticleTypes.WHITE_SMOKE },
-            offset = { _ -> Vec3(0.0, 1.0, 0.0) },
-            count = 100,
-            dist = { Vec3.ZERO },
-            speed = 0.5,
-        )
-        private val DEATH_PARTICLE_DATA_SPORES = ParticleData(
-            particle = { _, _ -> ParticleTypes.SPORE_BLOSSOM_AIR },
-            offset = { _ -> Vec3(0.0, 1.0, 0.0) },
-            count = 100,
-            dist = { Vec3(0.5, 0.5, 0.5) },
-            speed = 1.0,
-        )
-        private val DEATH_SOUND_DATA = RangeDefinedSoundData(
-            SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,
-            { 1f },
-            { 1F },
-            SoundSource.PLAYERS,
-            range = 64.0,
-        )
-
         private val ATTACKS: List<RandomOption<out Attack<BeastweaverEntity>>> = listOf(
             RandomOption(1, BEAR_SWIPE_RIGHT_ATTACK),
             RandomOption(1, BEAR_SWIPE_LEFT_ATTACK),
@@ -1425,16 +1396,6 @@ class BeastweaverEntity(
         if (angle > RHINO_CHARGE_ARROW_DEFLECT_ANGLE) return ProjectileDeflection.NONE
 
         return ProjectileDeflection.AIM_DEFLECT
-    }
-
-    override fun die(source: DamageSource) {
-        super.die(source)
-
-        val level = level() as? ServerLevel ?: return
-        DEATH_PARTICLE_DATA_SMOKE.apply(level, this)
-        DEATH_PARTICLE_DATA__WHITE_SMOKE.apply(level, this)
-        DEATH_PARTICLE_DATA_SPORES.apply(level, this)
-        DEATH_SOUND_DATA.apply(level, this)
     }
 
     override fun setNoAi(flag: Boolean) {

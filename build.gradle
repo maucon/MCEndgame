@@ -73,7 +73,6 @@ dependencies {
     implementation "net.fabricmc:fabric-loader:${loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
     implementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
-    implementation "xyz.nucleoid:fantasy:${fantasy_version}+${minecraft_version}"
     implementation "com.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
     implementation "de.maucon:maucon-framework:2.0.2"
 
@@ -91,7 +90,6 @@ dependencies {
     productionRuntimeMods files(tasks.named("gametestJar")) // our own gametest mod
     productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
     productionRuntimeMods "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
-    productionRuntimeMods "xyz.nucleoid:fantasy:${fantasy_version}+${minecraft_version}"
     productionRuntimeMods "com.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
 }
 

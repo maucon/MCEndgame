@@ -16,7 +16,6 @@ public class WolfCompanionInteractMixin {
     void interactMob(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         var wolf = (Wolf) (Object) this;
         if (!EntityMixinExtension.INSTANCE.isCompanion(wolf)) return;
-
-        cir.setReturnValue(InteractionResult.SUCCESS);
+        cir.setReturnValue(InteractionResult.PASS);
     }
 }

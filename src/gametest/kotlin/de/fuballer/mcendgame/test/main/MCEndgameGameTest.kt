@@ -29,4 +29,9 @@ class MCEndgameGameTest {
 
         helper.succeed()
     }
+
+    @GameTest
+    fun testDungeonOpenAndJoin(helper: GameTestHelper) {
+        DungeonOpenAndJoinGameTest.testPlayerOpensAndJoinsDungeon(helper)
+    }
 }

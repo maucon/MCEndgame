@@ -14,6 +14,7 @@ import net.minecraft.client.data.models.BlockModelGenerators
 import net.minecraft.client.data.models.ItemModelGenerators
 import net.minecraft.client.data.models.model.*
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 
@@ -24,6 +25,7 @@ class CustomModelProvider(
         generator.createCraftingTableLike(CustomBlocks.DUNGEON_DEVICE, CustomBlocks.DUNGEON_DEVICE) { block, _ -> sideTopBottomTextureMap(block) }
         generator.createCrossBlockWithDefaultItem(CustomBlocks.DECAYING_COBWEB, BlockModelGenerators.PlantType.NOT_TINTED)
         generator.createParticleOnlyBlock(CustomBlocks.TOTEM_STATUE, Blocks.STONE)
+        generator.createAirLikeBlock(CustomBlocks.DUNGEON_ENEMY_BLOCKER, Items.BARRIER)
     }
 
     override fun generateItemModels(generator: ItemModelGenerators) {

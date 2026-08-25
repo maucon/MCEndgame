@@ -16,9 +16,17 @@ public interface DungeonWorldAccessor {
 
     void mcendgame$setCompleted(boolean completed);
 
+    long mcendgame$getDungeonSeed();
+
+    void mcendgame$setDungeonSeed(long dungeonSeed);
+
     int mcendgame$getLevel();
 
     void mcendgame$setLevel(int level);
+
+    long mcendgame$getCreationTime();
+
+    void mcendgame$setCreationTime(long time);
 
     int mcendgame$getTotalBossCount();
 

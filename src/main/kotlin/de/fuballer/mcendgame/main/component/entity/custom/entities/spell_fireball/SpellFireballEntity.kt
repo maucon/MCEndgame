@@ -66,8 +66,8 @@ class SpellFireballEntity(
 
         damageTarget(hitResult.entity)
 
-        playSound(SoundEvents.FIRE_EXTINGUISH, 0.5f, 0.75F + random.nextFloat() * 0.25F)
-        playSound(SoundEvents.GENERIC_EXPLODE.value(), 0.5f, 0.75F + random.nextFloat() * 0.25F)
+        playSound(SoundEvents.FIRE_EXTINGUISH, 0.4f, 0.75F + random.nextFloat() * 0.25F)
+        playSound(SoundEvents.GENERIC_EXPLODE.value(), 0.4f, 0.75F + random.nextFloat() * 0.25F)
 
         discard()
     }
@@ -85,8 +85,8 @@ class SpellFireballEntity(
         super.onHitBlock(blockHitResult)
         val serverLevel = level() as? ServerLevel ?: return
 
-        playSound(SoundEvents.FIRE_EXTINGUISH, 0.5f, 0.75F + random.nextFloat() * 0.25F)
-        playSound(SoundEvents.GENERIC_EXPLODE.value(), 0.5f, 0.75F + random.nextFloat() * 0.25F)
+        playSound(SoundEvents.FIRE_EXTINGUISH, 0.4f, 0.75F + random.nextFloat() * 0.25F)
+        playSound(SoundEvents.GENERIC_EXPLODE.value(), 0.4f, 0.75F + random.nextFloat() * 0.25F)
         serverLevel.sendParticles(ParticleTypes.SMOKE, x, y, z, 5, 0.2, 0.2, 0.2, 0.3)
         spawnFire(serverLevel)
 
@@ -108,7 +108,7 @@ class SpellFireballEntity(
     override fun getDefaultGravity() = GRAVITY
 
     private fun extinguish(level: ServerLevel) {
-        playSound(SoundEvents.LAVA_EXTINGUISH, 0.75f, 0.75F + random.nextFloat() * 0.25F)
+        playSound(SoundEvents.LAVA_EXTINGUISH, 0.6f, 0.75F + random.nextFloat() * 0.25F)
         level.sendParticles(ParticleTypes.WHITE_SMOKE, x, y, z, 5, 0.2, 0.2, 0.2, 0.2)
 
         discard()

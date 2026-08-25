@@ -123,6 +123,6 @@ class SkeletonMageEntity(
     )
 
     private fun playShootFireballSound() {
-        playSound(SoundEvents.FIRECHARGE_USE, 0.75f, 0.75F + random.nextFloat() * 0.25F)
+        playSound(SoundEvents.FIRECHARGE_USE, 0.65f, 0.75F + random.nextFloat() * 0.25F)
     }
 }

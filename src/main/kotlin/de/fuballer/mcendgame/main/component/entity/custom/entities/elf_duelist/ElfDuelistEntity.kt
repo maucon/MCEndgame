@@ -63,7 +63,7 @@ class ElfDuelistEntity(
 
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
-        private val ATTACK_DAMAGE = BasicAttackDamage(0.6F, 1.0, 3.5)
+        private val ATTACK_DAMAGE = BasicAttackDamage(0.5F, 1.0, 3.5)
 
         private val STAB_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.stab_right")
         private const val STAB_RIGHT_ID = "Stab Right"
@@ -244,7 +244,7 @@ class ElfDuelistEntity(
         private val DOWNWARDS_SLICE_BOTH_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("attack.downwards_slice_both")
         private const val DOWNWARDS_SLICE_BOTH_ID = "Downwards Slice Both"
         private val DOWNWARDS_SLICE_BOTH_ANIM_DATA = AttackAnimationData(AttackPose.UPWARDS_SLICE_BOTH, AttackPose.DOWNWARDS_SLICE_BOTH, ATTACK_ANIM_CONTROLLER_ID, DOWNWARDS_SLICE_BOTH_ID)
-        private val DOWNWARDS_SLICE_BOTH_ATTACK_DAMAGE = BasicAttackDamage(0.6F, 2.0, 20.0, disableBlockingShield = 5F)
+        private val DOWNWARDS_SLICE_BOTH_ATTACK_DAMAGE = BasicAttackDamage(0.5F, 2.0, 20.0, disableBlockingShield = 5F)
         private val DOWNWARDS_SLICE_BOTH_ATTACK =
             LeapAttack<ElfDuelistEntity>(
                 DOWNWARDS_SLICE_BOTH_ID,

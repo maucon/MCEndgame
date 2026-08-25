@@ -226,18 +226,17 @@ re-run `runDatagen` and check in the regenerated `src/main/generated` files. Not
   test tasks automatically. Keep that behavior when adding new test tasks.
 - `run/`, `logs/`, `.gradle/`, `build/`, `src/main/generated/`, `.kotlin/`, `.idea/`
   are gitignored — never commit dev artifacts.
-- License is MIT; keep the LICENSE file (renamed into the jar by the `jar` task).
 
 ## Project conventions summary
 
-| Topic            | Convention                                                                 |
-|------------------|----------------------------------------------------------------------------|
-| Mod id / package | `mcendgame` / `de.fuballer.mcendgame`                                      |
-| Language         | Kotlin first; Java for mixins + runtime worlds                             |
-| DI / wiring      | `@Injectable` + `@Configuration`, auto-scanned; `@Initializer` for setup    |
+| Topic            | Convention                                                                              |
+|------------------|-----------------------------------------------------------------------------------------|
+| Mod id / package | `mcendgame` / `de.fuballer.mcendgame`                                                   |
+| Language         | Kotlin first; Java for mixins + runtime worlds                                          |
+| DI / wiring      | `@Injectable` + `@Configuration`, auto-scanned; `@Initializer` for setup                |
 | Internal comms   | `EventGateway.publish` + `@EventSubscriber`; `CommandGateway.apply` + `@CommandHandler` |
-| Persistence      | `PersistentMapRepository` + codec entities → `<world>/mcendgame/repository/*.json` |
-| Assets           | `src/main/resources/assets/mcendgame/` (models, textures, lang, geckolib)  |
-| Data            | datagen in `src/client/.../datagen/` → `src/main/generated/` (via `runDatagen`) |
-| Tests            | Fabric GameTest in `src/gametest/` (server + client entrypoints)            |
-| CI               | `runDatagen` + `build`; client gametests via `runProductionClientGameTest`  |
+| Persistence      | `PersistentMapRepository` + codec entities → `<world>/mcendgame/repository/*.json`      |
+| Assets           | `src/main/resources/assets/mcendgame/` (models, textures, lang, geckolib)               |
+| Data             | datagen in `src/client/.../datagen/` → `src/main/generated/` (via `runDatagen`)         |
+| Tests            | Fabric GameTest in `src/gametest/` (server + client entrypoints)                        |
+| CI               | `runDatagen` + `build`; client gametests via `runProductionClientGameTest`              |

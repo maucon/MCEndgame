@@ -35,7 +35,7 @@ open class PersistentMapRepository<ID, ENTITY : Entity<ID>>(
         writeToFile()
     }
 
-    @EventSubscriber
+    @EventSubscriber(sync = true)
     fun on(event: PlayerDisconnectEvent) {
         writeToFile()
     }

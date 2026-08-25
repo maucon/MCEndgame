@@ -36,6 +36,16 @@ object WorldMixinExtension {
         return accessor.`mcendgame$isCompleted`()
     }
 
+    fun ServerLevel.setDungeonSeed(dungeonSeed: Long) {
+        val accessor = this as DungeonWorldAccessor
+        accessor.`mcendgame$setDungeonSeed`(dungeonSeed)
+    }
+
+    fun ServerLevel.getDungeonSeed(): Long {
+        val accessor = this as DungeonWorldAccessor
+        return accessor.`mcendgame$getDungeonSeed`()
+    }
+
     fun ServerLevel.setDungeonLevel(dungeonLevel: Int) {
         val accessor = this as DungeonWorldAccessor
         accessor.`mcendgame$setLevel`(dungeonLevel)
@@ -44,6 +54,16 @@ object WorldMixinExtension {
     fun ServerLevel.getDungeonLevel(): Int {
         val accessor = this as DungeonWorldAccessor
         return accessor.`mcendgame$getLevel`()
+    }
+
+    fun ServerLevel.setCreationTime(time: Long) {
+        val accessor = this as DungeonWorldAccessor
+        accessor.`mcendgame$setCreationTime`(time)
+    }
+
+    fun ServerLevel.getCreationTime(): Long {
+        val accessor = this as DungeonWorldAccessor
+        return accessor.`mcendgame$getCreationTime`()
     }
 
     fun ServerLevel.setTotalBossCount(count: Int) {
