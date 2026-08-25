@@ -79,7 +79,7 @@ object DamageService {
         damageSource: DamageSourceDraft,
         damage: Float, // for debug
     ): DamageSourceResult {
-        log.info("createDamageSourceResult - ${victim.javaClass.simpleName} - ${damageSource.javaClass.simpleName}")
+        log.info("createDamageSourceResult - ${victim.javaClass.simpleName} - ${damageSource.javaClass.simpleName} - originalDamage: $damage")
 
         val vanillaDamageContext = damageSource.vanillaDamageContext
         val customDamageContext = damageSource.customDamageContext
@@ -127,42 +127,43 @@ object DamageService {
      * Has side effects, only use in damage-related mixins.
      */
     fun applyDamage(
-        entity: LivingEntity,
+        victim: LivingEntity,
         source: DamageSource,
         damage: Float // for debug
     ): Optional<Float> {
+        log.info("applyDamage - ${victim.javaClass.simpleName} - ${source.javaClass.simpleName} - damage: $damage")
         var dmg = damage
 
-        val damageReductionResult = calculateIncomingDamage(entity, source, dmg)
+        val damageReductionResult = calculateIncomingDamage(victim, source, dmg)
         val reducedTotal = damageReductionResult.damage
         val resistedTotal = damageReductionResult.resistedDamage
 
-        entity.setLastHitWasApplied(true)
+        victim.setLastHitWasApplied(true)
 
         var damageToApply = reducedTotal
         var damageResisted = resistedTotal
-        if (entity.isInInvulnerabilityFrames()) {
-            val isStronger = reducedTotal > entity.getLastHurt()
-            entity.setLastHitWasApplied(isStronger)
+        if (victim.isInInvulnerabilityFrames()) {
+            val isStronger = reducedTotal > victim.getLastHurt()
+            victim.setLastHitWasApplied(isStronger)
 
             if (!isStronger) return Optional.empty();
 
-            damageToApply = reducedTotal - entity.getLastHurt()
-            damageResisted = max(0f, resistedTotal - entity.getLastResisted())
+            damageToApply = reducedTotal - victim.getLastHurt()
+            damageResisted = max(0f, resistedTotal - victim.getLastResisted())
         }
-        entity.setLastHurt(reducedTotal)
-        entity.setLastResisted(resistedTotal)
+        victim.setLastHurt(reducedTotal)
+        victim.setLastResisted(resistedTotal)
 
         dmg = damageToApply
 
         // from LivingEntity.getDamageAfterArmorAbsorb
         if (!source.`is`(DamageTypeTags.BYPASSES_ARMOR)) {
-            entity.hurtArmor(source, dmg) // TODO only ATTACK_DAMAGE part?
+            victim.hurtArmor(source, dmg) // TODO only ATTACK_DAMAGE part?
         }
 
         // from LivingEntity.getDamageAfterMagicAbsorb
-        if (entity is ServerPlayer) {
-            entity.awardStat(Stats.DAMAGE_RESISTED, (damageResisted * 10.0f).roundToInt())
+        if (victim is ServerPlayer) {
+            victim.awardStat(Stats.DAMAGE_RESISTED, (damageResisted * 10.0f).roundToInt())
         } else if (source.entity is ServerPlayer) {
             (source.entity as ServerPlayer).awardStat(Stats.DAMAGE_DEALT_RESISTED, (damageResisted * 10.0f).roundToInt())
         }
@@ -207,7 +208,7 @@ object DamageService {
         source: DamageSource,
         damage: Float // for debug
     ): DamageReductionResult {
-        log.info("calculateReducedDamage - ${victim.javaClass.simpleName} - ${source.javaClass.simpleName}")
+        log.info("calculateIncomingDamage - ${victim.javaClass.simpleName} - ${source.javaClass.simpleName} - damage: $damage")
         if (source !is DamageSourceResult.Applied) {
             // todo log/debug
             return DamageReductionResult.zero()
