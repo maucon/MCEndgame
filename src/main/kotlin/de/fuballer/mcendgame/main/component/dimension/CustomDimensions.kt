@@ -22,9 +22,7 @@ import java.util.*
 
 @Injectable
 object CustomDimensions {
-    val DUNGEON: ResourceKey<DimensionType> = of("dungeon")
-
-    private fun of(id: String) = ResourceKey.create(Registries.DIMENSION_TYPE, IdentifierUtil.default(id))
+    val DUNGEON: ResourceKey<DimensionType> = ResourceKey.create(Registries.DIMENSION_TYPE, IdentifierUtil.default("dungeon"))
 
     fun bootstrap(context: BootstrapContext<DimensionType>) {
         val timelines = context.lookup(Registries.TIMELINE)

@@ -1,16 +1,11 @@
 package de.fuballer.mcendgame.main.component.dungeon.world
 
-import de.fuballer.mcendgame.main.component.dimension.CustomDimensions
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
-import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
+import de.fuballer.mcendgame.main.runtime_worlds.RuntimeLevelConfig
+import de.fuballer.mcendgame.main.runtime_worlds.util.VoidChunkGenerator
 import net.minecraft.resources.ResourceKey
-import net.minecraft.world.Difficulty
-import net.minecraft.world.clock.WorldClocks
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.gamerules.GameRules
-import xyz.nucleoid.fantasy.RuntimeLevelConfig
-import xyz.nucleoid.fantasy.util.VoidChunkGenerator
-import java.util.*
 
 object DungeonWorldSettings {
     const val EMPTY_WORLD_CHECK_PERIOD = 10 * 60 * 20 // ticks
@@ -20,10 +15,8 @@ object DungeonWorldSettings {
         biome: ResourceKey<Biome>,
         gameTime: Int,
     ): RuntimeLevelConfig = RuntimeLevelConfig()
-        .setDimensionType(CustomDimensions.DUNGEON)
-        .setDifficulty(Difficulty.HARD)
         .setGenerator(VoidChunkGenerator(RuntimeConfig.SERVER, biome))
-        .setClockTime(WorldClocks.OVERWORLD, gameTime)
+        .setClockTime(gameTime)
         .setGameRule(GameRules.KEEP_INVENTORY, true)
         .setGameRule(GameRules.MOB_GRIEFING, false)
         .setGameRule(GameRules.SPAWN_MOBS, false)
@@ -43,7 +36,4 @@ object DungeonWorldSettings {
         .setGameRule(GameRules.SPAWN_WARDENS, false)
         .setGameRule(GameRules.SPREAD_VINES, false)
         .setGameRule(GameRules.UNIVERSAL_ANGER, false)
-
-    const val DUNGEON_WORLD_PREFIX = "dungeon-world"
-    fun generateIdentifier() = IdentifierUtil.default("$DUNGEON_WORLD_PREFIX-${UUID.randomUUID()}")
 }
