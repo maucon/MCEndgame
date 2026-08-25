@@ -16,7 +16,7 @@ mixins and low-level runtime-world code) and published on Modrinth / CurseForge.
 
 - Minecraft **26.2** (calendar versioning), **Yarn** mappings, Fabric Loom
 - **Kotlin 2.4.0** via Fabric Language Kotlin, **Java 25** toolchain
-- Fabric API, **GeckoLib** (entity/armor animations), **Nucleoid Fantasy** (runtime dimensions)
+- Fabric API, **GeckoLib** (entity/armor animations)
 - **maucon-framework** (`de.maucon:maucon-framework:2.0.1`) — a private dependency from
   GitHub Packages (`maven.pkg.github.com/maucon/maucon-framework`) that provides the
   dependency injection, event bus, command bus, and initializer machinery the whole mod
