@@ -69,6 +69,8 @@ class KillerScreen(
         killerEntity.equipment.forEach { livingEntity.setItemSlot(it.key, it.value) }
         killerEntity.statusEffects.forEach { livingEntity.addEffect(it) }
 
+        livingEntity.id = 1 // assign any id (!=0) so it doesn't crash when rendering
+
         return livingEntity
     }
 
