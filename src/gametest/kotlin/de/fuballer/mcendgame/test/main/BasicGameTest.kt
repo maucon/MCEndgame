@@ -7,9 +7,9 @@ import net.minecraft.resources.Identifier
 import net.minecraft.world.level.block.Blocks
 import org.slf4j.LoggerFactory
 
-private val LOG = LoggerFactory.getLogger(MCEndgameGameTest::class.java)
+private val LOG = LoggerFactory.getLogger(BasicGameTest::class.java)
 
-class MCEndgameGameTest {
+class BasicGameTest {
     @GameTest
     fun test(helper: GameTestHelper) {
         helper.assertBlockPresent(Blocks.AIR, 0, 0, 0)
@@ -28,10 +28,5 @@ class MCEndgameGameTest {
         }
 
         helper.succeed()
-    }
-
-    @GameTest
-    fun testDungeonOpenAndJoin(helper: GameTestHelper) {
-        DungeonOpenAndJoinGameTest.testPlayerOpensAndJoinsDungeon(helper)
     }
 }

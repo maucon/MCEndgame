@@ -12,9 +12,9 @@ import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtensio
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getOpener
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getTotalBossCount
-import de.fuballer.mcendgame.test.main.DungeonOpenAndJoinGameTest.testPlayerOpensAndJoinsDungeon
 import de.maucon.mauconframework.event.EventGateway
 import io.netty.channel.embedded.EmbeddedChannel
+import net.fabricmc.fabric.api.gametest.v1.GameTest
 import net.minecraft.core.BlockPos
 import net.minecraft.gametest.framework.GameTestHelper
 import net.minecraft.network.Connection
@@ -31,6 +31,11 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import org.slf4j.LoggerFactory
 
+// Covers the whole generated layout (rooms start at the origin and extend a few hundred blocks)
+private val DUNGEON_AREA = AABB.ofSize(Vec3(0.0, 0.0, 0.0), 2000.0, 500.0, 2000.0)
+
+private val LOG = LoggerFactory.getLogger(DungeonGameTest::class.java)
+
 /**
  * End-to-end server gametest for the dungeon entry flow:
  * a player opens a dungeon at the Dungeon Device and then joins it through the entry portal.
@@ -42,14 +47,10 @@ import org.slf4j.LoggerFactory
  *    player interacts with an entry portal
  *
  * This class is not a gametest entrypoint itself; the main gametest entrypoint
- * ([MCEndgameGameTest]) invokes [testPlayerOpensAndJoinsDungeon].
+ * ([BasicGameTest]) invokes [testPlayerOpensAndJoinsDungeon].
  */
-object DungeonOpenAndJoinGameTest {
-    private val LOG = LoggerFactory.getLogger(this::class.java.simpleName)
-
-    // Covers the whole generated layout (rooms start at the origin and extend a few hundred blocks)
-    private val DUNGEON_AREA = AABB.ofSize(Vec3(0.0, 0.0, 0.0), 2000.0, 500.0, 2000.0)
-
+class DungeonGameTest {
+    @GameTest
     fun testPlayerOpensAndJoinsDungeon(helper: GameTestHelper) {
         val originWorld = helper.level
         val deviceRelativePos = BlockPos(0, 1, 0)
