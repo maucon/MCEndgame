@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.arachne.ArachneEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.BeakburnEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineEntity
@@ -14,8 +15,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dumm
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
-import net.minecraft.world.entity.animal.wolf.Wolf
 import net.minecraft.world.entity.LivingEntity.createLivingAttributes
+import net.minecraft.world.entity.animal.wolf.Wolf
 
 @Injectable
 object EntityAttributeRegisterer {
@@ -34,5 +35,6 @@ object EntityAttributeRegisterer {
         FabricDefaultAttributeRegistry.register(CustomEntities.BEASTWEAVER, BeastweaverEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.BEASTWEAVER_WOLF, Wolf.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.BEASTWEAVER_VINE, BeastweaverVineEntity.createAttributes())
+        FabricDefaultAttributeRegistry.register(CustomEntities.BANDIT, BanditEntity.createAttributes())
     }
 }
