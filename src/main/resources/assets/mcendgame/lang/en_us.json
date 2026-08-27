@@ -335,6 +335,8 @@
   "entity.mcendgame.block_debris": "Block Debris",
   "entity.mcendgame.bandit": "Bandit",
 
+  "entity.mcendgame.bandit.drenn": "Drenn, the Butcher",
+
   "item.mcendgame.decaying_cobweb": "Decaying Cobweb",
   "item.mcendgame.totem_statue": "Totem Statue",
   "item.mcendgame.dungeon_enemy_blocker": "Dungeon Enemy Blocker",

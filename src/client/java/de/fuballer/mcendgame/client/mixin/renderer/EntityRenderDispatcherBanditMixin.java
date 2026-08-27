@@ -41,7 +41,7 @@ public class EntityRenderDispatcherBanditMixin {
     ) {
         if (!(entity instanceof BanditEntity banditEntity)) return;
 
-        var model = banditEntity.getModelType();
+        var model = banditEntity.getBanditType().getModelType();
         var renderer = banditRenderers.get(model);
         cir.setReturnValue((EntityRenderer) renderer);
     }
@@ -58,7 +58,7 @@ public class EntityRenderDispatcherBanditMixin {
     ) {
         if (!(entityRenderState instanceof BanditRenderState banditRenderState)) return;
 
-        var model = banditRenderState.getModelType();
+        var model = banditRenderState.getBanditType().getModelType();
         var renderer = banditRenderers.get(model);
         cir.setReturnValue((EntityRenderer<?, ? super S>) renderer);
     }

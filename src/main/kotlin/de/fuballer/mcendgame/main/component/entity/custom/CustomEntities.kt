@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.main.component.entity.custom
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.arachne.ArachneEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditType
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.BeakburnEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineEntity
@@ -156,7 +157,7 @@ object CustomEntities {
     )
     val BANDIT = RegistryUtil.registerEntity(
         CustomEntityIds.BANDIT,
-        EntityType.Builder.of(::BanditEntity, MobCategory.MISC)
+        EntityType.Builder.of({ _, level -> BanditEntity.create(BanditType.DEFAULT, level) }, MobCategory.MISC)
             .sized(0.6F, 1.8F)
             .eyeHeight(1.62F)
             .vehicleAttachment(Avatar.DEFAULT_VEHICLE_ATTACHMENT)
