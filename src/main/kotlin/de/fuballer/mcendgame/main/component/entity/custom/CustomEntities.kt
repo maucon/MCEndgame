@@ -157,7 +157,7 @@ object CustomEntities {
     )
     val BANDIT = RegistryUtil.registerEntity(
         CustomEntityIds.BANDIT,
-        EntityType.Builder.of({ _, level -> BanditEntity.create(BanditType.DEFAULT, level) }, MobCategory.MISC)
+        EntityType.Builder.of({ _, level -> BanditEntity.create(BanditType.entries.random(), level) }, MobCategory.MISC)
             .sized(0.6F, 1.8F)
             .eyeHeight(1.62F)
             .vehicleAttachment(Avatar.DEFAULT_VEHICLE_ATTACHMENT)

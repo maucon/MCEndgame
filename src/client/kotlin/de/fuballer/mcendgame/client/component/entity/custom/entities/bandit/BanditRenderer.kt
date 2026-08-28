@@ -104,7 +104,7 @@ class BanditRenderer(
         partialTicks: Float,
     ) {
         super.extractRenderState(entity, state, partialTicks)
-        state.banditType = entity.banditType
+        state.banditType = entity.getBanditType()
         state.leftArmPose = getArmPose(entity, HumanoidArm.LEFT)
         state.rightArmPose = getArmPose(entity, HumanoidArm.RIGHT)
         state.arrowCount = entity.arrowCount
