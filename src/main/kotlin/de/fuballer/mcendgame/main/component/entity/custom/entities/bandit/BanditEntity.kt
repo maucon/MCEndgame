@@ -1,14 +1,13 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getHitbox
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.DifficultyInstance
-import net.minecraft.world.entity.EntitySpawnReason
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.PathfinderMob
-import net.minecraft.world.entity.SpawnGroupData
+import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
@@ -30,9 +29,10 @@ class BanditEntity(
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
                 .add(Attributes.FOLLOW_RANGE, 32.0)
+                .add(Attributes.ATTACK_DAMAGE, 1.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.3)
-                .add(Attributes.ATTACK_DAMAGE, 4.0)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.3)
+                .add(Attributes.ATTACK_SPEED)
+                .add(Attributes.SWEEPING_DAMAGE_RATIO)
         }
 
         fun create(type: BanditType, level: Level): BanditEntity {
@@ -89,5 +89,21 @@ class BanditEntity(
     override fun aiStep() {
         super.aiStep()
         updateSwingTime()
+    }
+
+    override fun isWithinMeleeAttackRange(target: LivingEntity): Boolean {
+        val attackRange = activeItem.get(DataComponents.ATTACK_RANGE)
+        val maxRange: Double
+        val minRange: Double
+        if (attackRange == null) {
+            maxRange = getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE)
+            minRange = 0.0
+        } else {
+            maxRange = attackRange.effectiveMaxRange(this).toDouble()
+            minRange = attackRange.effectiveMinRange(this).toDouble()
+        }
+
+        val hitbox = target.getHitbox()
+        return getAttackBoundingBox(maxRange).intersects(hitbox) && (minRange <= 0.0 || !getAttackBoundingBox(minRange).intersects(hitbox))
     }
 }
