@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.goals
+package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import net.minecraft.world.InteractionHand
@@ -23,8 +23,10 @@ open class BanditMeleeGoal(
     protected var ticksUntilNextAttack: Int = 0
     private var lastCanUseCheck: Long = 0
 
+    private val travelJumpMinDistanceToTargetAttackRangeFactor: Double = 1.8
+
     init {
-        setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP))
+        setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK))
     }
 
     companion object {
@@ -76,7 +78,7 @@ open class BanditMeleeGoal(
 
         tickPath(target)
 
-        if (shouldJump()) banditEntity.jumpControl.jump()
+        tryJump()
 
         ticksUntilNextAttack = max(ticksUntilNextAttack - 1, 0)
         checkAndPerformMeleeAttack(target)
@@ -96,16 +98,21 @@ open class BanditMeleeGoal(
         pathedTargetY = target.y
         pathedTargetZ = target.z
 
-        setTicksUntilNextPathRecalculation(target)
+        val canMoveTo = banditEntity.getNavigation().moveTo(target, speedModifier)
+
+        setTicksUntilNextPathRecalculation(target, canMoveTo)
     }
 
-    private fun setTicksUntilNextPathRecalculation(target: LivingEntity) {
+    private fun setTicksUntilNextPathRecalculation(
+        target: LivingEntity,
+        canMoveTo: Boolean,
+    ) {
         ticksUntilNextPathRecalculation = 4 + banditEntity.getRandom().nextInt(7)
         val targetDistanceSqr = banditEntity.distanceToSqr(target)
         if (targetDistanceSqr > 1024.0) ticksUntilNextPathRecalculation += 10
         else if (targetDistanceSqr > 256.0) ticksUntilNextPathRecalculation += 5
 
-        if (!banditEntity.getNavigation().moveTo(target, speedModifier)) ticksUntilNextPathRecalculation += 15
+        if (!canMoveTo) ticksUntilNextPathRecalculation += 15
 
         ticksUntilNextPathRecalculation = adjustedTickDelay(ticksUntilNextPathRecalculation)
     }
@@ -127,7 +134,13 @@ open class BanditMeleeGoal(
         return ticksUntilNextAttack <= 0 && banditEntity.isWithinMeleeAttackRange(target) && banditEntity.sensing.hasLineOfSight(target)
     }
 
-    private fun shouldJump(): Boolean {
-        return false
+    private fun tryJump() {
+        if (!banditEntity.onGround()) return
+
+        val target = banditEntity.target ?: return
+        val minDistance = banditEntity.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE) * travelJumpMinDistanceToTargetAttackRangeFactor
+        if (banditEntity.distanceToSqr(target) < minDistance * minDistance) return
+
+        banditEntity.getBanditMoveControl().jump()
     }
 }

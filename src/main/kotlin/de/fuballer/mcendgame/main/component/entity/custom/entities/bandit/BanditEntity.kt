@@ -1,7 +1,9 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
-import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.goals.BanditMeleeGoal
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.BanditMoveControl
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.BanditPathNavigation
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditMeleeGoal
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getHitbox
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -16,10 +18,13 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 
 class BanditEntity(
     type: EntityType<BanditEntity>,
@@ -30,7 +35,7 @@ class BanditEntity(
             return createLivingAttributes()
                 .add(Attributes.FOLLOW_RANGE, 32.0)
                 .add(Attributes.ATTACK_DAMAGE, 1.0)
-                .add(Attributes.MOVEMENT_SPEED, 0.1)
+                .add(Attributes.MOVEMENT_SPEED, 0.25)
                 .add(Attributes.ATTACK_SPEED)
                 .add(Attributes.SWEEPING_DAMAGE_RATIO)
         }
@@ -41,8 +46,15 @@ class BanditEntity(
             return bandit
         }
 
+        private const val BANDIT_TYPE_INDEX_ID = "bandit_type_index"
         private val BANDIT_TYPE_INDEX: EntityDataAccessor<Int> = SynchedEntityData.defineId(BanditEntity::class.java, EntityDataSerializers.INT)
     }
+
+    init {
+        moveControl = BanditMoveControl(this)
+    }
+
+    override fun createNavigation(level: Level): PathNavigation = BanditPathNavigation(this, level)
 
     override fun registerGoals() {
         goalSelector.addGoal(0, FloatGoal(this))
@@ -83,6 +95,7 @@ class BanditEntity(
 
     override fun aiStep() {
         super.aiStep()
+        speed = getAttributeValue(Attributes.MOVEMENT_SPEED).toFloat()
         updateSwingTime()
     }
 
@@ -101,4 +114,20 @@ class BanditEntity(
         val hitbox = target.getHitbox()
         return getAttackBoundingBox(maxRange).intersects(hitbox) && (minRange <= 0.0 || !getAttackBoundingBox(minRange).intersects(hitbox))
     }
+
+    override fun getSpeed(): Float = getAttributeValue(Attributes.MOVEMENT_SPEED).toFloat()
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.putInt(BANDIT_TYPE_INDEX_ID, entityData.get(BANDIT_TYPE_INDEX))
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        input.getInt(BANDIT_TYPE_INDEX_ID).ifPresent { entityData.set(BANDIT_TYPE_INDEX, it) }
+    }
+
+    fun getBanditMoveControl() = moveControl as BanditMoveControl
+
+    override fun getFlyingSpeed(): Float = 0.1F
 }
