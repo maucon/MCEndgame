@@ -10,6 +10,7 @@ import net.minecraft.world.level.pathfinder.Path
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.max
+import kotlin.math.min
 
 open class BanditMeleeGoal(
     protected val banditEntity: BanditEntity,
@@ -24,6 +25,7 @@ open class BanditMeleeGoal(
     private var lastCanUseCheck: Long = 0
 
     private val travelJumpMinDistanceToTargetAttackRangeFactor: Double = 1.8
+    private val travelJumpMinNoElevationNodes: Int = 5
 
     init {
         setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK))
@@ -98,7 +100,7 @@ open class BanditMeleeGoal(
         pathedTargetY = target.y
         pathedTargetZ = target.z
 
-        val canMoveTo = banditEntity.getNavigation().moveTo(target, speedModifier)
+        val canMoveTo = banditEntity.navigation.moveTo(target, speedModifier)
 
         setTicksUntilNextPathRecalculation(target, canMoveTo)
     }
@@ -141,6 +143,26 @@ open class BanditMeleeGoal(
         val minDistance = banditEntity.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE) * travelJumpMinDistanceToTargetAttackRangeFactor
         if (banditEntity.distanceToSqr(target) < minDistance * minDistance) return
 
+        if (isElevationAhead()) return
+
         banditEntity.getBanditMoveControl().jump()
+    }
+
+    private fun isElevationAhead(): Boolean {
+        val stepHeight = banditEntity.getAttributeValue(Attributes.STEP_HEIGHT)
+
+        val path = banditEntity.navigation.path ?: return false
+        val currentIndex = path.nextNodeIndex
+        val start = currentIndex + 1
+        val end = min(currentIndex + travelJumpMinNoElevationNodes, path.nodeCount - 1)
+
+        var y = path.nextNode.y
+        for (index in start..end) {
+            val nextY = path.getNode(index).y
+            if (nextY - y > stepHeight) return true
+            y = nextY
+        }
+
+        return false
     }
 }
