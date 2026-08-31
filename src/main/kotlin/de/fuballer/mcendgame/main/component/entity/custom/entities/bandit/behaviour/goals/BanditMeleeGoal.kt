@@ -83,6 +83,7 @@ open class BanditMeleeGoal(
         banditEntity.isSprinting = false
         banditEntity.setAggressive(false)
         banditEntity.getNavigation().stop()
+        banditEntity.getBanditMoveControl().strafe(0F, 0F)
     }
 
     override fun requiresUpdateEveryTick(): Boolean = true
