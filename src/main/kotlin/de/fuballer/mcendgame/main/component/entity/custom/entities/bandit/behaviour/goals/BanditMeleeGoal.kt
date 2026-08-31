@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditType
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isFacingTowards
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.LivingEntity
@@ -12,7 +13,7 @@ import java.util.*
 import kotlin.math.*
 
 open class BanditMeleeGoal(
-    protected val banditEntity: BanditEntity,
+    private val banditEntity: BanditEntity,
     private val speedModifier: Double,
 ) : Goal() {
     private var path: Path? = null
@@ -20,8 +21,9 @@ open class BanditMeleeGoal(
     private var pathedTargetY = 0.0
     private var pathedTargetZ = 0.0
     private var ticksUntilNextPathRecalculation = 0
-    protected var ticksUntilNextAttack: Int = 0
     private var lastCanUseCheck: Long = 0
+
+    private var ticksUntilNextAttack: Int = 0
 
     private val travelJumpMinNoElevationNodes: Int = 5
 
@@ -83,9 +85,6 @@ open class BanditMeleeGoal(
         val target = banditEntity.target ?: return
         banditEntity.getLookControl().setLookAt(target, 30.0f, 30.0f)
 
-        println(combatMode)
-        println(banditEntity.moveControl.speedModifier)
-
         ticksUntilNextAttack = max(ticksUntilNextAttack - 1, 0)
         tickCombatModes(target)
     }
@@ -100,10 +99,9 @@ open class BanditMeleeGoal(
             CombatMode.MOVE -> {
                 tickPath(target)
                 if (banditType.jumpWhileTravel) tryTravelJump()
-                checkAndPerformMeleeAttack(target)
 
                 if (isDistanceToTargetGreaterThan(attackRange * 2)) return
-                if (!target.isFacingTowards(banditEntity)) return
+
                 banditEntity.navigation.stop()
                 banditEntity.isSprinting = false
                 strafeForwards = 0.5F
@@ -113,10 +111,19 @@ open class BanditMeleeGoal(
             }
 
             CombatMode.DUEL -> {
-                checkAndPerformMeleeAttack(target)
-                tickDuelStrafe(target, attackRange)
+                val jumpCrit = banditType.jumpCritAttack
+                checkAndPerformMeleeAttack(target, jumpCrit)
 
-                if (!isDistanceToTargetGreaterThan(attackRange * 2.5) && target.isFacingTowards(banditEntity)) return
+                if (jumpCrit && ticksUntilNextAttack < 10 && banditEntity.onGround()) {
+                    strafeForwards = 0.5F
+                    strafingForwardsTime = 10
+                    val moveControl = banditEntity.getBanditMoveControl()
+                    moveControl.strafe(strafeForwards, strafeSide)
+                    moveControl.jump()
+                } else tickDuelStrafe(banditType, target, attackRange)
+
+                if (!isDistanceToTargetGreaterThan(attackRange * 2.5)) return
+
                 combatMode = CombatMode.MOVE
                 banditEntity.isSprinting = true
                 updatePath(target)
@@ -125,13 +132,14 @@ open class BanditMeleeGoal(
     }
 
     private fun tickDuelStrafe(
+        banditType: BanditType,
         target: LivingEntity,
         attackRange: Double,
     ) {
         strafeForwards = getDuelStrafeForwards(target, attackRange)
 
         strafingSideTime++
-        if (strafingSideTime >= 20) {
+        if (strafingSideTime >= banditType.sideStrafeUpdateTime) {
             strafingSideTime = 0
             if (banditEntity.random.nextFloat() < 0.3) strafeSide *= -1F
         }
@@ -166,7 +174,8 @@ open class BanditMeleeGoal(
         if (strafingForwardsTime >= 20) {
             strafingForwardsTime = 0
             var changeDirectionProbability = 0.3
-            if (strafeForwards > 0) changeDirectionProbability += 0.5 * (1 - distance / attackRange).coerceAtLeast(0.0)
+            val halfAttackRange = attackRange / 2
+            if (strafeForwards > 0) changeDirectionProbability += 0.7 * (1 - (distance - halfAttackRange) / halfAttackRange).coerceAtLeast(0.0)
             if (banditEntity.random.nextFloat() < changeDirectionProbability) return strafeForwards * -1F
         }
 
@@ -232,12 +241,28 @@ open class BanditMeleeGoal(
         return false
     }
 
-    protected open fun checkAndPerformMeleeAttack(target: LivingEntity) {
+    protected open fun checkAndPerformMeleeAttack(
+        target: LivingEntity,
+        hasToBeCrit: Boolean = false,
+    ) {
         if (!canPerformMeleeAttack(target)) return
+        if (hasToBeCrit && !canCriticalAttack()) return
+
         banditEntity.swing(InteractionHand.MAIN_HAND)
         banditEntity.doHurtTarget(getServerLevel(banditEntity), target)
         setMeleeAttackCooldown()
+
+        if (!banditEntity.getBanditType().strafeBackAfterTargetHit) return
+        strafeForwards = -0.5F
+        strafingForwardsTime = 0
     }
+
+    private fun canCriticalAttack() = banditEntity.fallDistance > 0.0
+            && !banditEntity.onGround()
+            && !banditEntity.onClimbable()
+            && !banditEntity.isInWater
+            && !banditEntity.isPassenger
+            && !banditEntity.isSprinting
 
     protected fun canPerformMeleeAttack(target: LivingEntity): Boolean {
         if (ticksUntilNextAttack > 0) return false

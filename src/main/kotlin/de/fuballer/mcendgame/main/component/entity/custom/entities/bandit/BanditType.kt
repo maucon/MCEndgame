@@ -19,7 +19,9 @@ enum class BanditType(
     val texture: Identifier,
     val equipment: List<BanditItemStack>,
     val jumpWhileTravel: Boolean = true,
-    val jumpAttack: Boolean = false,
+    val jumpCritAttack: Boolean = false,
+    val strafeBackAfterTargetHit: Boolean = true,
+    val sideStrafeUpdateTime: Int = 10,
 ) {
     RUSK(
         Component.translatable(TRANSLATABLE_BASE_KEY + "drenn"),
@@ -29,7 +31,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_AXE)),
             BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.WITHER_ROSE_CHESTPLATE.defaultInstance),
         ),
-        jumpAttack = true,
+        jumpCritAttack = true,
     ),
     NESSA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "nessa"),
