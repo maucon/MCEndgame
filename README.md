@@ -83,7 +83,7 @@
 </details>
 <details>
     <summary>Pinnacle Boss</summary>
-    <img src="assets/images/pinnacle_boss.png" alt="Killer">
+    <img src="assets/images/pinnacle_boss.png" alt="Pinnacle Boss">
 </details>
 <details>
     <summary>Scaling Difficulty</summary>
