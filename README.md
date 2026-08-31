@@ -2,13 +2,15 @@
 [![Mod Loader](https://img.shields.io/badge/Loader-Fabric-blue)](https://fabricmc.net/use/installer/)
 [![Modrinth](https://img.shields.io/badge/Modrinth-MCEndgame-green)](https://modrinth.com/mod/mcendgame)
 [![CurseForge](https://img.shields.io/badge/CurseForge-MCEndgame-orange)](https://www.curseforge.com/minecraft/mc-mods/mcendgame)
-[![build](https://github.com/maucon/MCEndgame/actions/workflows/build.yml/badge.svg)](https://github.com/maucon/MCEndgame/actions/workflows/build.yml)
+[![Discord](https://img.shields.io/badge/Discord-MCEndgame-darkblue)](https://discord.gg/bteDygRJFg)
 [![License](https://img.shields.io/badge/License-LGPLv3-lightblue)](LICENSE)
 
 <div align="center">
   <img src="assets/images/banner.png" alt="MCEndgame Banner" width="850">
 
   <p align="center">
+    <a href="https://discord.gg/bteDygRJFg">Join the Discord</a>
+    &middot;
     <a href="https://modrinth.com/mod/mcendgame">Get it on Modrinth</a>
     &middot;
     <a href="https://www.curseforge.com/minecraft/mc-mods/mcendgame">Get it on CurseForge</a>
@@ -78,6 +80,10 @@
 <details>
     <summary>Bosses</summary>
     <img src="assets/images/bosses.png" alt="Bosses">
+</details>
+<details>
+    <summary>Pinnacle Boss</summary>
+    <img src="assets/images/pinnacle_boss.png" alt="Pinnacle Boss">
 </details>
 <details>
     <summary>Scaling Difficulty</summary>
