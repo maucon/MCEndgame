@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer
 import net.minecraft.core.component.DataComponents
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.entity.Avatar
 import net.minecraft.world.entity.HumanoidArm
 import net.minecraft.world.item.*
 
@@ -23,24 +22,12 @@ class BanditRenderer(
     0.5f,
 ) {
     companion object {
-        private fun getArmPose(avatar: Avatar, arm: HumanoidArm): ArmPose {
-            val mainHandItem = avatar.getItemInHand(InteractionHand.MAIN_HAND)
-            val offHandItem = avatar.getItemInHand(InteractionHand.OFF_HAND)
-            val mainHandPose = getArmPose(avatar, mainHandItem, InteractionHand.MAIN_HAND)
-            var offHandPose = getArmPose(avatar, offHandItem, InteractionHand.OFF_HAND)
-            if (mainHandPose.isTwoHanded) {
-                offHandPose = if (offHandItem.isEmpty) ArmPose.EMPTY else ArmPose.ITEM
-            }
-
-            return if (avatar.mainArm == arm) mainHandPose else offHandPose
-        }
-
-        private fun getArmPose(avatar: Avatar, itemInHand: ItemStack, hand: InteractionHand?): ArmPose {
+        private fun getArmPose(bandit: BanditEntity, itemInHand: ItemStack, hand: InteractionHand?): ArmPose {
             if (itemInHand.isEmpty) return ArmPose.EMPTY
 
-            if (!avatar.swinging && itemInHand.`is`(Items.CROSSBOW) && CrossbowItem.isCharged(itemInHand)) return ArmPose.CROSSBOW_HOLD
+            if (!bandit.swinging && itemInHand.`is`(Items.CROSSBOW) && CrossbowItem.isCharged(itemInHand)) return ArmPose.CROSSBOW_HOLD
 
-            if (avatar.usedItemHand == hand && avatar.useItemRemainingTicks > 0) {
+            if (bandit.usedItemHand == hand && bandit.useItemRemainingTicks > 0) {
                 val anim = itemInHand.useAnimation
                 if (anim == ItemUseAnimation.BLOCK) {
                     return ArmPose.BLOCK
@@ -76,7 +63,7 @@ class BanditRenderer(
             }
 
             val attack = itemInHand.get(DataComponents.SWING_ANIMATION)
-            return if (attack != null && attack.type() == SwingAnimationType.STAB && avatar.swinging) ArmPose.SPEAR
+            return if (attack != null && attack.type() == SwingAnimationType.STAB && bandit.swinging) ArmPose.SPEAR
             else if (itemInHand.`is`(ItemTags.SPEARS)) ArmPose.SPEAR else ArmPose.ITEM
         }
     }
@@ -92,6 +79,18 @@ class BanditRenderer(
                 context.equipmentRenderer,
             )
         )
+    }
+
+    override fun getArmPose(mob: BanditEntity, arm: HumanoidArm): ArmPose {
+        val mainHandItem = mob.getItemInHand(InteractionHand.MAIN_HAND)
+        val offHandItem = mob.getItemInHand(InteractionHand.OFF_HAND)
+        val mainHandPose = getArmPose(mob, mainHandItem, InteractionHand.MAIN_HAND)
+        var offHandPose = getArmPose(mob, offHandItem, InteractionHand.OFF_HAND)
+        if (mainHandPose.isTwoHanded) {
+            offHandPose = if (offHandItem.isEmpty) ArmPose.EMPTY else ArmPose.ITEM
+        }
+
+        return if (mob.mainArm == arm) mainHandPose else offHandPose
     }
 
     override fun getTextureLocation(state: BanditRenderState) = state.banditType.texture

@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.equipment.trim.TrimMaterials
 import net.minecraft.world.item.equipment.trim.TrimPatterns
+import kotlin.random.Random
 
 private const val TRANSLATABLE_BASE_KEY = "entity.mcendgame.bandit."
 
@@ -22,6 +23,9 @@ enum class BanditType(
     val jumpCritAttack: Boolean = false,
     val strafeBackAfterTargetHit: Boolean = true,
     val sideStrafeUpdateTime: Int = 10,
+    val blockOnEnterDuel: Boolean = true,
+    val blockAfterTargetHitProbability: Double = 0.5,
+    val blockDuration: () -> Int = { Random.nextInt(20, 40) }
 ) {
     RUSK(
         Component.translatable(TRANSLATABLE_BASE_KEY + "drenn"),
@@ -29,6 +33,7 @@ enum class BanditType(
         Identifier.withDefaultNamespace("textures/entity/player/wide/steve.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_AXE)),
+            BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.SHIELD)),
             BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.WITHER_ROSE_CHESTPLATE.defaultInstance),
         ),
         jumpCritAttack = true,

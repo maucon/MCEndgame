@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.pathfinder.Path
 import java.util.*
 import kotlin.math.*
@@ -33,6 +34,11 @@ open class BanditMeleeGoal(
     private var strafeForwards = 0.5F
     private var strafingSideTime = 0
     private var strafeSide = 0.5F
+
+    private var blockingTicks = -1
+    private var blockingDuration = 0
+
+    private var shieldHit = false
 
     init {
         setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK))
@@ -101,41 +107,65 @@ open class BanditMeleeGoal(
                 if (banditType.jumpWhileTravel) tryTravelJump()
 
                 if (isDistanceToTargetGreaterThan(attackRange * 2)) return
-
-                banditEntity.navigation.stop()
-                banditEntity.isSprinting = false
-                strafeForwards = 0.5F
-                strafingForwardsTime = 0
-                strafingSideTime = 0
-                combatMode = CombatMode.DUEL
+                enterDuel(banditType)
             }
 
             CombatMode.DUEL -> {
-                val jumpCrit = banditType.jumpCritAttack
-                checkAndPerformMeleeAttack(target, jumpCrit)
+                tickBlocking()
 
-                if (jumpCrit && ticksUntilNextAttack < 10 && banditEntity.onGround()) {
-                    strafeForwards = 0.5F
-                    strafingForwardsTime = 10
-                    val moveControl = banditEntity.getBanditMoveControl()
-                    moveControl.strafe(strafeForwards, strafeSide)
-                    moveControl.jump()
-                } else tickDuelStrafe(banditType, target, attackRange)
+                val jumpCrit = banditType.jumpCritAttack
+                tickDuelStrafe(banditType, target, attackRange, jumpCrit)
+                if (!isBlocking()) checkAndPerformMeleeAttack(banditType, target, jumpCrit)
 
                 if (!isDistanceToTargetGreaterThan(attackRange * 2.5)) return
-
-                combatMode = CombatMode.MOVE
-                banditEntity.isSprinting = true
-                updatePath(target)
+                exitDuel(target)
             }
         }
+    }
+
+    private fun enterDuel(
+        banditType: BanditType,
+    ) {
+        if (banditType.blockOnEnterDuel) startBlocking(banditType)
+
+        banditEntity.navigation.stop()
+        banditEntity.isSprinting = false
+        strafeForwards = 0.5F
+        strafingForwardsTime = 0
+        strafingSideTime = 0
+        combatMode = CombatMode.DUEL
+    }
+
+    private fun exitDuel(
+        target: LivingEntity,
+    ) {
+        if (isBlocking()) stopBlocking()
+        combatMode = CombatMode.MOVE
+        banditEntity.isSprinting = true
+        updatePath(target)
+    }
+
+    private fun tickBlocking() {
+        if (shieldHit) stopBlocking()
+        if (!isBlocking()) return
+        if (++blockingTicks >= blockingDuration) stopBlocking()
     }
 
     private fun tickDuelStrafe(
         banditType: BanditType,
         target: LivingEntity,
         attackRange: Double,
+        jumpCrit: Boolean,
     ) {
+        if (jumpCrit && ticksUntilNextAttack < 10 && banditEntity.onGround() && !isBlocking()) {
+            strafeForwards = 0.5F
+            strafingForwardsTime = 10
+            val moveControl = banditEntity.getBanditMoveControl()
+            moveControl.strafe(strafeForwards, strafeSide)
+            moveControl.jump()
+            return
+        }
+
         strafeForwards = getDuelStrafeForwards(target, attackRange)
 
         strafingSideTime++
@@ -242,6 +272,7 @@ open class BanditMeleeGoal(
     }
 
     protected open fun checkAndPerformMeleeAttack(
+        banditType: BanditType,
         target: LivingEntity,
         hasToBeCrit: Boolean = false,
     ) {
@@ -252,9 +283,12 @@ open class BanditMeleeGoal(
         banditEntity.doHurtTarget(getServerLevel(banditEntity), target)
         setMeleeAttackCooldown()
 
-        if (!banditEntity.getBanditType().strafeBackAfterTargetHit) return
-        strafeForwards = -0.5F
-        strafingForwardsTime = 0
+        if (banditType.strafeBackAfterTargetHit) {
+            strafeForwards = -0.5F
+            strafingForwardsTime = 0
+        }
+
+        if (banditEntity.random.nextFloat() < banditType.blockAfterTargetHitProbability) startBlocking(banditType)
     }
 
     private fun canCriticalAttack() = banditEntity.fallDistance > 0.0
@@ -286,6 +320,32 @@ open class BanditMeleeGoal(
     private fun getAttackRange() = banditEntity.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE)
 
     private fun getMovementSpeed() = banditEntity.getAttributeValue(Attributes.MOVEMENT_SPEED)
+
+    private fun hasShield() = banditEntity.offhandItem.`is`(Items.SHIELD)
+
+    private fun startBlocking(
+        banditType: BanditType,
+    ) {
+        if (!hasShield()) return
+        if (banditEntity.getCooldowns().isOnCooldown(banditEntity.offhandItem)) return
+        
+        banditEntity.startUsingItem(InteractionHand.OFF_HAND)
+        blockingTicks = 0
+        blockingDuration = banditType.blockDuration()
+    }
+
+    private fun stopBlocking() {
+        banditEntity.stopUsingItem()
+        blockingTicks = -1
+        shieldHit = false
+    }
+
+    private fun isBlocking() = blockingTicks >= 0
+
+    fun tookHit() {
+        if (!isBlocking()) return
+        shieldHit = true
+    }
 
     private enum class CombatMode {
         MOVE,

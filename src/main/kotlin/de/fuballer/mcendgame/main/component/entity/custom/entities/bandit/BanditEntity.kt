@@ -9,7 +9,9 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.DifficultyInstance
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemCooldowns
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.storage.ValueInput
@@ -50,15 +53,28 @@ class BanditEntity(
         private val BANDIT_TYPE_INDEX: EntityDataAccessor<Int> = SynchedEntityData.defineId(BanditEntity::class.java, EntityDataSerializers.INT)
     }
 
+    private lateinit var fightingGoal: BanditMeleeGoal
+
+    private val cooldowns: ItemCooldowns = ItemCooldowns()
+
     init {
         moveControl = BanditMoveControl(this)
+    }
+
+    override fun baseTick() {
+        super.baseTick()
+
+        cooldowns.tick()
     }
 
     override fun createNavigation(level: Level): PathNavigation = BanditPathNavigation(this, level)
 
     override fun registerGoals() {
         goalSelector.addGoal(0, FloatGoal(this))
-        goalSelector.addGoal(1, BanditMeleeGoal(this, 1.0))
+
+        fightingGoal = BanditMeleeGoal(this, 1.0)
+        goalSelector.addGoal(1, fightingGoal)
+
         goalSelector.addGoal(2, WaterAvoidingRandomStrollGoal(this, 1.0))
         goalSelector.addGoal(3, RandomLookAroundGoal(this))
 
@@ -114,6 +130,14 @@ class BanditEntity(
         return getAttackBoundingBox(maxRange).intersects(hitbox) && (minRange <= 0.0 || !getAttackBoundingBox(minRange).intersects(hitbox))
     }
 
+    override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
+        val hurt = super.hurtServer(level, source, damage)
+
+        if (source.entity != null) fightingGoal.tookHit()
+
+        return hurt
+    }
+
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
         output.putInt(BANDIT_TYPE_INDEX_ID, entityData.get(BANDIT_TYPE_INDEX))
@@ -127,4 +151,21 @@ class BanditEntity(
     fun getBanditMoveControl() = moveControl as BanditMoveControl
 
     override fun getFlyingSpeed(): Float = 0.1F
+
+    override fun blockUsingItem(
+        level: ServerLevel,
+        attacker: LivingEntity,
+        source: DamageSource,
+        damage: Float,
+    ) {
+        super.blockUsingItem(level, attacker, source, damage)
+
+        val itemBlockingWith = getItemBlockingWith() ?: return
+        val blocksAttacks = itemBlockingWith.get(DataComponents.BLOCKS_ATTACKS) ?: return
+
+        val secondsToDisableBlocking = attacker.getSecondsToDisableBlocking()
+        if (secondsToDisableBlocking > 0.0F) blocksAttacks.disable(level, this, secondsToDisableBlocking, itemBlockingWith)
+    }
+
+    fun getCooldowns() = cooldowns
 }
