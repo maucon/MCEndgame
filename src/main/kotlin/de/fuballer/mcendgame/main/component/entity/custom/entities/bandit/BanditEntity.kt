@@ -95,7 +95,6 @@ class BanditEntity(
 
     override fun aiStep() {
         super.aiStep()
-        speed = getAttributeValue(Attributes.MOVEMENT_SPEED).toFloat()
         updateSwingTime()
     }
 
@@ -114,8 +113,6 @@ class BanditEntity(
         val hitbox = target.getHitbox()
         return getAttackBoundingBox(maxRange).intersects(hitbox) && (minRange <= 0.0 || !getAttackBoundingBox(minRange).intersects(hitbox))
     }
-
-    override fun getSpeed(): Float = getAttributeValue(Attributes.MOVEMENT_SPEED).toFloat()
 
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)

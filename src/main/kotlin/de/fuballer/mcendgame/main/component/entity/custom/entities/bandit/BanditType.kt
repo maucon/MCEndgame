@@ -18,6 +18,8 @@ enum class BanditType(
     val modelType: PlayerModelType,
     val texture: Identifier,
     val equipment: List<BanditItemStack>,
+    val jumpWhileTravel: Boolean = true,
+    val jumpAttack: Boolean = false,
 ) {
     RUSK(
         Component.translatable(TRANSLATABLE_BASE_KEY + "drenn"),
@@ -26,7 +28,8 @@ enum class BanditType(
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_AXE)),
             BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.WITHER_ROSE_CHESTPLATE.defaultInstance),
-        )
+        ),
+        jumpAttack = true,
     ),
     NESSA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "nessa"),
@@ -37,7 +40,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.BOUND_ABYSS.defaultInstance),
             BanditItemStack(EquipmentSlot.LEGS, ItemStack(Items.NETHERITE_LEGGINGS)),
             BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS), TrimMaterials.GOLD, TrimPatterns.WARD)
-        )
+        ),
     );
 
     fun equip(bandit: BanditEntity) {

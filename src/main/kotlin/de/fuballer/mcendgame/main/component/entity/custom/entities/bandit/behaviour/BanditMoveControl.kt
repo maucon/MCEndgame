@@ -32,6 +32,8 @@ class BanditMoveControl(
             dist = 1.0f
         }
 
+        mob.target?.also { tickRotate(it.x - mob.x, it.z - mob.z) }
+
         dist = speedModified / dist
         xa *= dist
         za *= dist
@@ -61,8 +63,7 @@ class BanditMoveControl(
             return
         }
 
-        val yRotD = (Mth.atan2(zd, xd) * 180.0f / Math.PI.toFloat()).toFloat() - 90.0f
-        mob.yRot = rotlerp(mob.yRot, yRotD, 90.0f)
+        tickRotate(xd, zd)
         mob.setSpeed((speedModifier * mob.getAttributeValue(Attributes.MOVEMENT_SPEED)).toFloat())
 
         if (jumping) {
@@ -81,6 +82,14 @@ class BanditMoveControl(
         }
     }
 
+    private fun tickRotate(
+        xd: Double,
+        zd: Double
+    ) {
+        val yRotD = (Mth.atan2(zd, xd) * 180.0f / Math.PI.toFloat()).toFloat() - 90.0f
+        mob.yRot = rotlerp(mob.yRot, yRotD, 90.0f)
+    }
+
     private fun isWalkable(dx: Float, dz: Float): Boolean {
         val pathNavigation = mob.getNavigation()
         val nodeEvaluator = pathNavigation.getNodeEvaluator()
@@ -91,5 +100,15 @@ class BanditMoveControl(
     fun jump() {
         mob.getJumpControl().jump()
         operation = Operation.JUMPING
+    }
+
+    override fun strafe(
+        forwards: Float,
+        right: Float,
+    ) {
+        operation = Operation.STRAFE
+        strafeForwards = forwards
+        strafeRight = right
+        speedModifier = 0.5
     }
 }
