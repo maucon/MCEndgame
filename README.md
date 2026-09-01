@@ -1,23 +1,17 @@
 [![Minecraft Version](https://img.shields.io/badge/Minecraft-26.2-brightgreen)](https://www.minecraft.net/)
 [![Mod Loader](https://img.shields.io/badge/Loader-Fabric-blue)](https://fabricmc.net/use/installer/)
-[![Modrinth](https://img.shields.io/badge/Modrinth-MCEndgame-green)](https://modrinth.com/mod/mcendgame)
-[![CurseForge](https://img.shields.io/badge/CurseForge-MCEndgame-orange)](https://www.curseforge.com/minecraft/mc-mods/mcendgame)
-[![Discord](https://img.shields.io/badge/Discord-MCEndgame-darkblue)](https://discord.gg/bteDygRJFg)
+[![build](https://github.com/maucon/MCEndgame/actions/workflows/build.yml/badge.svg)](https://github.com/maucon/MCEndgame/actions/workflows/build.yml)
 [![License](https://img.shields.io/badge/License-LGPLv3-lightblue)](LICENSE)
 
 <div align="center">
   <img src="assets/images/banner.png" alt="MCEndgame Banner" width="850">
 
   <p align="center">
-    <a href="https://discord.gg/bteDygRJFg">Join the Discord</a>
-    &middot;
-    <a href="https://modrinth.com/mod/mcendgame">Get it on Modrinth</a>
-    &middot;
-    <a href="https://www.curseforge.com/minecraft/mc-mods/mcendgame">Get it on CurseForge</a>
-    &middot;
-    <a href="https://github.com/maucon/MCEndgame/issues/new?labels=bug&template=bug-report.md">Report Bug</a>
-    &middot;
-    <a href="https://github.com/maucon/MCEndgame/issues/new?labels=enhancement&template=feature-request.md">Request Feature</a>
+    <a href="https://discord.gg/bteDygRJFg"><img alt="Join the Discord" src="https://img.shields.io/badge/Join%20the%20Discord-5865F2?logo=discord&logoColor=white"></a>
+    <a href="https://modrinth.com/mod/mcendgame"><img alt="Get it on Modrinth" src="https://img.shields.io/badge/Get%20it%20on%20Modrinth-1bd96a?logo=modrinth&logoColor=white"></a>
+    <a href="https://www.curseforge.com/minecraft/mc-mods/mcendgame"><img alt="Get it on CurseForge" src="https://img.shields.io/badge/Get%20it%20on%20CurseForge-F16436?logo=curseforge&logoColor=white"></a>
+    <a href="https://github.com/maucon/MCEndgame/issues/new?labels=bug&template=bug-report.md"><img alt="Report Bug" src="https://img.shields.io/badge/Report%20Bug-red?logo=github&logoColor=white"></a>
+    <a href="https://github.com/maucon/MCEndgame/issues/new?labels=enhancement&template=feature-request.md"><img alt="Request Feature" src="https://img.shields.io/badge/Request%20Feature-blue?logo=github&logoColor=white"></a>
   </p>
 </div>
 
@@ -27,7 +21,7 @@
 
 **MCEndgame** is a Minecraft mod that aims to make Minecraft's endgame more engaging through repeatable dungeon content, meaningful gear progression, and ARPG-inspired itemization.
 
-[Watch the Trailer](https://www.youtube.com/watch?v=R2MLI5XDsfM)
+[![Watch the Trailer](https://img.shields.io/badge/Watch%20the%20Trailer-red?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=R2MLI5XDsfM)
 
 ### Features
 
