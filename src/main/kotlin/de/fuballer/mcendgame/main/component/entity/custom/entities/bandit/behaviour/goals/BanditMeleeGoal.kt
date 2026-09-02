@@ -2,13 +2,13 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behav
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditType
+import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isFacingTowards
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.pathfinder.Path
 import java.util.*
 import kotlin.math.*
@@ -322,14 +322,14 @@ open class BanditMeleeGoal(
 
     private fun getMovementSpeed() = banditEntity.getAttributeValue(Attributes.MOVEMENT_SPEED)
 
-    private fun hasShield() = banditEntity.offhandItem.`is`(Items.SHIELD)
+    private fun hasShield() = banditEntity.offhandItem.`is`(CustomTags.SHIELD)
 
     private fun startBlocking(
         banditType: BanditType,
     ) {
         if (!hasShield()) return
         if (banditEntity.getCooldowns().isOnCooldown(banditEntity.offhandItem)) return
-        
+
         banditEntity.startUsingItem(InteractionHand.OFF_HAND)
         blockingTicks = 0
         blockingDuration = banditType.blockDuration()

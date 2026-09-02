@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
 import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItems
+import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.EquipmentSlot
@@ -30,23 +31,27 @@ enum class BanditType(
     RUSK(
         Component.translatable(TRANSLATABLE_BASE_KEY + "drenn"),
         PlayerModelType.WIDE,
-        Identifier.withDefaultNamespace("textures/entity/player/wide/steve.png"),
+        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
         listOf(
-            BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_AXE)),
-            BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.SHIELD)),
+            BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.FATESPLITTER.defaultInstance),
+            BanditItemStack(EquipmentSlot.OFFHAND, CustomToolItems.GRUDGEBEARER.defaultInstance),
+            BanditItemStack(EquipmentSlot.HEAD, ItemStack(Items.NETHERITE_HELMET)),
             BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.WITHER_ROSE_CHESTPLATE.defaultInstance),
+            BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WITHER_ROSE_LEGGINGS.defaultInstance),
+            BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS)),
         ),
         jumpCritAttack = true,
     ),
     NESSA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "nessa"),
         PlayerModelType.SLIM,
-        Identifier.withDefaultNamespace("textures/entity/player/slim/alex.png"),
+        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.RADIANT_DAWN.defaultInstance),
+            BanditItemStack(EquipmentSlot.HEAD, ItemStack(Items.NETHERITE_HELMET), TrimMaterials.GOLD, TrimPatterns.WARD),
             BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.BOUND_ABYSS.defaultInstance),
             BanditItemStack(EquipmentSlot.LEGS, ItemStack(Items.NETHERITE_LEGGINGS)),
-            BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS), TrimMaterials.GOLD, TrimPatterns.WARD)
+            BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS), TrimMaterials.GOLD, TrimPatterns.WARD),
         ),
     );
 
