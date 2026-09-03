@@ -28,6 +28,7 @@ enum class BanditType(
     val blockAfterTargetHitProbability: Double = 0.5,
     val blockDuration: () -> Int = { Random.nextInt(20, 40) }
 ) {
+    // bruiser
     RUSK(
         Component.translatable(TRANSLATABLE_BASE_KEY + "drenn"),
         PlayerModelType.WIDE,
@@ -42,6 +43,59 @@ enum class BanditType(
         ),
         jumpCritAttack = true,
     ),
+    SLOANE(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "sloane"),
+        PlayerModelType.WIDE,
+        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
+        listOf(
+            BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_SWORD)),
+            BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.NETHERITE_SWORD)),
+        ),
+    ),
+
+    // assassin
+    KEIR(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "keir"),
+        PlayerModelType.SLIM,
+        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        listOf(
+        ),
+    ),
+    NIAMH(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "niamh"),
+        PlayerModelType.SLIM,
+        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
+        listOf(
+        ),
+    ),
+
+    // tank
+    HADRIK(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "hadrik"),
+        PlayerModelType.WIDE,
+        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        listOf(
+            BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.SHIELD)),
+        ),
+    ),
+    BRINA(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "brina"),
+        PlayerModelType.WIDE,
+        IdentifierUtil.default("textures/entity/bandit/brina.png"),
+        listOf(
+            BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.SHIELD)),
+            BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.STONEWARD.defaultInstance),
+        ),
+    ),
+
+    // healer
+    EMRYS(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "emrys"),
+        PlayerModelType.WIDE,
+        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        listOf(
+        ),
+    ),
     NESSA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "nessa"),
         PlayerModelType.SLIM,
@@ -52,6 +106,56 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.BOUND_ABYSS.defaultInstance),
             BanditItemStack(EquipmentSlot.LEGS, ItemStack(Items.NETHERITE_LEGGINGS)),
             BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS), TrimMaterials.GOLD, TrimPatterns.WARD),
+        ),
+    ),
+
+    // archer
+    LORCAN(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "lorcan"),
+        PlayerModelType.SLIM,
+        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        listOf(
+        ),
+    ),
+    YVRA(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "yvra"),
+        PlayerModelType.SLIM,
+        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
+        listOf(
+        ),
+    ),
+
+    // mage
+    CATHAL(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "cathal"),
+        PlayerModelType.WIDE,
+        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        listOf(
+        ),
+    ),
+    MAEVE(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "maeve"),
+        PlayerModelType.SLIM,
+        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
+        listOf(
+        ),
+    ),
+
+    // summoner / companion
+    BRAKK(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "brakk"),
+        PlayerModelType.WIDE,
+        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        listOf(
+            BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.DRUIDS_BOOTS.defaultInstance),
+        ),
+    ),
+    MORRIGAN(
+        Component.translatable(TRANSLATABLE_BASE_KEY + "morrigan"),
+        PlayerModelType.SLIM,
+        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
+        listOf(
+            BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.BROODMOTHER.defaultInstance),
         ),
     );
 
