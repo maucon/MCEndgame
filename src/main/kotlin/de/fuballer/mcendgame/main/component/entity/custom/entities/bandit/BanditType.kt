@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
+import de.fuballer.mcendgame.main.component.item.custom.misc.CustomMiscItems
 import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItems
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.network.chat.Component
@@ -9,6 +10,8 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.PlayerModelType
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.DyedItemColor
+import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.item.equipment.trim.TrimMaterials
 import net.minecraft.world.item.equipment.trim.TrimPatterns
 import kotlin.random.Random
@@ -48,8 +51,12 @@ enum class BanditType(
         PlayerModelType.WIDE,
         IdentifierUtil.default("textures/entity/bandit/nessa.png"),
         listOf(
-            BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_SWORD)),
-            BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.NETHERITE_SWORD)),
+            BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_AXE)),
+            BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.NETHERITE_AXE)),
+            BanditItemStack(EquipmentSlot.HEAD, CustomArmorItems.ICEBORNE.defaultInstance),
+            BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.DRUIDS_CHESTPLATE.defaultInstance),
+            BanditItemStack(EquipmentSlot.LEGS, ItemStack(Items.NETHERITE_LEGGINGS), trimMaterial = TrimMaterials.COPPER, trimPattern = TrimPatterns.SILENCE),
+            BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.WITHER_ROSE_BOOTS.defaultInstance),
         ),
     ),
 
@@ -59,6 +66,11 @@ enum class BanditType(
         PlayerModelType.SLIM,
         IdentifierUtil.default("textures/entity/bandit/drenn.png"),
         listOf(
+            BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.NIGHTREAVER.defaultInstance),
+            BanditItemStack(EquipmentSlot.HEAD, CustomArmorItems.ABYSSAL_MASK.defaultInstance),
+            BanditItemStack(EquipmentSlot.CHEST, ItemStack(Items.NETHERITE_CHESTPLATE), trimMaterial = TrimMaterials.AMETHYST, trimPattern = TrimPatterns.RAISER),
+            BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WINDSTRIDER.defaultInstance),
+            BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.MOONSHADOW.defaultInstance),
         ),
     ),
     NIAMH(
@@ -66,6 +78,12 @@ enum class BanditType(
         PlayerModelType.SLIM,
         IdentifierUtil.default("textures/entity/bandit/nessa.png"),
         listOf(
+            BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.SERPENTS_FANG.defaultInstance, enchantments = mapOf(Enchantments.FIRE_ASPECT to 2)),
+            BanditItemStack(EquipmentSlot.OFFHAND, CustomToolItems.SERPENTS_FANG.defaultInstance, enchantments = mapOf(Enchantments.FIRE_ASPECT to 2)),
+            BanditItemStack(EquipmentSlot.HEAD, CustomArmorItems.SUEDE_HELMET.defaultInstance, dyedColor = DyedItemColor(6825251)),
+            BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.SUEDE_CHESTPLATE.defaultInstance, dyedColor = DyedItemColor(6825251)),
+            BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.SUEDE_LEGGINGS.defaultInstance, dyedColor = DyedItemColor(6825251)),
+            BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(6825251)),
         ),
     ),
 
@@ -75,7 +93,12 @@ enum class BanditType(
         PlayerModelType.WIDE,
         IdentifierUtil.default("textures/entity/bandit/drenn.png"),
         listOf(
+            BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.MACE)),
             BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.SHIELD)),
+            BanditItemStack(EquipmentSlot.HEAD, ItemStack(Items.NETHERITE_HELMET), trimMaterial = TrimMaterials.NETHERITE, trimPattern = TrimPatterns.SILENCE),
+            BanditItemStack(EquipmentSlot.CHEST, ItemStack(Items.NETHERITE_CHESTPLATE), trimMaterial = TrimMaterials.NETHERITE, trimPattern = TrimPatterns.SILENCE),
+            BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.STONEWARD.defaultInstance),
+            BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.WITHER_ROSE_BOOTS.defaultInstance),
         ),
     ),
     BRINA(
@@ -83,8 +106,12 @@ enum class BanditType(
         PlayerModelType.WIDE,
         IdentifierUtil.default("textures/entity/bandit/brina.png"),
         listOf(
-            BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.SHIELD)),
+            BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.GRAVEBREAKER.defaultInstance),
+            BanditItemStack(EquipmentSlot.OFFHAND, CustomMiscItems.FRIGID_CRY.defaultInstance),
+            BanditItemStack(EquipmentSlot.HEAD, CustomArmorItems.ICEBORNE.defaultInstance),
+            BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.WITHER_ROSE_CHESTPLATE.defaultInstance),
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.STONEWARD.defaultInstance),
+            BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(1908001)),
         ),
     ),
 
@@ -94,6 +121,12 @@ enum class BanditType(
         PlayerModelType.WIDE,
         IdentifierUtil.default("textures/entity/bandit/drenn.png"),
         listOf(
+            BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_SWORD)),
+            BanditItemStack(EquipmentSlot.OFFHAND, CustomMiscItems.VERDANT_ECHO.defaultInstance),
+            BanditItemStack(EquipmentSlot.HEAD, ItemStack(Items.NETHERITE_HELMET), trimMaterial = TrimMaterials.COPPER, trimPattern = TrimPatterns.SILENCE),
+            BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.DRUIDS_CHESTPLATE.defaultInstance),
+            BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.DRUIDS_LEGGINGS.defaultInstance),
+            BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.DRUIDS_BOOTS.defaultInstance),
         ),
     ),
     NESSA(
@@ -102,10 +135,10 @@ enum class BanditType(
         IdentifierUtil.default("textures/entity/bandit/nessa.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.RADIANT_DAWN.defaultInstance),
-            BanditItemStack(EquipmentSlot.HEAD, ItemStack(Items.NETHERITE_HELMET), TrimMaterials.GOLD, TrimPatterns.WARD),
+            BanditItemStack(EquipmentSlot.HEAD, ItemStack(Items.NETHERITE_HELMET), trimMaterial = TrimMaterials.GOLD, trimPattern = TrimPatterns.WARD),
             BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.BOUND_ABYSS.defaultInstance),
             BanditItemStack(EquipmentSlot.LEGS, ItemStack(Items.NETHERITE_LEGGINGS)),
-            BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS), TrimMaterials.GOLD, TrimPatterns.WARD),
+            BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS), trimMaterial = TrimMaterials.GOLD, trimPattern = TrimPatterns.WARD),
         ),
     ),
 
@@ -115,6 +148,11 @@ enum class BanditType(
         PlayerModelType.SLIM,
         IdentifierUtil.default("textures/entity/bandit/drenn.png"),
         listOf(
+            BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.WINDSTRING.defaultInstance),
+            BanditItemStack(EquipmentSlot.HEAD, CustomArmorItems.SUEDE_HELMET.defaultInstance, dyedColor = DyedItemColor(5988218)),
+            BanditItemStack(EquipmentSlot.CHEST, ItemStack(Items.NETHERITE_CHESTPLATE), trimMaterial = TrimMaterials.LAPIS, trimPattern = TrimPatterns.SNOUT),
+            BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.GILDED_TEMPEST.defaultInstance),
+            BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(3949738)),
         ),
     ),
     YVRA(
@@ -122,6 +160,11 @@ enum class BanditType(
         PlayerModelType.SLIM,
         IdentifierUtil.default("textures/entity/bandit/nessa.png"),
         listOf(
+            BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.HAILSTORM.defaultInstance),
+            BanditItemStack(EquipmentSlot.HEAD, ItemStack(Items.NETHERITE_HELMET), trimMaterial = TrimMaterials.DIAMOND, trimPattern = TrimPatterns.COAST),
+            BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.SUEDE_CHESTPLATE.defaultInstance, dyedColor = DyedItemColor(10082796)),
+            BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WINDSTRIDER.defaultInstance),
+            BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(10082796)),
         ),
     ),
 
@@ -131,6 +174,12 @@ enum class BanditType(
         PlayerModelType.WIDE,
         IdentifierUtil.default("textures/entity/bandit/drenn.png"),
         listOf(
+            BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_SWORD)),
+            BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.SHIELD)),
+            BanditItemStack(EquipmentSlot.HEAD, CustomArmorItems.WITHER_ROSE_HELMET.defaultInstance),
+            BanditItemStack(EquipmentSlot.CHEST, ItemStack(Items.NETHERITE_CHESTPLATE), trimMaterial = TrimMaterials.NETHERITE, trimPattern = TrimPatterns.WARD),
+            BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WITHER_ROSE_LEGGINGS.defaultInstance),
+            BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.EMBERREIGN.defaultInstance),
         ),
     ),
     MAEVE(
@@ -138,6 +187,12 @@ enum class BanditType(
         PlayerModelType.SLIM,
         IdentifierUtil.default("textures/entity/bandit/nessa.png"),
         listOf(
+            BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.TWINFIRE.defaultInstance),
+            BanditItemStack(EquipmentSlot.OFFHAND, CustomToolItems.TWINFIRE.defaultInstance),
+            BanditItemStack(EquipmentSlot.HEAD, CustomArmorItems.EMBERCHANT.defaultInstance),
+            BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.VOIDWEAVER.defaultInstance),
+            BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.LAMIAS_GIFT.defaultInstance),
+            BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS)),
         ),
     ),
 
@@ -147,6 +202,11 @@ enum class BanditType(
         PlayerModelType.WIDE,
         IdentifierUtil.default("textures/entity/bandit/drenn.png"),
         listOf(
+            BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_AXE)),
+            BanditItemStack(EquipmentSlot.OFFHAND, CustomMiscItems.MOLTEN_ROAR.defaultInstance),
+            BanditItemStack(EquipmentSlot.HEAD, CustomArmorItems.DRUIDS_HELMET.defaultInstance),
+            BanditItemStack(EquipmentSlot.CHEST, ItemStack(Items.NETHERITE_CHESTPLATE), trimMaterial = TrimMaterials.COPPER, trimPattern = TrimPatterns.SILENCE),
+            BanditItemStack(EquipmentSlot.LEGS, ItemStack(Items.NETHERITE_LEGGINGS), trimMaterial = TrimMaterials.COPPER, trimPattern = TrimPatterns.SILENCE),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.DRUIDS_BOOTS.defaultInstance),
         ),
     ),
@@ -155,7 +215,11 @@ enum class BanditType(
         PlayerModelType.SLIM,
         IdentifierUtil.default("textures/entity/bandit/nessa.png"),
         listOf(
+            BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.DUSK_PIERCER.defaultInstance),
+            BanditItemStack(EquipmentSlot.HEAD, ItemStack(Items.NETHERITE_HELMET), trimMaterial = TrimMaterials.NETHERITE, trimPattern = TrimPatterns.SILENCE),
             BanditItemStack(EquipmentSlot.CHEST, CustomArmorItems.BROODMOTHER.defaultInstance),
+            BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WINDSTRIDER.defaultInstance),
+            BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.MOONSHADOW.defaultInstance),
         ),
     );
 
