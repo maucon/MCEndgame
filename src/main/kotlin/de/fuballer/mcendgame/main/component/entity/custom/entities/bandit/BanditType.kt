@@ -28,7 +28,7 @@ enum class BanditType(
     val strafeBackAfterTargetHit: Boolean = true,
     val sideStrafeUpdateTime: Int = 10,
     val blockOnEnterDuel: Boolean = true,
-    val blockAfterTargetHitProbability: Double = 0.5,
+    val blockAfterTargetHitProbability: Double = 0.25,
     val blockDuration: () -> Int = { Random.nextInt(20, 40) }
 ) {
     // bruiser
@@ -45,6 +45,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS)),
         ),
         jumpCritAttack = true,
+        blockAfterTargetHitProbability = 0.5,
     ),
     SLOANE(
         Component.translatable(TRANSLATABLE_BASE_KEY + "sloane"),
@@ -58,6 +59,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, ItemStack(Items.NETHERITE_LEGGINGS), trimMaterial = TrimMaterials.COPPER, trimPattern = TrimPatterns.SILENCE),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.WITHER_ROSE_BOOTS.defaultInstance),
         ),
+        jumpCritAttack = true,
     ),
 
     // assassin
@@ -72,6 +74,8 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WINDSTRIDER.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.MOONSHADOW.defaultInstance),
         ),
+        jumpCritAttack = true,
+        sideStrafeUpdateTime = 8,
     ),
     NIAMH(
         Component.translatable(TRANSLATABLE_BASE_KEY + "niamh"),
@@ -85,6 +89,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.SUEDE_LEGGINGS.defaultInstance, dyedColor = DyedItemColor(6825251)),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(6825251)),
         ),
+        sideStrafeUpdateTime = 5,
     ),
 
     // tank
@@ -100,11 +105,14 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.STONEWARD.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.WITHER_ROSE_BOOTS.defaultInstance),
         ),
+        jumpCritAttack = true,
+        sideStrafeUpdateTime = 12,
+        blockDuration= { Random.nextInt(30, 50) },
     ),
     BRINA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "brina"),
         PlayerModelType.WIDE,
-        IdentifierUtil.default("textures/entity/bandit/brina.png"),
+        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.GRAVEBREAKER.defaultInstance),
             BanditItemStack(EquipmentSlot.OFFHAND, CustomMiscItems.FRIGID_CRY.defaultInstance),
@@ -113,6 +121,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.STONEWARD.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(1908001)),
         ),
+        jumpWhileTravel = false,
     ),
 
     // healer
@@ -128,6 +137,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.DRUIDS_LEGGINGS.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.DRUIDS_BOOTS.defaultInstance),
         ),
+        jumpCritAttack = true,
     ),
     NESSA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "nessa"),
@@ -181,6 +191,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WITHER_ROSE_LEGGINGS.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.EMBERREIGN.defaultInstance),
         ),
+        sideStrafeUpdateTime = 12,
     ),
     MAEVE(
         Component.translatable(TRANSLATABLE_BASE_KEY + "maeve"),
@@ -194,6 +205,8 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.LAMIAS_GIFT.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS)),
         ),
+        jumpWhileTravel = false,
+        sideStrafeUpdateTime = 8,
     ),
 
     // summoner / companion
@@ -209,6 +222,8 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, ItemStack(Items.NETHERITE_LEGGINGS), trimMaterial = TrimMaterials.COPPER, trimPattern = TrimPatterns.SILENCE),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.DRUIDS_BOOTS.defaultInstance),
         ),
+        jumpCritAttack = true,
+        sideStrafeUpdateTime = 8,
     ),
     MORRIGAN(
         Component.translatable(TRANSLATABLE_BASE_KEY + "morrigan"),
@@ -221,6 +236,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WINDSTRIDER.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.MOONSHADOW.defaultInstance),
         ),
+        jumpWhileTravel = false,
     );
 
     fun equip(bandit: BanditEntity) {
