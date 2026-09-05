@@ -144,6 +144,8 @@ class LinkRenderService {
     ) {
         val targetDistanceVector = linked.pos.subtract(origin.pos)
         val targetDistance = targetDistanceVector.length()
+        if (targetDistance == 0.0) return
+
         val distancePercent = (linked.connectionDuration.toDouble() / LinkSettings.getLinkConnectingTime(targetDistance)).coerceAtMost(1.0)
         val linkDistance = targetDistanceVector.scale(distancePercent)
         val segmentCount = linkDistance.length() / LinkSettings.LINK_RENDER_SEGMENT_LENGTH

@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.client.component.datagen
 
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItemIds
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItemIds
+import de.fuballer.mcendgame.main.component.item.custom.misc.CustomMiscItemIds
 import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItemIds
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItemIds
 import de.fuballer.mcendgame.main.component.tags.CustomTags
@@ -73,6 +74,12 @@ class CustomItemTagProvider(
         builder(CustomTags.SHIELD)
             .add(ItemIds.SHIELD)
             .add(CustomToolItemIds.GRUDGEBEARER)
+
+        builder(CustomTags.HORN)
+            .add(ItemIds.GOAT_HORN)
+            .add(CustomMiscItemIds.VERDANT_ECHO)
+            .add(CustomMiscItemIds.MOLTEN_ROAR)
+            .add(CustomMiscItemIds.FRIGID_CRY)
 
         builder(CustomTags.MACE)
             .add(ItemIds.MACE)

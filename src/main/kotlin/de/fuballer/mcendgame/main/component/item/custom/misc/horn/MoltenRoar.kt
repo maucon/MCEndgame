@@ -9,7 +9,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 
 class MoltenRoar(
@@ -29,7 +28,11 @@ class MoltenRoar(
 
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.HAND
 
-    override fun onUse(world: Level, user: Player, cmd: HornUseCommand) {
+    override fun onUse(
+        world: Level,
+        user: LivingEntity,
+        cmd: HornUseCommand,
+    ) {
         val nearbyAllies = world.getEntitiesOfClass(LivingEntity::class.java, user.boundingBox.inflate(range)) { user.isAlly(it) && user.distanceTo(it) <= range }
 
         val duration = (baseDuration * cmd.getDurationFactor()).toInt()

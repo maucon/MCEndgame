@@ -29,7 +29,8 @@ enum class BanditType(
     val sideStrafeUpdateTime: Int = 10,
     val blockOnEnterDuel: Boolean = true,
     val blockAfterTargetHitProbability: Double = 0.25,
-    val blockDuration: () -> Int = { Random.nextInt(20, 40) }
+    val blockDuration: () -> Int = { Random.nextInt(20, 40) },
+    val hornUseRange: Pair<Double, Double> = Pair(10.0, 30.0),
 ) {
     // bruiser
     RUSK(
@@ -107,7 +108,7 @@ enum class BanditType(
         ),
         jumpCritAttack = true,
         sideStrafeUpdateTime = 12,
-        blockDuration= { Random.nextInt(30, 50) },
+        blockDuration = { Random.nextInt(30, 50) },
     ),
     BRINA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "brina"),
@@ -122,6 +123,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(1908001)),
         ),
         jumpWhileTravel = false,
+        hornUseRange = Pair(0.0, 7.0),
     ),
 
     // healer
@@ -138,6 +140,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.DRUIDS_BOOTS.defaultInstance),
         ),
         jumpCritAttack = true,
+        hornUseRange = Pair(0.0, 10.0),
     ),
     NESSA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "nessa"),

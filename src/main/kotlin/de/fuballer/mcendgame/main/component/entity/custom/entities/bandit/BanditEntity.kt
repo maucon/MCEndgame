@@ -21,6 +21,7 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
+import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemCooldowns
@@ -32,7 +33,7 @@ import net.minecraft.world.level.storage.ValueOutput
 class BanditEntity(
     type: EntityType<BanditEntity>,
     level: Level,
-) : PathfinderMob(type, level) {
+) : PathfinderMob(type, level), Enemy {
     companion object {
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()

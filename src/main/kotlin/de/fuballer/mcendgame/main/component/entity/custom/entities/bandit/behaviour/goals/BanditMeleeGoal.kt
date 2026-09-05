@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behav
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditType
+import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesHornItem
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isFacingTowards
 import net.minecraft.world.InteractionHand
@@ -92,16 +93,19 @@ open class BanditMeleeGoal(
         val target = banditEntity.target ?: return
         banditEntity.getLookControl().setLookAt(target, 30.0f, 30.0f)
 
+        val banditType = banditEntity.getBanditType()
+
         ticksUntilNextAttack = max(ticksUntilNextAttack - 1, 0)
-        tickCombatModes(target)
+        tickCombatModes(banditType, target)
+
+        tryUseHorn(banditType, target)
     }
 
     private fun tickCombatModes(
+        banditType: BanditType,
         target: LivingEntity,
     ) {
         val attackRange = getAttackRange()
-        val banditType = banditEntity.getBanditType()
-
         when (combatMode) {
             CombatMode.MOVE -> {
                 tickPath(target)
@@ -347,6 +351,26 @@ open class BanditMeleeGoal(
         if (!isBlocking()) return
         shieldHit = true
     }
+
+    private fun tryUseHorn(
+        banditType: BanditType,
+        target: LivingEntity,
+    ) {
+        if (!hasHorn()) return
+        if (combatMode == CombatMode.DUEL && ticksUntilNextAttack <= 5) return
+        val hornItemStack = banditEntity.offhandItem
+        if (banditEntity.getCooldowns().isOnCooldown(hornItemStack)) return
+
+        val distanceSqr = banditEntity.distanceToSqr(target)
+        val (minRange, maxRange) = banditType.hornUseRange
+        if (distanceSqr < minRange * minRange) return
+        if (distanceSqr > maxRange * maxRange) return
+
+        val hornItem = hornItemStack.item as? UniqueAttributesHornItem ?: return
+        hornItem.banditUse(getServerLevel(banditEntity), banditEntity, InteractionHand.OFF_HAND)
+    }
+
+    private fun hasHorn() = banditEntity.offhandItem.`is`(CustomTags.HORN)
 
     private enum class CombatMode {
         MOVE,
