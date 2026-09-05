@@ -6,12 +6,23 @@ import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
 import de.fuballer.mcendgame.main.util.extension.DamageTypeExtension.isOf
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getAttackCooldownMultiplier
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.animal.fish.Pufferfish
+import net.minecraft.world.entity.monster.Guardian
 import net.minecraft.world.entity.player.Player
 
 object MeleeAttackCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.directEntity is LivingEntity
+    override fun isActive(source: DamageSource): Boolean {
+        if (source.entity !is LivingEntity) return false
+        if (source.entity is Pufferfish) return false
+        if (source.entity is Guardian) return false
+
+        return source.type().isOf(DamageTypes.MOB_ATTACK)
+                || source.type().isOf(DamageTypes.MOB_ATTACK_NO_AGGRO)
+                || source.type().isOf(DamageTypes.PLAYER_ATTACK)
+    }
 
     override fun calculateDamage(
         originalDamage: Float,

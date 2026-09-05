@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.dodge.DodgeSettings
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.calculator.BaseDamageCalculator
+import de.fuballer.mcendgame.main.component.damage.calculator.MeleeAttackCalculator
 import de.fuballer.mcendgame.main.component.damage.dodge.DodgeCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.ignore_damage.IgnoreDamageCommand
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDodgedEvent
@@ -25,21 +26,10 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-// TODO   if (damageCalculationConfig.isArmadilloDamageReduction) {
-//            combinedDamage = (combinedDamage - 1f) / 2f
-//        }
-//        if (damageCalculationConfig.isEnderDragonDamageReduction) {
-//            combinedDamage = combinedDamage / 4f + min(combinedDamage, 1.0f)
-//        }
-//        return damageCalculationConfig.difficultyScaling.scaleDamage(combinedDamage)
-
-// TODO player, enderdragon, armadillo mixin
-
 // TODO damageTypeKeys for
 //  ignore damage dealt scaling (increase, more, decreased, less damage)
 //  ignore damage taken scaling (increase, more, decreased, less damage taken)
 //  ignore dodge or dodgeable
-
 private val DAMAGE_CALCULATORS = listOf(
 //    CreeperExplosionCalculator,
 //    PufferfishTouchCalculator,
@@ -63,8 +53,8 @@ private val DAMAGE_CALCULATORS = listOf(
 //    PotionCalculator,
 //    MaceSmashAttackCalculator,
 //    GenericAttackCalculator,
-//    MeleeAttackCalculator,
 //    ShulkerBulletCalculator,
+    MeleeAttackCalculator,
 //    OtherProjectilesCalculator, // do not move
     // TODO add calculators one after another
     BaseDamageCalculator // do not move
@@ -77,9 +67,9 @@ object DamageService {
         victim: LivingEntity,
         serverLevel: ServerLevel,
         damageSource: DamageSourceDraft,
-        damage: Float, // for debug
+        damage: Float,
     ): DamageSourceResult {
-        log.info("createDamageSourceResult - ${victim.javaClass.simpleName} - ${damageSource.javaClass.simpleName} - originalDamage: $damage")
+        log.info("createDamageSourceResult - ${damageSource.entity?.javaClass?.simpleName} ⚔️ ${victim.javaClass.simpleName} - type: ${damageSource.type().msgId} - originalDamage: $damage")
 
         val vanillaDamageContext = damageSource.vanillaDamageContext
         val customDamageContext = damageSource.customDamageContext
@@ -88,7 +78,7 @@ object DamageService {
             victim,
             serverLevel,
             damageSource,
-            customDamageContext.extraVictimAttributes, // FIXME this is attacker not victim - add victim
+            customDamageContext.extraAttackerAttributes,
             vanillaDamageContext.isBlocked()
         )
         damageCalculationCommand.moreDamageTaken.addAll(vanillaDamageContext.getVictimMoreDamageTaken())
@@ -107,20 +97,23 @@ object DamageService {
             return DamageSourceResult.ZeroDamage(cmd, damageSource)
         }
 
-        // TODO special damage reduction
-        //      armadillo, ender-dragon, difficulty
+        // vanilla is attack damage only
+        var damageInstance = DamageInstance().setDamage(DamageCategory.ATTACK_DAMAGE, damage)
+        damageInstance += customDamageContext.damageInstance
 
-        // TODO calculate damage with calculators
-        // TODO update damageCalculators
-        val damageCalculator = DAMAGE_CALCULATORS.firstOrNull { it.isActive(damageSource) }!!
-        // TODO calculate final Damage Instance
-        val attackDamage = damageCalculator.calculateDamage(damage, victim, damageSource, cmd)
-        // TODO fix this holy
-        val damageInstance = DamageInstance().setAttackDamage(attackDamage)
+        val damageCalculator = DAMAGE_CALCULATORS.first { it.isActive(damageSource) }
+        log.info("damageCalculator: ${damageCalculator.javaClass.simpleName}")
+
+        println(damageInstance)
+        // FIXME i have certain feelings about this one
+        damageInstance.transformDamage { _, amount ->
+            damageCalculator.calculateDamage(amount, victim, damageSource, cmd)
+        }
+        println(damageInstance)
 
         // TODO damage type changing cmd (10% of AD to True Damage)
 
-        return DamageSourceResult.Applied(damageInstance, cmd, damageSource)
+        return DamageSourceResult.Applied(damageInstance, cmd, vanillaDamageContext, damageSource)
     }
 
     /**
@@ -168,6 +161,7 @@ object DamageService {
             (source.entity as ServerPlayer).awardStat(Stats.DAMAGE_DEALT_RESISTED, (damageResisted * 10.0f).roundToInt())
         }
 
+        log.info("applyDamage - final damage after reduction: $dmg")
         return Optional.of(dmg)
     }
 
@@ -213,10 +207,15 @@ object DamageService {
             // todo log/debug
             return DamageReductionResult.zero()
         }
-        log.info(source.damageInstance.toString())
+        val damageInstance = source.damageInstance
 
         // TODO event? command? LivingEntityDamagedEvent?
 
-        return source.damageInstance.getAfterDamageReduction(victim, source, source.damageCalculationCommand)
+        damageInstance.transformDamage { _, damage ->
+            val reduced = source.vanillaDamageContext.getCustomDamageReduction().invoke(damage)
+            source.vanillaDamageContext.getDifficultyScaling().scaleDamage(reduced)
+        }
+
+        return damageInstance.getAfterDamageReduction(victim, source, source.damageCalculationCommand)
     }
 }

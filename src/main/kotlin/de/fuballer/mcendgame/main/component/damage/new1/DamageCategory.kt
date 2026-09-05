@@ -6,6 +6,7 @@ import net.minecraft.tags.DamageTypeTags
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.monster.Witch
 
 enum class DamageCategory {
     ATTACK_DAMAGE {
@@ -21,17 +22,32 @@ enum class DamageCategory {
             if (!source.`is`(DamageTypeTags.BYPASSES_ARMOR)) {
                 amount = DamageUtil.reduceDamageByArmor(attacked, amount, source)
             }
-            if (!source.`is`(DamageTypeTags.BYPASSES_ENCHANTMENTS)) {
-                amount = DamageUtil.reduceDamageByProtectionEnchantment(attacked, amount, source)
-            }
             if (!source.`is`(DamageTypeTags.BYPASSES_EFFECTS)) {
                 if (attacked.hasEffect(MobEffects.RESISTANCE) && !source.`is`(DamageTypeTags.BYPASSES_RESISTANCE)) {
                     damageResisted = DamageUtil.getDamageReductionByResistanceEffect(attacked, amount)
                     amount -= damageResisted
                 }
+
+                if (!source.`is`(DamageTypeTags.BYPASSES_ENCHANTMENTS)) {
+                    amount = DamageUtil.reduceDamageByProtectionEnchantment(attacked, amount, source)
+                }
             }
+
+            // region Taken from Witch::getDamageAfterMagicAbsorb
+            if (attacked is Witch) {
+                if (source.entity == attacked) {
+                    amount = 0f
+                }
+
+                if (source.`is`(DamageTypeTags.WITCH_RESISTANT_TO)) {
+                    amount *= 0.15f
+                }
+            }
+            // endregion
+
             amount -= DamageUtil.reduceDamageByDamageTakenAttribute(amount, cmd)
 
+            amount = amount.coerceAtLeast(0f)
             return DamageReductionResult(amount, damageResisted)
         }
     },
@@ -45,17 +61,20 @@ enum class DamageCategory {
             var damageResisted = 0f
 
             var amount = DamageUtil.reduceDamageBySpellResistance(damage, cmd)
-            if (!source.`is`(DamageTypeTags.BYPASSES_ENCHANTMENTS)) {
-                amount = DamageUtil.reduceDamageByProtectionEnchantment(attacked, amount, source)
-            }
+
             if (!source.`is`(DamageTypeTags.BYPASSES_EFFECTS)) {
                 if (attacked.hasEffect(MobEffects.RESISTANCE) && !source.`is`(DamageTypeTags.BYPASSES_RESISTANCE)) {
                     damageResisted = DamageUtil.getDamageReductionByResistanceEffect(attacked, amount)
                     amount -= damageResisted
                 }
+
+                if (!source.`is`(DamageTypeTags.BYPASSES_ENCHANTMENTS)) {
+                    amount = DamageUtil.reduceDamageByProtectionEnchantment(attacked, amount, source)
+                }
             }
             amount -= DamageUtil.reduceDamageByDamageTakenAttribute(amount, cmd)
 
+            amount = amount.coerceAtLeast(0f)
             return DamageReductionResult(amount, damageResisted)
         }
     },

@@ -14,7 +14,7 @@ object BaseDamageCalculator : DamageCalculator {
         source: DamageSource,
         event: DamageCalculationCommand
     ): Float {
-        // TODO damageTypeKey if this should apply
+        // TODO fixme multi
         val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
         return (originalDamage * damageMulti).toFloat()
     }

@@ -56,7 +56,8 @@ public abstract class EnderDragonDamageCalculationMixin extends LivingEntity {
             //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
             if (part != this.head) {
-                damage = damage / 4.0F + Math.min(damage, 1.0F);
+                // skip damage reduction here, since we do it custom
+                //damage = damage / 4.0F + Math.min(damage, 1.0F);
 
                 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
                 damageReduction = true;
@@ -72,7 +73,11 @@ public abstract class EnderDragonDamageCalculationMixin extends LivingEntity {
 
                     //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
                     var draftSource = source instanceof DamageSourceDraft d ? d : new DamageSourceDraft(source);
-                    // TODO extendedSource.getDamageCalculationConfig().enderDragonDamageReduction(damageReduction);
+                    if (damageReduction) {
+                        draftSource.getVanillaDamageContext().setCustomDamageReduction(
+                                dmg -> dmg / 4.0F + Math.min(dmg, 1.0F)
+                        );
+                    }
                     super.hurtServer(level, draftSource, damage);
                     //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 

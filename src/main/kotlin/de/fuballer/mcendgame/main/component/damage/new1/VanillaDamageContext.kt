@@ -6,8 +6,8 @@ class VanillaDamageContext {
     private val victimMoreDamageTaken = mutableListOf<Double>()
     private var blocked = false
     private var difficultyScaling = DifficultyScaling.NONE
-    // TODO custom damage reductions, ender dragon, armadillo
-    
+    private var customDamageReduction: (Float) -> Float = { it } // e.g. armadillo or ender dragon
+
     fun setBlocked(blocked: Boolean) {
         this.blocked = blocked
     }
@@ -20,7 +20,12 @@ class VanillaDamageContext {
         victimMoreDamageTaken.add(roll)
     }
 
+    fun setCustomDamageReduction(customDamageReduction: (Float) -> Float) {
+        this.customDamageReduction = customDamageReduction
+    }
+
     fun isBlocked() = blocked
     fun getVictimMoreDamageTaken() = victimMoreDamageTaken.toList()
     fun getDifficultyScaling() = difficultyScaling
+    fun getCustomDamageReduction() = customDamageReduction
 }

@@ -5,21 +5,15 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.LivingEntity
 
 data class DamageInstance(
-    val damageComponents: MutableMap<DamageCategory, Float> = mutableMapOf(),
+    private val damageComponents: MutableMap<DamageCategory, Float> = mutableMapOf(),
 ) {
-    fun setAttackDamage(amount: Float): DamageInstance {
-        damageComponents[DamageCategory.ATTACK_DAMAGE] = amount
+    fun setDamage(category: DamageCategory, amount: Float): DamageInstance {
+        damageComponents[category] = amount
         return this
     }
 
-    fun setSpellDamage(amount: Float): DamageInstance {
-        damageComponents[DamageCategory.SPELL_DAMAGE] = amount
-        return this
-    }
-
-    fun setTrueDamage(amount: Float): DamageInstance {
-        damageComponents[DamageCategory.TRUE_DAMAGE] = amount
-        return this
+    fun transformDamage(transform: (DamageCategory, Float) -> Float) {
+        damageComponents.replaceAll(transform)
     }
 
     fun getRawDamage(): Float {
@@ -34,6 +28,14 @@ data class DamageInstance(
         return damageComponents
             .map { (category, damage) -> category.applyDamageReduction(damage, victim, source, cmd) }
             .fold(DamageReductionResult.zero()) { acc, result -> acc + result }
+    }
+
+    operator fun plus(other: DamageInstance): DamageInstance {
+        val result = DamageInstance(damageComponents.toMutableMap())
+        other.damageComponents.forEach { (category, amount) ->
+            result.damageComponents[category] = (result.damageComponents[category] ?: 0f) + amount
+        }
+        return result
     }
 
     override fun toString(): String {

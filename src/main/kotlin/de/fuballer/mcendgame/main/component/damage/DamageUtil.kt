@@ -123,10 +123,10 @@ object DamageUtil {
 
     fun calculateEnchantmentDamage(
         attacker: LivingEntity,
-        attacked: LivingEntity,
+        victim: LivingEntity,
         source: DamageSource
     ): Double {
-        return EnchantmentHelper.modifyDamage(attacker.level() as ServerLevel, attacker.weaponItem, attacked, source, 0.0F).toDouble()
+        return EnchantmentHelper.modifyDamage(attacker.level() as ServerLevel, attacker.weaponItem, victim, source, 0.0F).toDouble()
     }
 
     fun getAttackDamageBaseValue(

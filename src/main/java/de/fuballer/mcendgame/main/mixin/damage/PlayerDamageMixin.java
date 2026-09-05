@@ -55,18 +55,19 @@ public abstract class PlayerDamageMixin extends LivingEntity {
                 if (source.scalesWithDifficulty()) {
                     if (level.getDifficulty() == Difficulty.PEACEFUL) {
                         damage = 0.0F;
-
                     }
 
                     if (level.getDifficulty() == Difficulty.EASY) {
-                        damage = Math.min(damage / 2.0F + 1.0F, damage);
+                        // skip damage scaling here, since we do it custom
+                        //damage = Math.min(damage / 2.0F + 1.0F, damage);
                         //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
                         difficultyScaling = DifficultyScaling.EASY;
                         //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
                     }
 
                     if (level.getDifficulty() == Difficulty.HARD) {
-                        damage = damage * 3.0F / 2.0F;
+                        // skip damage scaling here, since we do it custom
+                        //damage = damage * 3.0F / 2.0F;
                         //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
                         difficultyScaling = DifficultyScaling.HARD;
                         //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑

@@ -16,6 +16,7 @@ sealed class DamageSourceResult(damageSource: DamageSource) : DamageSource(
     class Applied(
         val damageInstance: DamageInstance,
         val damageCalculationCommand: DamageCalculationCommand,
+        val vanillaDamageContext: VanillaDamageContext,
         damageSource: DamageSource
     ) : DamageSourceResult(damageSource) {
         override fun getRawDamage() = damageInstance.getRawDamage()
