@@ -107,6 +107,8 @@ class BanditEntity(
         type.equip(this)
         customName = type.customName
 
+        setPersistenceRequired()
+
         return result
     }
 

@@ -6,9 +6,9 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribut
 import de.fuballer.mcendgame.main.component.entity.custom.goals.predicates.ShouldBeAttackedByCompanionsPredicate
 import de.fuballer.mcendgame.main.messaging.dungeon.WorldAttributeChangedEvent
 import de.fuballer.mcendgame.main.messaging.misc.EquipmentChangeEvent
+import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDeathEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerAfterDimensionChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerBeforeDimensionChangeEvent
-import de.fuballer.mcendgame.main.messaging.misc.PlayerEntityDeathEvent
 import de.fuballer.mcendgame.main.messaging.server.ServerEndTickEvent
 import de.fuballer.mcendgame.main.util.extension.SlotExtension.isOrIsChildOf
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getTargetSelector
@@ -17,31 +17,43 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setC
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import de.maucon.mauconframework.initializer.Initializer
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.entity.EntityTypeTest
 import java.util.*
 
 @Injectable
 class CompanionService {
-    private val toSummon: MutableMap<UUID, MutableSet<CompanionType>> = mutableMapOf()
+    private val toSummon: MutableMap<UUID, ToSummonData> = mutableMapOf()
+
+    private data class ToSummonData(
+        val level: ServerLevel,
+        val companionTypes: MutableSet<CompanionType>,
+    )
 
     @Initializer
     fun onPlayerDisconnect() = ServerPlayConnectionEvents.DISCONNECT.register { handler, _ ->
         removeCompanions(handler.player)
     }
 
+    @Initializer
+    fun onEntityUnload() = ServerEntityEvents.ENTITY_UNLOAD.register { entity, _ ->
+        val entity = entity as? LivingEntity ?: return@register
+        removeCompanions(entity)
+    }
+
     @EventSubscriber(sync = true)
-    fun on(event: PlayerEntityDeathEvent) {
-        val player = event.player as? ServerPlayer ?: return
-        removeCompanions(player)
+    fun on(event: LivingEntityDeathEvent) {
+        if (event.isClient) return
+        removeCompanions(event.entity)
     }
 
     @EventSubscriber(sync = true)
@@ -53,7 +65,7 @@ class CompanionService {
     @EventSubscriber(sync = true)
     fun on(event: PlayerAfterDimensionChangeEvent) {
         val id = event.player.uuid
-        toSummon[id] = CompanionType.entries.toMutableSet()
+        toSummon[id] = ToSummonData(event.newWorld, CompanionType.entries.toMutableSet())
     }
 
     @EventSubscriber(sync = true)
@@ -61,24 +73,24 @@ class CompanionService {
         val companionTypes = CompanionType.entries.filter { it.attribute == event.attribute.type }
         event.world.players().forEach {
             val id = it.uuid
-            val set = toSummon[id] ?: mutableSetOf()
-            set.addAll(companionTypes)
-            toSummon[id] = set
+            val data = toSummon[id] ?: ToSummonData(it.level(), mutableSetOf())
+            data.companionTypes.addAll(companionTypes)
+            toSummon[id] = data
         }
     }
 
     // this also gets triggered by respawn and join
     @EventSubscriber(sync = true)
     fun on(event: EquipmentChangeEvent) {
-        val player = event.entity as? Player ?: return
-        val id = player.uuid
+        val level = event.entity.level() as? ServerLevel ?: return
+        val id = event.entity.uuid
         val attributeSlot = EquipmentSlotGroup.bySlot(event.slot)
 
-        val set = toSummon[id] ?: mutableSetOf()
-        set.addAll(getItemStackCompanions(event.oldStack, attributeSlot))
-        set.addAll(getItemStackCompanions(event.newStack, attributeSlot))
+        val data = toSummon[id] ?: ToSummonData(level, mutableSetOf())
+        data.companionTypes.addAll(getItemStackCompanions(event.oldStack, attributeSlot))
+        data.companionTypes.addAll(getItemStackCompanions(event.newStack, attributeSlot))
 
-        toSummon[id] = set
+        toSummon[id] = data
     }
 
     @EventSubscriber(sync = true)
@@ -87,11 +99,12 @@ class CompanionService {
         while (iterator.hasNext()) {
             val entry = iterator.next()
             val id = entry.key
-            val types = entry.value
+            val data = entry.value
             iterator.remove()
 
-            event.server.playerList.getPlayer(id)?.let { player ->
-                types.forEach { type -> resummon(player, type) }
+            data.level.getEntity(id)?.let { entity ->
+                if (entity !is LivingEntity) return@let
+                data.companionTypes.forEach { type -> resummon(entity, type) }
             }
         }
     }
@@ -105,59 +118,60 @@ class CompanionService {
     }
 
     private fun resummon(
-        player: ServerPlayer,
+        owner: LivingEntity,
         type: CompanionType,
     ) {
-        removeCompanions(player, type.entityClass)
-        summonAllOfType(player, type)
+        removeCompanions(owner, type.entityClass)
+        summonAllOfType(owner, type)
     }
 
-    fun removeCompanions(player: ServerPlayer) {
-        CompanionType.entries.forEach { removeCompanions(player, it.entityClass) }
+    fun removeCompanions(owner: LivingEntity) {
+        CompanionType.entries.forEach { removeCompanions(owner, it.entityClass) }
     }
 
     fun removeCompanions(
-        player: ServerPlayer,
+        owner: LivingEntity,
         type: Class<out TamableAnimal>,
     ) {
-        val world = player.level()
+        val world = owner.level() as? ServerLevel ?: return
 
         val companions = world.getEntities(EntityTypeTest.forClass(type)) {
-            it.isCompanion() && it.owner == player
+            it.isCompanion() && it.owner == owner
         }
 
         companions.forEach {
             if (!it.isAlive) return@forEach
-            it.remove(Entity.RemovalReason.UNLOADED_WITH_PLAYER)
+            it.remove(Entity.RemovalReason.DISCARDED)
         }
     }
 
     private fun summonAllOfType(
-        player: ServerPlayer,
+        owner: LivingEntity,
         type: CompanionType,
     ) {
-        player.getAllCustomAttributes()[type.attribute]?.forEach { summonAllFromAttribute(player, type, it) }
+        owner.getAllCustomAttributes()[type.attribute]?.forEach { summonAllFromAttribute(owner, type, it) }
     }
 
     private fun summonAllFromAttribute(
-        player: ServerPlayer,
+        owner: LivingEntity,
         type: CompanionType,
         attribute: CustomAttribute,
     ) {
         val count = type.getCount(attribute)
-        repeat(count) { summonFromAttribute(player, type, attribute) }
+        repeat(count) { summonFromAttribute(owner, type, attribute) }
     }
 
     private fun summonFromAttribute(
-        player: ServerPlayer,
+        owner: LivingEntity,
         type: CompanionType,
         attribute: CustomAttribute,
     ) {
-        val world = player.level()
+        val world = owner.level()
         val companion = type.entityType.create(world, EntitySpawnReason.MOB_SUMMONED) ?: return
 
-        companion.setPos(player.position())
-        companion.tame(player)
+        companion.setPos(owner.position())
+        companion.setTame(true, false)
+        companion.owner = owner
         companion.setCompanion()
         companion.isInvulnerable = true
         companion.getAttribute(Attributes.FOLLOW_RANGE)?.baseValue = 24.0
