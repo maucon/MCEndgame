@@ -21,7 +21,6 @@ repositories {
             password = System.getenv("GITHUB_PACKAGES_TOKEN")
         }
     }
-    maven { url = 'https://maven.nucleoid.xyz/' }
     exclusiveContent {
         forRepository {
             maven {

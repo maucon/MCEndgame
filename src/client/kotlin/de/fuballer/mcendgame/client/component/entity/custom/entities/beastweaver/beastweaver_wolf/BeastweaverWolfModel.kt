@@ -19,7 +19,7 @@ class BeastweaverWolfModel(
         color: Int,
         gradientData: BeastweaverGradientData,
     ) {
-        val accessor = root() as ModelPartBeastweaverGradientAccessor
+        @Suppress("CAST_NEVER_SUCCEEDS") val accessor = root() as ModelPartBeastweaverGradientAccessor
         accessor.`mcendgame$renderWithGradient`(poseStack, buffer, lightCoords, overlayCoords, color, gradientData)
     }
 }
