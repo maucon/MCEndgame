@@ -51,7 +51,7 @@ enum class BanditType(
     SLOANE(
         Component.translatable(TRANSLATABLE_BASE_KEY + "sloane"),
         PlayerModelType.WIDE,
-        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
+        IdentifierUtil.default("textures/entity/bandit/sloane.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_AXE)),
             BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.NETHERITE_AXE)),
@@ -67,7 +67,7 @@ enum class BanditType(
     KEIR(
         Component.translatable(TRANSLATABLE_BASE_KEY + "keir"),
         PlayerModelType.SLIM,
-        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        IdentifierUtil.default("textures/entity/bandit/keir.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.NIGHTREAVER.defaultInstance),
             BanditItemStack(EquipmentSlot.HEAD, CustomArmorItems.ABYSSAL_MASK.defaultInstance),
@@ -81,7 +81,7 @@ enum class BanditType(
     NIAMH(
         Component.translatable(TRANSLATABLE_BASE_KEY + "niamh"),
         PlayerModelType.SLIM,
-        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
+        IdentifierUtil.default("textures/entity/bandit/niamh.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.SERPENTS_FANG.defaultInstance, enchantments = mapOf(Enchantments.FIRE_ASPECT to 2)),
             BanditItemStack(EquipmentSlot.OFFHAND, CustomToolItems.SERPENTS_FANG.defaultInstance, enchantments = mapOf(Enchantments.FIRE_ASPECT to 2)),
@@ -97,7 +97,7 @@ enum class BanditType(
     HADRIK(
         Component.translatable(TRANSLATABLE_BASE_KEY + "hadrik"),
         PlayerModelType.WIDE,
-        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        IdentifierUtil.default("textures/entity/bandit/hadrik.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.MACE)),
             BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.SHIELD)),
@@ -113,7 +113,7 @@ enum class BanditType(
     BRINA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "brina"),
         PlayerModelType.WIDE,
-        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
+        IdentifierUtil.default("textures/entity/bandit/brina.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.GRAVEBREAKER.defaultInstance),
             BanditItemStack(EquipmentSlot.OFFHAND, CustomMiscItems.FRIGID_CRY.defaultInstance),
@@ -130,7 +130,7 @@ enum class BanditType(
     EMRYS(
         Component.translatable(TRANSLATABLE_BASE_KEY + "emrys"),
         PlayerModelType.WIDE,
-        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        IdentifierUtil.default("textures/entity/bandit/emrys.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_SWORD)),
             BanditItemStack(EquipmentSlot.OFFHAND, CustomMiscItems.VERDANT_ECHO.defaultInstance),
@@ -159,7 +159,7 @@ enum class BanditType(
     LORCAN(
         Component.translatable(TRANSLATABLE_BASE_KEY + "lorcan"),
         PlayerModelType.SLIM,
-        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        IdentifierUtil.default("textures/entity/bandit/lorcan.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.WINDSTRING.defaultInstance),
             BanditItemStack(EquipmentSlot.HEAD, CustomArmorItems.SUEDE_HELMET.defaultInstance, dyedColor = DyedItemColor(5988218)),
@@ -171,7 +171,7 @@ enum class BanditType(
     YVRA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "yvra"),
         PlayerModelType.SLIM,
-        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
+        IdentifierUtil.default("textures/entity/bandit/yvra.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.HAILSTORM.defaultInstance),
             BanditItemStack(EquipmentSlot.HEAD, ItemStack(Items.NETHERITE_HELMET), trimMaterial = TrimMaterials.DIAMOND, trimPattern = TrimPatterns.COAST),
@@ -185,7 +185,7 @@ enum class BanditType(
     CATHAL(
         Component.translatable(TRANSLATABLE_BASE_KEY + "cathal"),
         PlayerModelType.WIDE,
-        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        IdentifierUtil.default("textures/entity/bandit/cathal.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_SWORD)),
             BanditItemStack(EquipmentSlot.OFFHAND, ItemStack(Items.SHIELD)),
@@ -199,7 +199,7 @@ enum class BanditType(
     MAEVE(
         Component.translatable(TRANSLATABLE_BASE_KEY + "maeve"),
         PlayerModelType.SLIM,
-        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
+        IdentifierUtil.default("textures/entity/bandit/maeve.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.TWINFIRE.defaultInstance),
             BanditItemStack(EquipmentSlot.OFFHAND, CustomToolItems.TWINFIRE.defaultInstance),
@@ -216,7 +216,7 @@ enum class BanditType(
     BRAKK(
         Component.translatable(TRANSLATABLE_BASE_KEY + "brakk"),
         PlayerModelType.WIDE,
-        IdentifierUtil.default("textures/entity/bandit/drenn.png"),
+        IdentifierUtil.default("textures/entity/bandit/brakk.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, ItemStack(Items.NETHERITE_AXE)),
             BanditItemStack(EquipmentSlot.OFFHAND, CustomMiscItems.MOLTEN_ROAR.defaultInstance),
@@ -231,7 +231,7 @@ enum class BanditType(
     MORRIGAN(
         Component.translatable(TRANSLATABLE_BASE_KEY + "morrigan"),
         PlayerModelType.SLIM,
-        IdentifierUtil.default("textures/entity/bandit/nessa.png"),
+        IdentifierUtil.default("textures/entity/bandit/morrigan.png"),
         listOf(
             BanditItemStack(EquipmentSlot.MAINHAND, CustomToolItems.DUSK_PIERCER.defaultInstance),
             BanditItemStack(EquipmentSlot.HEAD, ItemStack(Items.NETHERITE_HELMET), trimMaterial = TrimMaterials.NETHERITE, trimPattern = TrimPatterns.SILENCE),
