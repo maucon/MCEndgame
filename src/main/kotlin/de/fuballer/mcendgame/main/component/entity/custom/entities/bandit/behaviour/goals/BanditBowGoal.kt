@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behav
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.component.tags.CustomTags
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.getBowFullPullTicks
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.item.BowItem
@@ -13,7 +14,7 @@ class BanditBowGoal(
     attackRadius: Float,
 ) : Goal() {
     private val attackRadiusSqr: Float = attackRadius * attackRadius
-    private var attackTime = -1
+    private var useBowCooldown = -1
     private var seeTime = 0
     private var strafingClockwise = false
     private var strafingBackwards = false
@@ -38,8 +39,9 @@ class BanditBowGoal(
         super.stop()
         banditEntity.setAggressive(false)
         seeTime = 0
-        attackTime = -1
+        useBowCooldown = -1
         banditEntity.stopUsingItem()
+        banditEntity.getBanditMoveControl().isPullingBow = false
     }
 
     override fun requiresUpdateEveryTick() = true
@@ -88,16 +90,19 @@ class BanditBowGoal(
         if (banditEntity.isUsingItem) {
             if (!hasLineOfSight && seeTime < -60) {
                 banditEntity.stopUsingItem()
+                banditEntity.getBanditMoveControl().isPullingBow = false
             } else if (hasLineOfSight) {
                 val pullTime = banditEntity.ticksUsingItem
-                if (pullTime >= 20) {
+                if (pullTime >= banditEntity.getBowFullPullTicks()) {
                     banditEntity.stopUsingItem()
+                    banditEntity.getBanditMoveControl().isPullingBow = false
                     banditEntity.performRangedAttack(target, BowItem.getPowerForTime(pullTime))
-                    attackTime = 20 // TODO use bow pull ticks
+                    useBowCooldown = 5
                 }
             }
-        } else if (--attackTime <= 0 && seeTime >= -60) {
+        } else if (--useBowCooldown <= 0 && seeTime >= -60) {
             banditEntity.startUsingItem(InteractionHand.MAIN_HAND)
+            banditEntity.getBanditMoveControl().isPullingBow = true
         }
     }
 }

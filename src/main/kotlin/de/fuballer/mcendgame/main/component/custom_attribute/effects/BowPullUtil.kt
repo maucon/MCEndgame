@@ -5,7 +5,7 @@ import kotlin.math.min
 object BowPullUtil {
     fun getPullProgress(useTicks: Int, fullPullTicks: Int): Float {
         val percentage = useTicks / fullPullTicks.toFloat()
-        var progress = (percentage * percentage + percentage * 2.0F) / 3.0F
+        val progress = (percentage * percentage + percentage * 2.0F) / 3.0F
         return min(progress, 1F)
     }
 }

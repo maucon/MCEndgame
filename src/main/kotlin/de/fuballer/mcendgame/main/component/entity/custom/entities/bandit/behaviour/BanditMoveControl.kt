@@ -13,6 +13,9 @@ import kotlin.math.max
 class BanditMoveControl(
     banditEntity: BanditEntity
 ) : MoveControl<BanditEntity>(banditEntity) {
+    var isBlocking = false
+    var isPullingBow = false
+
     override fun tick() {
         when (operation) {
             Operation.STRAFE -> tickStrafe()
@@ -23,8 +26,7 @@ class BanditMoveControl(
     }
 
     private fun tickStrafe() {
-        val speed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED).toFloat()
-        val speedModified = speedModifier.toFloat() * speed
+        val speed = getModifiedSpeed()
         var xa = strafeForwards
         var za = strafeRight
         var dist = Mth.sqrt(xa * xa + za * za)
@@ -34,7 +36,7 @@ class BanditMoveControl(
 
         mob.target?.also { tickRotate(it.x - mob.x, it.z - mob.z) }
 
-        dist = speedModified / dist
+        dist = speed / dist
         xa *= dist
         za *= dist
         val sin = Mth.sin((mob.yRot * (Math.PI / 180.0).toFloat()).toDouble())
@@ -46,7 +48,7 @@ class BanditMoveControl(
             strafeRight = 0.0f
         }
 
-        mob.setSpeed(speedModified)
+        mob.setSpeed(speed)
         mob.setZza(strafeForwards)
         mob.setXxa(strafeRight)
         operation = Operation.WAIT
@@ -64,7 +66,7 @@ class BanditMoveControl(
         }
 
         tickRotate(xd, zd)
-        mob.setSpeed((speedModifier * mob.getAttributeValue(Attributes.MOVEMENT_SPEED)).toFloat())
+        mob.setSpeed(getModifiedSpeed())
 
         if (jumping) {
             if (mob.onGround() || mob.isInLiquid && mob.isAffectedByFluids) operation = Operation.WAIT
@@ -110,5 +112,12 @@ class BanditMoveControl(
         strafeForwards = forwards
         strafeRight = right
         speedModifier = 0.5
+    }
+
+    private fun getModifiedSpeed(): Float {
+        var speed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED)
+        speed *= speedModifier
+        if (isBlocking || isPullingBow) speed *= 0.3
+        return speed.toFloat()
     }
 }

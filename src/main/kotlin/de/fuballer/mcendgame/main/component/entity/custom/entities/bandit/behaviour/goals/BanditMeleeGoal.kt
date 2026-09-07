@@ -335,12 +335,14 @@ open class BanditMeleeGoal(
         if (banditEntity.getCooldowns().isOnCooldown(banditEntity.offhandItem)) return
 
         banditEntity.startUsingItem(InteractionHand.OFF_HAND)
+        banditEntity.getBanditMoveControl().isBlocking = true
         blockingTicks = 0
         blockingDuration = banditType.blockDuration()
     }
 
     private fun stopBlocking() {
         banditEntity.stopUsingItem()
+        banditEntity.getBanditMoveControl().isBlocking = false
         blockingTicks = -1
         shieldHit = false
     }

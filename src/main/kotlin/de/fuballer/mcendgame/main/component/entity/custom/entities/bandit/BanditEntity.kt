@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile.AdditionalProjectilesUtil
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.BanditMoveControl
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.BanditPathNavigation
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditMeleeGoal
@@ -27,7 +28,6 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.RangedAttackMob
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.ProjectileUtil
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow
 import net.minecraft.world.item.ItemCooldowns
@@ -37,6 +37,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.Vec3
 import kotlin.math.sqrt
 
 class BanditEntity(
@@ -201,25 +202,31 @@ class BanditEntity(
     override fun performRangedAttack(target: LivingEntity, power: Float) {
         val bowItem = getItemInHand(InteractionHand.MAIN_HAND)
         val projectile = ItemStack(Items.ARROW)
-        val arrow: AbstractArrow = ProjectileUtil.getMobArrow(this, projectile, power, bowItem)
 
         val xd = target.x - x
-        val yd = target.getY(0.3333333333333333) - arrow.y
         val zd = target.z - z
-        val distanceToTarget = sqrt(xd * xd + zd * zd)
-
-        playSound(SoundEvents.SKELETON_SHOOT, 1.0f, 1.0f / (this.getRandom().nextFloat() * 0.4f + 0.8f))
+        val horizontalDistance = sqrt(xd * xd + zd * zd)
+        val direction = Vec3(xd, horizontalDistance * 0.2f, zd)
 
         val serverLevel = level() as? ServerLevel ?: return
-        Projectile.spawnProjectileUsingShoot(
-            arrow,
-            serverLevel,
-            projectile,
-            xd,
-            yd + distanceToTarget * 0.2f,
-            zd,
-            1.6f,
-            5f,
+        AdditionalProjectilesUtil.shootProjectile(
+            this,
+            null,
+            direction,
+            { ProjectileUtil.getMobArrow(this, projectile, power, bowItem) },
+            { projectile, spreadVelocity, _ ->
+                projectile.shoot(
+                    spreadVelocity.x,
+                    spreadVelocity.y + target.getY(0.3333333333333333) - projectile.y,
+                    spreadVelocity.z,
+                    3f,
+                    1f,
+                )
+                (projectile as? AbstractArrow)?.isCritArrow = true
+                serverLevel.addFreshEntity(projectile)
+            }
         )
+
+        playSound(SoundEvents.SKELETON_SHOOT, 1.0f, 1.0f / (getRandom().nextFloat() * 0.4f + 0.8f))
     }
 }
