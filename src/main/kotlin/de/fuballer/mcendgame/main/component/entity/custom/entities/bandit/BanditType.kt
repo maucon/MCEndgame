@@ -1,5 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditBowGoal
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditMeleeGoal
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
 import de.fuballer.mcendgame.main.component.item.custom.misc.CustomMiscItems
 import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItems
@@ -7,6 +9,7 @@ import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.player.PlayerModelType
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -23,6 +26,7 @@ enum class BanditType(
     val modelType: PlayerModelType,
     val texture: Identifier,
     val equipment: List<BanditItemStack>,
+    val fightingGoal: (BanditEntity) -> Goal = { banditEntity -> BanditMeleeGoal(banditEntity, 1.0) },
     val jumpWhileTravel: Boolean = true,
     val jumpCritAttack: Boolean = false,
     val strafeBackAfterTargetHit: Boolean = true,
@@ -33,7 +37,7 @@ enum class BanditType(
     val hornUseRange: Pair<Double, Double> = Pair(10.0, 30.0),
 ) {
     // bruiser
-    RUSK(
+    DRENN(
         Component.translatable(TRANSLATABLE_BASE_KEY + "drenn"),
         PlayerModelType.WIDE,
         IdentifierUtil.default("textures/entity/bandit/drenn.png"),
@@ -167,6 +171,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.GILDED_TEMPEST.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(3949738)),
         ),
+        fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
     ),
     YVRA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "yvra"),
@@ -179,6 +184,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WINDSTRIDER.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(10082796)),
         ),
+        fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
     ),
 
     // mage
@@ -239,6 +245,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WINDSTRIDER.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.MOONSHADOW.defaultInstance),
         ),
+        fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
         jumpWhileTravel = false,
     );
 
@@ -247,6 +254,6 @@ enum class BanditType(
     }
 
     companion object {
-        val DEFAULT = RUSK
+        val DEFAULT = DRENN
     }
 }

@@ -9,30 +9,40 @@ import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.DifficultyInstance
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
+import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.monster.RangedAttackMob
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.entity.projectile.ProjectileUtil
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow
 import net.minecraft.world.item.ItemCooldowns
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import kotlin.math.sqrt
 
 class BanditEntity(
     type: EntityType<BanditEntity>,
     level: Level,
-) : PathfinderMob(type, level), Enemy {
+) : PathfinderMob(type, level), Enemy, RangedAttackMob {
     companion object {
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
@@ -43,18 +53,14 @@ class BanditEntity(
                 .add(Attributes.SWEEPING_DAMAGE_RATIO)
         }
 
-//        fun create(type: BanditType, level: Level): BanditEntity {
-//            val bandit = BanditEntity(CustomEntities.BANDIT, level)
-//            if (!level.isClientSide) bandit.setBanditType(type)
-//            return bandit
-//        }
+        private const val FIGHTING_GOAL_PRIO = 1
 
         private const val BANDIT_TYPE_ID = "BanditType"
         private const val BANDIT_TYPE_INDEX_ID = "bandit_type_index"
         private val BANDIT_TYPE_INDEX: EntityDataAccessor<Int> = SynchedEntityData.defineId(BanditEntity::class.java, EntityDataSerializers.INT)
     }
 
-    private lateinit var fightingGoal: BanditMeleeGoal
+    private lateinit var fightingGoal: Goal
 
     private val cooldowns: ItemCooldowns = ItemCooldowns()
 
@@ -73,8 +79,8 @@ class BanditEntity(
     override fun registerGoals() {
         goalSelector.addGoal(0, FloatGoal(this))
 
-        fightingGoal = BanditMeleeGoal(this, 1.0)
-        goalSelector.addGoal(1, fightingGoal)
+        fightingGoal = getBanditType().fightingGoal(this)
+        goalSelector.addGoal(FIGHTING_GOAL_PRIO, fightingGoal)
 
         goalSelector.addGoal(2, WaterAvoidingRandomStrollGoal(this, 1.0))
         goalSelector.addGoal(3, RandomLookAroundGoal(this))
@@ -94,6 +100,10 @@ class BanditEntity(
 
         customName = type.customName
         type.equip(this)
+
+        if (::fightingGoal.isInitialized) goalSelector.removeGoal(fightingGoal)
+        fightingGoal = type.fightingGoal(this)
+        goalSelector.addGoal(FIGHTING_GOAL_PRIO, fightingGoal)
     }
 
     fun getBanditType() = BanditType.entries[entityData.get(BANDIT_TYPE_INDEX)]
@@ -132,9 +142,8 @@ class BanditEntity(
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
         val hurt = super.hurtServer(level, source, damage)
-
-        if (source.entity != null) fightingGoal.tookHit()
-
+        if (source.entity == null) return hurt
+        (fightingGoal as? BanditMeleeGoal)?.tookHit()
         return hurt
     }
 
@@ -188,4 +197,29 @@ class BanditEntity(
     }
 
     fun getCooldowns() = cooldowns
+
+    override fun performRangedAttack(target: LivingEntity, power: Float) {
+        val bowItem = getItemInHand(InteractionHand.MAIN_HAND)
+        val projectile = ItemStack(Items.ARROW)
+        val arrow: AbstractArrow = ProjectileUtil.getMobArrow(this, projectile, power, bowItem)
+
+        val xd = target.x - x
+        val yd = target.getY(0.3333333333333333) - arrow.y
+        val zd = target.z - z
+        val distanceToTarget = sqrt(xd * xd + zd * zd)
+
+        playSound(SoundEvents.SKELETON_SHOOT, 1.0f, 1.0f / (this.getRandom().nextFloat() * 0.4f + 0.8f))
+
+        val serverLevel = level() as? ServerLevel ?: return
+        Projectile.spawnProjectileUsingShoot(
+            arrow,
+            serverLevel,
+            projectile,
+            xd,
+            yd + distanceToTarget * 0.2f,
+            zd,
+            1.6f,
+            5f,
+        )
+    }
 }
