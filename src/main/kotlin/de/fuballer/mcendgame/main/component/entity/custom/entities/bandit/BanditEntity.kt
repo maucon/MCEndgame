@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 
-import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.BanditMoveControl
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.BanditPathNavigation
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditMeleeGoal
@@ -44,12 +43,13 @@ class BanditEntity(
                 .add(Attributes.SWEEPING_DAMAGE_RATIO)
         }
 
-        fun create(type: BanditType, level: Level): BanditEntity {
-            val bandit = BanditEntity(CustomEntities.BANDIT, level)
-            if (!level.isClientSide) bandit.setBanditType(type)
-            return bandit
-        }
+//        fun create(type: BanditType, level: Level): BanditEntity {
+//            val bandit = BanditEntity(CustomEntities.BANDIT, level)
+//            if (!level.isClientSide) bandit.setBanditType(type)
+//            return bandit
+//        }
 
+        private const val BANDIT_TYPE_ID = "BanditType"
         private const val BANDIT_TYPE_INDEX_ID = "bandit_type_index"
         private val BANDIT_TYPE_INDEX: EntityDataAccessor<Int> = SynchedEntityData.defineId(BanditEntity::class.java, EntityDataSerializers.INT)
     }
@@ -91,6 +91,9 @@ class BanditEntity(
 
     fun setBanditType(type: BanditType) {
         entityData.set(BANDIT_TYPE_INDEX, type.ordinal)
+
+        customName = type.customName
+        type.equip(this)
     }
 
     fun getBanditType() = BanditType.entries[entityData.get(BANDIT_TYPE_INDEX)]
@@ -102,13 +105,7 @@ class BanditEntity(
         groupData: SpawnGroupData?,
     ): SpawnGroupData? {
         val result = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
-
-        val type = getBanditType()
-        type.equip(this)
-        customName = type.customName
-
         setPersistenceRequired()
-
         return result
     }
 
@@ -148,7 +145,27 @@ class BanditEntity(
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
-        input.getInt(BANDIT_TYPE_INDEX_ID).ifPresent { entityData.set(BANDIT_TYPE_INDEX, it) }
+
+        val optionalTypeString = input.getString(BANDIT_TYPE_ID)
+        if (optionalTypeString.isPresent) {
+            val typeString = optionalTypeString.get()
+            val type = BanditType.entries.firstOrNull { it.name.equals(typeString, ignoreCase = true) }
+
+            if (type != null) {
+                setBanditType(type)
+                return
+            }
+        }
+
+        val optionalIndex = input.getInt(BANDIT_TYPE_INDEX_ID)
+        if (optionalIndex.isPresent) {
+            val index = optionalIndex.get()
+            val type = BanditType.entries[index]
+            setBanditType(type)
+            return
+        }
+
+        setBanditType(BanditType.entries.random())
     }
 
     fun getBanditMoveControl() = moveControl as BanditMoveControl
