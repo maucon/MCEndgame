@@ -195,6 +195,7 @@
   "container.mcendgame.crystal_forge.forge_error.not_enough_rolls_to_shuffle": "Not enough rolls to shuffle.",
   "container.mcendgame.crystal_forge.forge_error.all_rolls_equal": "All rolls are equal.",
   "container.mcendgame.crystal_forge.forge_error.secondary_output_slot_not_empty": "Secondary output slot is not empty.",
+  "container.mcendgame.crystal_forge.forge_error.no_synthesized_attribute": "No synthesized attribute available.",
 
   "mcendgame.corrupted": "Corrupted",
 

@@ -9,6 +9,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItemInterface
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
 import de.fuballer.mcendgame.main.component.item.equipment.Equipment
+import de.fuballer.mcendgame.main.component.item.equipment.data.TieredRollableCustomAttribute
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import net.minecraft.network.chat.MutableComponent
@@ -29,8 +30,12 @@ abstract class SynthesizedCrystal(
 
         if (stack.item is UniqueAttributesItemInterface) return CrystalForgeSettings.getForgeErrorText("cannot_forge_unique")
 
-        val attributes = stack.getCustomAttributes()
-        if (attributes.isEmpty()) return CrystalForgeSettings.getForgeErrorText("not_enough_attributes")
+        val equipment = Equipment.fromItem(stack.item)
+        val possibleAttributes = forcedAttributes[equipment]?.options
+        if (possibleAttributes?.isNotEmpty() != true) return CrystalForgeSettings.getForgeErrorText("no_synthesized_attribute")
+
+        val presentAttributes = stack.getCustomAttributes()
+        if (presentAttributes.isEmpty()) return CrystalForgeSettings.getForgeErrorText("not_enough_attributes")
 
         return null
     }
@@ -42,7 +47,6 @@ abstract class SynthesizedCrystal(
         if (oldAttributes.isEmpty()) return CrystalForgeOutput(newStack)
 
         val equipment = Equipment.fromItem(stack.item)
-
         var possibleAttributes = forcedAttributes[equipment]?.options ?: return CrystalForgeOutput(newStack)
 
         val possibleAttributeTypes = possibleAttributes.map { it.option.type }
@@ -92,4 +96,47 @@ abstract class SynthesizedCrystal(
             return tiers.entries.minBy { abs(tier - it.key) * 2 + if (it.key < tier) 1 else 0 }.value
         }
     }
+
+    fun MutableMap<Equipment, EquipmentAttributes>.putEquipmentAttributes(
+        equipment: Iterable<Equipment>,
+        vararg options: RandomOption<EquipmentAttribute>
+    ): MutableMap<Equipment, EquipmentAttributes> {
+        putAll(equipment.associateWith { EquipmentAttributes(*options) })
+        return this
+    }
+
+    data class CopyExistingData(
+        val type: AttributeType,
+        val weight: Int = 1,
+        val factor: Double = 0.8,
+    )
+
+    fun MutableMap<Equipment, EquipmentAttributes>.fromExisting(
+        equipment: Iterable<Equipment>,
+        vararg toCopy: CopyExistingData,
+    ): MutableMap<Equipment, EquipmentAttributes> {
+        putAll(equipment.associateWith { equip ->
+            EquipmentAttributes(
+                toCopy.map { copy ->
+                    RandomOption(
+                        weight = copy.weight,
+                        EquipmentAttribute(
+                            copy.type,
+                            getEquipmentAttributeBounds(equip.rollableCustomAttributes, copy.type, copy.factor)
+                        )
+                    )
+                }
+            )
+        })
+        return this
+    }
+
+    fun getEquipmentAttributeBounds(
+        attributes: List<RandomOption<TieredRollableCustomAttribute>>,
+        type: AttributeType,
+        factor: Double,
+    ): Map<Int, List<AttributeBounds<*>>> = attributes
+        .first { it.option.type == type }.option.tiers
+        .map { it.option }
+        .associate { data -> data.tier to data.bounds.map { it.withFactor(factor) } }
 }

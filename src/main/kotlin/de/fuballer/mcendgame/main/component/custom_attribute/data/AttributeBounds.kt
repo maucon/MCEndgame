@@ -2,11 +2,13 @@ package de.fuballer.mcendgame.main.component.custom_attribute.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 sealed interface AttributeBounds<T : AttributeRoll<*>> {
     fun roll(percentRoll: Double): T
     fun getSignFlipped(): AttributeBounds<T>
+    fun withFactor(factor: Double): AttributeBounds<T>
 }
 
 data class DoubleBounds(
@@ -30,6 +32,8 @@ data class DoubleBounds(
     override fun roll(percentRoll: Double) = DoubleRoll(this, percentRoll)
 
     override fun getSignFlipped() = DoubleBounds(-max, -min)
+
+    override fun withFactor(factor: Double) = DoubleBounds(min * factor, max * factor)
 }
 
 data class StringBounds(
@@ -49,6 +53,8 @@ data class StringBounds(
     override fun roll(percentRoll: Double) = StringRoll(this, Random.nextInt(options.size))
 
     override fun getSignFlipped() = StringBounds(options)
+
+    override fun withFactor(factor: Double) = StringBounds(options)
 }
 
 data class IntBounds(
@@ -72,4 +78,6 @@ data class IntBounds(
     override fun roll(percentRoll: Double) = IntRoll(this, percentRoll)
 
     override fun getSignFlipped() = IntBounds(-max, -min)
+
+    override fun withFactor(factor: Double) = IntBounds((min * factor).roundToInt(), (max * factor).roundToInt())
 }
