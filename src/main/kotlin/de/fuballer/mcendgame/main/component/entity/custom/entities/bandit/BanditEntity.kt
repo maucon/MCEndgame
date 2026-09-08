@@ -28,8 +28,8 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.RangedAttackMob
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.entity.projectile.ProjectileUtil
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow
+import net.minecraft.world.entity.projectile.arrow.Arrow
 import net.minecraft.world.item.ItemCooldowns
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -200,20 +200,24 @@ class BanditEntity(
     fun getCooldowns() = cooldowns
 
     override fun performRangedAttack(target: LivingEntity, power: Float) {
-        val bowItem = getItemInHand(InteractionHand.MAIN_HAND)
-        val projectile = ItemStack(Items.ARROW)
-
         val xd = target.x - x
         val zd = target.z - z
         val horizontalDistance = sqrt(xd * xd + zd * zd)
-        val direction = Vec3(xd, horizontalDistance * 0.2f, zd)
+        val direction = Vec3(xd, horizontalDistance * 0.1f, zd)
 
         val serverLevel = level() as? ServerLevel ?: return
         AdditionalProjectilesUtil.shootProjectile(
             this,
             null,
             direction,
-            { ProjectileUtil.getMobArrow(this, projectile, power, bowItem) },
+            {
+                Arrow(
+                    serverLevel,
+                    this,
+                    ItemStack(Items.ARROW),
+                    getItemInHand(InteractionHand.MAIN_HAND)
+                )
+            },
             { projectile, spreadVelocity, _ ->
                 projectile.shoot(
                     spreadVelocity.x,
