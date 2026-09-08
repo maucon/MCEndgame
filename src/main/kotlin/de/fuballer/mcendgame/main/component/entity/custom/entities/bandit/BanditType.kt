@@ -35,6 +35,8 @@ enum class BanditType(
     val blockAfterTargetHitProbability: Double = 0.25,
     val blockDuration: () -> Int = { Random.nextInt(20, 40) },
     val hornUseRange: Pair<Double, Double> = Pair(10.0, 30.0),
+    val predictMovementProbability: Double = 1.0,
+    val predictedMovementRandomFactorRange: Pair<Double, Double> = Pair(0.85, 1.15),
 ) {
     // bruiser
     DRENN(
@@ -172,6 +174,8 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(3949738)),
         ),
         fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
+        predictMovementProbability = 0.75,
+        predictedMovementRandomFactorRange = Pair(0.95, 1.15)
     ),
     YVRA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "yvra"),
@@ -185,6 +189,8 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(10082796)),
         ),
         fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
+        predictMovementProbability = 0.75,
+        predictedMovementRandomFactorRange = Pair(0.75, 1.25)
     ),
 
     // mage
@@ -247,6 +253,8 @@ enum class BanditType(
         ),
         fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
         jumpWhileTravel = false,
+        predictMovementProbability = 1.0,
+        predictedMovementRandomFactorRange = Pair(0.95, 1.05)
     );
 
     fun equip(bandit: BanditEntity) {

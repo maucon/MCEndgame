@@ -61,6 +61,9 @@ class BanditEntity(
         private val BANDIT_TYPE_INDEX: EntityDataAccessor<Int> = SynchedEntityData.defineId(BanditEntity::class.java, EntityDataSerializers.INT)
     }
 
+    private var targetPos = Vec3.ZERO
+    private var targetMovement = Vec3.ZERO
+
     private lateinit var fightingGoal: Goal
 
     private val cooldowns: ItemCooldowns = ItemCooldowns()
@@ -73,6 +76,12 @@ class BanditEntity(
         super.baseTick()
 
         cooldowns.tick()
+
+        if (level().isClientSide) return
+
+        val prevTargetPos = targetPos
+        targetPos = target?.position() ?: Vec3.ZERO
+        targetMovement = targetPos.subtract(prevTargetPos)
     }
 
     override fun createNavigation(level: Level): PathNavigation = BanditPathNavigation(this, level)
@@ -200,12 +209,23 @@ class BanditEntity(
     fun getCooldowns() = cooldowns
 
     override fun performRangedAttack(target: LivingEntity, power: Float) {
-        val xd = target.x - x
-        val zd = target.z - z
+        val serverLevel = level() as? ServerLevel ?: return
+        val banditType = getBanditType()
+
+        var aimPosition = target.position()
+        if (random.nextDouble() < banditType.predictMovementProbability) {
+            val arrowTravelTime = distanceTo(target) / 3.0
+            val randomFactorRange = banditType.predictedMovementRandomFactorRange
+            val randomFactor = randomFactorRange.first + random.nextDouble() * (randomFactorRange.second - randomFactorRange.first)
+            val predictedMovement = targetMovement.scale(arrowTravelTime * randomFactor)
+            aimPosition = aimPosition.add(predictedMovement)
+        }
+
+        val xd = aimPosition.x - x
+        val zd = aimPosition.z - z
         val horizontalDistance = sqrt(xd * xd + zd * zd)
         val direction = Vec3(xd, horizontalDistance * 0.1f, zd)
 
-        val serverLevel = level() as? ServerLevel ?: return
         AdditionalProjectilesUtil.shootProjectile(
             this,
             null,

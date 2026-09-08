@@ -20,7 +20,7 @@ public class BlocksAttacksBanditCooldownMixin {
                     target = "Lnet/minecraft/world/entity/LivingEntity;stopUsingItem()V"
             )
     )
-    void a(
+    void addBanditCooldown(
             ServerLevel level,
             LivingEntity user,
             float baseSeconds,
