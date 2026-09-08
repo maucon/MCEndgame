@@ -106,6 +106,7 @@ object CustomCreativeModeTab {
                     output.accept(CrystalItems.REFORGE_CRYSTAL.defaultInstance)
                     output.accept(CrystalItems.CORRUPTION_CRYSTAL.defaultInstance)
                     output.accept(CrystalItems.IMITATION_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_FORCE_CRYSTAL.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(

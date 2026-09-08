@@ -94,6 +94,7 @@
   "item.mcendgame.reforge_crystal": "Reforge Crystal",
   "item.mcendgame.corruption_crystal": "Corruption Crystal",
   "item.mcendgame.imitation_crystal": "Imitation Crystal",
+  "item.mcendgame.synthesized_force_crystal": "Synthesized Force Crystal",
 
   "item.mcendgame.crystal.description.calibration": "Randomize all values of an item's attributes",
   "item.mcendgame.crystal.description.sacrifice": "Enhances an attribute by removing another",
@@ -101,6 +102,7 @@
   "item.mcendgame.crystal.description.reforge": "Reforges a unique item into a different one",
   "item.mcendgame.crystal.description.corruption": "Corrupts an item with varying results",
   "item.mcendgame.crystal.description.imitation": "Creates a copy of an item",
+  "item.mcendgame.crystal.description.synthesized_force": "Replaces a random attribute with an attack attribute",
 
   "item.mcendgame.totem_of_bastion": "Totem of Bastion",
   "item.mcendgame.totem_of_force": "Totem of Force",
