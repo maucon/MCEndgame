@@ -131,6 +131,14 @@ abstract class SynthesizedCrystal(
         return this
     }
 
+    fun MutableMap<Equipment, EquipmentAttributes>.fromExisting(
+        equipment: Iterable<Iterable<Equipment>>,
+        vararg toCopy: CopyExistingData,
+    ): MutableMap<Equipment, EquipmentAttributes> {
+        equipment.forEach { fromExisting(it, *toCopy) }
+        return this
+    }
+
     fun getEquipmentAttributeBounds(
         attributes: List<RandomOption<TieredRollableCustomAttribute>>,
         type: AttributeType,

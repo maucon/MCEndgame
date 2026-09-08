@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.item.custom.crystal.item.synthesized
 
+import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.item.equipment.Equipment
 import de.fuballer.mcendgame.main.component.item.equipment.tool.*
@@ -15,24 +16,15 @@ class SynthesizedForceCrystal(
 
     override val forcedAttributes = mutableMapOf<Equipment, EquipmentAttributes>()
         .fromExisting(
-            Sword.entries,
+            listOf(
+                Sword.entries,
+                Axe.entries,
+                Pickaxe.entries,
+                Shovel.entries,
+                Hoe.entries,
+            ),
             CopyExistingData(VanillaAttributeTypes.ATTACK_DAMAGE),
             CopyExistingData(VanillaAttributeTypes.INCREASED_ATTACK_DAMAGE),
-        ).fromExisting(
-            Axe.entries,
-            CopyExistingData(VanillaAttributeTypes.ATTACK_DAMAGE),
-            CopyExistingData(VanillaAttributeTypes.INCREASED_ATTACK_DAMAGE),
-        ).fromExisting(
-            Pickaxe.entries,
-            CopyExistingData(VanillaAttributeTypes.ATTACK_DAMAGE),
-            CopyExistingData(VanillaAttributeTypes.INCREASED_ATTACK_DAMAGE),
-        ).fromExisting(
-            Shovel.entries,
-            CopyExistingData(VanillaAttributeTypes.ATTACK_DAMAGE),
-            CopyExistingData(VanillaAttributeTypes.INCREASED_ATTACK_DAMAGE),
-        ).fromExisting(
-            Hoe.entries,
-            CopyExistingData(VanillaAttributeTypes.ATTACK_DAMAGE),
-            CopyExistingData(VanillaAttributeTypes.INCREASED_ATTACK_DAMAGE),
+            CopyExistingData(CustomAttributeTypes.INCREASED_DAMAGE),
         ).toMap()
 }
