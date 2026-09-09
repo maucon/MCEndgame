@@ -131,6 +131,7 @@ abstract class SynthesizedCrystal(
         return this
     }
 
+    @JvmName("fromExistingGrouped")
     fun MutableMap<Equipment, EquipmentAttributes>.fromExisting(
         equipment: Iterable<Iterable<Equipment>>,
         vararg toCopy: CopyExistingData,
