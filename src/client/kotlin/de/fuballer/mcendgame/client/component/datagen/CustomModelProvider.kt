@@ -86,6 +86,12 @@ class CustomModelProvider(
         generator.generateFlatItem(CrystalItems.CORRUPTION_CRYSTAL, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(CrystalItems.IMITATION_CRYSTAL, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(CrystalItems.SYNTHESIZED_FORCE_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.SYNTHESIZED_MOMENTUM_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.SYNTHESIZED_ENDURANCE_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.SYNTHESIZED_VITALITY_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.SYNTHESIZED_PRECISION_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.SYNTHESIZED_FOCUS_CRYSTAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CrystalItems.SYNTHESIZED_COMMAND_CRYSTAL, ModelTemplates.FLAT_ITEM)
 
         generator.generateFlatItem(TotemItems.TOTEM_OF_BASTION, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(TotemItems.TOTEM_OF_FORCE, ModelTemplates.FLAT_ITEM)

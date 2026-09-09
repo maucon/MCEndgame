@@ -107,6 +107,12 @@ object CustomCreativeModeTab {
                     output.accept(CrystalItems.CORRUPTION_CRYSTAL.defaultInstance)
                     output.accept(CrystalItems.IMITATION_CRYSTAL.defaultInstance)
                     output.accept(CrystalItems.SYNTHESIZED_FORCE_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_MOMENTUM_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_ENDURANCE_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_VITALITY_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_PRECISION_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_FOCUS_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_COMMAND_CRYSTAL.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(

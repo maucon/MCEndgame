@@ -9,7 +9,12 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItemInterface
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
 import de.fuballer.mcendgame.main.component.item.equipment.Equipment
+import de.fuballer.mcendgame.main.component.item.equipment.armor.Boots
+import de.fuballer.mcendgame.main.component.item.equipment.armor.Chestplate
+import de.fuballer.mcendgame.main.component.item.equipment.armor.Helmet
+import de.fuballer.mcendgame.main.component.item.equipment.armor.Leggings
 import de.fuballer.mcendgame.main.component.item.equipment.data.TieredRollableCustomAttribute
+import de.fuballer.mcendgame.main.component.item.equipment.tool.*
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import de.fuballer.mcendgame.main.util.random.RandomUtil
 import net.minecraft.network.chat.MutableComponent
@@ -20,6 +25,40 @@ abstract class SynthesizedCrystal(
     settings: Properties
 ) : CrystalItem(settings) {
     abstract val forcedAttributes: Map<Equipment, EquipmentAttributes>
+
+    companion object {
+        const val ATTRIBUTE_DEFAULT_WEIGHT = 100
+        const val ATTRIBUTE_DEFAULT_FACTOR = 0.8
+
+        val MELEE_WEAPONS = listOf<List<Equipment>>(
+            Sword.entries,
+            Axe.entries,
+            Pickaxe.entries,
+            Shovel.entries,
+            Hoe.entries,
+            Spear.entries,
+            Mace.entries,
+            listOf(Miscellaneous.TRIDENT),
+        )
+        val RANGED_WEAPONS = listOf<List<Equipment>>(
+            Bow.entries,
+            listOf(Miscellaneous.CROSSBOW),
+        )
+        val WEAPONS = MELEE_WEAPONS.toMutableList().apply { addAll(RANGED_WEAPONS) }
+        val MELEE_WEAPONS_WITH_SHIELDS = MELEE_WEAPONS.toMutableList().apply { add(Shield.entries) }
+        val WEAPONS_WITH_SHIELD = WEAPONS.toMutableList().apply { add(Shield.entries) }
+        val HELMETS_AND_BOOTS = listOf<List<Equipment>>(
+            Helmet.entries,
+            Boots.entries,
+        )
+        val ARMOR = listOf<List<Equipment>>(
+            Helmet.entries,
+            Chestplate.entries,
+            Leggings.entries,
+            Boots.entries,
+        )
+        val CHESTPLATES_WITH_ELYTRA = Chestplate.entries.toMutableList<Equipment>().apply { add(Miscellaneous.ELYTRA) }
+    }
 
     override fun canForge(
         stack: ItemStack,
@@ -91,6 +130,13 @@ abstract class SynthesizedCrystal(
             vararg tiers: Pair<Int, AttributeBounds<*>>,
         ) : this(type, tiers.toMap().mapValues { listOf(it.value) })
 
+        companion object {
+            fun fromBoundsLists(
+                type: AttributeType,
+                vararg tiers: Pair<Int, List<AttributeBounds<*>>>,
+            ) = EquipmentAttribute(type, tiers.toMap())
+        }
+
         fun getBounds(tier: Int): List<AttributeBounds<*>> {
             tiers[tier]?.let { return it }
             return tiers.entries.minBy { abs(tier - it.key) * 2 + if (it.key < tier) 1 else 0 }.value
@@ -105,10 +151,19 @@ abstract class SynthesizedCrystal(
         return this
     }
 
+    fun MutableMap<Equipment, EquipmentAttributes>.putEquipmentAttributes(
+        equipment: Iterable<Iterable<Equipment>>,
+        vararg options: RandomOption<EquipmentAttribute>
+    ): MutableMap<Equipment, EquipmentAttributes> {
+        equipment.forEach { putEquipmentAttributes(it, *options) }
+        return this
+    }
+
     data class CopyExistingData(
         val type: AttributeType,
-        val weight: Int = 1,
-        val factor: Double = 0.8,
+        val weight: Int = ATTRIBUTE_DEFAULT_WEIGHT,
+        val factor: Double = ATTRIBUTE_DEFAULT_FACTOR,
+        val takeFrom: Equipment? = null,
     )
 
     fun MutableMap<Equipment, EquipmentAttributes>.fromExisting(
@@ -122,7 +177,11 @@ abstract class SynthesizedCrystal(
                         weight = copy.weight,
                         EquipmentAttribute(
                             copy.type,
-                            getEquipmentAttributeBounds(equip.rollableCustomAttributes, copy.type, copy.factor)
+                            getEquipmentAttributeBounds(
+                                copy.takeFrom?.rollableCustomAttributes ?: equip.rollableCustomAttributes,
+                                copy.type,
+                                copy.factor,
+                            )
                         )
                     )
                 }
