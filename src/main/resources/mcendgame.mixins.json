@@ -11,6 +11,7 @@
     "additional_projectiles.TridentItemAdditionalProjectilesMixin",
     "attribute.RangedAttributeMixin",
     "blocks_attacks.BlocksAttacksBanditCooldownMixin",
+    "companion.AnimalCompanionRemoveWhenFarAwayMixin",
     "companion.EntityCompanionMixin",
     "conversion.SkeletonConversionMixin",
     "conversion.ZombieConversionMixin",

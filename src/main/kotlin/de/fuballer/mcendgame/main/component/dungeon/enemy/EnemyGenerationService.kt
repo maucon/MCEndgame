@@ -190,7 +190,12 @@ class EnemyGenerationService(
             0F,
         )
 
+        bandit.setDungeonEnemy()
+        bandit.setPersistenceRequired()
+
         bandit.setBanditType(BanditType.entries.random(random))
+
+        bandit.heal(1000F)
         return bandit
     }
 }

@@ -11,7 +11,6 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.DifficultyInstance
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
@@ -34,7 +33,6 @@ import net.minecraft.world.item.ItemCooldowns
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
@@ -117,17 +115,6 @@ class BanditEntity(
     }
 
     fun getBanditType() = BanditType.entries[entityData.get(BANDIT_TYPE_INDEX)]
-
-    override fun finalizeSpawn(
-        level: ServerLevelAccessor,
-        difficulty: DifficultyInstance,
-        spawnReason: EntitySpawnReason,
-        groupData: SpawnGroupData?,
-    ): SpawnGroupData? {
-        val result = super.finalizeSpawn(level, difficulty, spawnReason, groupData)
-        setPersistenceRequired()
-        return result
-    }
 
     override fun aiStep() {
         super.aiStep()
@@ -253,4 +240,6 @@ class BanditEntity(
 
         playSound(SoundEvents.SKELETON_SHOOT, 1.0f, 1.0f / (getRandom().nextFloat() * 0.4f + 0.8f))
     }
+
+    override fun removeWhenFarAway(distSqr: Double) = false
 }

@@ -13,7 +13,9 @@ import de.fuballer.mcendgame.main.messaging.server.ServerEndTickEvent
 import de.fuballer.mcendgame.main.util.extension.SlotExtension.isOrIsChildOf
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getTargetSelector
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCompanion
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setCompanion
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setDungeonEnemy
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import de.maucon.mauconframework.initializer.Initializer
@@ -79,7 +81,7 @@ class CompanionService {
         }
     }
 
-    // this also gets triggered by respawn and join
+    // this also gets triggered by player respawn and join, entity load
     @EventSubscriber(sync = true)
     fun on(event: EquipmentChangeEvent) {
         val level = event.entity.level() as? ServerLevel ?: return
@@ -175,15 +177,19 @@ class CompanionService {
         companion.setCompanion()
         companion.isInvulnerable = true
         companion.getAttribute(Attributes.FOLLOW_RANGE)?.baseValue = 24.0
+        if (owner.isDungeonEnemy()) companion.setDungeonEnemy()
 
-        addGoals(companion)
+        updateTargetGoals(owner, companion)
 
         type.applyOther(companion, attribute)
 
         world.addFreshEntity(companion)
     }
 
-    fun addGoals(entity: TamableAnimal) {
+    fun updateTargetGoals(
+        owner: LivingEntity,
+        entity: TamableAnimal,
+    ) {
         val targetSelector = entity.getTargetSelector()
 
         targetSelector.availableGoals
@@ -201,7 +207,7 @@ class CompanionService {
                 10,
                 false,
                 false,
-                ShouldBeAttackedByCompanionsPredicate(),
+                ShouldBeAttackedByCompanionsPredicate(owner.isDungeonEnemy()),
             )
         )
     }
