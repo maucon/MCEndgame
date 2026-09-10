@@ -3,6 +3,8 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditBowGoal
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditMeleeGoal
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
+import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
+import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
 import de.fuballer.mcendgame.main.component.item.custom.misc.CustomMiscItems
 import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItems
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
@@ -26,6 +28,7 @@ enum class BanditType(
     val modelType: PlayerModelType,
     val texture: Identifier,
     val equipment: List<BanditItemStack>,
+    val rewardCrystal: CrystalItem,
     val fightingGoal: (BanditEntity) -> Goal = { banditEntity -> BanditMeleeGoal(banditEntity, 1.0) },
     val jumpWhileTravel: Boolean = true,
     val jumpCritAttack: Boolean = false,
@@ -51,6 +54,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WITHER_ROSE_LEGGINGS.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS)),
         ),
+        CrystalItems.SYNTHESIZED_FORCE_CRYSTAL,
         jumpCritAttack = true,
         blockAfterTargetHitProbability = 0.5,
     ),
@@ -66,6 +70,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, ItemStack(Items.NETHERITE_LEGGINGS), trimMaterial = TrimMaterials.COPPER, trimPattern = TrimPatterns.SILENCE),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.WITHER_ROSE_BOOTS.defaultInstance),
         ),
+        CrystalItems.SYNTHESIZED_FORCE_CRYSTAL,
         jumpCritAttack = true,
     ),
 
@@ -81,6 +86,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WINDSTRIDER.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.MOONSHADOW.defaultInstance),
         ),
+        CrystalItems.SYNTHESIZED_MOMENTUM_CRYSTAL,
         jumpCritAttack = true,
         sideStrafeUpdateTime = 8,
     ),
@@ -96,6 +102,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.SUEDE_LEGGINGS.defaultInstance, dyedColor = DyedItemColor(6825251)),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(6825251)),
         ),
+        CrystalItems.SYNTHESIZED_MOMENTUM_CRYSTAL,
         sideStrafeUpdateTime = 5,
     ),
 
@@ -112,6 +119,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.STONEWARD.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.WITHER_ROSE_BOOTS.defaultInstance),
         ),
+        CrystalItems.SYNTHESIZED_ENDURANCE_CRYSTAL,
         jumpCritAttack = true,
         sideStrafeUpdateTime = 12,
         blockDuration = { Random.nextInt(30, 50) },
@@ -128,6 +136,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.STONEWARD.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(1908001)),
         ),
+        CrystalItems.SYNTHESIZED_ENDURANCE_CRYSTAL,
         jumpWhileTravel = false,
         hornUseRange = Pair(0.0, 7.0),
     ),
@@ -145,6 +154,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.DRUIDS_LEGGINGS.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.DRUIDS_BOOTS.defaultInstance),
         ),
+        CrystalItems.SYNTHESIZED_VITALITY_CRYSTAL,
         jumpCritAttack = true,
         hornUseRange = Pair(0.0, 10.0),
     ),
@@ -159,6 +169,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, ItemStack(Items.NETHERITE_LEGGINGS)),
             BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS), trimMaterial = TrimMaterials.GOLD, trimPattern = TrimPatterns.WARD),
         ),
+        CrystalItems.SYNTHESIZED_VITALITY_CRYSTAL,
     ),
 
     // archer
@@ -173,6 +184,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.GILDED_TEMPEST.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(3949738)),
         ),
+        CrystalItems.SYNTHESIZED_PRECISION_CRYSTAL,
         fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
         predictMovementProbability = 0.75,
         predictedMovementRandomFactorRange = Pair(0.95, 1.15)
@@ -188,6 +200,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WINDSTRIDER.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.SUEDE_BOOTS.defaultInstance, dyedColor = DyedItemColor(10082796)),
         ),
+        CrystalItems.SYNTHESIZED_PRECISION_CRYSTAL,
         fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
         predictMovementProbability = 0.75,
         predictedMovementRandomFactorRange = Pair(0.75, 1.25)
@@ -206,6 +219,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WITHER_ROSE_LEGGINGS.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.EMBERREIGN.defaultInstance),
         ),
+        CrystalItems.SYNTHESIZED_FOCUS_CRYSTAL,
         sideStrafeUpdateTime = 12,
     ),
     MAEVE(
@@ -220,6 +234,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.LAMIAS_GIFT.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS)),
         ),
+        CrystalItems.SYNTHESIZED_FOCUS_CRYSTAL,
         jumpWhileTravel = false,
         sideStrafeUpdateTime = 8,
     ),
@@ -237,6 +252,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, ItemStack(Items.NETHERITE_LEGGINGS), trimMaterial = TrimMaterials.COPPER, trimPattern = TrimPatterns.SILENCE),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.DRUIDS_BOOTS.defaultInstance),
         ),
+        CrystalItems.SYNTHESIZED_COMMAND_CRYSTAL,
         jumpCritAttack = true,
         sideStrafeUpdateTime = 8,
     ),
@@ -251,6 +267,7 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.LEGS, CustomArmorItems.WINDSTRIDER.defaultInstance),
             BanditItemStack(EquipmentSlot.FEET, CustomArmorItems.MOONSHADOW.defaultInstance),
         ),
+        CrystalItems.SYNTHESIZED_COMMAND_CRYSTAL,
         fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
         jumpWhileTravel = false,
         predictMovementProbability = 1.0,

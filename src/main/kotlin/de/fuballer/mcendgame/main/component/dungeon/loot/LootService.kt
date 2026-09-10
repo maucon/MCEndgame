@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.dungeon.loot
 
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItemInterface
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
@@ -46,6 +47,10 @@ class LootService {
         val enemyEntity = event.enemyEntity
 
         if (enemyEntity.isDungeonBoss()) return
+        if (enemyEntity is BanditEntity) {
+            dropBanditLoot(serverWorld, enemyEntity)
+            return
+        }
 
         if (enemyEntity.isElite()) dropEliteLoot(serverWorld, enemyEntity)
 
@@ -125,6 +130,12 @@ class LootService {
 
     private fun dropEliteLoot(serverWorld: ServerLevel, entity: LivingEntity) {
         val aspect = RandomUtil.pickOne(LootSettings.ASPECTS).option
-        RuntimeConfig.SERVER.execute { entity.spawnAtLocation(serverWorld, aspect.defaultInstance) }
+        entity.spawnAtLocation(serverWorld, aspect.defaultInstance)
+    }
+
+    private fun dropBanditLoot(serverWorld: ServerLevel, bandit: BanditEntity) {
+        val type = bandit.getBanditType()
+        val stack = type.rewardCrystal.defaultInstance
+        bandit.spawnAtLocation(serverWorld, stack)
     }
 }
