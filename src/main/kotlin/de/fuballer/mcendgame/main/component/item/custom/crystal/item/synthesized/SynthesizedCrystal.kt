@@ -143,14 +143,23 @@ abstract class SynthesizedCrystal(
         }
     }
 
+    fun MutableMap<Equipment, EquipmentAttributes>.putOrAdd(
+        equip: Equipment,
+        options: List<RandomOption<EquipmentAttribute>>,
+    ) {
+        val existing = this[equip]
+        this[equip] = if (existing == null) EquipmentAttributes(options.toList()) else EquipmentAttributes(existing.options + options)
+    }
+
     fun MutableMap<Equipment, EquipmentAttributes>.putEquipmentAttributes(
         equipment: Iterable<Equipment>,
         vararg options: RandomOption<EquipmentAttribute>
     ): MutableMap<Equipment, EquipmentAttributes> {
-        putAll(equipment.associateWith { EquipmentAttributes(*options) })
+        equipment.forEach { putOrAdd(it, options.toList()) }
         return this
     }
 
+    @JvmName("putEquipmentAttributesGrouped")
     fun MutableMap<Equipment, EquipmentAttributes>.putEquipmentAttributes(
         equipment: Iterable<Iterable<Equipment>>,
         vararg options: RandomOption<EquipmentAttribute>
@@ -170,23 +179,24 @@ abstract class SynthesizedCrystal(
         equipment: Iterable<Equipment>,
         vararg toCopy: CopyExistingData,
     ): MutableMap<Equipment, EquipmentAttributes> {
-        putAll(equipment.associateWith { equip ->
-            EquipmentAttributes(
-                toCopy.map { copy ->
-                    RandomOption(
-                        weight = copy.weight,
-                        EquipmentAttribute(
+        equipment.forEach { equip ->
+            val newOptions = toCopy.map { copy ->
+                RandomOption(
+                    weight = copy.weight,
+                    EquipmentAttribute(
+                        copy.type,
+                        getEquipmentAttributeBounds(
+                            copy.takeFrom?.rollableCustomAttributes ?: equip.rollableCustomAttributes,
                             copy.type,
-                            getEquipmentAttributeBounds(
-                                copy.takeFrom?.rollableCustomAttributes ?: equip.rollableCustomAttributes,
-                                copy.type,
-                                copy.factor,
-                            )
+                            copy.factor,
                         )
                     )
-                }
-            )
-        })
+                )
+            }
+
+            putOrAdd(equip, newOptions)
+        }
+
         return this
     }
 

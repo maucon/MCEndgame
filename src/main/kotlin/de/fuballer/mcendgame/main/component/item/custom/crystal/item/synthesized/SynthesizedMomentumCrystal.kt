@@ -8,6 +8,8 @@ import de.fuballer.mcendgame.main.component.item.equipment.Equipment
 import de.fuballer.mcendgame.main.component.item.equipment.armor.Boots
 import de.fuballer.mcendgame.main.component.item.equipment.armor.Helmet
 import de.fuballer.mcendgame.main.component.item.equipment.armor.Leggings
+import de.fuballer.mcendgame.main.component.item.equipment.tool.Shield
+import de.fuballer.mcendgame.main.component.item.equipment.tool.Sword
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.network.chat.Component
 import java.awt.Color
@@ -29,8 +31,11 @@ class SynthesizedMomentumCrystal(
                 takeFrom = Boots.LEATHER,
             ),
         ).fromExisting(
-            MELEE_WEAPONS_WITH_SHIELDS,
+            MELEE_WEAPONS,
             CopyExistingData(VanillaAttributeTypes.INCREASED_ATTACK_SPEED),
+        ).fromExisting(
+            Shield.entries,
+            CopyExistingData(VanillaAttributeTypes.INCREASED_ATTACK_SPEED, takeFrom = Sword.WOODEN),
         ).putEquipmentAttributes(
             MELEE_WEAPONS_WITH_SHIELDS,
             RandomOption(

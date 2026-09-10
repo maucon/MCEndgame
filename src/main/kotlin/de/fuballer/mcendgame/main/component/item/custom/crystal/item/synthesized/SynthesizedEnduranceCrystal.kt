@@ -33,8 +33,7 @@ class SynthesizedEnduranceCrystal(
                     1 to listOf(DoubleBounds(0.08, 0.1), IntBounds(10, 10)),
                 ),
             ),
-        )
-        .fromExisting(
+        ).fromExisting(
             ARMOR.toMutableList().apply {
                 add(Shield.entries)
                 add(listOf(Miscellaneous.ELYTRA))
