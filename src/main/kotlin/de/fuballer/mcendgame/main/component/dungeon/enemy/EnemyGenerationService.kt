@@ -33,6 +33,7 @@ class EnemyGenerationService(
 ) {
     fun generate(
         dungeonWorld: ServerLevel,
+        seedFirstTime: Boolean,
         level: Int,
         enemyTypes: List<RandomOption<EntityTypeStats>>,
         applyMisc: (List<LivingEntity>) -> Unit,
@@ -46,6 +47,7 @@ class EnemyGenerationService(
         val entities = cmd.spawnPositions.map {
             spawnEnemy(
                 dungeonWorld,
+                seedFirstTime,
                 level,
                 enemyTypes,
                 it,
@@ -57,6 +59,7 @@ class EnemyGenerationService(
         entities.addAll(cmd.eliteSpawnPositions.map {
             spawnEnemy(
                 dungeonWorld,
+                seedFirstTime,
                 level,
                 enemyTypes,
                 it,
@@ -69,6 +72,7 @@ class EnemyGenerationService(
         entities.addAll(cmd.lootGoblinSpawnPositions.map {
             spawnEnemy(
                 dungeonWorld,
+                seedFirstTime,
                 level,
                 enemyTypes,
                 it,
@@ -82,6 +86,7 @@ class EnemyGenerationService(
             entities.addAll(
                 spawnBandits(
                     dungeonWorld,
+                    seedFirstTime,
                     level,
                     spawnPositions,
                     random,
@@ -99,6 +104,7 @@ class EnemyGenerationService(
 
     private fun spawnEnemy(
         dungeonWorld: ServerLevel,
+        seedFirstTime: Boolean,
         level: Int,
         types: List<RandomOption<EntityTypeStats>>,
         location: SpawnPosition,
@@ -107,7 +113,7 @@ class EnemyGenerationService(
         isForcedElite: Boolean = false,
         isForcedLootGoblin: Boolean = false,
     ): LivingEntity {
-        val isLootGoblin = isForcedLootGoblin || EnemyGenerationSettings.randomLootGoblin(random)
+        val isLootGoblin = isForcedLootGoblin || (seedFirstTime && EnemyGenerationSettings.randomLootGoblin(random))
 
         val validTypes = if (!isLootGoblin) types else types.filter { it.option.equipmentClass.isNot(EnemyEquipmentClass.NO_ARMOR) }
         val type = RandomUtil.pickOne(validTypes, random).option
@@ -118,7 +124,7 @@ class EnemyGenerationService(
 
         if (isLootGoblin) enemyEntity.setLootGoblin()
 
-        val isElite = isForcedElite || EnemyGenerationSettings.randomElite(random)
+        val isElite = isForcedElite || (seedFirstTime && EnemyGenerationSettings.randomElite(random))
         if (isElite) {
             enemyEntity.setElite()
             applyEliteEffects(enemyEntity)
@@ -165,12 +171,15 @@ class EnemyGenerationService(
 
     private fun spawnBandits(
         dungeonWorld: ServerLevel,
+        seedFirstTime: Boolean,
         level: Int,
         spawnPositions: List<SpawnPosition>,
         random: Random,
     ): Iterable<BanditEntity> {
         val generateBanditsCommand = DungeonGenerateBanditsCommand(dungeonWorld, spawnPositions.toMutableList())
-        generateBanditsCommand.addBandits(EnemyGenerationSettings.randomBanditCount(level, random))
+
+        if (seedFirstTime) generateBanditsCommand.addBandits(EnemyGenerationSettings.randomBanditCount(level, random))
+
         val cmd = CommandGateway.apply(generateBanditsCommand)
         return cmd.chosenSpawnPositions.map { spawnBandit(dungeonWorld, it, random) }
     }
