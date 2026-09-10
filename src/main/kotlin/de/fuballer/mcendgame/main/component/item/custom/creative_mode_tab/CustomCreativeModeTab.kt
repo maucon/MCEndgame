@@ -92,6 +92,7 @@ object CustomCreativeModeTab {
                     output.accept(AspectItems.ASPECT_OF_ANCESTORS.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_DUALITY.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_THE_GROVE.defaultInstance)
+                    output.accept(AspectItems.ASPECT_OF_OUTLAWS.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(

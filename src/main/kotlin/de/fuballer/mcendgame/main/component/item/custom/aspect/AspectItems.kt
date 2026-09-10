@@ -12,6 +12,7 @@ import de.fuballer.mcendgame.main.component.item.custom.aspect.item.greed.Aspect
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.grove.AspectOfTheGrove
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.hordes.AspectOfHordes
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.impatience.AspectOfImpatience
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.outlaws.AspectOfOutlaws
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.savagery.AspectOfSavagery
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.tyranny.AspectOfTyranny
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.zeal.AspectOfZeal
@@ -35,4 +36,5 @@ object AspectItems {
     val ASPECT_OF_ANCESTORS = RegistryUtil.registerAspectItem(::AspectOfAncestors, AspectItemIds.ASPECT_OF_ANCESTORS)
     val ASPECT_OF_DUALITY = RegistryUtil.registerAspectItem(::AspectOfDuality, AspectItemIds.ASPECT_OF_DUALITY)
     val ASPECT_OF_THE_GROVE = RegistryUtil.registerAspectItem(::AspectOfTheGrove, AspectItemIds.ASPECT_OF_THE_GROVE)
+    val ASPECT_OF_OUTLAWS = RegistryUtil.registerAspectItem(::AspectOfOutlaws, AspectItemIds.ASPECT_OF_OUTLAWS)
 }

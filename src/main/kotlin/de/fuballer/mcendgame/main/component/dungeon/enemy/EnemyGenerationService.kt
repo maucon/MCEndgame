@@ -5,7 +5,11 @@ import de.fuballer.mcendgame.main.component.dungeon.enemy.potion_effect.PotionEf
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
+import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditType
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemiesGeneratedCommand
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateBanditsCommand
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateEnemiesCommand
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setDungeonEnemy
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setElite
@@ -16,6 +20,7 @@ import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -72,6 +77,17 @@ class EnemyGenerationService(
                 isForcedLootGoblin = true,
             )
         })
+
+        if (!isEncounter) {
+            entities.addAll(
+                spawnBandits(
+                    dungeonWorld,
+                    level,
+                    spawnPositions,
+                    random,
+                )
+            )
+        }
 
         applyMisc(entities)
 
@@ -145,5 +161,36 @@ class EnemyGenerationService(
     ) {
         val scale = if (isElite) EnemyGenerationSettings.ELITE_SCALE else type.getRandomScale(random)
         entity.getAttribute(Attributes.SCALE)?.baseValue = scale
+    }
+
+    private fun spawnBandits(
+        dungeonWorld: ServerLevel,
+        level: Int,
+        spawnPositions: List<SpawnPosition>,
+        random: Random,
+    ): Iterable<BanditEntity> {
+        val generateBanditsCommand = DungeonGenerateBanditsCommand(dungeonWorld, spawnPositions.toMutableList())
+        generateBanditsCommand.addBandits(EnemyGenerationSettings.randomBanditCount(level, random))
+        val cmd = CommandGateway.apply(generateBanditsCommand)
+        return cmd.chosenSpawnPositions.map { spawnBandit(dungeonWorld, it, random) }
+    }
+
+    private fun spawnBandit(
+        dungeonWorld: ServerLevel,
+        location: SpawnPosition,
+        random: Random,
+    ): BanditEntity {
+        val bandit = CustomEntities.BANDIT.spawn(dungeonWorld, location.blockPos(), EntitySpawnReason.STRUCTURE)
+            ?: throw Exception("Couldn't spawn bandit, in world: $dungeonWorld")
+        bandit.snapTo(
+            location.pos.x + 0.5,
+            location.pos.y.toDouble(),
+            location.pos.z + 0.5,
+            location.rot.toFloat(),
+            0F,
+        )
+
+        bandit.setBanditType(BanditType.entries.random(random))
+        return bandit
     }
 }

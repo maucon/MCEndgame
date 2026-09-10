@@ -74,6 +74,7 @@ class CustomModelProvider(
         generator.generateFlatItem(AspectItems.ASPECT_OF_GREED, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_HORDES, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_IMPATIENCE, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_OUTLAWS, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_SAVAGERY, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_THE_GROVE, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_TYRANNY, ModelTemplates.FLAT_ITEM)

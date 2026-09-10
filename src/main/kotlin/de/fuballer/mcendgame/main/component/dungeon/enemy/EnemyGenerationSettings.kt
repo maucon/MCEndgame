@@ -56,4 +56,13 @@ object EnemyGenerationSettings {
     const val ELITE_HEALTH_FACTOR = 2.5
     fun randomElite(random: Random) = random.nextDouble() < ELITE_PROBABILITY
     fun getEliteStatusEffect() = MobEffectInstance(MobEffects.RAID_OMEN, MobEffectInstance.INFINITE_DURATION, 0, false, true)
+
+    fun randomBanditCount(
+        level: Int,
+        random: Random,
+    ): Int {
+        val range = level * 0.2
+        val pick = random.nextDouble(range)
+        return pick.toInt() + if (random.nextDouble() < pick % 1) 1 else 0
+    }
 }
