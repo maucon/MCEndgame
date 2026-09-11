@@ -65,6 +65,7 @@
   "item.mcendgame.aspect_of_ancestors": "Aspect of Ancestors",
   "item.mcendgame.aspect_of_the_grove": "Aspect of the Grove",
   "item.mcendgame.aspect_of_outlaws": "Aspect of Outlaws",
+  "item.mcendgame.aspect_of_kin": "Aspect of Kin",
 
   "item.mcendgame.aspect.limit": "Limit: %s",
   "item.mcendgame.aspect.description.tyranny": "Dungeon contains %s additional Elites",
@@ -89,6 +90,7 @@
   "item.mcendgame.aspect.description.grove_0": "Dungeon only contains the Beastweaver",
   "item.mcendgame.aspect.description.grove_1": "Dungeon is at least Level %s",
   "item.mcendgame.aspect.description.outlaws": "Dungeon contains %s additional Bandits",
+  "item.mcendgame.aspect.description.kin": "Bandits appear in pairs",
 
   "item.mcendgame.calibration_crystal": "Calibration Crystal",
   "item.mcendgame.sacrifice_crystal": "Sacrifice Crystal",

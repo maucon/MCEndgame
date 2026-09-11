@@ -10,6 +10,7 @@ data class DungeonGenerateBanditsCommand(
     val aspects: Map<AspectItem, Int>,
     val possibleSpawnPositions: MutableList<SpawnPosition>,
     val chosenSpawnPositions: MutableList<SpawnPosition> = mutableListOf(),
+    var pairs: Boolean = false,
 ) {
     constructor(
         dungeonWorld: ServerLevel,

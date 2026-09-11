@@ -177,11 +177,11 @@ class EnemyGenerationService(
         random: Random,
     ): Iterable<BanditEntity> {
         val generateBanditsCommand = DungeonGenerateBanditsCommand(dungeonWorld, spawnPositions.toMutableList())
-
         if (seedFirstTime) generateBanditsCommand.addBandits(EnemyGenerationSettings.randomBanditCount(level, random))
-
         val cmd = CommandGateway.apply(generateBanditsCommand)
-        return cmd.chosenSpawnPositions.map { spawnBandit(dungeonWorld, it, random) }
+
+        return if (cmd.pairs) cmd.chosenSpawnPositions.flatMap { spawnBanditPair(dungeonWorld, it, random) }
+        else cmd.chosenSpawnPositions.map { spawnBandit(dungeonWorld, it, random) }
     }
 
     private fun spawnBandit(
@@ -206,5 +206,18 @@ class EnemyGenerationService(
 
         bandit.heal(1000F)
         return bandit
+    }
+
+    private fun spawnBanditPair(
+        dungeonWorld: ServerLevel,
+        location: SpawnPosition,
+        random: Random,
+    ): Iterable<BanditEntity> {
+        val bandit1 = spawnBandit(dungeonWorld, location, random)
+        val bandit2 = spawnBandit(dungeonWorld, location, random)
+
+        // TODO make them not path away from each other (custom goal)
+
+        return listOf(bandit1, bandit2)
     }
 }
