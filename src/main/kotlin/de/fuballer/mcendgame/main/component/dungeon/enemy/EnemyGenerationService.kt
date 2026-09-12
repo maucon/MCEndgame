@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.dungeon.enemy
 
+import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.addCustomAttribute
 import de.fuballer.mcendgame.main.component.dungeon.enemy.equipment.EquipmentGenerationService
 import de.fuballer.mcendgame.main.component.dungeon.enemy.potion_effect.PotionEffectService
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
@@ -202,7 +203,12 @@ class EnemyGenerationService(
         bandit.setDungeonEnemy()
         bandit.setPersistenceRequired()
 
-        bandit.setBanditType(BanditType.entries.random(random))
+        val banditType = BanditType.entries.random(random)
+        bandit.setBanditType(banditType)
+
+        banditType.dungeonBalanceAttributes().forEach { attribute ->
+            bandit.addCustomAttribute(attribute)
+        }
 
         bandit.heal(1000F)
         return bandit

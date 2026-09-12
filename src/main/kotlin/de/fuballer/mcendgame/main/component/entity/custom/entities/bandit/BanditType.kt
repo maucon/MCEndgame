@@ -1,5 +1,9 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 
+import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
+import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
+import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
+import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditBowGoal
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditMeleeGoal
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
@@ -40,6 +44,7 @@ enum class BanditType(
     val hornUseRange: Pair<Double, Double> = Pair(10.0, 30.0),
     val predictMovementProbability: Double = 1.0,
     val predictedMovementRandomFactorRange: Pair<Double, Double> = Pair(0.85, 1.15),
+    val dungeonBalanceAttributes: () -> Iterable<CustomAttribute> = { listOf() },
 ) {
     // bruiser
     DRENN(
@@ -57,6 +62,11 @@ enum class BanditType(
         CrystalItems.SYNTHESIZED_FORCE_CRYSTAL,
         jumpCritAttack = true,
         blockAfterTargetHitProbability = 0.5,
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(VanillaAttributeTypes.MORE_SCALE, roll = DoubleRoll(DoubleBounds(0.5))),
+            )
+        }
     ),
     SLOANE(
         Component.translatable(TRANSLATABLE_BASE_KEY + "sloane"),
