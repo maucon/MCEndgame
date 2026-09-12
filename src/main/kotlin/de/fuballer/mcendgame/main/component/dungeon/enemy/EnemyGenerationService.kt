@@ -216,7 +216,8 @@ class EnemyGenerationService(
         val bandit1 = spawnBandit(dungeonWorld, location, random)
         val bandit2 = spawnBandit(dungeonWorld, location, random)
 
-        // TODO make them not path away from each other (custom goal)
+        bandit1.setPartner(bandit2)
+        bandit2.setPartner(bandit1)
 
         return listOf(bandit1, bandit2)
     }

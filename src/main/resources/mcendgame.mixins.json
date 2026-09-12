@@ -13,6 +13,7 @@
     "blocks_attacks.BlocksAttacksBanditCooldownMixin",
     "companion.AnimalCompanionRemoveWhenFarAwayMixin",
     "companion.EntityCompanionMixin",
+    "companion.LivingEntityCompanionRemoveMixin",
     "conversion.SkeletonConversionMixin",
     "conversion.ZombieConversionMixin",
     "corruption.AnvilMenuCorruptionUnmodifiableMixin",

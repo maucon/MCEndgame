@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile.
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.BanditMoveControl
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.BanditPathNavigation
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditMeleeGoal
+import de.fuballer.mcendgame.main.component.entity.custom.goals.FollowPartnerGoal
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getHitbox
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -36,12 +37,13 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
+import java.util.*
 import kotlin.math.sqrt
 
 class BanditEntity(
     type: EntityType<BanditEntity>,
     level: Level,
-) : PathfinderMob(type, level), Enemy, RangedAttackMob {
+) : PathfinderMob(type, level), Enemy, RangedAttackMob, FollowPartnerGoal.PairedMob {
     companion object {
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
@@ -53,6 +55,8 @@ class BanditEntity(
         }
 
         private const val FIGHTING_GOAL_PRIO = 1
+
+        private const val PARTNER_ID = "partner"
 
         private const val BANDIT_TYPE_ID = "BanditType"
         private const val BANDIT_TYPE_INDEX_ID = "bandit_type_index"
@@ -90,8 +94,9 @@ class BanditEntity(
         fightingGoal = getBanditType().fightingGoal(this)
         goalSelector.addGoal(FIGHTING_GOAL_PRIO, fightingGoal)
 
-        goalSelector.addGoal(2, WaterAvoidingRandomStrollGoal(this, 1.0))
-        goalSelector.addGoal(3, RandomLookAroundGoal(this))
+        goalSelector.addGoal(2, FollowPartnerGoal(this, 1.0, 10.0, 3.0))
+        goalSelector.addGoal(3, WaterAvoidingRandomStrollGoal(this, 1.0))
+        goalSelector.addGoal(4, RandomLookAroundGoal(this))
 
         targetSelector.addGoal(0, HurtByTargetGoal(this))
         targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, false))
@@ -115,6 +120,14 @@ class BanditEntity(
     }
 
     fun getBanditType() = BanditType.entries[entityData.get(BANDIT_TYPE_INDEX)]
+
+    override var partnerReference: EntityReference<LivingEntity>? = null
+
+    override fun getLevel() = level()
+
+    fun setPartner(partner: LivingEntity?) {
+        partnerReference = EntityReference.of(partner)
+    }
 
     override fun aiStep() {
         super.aiStep()
@@ -147,10 +160,13 @@ class BanditEntity(
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
         output.putInt(BANDIT_TYPE_INDEX_ID, entityData.get(BANDIT_TYPE_INDEX))
+        EntityReference.store(partnerReference, output, PARTNER_ID)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
         super.readAdditionalSaveData(input)
+
+        partnerReference = EntityReference.readWithOldOwnerConversion(input, PARTNER_ID, level())
 
         val optionalTypeString = input.getString(BANDIT_TYPE_ID)
         if (optionalTypeString.isPresent) {

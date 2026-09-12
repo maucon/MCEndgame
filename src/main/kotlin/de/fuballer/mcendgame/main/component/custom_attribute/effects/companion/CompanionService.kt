@@ -46,12 +46,6 @@ class CompanionService {
         removeCompanions(handler.player)
     }
 
-    @Initializer
-    fun onEntityUnload() = ServerEntityEvents.ENTITY_UNLOAD.register { entity, _ ->
-        val entity = entity as? LivingEntity ?: return@register
-        removeCompanions(entity)
-    }
-
     @EventSubscriber(sync = true)
     fun on(event: LivingEntityDeathEvent) {
         if (event.isClient) return
