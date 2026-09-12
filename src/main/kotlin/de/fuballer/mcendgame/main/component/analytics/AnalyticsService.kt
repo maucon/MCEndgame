@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.component.analytics
 import com.google.gson.Gson
 import de.fuballer.mcendgame.main.MCEndgame
 import de.fuballer.mcendgame.main.component.config.UserConfig
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneDespawnEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemyDeathEvent
@@ -108,6 +109,7 @@ class AnalyticsService(
         val entity = event.enemyEntity
         if (entity.isLootGoblin()) sendLootGoblinKilledAnalytics(level, entity)
         if (entity.isElite()) sendEliteKilledAnalytics(level, entity)
+        if (entity is BanditEntity) sendBanditKilledAnalytics(level, entity)
     }
 
     private fun sendLootGoblinKilledAnalytics(level: ServerLevel, goblin: LivingEntity) {
@@ -126,6 +128,16 @@ class AnalyticsService(
             payload = SpecialEnemyKilledPayload(
                 dungeon = AnalyticsUtil.getDungeonData(level),
                 enemyLoadout = AnalyticsUtil.getEntityLoadoutData(goblin)
+            )
+        )
+    }
+
+    private fun sendBanditKilledAnalytics(level: ServerLevel, bandit: BanditEntity) {
+        sendAnalytics(
+            eventType = EventType.BANDIT_KILLED,
+            payload = BanditKilledPayload(
+                dungeon = AnalyticsUtil.getDungeonData(level),
+                banditType = bandit.getBanditType().toString(),
             )
         )
     }
