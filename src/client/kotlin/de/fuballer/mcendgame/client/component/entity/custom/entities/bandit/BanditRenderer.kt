@@ -1,12 +1,15 @@
 package de.fuballer.mcendgame.client.component.entity.custom.entities.bandit
 
+import com.mojang.blaze3d.vertex.PoseStack
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import net.minecraft.client.model.HumanoidModel.ArmPose
 import net.minecraft.client.model.geom.ModelLayers
+import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.entity.ArmorModelSet
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer
+import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.core.component.DataComponents
 import net.minecraft.tags.ItemTags
 import net.minecraft.world.InteractionHand
@@ -109,4 +112,10 @@ class BanditRenderer(
         state.arrowCount = entity.arrowCount
         state.stingerCount = entity.stingerCount
     }
+
+    override fun submitNameDisplay(state: BanditRenderState, poseStack: PoseStack, submitNodeCollector: SubmitNodeCollector, camera: CameraRenderState) {
+        super.submitNameDisplay(state, poseStack, submitNodeCollector, camera)
+    }
+
+    override fun shouldShowName(entity: BanditEntity, distanceToCameraSq: Double) = false
 }
