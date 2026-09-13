@@ -13,25 +13,25 @@ import net.minecraft.world.item.equipment.trim.TrimMaterial
 import net.minecraft.world.item.equipment.trim.TrimPattern
 
 data class BanditItemStack(
-    private val slot: EquipmentSlot,
+    val slot: EquipmentSlot,
     private val baseStack: ItemStack,
     private val enchantments: Map<ResourceKey<Enchantment>, Int> = mapOf(),
     private val trimMaterial: ResourceKey<TrimMaterial>? = null,
     private val trimPattern: ResourceKey<TrimPattern>? = null,
     private val dyedColor: DyedItemColor? = null,
 ) {
-    fun equip(bandit: BanditEntity) {
+    fun getStack(bandit: BanditEntity): ItemStack {
         val stack = baseStack.copy()
 
         val registryAccess = bandit.registryAccess()
-        applyEnchantments(registryAccess, stack)
+        applyForcedEnchantments(registryAccess, stack)
         if (trimMaterial != null && trimPattern != null) stack.setTrim(registryAccess, trimMaterial, trimPattern)
         dyedColor?.let { stack.set(DataComponents.DYED_COLOR, it) }
 
-        bandit.setItemSlot(slot, stack)
+        return stack
     }
 
-    private fun applyEnchantments(
+    private fun applyForcedEnchantments(
         registryAccess: RegistryAccess,
         stack: ItemStack,
     ) {

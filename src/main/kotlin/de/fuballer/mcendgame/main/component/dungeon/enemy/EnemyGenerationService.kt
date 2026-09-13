@@ -181,13 +181,14 @@ class EnemyGenerationService(
         if (seedFirstTime) generateBanditsCommand.addBandits(EnemyGenerationSettings.randomBanditCount(level, random))
         val cmd = CommandGateway.apply(generateBanditsCommand)
 
-        return if (cmd.pairs) cmd.chosenSpawnPositions.flatMap { spawnBanditPair(dungeonWorld, it, random) }
-        else cmd.chosenSpawnPositions.map { spawnBandit(dungeonWorld, it, random) }
+        return if (cmd.pairs) cmd.chosenSpawnPositions.flatMap { spawnBanditPair(dungeonWorld, it, level, random) }
+        else cmd.chosenSpawnPositions.map { spawnBandit(dungeonWorld, it, level, random) }
     }
 
     private fun spawnBandit(
         dungeonWorld: ServerLevel,
         location: SpawnPosition,
+        level: Int,
         random: Random,
     ): BanditEntity {
         val bandit = CustomEntities.BANDIT.spawn(dungeonWorld, location.blockPos(), EntitySpawnReason.STRUCTURE)
@@ -206,6 +207,8 @@ class EnemyGenerationService(
         val banditType = BanditType.entries.random(random)
         bandit.setBanditType(banditType)
 
+        equipmentGenerationService.setBanditEquipment(bandit, banditType, level, dungeonWorld.server, random)
+
         banditType.dungeonBalanceAttributes().forEach { attribute ->
             bandit.addCustomAttribute(attribute)
         }
@@ -217,10 +220,11 @@ class EnemyGenerationService(
     private fun spawnBanditPair(
         dungeonWorld: ServerLevel,
         location: SpawnPosition,
+        level: Int,
         random: Random,
     ): Iterable<BanditEntity> {
-        val bandit1 = spawnBandit(dungeonWorld, location, random)
-        val bandit2 = spawnBandit(dungeonWorld, location, random)
+        val bandit1 = spawnBandit(dungeonWorld, location, level, random)
+        val bandit2 = spawnBandit(dungeonWorld, location, level, random)
 
         bandit1.setPartner(bandit2)
         bandit2.setPartner(bandit1)

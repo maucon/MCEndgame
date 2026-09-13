@@ -4,6 +4,8 @@ import de.fuballer.mcendgame.main.component.dungeon.enemy.equipment.attributes.A
 import de.fuballer.mcendgame.main.component.dungeon.enemy.equipment.data.EquipmentTag
 import de.fuballer.mcendgame.main.component.dungeon.enemy.equipment.enchantment.EnchantmentService
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditType
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItemInterface
 import de.fuballer.mcendgame.main.component.item.equipment.Equipment
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateEnemiesCommand
@@ -63,6 +65,24 @@ class EquipmentGenerationService(
         }
         createEquipment(level, EquipmentSlot.FEET, entityEquipmentClass, server, random, equipmentData)?.also {
             entity.setItemSlot(EquipmentSlot.FEET, it)
+        }
+    }
+
+    fun setBanditEquipment(
+        bandit: BanditEntity,
+        banditType: BanditType,
+        level: Int,
+        server: MinecraftServer,
+        random: Random,
+    ) {
+        banditType.equipment.forEach {
+            val stack = it.getStack(bandit)
+
+            Equipment.fromItem(stack.item)?.also { equipment ->
+                enchantmentService.enchantItem(stack, equipment.rollableEnchants, level, server, random)
+            }
+
+            bandit.setItemSlot(it.slot, stack)
         }
     }
 

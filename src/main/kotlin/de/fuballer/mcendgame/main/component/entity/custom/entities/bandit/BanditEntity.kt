@@ -112,7 +112,6 @@ class BanditEntity(
         entityData.set(BANDIT_TYPE_INDEX, type.ordinal)
 
         customName = type.customName
-        type.equip(this)
 
         if (::fightingGoal.isInitialized) goalSelector.removeGoal(fightingGoal)
         fightingGoal = type.fightingGoal(this)

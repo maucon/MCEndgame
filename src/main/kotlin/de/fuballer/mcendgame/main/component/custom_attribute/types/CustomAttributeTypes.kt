@@ -44,6 +44,8 @@ object CustomAttributeTypes {
         CustomAttributeType("more_damage_per_missing_heart", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
     val INCREASED_SPELL_DAMAGE =
         CustomAttributeType("increased_spell_damage", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
+    val MORE_SPELL_DAMAGE =
+        CustomAttributeType("more_spell_damage", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
     val INCREASED_PROJECTILE_DAMAGE =
         CustomAttributeType("increased_projectile_damage", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
     val MORE_PROJECTILE_DAMAGE =
@@ -122,6 +124,13 @@ object CustomAttributeTypes {
         AttributeFormats.PERCENT_BOUNDS,
         AttributeAffinities.BENEFICIAL,
         SignBasedKeywords.INCREASED
+    )
+    val MORE_COMPANION_DAMAGE = CustomAttributeType(
+        "more_companion_damage",
+        AttributeFormats.PERCENT_ROLL,
+        AttributeFormats.PERCENT_BOUNDS,
+        AttributeAffinities.BENEFICIAL,
+        SignBasedKeywords.MORE
     )
 
     // MISC

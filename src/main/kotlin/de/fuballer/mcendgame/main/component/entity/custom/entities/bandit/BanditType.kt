@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
-import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
+import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditBowGoal
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditMeleeGoal
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
@@ -35,6 +35,7 @@ enum class BanditType(
     val rewardCrystal: CrystalItem,
     val fightingGoal: (BanditEntity) -> Goal = { banditEntity -> BanditMeleeGoal(banditEntity, 1.0) },
     val jumpWhileTravel: Boolean = true,
+    val randomAttackCooldownFactor: () -> Double = { Random.nextDouble(1.0, 1.4) },
     val jumpCritAttack: Boolean = false,
     val strafeBackAfterTargetHit: Boolean = true,
     val sideStrafeUpdateTime: Int = 10,
@@ -64,9 +65,9 @@ enum class BanditType(
         blockAfterTargetHitProbability = 0.5,
         dungeonBalanceAttributes = {
             listOf(
-                CustomAttribute(VanillaAttributeTypes.MORE_SCALE, roll = DoubleRoll(DoubleBounds(0.5))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.2))),
             )
-        }
+        },
     ),
     SLOANE(
         Component.translatable(TRANSLATABLE_BASE_KEY + "sloane"),
@@ -114,6 +115,11 @@ enum class BanditType(
         ),
         CrystalItems.SYNTHESIZED_MOMENTUM_CRYSTAL,
         sideStrafeUpdateTime = 5,
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, roll = DoubleRoll(DoubleBounds(-0.15))),
+            )
+        },
     ),
 
     // tank
@@ -167,6 +173,13 @@ enum class BanditType(
         CrystalItems.SYNTHESIZED_VITALITY_CRYSTAL,
         jumpCritAttack = true,
         hornUseRange = Pair(0.0, 10.0),
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(CustomAttributeTypes.MORE_COMPANION_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
+                CustomAttribute(CustomAttributeTypes.MORE_HEALING, roll = DoubleRoll(DoubleBounds(-0.25))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.15))),
+            )
+        },
     ),
     NESSA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "nessa"),
@@ -247,6 +260,11 @@ enum class BanditType(
         CrystalItems.SYNTHESIZED_FOCUS_CRYSTAL,
         jumpWhileTravel = false,
         sideStrafeUpdateTime = 8,
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(CustomAttributeTypes.MORE_SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.25))),
+            )
+        },
     ),
 
     // summoner / companion
@@ -265,6 +283,11 @@ enum class BanditType(
         CrystalItems.SYNTHESIZED_COMMAND_CRYSTAL,
         jumpCritAttack = true,
         sideStrafeUpdateTime = 8,
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(CustomAttributeTypes.MORE_COMPANION_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
+            )
+        },
     ),
     MORRIGAN(
         Component.translatable(TRANSLATABLE_BASE_KEY + "morrigan"),
@@ -281,12 +304,13 @@ enum class BanditType(
         fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
         jumpWhileTravel = false,
         predictMovementProbability = 1.0,
-        predictedMovementRandomFactorRange = Pair(0.95, 1.05)
+        predictedMovementRandomFactorRange = Pair(0.95, 1.05),
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(CustomAttributeTypes.MORE_COMPANION_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
+            )
+        },
     );
-
-    fun equip(bandit: BanditEntity) {
-        equipment.forEach { it.equip(bandit) }
-    }
 
     companion object {
         val DEFAULT = DRENN

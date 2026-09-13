@@ -286,7 +286,7 @@ open class BanditMeleeGoal(
 
         banditEntity.swing(InteractionHand.MAIN_HAND)
         banditEntity.doHurtTarget(getServerLevel(banditEntity), target)
-        setMeleeAttackCooldown()
+        setMeleeAttackCooldown(banditType)
 
         if (banditType.strafeBackAfterTargetHit) {
             strafeForwards = -0.5F
@@ -311,9 +311,11 @@ open class BanditMeleeGoal(
         return true
     }
 
-    protected fun setMeleeAttackCooldown() {
+    protected fun setMeleeAttackCooldown(
+        banditType: BanditType,
+    ) {
         val attackSpeed = banditEntity.getAttributeValue(Attributes.ATTACK_SPEED)
-        val attackCooldown = ceil(20 / attackSpeed).toInt()
+        val attackCooldown = ceil(20 / attackSpeed * banditType.randomAttackCooldownFactor()).toInt()
         ticksUntilNextAttack = adjustedTickDelay(attackCooldown)
     }
 

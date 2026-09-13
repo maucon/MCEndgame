@@ -13,7 +13,6 @@ class BanditPathNavigation(
     mob: Mob,
     level: Level,
 ) : GroundPathNavigation(mob, level) {
-
     companion object {
         private const val LOOK_AHEAD_NODES = 6
         private const val WAYPOINT_DISTANCE = 1.0
