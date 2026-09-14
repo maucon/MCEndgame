@@ -31,27 +31,19 @@ class BanditPathNavigation(
         if (path.isDone) return
 
         val mobPosition = tempMobPos
-        while (!path.isDone && isAtNode(path.nextNode)) path.advance()
+        if (!path.isDone && isAtNode(path.nextNode)) path.advance()
 
-        if (path.isDone) {
-            doStuckDetection(mobPosition)
-            return
-        }
-
-        val currentIndex = path.nextNodeIndex
-        val furthestReachableIndex = findFurthestReachableNode(path, currentIndex, mobPosition)
-        if (furthestReachableIndex > currentIndex) path.nextNodeIndex = furthestReachableIndex
+        path.nextNodeIndex = findFurthestReachableNode(path, mobPosition)
 
         doStuckDetection(mobPosition)
     }
 
     private fun findFurthestReachableNode(
         path: Path,
-        currentIndex: Int,
         mobPosition: Vec3,
     ): Int {
-        val lastIndex = min(currentIndex + LOOK_AHEAD_NODES, path.nodeCount - 1)
-        var reachableIndex = currentIndex + 1
+        val lastIndex = min(path.nextNodeIndex + LOOK_AHEAD_NODES, path.nodeCount - 1)
+        var reachableIndex = path.nextNodeIndex + 1
         while (reachableIndex <= lastIndex && canSkipToNode(path, mobPosition, reachableIndex)) reachableIndex++
         return reachableIndex - 1
     }
@@ -61,22 +53,22 @@ class BanditPathNavigation(
         mobPosition: Vec3,
         index: Int,
     ): Boolean {
-        val node = path.getNode(index)
+        val baseNode = path.nextNode
+        val targetNode = path.getNode(index)
 
-        val verticalDifference = node.y - mobPosition.y
-        if (abs(verticalDifference) > 1.0) return false
+        val verticalDifference = targetNode.y - baseNode.y
+        if (verticalDifference > 0.0 || verticalDifference < 5.0) return false
 
-        val target = path.getEntityPosAtNode(mob, index)
-        return canMoveDirectly(mobPosition, target)
+        val targetPosition = path.getEntityPosAtNode(mob, index)
+        return isClearForMovementBetween(mob, mobPosition, targetPosition, false)
     }
 
     private fun isAtNode(node: Node): Boolean {
         val nodePosition = Vec3.atBottomCenterOf(node.asBlockPos())
 
-        val dx = abs(mob.x - nodePosition.x)
-        val dz = abs(mob.z - nodePosition.z)
+        val dx = abs(mob.x - nodePosition.x + 0.5)
         val dy = abs(mob.y - nodePosition.y)
-
+        val dz = abs(mob.z - nodePosition.z + 0.5)
         return dx <= WAYPOINT_DISTANCE && dz <= WAYPOINT_DISTANCE && dy <= maxVerticalDistanceToWaypoint
     }
 }

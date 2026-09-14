@@ -5,6 +5,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.Bandit
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesHornItem
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isFacingTowards
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -40,6 +42,8 @@ open class BanditMeleeGoal(
     private var blockingDuration = 0
 
     private var shieldHit = false
+
+    private var targetSeenTicks = 0
 
     init {
         setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK))
@@ -96,9 +100,48 @@ open class BanditMeleeGoal(
         val banditType = banditEntity.getBanditType()
 
         ticksUntilNextAttack = max(ticksUntilNextAttack - 1, 0)
+        tickTargetSeen(target)
         tickCombatModes(banditType, target)
 
         tryUseHorn(banditType, target)
+
+        // debug
+        displayPathParticles()
+    }
+
+    private fun tickTargetSeen(
+        target: LivingEntity,
+    ) {
+        targetSeenTicks = if (banditEntity.sensing.hasLineOfSight(target)) min(targetSeenTicks + 1, 10) else max(targetSeenTicks - 1, 0)
+    }
+
+    fun displayPathParticles() {
+        val level = banditEntity.level() as? ServerLevel ?: return
+
+        val path = banditEntity.navigation.path ?: return
+        val nextNode = path.nextNodeIndex
+
+        for (i in 0 until path.nodeCount) {
+            val node = path.getNode(i)
+
+            val particle = if (i == nextNode) {
+                ParticleTypes.FLAME
+            } else {
+                ParticleTypes.END_ROD
+            }
+
+            level.sendParticles(
+                particle,
+                node.x + 0.5,
+                node.y + 0.5,
+                node.z + 0.5,
+                1,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            )
+        }
     }
 
     private fun tickCombatModes(
@@ -111,8 +154,7 @@ open class BanditMeleeGoal(
                 tickPath(target)
                 if (banditType.jumpWhileTravel) tryTravelJump()
 
-                if (isDistanceToTargetGreaterThan(attackRange * 2)) return
-                enterDuel(banditType)
+                if (shouldEnterDuel(target, attackRange)) enterDuel(banditType)
             }
 
             CombatMode.DUEL -> {
@@ -122,10 +164,32 @@ open class BanditMeleeGoal(
                 tickDuelStrafe(banditType, target, attackRange, jumpCrit)
                 if (!isBlocking()) checkAndPerformMeleeAttack(banditType, target, jumpCrit)
 
-                if (!isDistanceToTargetGreaterThan(attackRange * 2.5)) return
-                exitDuel(target)
+                if (shouldExitDuel(attackRange)) exitDuel(target)
             }
         }
+    }
+
+    private fun shouldEnterDuel(
+        target: LivingEntity,
+        attackRange: Double,
+    ): Boolean {
+        if (isDistanceToTargetGreaterThan(attackRange * 1.5)) return false
+        if (targetSeenTicks < 10) return false
+
+        val path = banditEntity.navigation.path ?: return false
+
+        if (abs(target.y - path.nextNode.y) <= 1.0) return true
+        val endNode = path.getNode(path.nodeCount - 1)
+        if (abs(target.y - endNode.x) <= 1.0) return false
+        return true
+    }
+
+    private fun shouldExitDuel(
+        attackRange: Double,
+    ): Boolean {
+        if (isDistanceToTargetGreaterThan(attackRange * 2.0)) return true
+        if (targetSeenTicks == 0) return true
+        return false
     }
 
     private fun enterDuel(
