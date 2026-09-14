@@ -30,9 +30,7 @@ class BanditMoveControl(
         var xa = strafeForwards
         var za = strafeRight
         var dist = Mth.sqrt(xa * xa + za * za)
-        if (dist < 1.0f) {
-            dist = 1.0f
-        }
+        if (dist < 1.0f) dist = 1.0f
 
         mob.target?.also { tickRotate(it.x - mob.x, it.z - mob.z) }
 
@@ -44,7 +42,7 @@ class BanditMoveControl(
         val dx = xa * cos - za * sin
         val dz = za * cos + xa * sin
         if (!isWalkable(dx, dz)) {
-            strafeForwards = 1.0f
+            strafeForwards = 0.5f
             strafeRight = 0.0f
         }
 

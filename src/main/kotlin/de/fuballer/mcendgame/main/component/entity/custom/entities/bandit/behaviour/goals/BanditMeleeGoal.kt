@@ -176,7 +176,8 @@ open class BanditMeleeGoal(
         if (isDistanceToTargetGreaterThan(attackRange * 1.5)) return false
         if (targetSeenTicks < 10) return false
 
-        val path = banditEntity.navigation.path ?: return false
+        val path = banditEntity.navigation.path ?: return true
+        if (path.isDone) return true
 
         if (abs(target.y - path.nextNode.y) <= 1.0) return true
         val endNode = path.getNode(path.nodeCount - 1)

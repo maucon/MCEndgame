@@ -14,8 +14,7 @@ class BanditPathNavigation(
     level: Level,
 ) : GroundPathNavigation(mob, level) {
     companion object {
-        private const val LOOK_AHEAD_NODES = 6
-        private const val WAYPOINT_DISTANCE = 1.0
+        private const val LOOK_AHEAD_NODES = 10
         private const val AIRBORNE_VERTICAL_TOLERANCE = 2.0F
     }
 
@@ -32,9 +31,12 @@ class BanditPathNavigation(
 
         val mobPosition = tempMobPos
         if (!path.isDone && isAtNode(path.nextNode)) path.advance()
+        if (path.isDone) {
+            doStuckDetection(mobPosition)
+            return
+        }
 
         path.nextNodeIndex = findFurthestReachableNode(path, mobPosition)
-
         doStuckDetection(mobPosition)
     }
 
@@ -66,9 +68,11 @@ class BanditPathNavigation(
     private fun isAtNode(node: Node): Boolean {
         val nodePosition = Vec3.atBottomCenterOf(node.asBlockPos())
 
-        val dx = abs(mob.x - nodePosition.x + 0.5)
+        val dx = abs(mob.x - nodePosition.x)
         val dy = abs(mob.y - nodePosition.y)
-        val dz = abs(mob.z - nodePosition.z + 0.5)
-        return dx <= WAYPOINT_DISTANCE && dz <= WAYPOINT_DISTANCE && dy <= maxVerticalDistanceToWaypoint
+        val dz = abs(mob.z - nodePosition.z)
+
+        maxDistanceToWaypoint = if (mob.bbWidth > 0.75f) mob.bbWidth / 2.0f else 0.75f - mob.bbWidth / 2.0f
+        return dx <= maxDistanceToWaypoint && dz <= maxDistanceToWaypoint && dy <= maxVerticalDistanceToWaypoint
     }
 }
