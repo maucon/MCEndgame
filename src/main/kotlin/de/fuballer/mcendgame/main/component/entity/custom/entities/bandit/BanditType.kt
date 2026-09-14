@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 import de.fuballer.mcendgame.main.component.custom_attribute.data.*
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.change_gained_status_effect.GainedStatusEffect
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
+import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditBowGoal
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditMeleeGoal
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
@@ -122,6 +123,8 @@ enum class BanditType(
         dungeonBalanceAttributes = {
             listOf(
                 CustomAttribute(CustomAttributeTypes.DODGE, roll = DoubleRoll(DoubleBounds(0.15))),
+                CustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(6.0))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
             )
         },
     ),
@@ -142,6 +145,7 @@ enum class BanditType(
         CrystalItems.SYNTHESIZED_ENDURANCE_CRYSTAL,
         jumpCritAttack = true,
         sideStrafeUpdateTime = 12,
+        blockAfterTargetHitProbability = 0.5,
         blockDuration = { Random.nextInt(30, 50) },
         dungeonBalanceAttributes = {
             listOf(
@@ -174,6 +178,9 @@ enum class BanditType(
                     ),
                 ),
                 CustomAttribute(CustomAttributeTypes.RESISTANCE_WHEN_LOW_HEALTH, roll = IntRoll(IntBounds(10))),
+                CustomAttribute(CustomAttributeTypes.ARMOR_WHILE_WITHERED, roll = DoubleRoll(DoubleBounds(8.0))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(0.15))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, roll = DoubleRoll(DoubleBounds(-0.15))),
             )
         },
     ),
@@ -239,6 +246,12 @@ enum class BanditType(
         fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
         predictMovementProbability = 0.75,
         predictedMovementRandomFactorRange = Pair(0.95, 1.15),
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(4.0))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.35))),
+            )
+        },
     ),
     YVRA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "yvra"),
@@ -290,8 +303,8 @@ enum class BanditType(
         sideStrafeUpdateTime = 8,
         dungeonBalanceAttributes = {
             listOf(
-                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.3))),
-                CustomAttribute(CustomAttributeTypes.MORE_SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.15))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.4))),
+                CustomAttribute(CustomAttributeTypes.MORE_SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.25))),
             )
         },
     ),
@@ -315,7 +328,8 @@ enum class BanditType(
         dungeonBalanceAttributes = {
             listOf(
                 CustomAttribute(CustomAttributeTypes.MORE_COMPANION_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
-                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.15))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.25))),
+                CustomAttribute(CustomAttributeTypes.MORE_HEALTH_RECOVERY, roll = DoubleRoll(DoubleBounds(-0.35))),
             )
         },
     ),
@@ -338,7 +352,7 @@ enum class BanditType(
         dungeonBalanceAttributes = {
             listOf(
                 CustomAttribute(CustomAttributeTypes.MORE_COMPANION_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
-                CustomAttribute(CustomAttributeTypes.MORE_PROJECTILE_DAMAGE, roll = DoubleRoll(DoubleBounds(0.15))),
+                CustomAttribute(CustomAttributeTypes.MORE_PROJECTILE_DAMAGE, roll = DoubleRoll(DoubleBounds(0.1))),
             )
         },
     );

@@ -48,7 +48,7 @@ class BanditEntity(
     companion object {
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
-                .add(Attributes.FOLLOW_RANGE, 32.0)
+                .add(Attributes.FOLLOW_RANGE, 64.0)
                 .add(Attributes.ATTACK_DAMAGE, 1.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.25)
                 .add(Attributes.ATTACK_SPEED)
