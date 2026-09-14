@@ -36,6 +36,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import java.util.*
 import kotlin.math.sqrt
@@ -147,6 +148,10 @@ class BanditEntity(
 
         val hitbox = target.getHitbox()
         return getAttackBoundingBox(maxRange).intersects(hitbox) && (minRange <= 0.0 || !getAttackBoundingBox(minRange).intersects(hitbox))
+    }
+
+    override fun getAttackBoundingBox(expansion: Double): AABB {
+        return boundingBox.inflate(expansion, expansion, expansion)
     }
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {

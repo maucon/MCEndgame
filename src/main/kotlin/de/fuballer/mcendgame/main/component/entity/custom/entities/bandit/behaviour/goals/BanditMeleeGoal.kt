@@ -180,9 +180,11 @@ open class BanditMeleeGoal(
         val path = banditEntity.navigation.path ?: return true
         if (path.isDone) return true
 
-        if (abs(target.y - path.nextNode.y) <= 1.0) return true
+        val currentYDiff = abs(target.y - path.nextNode.y)
         val endNode = path.getNode(path.nodeCount - 1)
-        if (abs(target.y - endNode.x) <= 1.0) return false
+        val pathEndYDiff = abs(target.y - endNode.y)
+        if (currentYDiff - pathEndYDiff > 1.5) return false
+
         return true
     }
 
@@ -319,6 +321,8 @@ open class BanditMeleeGoal(
 
     private fun tryTravelJump() {
         if (!banditEntity.onGround()) return
+        val path = banditEntity.navigation.path ?: return
+        if (path.nodeCount < 5) return
         if (isElevationAhead()) return
         banditEntity.getBanditMoveControl().jump()
     }
@@ -369,15 +373,30 @@ open class BanditMeleeGoal(
             && !banditEntity.isPassenger
             && !banditEntity.isSprinting
 
-    protected fun canPerformMeleeAttack(target: LivingEntity): Boolean {
-        if (ticksUntilNextAttack > 0) return false
-        if (!banditEntity.isFacingTowards(target, 30.0)) return false
+    private fun canPerformMeleeAttack(target: LivingEntity): Boolean {
         if (!banditEntity.isWithinMeleeAttackRange(target)) return false
+        if (ticksUntilNextAttack > 0) return false
+        if (!isFacingCorrectForAttack(target)) return false
         if (!banditEntity.sensing.hasLineOfSight(target)) return false
         return true
     }
 
-    protected fun setMeleeAttackCooldown(
+    private fun isFacingCorrectForAttack(target: LivingEntity): Boolean {
+        var allowedAngle = 30.0
+
+        val eyePos = banditEntity.eyePosition
+        val targetPos = target.eyePosition
+        val dx = targetPos.x - eyePos.x
+        val dy = targetPos.y - eyePos.y
+        val dz = targetPos.z - eyePos.z
+        val horizontalDistance = sqrt(dx * dx + dz * dz)
+        val verticalAngle = Math.toDegrees(atan2(dy, horizontalDistance))
+
+        allowedAngle += max(verticalAngle - 45.0, 0.0) / 2
+        return banditEntity.isFacingTowards(target, allowedAngle)
+    }
+
+    private fun setMeleeAttackCooldown(
         banditType: BanditType,
     ) {
         val attackSpeed = banditEntity.getAttributeValue(Attributes.ATTACK_SPEED)

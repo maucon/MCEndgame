@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour
 
+import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation
 import net.minecraft.world.level.Level
@@ -7,6 +8,7 @@ import net.minecraft.world.level.pathfinder.Node
 import net.minecraft.world.level.pathfinder.Path
 import net.minecraft.world.phys.Vec3
 import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.min
 
 class BanditPathNavigation(
@@ -59,10 +61,33 @@ class BanditPathNavigation(
         val targetNode = path.getNode(index)
 
         val verticalDifference = targetNode.y - baseNode.y
-        if (verticalDifference > 0.0 || verticalDifference < 5.0) return false
+        if (verticalDifference > 0.0 || verticalDifference < -5.0) return false
 
         val targetPosition = path.getEntityPosAtNode(mob, index)
-        return isClearForMovementBetween(mob, mobPosition, targetPosition, false)
+        if (!isClearForMovementBetween(mob, mobPosition, targetPosition, false)) return false
+        if (!hasGroundAlongPath(mobPosition, targetPosition)) return false
+
+        return true
+    }
+
+    private fun hasGroundAlongPath(
+        start: Vec3,
+        end: Vec3,
+    ): Boolean {
+        val distance = start.distanceTo(end)
+        val steps = ceil(distance).toInt()
+
+        for (step in 0..steps) {
+            val percentage = step.toDouble() / steps.coerceAtLeast(1)
+            val pos = start.lerp(end, percentage)
+
+            val blockPos = BlockPos.containing(pos)
+            val below = blockPos.below()
+
+            if (!mob.level().getBlockState(below).isSolidRender) return false
+        }
+
+        return true
     }
 
     private fun isAtNode(node: Node): Boolean {
