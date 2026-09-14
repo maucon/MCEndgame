@@ -98,6 +98,7 @@ abstract class SynthesizedCrystal(
 
         val presentAttributeTypes = newAttributes.map { it.type }
         possibleAttributes = possibleAttributes.filter { !presentAttributeTypes.contains(it.option.type) }
+        if (possibleAttributes.isEmpty()) return CrystalForgeOutput(newStack)
         val chosenAttribute = RandomUtil.pickOne(possibleAttributes).option
 
         val tier = removedAttribute.tier
