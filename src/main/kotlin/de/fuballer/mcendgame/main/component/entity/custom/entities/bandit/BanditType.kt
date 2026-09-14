@@ -1,8 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.bandit
 
-import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
-import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
-import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
+import de.fuballer.mcendgame.main.component.custom_attribute.data.*
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.change_gained_status_effect.GainedStatusEffect
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditBowGoal
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditMeleeGoal
@@ -83,6 +82,11 @@ enum class BanditType(
         ),
         CrystalItems.SYNTHESIZED_FORCE_CRYSTAL,
         jumpCritAttack = true,
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(CustomAttributeTypes.MORE_HEALTH_RECOVERY, roll = DoubleRoll(DoubleBounds(-0.4))),
+            )
+        },
     ),
 
     // assassin
@@ -117,7 +121,7 @@ enum class BanditType(
         sideStrafeUpdateTime = 5,
         dungeonBalanceAttributes = {
             listOf(
-                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, roll = DoubleRoll(DoubleBounds(-0.15))),
+                CustomAttribute(CustomAttributeTypes.DODGE, roll = DoubleRoll(DoubleBounds(0.15))),
             )
         },
     ),
@@ -139,6 +143,11 @@ enum class BanditType(
         jumpCritAttack = true,
         sideStrafeUpdateTime = 12,
         blockDuration = { Random.nextInt(30, 50) },
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, roll = DoubleRoll(DoubleBounds(-0.2))),
+            )
+        },
     ),
     BRINA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "brina"),
@@ -155,6 +164,18 @@ enum class BanditType(
         CrystalItems.SYNTHESIZED_ENDURANCE_CRYSTAL,
         jumpWhileTravel = false,
         hornUseRange = Pair(0.0, 7.0),
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(
+                    CustomAttributeTypes.CHANGE_GAINED_STATUS_EFFECT,
+                    rolls = listOf(
+                        StringRoll(StringBounds(GainedStatusEffect.RESISTANCE.displayName)),
+                        StringRoll(StringBounds(GainedStatusEffect.WITHER.displayName)),
+                    ),
+                ),
+                CustomAttribute(CustomAttributeTypes.RESISTANCE_WHEN_LOW_HEALTH, roll = IntRoll(IntBounds(10))),
+            )
+        },
     ),
 
     // healer
@@ -176,8 +197,9 @@ enum class BanditType(
         dungeonBalanceAttributes = {
             listOf(
                 CustomAttribute(CustomAttributeTypes.MORE_COMPANION_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
-                CustomAttribute(CustomAttributeTypes.MORE_HEALING, roll = DoubleRoll(DoubleBounds(-0.25))),
+                CustomAttribute(CustomAttributeTypes.MORE_HEALTH_RECOVERY, roll = DoubleRoll(DoubleBounds(-0.5))),
                 CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.15))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, roll = DoubleRoll(DoubleBounds(0.1))),
             )
         },
     ),
@@ -193,6 +215,12 @@ enum class BanditType(
             BanditItemStack(EquipmentSlot.FEET, ItemStack(Items.NETHERITE_BOOTS), trimMaterial = TrimMaterials.GOLD, trimPattern = TrimPatterns.WARD),
         ),
         CrystalItems.SYNTHESIZED_VITALITY_CRYSTAL,
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(CustomAttributeTypes.MORE_HEALTH_RECOVERY, roll = DoubleRoll(DoubleBounds(-0.15))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, roll = DoubleRoll(DoubleBounds(0.05))),
+            )
+        },
     ),
 
     // archer
@@ -210,7 +238,7 @@ enum class BanditType(
         CrystalItems.SYNTHESIZED_PRECISION_CRYSTAL,
         fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
         predictMovementProbability = 0.75,
-        predictedMovementRandomFactorRange = Pair(0.95, 1.15)
+        predictedMovementRandomFactorRange = Pair(0.95, 1.15),
     ),
     YVRA(
         Component.translatable(TRANSLATABLE_BASE_KEY + "yvra"),
@@ -226,7 +254,7 @@ enum class BanditType(
         CrystalItems.SYNTHESIZED_PRECISION_CRYSTAL,
         fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
         predictMovementProbability = 0.75,
-        predictedMovementRandomFactorRange = Pair(0.75, 1.25)
+        predictedMovementRandomFactorRange = Pair(0.75, 1.25),
     ),
 
     // mage
@@ -262,7 +290,8 @@ enum class BanditType(
         sideStrafeUpdateTime = 8,
         dungeonBalanceAttributes = {
             listOf(
-                CustomAttribute(CustomAttributeTypes.MORE_SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.25))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.3))),
+                CustomAttribute(CustomAttributeTypes.MORE_SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.15))),
             )
         },
     ),
@@ -286,6 +315,7 @@ enum class BanditType(
         dungeonBalanceAttributes = {
             listOf(
                 CustomAttribute(CustomAttributeTypes.MORE_COMPANION_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.15))),
             )
         },
     ),
@@ -308,6 +338,7 @@ enum class BanditType(
         dungeonBalanceAttributes = {
             listOf(
                 CustomAttribute(CustomAttributeTypes.MORE_COMPANION_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
+                CustomAttribute(CustomAttributeTypes.MORE_PROJECTILE_DAMAGE, roll = DoubleRoll(DoubleBounds(0.15))),
             )
         },
     );
