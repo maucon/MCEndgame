@@ -85,6 +85,8 @@ open class BanditMeleeGoal(
     override fun stop() {
         banditEntity.target = null
 
+        if (isBlocking()) stopBlocking()
+        combatMode = CombatMode.MOVE
         banditEntity.isSprinting = false
         banditEntity.setAggressive(false)
         banditEntity.getNavigation().stop()

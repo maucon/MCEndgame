@@ -148,11 +148,11 @@ class LinkRenderService {
 
         val distancePercent = (linked.connectionDuration.toDouble() / LinkSettings.getLinkConnectingTime(targetDistance)).coerceAtMost(1.0)
         val linkDistance = targetDistanceVector.scale(distancePercent)
+        val linkLength = linkDistance.length()
+        if (linkLength == 0.0) return
         val segmentCount = linkDistance.length() / LinkSettings.LINK_RENDER_SEGMENT_LENGTH
 
         val perpendicularVector = linkDistance.horizontal().yRot(Math.toRadians(90.0).toFloat()).normalize()
-
-        val linkLength = linkDistance.length()
 
         val vertexData = mutableListOf<LinkVertexData>()
         for (i in 0..segmentCount.toInt() + 1) {
