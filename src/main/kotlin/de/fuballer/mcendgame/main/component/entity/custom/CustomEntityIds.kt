@@ -22,4 +22,5 @@ object CustomEntityIds {
     val BEASTWEAVER = RegistryKeyUtil.createEntityKey("beastweaver")
     val BEASTWEAVER_WOLF = RegistryKeyUtil.createEntityKey("beastweaver_wolf")
     val BEASTWEAVER_VINE = RegistryKeyUtil.createEntityKey("beastweaver_vine")
+    val BANDIT = RegistryKeyUtil.createEntityKey("bandit")
 }

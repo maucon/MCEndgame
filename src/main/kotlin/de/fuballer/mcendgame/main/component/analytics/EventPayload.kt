@@ -6,7 +6,7 @@ data class EventPayload(
     val eventType: String,
     val modVersion: String,
     val payload: Any,
-    val schemaVersion : Int = 1,
+    val schemaVersion: Int = 1,
 )
 
 enum class EventType(
@@ -17,6 +17,7 @@ enum class EventType(
     DUNGEON_BOSS_KILLED("dungeon_boss_killed"),
     LOOT_GOBLIN_KILLED("loot_goblin_killed"),
     ELITE_KILLED("elite_killed"),
+    BANDIT_KILLED("bandit_killed"),
     TOTEM_ENCOUNTER_STARTED("totem_encounter_started"),
     SCARRED_ONE_SELECTED("scarred_one_selected"),
 }
@@ -24,33 +25,39 @@ enum class EventType(
 data class DungeonJoinPayload(
     val dungeon: DungeonDataPayload,
     val player: PlayerLoadoutPayload,
-    val schemaVersion : Int = 1,
+    val schemaVersion: Int = 1,
 )
 
 data class DungeonPlayerDeathPayload(
     val dungeon: DungeonDataPayload,
     val player: PlayerLoadoutPayload,
     val killer: EntityLoadoutPayload?,
-    val schemaVersion : Int = 1,
+    val schemaVersion: Int = 1,
 )
 
 data class DungeonBossKilledPayload(
     val dungeon: DungeonDataPayload,
     val boss: String,
     val players: List<PlayerLoadoutPayload>,
-    val schemaVersion : Int = 1,
+    val schemaVersion: Int = 1,
 )
 
 data class SpecialEnemyKilledPayload(
     val dungeon: DungeonDataPayload,
     val enemyLoadout: EntityLoadoutPayload,
-    val schemaVersion : Int = 1,
+    val schemaVersion: Int = 1,
+)
+
+data class BanditKilledPayload(
+    val dungeon: DungeonDataPayload,
+    val banditType: String,
+    val schemaVersion: Int = 1,
 )
 
 data class ScarredOneSelectedPayload(
     val dungeon: DungeonDataPayload,
     val scarredOne: ScarredOnePayload,
-    val schemaVersion : Int = 1,
+    val schemaVersion: Int = 1,
 )
 
 data class DungeonDataPayload(
@@ -58,7 +65,7 @@ data class DungeonDataPayload(
     val dungeonLevel: Int,
     val aspects: List<String>,
     val timeSinceCreation: Long,
-    val schemaVersion : Int = 1,
+    val schemaVersion: Int = 1,
 )
 
 data class PlayerLoadoutPayload(
@@ -68,7 +75,7 @@ data class PlayerLoadoutPayload(
     val hotbar: List<PayloadItem?>,
     val effects: Map<String, Int>,
     val gamemode: String,
-    val schemaVersion : Int = 1,
+    val schemaVersion: Int = 1,
 )
 
 data class EntityLoadoutPayload(
@@ -77,19 +84,19 @@ data class EntityLoadoutPayload(
     val mainhand: PayloadItem?,
     val offhand: PayloadItem?,
     val effects: Map<String, Int>,
-    val schemaVersion : Int = 1,
+    val schemaVersion: Int = 1,
 )
 
 data class ScarredOnePayload(
     val accepted: Boolean,
     val positiveEffects: JsonElement,
     val negativeEffects: JsonElement,
-    val schemaVersion : Int = 1,
+    val schemaVersion: Int = 1,
 )
 
 data class PayloadItem(
     val id: String,
     val enchantments: Map<String, Int>,
     val customAttributes: JsonElement,
-    val schemaVersion : Int = 1,
+    val schemaVersion: Int = 1,
 )

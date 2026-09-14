@@ -1,9 +1,8 @@
-package de.fuballer.mcendgame.main.component.custom_attribute.effects
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.link
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getHealingFactor
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.link.LinkSettings
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDeathEvent
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getLinkedBy
@@ -12,6 +11,7 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.LivingEntity
+import kotlin.collections.sumOf
 
 @Injectable
 class HealOnLinkedEnemyKilledService {

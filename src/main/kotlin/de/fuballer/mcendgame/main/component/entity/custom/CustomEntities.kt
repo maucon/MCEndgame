@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.arachne.ArachneEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.BeakburnEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineEntity
@@ -20,6 +21,7 @@ import de.fuballer.mcendgame.main.component.portal.PortalEntity
 import de.fuballer.mcendgame.main.component.portal.PortalSettings
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
 import de.maucon.mauconframework.di.annotation.Injectable
+import net.minecraft.world.entity.Avatar
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.phys.Vec3
@@ -151,5 +153,13 @@ object CustomEntities {
             .sized(0.4F, 2.5F)
             .eyeHeight(2.0F)
             .clientTrackingRange(10)
+    )
+    val BANDIT = RegistryUtil.registerEntity(
+        CustomEntityIds.BANDIT,
+        EntityType.Builder.of(::BanditEntity, MobCategory.MISC)
+            .sized(0.6F, 1.8F)
+            .eyeHeight(1.62F)
+            .vehicleAttachment(Avatar.DEFAULT_VEHICLE_ATTACHMENT)
+            .clientTrackingRange(16)
     )
 }

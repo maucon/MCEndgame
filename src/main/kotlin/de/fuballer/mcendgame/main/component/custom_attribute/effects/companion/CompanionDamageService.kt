@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribut
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectGenericIncreasedDamageCommand
+import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectGenericMoreDamageCommand
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCompanion
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
@@ -29,6 +30,10 @@ class CompanionDamageService {
             val increase = attr.sumOf { it.rolls[0].asDoubleRoll().getValue() }
             cmd.increasedDamage.add(increase)
         }
+
+        attributes[CustomAttributeTypes.MORE_COMPANION_DAMAGE]?.let { attr ->
+            cmd.moreDamage.addAll(attr.map { it.rolls[0].asDoubleRoll().getValue() })
+        }
     }
 
     @CommandHandler
@@ -36,6 +41,12 @@ class CompanionDamageService {
         val attributes = getOwnerAttributes(cmd.entity)[CustomAttributeTypes.INCREASED_COMPANION_DAMAGE] ?: return
         val increase = attributes.sumOf { it.rolls[0].asDoubleRoll().getValue() }
         cmd.increased.add(increase)
+    }
+
+    @CommandHandler
+    fun on(cmd: CollectGenericMoreDamageCommand) {
+        val attributes = getOwnerAttributes(cmd.entity)[CustomAttributeTypes.MORE_COMPANION_DAMAGE] ?: return
+        cmd.more.addAll(attributes.map { it.rolls[0].asDoubleRoll().getValue() })
     }
 
     private fun getOwnerAttributes(companion: Entity?): Map<CustomAttributeType, List<CustomAttribute>> {

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.mixin.entity;
+package de.fuballer.mcendgame.main.mixin.companion;
 
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension;
 import net.minecraft.world.entity.Entity;
@@ -9,12 +9,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public class EntityCompanionPortalMixin {
+public class EntityCompanionMixin {
     @Inject(method = "canUsePortal", at = @At("HEAD"), cancellable = true)
-    void canUsePortals(boolean allowVehicles, CallbackInfoReturnable<Boolean> cir) {
+    void canUsePortals(boolean ignorePassenger, CallbackInfoReturnable<Boolean> cir) {
         var entity = (Entity) (Object) this;
-        if (!(entity instanceof LivingEntity)) return;
-        if (!EntityMixinExtension.INSTANCE.isCompanion((LivingEntity) entity)) return;
+        if (!(entity instanceof LivingEntity livingEntity)) return;
+        if (!EntityMixinExtension.INSTANCE.isCompanion(livingEntity)) return;
 
         cir.setReturnValue(false);
     }

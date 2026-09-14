@@ -30,6 +30,7 @@ interface Equipment {
                 putAll(Pickaxe.entries.associateBy { it.item })
                 putAll(Shovel.entries.associateBy { it.item })
                 putAll(Hoe.entries.associateBy { it.item })
+                putAll(Spear.entries.associateBy { it.item })
                 putAll(Bow.entries.associateBy { it.item })
                 putAll(Horn.entries.associateBy { it.item })
                 putAll(Shield.entries.associateBy { it.item })

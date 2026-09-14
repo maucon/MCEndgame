@@ -1,0 +1,22 @@
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile
+
+import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asDoubleRoll
+import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
+import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
+import de.maucon.mauconframework.command.CommandHandler
+import de.maucon.mauconframework.di.annotation.Injectable
+import kotlin.collections.forEach
+
+@Injectable
+class MoreProjectileDamageTakenService {
+    @CommandHandler
+    fun on(cmd: DamageCalculationCommand) {
+        if (!cmd.isProjectile) return
+        val attributes = cmd.damagedAttributes[CustomAttributeTypes.MORE_PROJECTILE_DAMAGE_TAKEN] ?: return
+
+        attributes.forEach { attribute ->
+            val moreDamage = attribute.rolls[0].asDoubleRoll().getValue()
+            cmd.moreDamageTaken.add(moreDamage)
+        }
+    }
+}

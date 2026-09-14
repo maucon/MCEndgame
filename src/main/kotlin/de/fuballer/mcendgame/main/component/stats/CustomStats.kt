@@ -30,6 +30,13 @@ object CustomStats {
     val REFORGE_CRYSTAL_USED = CustomStatsRegistry.register("reforge_crystal_used", StatFormatter.DEFAULT)
     val CORRUPTION_CRYSTAL_USED = CustomStatsRegistry.register("corruption_crystal_used", StatFormatter.DEFAULT)
     val IMITATION_CRYSTAL_USED = CustomStatsRegistry.register("imitation_crystal_used", StatFormatter.DEFAULT)
+    val SYNTHESIZED_FORCE_CRYSTAL_USED = CustomStatsRegistry.register("synthesized_force_crystal_used", StatFormatter.DEFAULT)
+    val SYNTHESIZED_MOMENTUM_CRYSTAL_USED = CustomStatsRegistry.register("synthesized_momentum_crystal_used", StatFormatter.DEFAULT)
+    val SYNTHESIZED_ENDURANCE_CRYSTAL_USED = CustomStatsRegistry.register("synthesized_endurance_crystal_used", StatFormatter.DEFAULT)
+    val SYNTHESIZED_VITALITY_CRYSTAL_USED = CustomStatsRegistry.register("synthesized_vitality_crystal_used", StatFormatter.DEFAULT)
+    val SYNTHESIZED_PRECISION_CRYSTAL_USED = CustomStatsRegistry.register("synthesized_precision_crystal_used", StatFormatter.DEFAULT)
+    val SYNTHESIZED_FOCUS_CRYSTAL_USED = CustomStatsRegistry.register("synthesized_focus_crystal_used", StatFormatter.DEFAULT)
+    val SYNTHESIZED_COMMAND_CRYSTAL_USED = CustomStatsRegistry.register("synthesized_command_crystal_used", StatFormatter.DEFAULT)
 
     // Scarred One
     val SCARRED_ONE_ACCEPTED = CustomStatsRegistry.register("scarred_one_accepted", StatFormatter.DEFAULT)

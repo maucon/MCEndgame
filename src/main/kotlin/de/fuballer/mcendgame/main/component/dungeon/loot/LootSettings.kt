@@ -34,6 +34,8 @@ object LootSettings {
         RandomOption(50, AspectItems.ASPECT_OF_ANCESTORS),
         RandomOption(50, AspectItems.ASPECT_OF_DUALITY),
         //RandomOption(1, AspectItems.ASPECT_OF_THE_GROVE), doesn't drop default [AspectOfTheGroveService]
+        RandomOption(75, AspectItems.ASPECT_OF_OUTLAWS),
+        RandomOption(20, AspectItems.ASPECT_OF_KIN),
     )
 
     fun getBossBaseCrystalCount(dungeonLevel: Int) = dungeonLevel / 7.0 + Random.nextDouble(dungeonLevel / 5.0)
