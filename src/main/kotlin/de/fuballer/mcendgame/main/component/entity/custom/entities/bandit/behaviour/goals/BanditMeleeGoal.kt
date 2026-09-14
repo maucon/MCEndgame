@@ -106,7 +106,7 @@ open class BanditMeleeGoal(
         tryUseHorn(banditType, target)
 
         // debug
-        displayPathParticles()
+        //displayPathParticles()
     }
 
     private fun tickTargetSeen(
@@ -115,6 +115,7 @@ open class BanditMeleeGoal(
         targetSeenTicks = if (banditEntity.sensing.hasLineOfSight(target)) min(targetSeenTicks + 1, 10) else max(targetSeenTicks - 1, 0)
     }
 
+    // debug
     fun displayPathParticles() {
         val level = banditEntity.level() as? ServerLevel ?: return
 
