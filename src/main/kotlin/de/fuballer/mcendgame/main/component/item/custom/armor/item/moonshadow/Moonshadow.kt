@@ -11,7 +11,7 @@ class Moonshadow(
     settings: Properties,
 ) : UniqueAttributesItem(settings) {
     override fun getCustomAttributes() = listOf(
-        RollableCustomAttribute(CustomAttributeTypes.DODGE, 0, DoubleBounds(0.1, 0.2)),
+        RollableCustomAttribute(CustomAttributeTypes.DODGE, 0, DoubleBounds(0.15, 0.25)),
         RollableCustomAttribute(VanillaAttributeTypes.INCREASED_MOVEMENT_SPEED, 0, DoubleBounds(0.05, 0.15)),
     )
 

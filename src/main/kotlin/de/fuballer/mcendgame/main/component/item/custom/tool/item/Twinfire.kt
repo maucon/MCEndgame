@@ -12,8 +12,8 @@ class Twinfire(
 ) : UniqueAttributesItem(settings) {
     override fun getCustomAttributes() = listOf(
         getFlatDamageAttribute(),
-        RollableCustomAttribute(CustomAttributeTypes.DODGE, 0, DoubleBounds(0.05, 0.08)),
-        RollableCustomAttribute(CustomAttributeTypes.TWINFIRE_DUAL_WIELD_MORE_DAMAGE, 0, DoubleBounds(0.05, 0.1)),
+        RollableCustomAttribute(CustomAttributeTypes.DODGE, 0, DoubleBounds(0.08, 0.12)),
+        RollableCustomAttribute(CustomAttributeTypes.TWINFIRE_DUAL_WIELD_MORE_DAMAGE, 0, DoubleBounds(0.08, 0.12)),
     )
 
     private fun getFlatDamageAttribute() = listOf(
