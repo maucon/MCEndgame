@@ -1,9 +1,8 @@
 package de.fuballer.mcendgame.main.component.item.custom.aspect.item.savagery
 
 import de.fuballer.mcendgame.main.component.custom_attribute.AttributeFormats
-import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
-import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
+import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem
 import net.minecraft.network.chat.Component
@@ -13,12 +12,10 @@ class AspectOfSavagery(
 ) : AspectItem(settings) {
     companion object {
         const val MORE_DAMAGE = 0.3
-        val MORE_DAMAGE_ROLL = DoubleRoll(DoubleBounds(MORE_DAMAGE))
-        val MORE_DAMAGE_ATTRIBUTE = CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = MORE_DAMAGE_ROLL)
+        val MORE_DAMAGE_ATTRIBUTE = RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE, 0, DoubleBounds(MORE_DAMAGE))
 
         const val INCREASED_LOOT = 0.2
-        val INCREASED_LOOT_ROLL = DoubleRoll(DoubleBounds(INCREASED_LOOT))
-        val INCREASED_LOOT_ATTRIBUTE = CustomAttribute(CustomAttributeTypes.DROP_INCREASED_LOOT, roll = INCREASED_LOOT_ROLL)
+        val INCREASED_LOOT_ATTRIBUTE = RollableCustomAttribute(CustomAttributeTypes.DROP_INCREASED_LOOT, 0, DoubleBounds(INCREASED_LOOT))
     }
 
     override val tier = 2

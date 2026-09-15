@@ -159,7 +159,7 @@ object CustomAttributesExtensions {
         attributeInstance.addPermanentModifier(modifier)
     }
 
-    fun LivingEntity.addCustomAttributes(customAttributes: List<CustomAttribute>) {
+    fun LivingEntity.addCustomAttributes(vararg customAttributes: CustomAttribute) {
         customAttributes.forEach { addCustomAttribute(it) }
     }
 

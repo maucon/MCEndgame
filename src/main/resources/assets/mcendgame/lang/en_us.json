@@ -50,6 +50,7 @@
   "item.mcendgame.horn.description.frigid_cry": " Applies Slowness to nearby Enemies",
 
   "item.mcendgame.aspect_of_tyranny": "Aspect of Tyranny",
+  "item.mcendgame.aspect_of_ascension": "Aspect of Ascension",
   "item.mcendgame.aspect_of_greed": "Aspect of Greed",
   "item.mcendgame.aspect_of_dominion": "Aspect of Dominion",
   "item.mcendgame.aspect_of_duality": "Aspect of Duality",
@@ -69,6 +70,9 @@
 
   "item.mcendgame.aspect.limit": "Limit: %s",
   "item.mcendgame.aspect.description.tyranny": "Dungeon contains %s additional Elites",
+  "item.mcendgame.aspect.description.ascension_0": "Elites take %s%% less Damage",
+  "item.mcendgame.aspect.description.ascension_1": "Elites deal %s%% more Damage",
+  "item.mcendgame.aspect.description.ascension_2": "Elites drop an additional Aspect",
   "item.mcendgame.aspect.description.greed": "Dungeon contains %s additional Loot Goblins",
   "item.mcendgame.aspect.description.dominion": "Dungeon contains an additional Boss",
   "item.mcendgame.aspect.description.duality_0": "Dungeon contains the Scarred One",

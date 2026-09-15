@@ -21,6 +21,7 @@ object LootSettings {
     val ASPECTS = listOf(
         RandomOption(100, AspectItems.ASPECT_OF_HORDES),
         RandomOption(80, AspectItems.ASPECT_OF_TYRANNY),
+        RandomOption(15, AspectItems.ASPECT_OF_ASCENSION),
         RandomOption(80, AspectItems.ASPECT_OF_DOMINION),
         RandomOption(100, AspectItems.ASPECT_OF_IMPATIENCE),
         RandomOption(50, AspectItems.ASPECT_OF_ZEAL),
@@ -35,7 +36,7 @@ object LootSettings {
         RandomOption(70, AspectItems.ASPECT_OF_DUALITY),
         //RandomOption(1, AspectItems.ASPECT_OF_THE_GROVE), doesn't drop default [AspectOfTheGroveService]
         RandomOption(80, AspectItems.ASPECT_OF_OUTLAWS),
-        RandomOption(20, AspectItems.ASPECT_OF_KIN),
+        RandomOption(15, AspectItems.ASPECT_OF_KIN),
     )
 
     fun getBossBaseCrystalCount(dungeonLevel: Int) = dungeonLevel / 7.0 + Random.nextDouble(dungeonLevel / 5.0)

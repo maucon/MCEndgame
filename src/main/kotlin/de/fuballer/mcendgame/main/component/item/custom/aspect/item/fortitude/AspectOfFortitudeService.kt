@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.component.item.custom.aspect.item.fortitude
 
-import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.addCustomAttribute
+import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.addCustomAttributes
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemiesGeneratedCommand
 import de.maucon.mauconframework.command.CommandHandler
@@ -14,8 +14,10 @@ object AspectOfFortitudeService {
 
         command.enemies.forEach { enemy ->
             repeat(amount) {
-                enemy.addCustomAttribute(AspectOfFortitude.LESS_DAMAGE_TAKEN_ATTRIBUTE)
-                enemy.addCustomAttribute(AspectOfFortitude.INCREASED_LOOT_ATTRIBUTE)
+                enemy.addCustomAttributes(
+                    AspectOfFortitude.LESS_DAMAGE_TAKEN_ATTRIBUTE.roll(),
+                    AspectOfFortitude.INCREASED_LOOT_ATTRIBUTE.roll(),
+                )
             }
         }
     }
