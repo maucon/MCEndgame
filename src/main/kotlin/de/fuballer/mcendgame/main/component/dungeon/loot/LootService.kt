@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.main.configuration.RuntimeConfig
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossCrystalDropCommand
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemyDeathEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.EliteAspectDropCommand
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDropCommand
 import de.fuballer.mcendgame.main.messaging.misc.MagicFindCommand
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.getTotalCustomAttributeLootMultiplier
@@ -128,9 +129,17 @@ class LootService {
         itemStack.damageValue = (itemStack.maxDamage * Random.nextDouble()).toInt()
     }
 
-    private fun dropEliteLoot(serverWorld: ServerLevel, entity: LivingEntity) {
-        val aspect = RandomUtil.pickOne(LootSettings.ASPECTS).option
-        entity.spawnAtLocation(serverWorld, aspect.defaultInstance)
+    private fun dropEliteLoot(
+        serverLevel: ServerLevel,
+        entity: LivingEntity,
+    ) {
+        val command = EliteAspectDropCommand(serverLevel.getDungeonAspects())
+        val cmd = CommandGateway.apply(command)
+
+        repeat(cmd.count) {
+            val aspect = RandomUtil.pickOne(LootSettings.ASPECTS).option
+            entity.spawnAtLocation(serverLevel, aspect.defaultInstance)
+        }
     }
 
     private fun dropBanditLoot(serverWorld: ServerLevel, bandit: BanditEntity) {

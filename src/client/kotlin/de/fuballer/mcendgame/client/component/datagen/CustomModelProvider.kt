@@ -64,6 +64,7 @@ class CustomModelProvider(
         generator.generateFlatItem(CustomArmorItems.EMBERREIGN, ModelTemplates.FLAT_ITEM)
 
         generator.generateFlatItem(AspectItems.ASPECT_OF_ANCESTORS, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.ASPECT_OF_ASCENSION, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_CURIO, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_DOMINION, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_DUALITY, ModelTemplates.FLAT_ITEM)

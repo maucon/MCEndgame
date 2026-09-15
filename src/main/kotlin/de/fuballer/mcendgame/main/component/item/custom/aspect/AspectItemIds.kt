@@ -22,4 +22,5 @@ object AspectItemIds {
     val ASPECT_OF_THE_GROVE = RegistryKeyUtil.createItemKey("aspect_of_the_grove")
     val ASPECT_OF_OUTLAWS = RegistryKeyUtil.createItemKey("aspect_of_outlaws")
     val ASPECT_OF_KIN = RegistryKeyUtil.createItemKey("aspect_of_kin")
+    val ASPECT_OF_ASCENSION = RegistryKeyUtil.createItemKey("aspect_of_ascension")
 }

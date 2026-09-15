@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.item.custom.aspect
 
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.ancestors.AspectOfAncestors
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.ascension.AspectOfAscension
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.curio.AspectOfCurio
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.dominion.AspectOfDominion
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.duality.AspectOfDuality
@@ -39,4 +40,5 @@ object AspectItems {
     val ASPECT_OF_THE_GROVE = RegistryUtil.registerAspectItem(::AspectOfTheGrove, AspectItemIds.ASPECT_OF_THE_GROVE)
     val ASPECT_OF_OUTLAWS = RegistryUtil.registerAspectItem(::AspectOfOutlaws, AspectItemIds.ASPECT_OF_OUTLAWS)
     val ASPECT_OF_KIN = RegistryUtil.registerAspectItem(::AspectOfKin, AspectItemIds.ASPECT_OF_KIN)
+    val ASPECT_OF_ASCENSION = RegistryUtil.registerAspectItem(::AspectOfAscension, AspectItemIds.ASPECT_OF_ASCENSION)
 }
