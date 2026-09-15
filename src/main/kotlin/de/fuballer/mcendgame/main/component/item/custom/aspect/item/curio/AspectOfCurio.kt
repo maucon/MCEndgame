@@ -7,7 +7,7 @@ class AspectOfCurio(
     settings: Properties,
 ) : AspectItem(settings) {
     companion object {
-        const val INCREASED_UNIQUES = 1.0
+        const val INCREASED_UNIQUES = 2.0
     }
 
     override val tier = 2
