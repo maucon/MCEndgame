@@ -13,7 +13,7 @@ class WitherRoseBoots(
 ) : UniqueAttributesItem(settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(VanillaAttributeTypes.INCREASED_MOVEMENT_SPEED, 0, DoubleBounds(0.1, 0.2)),
-        RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN_PER_NEARBY_ENEMY, 0, DoubleBounds(-0.015, -0.01), IntBounds(5, 5)),
+        RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN_PER_NEARBY_ENEMY, 0, DoubleBounds(-0.025, -0.015), IntBounds(5, 5)),
     )
 
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.FEET

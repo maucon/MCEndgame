@@ -16,7 +16,7 @@ class SuedeChestplate(
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.DODGE_PER_MAX_HEART_BELOW_TEN, 0, DoubleBounds(0.05, 0.08)),
         RollableCustomAttribute(VanillaAttributeTypes.MAX_HEALTH, 0, DoubleBounds(-6.0, -3.0)),
-        RollableCustomAttribute(CustomAttributeTypes.MAGIC_FIND, 0, IntBounds(3, 5)),
+        RollableCustomAttribute(CustomAttributeTypes.MAGIC_FIND, 0, IntBounds(5, 7)),
         RollableCustomAttribute(VanillaAttributeTypes.INCREASED_SCALE, 0, DoubleBounds(-0.12, -0.06)),
     )
 

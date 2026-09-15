@@ -13,7 +13,7 @@ class Grudgebearer(
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, 0, DoubleBounds(-0.06, -0.04)),
         RollableCustomAttribute(CustomAttributeTypes.SHIELD_DISABLED_ON_BLOCKING_HIT, 0, IntBounds(3)),
-        RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE_WHILE_SHIELD_DISABLED, 0, DoubleBounds(0.2, 0.3)),
+        RollableCustomAttribute(CustomAttributeTypes.INCREASED_DAMAGE_WHILE_SHIELD_DISABLED, 0, DoubleBounds(0.25, 0.35)),
     )
 
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.HAND

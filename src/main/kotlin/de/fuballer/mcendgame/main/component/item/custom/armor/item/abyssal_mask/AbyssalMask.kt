@@ -15,8 +15,8 @@ class AbyssalMask(
 ) : UniqueAttributesItem(settings), HidePlayerModelPartArmor {
     override fun getCustomAttributes(): List<RollableCustomAttribute> {
         val chosenConversions = ChangeGainedStatusEffectSettings.getStatusEffectPairs(2)
-        val attributes = mutableListOf<RollableCustomAttribute>(
-            RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, 0, DoubleBounds(-0.06, -0.04))
+        val attributes = mutableListOf(
+            RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, 0, DoubleBounds(-0.08, -0.05))
         )
 
         chosenConversions.forEach { conversion ->
