@@ -22,13 +22,19 @@
 **MCEndgame** is a Minecraft mod that aims to make Minecraft's endgame more engaging through repeatable dungeon content, meaningful gear progression, and ARPG-inspired itemization.
 
 [![Watch the Trailer](https://img.shields.io/badge/Watch%20the%20Trailer-red?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=R2MLI5XDsfM)
+[![Pinnacle Boss Beastweaver](https://img.shields.io/badge/Pinnacle%20Boss:%20Beastweaver-red?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=H9OsGoxbOlM)
 
 ### Features
 
 - **Procedurally generated dungeons with difficulty scaling**
 
-  Dungeons are entered through a Dungeon Device and generated using a room-based system, creating a different layout for each run. They feature custom enemies, including special variants
-  with unique mechanics and loot drops, while difficulty scaling keeps the encounters challenging as players progress.
+  Dungeons are entered through a Dungeon Device and generated using a room-based system, creating a different layout for each run. Difficulty scaling keeps the encounters challenging as
+  players progress.
+
+- **Diverse enemies with special variants and unique mechanics**
+
+  Dungeons are populated with custom enemies, including loot goblins guaranteed to drop equipment, elites that drop aspects, and bandits — player-like enemies
+  with custom loadouts that drop synthesized crystals.
 
 - **Boss fights with unique AI, attack patterns, and animations**
 
@@ -82,6 +88,10 @@
 <details>
     <summary>Scaling Difficulty</summary>
     <img src="assets/images/difficulty.png" alt="Scaling Difficulty">
+</details>
+<details>
+    <summary>Bandits</summary>
+    <img src="assets/images/bandits.png" alt="Bandits">
 </details>
 <details>
     <summary>Custom Items</summary>
