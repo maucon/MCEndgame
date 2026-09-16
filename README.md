@@ -33,8 +33,8 @@
 
 - **Diverse enemies with special variants and unique mechanics**
 
-  Dungeons are populated with custom enemies, including loot goblins guaranteed to drop equipment, elites that drop aspect, and bandits — player-like enemies
-  with custom loadouts that drop crystals.
+  Dungeons are populated with custom enemies, including loot goblins guaranteed to drop equipment, elites that drop aspects, and bandits — player-like enemies
+  with custom loadouts that drop synthesized crystals.
 
 - **Boss fights with unique AI, attack patterns, and animations**
 
