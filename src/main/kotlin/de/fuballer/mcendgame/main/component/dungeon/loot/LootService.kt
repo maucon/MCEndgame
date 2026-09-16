@@ -142,9 +142,14 @@ class LootService {
         }
     }
 
-    private fun dropBanditLoot(serverWorld: ServerLevel, bandit: BanditEntity) {
+    private fun dropBanditLoot(
+        serverWorld: ServerLevel,
+        bandit: BanditEntity,
+    ) {
         val type = bandit.getBanditType()
         val stack = type.rewardCrystal.defaultInstance
+        val dungeonLevel = serverWorld.getDungeonLevel()
+        stack.count = LootSettings.getBanditCrystalCount(dungeonLevel)
         bandit.spawnAtLocation(serverWorld, stack)
     }
 }
