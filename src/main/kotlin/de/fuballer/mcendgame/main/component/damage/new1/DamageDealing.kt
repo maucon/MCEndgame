@@ -11,7 +11,8 @@ import net.minecraft.world.entity.Entity
 object DamageDealing {
     fun Entity.dealDamageTODO(
         damageType: ResourceKey<DamageType>, // the kind of attack
-        damageInstance: DamageInstance, // the damage dealt by category
+        damageCategory: DamageCategory, // the category of the damage
+        damageAmount: Float, // the amount of damage
         causingEntity: Entity?, // the entity causing the damage (e.g. skeleton)
         directEntity: Entity? = causingEntity, // the entity dealing the damage (e.g. arrow)
         extraAttributes: List<CustomAttribute> = emptyList(),

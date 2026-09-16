@@ -1,11 +1,12 @@
-package de.fuballer.mcendgame.main.component.damage.calculator
+package de.fuballer.mcendgame.main.component.damage.calculator.spell_damage
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
+import de.fuballer.mcendgame.main.component.damage.calculator.DamageCalculator
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.LivingEntity
 
-object BaseDamageCalculator : DamageCalculator {
+object BaseSpellDamageCalculator : DamageCalculator {
     override fun isActive(source: DamageSource) = true
 
     override fun calculateDamage(
@@ -14,8 +15,7 @@ object BaseDamageCalculator : DamageCalculator {
         source: DamageSource,
         event: DamageCalculationCommand
     ): Float {
-        // TODO fixme multi
-        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
+        val damageMulti = DamageUtil.calculateSpellDamageMultiplier(event)
         return (originalDamage * damageMulti).toFloat()
     }
 }

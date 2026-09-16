@@ -14,12 +14,12 @@ sealed class DamageSourceResult(damageSource: DamageSource) : DamageSource(
     open fun getRawDamage(): Float = 0f
 
     class Applied(
-        val damageInstance: DamageInstance,
+        val categorizedDamage: CategorizedDamage,
         val damageCalculationCommand: DamageCalculationCommand,
         val vanillaDamageContext: VanillaDamageContext,
         damageSource: DamageSource
     ) : DamageSourceResult(damageSource) {
-        override fun getRawDamage() = damageInstance.getRawDamage()
+        override fun getRawDamage() = categorizedDamage.getRawDamage()
     }
 
     class ZeroDamage(

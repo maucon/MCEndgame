@@ -1,7 +1,8 @@
-package de.fuballer.mcendgame.main.component.damage.calculator
+package de.fuballer.mcendgame.main.component.damage.calculator.attack_damage
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
+import de.fuballer.mcendgame.main.component.damage.calculator.DamageCalculator
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.arrow.ThrownTrident

@@ -1,7 +1,8 @@
-package de.fuballer.mcendgame.main.component.damage.calculator
+package de.fuballer.mcendgame.main.component.damage.calculator.attack_damage
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
+import de.fuballer.mcendgame.main.component.damage.calculator.DamageCalculator
 import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
 import de.fuballer.mcendgame.main.util.extension.DamageTypeExtension.isOf
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getAttackCooldownMultiplier
@@ -22,6 +23,7 @@ object MeleeAttackCalculator : DamageCalculator {
         return source.type().isOf(DamageTypes.MOB_ATTACK)
                 || source.type().isOf(DamageTypes.MOB_ATTACK_NO_AGGRO)
                 || source.type().isOf(DamageTypes.PLAYER_ATTACK)
+                || source.type().isOf(CustomDamageTypes.SWEEPING)
     }
 
     override fun calculateDamage(

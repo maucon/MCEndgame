@@ -1,7 +1,8 @@
-package de.fuballer.mcendgame.main.component.damage.calculator
+package de.fuballer.mcendgame.main.component.damage.calculator.attack_damage
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
+import de.fuballer.mcendgame.main.component.damage.calculator.DamageCalculator
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getAttackCooldownMultiplier
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.damagesource.DamageSource

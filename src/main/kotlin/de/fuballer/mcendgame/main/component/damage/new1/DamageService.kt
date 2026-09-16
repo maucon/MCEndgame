@@ -3,8 +3,6 @@ package de.fuballer.mcendgame.main.component.damage.new1
 import com.mojang.logging.LogUtils
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.dodge.DodgeSettings
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
-import de.fuballer.mcendgame.main.component.damage.calculator.BaseDamageCalculator
-import de.fuballer.mcendgame.main.component.damage.calculator.MeleeAttackCalculator
 import de.fuballer.mcendgame.main.component.damage.dodge.DodgeCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.ignore_damage.IgnoreDamageCommand
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDodgedEvent
@@ -30,35 +28,8 @@ import kotlin.math.roundToInt
 //  ignore damage dealt scaling (increase, more, decreased, less damage)
 //  ignore damage taken scaling (increase, more, decreased, less damage taken)
 //  ignore dodge or dodgeable
-private val DAMAGE_CALCULATORS = listOf(
-//    CreeperExplosionCalculator,
-//    PufferfishTouchCalculator,
-//    PierceAttackDamageCalculator,
-//    KineticAttackDamageCalculator,
-//    SpellDamageCalculator,
-//    EnderDragonCalculator,
-//    WitherSkullCalculator,
-//    WitherExplosionCalculator,
-//    SonicBoomCalculator,
-//    GuardianMagicCalculator,
-//    GuardianThornsCalculator,
-//    TridentProjectileCalculator,
-//    SmallFireballCalculator,
-//    FireballCalculator,
-//    AbstractArrowCalculator,
-//    SnowballCalculator,
-//    WindChargeCalculator,
-//    ThornsCalculator,
-//    MagicDamageCalculator,
-//    PotionCalculator,
-//    MaceSmashAttackCalculator,
-//    GenericAttackCalculator,
-//    ShulkerBulletCalculator,
-    MeleeAttackCalculator,
-//    OtherProjectilesCalculator, // do not move
-    // TODO add calculators one after another
-    BaseDamageCalculator // do not move
-)
+// TODO damage dealing API
+// TODO check for knockback. is it applied once or double? check sulfur cube
 
 object DamageService {
     private val log = LogUtils.getLogger()
@@ -97,23 +68,15 @@ object DamageService {
             return DamageSourceResult.ZeroDamage(cmd, damageSource)
         }
 
-        // vanilla is attack damage only
-        var damageInstance = DamageInstance().setDamage(DamageCategory.ATTACK_DAMAGE, damage)
-        damageInstance += customDamageContext.damageInstance
+        val incomingDamage = customDamageContext.incomingDamage
+            ?: IncomingDamage(DamageCategory.ATTACK_DAMAGE, damage) // vanilla is attack damage only
 
-        val damageCalculator = DAMAGE_CALCULATORS.first { it.isActive(damageSource) }
-        log.info("damageCalculator: ${damageCalculator.javaClass.simpleName}")
+        val calculated = incomingDamage.category.calculate(incomingDamage.amount, victim, damageSource, cmd)
+        val categorizedDamage = CategorizedDamage(incomingDamage.category to calculated)
 
-        println(damageInstance)
-        // FIXME i have certain feelings about this one
-        damageInstance.transformDamage { _, amount ->
-            damageCalculator.calculateDamage(amount, victim, damageSource, cmd)
-        }
-        println(damageInstance)
+        println("categorizedDamage = $categorizedDamage")
 
-        // TODO damage type changing cmd (10% of AD to True Damage)
-
-        return DamageSourceResult.Applied(damageInstance, cmd, vanillaDamageContext, damageSource)
+        return DamageSourceResult.Applied(categorizedDamage, cmd, vanillaDamageContext, damageSource)
     }
 
     /**
@@ -207,15 +170,14 @@ object DamageService {
             // todo log/debug
             return DamageReductionResult.zero()
         }
-        val damageInstance = source.damageInstance
-
         // TODO event? command? LivingEntityDamagedEvent?
 
-        damageInstance.transformDamage { _, damage ->
+        // FIXME spell damage from enemies scaling?
+        val scaledDamageInstance = source.categorizedDamage.transformDamage { _, damage ->
             val reduced = source.vanillaDamageContext.getCustomDamageReduction().invoke(damage)
             source.vanillaDamageContext.getDifficultyScaling().scaleDamage(reduced)
         }
 
-        return damageInstance.getAfterDamageReduction(victim, source, source.damageCalculationCommand)
+        return scaledDamageInstance.getAfterDamageReduction(victim, source, source.damageCalculationCommand)
     }
 }

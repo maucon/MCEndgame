@@ -1,20 +1,25 @@
-package de.fuballer.mcendgame.main.component.damage.calculator
+package de.fuballer.mcendgame.main.component.damage.calculator.attack_damage
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
+import de.fuballer.mcendgame.main.component.damage.calculator.DamageCalculator
 import de.fuballer.mcendgame.main.util.extension.mixin.PersistentProjectileEntityMixinExtension.getDamage
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow
+import net.minecraft.world.entity.projectile.arrow.ThrownTrident
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import kotlin.math.ceil
 import kotlin.random.Random
 
 // skeleton arrows (bogged, stray)
 object AbstractArrowCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource) = source.directEntity is AbstractArrow
+    override fun isActive(source: DamageSource): Boolean {
+        if (source.directEntity is ThrownTrident) return false
+        return source.directEntity is AbstractArrow
+    }
 
     override fun calculateDamage(
         originalDamage: Float,
