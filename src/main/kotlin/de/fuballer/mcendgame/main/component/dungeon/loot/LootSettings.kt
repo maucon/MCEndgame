@@ -67,10 +67,11 @@ object LootSettings {
     )
 
     fun getBanditCrystalCount(dungeonLevel: Int): Int {
-        var count = 1
-        val quotient = dungeonLevel / 15.0
-        count += quotient.toInt()
-        if (Random.nextDouble() < quotient % 1) count++
-        return count
+        val exactBonus = dungeonLevel / 15.0
+        val guaranteedBonus = exactBonus.toInt()
+        val fractionalChance = exactBonus - guaranteedBonus
+
+        return 1 + guaranteedBonus +
+                if (Random.nextDouble() < fractionalChance) 1 else 0
     }
 }
