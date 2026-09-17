@@ -44,7 +44,7 @@ jobs:
 
       - name: Store reports
         if: failure()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: reports
           path: |
@@ -53,7 +53,7 @@ jobs:
 
       - name: Upload build artifacts
         id: artifact-upload
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: 'build-jars'
           path: build/libs/
@@ -108,7 +108,7 @@ jobs:
 
       - name: Upload test screenshots
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: 'test-screenshots'
           path: run/screenshots/
