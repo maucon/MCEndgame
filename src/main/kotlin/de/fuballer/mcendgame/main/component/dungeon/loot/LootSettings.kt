@@ -65,4 +65,13 @@ object LootSettings {
             CustomArmorItems.BROODMOTHER to 0.05,
         ),
     )
+
+    fun getBanditCrystalCount(dungeonLevel: Int): Int {
+        val exactBonus = dungeonLevel / 15.0
+        val guaranteedBonus = exactBonus.toInt()
+        val fractionalChance = exactBonus - guaranteedBonus
+
+        return 1 + guaranteedBonus +
+                if (Random.nextDouble() < fractionalChance) 1 else 0
+    }
 }
