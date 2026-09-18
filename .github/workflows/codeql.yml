@@ -69,6 +69,6 @@ jobs:
       # endregion
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@c35d1b164463ee62a100735382aaaa525c5d3496
+        uses: github/codeql-action/analyze@977e6ceaea7361825998245d787fa3b4d6b9e5df
         with:
           category: "/language:${{matrix.language}}"
