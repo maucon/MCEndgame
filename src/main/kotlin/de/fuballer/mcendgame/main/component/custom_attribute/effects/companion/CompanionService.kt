@@ -19,7 +19,6 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setD
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import de.maucon.mauconframework.initializer.Initializer
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -28,6 +27,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
+import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.entity.EntityTypeTest
 import java.util.*
@@ -100,6 +100,7 @@ class CompanionService {
 
             data.level.getEntity(id)?.let { entity ->
                 if (entity !is LivingEntity) return@let
+                if (entity is ArmorStand) return@let
                 data.companionTypes.forEach { type -> resummon(entity, type) }
             }
         }
