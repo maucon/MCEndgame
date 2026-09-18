@@ -187,9 +187,9 @@ enum class BanditType(
                     ),
                 ),
                 CustomAttribute(CustomAttributeTypes.RESISTANCE_WHEN_LOW_HEALTH, roll = IntRoll(IntBounds(10))),
-                CustomAttribute(CustomAttributeTypes.ARMOR_WHILE_WITHERED, roll = DoubleRoll(DoubleBounds(8.0))),
-                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(0.2))),
+                CustomAttribute(CustomAttributeTypes.ARMOR_WHILE_WITHERED, roll = DoubleRoll(DoubleBounds(4.0))),
                 CustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, roll = DoubleRoll(DoubleBounds(-0.15))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.1))),
             )
         },
     ),
