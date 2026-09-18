@@ -271,7 +271,7 @@ class DungeonDeviceScreen(
             y += 5
         }
 
-        val banditAttributes = EnemyLevelScalingSettings.getBossLevelAttributes(dungeonLevel)
+        val banditAttributes = EnemyLevelScalingSettings.getBanditLevelAttributes(dungeonLevel)
         if (banditAttributes.isNotEmpty()) {
             y += initLevelScalingHeader(BANDIT_ATTRIBUTES_TEXT, x, y, width) + 3
             y += initLevelScalingAttributeTextsPart(banditAttributes, x, y, width)
