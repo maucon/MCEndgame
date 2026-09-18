@@ -177,7 +177,6 @@ class AnalyticsService(
     }
 
     private fun sendAnalytics(eventType: EventType, payload: Any) {
-        println(payload)
         if (!userConfig.sendAnalytics) return
 
         val httpPayload = EventPayload(eventType.type, modVersion, payload)
