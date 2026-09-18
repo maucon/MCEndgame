@@ -66,7 +66,7 @@ object AnalyticsUtil {
             val totemItem = itemStack.item as? TotemItem ?: return@map null
 
             // Backfill tier data component for totems saved before it existed
-            MigrationService.migrateTotemTier(itemStack)
+            MigrationService.migrateTotemTier(itemStack, player)
 
             val id = BuiltInRegistries.ITEM.getKey(totemItem).toString()
             val tier = itemStack.get(CustomDataComponentType.TOTEM_TIER) ?: return@map null
