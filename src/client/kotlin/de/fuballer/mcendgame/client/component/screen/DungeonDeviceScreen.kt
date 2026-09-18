@@ -457,7 +457,7 @@ class DungeonDeviceScreen(
     private fun onCreateDungeonButtonPress(button: Button) {
         ClientPlayNetworking.send(menu.payload)
         onClose()
-        log.info("You opened a dungeon opened")
+        log.info("You opened a dungeon")
     }
 
     private fun onCreateTrainingDungeonButtonPress(button: Button) {
