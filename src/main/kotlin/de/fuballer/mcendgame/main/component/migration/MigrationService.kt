@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.main.component.data_component_type.CustomDataCompon
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItem
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.contents.TranslatableContents
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 
 /**
@@ -31,7 +32,7 @@ object MigrationService {
      *
      * No-op if the totem already has a tier component or has no lore to read from.
      */
-    fun migrateTotemTier(totem: ItemStack) {
+    fun migrateTotemTier(totem: ItemStack, player: Player) {
         if (totem.has(CustomDataComponentType.TOTEM_TIER)) return
         val lore = totem.get(DataComponents.LORE) ?: return
 
@@ -45,14 +46,13 @@ object MigrationService {
 
         if (tier == null) {
             log.warn(
-                "Could not migrate tier for totem {}: no valid tier found in lore. " +
-                        "This totem should be removed and replaced using /givetotem (Moderator).",
-                totem.item
+                "Could not migrate tier for totem ${totem.item} of player ${player.gameProfile.name}: no valid tier found in lore. " +
+                        "This totem should be removed and replaced using /givetotem (Moderator)."
             )
             return
         }
 
         totem.set(CustomDataComponentType.TOTEM_TIER, tier)
-        log.info("Migrated totem {} to tier {}", totem.item, tier)
+        log.info("Migrated totem ${totem.item} to tier $tier of player ${player.gameProfile.name}")
     }
 }
