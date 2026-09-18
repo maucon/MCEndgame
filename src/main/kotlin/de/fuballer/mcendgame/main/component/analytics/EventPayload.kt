@@ -74,8 +74,9 @@ data class PlayerLoadoutPayload(
     val offhand: PayloadItem?,
     val hotbar: List<PayloadItem?>,
     val effects: Map<String, Int>,
+    val totems: List<TotemPayload>,
     val gamemode: String,
-    val schemaVersion: Int = 1,
+    val schemaVersion: Int = 2,
 )
 
 data class EntityLoadoutPayload(
@@ -92,6 +93,12 @@ data class ScarredOnePayload(
     val positiveEffects: JsonElement,
     val negativeEffects: JsonElement,
     val schemaVersion: Int = 1,
+)
+
+data class TotemPayload(
+    val id: String,
+    val tier: Int,
+    val type: String,
 )
 
 data class PayloadItem(

@@ -363,7 +363,7 @@ class DungeonDeviceScreen(
 
     override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         extractTransparentBackground(graphics)
-        
+
         val textureX = (width - imageWidth) / 2
         val textureY = (height - imageHeight) / 2
 
@@ -465,14 +465,14 @@ class DungeonDeviceScreen(
     private fun onCreateDungeonButtonPress(button: Button) {
         ClientPlayNetworking.send(menu.payload)
         onClose()
-        log.info("Dungeon opened by ${inventory.player.gameProfile.name}")
+        log.info("You opened a dungeon")
     }
 
     private fun onCreateTrainingDungeonButtonPress(button: Button) {
         val payload = DungeonDeviceTrainingPayload.from(menu.payload)
         ClientPlayNetworking.send(payload)
         onClose()
-        log.info("Training dungeon opened by ${inventory.player.gameProfile.name}")
+        log.info("You opened a training dungeon")
     }
 
     private fun sendUpdateDungeonLevelPayload() {

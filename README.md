@@ -149,6 +149,7 @@ You can also build the mod yourself:
 ```bash
 git clone https://github.com/maucon/MCEndgame.git
 cd MCEndgame
+./gradlew runDatagen
 ./gradlew build
 ```
 

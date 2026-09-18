@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.main.component.item.custom.totem
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.setCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
+import de.fuballer.mcendgame.main.component.data_component_type.CustomDataComponentType
 import net.minecraft.ChatFormatting
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
@@ -30,6 +31,8 @@ abstract class TotemItem(
         val limitedRarity = min(tier, maxTier)
         addLore(stack, tier)
         stack.setCustomAttributes(getCustomAttributes(limitedRarity), EquipmentSlotGroup.CHEST)
+
+        stack.set(CustomDataComponentType.TOTEM_TIER, tier) // only used for analytics
 
         return stack
     }
