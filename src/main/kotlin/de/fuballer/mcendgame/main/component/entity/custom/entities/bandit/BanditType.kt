@@ -87,7 +87,7 @@ enum class BanditType(
         dungeonBalanceAttributes = {
             listOf(
                 CustomAttribute(CustomAttributeTypes.MORE_HEALTH_RECOVERY, roll = DoubleRoll(DoubleBounds(-0.55))),
-                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.1))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.15))),
             )
         },
     ),
@@ -158,6 +158,7 @@ enum class BanditType(
         dungeonBalanceAttributes = {
             listOf(
                 CustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, roll = DoubleRoll(DoubleBounds(-0.2))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(0.1))),
             )
         },
     ),
@@ -187,7 +188,7 @@ enum class BanditType(
                 ),
                 CustomAttribute(CustomAttributeTypes.RESISTANCE_WHEN_LOW_HEALTH, roll = IntRoll(IntBounds(10))),
                 CustomAttribute(CustomAttributeTypes.ARMOR_WHILE_WITHERED, roll = DoubleRoll(DoubleBounds(8.0))),
-                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(0.15))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(0.2))),
                 CustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, roll = DoubleRoll(DoubleBounds(-0.15))),
             )
         },
