@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribut
 import de.fuballer.mcendgame.main.component.data_component_type.CustomDataComponentType
 import de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encounters.scarred_one.data.RolledScarredOneEffect
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItem
+import de.fuballer.mcendgame.main.component.migration.MigrationService
 import de.fuballer.mcendgame.main.component.totem.db.PlayerTotemsRepository
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getCreationTime
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonAspects
@@ -61,11 +62,14 @@ object AnalyticsUtil {
         playerTotemsRepository: PlayerTotemsRepository
     ): List<TotemPayload> {
         val totems = playerTotemsRepository.findById(player.uuid)?.totems ?: listOf()
-        return totems.map { totem ->
-            val totemItem = totem.item as? TotemItem ?: return@map null
+        return totems.map { itemStack ->
+            val totemItem = itemStack.item as? TotemItem ?: return@map null
+
+            // Backfill tier data component for totems saved before it existed
+            MigrationService.migrateTotemTier(itemStack)
 
             val id = BuiltInRegistries.ITEM.getKey(totemItem).toString()
-            val tier = totem.get(CustomDataComponentType.TOTEM_TIER) ?: -1
+            val tier = itemStack.get(CustomDataComponentType.TOTEM_TIER) ?: return@map null
             val type = totemItem.type.toString()
 
             TotemPayload(id, tier, type)
