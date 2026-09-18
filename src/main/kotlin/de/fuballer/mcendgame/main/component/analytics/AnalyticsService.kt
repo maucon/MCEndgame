@@ -145,6 +145,8 @@ class AnalyticsService(
     @EventSubscriber
     fun on(event: TotemEncounterActivatedEvent) {
         val level = event.player.level() as? ServerLevel ?: return
+        if (!level.isDungeonWorld()) return
+
         sendAnalytics(
             eventType = EventType.TOTEM_ENCOUNTER_STARTED,
             payload = AnalyticsUtil.getDungeonData(level),

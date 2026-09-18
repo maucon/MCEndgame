@@ -14,13 +14,16 @@ import de.fuballer.mcendgame.main.messaging.dungeon.*
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getDungeonLevel
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
+import de.maucon.mauconframework.di.annotation.Logging
 import de.maucon.mauconframework.event.EventGateway
 import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.core.GlobalPos
+import org.slf4j.Logger
 import kotlin.random.Random
 
 @Injectable
 class DungeonGenerationService(
+    @Logging private val log: Logger,
     private val dungeonWorldService: DungeonWorldService,
     private val dungeonBuilderService: DungeonBuilderService,
     private val dungeonEncounterGenerationService: DungeonEncounterGenerationService,
@@ -32,6 +35,8 @@ class DungeonGenerationService(
     @EventSubscriber(sync = true)
     fun on(event: OpenDungeonButtonPressedEvent) {
         val player = event.player
+        log.info("Dungeon opened by ${player.gameProfile.name}")
+
         val originWorld = player.level()
         val dungeonDevicePos = event.dungeonDeviceBlockEntity.blockPos
         val dungeonDeviceGlobalPos = GlobalPos(originWorld.dimension(), dungeonDevicePos)
