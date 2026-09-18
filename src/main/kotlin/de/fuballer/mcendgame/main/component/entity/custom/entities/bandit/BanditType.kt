@@ -65,7 +65,8 @@ enum class BanditType(
         blockAfterTargetHitProbability = 0.5,
         dungeonBalanceAttributes = {
             listOf(
-                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.2))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.25))),
+                CustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(-4.0))),
             )
         },
     ),
@@ -85,7 +86,8 @@ enum class BanditType(
         jumpCritAttack = true,
         dungeonBalanceAttributes = {
             listOf(
-                CustomAttribute(CustomAttributeTypes.MORE_HEALTH_RECOVERY, roll = DoubleRoll(DoubleBounds(-0.4))),
+                CustomAttribute(CustomAttributeTypes.MORE_HEALTH_RECOVERY, roll = DoubleRoll(DoubleBounds(-0.55))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.1))),
             )
         },
     ),
@@ -105,6 +107,12 @@ enum class BanditType(
         CrystalItems.SYNTHESIZED_MOMENTUM_CRYSTAL,
         jumpCritAttack = true,
         sideStrafeUpdateTime = 8,
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.15))),
+                CustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(-2.0))),
+            )
+        },
     ),
     NIAMH(
         Component.translatable(TRANSLATABLE_BASE_KEY + "niamh"),
@@ -123,8 +131,8 @@ enum class BanditType(
         dungeonBalanceAttributes = {
             listOf(
                 CustomAttribute(CustomAttributeTypes.DODGE, roll = DoubleRoll(DoubleBounds(0.15))),
-                CustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(6.0))),
-                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
+                CustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(8.0))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.55))),
             )
         },
     ),
@@ -249,7 +257,7 @@ enum class BanditType(
         dungeonBalanceAttributes = {
             listOf(
                 CustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(4.0))),
-                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.35))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.2))),
             )
         },
     ),
@@ -268,6 +276,12 @@ enum class BanditType(
         fightingGoal = { banditEntity -> BanditBowGoal(banditEntity, 1.0, 20f) },
         predictMovementProbability = 0.75,
         predictedMovementRandomFactorRange = Pair(0.75, 1.25),
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN, roll = DoubleRoll(DoubleBounds(-0.2))),
+                CustomAttribute(CustomAttributeTypes.PROJECTILE_DODGE, roll = DoubleRoll(DoubleBounds(0.2))),
+            )
+        },
     ),
 
     // mage
@@ -285,6 +299,12 @@ enum class BanditType(
         ),
         CrystalItems.SYNTHESIZED_FOCUS_CRYSTAL,
         sideStrafeUpdateTime = 12,
+        dungeonBalanceAttributes = {
+            listOf(
+                CustomAttribute(VanillaAttributeTypes.MORE_ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.4))),
+                CustomAttribute(CustomAttributeTypes.MORE_SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(0.15))),
+            )
+        },
     ),
     MAEVE(
         Component.translatable(TRANSLATABLE_BASE_KEY + "maeve"),
@@ -303,8 +323,8 @@ enum class BanditType(
         sideStrafeUpdateTime = 8,
         dungeonBalanceAttributes = {
             listOf(
-                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.4))),
-                CustomAttribute(CustomAttributeTypes.MORE_SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.25))),
+                CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
+                CustomAttribute(CustomAttributeTypes.MORE_SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.15))),
             )
         },
     ),
@@ -329,7 +349,7 @@ enum class BanditType(
             listOf(
                 CustomAttribute(CustomAttributeTypes.MORE_COMPANION_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.5))),
                 CustomAttribute(CustomAttributeTypes.MORE_DAMAGE, roll = DoubleRoll(DoubleBounds(-0.25))),
-                CustomAttribute(CustomAttributeTypes.MORE_HEALTH_RECOVERY, roll = DoubleRoll(DoubleBounds(-0.35))),
+                CustomAttribute(CustomAttributeTypes.MORE_HEALTH_RECOVERY, roll = DoubleRoll(DoubleBounds(-0.5))),
             )
         },
     ),

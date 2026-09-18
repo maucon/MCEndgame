@@ -61,6 +61,7 @@ private const val LEVEL_TEXT_SCALING = 0.95f
 private val ATTRIBUTE_PANEL_TEXTURE = IdentifierUtil.default("textures/gui/container/dungeon_device_attribute_panel.png")
 private val ENEMY_ATTRIBUTES_TEXT = Component.translatable("container.mcendgame.dungeon_device.enemy_attributes")
 private val BOSS_ATTRIBUTES_TEXT = Component.translatable("container.mcendgame.dungeon_device.boss_attributes")
+private val BANDIT_ATTRIBUTES_TEXT = Component.translatable("container.mcendgame.dungeon_device.bandit_attributes")
 private const val ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH = 4
 private const val ATTRIBUTE_PANEL_MAX_WIDTH = 150
 private const val ATTRIBUTE_HEADER_WIDGET_HEIGHT = 10
@@ -267,6 +268,13 @@ class DungeonDeviceScreen(
         if (bossAttributes.isNotEmpty()) {
             y += initLevelScalingHeader(BOSS_ATTRIBUTES_TEXT, x, y, width) + 3
             y += initLevelScalingAttributeTextsPart(bossAttributes, x, y, width)
+            y += 5
+        }
+
+        val banditAttributes = EnemyLevelScalingSettings.getBossLevelAttributes(dungeonLevel)
+        if (banditAttributes.isNotEmpty()) {
+            y += initLevelScalingHeader(BANDIT_ATTRIBUTES_TEXT, x, y, width) + 3
+            y += initLevelScalingAttributeTextsPart(banditAttributes, x, y, width)
             y += 5
         }
     }
