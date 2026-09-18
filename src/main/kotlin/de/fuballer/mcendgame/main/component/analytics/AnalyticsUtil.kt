@@ -4,7 +4,10 @@ import com.google.gson.JsonElement
 import com.mojang.serialization.JsonOps
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
+import de.fuballer.mcendgame.main.component.data_component_type.CustomDataComponentType
 import de.fuballer.mcendgame.main.component.dungeon.generation.encounter.encounters.scarred_one.data.RolledScarredOneEffect
+import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItem
+import de.fuballer.mcendgame.main.component.totem.db.PlayerTotemsRepository
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getCreationTime
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonAspects
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
@@ -53,12 +56,32 @@ object AnalyticsUtil {
         it.effect.unwrapKey().map { k -> k.identifier().toString() }.orElse(UNKNOWN)!! to it.amplifier
     }
 
-    fun getPlayerLoadoutData(player: Player) = PlayerLoadoutPayload(
+    private fun getPlayerTotems(
+        player: Player,
+        playerTotemsRepository: PlayerTotemsRepository
+    ): List<TotemPayload> {
+        val totems = playerTotemsRepository.findById(player.uuid)?.totems ?: listOf()
+        return totems.map { totem ->
+            val totemItem = totem.item as? TotemItem ?: return@map null
+
+            val id = BuiltInRegistries.ITEM.getKey(totemItem).toString()
+            val tier = totem.get(CustomDataComponentType.TOTEM_TIER) ?: -1
+            val type = totemItem.type.toString()
+
+            TotemPayload(id, tier, type)
+        }.filterNotNull()
+    }
+
+    fun getPlayerLoadoutData(
+        player: Player,
+        playerTotemsRepository: PlayerTotemsRepository
+    ) = PlayerLoadoutPayload(
         armor = getArmorItems(player),
         mainhand = getMainhandItems(player),
         offhand = getOffhandItems(player),
         hotbar = getHotbarItems(player),
         effects = getActiveEffects(player),
+        totems = getPlayerTotems(player, playerTotemsRepository),
         gamemode = player.gameMode()?.name ?: UNKNOWN,
     )
 

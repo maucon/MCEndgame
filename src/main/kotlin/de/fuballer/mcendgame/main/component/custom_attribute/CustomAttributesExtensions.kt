@@ -5,15 +5,14 @@ import de.fuballer.mcendgame.main.accessor.LivingEntityCustomAttributesAccessor
 import de.fuballer.mcendgame.main.component.custom_attribute.data.*
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes.ADDITIONAL_PROJECTILES
+import de.fuballer.mcendgame.main.component.data_component_type.CustomDataComponentType
 import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectHealFactorCommand
 import de.fuballer.mcendgame.main.messaging.misc.CollectCustomAttributesCommand
 import de.fuballer.mcendgame.main.util.extension.SlotExtension.isOrIsChildOf
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getCustomTypeAttributes
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
-import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
-import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.EquipmentSlot
@@ -26,19 +25,11 @@ import kotlin.math.max
 
 @Injectable
 object CustomAttributesExtensions {
-    private val COMPONENT_TYPE: DataComponentType<List<CustomAttribute>> =
-        RegistryUtil.registerDataComponentType(
-            DataComponentType.builder<List<CustomAttribute>>()
-                .persistent(CustomAttribute.CODEC.listOf())
-                .build(),
-            "custom_attributes"
-        )
-
     fun ItemStack.setCustomAttributes(
         customAttributes: List<CustomAttribute>,
         slot: EquipmentSlotGroup,
     ) {
-        set(COMPONENT_TYPE, customAttributes)
+        set(CustomDataComponentType.CUSTOM_ATTRIBUTE, customAttributes)
 
         val attributeModifierComponent = getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY)
 
@@ -60,7 +51,7 @@ object CustomAttributesExtensions {
     }
 
     fun ItemStack.getCustomAttributes(): List<CustomAttribute> {
-        return get(COMPONENT_TYPE)
+        return get(CustomDataComponentType.CUSTOM_ATTRIBUTE)
             ?: emptyList()
     }
 

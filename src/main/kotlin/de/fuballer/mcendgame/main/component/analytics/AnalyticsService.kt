@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.main.MCEndgame
 import de.fuballer.mcendgame.main.component.config.UserConfig
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneDespawnEvent
+import de.fuballer.mcendgame.main.component.totem.db.PlayerTotemsRepository
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemyDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonPlayerDeathEvent
@@ -37,6 +38,7 @@ private const val ENDPOINT = "https://mcendgame-analytics.maucon.workers.dev/"
 class AnalyticsService(
     @Logging private val log: Logger,
     private val userConfig: UserConfig,
+    private val playerTotemsRepository: PlayerTotemsRepository
 ) {
     private lateinit var modVersion: String
     private val sessionId = UUID.randomUUID().toString()
@@ -62,7 +64,7 @@ class AnalyticsService(
             eventType = EventType.DUNGEON_JOIN,
             payload = DungeonJoinPayload(
                 dungeon = AnalyticsUtil.getDungeonData(event.newWorld),
-                player = AnalyticsUtil.getPlayerLoadoutData(event.player),
+                player = AnalyticsUtil.getPlayerLoadoutData(event.player, playerTotemsRepository),
             )
         )
     }
@@ -78,7 +80,7 @@ class AnalyticsService(
             eventType = EventType.PLAYER_DUNGEON_DEATH,
             payload = DungeonPlayerDeathPayload(
                 dungeon = AnalyticsUtil.getDungeonData(level),
-                player = AnalyticsUtil.getPlayerLoadoutData(event.player),
+                player = AnalyticsUtil.getPlayerLoadoutData(event.player, playerTotemsRepository),
                 killer = event.killer?.let { AnalyticsUtil.getEntityLoadoutData(it) },
             )
         )
@@ -95,7 +97,7 @@ class AnalyticsService(
             payload = DungeonBossKilledPayload(
                 dungeon = AnalyticsUtil.getDungeonData(level),
                 boss = BuiltInRegistries.ENTITY_TYPE.getKey(event.bossEntity.type).toString(),
-                players = level.players().map { AnalyticsUtil.getPlayerLoadoutData(it) },
+                players = level.players().map { AnalyticsUtil.getPlayerLoadoutData(it, playerTotemsRepository) },
             )
         )
     }
