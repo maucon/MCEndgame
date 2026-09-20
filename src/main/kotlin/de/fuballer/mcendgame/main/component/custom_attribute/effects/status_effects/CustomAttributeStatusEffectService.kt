@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.main.component.status_effect.MoltenRoarEffect
 import de.fuballer.mcendgame.main.component.status_effect.ResilienceEffect
 import de.fuballer.mcendgame.main.component.status_effect.VerdantEchoEffect
 import de.fuballer.mcendgame.main.component.status_effect.beastweaver_blessings.BlessingOfTheEagleEffect
+import de.fuballer.mcendgame.main.component.status_effect.beastweaver_blessings.BlessingOfTheRhinoEffect
 import de.fuballer.mcendgame.main.component.status_effect.beastweaver_blessings.BlessingOfTheSerpentEffect
 import de.fuballer.mcendgame.main.component.status_effect.beastweaver_blessings.BlessingOfTheWolfEffect
 import de.fuballer.mcendgame.main.messaging.misc.CollectCustomAttributesCommand
@@ -15,8 +16,9 @@ private val EFFECTS = mapOf(
     CustomStatusEffects.MOLTEN_ROAR to MoltenRoarEffect::getCustomAttributes,
     CustomStatusEffects.RESILIENCE to ResilienceEffect::getCustomAttributes,
     CustomStatusEffects.VERDANT_ECHO to VerdantEchoEffect::getCustomAttributes,
-    CustomStatusEffects.BLESSING_OF_THE_SERPENT to BlessingOfTheSerpentEffect::getCustomAttributes,
     CustomStatusEffects.BLESSING_OF_THE_EAGLE to BlessingOfTheEagleEffect::getCustomAttributes,
+    CustomStatusEffects.BLESSING_OF_THE_RHINO to BlessingOfTheRhinoEffect::getCustomAttributes,
+    CustomStatusEffects.BLESSING_OF_THE_SERPENT to BlessingOfTheSerpentEffect::getCustomAttributes,
     CustomStatusEffects.BLESSING_OF_THE_WOLF to BlessingOfTheWolfEffect::getCustomAttributes,
 )
 
