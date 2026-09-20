@@ -24,7 +24,8 @@ object CustomAttributeTypes {
     val PROJECTILE_DODGE = CustomAttributeType("projectile_dodge", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
     val DODGED_PROJECTILE_REFLECT = CustomAttributeType("dodged_projectile_reflect", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
     val MORE_DAMAGE_TAKEN = CustomAttributeType("more_damage_taken", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
-    val MORE_PROJECTILE_DAMAGE_TAKEN = CustomAttributeType("more_projectile_damage_taken", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
+    val MORE_PROJECTILE_DAMAGE_TAKEN =
+        CustomAttributeType("more_projectile_damage_taken", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
     val GAIN_ENEMY_ARMOR_ON_KILL =
         CustomAttributeType(
             "gain_enemy_armor_on_kill",
@@ -291,6 +292,15 @@ object CustomAttributeTypes {
     val STRENGTH_ON_KILL = CustomAttributeType("strength_on_kill", AttributeFormats.TWO_INT_ROLL, AttributeFormats.TWO_INT_BOUNDS, AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL)
     val SPEED_ON_KILL = CustomAttributeType("speed_on_kill", AttributeFormats.TWO_INT_ROLL, AttributeFormats.TWO_INT_BOUNDS, AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL)
     val HASTE_ON_KILL = CustomAttributeType("haste_on_kill", AttributeFormats.TWO_INT_ROLL, AttributeFormats.TWO_INT_BOUNDS, AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL)
+
+    // beastweaver blessings
+    val BLESSING_OF_THE_BEAR = CustomAttributeType("blessing_of_the_bear", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_EAGLE = CustomAttributeType("blessing_of_the_eagle", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_MAMMOTH = CustomAttributeType("blessing_of_the_mammoth", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_RHINO = CustomAttributeType("blessing_of_the_rhino", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_SERPENT = CustomAttributeType("blessing_of_the_serpent", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_STAG = CustomAttributeType("blessing_of_the_stag", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_WOLF = CustomAttributeType("blessing_of_the_wolf", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
 
     val NO_ATTACK_DAMAGE = CustomAttributeType("no_attack_damage", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.DETRIMENTAL)
 

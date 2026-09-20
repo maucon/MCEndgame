@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.custom_attribute.effects
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.status_effects
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asDoubleRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes

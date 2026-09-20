@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.custom_attribute.effects
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.magic_find
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asIntRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes

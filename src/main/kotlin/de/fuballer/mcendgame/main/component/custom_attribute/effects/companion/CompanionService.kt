@@ -27,7 +27,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
-import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.entity.EntityTypeTest
 import java.util.*
@@ -99,8 +98,7 @@ class CompanionService {
             iterator.remove()
 
             data.level.getEntity(id)?.let { entity ->
-                if (entity !is LivingEntity) return@let
-                if (entity is ArmorStand) return@let
+                if (entity !is Mob && entity !is Avatar) return@let
                 data.companionTypes.forEach { type -> resummon(entity, type) }
             }
         }

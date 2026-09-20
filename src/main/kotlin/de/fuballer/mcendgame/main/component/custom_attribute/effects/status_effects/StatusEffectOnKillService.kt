@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.custom_attribute.effects
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.status_effects
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asIntRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
@@ -21,7 +21,7 @@ class StatusEffectOnKillService {
     fun on(event: LivingEntityDeathEvent) {
         val killer = event.killer ?: return
 
-        EFFECTS.forEach { attribute, effect ->
+        EFFECTS.forEach { (attribute, effect) ->
             killer.getAllCustomAttributes()[attribute]?.forEach {
                 val duration = it.rolls[1].asIntRoll().getValue() * 20
                 val amplifier = it.rolls[0].asIntRoll().getValue() - 1
