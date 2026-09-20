@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.abyssal_mask.AbyssalMaskModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.bound_abyss.BoundAbyssModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.broodmother.BroodmotherModel
+import de.fuballer.mcendgame.client.component.item.custom.armor.model.crown_of_the_stag.CrownOfTheStagModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsBootsModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsChestplateModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsHelmetModel
@@ -182,6 +183,10 @@ class CustomHumanoidArmorFeatureRenderer<S : HumanoidRenderState, M : HumanoidMo
         texturedArmorModels[CustomArmorItems.EMBERREIGN] = TexturedArmorModel(
             { EmberreignModel(ctx.bakeLayer(EmberreignModel.MODEL_LAYER)) },
             IdentifierUtil.default("textures/entity/equipment/custom_humanoid/emberreign.png"),
+        )
+        texturedArmorModels[CustomArmorItems.CROWN_OF_THE_STAG] = TexturedArmorModel(
+            { EmberreignModel(ctx.bakeLayer(CrownOfTheStagModel.MODEL_LAYER)) },
+            IdentifierUtil.default("textures/entity/equipment/custom_humanoid/crown_of_the_stag.png"),
         )
     }
 

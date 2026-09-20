@@ -58,6 +58,9 @@ enum class Helmet(
     ),
     ABYSSAL_MASK(
         CustomArmorItems.ABYSSAL_MASK,
+    ),
+    CROWN_OF_THE_STAG(
+        CustomArmorItems.CROWN_OF_THE_STAG,
     );
 
     override val slot = EquipmentSlotGroup.HEAD

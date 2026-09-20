@@ -4,6 +4,8 @@ import de.fuballer.mcendgame.main.component.item.custom.UniqueItemRegistry
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.abyssal_mask.AbyssalMask
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.bound_abyss.BoundAbyss
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.broodmother.Broodmother
+import de.fuballer.mcendgame.main.component.item.custom.armor.item.crown_of_the_stag.CrownOfTheStag
+import de.fuballer.mcendgame.main.component.item.custom.armor.item.crown_of_the_stag.CrownOfTheStagArmorMaterial
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsBoots
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsChestplate
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.druids.DruidsHelmet
@@ -57,4 +59,5 @@ object CustomArmorItems {
     val WINDSTRIDER = UniqueItemRegistry.registerArmorItem(::Windstrider, WindstriderArmorMaterial, ArmorType.LEGGINGS, CustomArmorItemIds.WINDSTRIDER)
     val BROODMOTHER = UniqueItemRegistry.registerArmorItem(::Broodmother, BroodmotherArmorMaterial, ArmorType.CHESTPLATE, CustomArmorItemIds.BROODMOTHER)
     val EMBERREIGN = UniqueItemRegistry.registerArmorItem(::Emberreign, EmberreignArmorMaterial, ArmorType.BOOTS, CustomArmorItemIds.EMBERREIGN)
+    val CROWN_OF_THE_STAG = UniqueItemRegistry.registerArmorItem(::CrownOfTheStag, CrownOfTheStagArmorMaterial, ArmorType.HELMET, CustomArmorItemIds.CROWN_OF_THE_STAG)
 }

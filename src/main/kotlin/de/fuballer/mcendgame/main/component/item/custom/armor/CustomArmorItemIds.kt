@@ -30,4 +30,5 @@ object CustomArmorItemIds {
     val WINDSTRIDER = RegistryKeyUtil.createItemKey("windstrider")
     val BROODMOTHER = RegistryKeyUtil.createItemKey("broodmother")
     val EMBERREIGN = RegistryKeyUtil.createItemKey("emberreign")
+    val CROWN_OF_THE_STAG = RegistryKeyUtil.createItemKey("crown_of_the_stag")
 }

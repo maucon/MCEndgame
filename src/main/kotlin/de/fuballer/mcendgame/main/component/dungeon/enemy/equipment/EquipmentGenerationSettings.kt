@@ -40,6 +40,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment(Helmet.WITHER_ROSE_HELMET, EquipmentSlot.HEAD)),
         RandomOption(100, TaggedEquipment(Helmet.SUEDE_HELMET, EquipmentSlot.HEAD)),
         RandomOption(100, TaggedEquipment(Helmet.ABYSSAL_MASK, EquipmentSlot.HEAD)),
+        //RandomOption(100, TaggedEquipment(Helmet.CROWN_OF_THE_STAG, EquipmentSlot.HEAD)), drops from beastweaver boss
 
         RandomOption(100, TaggedEquipment(Chestplate.BOUND_ABYSS, EquipmentSlot.CHEST)),
         RandomOption(100, TaggedEquipment(Chestplate.DRUIDS_CHESTPLATE, EquipmentSlot.CHEST)),

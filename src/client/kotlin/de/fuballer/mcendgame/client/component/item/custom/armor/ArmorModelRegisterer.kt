@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.client.component.item.custom.armor
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.abyssal_mask.AbyssalMaskModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.bound_abyss.BoundAbyssModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.broodmother.BroodmotherModel
+import de.fuballer.mcendgame.client.component.item.custom.armor.model.crown_of_the_stag.CrownOfTheStagModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsBootsModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsChestplateModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.druids.DruidsHelmetModel
@@ -132,6 +133,10 @@ object ArmorModelRegisterer {
         ModelLayerRegistry.registerModelLayer(
             EmberreignModel.MODEL_LAYER,
             EmberreignModel.Companion::getTexturedModelData
+        )
+        ModelLayerRegistry.registerModelLayer(
+            CrownOfTheStagModel.MODEL_LAYER,
+            CrownOfTheStagModel.Companion::getTexturedModelData
         )
     }
 }

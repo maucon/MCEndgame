@@ -47,6 +47,7 @@ object CustomCreativeModeTab {
                     output.accept(CustomArmorItems.WINDSTRIDER.defaultInstance)
                     output.accept(CustomArmorItems.BROODMOTHER.defaultInstance)
                     output.accept(CustomArmorItems.EMBERREIGN.defaultInstance)
+                    output.accept(CustomArmorItems.CROWN_OF_THE_STAG.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(
