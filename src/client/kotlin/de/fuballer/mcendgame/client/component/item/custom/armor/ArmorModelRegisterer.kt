@@ -15,6 +15,7 @@ import de.fuballer.mcendgame.client.component.item.custom.armor.model.gilded_tem
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.iceborne.IceborneModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.lamias_gift.LamiasGiftModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.moonshadow.MoonshadowModel
+import de.fuballer.mcendgame.client.component.item.custom.armor.model.skin_of_the_rhino.SkinOfTheRhinoModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.stoneward.StonewardModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.suede.SuedeBootsModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.suede.SuedeChestplateModel
@@ -137,6 +138,10 @@ object ArmorModelRegisterer {
         ModelLayerRegistry.registerModelLayer(
             CrownOfTheStagModel.MODEL_LAYER,
             CrownOfTheStagModel.Companion::getTexturedModelData
+        )
+        ModelLayerRegistry.registerModelLayer(
+            SkinOfTheRhinoModel.MODEL_LAYER,
+            SkinOfTheRhinoModel.Companion::getTexturedModelData
         )
     }
 }

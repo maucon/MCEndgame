@@ -17,6 +17,8 @@ import de.fuballer.mcendgame.main.component.item.custom.armor.item.gilded_tempes
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.iceborne.Iceborne
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.lamias_gift.LamiasGift
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.moonshadow.Moonshadow
+import de.fuballer.mcendgame.main.component.item.custom.armor.item.skin_of_the_rhino.SkinOfTheRhino
+import de.fuballer.mcendgame.main.component.item.custom.armor.item.skin_of_the_rhino.SkinOfTheRhinoArmorMaterial
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.stoneward.Stoneward
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.suede.SuedeBoots
 import de.fuballer.mcendgame.main.component.item.custom.armor.item.suede.SuedeChestplate
@@ -60,4 +62,5 @@ object CustomArmorItems {
     val BROODMOTHER = UniqueItemRegistry.registerArmorItem(::Broodmother, BroodmotherArmorMaterial, ArmorType.CHESTPLATE, CustomArmorItemIds.BROODMOTHER)
     val EMBERREIGN = UniqueItemRegistry.registerArmorItem(::Emberreign, EmberreignArmorMaterial, ArmorType.BOOTS, CustomArmorItemIds.EMBERREIGN)
     val CROWN_OF_THE_STAG = UniqueItemRegistry.registerArmorItem(::CrownOfTheStag, CrownOfTheStagArmorMaterial, ArmorType.HELMET, CustomArmorItemIds.CROWN_OF_THE_STAG)
+    val SKIN_OF_THE_RHINO = UniqueItemRegistry.registerArmorItem(::SkinOfTheRhino, SkinOfTheRhinoArmorMaterial, ArmorType.CHESTPLATE, CustomArmorItemIds.SKIN_OF_THE_RHINO)
 }

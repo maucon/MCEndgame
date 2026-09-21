@@ -48,6 +48,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment(Chestplate.SUEDE_CHESTPLATE, EquipmentSlot.CHEST)),
         RandomOption(100, TaggedEquipment(Chestplate.VOIDWEAVER, EquipmentSlot.CHEST)),
         //RandomOption(100, TaggedEquipment(Chestplate.BROODMOTHER, EquipmentSlot.CHEST)), drops from arachne boss
+        //RandomOption(100, TaggedEquipment(Chestplate.SKIN_OF_THE_RHINO, EquipmentSlot.CHEST)), drops from beastweaver boss
 
         RandomOption(100, TaggedEquipment(Leggings.LAMIAS_GIFT, EquipmentSlot.LEGS)),
         RandomOption(100, TaggedEquipment(Leggings.DRUIDS_LEGGINGS, EquipmentSlot.LEGS)),

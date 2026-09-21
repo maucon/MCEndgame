@@ -48,6 +48,7 @@ object CustomCreativeModeTab {
                     output.accept(CustomArmorItems.BROODMOTHER.defaultInstance)
                     output.accept(CustomArmorItems.EMBERREIGN.defaultInstance)
                     output.accept(CustomArmorItems.CROWN_OF_THE_STAG.defaultInstance)
+                    output.accept(CustomArmorItems.SKIN_OF_THE_RHINO.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(

@@ -16,6 +16,7 @@ import de.fuballer.mcendgame.client.component.item.custom.armor.model.gilded_tem
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.iceborne.IceborneModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.lamias_gift.LamiasGiftModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.moonshadow.MoonshadowModel
+import de.fuballer.mcendgame.client.component.item.custom.armor.model.skin_of_the_rhino.SkinOfTheRhinoModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.stoneward.StonewardModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.suede.SuedeBootsModel
 import de.fuballer.mcendgame.client.component.item.custom.armor.model.suede.SuedeChestplateModel
@@ -185,8 +186,12 @@ class CustomHumanoidArmorFeatureRenderer<S : HumanoidRenderState, M : HumanoidMo
             IdentifierUtil.default("textures/entity/equipment/custom_humanoid/emberreign.png"),
         )
         texturedArmorModels[CustomArmorItems.CROWN_OF_THE_STAG] = TexturedArmorModel(
-            { EmberreignModel(ctx.bakeLayer(CrownOfTheStagModel.MODEL_LAYER)) },
+            { CrownOfTheStagModel(ctx.bakeLayer(CrownOfTheStagModel.MODEL_LAYER)) },
             IdentifierUtil.default("textures/entity/equipment/custom_humanoid/crown_of_the_stag.png"),
+        )
+        texturedArmorModels[CustomArmorItems.SKIN_OF_THE_RHINO] = TexturedArmorModel(
+            { SkinOfTheRhinoModel(ctx.bakeLayer(SkinOfTheRhinoModel.MODEL_LAYER)) },
+            IdentifierUtil.default("textures/entity/equipment/custom_humanoid/skin_of_the_rhino.png"),
         )
     }
 

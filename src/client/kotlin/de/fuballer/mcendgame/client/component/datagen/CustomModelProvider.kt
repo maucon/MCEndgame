@@ -63,6 +63,7 @@ class CustomModelProvider(
         generator.generateFlatItem(CustomArmorItems.BROODMOTHER, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(CustomArmorItems.EMBERREIGN, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(CustomArmorItems.CROWN_OF_THE_STAG, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(CustomArmorItems.SKIN_OF_THE_RHINO, ModelTemplates.FLAT_ITEM)
 
         generator.generateFlatItem(AspectItems.ASPECT_OF_ANCESTORS, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_ASCENSION, ModelTemplates.FLAT_ITEM)
