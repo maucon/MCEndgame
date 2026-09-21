@@ -262,6 +262,7 @@
   "attribute.mcendgame.more_damage_taken": " %s%% %s Damage taken",
   "attribute.mcendgame.more_projectile_damage_taken": " %s%% %s Projectile Damage taken",
   "attribute.mcendgame.more_damage_taken_while_on_fire": " %s%% %s Damage taken while on Fire",
+  "attribute.mcendgame.flat_damage_taken": "%s Damage taken",
   "attribute.mcendgame.spell_damage": "%s Spell Damage",
   "attribute.mcendgame.increased_damage": "%s%% %s Damage",
   "attribute.mcendgame.more_damage": " %s%% %s Damage",

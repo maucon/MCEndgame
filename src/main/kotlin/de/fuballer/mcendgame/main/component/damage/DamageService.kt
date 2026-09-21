@@ -134,6 +134,7 @@ object DamageService {
         spellDamage = calculateSpellDamageReduction(spellDamage, attacked, source, cmd)
 
         var combinedDamage = attackDamage + spellDamage
+        combinedDamage = (combinedDamage + cmd.flatDamageTaken.sum().toFloat()).coerceAtLeast(0F)
 
         // Special damage calculation
         if (damageCalculationConfig.isArmadilloDamageReduction) {
