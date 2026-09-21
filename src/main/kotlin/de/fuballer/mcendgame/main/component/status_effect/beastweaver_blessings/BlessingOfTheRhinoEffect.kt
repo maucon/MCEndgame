@@ -7,8 +7,6 @@ import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttribu
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
-import net.minecraft.world.entity.ai.attributes.AttributeModifier
-import net.minecraft.world.entity.ai.attributes.Attributes
 
 class BlessingOfTheRhinoEffect : MobEffect(MobEffectCategory.BENEFICIAL, 9835540) {
     companion object {
@@ -21,9 +19,5 @@ class BlessingOfTheRhinoEffect : MobEffect(MobEffectCategory.BENEFICIAL, 9835540
                 DoubleRoll(DoubleBounds((amplifier + 1) * -0.08)),
             )
         )
-    }
-
-    init {
-        addAttributeModifier(Attributes.ATTACK_SPEED, ATTRIBUTE_IDENTIFIER, 0.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
     }
 }
