@@ -17,6 +17,7 @@ object CustomStatusEffects {
     val SCORCH = RegistryUtil.registerStatusEffect("scorch", ScorchEffect())
     val VERDANT_ECHO = RegistryUtil.registerStatusEffect("verdant_echo", VerdantEchoEffect())
     val MOLTEN_ROAR = RegistryUtil.registerStatusEffect("molten_roar", MoltenRoarEffect())
+    val HOWL_OF_THE_WOLF = RegistryUtil.registerStatusEffect("howl_of_the_wolf", HowlOfTheWolfEffect())
     val ANCIENT_BLIGHT = RegistryUtil.registerStatusEffect("ancient_blight", AncientBlightEffect())
 
     // beastweaver blessings

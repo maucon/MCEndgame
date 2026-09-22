@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.main.component.item.custom
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.component.item.custom.misc.horn.command.HornUseCommand
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.isAlly
 import de.maucon.mauconframework.command.CommandGateway
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Holder
@@ -119,4 +120,9 @@ abstract class UniqueAttributesHornItem(
     }
 
     abstract fun onUse(world: Level, user: LivingEntity, cmd: HornUseCommand)
+
+    fun getNearbyAllies(
+        world: Level,
+        user: LivingEntity,
+    ) = world.getEntitiesOfClass(LivingEntity::class.java, user.boundingBox.inflate(range)) { user.isAlly(it) && user.distanceTo(it) <= range }
 }

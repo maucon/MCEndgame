@@ -72,6 +72,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment(Horn.VERDANT_ECHO, EquipmentSlot.OFFHAND)),
         RandomOption(100, TaggedEquipment(Horn.MOLTEN_ROAR, EquipmentSlot.OFFHAND)),
         RandomOption(100, TaggedEquipment(Horn.FRIGID_CRY, EquipmentSlot.OFFHAND)),
+        //RandomOption(100, TaggedEquipment(Horn.HOWL_OF_THE_WOLF, EquipmentSlot.OFFHAND)), drops from beastweaver boss
 
         RandomOption(100, TaggedEquipment(Shield.GRUDGEBEARER, EquipmentSlot.OFFHAND)),
     )

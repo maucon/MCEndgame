@@ -2,8 +2,10 @@ package de.fuballer.mcendgame.main.component.item.custom.misc
 
 import de.fuballer.mcendgame.main.component.item.custom.UniqueItemRegistry
 import de.fuballer.mcendgame.main.component.item.custom.misc.horn.FrigidCry
+import de.fuballer.mcendgame.main.component.item.custom.misc.horn.HowlOfTheWolf
 import de.fuballer.mcendgame.main.component.item.custom.misc.horn.MoltenRoar
 import de.fuballer.mcendgame.main.component.item.custom.misc.horn.VerdantEcho
+import de.fuballer.mcendgame.main.component.sound.CustomInstruments
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.Instruments
@@ -32,5 +34,12 @@ object CustomMiscItems {
             .stacksTo(1)
             .delayedComponent(DataComponents.INSTRUMENT) { context -> InstrumentComponent(context.getOrThrow(Instruments.FEEL_GOAT_HORN)) },
         CustomMiscItemIds.FRIGID_CRY,
+    )
+    val HOWL_OF_THE_WOLF = UniqueItemRegistry.registerMiscItem(
+        ::HowlOfTheWolf,
+        Item.Properties()
+            .stacksTo(1)
+            .delayedComponent(DataComponents.INSTRUMENT) { context -> InstrumentComponent(context.getOrThrow(CustomInstruments.HOWL_OF_THE_WOLF_HORN)) },
+        CustomMiscItemIds.HOWL_OF_THE_WOLF,
     )
 }

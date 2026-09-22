@@ -8,4 +8,5 @@ object CustomMiscItemIds {
     val VERDANT_ECHO = RegistryKeyUtil.createItemKey("verdant_echo")
     val MOLTEN_ROAR = RegistryKeyUtil.createItemKey("molten_roar")
     val FRIGID_CRY = RegistryKeyUtil.createItemKey("frigid_cry")
+    val HOWL_OF_THE_WOLF = RegistryKeyUtil.createItemKey("howl_of_the_wolf")
 }

@@ -70,6 +70,7 @@ object CustomCreativeModeTab {
                     output.accept(CustomMiscItems.VERDANT_ECHO.defaultInstance)
                     output.accept(CustomMiscItems.MOLTEN_ROAR.defaultInstance)
                     output.accept(CustomMiscItems.FRIGID_CRY.defaultInstance)
+                    output.accept(CustomMiscItems.HOWL_OF_THE_WOLF.defaultInstance)
                     output.accept(CustomToolItems.GRUDGEBEARER.defaultInstance)
                 }
         )

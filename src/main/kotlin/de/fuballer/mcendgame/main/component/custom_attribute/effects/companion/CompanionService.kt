@@ -3,15 +3,14 @@ package de.fuballer.mcendgame.main.component.custom_attribute.effects.companion
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
-import de.fuballer.mcendgame.main.component.entity.custom.goals.predicates.ShouldBeAttackedByCompanionsPredicate
 import de.fuballer.mcendgame.main.messaging.dungeon.WorldAttributeChangedEvent
 import de.fuballer.mcendgame.main.messaging.misc.EquipmentChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDeathEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerAfterDimensionChangeEvent
 import de.fuballer.mcendgame.main.messaging.misc.PlayerBeforeDimensionChangeEvent
 import de.fuballer.mcendgame.main.messaging.server.ServerEndTickEvent
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.updateCompanionGoals
 import de.fuballer.mcendgame.main.util.extension.SlotExtension.isOrIsChildOf
-import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getTargetSelector
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isCompanion
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setCompanion
@@ -24,9 +23,6 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.entity.EntityTypeTest
 import java.util.*
@@ -172,36 +168,10 @@ class CompanionService {
         companion.getAttribute(Attributes.FOLLOW_RANGE)?.baseValue = 24.0
         if (owner.isDungeonEnemy()) companion.setDungeonEnemy()
 
-        updateTargetGoals(owner, companion)
+        companion.updateCompanionGoals(owner)
 
         type.applyOther(companion, attribute)
 
         world.addFreshEntity(companion)
-    }
-
-    fun updateTargetGoals(
-        owner: LivingEntity,
-        entity: TamableAnimal,
-    ) {
-        val targetSelector = entity.getTargetSelector()
-
-        targetSelector.availableGoals
-            .map { it.goal }
-            .toList()
-            .forEach(targetSelector::removeGoal)
-
-        targetSelector.addGoal(1, OwnerHurtByTargetGoal(entity))
-        targetSelector.addGoal(2, OwnerHurtTargetGoal(entity))
-        targetSelector.addGoal(
-            3,
-            NearestAttackableTargetGoal(
-                entity,
-                LivingEntity::class.java,
-                10,
-                false,
-                false,
-                ShouldBeAttackedByCompanionsPredicate(owner.isDungeonEnemy()),
-            )
-        )
     }
 }
