@@ -42,9 +42,26 @@ class HowlOfTheWolf(
         user: LivingEntity,
         cmd: HornUseCommand,
     ) {
+        val nearbyAllies = getNearbyAllies(world, user)
+
+        val duration = (baseDuration * cmd.getDurationFactor()).toInt()
+        val amplifier = if (cmd.isStronger) 1 else 0
+        nearbyAllies.forEach {
+            val effectInstance = MobEffectInstance(CustomStatusEffects.HOWL_OF_THE_WOLF, duration, amplifier, false, true, true)
+            it.addEffect(effectInstance)
+        }
+
+        summonWolves(world, user, cmd.isStronger)
+    }
+
+    private fun summonWolves(
+        world: Level,
+        user: LivingEntity,
+        isStronger: Boolean,
+    ) {
         val possiblePositions = BlockPosUtil.findEmptyAboveSolid(world, user.blockPosition(), SEARCH_SPAWN_POS_STEPS)
 
-        val wolfCount = if (cmd.isStronger) 3 else 2
+        val wolfCount = if (isStronger) 3 else 2
         possiblePositions.shuffled().take(wolfCount).forEach { pos ->
             val wolf = BeastweaverWolfEntity(CustomEntities.BEASTWEAVER_WOLF, world)
 
@@ -61,15 +78,6 @@ class HowlOfTheWolf(
 
             wolf.setPos(pos.x + 0.5, pos.y.toDouble(), pos.z + 0.5)
             world.addFreshEntity(wolf)
-        }
-
-        val nearbyAllies = getNearbyAllies(world, user)
-
-        val duration = (baseDuration * cmd.getDurationFactor()).toInt()
-        val amplifier = if (cmd.isStronger) 1 else 0
-        nearbyAllies.forEach {
-            val effectInstance = MobEffectInstance(CustomStatusEffects.HOWL_OF_THE_WOLF, duration, amplifier, false, true, true)
-            it.addEffect(effectInstance)
         }
     }
 }
