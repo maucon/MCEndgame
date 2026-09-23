@@ -25,6 +25,7 @@ class CustomItemTagProvider(
             .add(CustomToolItemIds.SERPENTS_FANG)
             .add(CustomToolItemIds.NIGHTREAVER)
             .add(CustomToolItemIds.RADIANT_DAWN)
+            .add(CustomToolItemIds.CLAWS_OF_THE_BEAR)
 
         builder(ItemTags.AXES)
             .add(CustomToolItemIds.FATESPLITTER)
@@ -36,6 +37,7 @@ class CustomItemTagProvider(
             .add(CustomArmorItemIds.WITHER_ROSE_HELMET)
             .add(CustomArmorItemIds.EMBERCHANT)
             .add(CustomArmorItemIds.ABYSSAL_MASK)
+            .add(CustomArmorItemIds.CROWN_OF_THE_STAG)
 
         builder(ItemTags.CHEST_ARMOR)
             .add(CustomArmorItemIds.BOUND_ABYSS)
@@ -44,6 +46,7 @@ class CustomItemTagProvider(
             .add(CustomArmorItemIds.VOIDWEAVER)
             .add(CustomArmorItemIds.WITHER_ROSE_CHESTPLATE)
             .add(CustomArmorItemIds.BROODMOTHER)
+            .add(CustomArmorItemIds.SKIN_OF_THE_RHINO)
 
         builder(ItemTags.LEG_ARMOR)
             .add(CustomArmorItemIds.LAMIAS_GIFT)

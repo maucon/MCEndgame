@@ -34,7 +34,7 @@
     ],
     "fallback": {
       "type": "minecraft:model",
-      "model": "mcendgame:item/claws_of_the_bear_righthand"
+      "model": "mcendgame:item/claws_of_the_bear_icon"
     }
   }
 }
