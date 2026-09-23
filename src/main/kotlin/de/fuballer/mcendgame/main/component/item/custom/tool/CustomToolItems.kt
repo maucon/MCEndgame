@@ -97,4 +97,9 @@ object CustomToolItems {
             .component(DataComponents.WEAPON, Weapon(1)),
         CustomToolItemIds.GRAVEBREAKER
     )
+    val CLAWS_OF_THE_BEAR = UniqueItemRegistry.registerToolItem(
+        ::ClawsOfTheBear,
+        Item.Properties().sword(CustomToolMaterials.CLAWS_OF_THE_BEAR, 7F, -2.4F),
+        CustomToolItemIds.CLAWS_OF_THE_BEAR
+    )
 }

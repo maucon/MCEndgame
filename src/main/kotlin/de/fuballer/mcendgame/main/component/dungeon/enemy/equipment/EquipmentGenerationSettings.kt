@@ -33,6 +33,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment.forBothHands(Sword.RADIANT_DAWN)),
         RandomOption(100, TaggedEquipment.forBothHands(Axe.FATESPLITTER)),
         //RandomOption(100, TaggedEquipment.forBothHands(Mace.GRAVEBREAKER)), drops from bonecrusher boss
+        //RandomOption(100, TaggedEquipment.forBothHands(Sword.CLAWS_OF_THE_BEAR)), drops from beastweaver boss
 
         RandomOption(100, TaggedEquipment(Helmet.ICEBORNE, EquipmentSlot.HEAD)),
         RandomOption(100, TaggedEquipment(Helmet.EMBERCHANT, EquipmentSlot.HEAD)),

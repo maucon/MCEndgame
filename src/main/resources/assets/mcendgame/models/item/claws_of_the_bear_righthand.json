@@ -1,0 +1,7 @@
+{
+  "parent": "mcendgame:item/claws_of_the_bear",
+	"textures": {
+		"0": "mcendgame:item/claws_of_the_bear_righthand",
+		"particle": "mcendgame:item/claws_of_the_bear_righthand"
+	}
+}
