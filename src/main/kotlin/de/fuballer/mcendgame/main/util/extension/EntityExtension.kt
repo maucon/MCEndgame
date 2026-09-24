@@ -21,6 +21,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
@@ -300,5 +301,11 @@ object EntityExtension {
                 ShouldBeAttackedByCompanionsPredicate(owner.isDungeonEnemy()),
             )
         )
+    }
+
+    fun LivingEntity.isDualWielding(): Boolean {
+        val offHandStack = getItemInHand(InteractionHand.OFF_HAND)
+        val mainHandStack = getItemInHand(InteractionHand.MAIN_HAND)
+        return offHandStack.item == mainHandStack.item
     }
 }

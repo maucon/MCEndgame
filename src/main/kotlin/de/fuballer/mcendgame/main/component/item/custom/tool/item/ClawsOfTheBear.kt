@@ -10,7 +10,7 @@ class ClawsOfTheBear(
     settings: Properties,
 ) : UniqueAttributesItem(settings) {
     override fun getCustomAttributes() = listOf(
-        RollableCustomAttribute(CustomAttributeTypes.DODGE, 0, DoubleBounds(0.08, 0.12)),
+        RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE, 0, DoubleBounds(0.1, 0.2)), // TODO
     )
 
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.HAND
