@@ -362,6 +362,7 @@
   "attribute.mcendgame.blessing_of_the_stag": " Blessing of the Stag",
   "attribute.mcendgame.blessing_of_the_wolf": " Blessing of the Wolf",
   "attribute.mcendgame.no_attack_damage": " Deal no Attack Damage",
+  "attribute.mcendgame.attributes_apply_in_both_hands": " Attributes apply in both Hands",
 
   "effect.mcendgame.fury": "Fury",
   "effect.mcendgame.resilience": "Resilience",

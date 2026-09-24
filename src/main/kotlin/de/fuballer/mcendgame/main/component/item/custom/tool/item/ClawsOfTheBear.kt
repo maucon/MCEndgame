@@ -14,6 +14,7 @@ class ClawsOfTheBear(
         RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 0, DoubleBounds(1.5, 2.5)),
         RollableCustomAttribute(CustomAttributeTypes.MORE_ATTACK_SPEED_DUAL_WIELD, 0, DoubleBounds(0.12, 0.18)),
         RollableCustomAttribute(CustomAttributeTypes.HEAL_ON_MELEE_HIT, 0, DoubleBounds(0.2, 0.4)),
+        RollableCustomAttribute(CustomAttributeTypes.ATTRIBUTES_APPLY_IN_BOTH_HANDS, 0),
     )
 
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.HAND

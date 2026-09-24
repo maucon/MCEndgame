@@ -320,6 +320,9 @@ object CustomAttributeTypes {
     val DROP_MORE_LOOT =
         CustomAttributeType("drop_more_loot", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.EMPTY, SignBasedKeywords.MORE)
 
+    // no effect, only visual
+    val ATTRIBUTES_APPLY_IN_BOTH_HANDS = CustomAttributeType("attributes_apply_in_both_hands", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+
     // region get by key
     fun getByKey(key: String): CustomAttributeType {
         return attributeTypes[key] ?: ERROR
