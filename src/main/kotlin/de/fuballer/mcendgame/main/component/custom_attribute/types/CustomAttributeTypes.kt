@@ -151,8 +151,16 @@ object CustomAttributeTypes {
     val MORE_DAMAGE_TAKEN_WHILE_HIGH_HEALTH =
         CustomAttributeType("more_damage_taken_while_high_health", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
 
-    val TWINFIRE_DUAL_WIELD_MORE_DAMAGE = CustomAttributeType(
-        "twinfire_more_damage",
+    val MORE_DAMAGE_DUAL_WIELD = CustomAttributeType(
+        "more_damage_dual_wield",
+        AttributeFormats.SIGNED_PERCENT_ROLL,
+        AttributeFormats.PERCENT_BOUNDS,
+        AttributeAffinities.BENEFICIAL,
+        SignBasedKeywords.MORE
+    )
+
+    val MORE_ATTACK_SPEED_DUAL_WIELD = CustomAttributeType(
+        "more_attack_speed_dual_wield",
         AttributeFormats.SIGNED_PERCENT_ROLL,
         AttributeFormats.PERCENT_BOUNDS,
         AttributeAffinities.BENEFICIAL,
@@ -241,6 +249,7 @@ object CustomAttributeTypes {
     )
 
     val HEAL_ON_KILL = CustomAttributeType("heal_on_kill", AttributeFormats.DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val HEAL_ON_MELEE_HIT = CustomAttributeType("heal_on_melee_hit", AttributeFormats.DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
     val HEAL_NEARBY_ALLIES_ON_MELEE_HIT = CustomAttributeType(
         "heal_nearby_allies_on_melee_hit",
         AttributeFormats.INT_AND_DOUBLE_ROLL,

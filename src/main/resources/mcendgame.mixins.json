@@ -57,8 +57,6 @@
     "knockback.PlayerKnockbackCommandMixin",
     "knockback.RamTargetKnockbackCommandMixin",
     "living_entity.LivingEntityAccessor",
-    "living_entity.LivingEntityAttributeWhilePoisonedMixin",
-    "living_entity.LivingEntityAttributeWhileWitheredMixin",
     "living_entity.LivingEntityAuraMixin",
     "living_entity.LivingEntityChangeGainedStatusEffectMixin",
     "living_entity.LivingEntityCompanionMixin",
