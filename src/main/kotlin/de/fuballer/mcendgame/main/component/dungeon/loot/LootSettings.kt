@@ -4,9 +4,11 @@ import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
+import de.fuballer.mcendgame.main.component.item.custom.misc.CustomMiscItems
 import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItems
 import de.fuballer.mcendgame.main.util.random.LevelRestrictedRandomOption
 import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.minecraft.world.item.Item
 import kotlin.random.Random
 
 object LootSettings {
@@ -52,19 +54,40 @@ object LootSettings {
 
     // unaffected by increased loot
     val BOSS_UNIQUES = mapOf(
-        CustomEntities.BEAKBURN to mapOf(
-            CustomArmorItems.EMBERREIGN to 0.05,
+        CustomEntities.BEAKBURN to BossUniqueItemDrops(
+            probability = 0.05,
+            RandomOption(1, Pair(CustomArmorItems.EMBERREIGN, 1)),
         ),
-        CustomEntities.BONECRUSHER to mapOf(
-            CustomToolItems.GRAVEBREAKER to 0.05,
+        CustomEntities.BONECRUSHER to BossUniqueItemDrops(
+            probability = 0.05,
+            RandomOption(1, Pair(CustomToolItems.GRAVEBREAKER, 1)),
         ),
-        CustomEntities.ELF_DUELIST to mapOf(
-            CustomArmorItems.WINDSTRIDER to 0.05,
+        CustomEntities.ELF_DUELIST to BossUniqueItemDrops(
+            probability = 0.05,
+            RandomOption(1, Pair(CustomArmorItems.WINDSTRIDER, 1)),
         ),
-        CustomEntities.ARACHNE to mapOf(
-            CustomArmorItems.BROODMOTHER to 0.05,
+        CustomEntities.ARACHNE to BossUniqueItemDrops(
+            probability = 0.05,
+            RandomOption(1, Pair(CustomArmorItems.BROODMOTHER, 1)),
+        ),
+        CustomEntities.BEASTWEAVER to BossUniqueItemDrops(
+            probability = 1.0,
+            RandomOption(3, Pair(CustomArmorItems.CROWN_OF_THE_STAG, 1)),
+            RandomOption(1, Pair(CustomArmorItems.SKIN_OF_THE_RHINO, 1)),
+            RandomOption(1, Pair(CustomToolItems.CLAWS_OF_THE_BEAR, 2)),
+            RandomOption(1, Pair(CustomMiscItems.HOWL_OF_THE_WOLF, 1))
         ),
     )
+
+    data class BossUniqueItemDrops(
+        val probability: Double,
+        val items: List<RandomOption<Pair<Item, Int>>>,
+    ) {
+        constructor(
+            probability: Double,
+            vararg items: RandomOption<Pair<Item, Int>>,
+        ) : this(probability, items.toList())
+    }
 
     fun getBanditCrystalCount(dungeonLevel: Int): Int {
         val exactBonus = dungeonLevel / 15.0
