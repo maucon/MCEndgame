@@ -40,6 +40,8 @@
     "sound.RangeDefinedSoundEngineMixin",
     "stats.GeneralStatsListWidgetMixin",
     "stats.StatsScreenMixin",
+    "status_effect.EffectsInInventoryBeastweaverBlessingMixin",
+    "status_effect.HudBeastweaverBlessingMixin",
     "vertex_consumer.BufferBuilderSetVertexElementsMixin"
   ],
   "injectors": {

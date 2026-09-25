@@ -6,7 +6,7 @@ import net.minecraft.world.effect.MobEffectCategory
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 
-class BlessingOfTheBearEffect : MobEffect(MobEffectCategory.BENEFICIAL, 9835540) {
+class BlessingOfTheBearEffect : MobEffect(MobEffectCategory.BENEFICIAL, BeastweaverBlessingEffect.PARTICLE_COLOR), BeastweaverBlessingEffect {
     companion object {
         val ATTRIBUTE_IDENTIFIER = IdentifierUtil.default("effect.blessing_of_the_bear")
     }

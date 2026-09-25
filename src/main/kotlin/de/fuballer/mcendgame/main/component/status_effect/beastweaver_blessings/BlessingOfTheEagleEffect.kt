@@ -8,7 +8,7 @@ import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
 
-class BlessingOfTheEagleEffect : MobEffect(MobEffectCategory.BENEFICIAL, 9835540) {
+class BlessingOfTheEagleEffect : MobEffect(MobEffectCategory.BENEFICIAL, BeastweaverBlessingEffect.PARTICLE_COLOR), BeastweaverBlessingEffect {
     companion object {
         val ATTRIBUTE_IDENTIFIER = IdentifierUtil.default("effect.blessing_of_the_eagle")
 
