@@ -23,6 +23,7 @@ import de.maucon.mauconframework.di.annotation.Injectable
 
 @Injectable
 object AspectItems {
+    // order is important for disabling
     val ASPECT_OF_TYRANNY = RegistryUtil.registerAspectItem(::AspectOfTyranny, AspectItemIds.ASPECT_OF_TYRANNY)
     val ASPECT_OF_GREED = RegistryUtil.registerAspectItem(::AspectOfGreed, AspectItemIds.ASPECT_OF_GREED)
     val ASPECT_OF_DOMINION = RegistryUtil.registerAspectItem(::AspectOfDominion, AspectItemIds.ASPECT_OF_DOMINION)
@@ -31,14 +32,14 @@ object AspectItems {
     val ASPECT_OF_CURIO = RegistryUtil.registerAspectItem(::AspectOfCurio, AspectItemIds.ASPECT_OF_CURIO)
     val ASPECT_OF_FORTUNE = RegistryUtil.registerAspectItem(::AspectOfFortune, AspectItemIds.ASPECT_OF_FORTUNE)
     val ASPECT_OF_ZEAL = RegistryUtil.registerAspectItem(::AspectOfZeal, AspectItemIds.ASPECT_OF_ZEAL)
-    val ASPECT_OF_GHOSTS = RegistryUtil.registerAspectItem(::AspectOfGhosts, AspectItemIds.ASPECT_OF_GHOSTS)
     val ASPECT_OF_FORTITUDE = RegistryUtil.registerAspectItem(::AspectOfFortitude, AspectItemIds.ASPECT_OF_FORTITUDE)
     val ASPECT_OF_SAVAGERY = RegistryUtil.registerAspectItem(::AspectOfSavagery, AspectItemIds.ASPECT_OF_SAVAGERY)
     val ASPECT_OF_EMINENCE = RegistryUtil.registerAspectItem(::AspectOfEminence, AspectItemIds.ASPECT_OF_EMINENCE)
     val ASPECT_OF_ANCESTORS = RegistryUtil.registerAspectItem(::AspectOfAncestors, AspectItemIds.ASPECT_OF_ANCESTORS)
     val ASPECT_OF_DUALITY = RegistryUtil.registerAspectItem(::AspectOfDuality, AspectItemIds.ASPECT_OF_DUALITY)
-    val ASPECT_OF_THE_GROVE = RegistryUtil.registerAspectItem(::AspectOfTheGrove, AspectItemIds.ASPECT_OF_THE_GROVE)
     val ASPECT_OF_OUTLAWS = RegistryUtil.registerAspectItem(::AspectOfOutlaws, AspectItemIds.ASPECT_OF_OUTLAWS)
     val ASPECT_OF_KIN = RegistryUtil.registerAspectItem(::AspectOfKin, AspectItemIds.ASPECT_OF_KIN)
     val ASPECT_OF_ASCENSION = RegistryUtil.registerAspectItem(::AspectOfAscension, AspectItemIds.ASPECT_OF_ASCENSION)
+    val ASPECT_OF_GHOSTS = RegistryUtil.registerAspectItem(::AspectOfGhosts, AspectItemIds.ASPECT_OF_GHOSTS)
+    val ASPECT_OF_THE_GROVE = RegistryUtil.registerAspectItem(::AspectOfTheGrove, AspectItemIds.ASPECT_OF_THE_GROVE)
 }
