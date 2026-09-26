@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.mixin.damage;
 
-import de.fuballer.mcendgame.main.component.damage.DifficultyScaling;
 import de.fuballer.mcendgame.main.component.damage.DamageService;
+import de.fuballer.mcendgame.main.component.damage.DifficultyScaling;
 import de.fuballer.mcendgame.main.component.damage.data.DamageSourceDraft;
 import de.fuballer.mcendgame.main.mixin.access.PlayerAccessMixin;
 import net.minecraft.server.level.ServerLevel;
@@ -87,21 +87,28 @@ public abstract class PlayerDamageMixin extends LivingEntity {
     }
 
     @Inject(at = @At("HEAD"), method = "actuallyHurt", cancellable = true)
-    protected void applyDamage(
+    protected void applyDamage(ServerLevel level, DamageSource source, float dmg, CallbackInfo ci) {
+        callApplyDamage(level, source, dmg);
+        ci.cancel();
+    }
+
+    @Unique
+    private void callApplyDamage(
             ServerLevel level,
             DamageSource source,
-            float dmg,
-            CallbackInfo ci
+            float dmg
     ) {
         Player this_ = (Player) (Object) this;
 
         if (!this.isInvulnerableTo(level, source)) {
             //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-            var damageOptional = DamageService.INSTANCE.applyDamage(this_, source, dmg);
+            var damageOptional = DamageService.INSTANCE.applyDamage(this_, source);
             if (damageOptional.isEmpty()) {
                 return;
             }
+
             dmg = damageOptional.get();
+            System.out.println("PlayerDamageMixing::applyDamage: dmg=" + dmg);
             //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             //dmg = this.getDamageAfterArmorAbsorb(source, dmg);
             //dmg = this.getDamageAfterMagicAbsorb(source, dmg);
@@ -124,7 +131,5 @@ public abstract class PlayerDamageMixin extends LivingEntity {
                 this.gameEvent(GameEvent.ENTITY_DAMAGE);
             }
         }
-
-        ci.cancel();
     }
 }

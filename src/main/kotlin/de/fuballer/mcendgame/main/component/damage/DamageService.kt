@@ -1,10 +1,10 @@
 package de.fuballer.mcendgame.main.component.damage
 
 import com.mojang.logging.LogUtils
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.dodge.DodgeSettings
 import de.fuballer.mcendgame.main.component.damage.data.*
 import de.fuballer.mcendgame.main.component.damage.dodge.DodgeCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.ignore_damage.IgnoreDamageCommand
+import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDamagedEvent
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDodgedEvent
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getLastHurt
@@ -25,11 +25,8 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-// TODO damageTypeKeys for
-//  ignore damage dealt scaling (increase, more, decreased, less damage)
-//  ignore damage taken scaling (increase, more, decreased, less damage taken)
-//  ignore dodge or dodgeable
-// TODO check for knockback. is it applied once or double? check sulfur cube
+// TODO check for knockback. is it applied once or double? check sulfur cube / check custom knockback attacks
+// TODO AttackKnockbackUtil
 object DamageService {
     private val log = LogUtils.getLogger()
 
@@ -39,12 +36,7 @@ object DamageService {
         damageSource: DamageSourceDraft,
         damage: Float,
     ): DamageSourceResult {
-        log.info("createDamageSourceResult - ${damageSource.entity?.javaClass?.simpleName} ⚔️ ${victim.javaClass.simpleName} - type: ${damageSource.type().msgId} - originalDamage: $damage")
-
         if (isDamageIgnored(victim, damageSource)) {
-            return DamageSourceResult.NoDamage(damageSource)
-        }
-        if (isDamageDodged(victim, damageSource)) {
             return DamageSourceResult.NoDamage(damageSource)
         }
 
@@ -63,7 +55,11 @@ object DamageService {
         val cmd = CommandGateway.apply(damageCalculationCommand)
 
         if (cmd.isShieldBlocking) {
-            return DamageSourceResult.ZeroDamage(cmd, damageSource)
+            return DamageSourceResult.ZeroDamage(damageSource)
+        }
+
+        if (isDamageDodged(victim, damageSource)) {
+            return DamageSourceResult.NoDamage(damageSource)
         }
 
         val incomingDamage = customDamageContext.incomingDamage
@@ -72,7 +68,7 @@ object DamageService {
         val calculated = incomingDamage.category.calculate(incomingDamage.amount, victim, damageSource, cmd)
         val categorizedDamage = CategorizedDamage(incomingDamage.category to calculated)
 
-        println("categorizedDamage = $categorizedDamage")
+        println("categorizedDamage=$categorizedDamage")
 
         return DamageSourceResult.Applied(categorizedDamage, cmd, vanillaDamageContext, damageSource)
     }
@@ -82,14 +78,10 @@ object DamageService {
      */
     fun applyDamage(
         victim: LivingEntity,
-        source: DamageSource,
-        damage: Float
+        source: DamageSource
     ): Optional<Float> {
-        log.info("applyDamage - ${victim.javaClass.simpleName} - ${source.javaClass.simpleName} - damage: $damage")
-        var dmg = damage
-
-        val (damageTotal, resistedTotal) = calculateIncomingDamage(victim, source, dmg)
-        if (damageTotal <= 0) return Optional.empty()
+        val (reducedTotal, resistedTotal) = calculateIncomingDamage(victim, source)
+        val damageTotal = reducedTotal.coerceAtLeast(0f)
 
         victim.setLastHitWasApplied(true)
 
@@ -107,7 +99,7 @@ object DamageService {
         victim.setLastHurt(damageTotal)
         victim.setLastResisted(resistedTotal)
 
-        dmg = damageToApply
+        val dmg = damageToApply
 
         // from LivingEntity.getDamageAfterArmorAbsorb
         if (!source.`is`(DamageTypeTags.BYPASSES_ARMOR)) {
@@ -120,8 +112,6 @@ object DamageService {
         } else if (source.entity is ServerPlayer) {
             (source.entity as ServerPlayer).awardStat(Stats.DAMAGE_DEALT_RESISTED, (damageResisted * 10.0f).roundToInt())
         }
-
-        log.info("applyDamage - final damage after reduction: $dmg")
 
         val event = LivingEntityDamagedEvent(victim, source, dmg)
         EventGateway.publish(event)
@@ -143,11 +133,7 @@ object DamageService {
         entity: LivingEntity,
         source: DamageSource
     ): Boolean {
-        val key = source.typeHolder().unwrapKey()
-        if (key.isEmpty) return false
-
-        // TODO should be DamageTypeKey
-        if (DodgeSettings.BYPASS_DODGE.contains(key.get())) return false
+        if (!source.`is`(CustomTags.BYPASS_DODGE)) return false;
 
         val dodgeCalculationCommand = DodgeCalculationCommand.of(entity, source)
             .let { CommandGateway.apply(it) }
@@ -164,11 +150,12 @@ object DamageService {
     private fun calculateIncomingDamage(
         victim: LivingEntity,
         source: DamageSource,
-        damage: Float
     ): DamageReductionResult {
-        log.info("calculateIncomingDamage - ${victim.javaClass.simpleName} - ${source.javaClass.simpleName} - damage: $damage")
+        // only DamageSourceResult.Applied does apply damage to the victim otherwise return zero
         if (source !is DamageSourceResult.Applied) {
-            log.warn("${source.javaClass.simpleName} is not DamageSourceResult.Applied - dealing no damage")
+            if (source !is DamageSourceResult) {
+                log.error("Expected DamageSourceResult but got ${source.javaClass.simpleName} - dealing no damage")
+            }
             return DamageReductionResult.zero()
         }
 

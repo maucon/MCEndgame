@@ -240,7 +240,7 @@ class VanillaDamageGameTest {
         LOG.info("Testing vanilla skeleton arrow damage against a player")
         val skeleton = helper.level.createEntity(EntityTypes.SKELETON)
         val arrow = helper.level.createEntity(EntityTypes.ARROW)
-        arrow.setBaseDamage(2.0)
+        arrow.deltaMovement = Vec3(1.0, 0.0, 0.0)
         helper.assertPlayerDamageScenarios("Skeleton arrow") { level, player ->
             val source = level.damageSources().arrow(arrow, skeleton)
             player.hurtServer(level, source, 2.0f)

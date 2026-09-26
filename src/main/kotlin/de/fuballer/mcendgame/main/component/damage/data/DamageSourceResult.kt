@@ -23,7 +23,6 @@ sealed class DamageSourceResult(damageSource: DamageSource) : DamageSource(
     }
 
     class ZeroDamage(
-        val damageCalculationCommand: DamageCalculationCommand, // FIXME check
         damageSource: DamageSource
     ) : DamageSourceResult(damageSource)
 

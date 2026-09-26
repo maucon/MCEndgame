@@ -4,9 +4,9 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribut
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
+import de.fuballer.mcendgame.main.component.damage.DamageCategory
 import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
 import de.fuballer.mcendgame.main.component.damage.data.CustomDamageContext
-import de.fuballer.mcendgame.main.component.damage.DamageCategory
 import de.fuballer.mcendgame.main.component.damage.data.DamageSourceDraft
 import de.fuballer.mcendgame.main.component.damage.data.IncomingDamage
 import de.fuballer.mcendgame.main.component.damage.data.VanillaDamageContext
@@ -54,7 +54,7 @@ object DamageDealing {
     ) = dealDamage(
         CustomDamageTypes.SPELL,
         DamageCategory.SPELL_DAMAGE,
-        flatDamage.toFloat(), // mock value, spell damage will be calculated by entities spell damage
+        69f, // mock value, spell damage will be calculated by entities spell damage
         causingEntity,
         directEntity,
         extraAttributes = listOf(

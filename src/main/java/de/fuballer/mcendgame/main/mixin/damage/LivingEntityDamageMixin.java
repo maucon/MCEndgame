@@ -223,7 +223,7 @@ public abstract class LivingEntityDamageMixin {
     }
 
     @Unique
-    protected void callApplyDamage(ServerLevel level, DamageSource source, float dmg) {
+    private void callApplyDamage(ServerLevel level, DamageSource source, float dmg) {
         LivingEntity this_ = (LivingEntity) (Object) this;
 
         Entity entity;
@@ -232,18 +232,18 @@ public abstract class LivingEntityDamageMixin {
         }
 
         //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-        var damageOptional = DamageService.INSTANCE.applyDamage(this_, source, dmg);
+        var damageOptional = DamageService.INSTANCE.applyDamage(this_, source);
         if (damageOptional.isEmpty()) {
             return;
         }
 
-        System.out.println(damageOptional.get() + " : " + dmg);
         dmg = damageOptional.get();
-        var originalDamage = dmg;
+        System.out.println("LivingEntityDamageMixin::applyDamage: dmg=" + dmg);
         //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
         //dmg = this_.getDamageAfterArmorAbsorb(source, dmg);
         //float originalDamage = dmg = this_.getDamageAfterMagicAbsorb(source, dmg);
+        float originalDamage = dmg;
         dmg = Math.max(dmg - this_.getAbsorptionAmount(), 0.0f);
         this_.setAbsorptionAmount(this_.getAbsorptionAmount() - (originalDamage - dmg));
         float absorbedDamage = originalDamage - dmg;
