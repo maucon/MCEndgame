@@ -88,24 +88,23 @@ object DamageService {
         log.info("applyDamage - ${victim.javaClass.simpleName} - ${source.javaClass.simpleName} - damage: $damage")
         var dmg = damage
 
-        val damageReductionResult = calculateIncomingDamage(victim, source, dmg)
-        val reducedTotal = damageReductionResult.damage
-        val resistedTotal = damageReductionResult.resistedDamage
+        val (damageTotal, resistedTotal) = calculateIncomingDamage(victim, source, dmg)
+        if (damageTotal <= 0) return Optional.empty()
 
         victim.setLastHitWasApplied(true)
 
-        var damageToApply = reducedTotal
+        var damageToApply = damageTotal
         var damageResisted = resistedTotal
         if (victim.isInInvulnerabilityFrames()) {
-            val isStronger = reducedTotal > victim.getLastHurt()
+            val isStronger = damageTotal > victim.getLastHurt()
             victim.setLastHitWasApplied(isStronger)
 
             if (!isStronger) return Optional.empty()
 
-            damageToApply = reducedTotal - victim.getLastHurt()
+            damageToApply = damageTotal - victim.getLastHurt()
             damageResisted = max(0f, resistedTotal - victim.getLastResisted())
         }
-        victim.setLastHurt(reducedTotal)
+        victim.setLastHurt(damageTotal)
         victim.setLastResisted(resistedTotal)
 
         dmg = damageToApply
@@ -179,10 +178,10 @@ object DamageService {
             source.vanillaDamageContext.getDifficultyScaling().scaleDamage(reduced)
         }
 
-        // TODO
-        combinedDamage = (combinedDamage + cmd.flatDamageTaken.sum().toFloat()).coerceAtLeast(0F)
+        val cmd = source.damageCalculationCommand
+        val afterDamageReduction = scaledDamageInstance.getAfterDamageReduction(victim, source, cmd)
 
-
-        return scaledDamageInstance.getAfterDamageReduction(victim, source, source.damageCalculationCommand)
+        val flatDamageTaken = cmd.flatDamageTaken.sum().toFloat()
+        return afterDamageReduction + DamageReductionResult(flatDamageTaken, 0f)
     }
 }
