@@ -1,6 +1,7 @@
-package de.fuballer.mcendgame.main.component.damage.new1
+package de.fuballer.mcendgame.main.component.damage.data
 
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
+import de.fuballer.mcendgame.main.component.damage.DamageCategory
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.LivingEntity
 

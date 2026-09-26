@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.mixin.damage;
 
-import de.fuballer.mcendgame.main.component.damage.new1.DamageService;
-import de.fuballer.mcendgame.main.component.damage.new1.DamageSourceDraft;
+import de.fuballer.mcendgame.main.component.damage.DamageService;
+import de.fuballer.mcendgame.main.component.damage.data.DamageSourceDraft;
 import de.fuballer.mcendgame.main.mixin.access.EntityAccessMixin;
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension;
 import net.minecraft.core.component.DataComponents;
@@ -105,14 +105,14 @@ public abstract class LivingEntityDamageMixin {
         draftSource.getVanillaDamageContext().setBlocked(blocked);
         //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
         if (source.is(DamageTypeTags.IS_FREEZING) && this_.is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES)) {
-            damage *= 5.0f;
+            //damage *= 5.0f;
             //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
             draftSource.getVanillaDamageContext().addVictimMoreDamageTaken(4);
             //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
         }
         if (source.is(DamageTypeTags.DAMAGES_HELMET) && !this_.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
             this_.hurtHelmet(source, damage);
-            damage *= 0.75f;
+            //damage *= 0.75f;
             //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
             draftSource.getVanillaDamageContext().addVictimMoreDamageTaken(-0.25);
             //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑

@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.mixin.damage;
 
 import de.fuballer.mcendgame.main.component.damage.DifficultyScaling;
-import de.fuballer.mcendgame.main.component.damage.new1.DamageService;
-import de.fuballer.mcendgame.main.component.damage.new1.DamageSourceDraft;
+import de.fuballer.mcendgame.main.component.damage.DamageService;
+import de.fuballer.mcendgame.main.component.damage.data.DamageSourceDraft;
 import de.fuballer.mcendgame.main.mixin.access.PlayerAccessMixin;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;

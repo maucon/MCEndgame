@@ -5,7 +5,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
-import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealSpellDamage
+import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealSpellDamage
 import de.fuballer.mcendgame.main.component.particle.MoveToTargetFlameParticleEffect
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.isEnemy
@@ -121,7 +121,7 @@ class BurnEnemyOnWalkService(
 
         scheduler.delayed(sparkTravelTime) {
             if (target.isDeadOrDying) return@delayed
-            if (!target.dealSpellDamage(spellPercent, entity)) return@delayed
+            if (!target.dealSpellDamage(entity, damageMultiplier = spellPercent)) return@delayed
             target.igniteForSeconds(BurnEnemyOnWalkSettings.BURN_DURATION)
         }
     }

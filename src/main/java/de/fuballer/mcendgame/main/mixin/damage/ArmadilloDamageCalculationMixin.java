@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.mixin.damage;
 
-import de.fuballer.mcendgame.main.component.damage.new1.DamageSourceDraft;
+import de.fuballer.mcendgame.main.component.damage.data.DamageSourceDraft;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;

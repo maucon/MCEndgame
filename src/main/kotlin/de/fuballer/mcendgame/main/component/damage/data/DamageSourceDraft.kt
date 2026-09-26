@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.damage.new1
+package de.fuballer.mcendgame.main.component.damage.data
 
 import net.minecraft.core.Holder
 import net.minecraft.world.damagesource.DamageSource
@@ -9,9 +9,9 @@ class DamageSourceDraft(
     val vanillaDamageContext: VanillaDamageContext,
     val customDamageContext: CustomDamageContext,
     type: Holder<DamageType>,
-    source: Entity?,
-    attacker: Entity?
-) : DamageSource(type, source, attacker) {
+    directEntity: Entity?,
+    causingEntity: Entity?
+) : DamageSource(type, directEntity, causingEntity) {
     constructor(
         vanillaDamageContext: VanillaDamageContext,
         customDamageContext: CustomDamageContext,

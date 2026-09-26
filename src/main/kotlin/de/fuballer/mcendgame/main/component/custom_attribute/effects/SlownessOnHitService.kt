@@ -18,7 +18,7 @@ class SlownessOnHitService {
 
         val attributes = attacker.getAllCustomAttributes()[CustomAttributeTypes.SLOWNESS_ON_HIT] ?: return
 
-        val damaged = event.damaged
+        val damaged = event.victim
         attributes.forEach {
             val duration = it.rolls[1].asIntRoll().getValue() * 20
             val amplifier = it.rolls[0].asIntRoll().getValue() - 1

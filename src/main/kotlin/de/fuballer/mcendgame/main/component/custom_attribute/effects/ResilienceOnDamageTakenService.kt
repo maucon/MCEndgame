@@ -15,7 +15,7 @@ class ResilienceOnDamageTakenService {
     fun on(event: LivingEntityDamagedEvent) {
         if (event.amount <= 0) return
 
-        val damaged = event.damaged
+        val damaged = event.victim
         val attributes = damaged.getAllCustomAttributes()[CustomAttributeTypes.RESILIENCE_ON_DAMAGE_TAKEN] ?: return
 
         val currentResilience = damaged.getEffect(CustomStatusEffects.RESILIENCE)?.amplifier ?: -1

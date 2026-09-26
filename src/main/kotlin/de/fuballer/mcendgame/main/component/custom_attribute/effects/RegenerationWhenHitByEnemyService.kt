@@ -14,7 +14,7 @@ import net.minecraft.world.effect.MobEffects
 class RegenerationWhenHitByEnemyService {
     @EventSubscriber(sync = true)
     fun on(event: LivingEntityDamagedEvent) {
-        val damaged = event.damaged
+        val damaged = event.victim
         val attacker = event.damageSource.entity ?: return
         if (!damaged.isEnemy(attacker)) return
 
