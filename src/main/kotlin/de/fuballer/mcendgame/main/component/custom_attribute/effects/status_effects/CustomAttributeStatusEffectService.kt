@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.custom_attribute.effects.status_effects
 
 import de.fuballer.mcendgame.main.component.status_effect.CustomStatusEffects
+import de.fuballer.mcendgame.main.component.status_effect.HowlOfTheWolfEffect
 import de.fuballer.mcendgame.main.component.status_effect.MoltenRoarEffect
 import de.fuballer.mcendgame.main.component.status_effect.ResilienceEffect
 import de.fuballer.mcendgame.main.component.status_effect.VerdantEchoEffect
@@ -16,6 +17,7 @@ private val EFFECTS = mapOf(
     CustomStatusEffects.MOLTEN_ROAR to MoltenRoarEffect::getCustomAttributes,
     CustomStatusEffects.RESILIENCE to ResilienceEffect::getCustomAttributes,
     CustomStatusEffects.VERDANT_ECHO to VerdantEchoEffect::getCustomAttributes,
+    CustomStatusEffects.HOWL_OF_THE_WOLF to HowlOfTheWolfEffect::getCustomAttributes,
     CustomStatusEffects.BLESSING_OF_THE_EAGLE to BlessingOfTheEagleEffect::getCustomAttributes,
     CustomStatusEffects.BLESSING_OF_THE_RHINO to BlessingOfTheRhinoEffect::getCustomAttributes,
     CustomStatusEffects.BLESSING_OF_THE_SERPENT to BlessingOfTheSerpentEffect::getCustomAttributes,
