@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesHornItem
 import de.fuballer.mcendgame.main.component.item.custom.misc.horn.command.HornUseCommand
 import de.fuballer.mcendgame.main.component.status_effect.CustomStatusEffects
 import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.LivingEntity
@@ -29,7 +30,7 @@ class VerdantEcho(
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.HAND
 
     override fun onUse(
-        world: Level,
+        world: ServerLevel,
         user: LivingEntity,
         cmd: HornUseCommand,
     ) {

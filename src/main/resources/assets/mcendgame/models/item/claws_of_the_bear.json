@@ -1,7 +1,7 @@
 {
 	"format_version": "1.21.11",
 	"credit": "Made with Blockbench",
-	"parent": "item/handhel",
+	"parent": "item/handheld",
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "mcendgame:item/claws_of_the_bear_righthand",

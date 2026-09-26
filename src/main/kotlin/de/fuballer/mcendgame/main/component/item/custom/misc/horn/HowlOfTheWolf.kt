@@ -12,6 +12,7 @@ import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDu
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setCompanion
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setDungeonEnemy
 import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.LivingEntity
@@ -38,7 +39,7 @@ class HowlOfTheWolf(
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.HAND
 
     override fun onUse(
-        world: Level,
+        world: ServerLevel,
         user: LivingEntity,
         cmd: HornUseCommand,
     ) {

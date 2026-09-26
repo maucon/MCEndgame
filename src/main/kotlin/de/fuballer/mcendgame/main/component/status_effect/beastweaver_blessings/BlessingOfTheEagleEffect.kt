@@ -16,7 +16,7 @@ class BlessingOfTheEagleEffect : MobEffect(MobEffectCategory.BENEFICIAL, Beastwe
             CustomAttribute(
                 CustomAttributeTypes.CRITICAL_DAMAGE_MULTIPLIER,
                 0,
-                DoubleRoll(DoubleBounds(amplifier * 0.2)),
+                DoubleRoll(DoubleBounds((amplifier + 1) * 0.2)),
             )
         )
     }

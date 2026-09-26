@@ -59,6 +59,12 @@ class VanillaAttributesDuringConditionService {
             return
         }
 
+        val activeKeys = attributes.map { "${attributeTypeKey}_${it.id}" }.toSet()
+        attributeInstance.modifiers
+            .filter { it.id.path.startsWith("${attributeTypeKey}_") }
+            .filter { it.id.path !in activeKeys }
+            .forEach { attributeInstance.removeModifier(it) }
+
         attributes.forEach {
             val key = "${attributeTypeKey}_${it.id}"
             val identifier = IdentifierUtil.default(key)
