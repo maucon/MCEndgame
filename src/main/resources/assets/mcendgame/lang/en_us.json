@@ -306,7 +306,6 @@
   "attribute.mcendgame.increased_healing": "%s%% %s Healing",
   "attribute.mcendgame.more_healing": " %s%% %s Healing",
   "attribute.mcendgame.chance_to_heal_more": " %s%% Chance to Heal %s%% %s",
-  "attribute.mcendgame.no_attack_damage": " Deal no Attack Damage",
 
   "effect.mcendgame.fury": "Fury",
   "effect.mcendgame.resilience": "Resilience",

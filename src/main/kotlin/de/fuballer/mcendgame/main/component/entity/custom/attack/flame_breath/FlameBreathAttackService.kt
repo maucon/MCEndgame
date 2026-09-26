@@ -1,7 +1,5 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.flame_breath
 
-import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
-import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealSpellDamage
 import de.fuballer.mcendgame.main.component.particle.HorizontalFlameBreathParticleEffect
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
@@ -21,7 +19,6 @@ import kotlin.math.min
 import kotlin.random.Random
 
 private val HORIZONTAL_VECTOR = Vec3(1.0, 0.0, 1.0)
-private val NO_AD_ATTRIBUTE = CustomAttribute(CustomAttributeTypes.NO_ATTACK_DAMAGE)
 
 @Injectable
 class FlameBreathAttackService(

@@ -100,7 +100,7 @@ object DamageService {
             val isStronger = reducedTotal > victim.getLastHurt()
             victim.setLastHitWasApplied(isStronger)
 
-            if (!isStronger) return Optional.empty();
+            if (!isStronger) return Optional.empty()
 
             damageToApply = reducedTotal - victim.getLastHurt()
             damageResisted = max(0f, resistedTotal - victim.getLastResisted())

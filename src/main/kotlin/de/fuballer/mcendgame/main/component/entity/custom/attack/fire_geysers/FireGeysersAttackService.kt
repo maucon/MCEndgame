@@ -1,7 +1,5 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.fire_geysers
 
-import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
-import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealSpellDamage
 import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
@@ -24,8 +22,6 @@ import net.minecraft.world.phys.AABB
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
-
-private val NO_AD_ATTRIBUTE = CustomAttribute(CustomAttributeTypes.NO_ATTACK_DAMAGE)
 
 @Injectable
 class FireGeysersAttackService(
