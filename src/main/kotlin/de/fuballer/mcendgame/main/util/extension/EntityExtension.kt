@@ -6,11 +6,13 @@ import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExt
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.hasBlockPhasing
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
+import de.fuballer.mcendgame.main.component.entity.custom.goals.predicates.ShouldBeAttackedByCompanionsPredicate
 import de.fuballer.mcendgame.main.component.item.custom.armor.interfaces.ItemWithCape
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.messaging.misc.GainStatusEffectCommand
 import de.fuballer.mcendgame.main.util.extension.Vec3Extension.angleDeg
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getTargetSelector
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
 import de.maucon.mauconframework.command.CommandGateway
 import net.minecraft.core.BlockPos
@@ -19,11 +21,12 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.effect.MobEffectInstance
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.OwnableEntity
+import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal
 import net.minecraft.world.entity.animal.Animal
 import net.minecraft.world.entity.animal.golem.IronGolem
 import net.minecraft.world.entity.decoration.ArmorStand
@@ -44,6 +47,8 @@ object EntityExtension {
     fun LivingEntity.isAlly(entity: Entity): Boolean {
         if (this == entity) return true
 
+        if (entity is LivingEntity && isDungeonEnemy() != entity.isDungeonEnemy()) return false
+
         if (this.isOrIsTameableOf(Player::class.java) && entity.isOrIsTameableOf(Player::class.java)) return true
         if (this.isOrIsTameableOf(Enemy::class.java) && entity.isOrIsTameableOf(Enemy::class.java)) return true
 
@@ -53,6 +58,8 @@ object EntityExtension {
     fun LivingEntity.isEnemy(entity: Entity): Boolean {
         if (this == entity) return false
 
+        if (entity is LivingEntity && isDungeonEnemy() != entity.isDungeonEnemy()) return true
+
         if (this.isOrIsTameableOf(Player::class.java) && entity.isPlayerEnemy()) return true
         if (this.isPlayerEnemy() && entity.isOrIsTameableOf(Player::class.java)) return true
 
@@ -60,6 +67,7 @@ object EntityExtension {
     }
 
     private fun Entity.isPlayerEnemy(): Boolean {
+        if (this is LivingEntity && isDungeonEnemy()) return true
         if (isOrIsTameableOf(Enemy::class.java)) return true
         if (this is TrainingDummyEntity) return true
         return false
@@ -271,4 +279,35 @@ object EntityExtension {
     }
 
     fun LivingEntity.getHealthPercentage() = health / maxHealth
+
+    fun TamableAnimal.updateCompanionGoals(owner: LivingEntity) {
+        val targetSelector = getTargetSelector()
+
+        targetSelector.availableGoals
+            .map { it.goal }
+            .toList()
+            .forEach(targetSelector::removeGoal)
+
+        targetSelector.addGoal(1, OwnerHurtByTargetGoal(this))
+        targetSelector.addGoal(2, OwnerHurtTargetGoal(this))
+        targetSelector.addGoal(
+            3,
+            NearestAttackableTargetGoal(
+                this,
+                LivingEntity::class.java,
+                10,
+                false,
+                false,
+                ShouldBeAttackedByCompanionsPredicate(owner.isDungeonEnemy()),
+            )
+        )
+    }
+
+    fun LivingEntity.isDualWielding(): Boolean {
+        val mainHandStack = getItemInHand(InteractionHand.MAIN_HAND)
+        if (mainHandStack.isEmpty) return false
+        val offHandStack = getItemInHand(InteractionHand.OFF_HAND)
+        if (offHandStack.isEmpty) return false
+        return mainHandStack.item == offHandStack.item
+    }
 }

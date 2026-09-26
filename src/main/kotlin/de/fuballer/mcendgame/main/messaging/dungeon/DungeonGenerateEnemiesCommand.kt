@@ -17,6 +17,7 @@ data class DungeonGenerateEnemiesCommand(
     var uniqueEquipmentProbability: Double = EquipmentGenerationSettings.getUniqueEquipmentBaseProbability(dungeonWorld.getDungeonLevel()),
     var lootGoblinLuckyAttributes: Boolean = false,
     var additionalAttributeProbabilities: MutableList<Double> = mutableListOf(),
+    var specialEnemiesDisabled: Boolean = false,
 ) {
     companion object {
         fun of(

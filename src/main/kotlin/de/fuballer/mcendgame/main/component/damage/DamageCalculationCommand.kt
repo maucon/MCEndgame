@@ -41,6 +41,7 @@ data class DamageCalculationCommand(
     val increasedDamageTaken: MutableList<Double> = mutableListOf(),
     val moreDamageTaken: MutableList<Double> = mutableListOf(),
     val spellResistance: MutableList<Double> = mutableListOf(),
+    val flatDamageTaken: MutableList<Double> = mutableListOf(),
 
     val criticalDamageMulti: MutableList<Double> = mutableListOf(),
     val applyCritToSpellDamage: Boolean = false,

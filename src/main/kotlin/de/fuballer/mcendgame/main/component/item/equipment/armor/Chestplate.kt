@@ -55,6 +55,9 @@ enum class Chestplate(
     ),
     BROODMOTHER(
         CustomArmorItems.BROODMOTHER,
+    ),
+    SKIN_OF_THE_RHINO(
+        CustomArmorItems.SKIN_OF_THE_RHINO,
     );
 
     override val slot = EquipmentSlotGroup.CHEST

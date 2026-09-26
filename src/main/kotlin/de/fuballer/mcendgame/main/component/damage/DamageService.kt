@@ -179,6 +179,10 @@ object DamageService {
             source.vanillaDamageContext.getDifficultyScaling().scaleDamage(reduced)
         }
 
+        // TODO
+        combinedDamage = (combinedDamage + cmd.flatDamageTaken.sum().toFloat()).coerceAtLeast(0F)
+
+
         return scaledDamageInstance.getAfterDamageReduction(victim, source, source.damageCalculationCommand)
     }
 }

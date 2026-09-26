@@ -25,7 +25,7 @@ object LinkSettings {
     val LINK_ORIGIN_COLOR = Color(40, 5, 60, 200)
     val LINK_TARGET_COLOR = Color(120, 50, 220, 40)
     fun getColor(percentage: Double): Int {
-        var p = percentage.coerceIn(0.0, 1.0)
+        val p = percentage.coerceIn(0.0, 1.0)
         val r = (LINK_ORIGIN_COLOR.red + (LINK_TARGET_COLOR.red - LINK_ORIGIN_COLOR.red) * p).roundToInt()
         val g = (LINK_ORIGIN_COLOR.green + (LINK_TARGET_COLOR.green - LINK_ORIGIN_COLOR.green) * p).roundToInt()
         val b = (LINK_ORIGIN_COLOR.blue + (LINK_TARGET_COLOR.blue - LINK_ORIGIN_COLOR.blue) * p).roundToInt()

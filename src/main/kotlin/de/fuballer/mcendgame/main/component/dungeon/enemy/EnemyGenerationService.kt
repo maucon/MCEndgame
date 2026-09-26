@@ -1,11 +1,16 @@
 package de.fuballer.mcendgame.main.component.dungeon.enemy
 
+import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.addCustomAttribute
 import de.fuballer.mcendgame.main.component.dungeon.enemy.equipment.EquipmentGenerationService
 import de.fuballer.mcendgame.main.component.dungeon.enemy.potion_effect.PotionEffectService
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
+import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditType
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemiesGeneratedCommand
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateBanditsCommand
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateEnemiesCommand
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setDungeonEnemy
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setElite
@@ -16,6 +21,7 @@ import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -28,6 +34,7 @@ class EnemyGenerationService(
 ) {
     fun generate(
         dungeonWorld: ServerLevel,
+        seedFirstTime: Boolean,
         level: Int,
         enemyTypes: List<RandomOption<EntityTypeStats>>,
         applyMisc: (List<LivingEntity>) -> Unit,
@@ -41,6 +48,7 @@ class EnemyGenerationService(
         val entities = cmd.spawnPositions.map {
             spawnEnemy(
                 dungeonWorld,
+                seedFirstTime,
                 level,
                 enemyTypes,
                 it,
@@ -49,29 +57,17 @@ class EnemyGenerationService(
             )
         }.toMutableList()
 
-        entities.addAll(cmd.eliteSpawnPositions.map {
-            spawnEnemy(
+        if (!cmd.specialEnemiesDisabled && !isEncounter) entities.addAll(
+            generateSpecialEnemies(
                 dungeonWorld,
+                seedFirstTime,
                 level,
                 enemyTypes,
-                it,
-                random,
+                spawnPositions,
                 cmd,
-                isForcedElite = true,
-            )
-        })
-
-        entities.addAll(cmd.lootGoblinSpawnPositions.map {
-            spawnEnemy(
-                dungeonWorld,
-                level,
-                enemyTypes,
-                it,
                 random,
-                cmd,
-                isForcedLootGoblin = true,
             )
-        })
+        )
 
         applyMisc(entities)
 
@@ -81,8 +77,57 @@ class EnemyGenerationService(
         return entities
     }
 
+    private fun generateSpecialEnemies(
+        dungeonWorld: ServerLevel,
+        seedFirstTime: Boolean,
+        level: Int,
+        enemyTypes: List<RandomOption<EntityTypeStats>>,
+        spawnPositions: List<SpawnPosition>,
+        cmd: DungeonGenerateEnemiesCommand,
+        random: Random,
+    ): Iterable<LivingEntity> {
+        val specialEnemies = cmd.eliteSpawnPositions.map {
+            spawnEnemy(
+                dungeonWorld,
+                seedFirstTime,
+                level,
+                enemyTypes,
+                it,
+                random,
+                cmd,
+                isForcedElite = true,
+            )
+        }.toMutableList()
+
+        specialEnemies.addAll(cmd.lootGoblinSpawnPositions.map {
+            spawnEnemy(
+                dungeonWorld,
+                seedFirstTime,
+                level,
+                enemyTypes,
+                it,
+                random,
+                cmd,
+                isForcedLootGoblin = true,
+            )
+        })
+
+        specialEnemies.addAll(
+            spawnBandits(
+                dungeonWorld,
+                seedFirstTime,
+                level,
+                spawnPositions,
+                random,
+            )
+        )
+
+        return specialEnemies
+    }
+
     private fun spawnEnemy(
         dungeonWorld: ServerLevel,
+        seedFirstTime: Boolean,
         level: Int,
         types: List<RandomOption<EntityTypeStats>>,
         location: SpawnPosition,
@@ -91,7 +136,8 @@ class EnemyGenerationService(
         isForcedElite: Boolean = false,
         isForcedLootGoblin: Boolean = false,
     ): LivingEntity {
-        val isLootGoblin = isForcedLootGoblin || EnemyGenerationSettings.randomLootGoblin(random)
+        val isLootGoblin = !generateEnemiesCommand.specialEnemiesDisabled
+                && (isForcedLootGoblin || (seedFirstTime && EnemyGenerationSettings.randomLootGoblin(random)))
 
         val validTypes = if (!isLootGoblin) types else types.filter { it.option.equipmentClass.isNot(EnemyEquipmentClass.NO_ARMOR) }
         val type = RandomUtil.pickOne(validTypes, random).option
@@ -102,7 +148,8 @@ class EnemyGenerationService(
 
         if (isLootGoblin) enemyEntity.setLootGoblin()
 
-        val isElite = isForcedElite || EnemyGenerationSettings.randomElite(random)
+        val isElite = !generateEnemiesCommand.specialEnemiesDisabled
+                && (isForcedElite || (seedFirstTime && EnemyGenerationSettings.randomElite(random)))
         if (isElite) {
             enemyEntity.setElite()
             applyEliteEffects(enemyEntity)
@@ -145,5 +192,67 @@ class EnemyGenerationService(
     ) {
         val scale = if (isElite) EnemyGenerationSettings.ELITE_SCALE else type.getRandomScale(random)
         entity.getAttribute(Attributes.SCALE)?.baseValue = scale
+    }
+
+    private fun spawnBandits(
+        dungeonWorld: ServerLevel,
+        seedFirstTime: Boolean,
+        level: Int,
+        spawnPositions: List<SpawnPosition>,
+        random: Random,
+    ): Iterable<BanditEntity> {
+        val generateBanditsCommand = DungeonGenerateBanditsCommand(dungeonWorld, spawnPositions.toMutableList())
+        if (seedFirstTime) generateBanditsCommand.addBandits(EnemyGenerationSettings.randomBanditCount(level, random))
+        val cmd = CommandGateway.apply(generateBanditsCommand)
+
+        return if (cmd.pairs) cmd.chosenSpawnPositions.flatMap { spawnBanditPair(dungeonWorld, it, level, random) }
+        else cmd.chosenSpawnPositions.map { spawnBandit(dungeonWorld, it, level, random) }
+    }
+
+    private fun spawnBandit(
+        dungeonWorld: ServerLevel,
+        location: SpawnPosition,
+        level: Int,
+        random: Random,
+    ): BanditEntity {
+        val bandit = CustomEntities.BANDIT.spawn(dungeonWorld, location.blockPos(), EntitySpawnReason.STRUCTURE)
+            ?: throw Exception("Couldn't spawn bandit, in world: $dungeonWorld")
+        bandit.snapTo(
+            location.pos.x + 0.5,
+            location.pos.y.toDouble(),
+            location.pos.z + 0.5,
+            location.rot.toFloat(),
+            0F,
+        )
+
+        bandit.setDungeonEnemy()
+        bandit.setPersistenceRequired()
+
+        val banditType = BanditType.entries.random(random)
+        bandit.setBanditType(banditType)
+
+        equipmentGenerationService.setBanditEquipment(bandit, banditType, level, dungeonWorld.server, random)
+
+        banditType.dungeonBalanceAttributes().forEach { attribute ->
+            bandit.addCustomAttribute(attribute)
+        }
+
+        bandit.heal(1000F)
+        return bandit
+    }
+
+    private fun spawnBanditPair(
+        dungeonWorld: ServerLevel,
+        location: SpawnPosition,
+        level: Int,
+        random: Random,
+    ): Iterable<BanditEntity> {
+        val bandit1 = spawnBandit(dungeonWorld, location, level, random)
+        val bandit2 = spawnBandit(dungeonWorld, location, level, random)
+
+        bandit1.setPartner(bandit2)
+        bandit2.setPartner(bandit1)
+
+        return listOf(bandit1, bandit2)
     }
 }

@@ -15,8 +15,8 @@ class SuedeBoots(
 ) : UniqueAttributesItem(settings), HidePlayerModelPartArmor {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.DODGE, 0, DoubleBounds(0.1, 0.15)),
-        RollableCustomAttribute(CustomAttributeTypes.MAGIC_FIND, 0, IntBounds(3, 5)),
-        RollableCustomAttribute(VanillaAttributeTypes.INCREASED_MOVEMENT_SPEED, 0, DoubleBounds(0.1, 0.2)),
+        RollableCustomAttribute(CustomAttributeTypes.MAGIC_FIND, 0, IntBounds(5, 8)),
+        RollableCustomAttribute(VanillaAttributeTypes.INCREASED_MOVEMENT_SPEED, 0, DoubleBounds(0.1, 0.15)),
         RollableCustomAttribute(CustomAttributeTypes.INCREASED_MOVEMENT_SPEED_AFTER_DODGING, 0, DoubleBounds(0.15, 0.25), IntBounds(3, 5)),
     )
 

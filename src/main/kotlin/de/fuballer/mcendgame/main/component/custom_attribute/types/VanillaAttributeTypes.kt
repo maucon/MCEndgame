@@ -75,6 +75,15 @@ object VanillaAttributeTypes {
         AttributeAffinities.BENEFICIAL,
         SignBasedKeywords.INCREASED
     )
+    val MORE_ATTACK_DAMAGE = VanillaAttributeType(
+        Attributes.ATTACK_DAMAGE,
+        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,
+        "more_attack_damage",
+        AttributeFormats.PERCENT_ROLL,
+        AttributeFormats.PERCENT_BOUNDS,
+        AttributeAffinities.BENEFICIAL,
+        SignBasedKeywords.MORE
+    )
     val INCREASED_ATTACK_SPEED = VanillaAttributeType(
         Attributes.ATTACK_SPEED,
         AttributeModifier.Operation.ADD_MULTIPLIED_BASE,

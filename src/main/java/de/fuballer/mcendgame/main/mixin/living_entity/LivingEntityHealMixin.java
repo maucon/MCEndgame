@@ -9,11 +9,11 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityHealMixin {
-    @ModifyVariable(method = "heal(F)V", at = @At("HEAD"), ordinal = 0, argsOnly = true)
-    float heal(float amount) {
+    @ModifyVariable(method = "heal(F)V", at = @At("HEAD"), argsOnly = true, name = "heal")
+    float heal(float heal) {
         var entity = (LivingEntity) (Object) this;
 
-        var command = new LivingEntityHealthRecoveryCommand(entity, amount);
+        var command = new LivingEntityHealthRecoveryCommand(entity, heal);
         var cmd = CommandGateway.INSTANCE.apply(command);
 
         return cmd.getFinalAmount();

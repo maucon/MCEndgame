@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.client.component.datagen
 
 import de.fuballer.mcendgame.main.component.biome.CustomBiomes
 import de.fuballer.mcendgame.main.component.dimension.CustomDimensions
+import de.fuballer.mcendgame.main.component.sound.CustomInstruments
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider
 import net.minecraft.core.HolderLookup
@@ -26,6 +27,10 @@ class CustomRegistryProvider(
         biomes.get(CustomBiomes.DESERT_DUNGEON)
             .ifPresent(entries::add)
         biomes.get(CustomBiomes.BEASTWEAVER_GROVE_DUNGEON)
+            .ifPresent(entries::add)
+
+        registries.lookupOrThrow(Registries.INSTRUMENT)
+            .get(CustomInstruments.HOWL_OF_THE_WOLF_HORN)
             .ifPresent(entries::add)
     }
 

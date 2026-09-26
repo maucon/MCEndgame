@@ -26,4 +26,17 @@ object EnemyLevelScalingSettings {
         CustomAttribute(VanillaAttributeTypes.ARMOR, roll = DoubleRoll(DoubleBounds(15 + 0.5 * level))),
         CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, roll = DoubleRoll(DoubleBounds(0.5 * level))),
     )
+
+    fun getBanditLevelAttributes(level: Int) = mutableListOf(
+        CustomAttribute(VanillaAttributeTypes.MORE_MAX_HEALTH, roll = DoubleRoll(DoubleBounds(0.1 * level))),
+        CustomAttribute(VanillaAttributeTypes.ARMOR, roll = DoubleRoll(DoubleBounds(0.5 * level))),
+        CustomAttribute(VanillaAttributeTypes.ARMOR_TOUGHNESS, roll = DoubleRoll(DoubleBounds(0.5 * level))),
+    ).also {
+        if (level <= 8) it.add(
+            CustomAttribute(
+                CustomAttributeTypes.MORE_SPELL_DAMAGE,
+                roll = DoubleRoll(DoubleBounds(-0.56 + 0.06 * level))
+            )
+        )
+    }
 }

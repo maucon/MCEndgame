@@ -12,6 +12,7 @@ class Emberchant(
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.INCREASED_SPELL_DAMAGE, 0, DoubleBounds(0.1, 0.2)),
         RollableCustomAttribute(CustomAttributeTypes.BURNING_ENEMIES_EXPLODE_WHEN_KILLED, 0, DoubleBounds(0.8, 1.2)),
+        RollableCustomAttribute(CustomAttributeTypes.SPELL_RESISTANCE, 0, DoubleBounds(0.05, 0.1)),
     )
 
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.HEAD

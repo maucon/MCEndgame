@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.client.component.datagen
 
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItemIds
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItemIds
+import de.fuballer.mcendgame.main.component.item.custom.misc.CustomMiscItemIds
 import de.fuballer.mcendgame.main.component.item.custom.tool.CustomToolItemIds
 import de.fuballer.mcendgame.main.component.item.custom.totem.TotemItemIds
 import de.fuballer.mcendgame.main.component.tags.CustomTags
@@ -24,6 +25,7 @@ class CustomItemTagProvider(
             .add(CustomToolItemIds.SERPENTS_FANG)
             .add(CustomToolItemIds.NIGHTREAVER)
             .add(CustomToolItemIds.RADIANT_DAWN)
+            .add(CustomToolItemIds.CLAWS_OF_THE_BEAR)
 
         builder(ItemTags.AXES)
             .add(CustomToolItemIds.FATESPLITTER)
@@ -35,6 +37,7 @@ class CustomItemTagProvider(
             .add(CustomArmorItemIds.WITHER_ROSE_HELMET)
             .add(CustomArmorItemIds.EMBERCHANT)
             .add(CustomArmorItemIds.ABYSSAL_MASK)
+            .add(CustomArmorItemIds.CROWN_OF_THE_STAG)
 
         builder(ItemTags.CHEST_ARMOR)
             .add(CustomArmorItemIds.BOUND_ABYSS)
@@ -43,6 +46,7 @@ class CustomItemTagProvider(
             .add(CustomArmorItemIds.VOIDWEAVER)
             .add(CustomArmorItemIds.WITHER_ROSE_CHESTPLATE)
             .add(CustomArmorItemIds.BROODMOTHER)
+            .add(CustomArmorItemIds.SKIN_OF_THE_RHINO)
 
         builder(ItemTags.LEG_ARMOR)
             .add(CustomArmorItemIds.LAMIAS_GIFT)
@@ -73,6 +77,12 @@ class CustomItemTagProvider(
         builder(CustomTags.SHIELD)
             .add(ItemIds.SHIELD)
             .add(CustomToolItemIds.GRUDGEBEARER)
+
+        builder(CustomTags.HORN)
+            .add(ItemIds.GOAT_HORN)
+            .add(CustomMiscItemIds.VERDANT_ECHO)
+            .add(CustomMiscItemIds.MOLTEN_ROAR)
+            .add(CustomMiscItemIds.FRIGID_CRY)
 
         builder(CustomTags.MACE)
             .add(ItemIds.MACE)

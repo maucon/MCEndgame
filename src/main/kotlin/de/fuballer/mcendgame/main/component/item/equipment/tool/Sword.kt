@@ -52,6 +52,9 @@ enum class Sword(
     ),
     RADIANT_DAWN(
         CustomToolItems.RADIANT_DAWN,
+    ),
+    CLAWS_OF_THE_BEAR(
+        CustomToolItems.CLAWS_OF_THE_BEAR,
     );
 
     override val slot = EquipmentSlotGroup.MAINHAND

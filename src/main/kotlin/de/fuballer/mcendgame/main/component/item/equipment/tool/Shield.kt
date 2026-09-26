@@ -140,17 +140,6 @@ enum class Shield(
         RandomOption(
             weight = 1000,
             TieredRollableCustomAttribute(
-                CustomAttributeTypes.PROJECTILE_DODGE,
-                listOf(
-                    LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(0.02, 0.04))),
-                    LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, AttributeTierData(2, DoubleBounds(0.04, 0.06))),
-                    LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, AttributeTierData(1, DoubleBounds(0.06, 0.08))),
-                )
-            )
-        ),
-        RandomOption(
-            weight = 1000,
-            TieredRollableCustomAttribute(
                 CustomAttributeTypes.MORE_DAMAGE_TAKEN,
                 listOf(
                     LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(-0.025, -0.01))),

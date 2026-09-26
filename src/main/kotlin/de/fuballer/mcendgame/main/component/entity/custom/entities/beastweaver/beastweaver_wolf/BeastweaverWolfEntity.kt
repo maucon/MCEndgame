@@ -7,12 +7,9 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ai.goal.FloatGoal
-import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal
+import net.minecraft.world.entity.ai.goal.*
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
 import net.minecraft.world.entity.animal.wolf.Wolf
-import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -20,7 +17,10 @@ import net.minecraft.world.level.Level
 class BeastweaverWolfEntity(
     type: EntityType<out BeastweaverWolfEntity>,
     level: Level,
-) : Wolf(type, level), Enemy {
+) : Wolf(type, level) {
+    var maxDuration = 500 + (random.nextDouble() * 50).toInt()
+    private var dieWithoutTarget = true
+
     companion object {
         fun createAttributes(): AttributeSupplier.Builder =
             createAnimalAttributes()
@@ -34,11 +34,13 @@ class BeastweaverWolfEntity(
         goalSelector.addGoal(1, FloatGoal(this))
         goalSelector.addGoal(2, LeapAtTargetGoal(this, 0.4F))
         goalSelector.addGoal(3, MeleeAttackGoal(this, 1.0, true))
+        goalSelector.addGoal(4, FollowOwnerGoal(this, 1.0, 10.0f, 2.0f))
+        goalSelector.addGoal(5, WaterAvoidingRandomStrollGoal(this, 1.0))
+        goalSelector.addGoal(6, LookAtPlayerGoal(this, Player::class.java, 8.0f))
+        goalSelector.addGoal(6, RandomLookAroundGoal(this))
 
         targetSelector.addGoal(4, NearestAttackableTargetGoal(this, Player::class.java, 10, false, false, null))
     }
-
-    private val maxDuration = 500 + random.nextDouble() * 50
 
     override fun baseTick() {
         super.baseTick()
@@ -46,9 +48,12 @@ class BeastweaverWolfEntity(
         val serverLevel = level() as? ServerLevel ?: return
         if (
             tickCount > maxDuration
-            || target?.isAlive != true
+            || (dieWithoutTarget && (target?.isAlive != true))
             || owner?.isAlive != true
-        ) kill(serverLevel)
+        ) {
+            owner = null
+            kill(serverLevel)
+        }
     }
 
     override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
@@ -63,4 +68,8 @@ class BeastweaverWolfEntity(
     override fun shouldTryTeleportToOwner() = false
 
     override fun isFood(itemStack: ItemStack) = false
+
+    fun setDieWithoutTarget(dieWithoutTarget: Boolean) {
+        this.dieWithoutTarget = dieWithoutTarget
+    }
 }

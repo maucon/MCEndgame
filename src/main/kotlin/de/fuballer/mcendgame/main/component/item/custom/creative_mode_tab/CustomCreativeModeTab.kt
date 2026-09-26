@@ -47,6 +47,8 @@ object CustomCreativeModeTab {
                     output.accept(CustomArmorItems.WINDSTRIDER.defaultInstance)
                     output.accept(CustomArmorItems.BROODMOTHER.defaultInstance)
                     output.accept(CustomArmorItems.EMBERREIGN.defaultInstance)
+                    output.accept(CustomArmorItems.CROWN_OF_THE_STAG.defaultInstance)
+                    output.accept(CustomArmorItems.SKIN_OF_THE_RHINO.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(
@@ -62,12 +64,14 @@ object CustomCreativeModeTab {
                     output.accept(CustomToolItems.NIGHTREAVER.defaultInstance)
                     output.accept(CustomToolItems.GRAVEBREAKER.defaultInstance)
                     output.accept(CustomToolItems.RADIANT_DAWN.defaultInstance)
+                    output.accept(CustomToolItems.CLAWS_OF_THE_BEAR.defaultInstance)
                     output.accept(CustomToolItems.WINDSTRING.defaultInstance)
                     output.accept(CustomToolItems.HAILSTORM.defaultInstance)
                     output.accept(CustomToolItems.DUSK_PIERCER.defaultInstance)
                     output.accept(CustomMiscItems.VERDANT_ECHO.defaultInstance)
                     output.accept(CustomMiscItems.MOLTEN_ROAR.defaultInstance)
                     output.accept(CustomMiscItems.FRIGID_CRY.defaultInstance)
+                    output.accept(CustomMiscItems.HOWL_OF_THE_WOLF.defaultInstance)
                     output.accept(CustomToolItems.GRUDGEBEARER.defaultInstance)
                 }
         )
@@ -92,6 +96,9 @@ object CustomCreativeModeTab {
                     output.accept(AspectItems.ASPECT_OF_ANCESTORS.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_DUALITY.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_THE_GROVE.defaultInstance)
+                    output.accept(AspectItems.ASPECT_OF_OUTLAWS.defaultInstance)
+                    output.accept(AspectItems.ASPECT_OF_KIN.defaultInstance)
+                    output.accept(AspectItems.ASPECT_OF_ASCENSION.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(
@@ -106,6 +113,13 @@ object CustomCreativeModeTab {
                     output.accept(CrystalItems.REFORGE_CRYSTAL.defaultInstance)
                     output.accept(CrystalItems.CORRUPTION_CRYSTAL.defaultInstance)
                     output.accept(CrystalItems.IMITATION_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_FORCE_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_MOMENTUM_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_ENDURANCE_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_VITALITY_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_PRECISION_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_FOCUS_CRYSTAL.defaultInstance)
+                    output.accept(CrystalItems.SYNTHESIZED_COMMAND_CRYSTAL.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(

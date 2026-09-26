@@ -71,5 +71,8 @@ class AspectOfTheGrove(
         AspectItems.ASPECT_OF_EMINENCE,
         AspectItems.ASPECT_OF_ANCESTORS,
         AspectItems.ASPECT_OF_ZEAL,
+        AspectItems.ASPECT_OF_KIN,
+        AspectItems.ASPECT_OF_ASCENSION,
+        AspectItems.ASPECT_OF_OUTLAWS,
     )
 }

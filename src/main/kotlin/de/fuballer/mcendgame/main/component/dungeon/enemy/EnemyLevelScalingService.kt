@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.dungeon.enemy
 
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGeneratedEvent
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonBoss
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
@@ -20,6 +21,9 @@ class EnemyLevelScalingService {
         }
         EnemyLevelScalingSettings.getBossLevelAttributes(level).forEach { attribute ->
             dungeonWorld.addCustomAttribute(attribute) { it.isDungeonBoss() }
+        }
+        EnemyLevelScalingSettings.getBanditLevelAttributes(level).forEach { attribute ->
+            dungeonWorld.addCustomAttribute(attribute) { it is BanditEntity }
         }
     }
 }

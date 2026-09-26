@@ -7,7 +7,7 @@ class AspectOfTyranny(
     settings: Properties,
 ) : AspectItem(settings) {
     companion object {
-        const val ADDITIONAL_ELITES = 2
+        const val ADDITIONAL_ELITES = 3
     }
 
     override val tier = 2

@@ -19,6 +19,9 @@ enum class Horn(
     ),
     FRIGID_CRY(
         CustomMiscItems.FRIGID_CRY,
+    ),
+    HOWL_OF_THE_WOLF(
+        CustomMiscItems.HOWL_OF_THE_WOLF,
     );
 
     override val slot = EquipmentSlotGroup.HAND

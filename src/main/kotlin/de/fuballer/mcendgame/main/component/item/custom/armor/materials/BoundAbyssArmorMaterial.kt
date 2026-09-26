@@ -19,7 +19,7 @@ object BoundAbyssArmorMaterial : CustomArmorMaterial {
         ),
         15,
         SoundEvents.ARMOR_EQUIP_GENERIC,
-        1.0f,
+        3.0f,
         0.1f,
         ItemTags.REPAIRS_GOLD_ARMOR,
         registryKey

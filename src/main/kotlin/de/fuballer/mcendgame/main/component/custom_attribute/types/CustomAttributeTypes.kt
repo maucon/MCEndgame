@@ -24,6 +24,8 @@ object CustomAttributeTypes {
     val PROJECTILE_DODGE = CustomAttributeType("projectile_dodge", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
     val DODGED_PROJECTILE_REFLECT = CustomAttributeType("dodged_projectile_reflect", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
     val MORE_DAMAGE_TAKEN = CustomAttributeType("more_damage_taken", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
+    val MORE_PROJECTILE_DAMAGE_TAKEN =
+        CustomAttributeType("more_projectile_damage_taken", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
     val GAIN_ENEMY_ARMOR_ON_KILL =
         CustomAttributeType(
             "gain_enemy_armor_on_kill",
@@ -31,7 +33,9 @@ object CustomAttributeTypes {
             AttributeFormats.PERCENT_AND_INT_BOUNDS,
             AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL
         )
-    val MORE_DAMAGE_TAKEN_WHILE_ON_FIRE= CustomAttributeType("more_damage_taken_while_on_fire", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
+    val MORE_DAMAGE_TAKEN_WHILE_ON_FIRE =
+        CustomAttributeType("more_damage_taken_while_on_fire", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
+    val FLAT_DAMAGE_TAKEN = CustomAttributeType("flat_damage_taken", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.DETRIMENTAL)
 
     // OFFENSE
     val SPELL_DAMAGE = CustomAttributeType("spell_damage", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
@@ -42,6 +46,8 @@ object CustomAttributeTypes {
         CustomAttributeType("more_damage_per_missing_heart", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
     val INCREASED_SPELL_DAMAGE =
         CustomAttributeType("increased_spell_damage", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
+    val MORE_SPELL_DAMAGE =
+        CustomAttributeType("more_spell_damage", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
     val INCREASED_PROJECTILE_DAMAGE =
         CustomAttributeType("increased_projectile_damage", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
     val MORE_PROJECTILE_DAMAGE =
@@ -121,6 +127,13 @@ object CustomAttributeTypes {
         AttributeAffinities.BENEFICIAL,
         SignBasedKeywords.INCREASED
     )
+    val MORE_COMPANION_DAMAGE = CustomAttributeType(
+        "more_companion_damage",
+        AttributeFormats.PERCENT_ROLL,
+        AttributeFormats.PERCENT_BOUNDS,
+        AttributeAffinities.BENEFICIAL,
+        SignBasedKeywords.MORE
+    )
 
     // MISC
     val INCREASED_DAMAGE_AGAINST_FULL_HEALTH = CustomAttributeType(
@@ -138,8 +151,16 @@ object CustomAttributeTypes {
     val MORE_DAMAGE_TAKEN_WHILE_HIGH_HEALTH =
         CustomAttributeType("more_damage_taken_while_high_health", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
 
-    val TWINFIRE_DUAL_WIELD_MORE_DAMAGE = CustomAttributeType(
-        "twinfire_more_damage",
+    val MORE_DAMAGE_DUAL_WIELD = CustomAttributeType(
+        "more_damage_dual_wield",
+        AttributeFormats.SIGNED_PERCENT_ROLL,
+        AttributeFormats.PERCENT_BOUNDS,
+        AttributeAffinities.BENEFICIAL,
+        SignBasedKeywords.MORE
+    )
+
+    val MORE_ATTACK_SPEED_DUAL_WIELD = CustomAttributeType(
+        "more_attack_speed_dual_wield",
         AttributeFormats.SIGNED_PERCENT_ROLL,
         AttributeFormats.PERCENT_BOUNDS,
         AttributeAffinities.BENEFICIAL,
@@ -172,8 +193,10 @@ object CustomAttributeTypes {
     val MORE_HEALTH_RECOVERY =
         CustomAttributeType("more_health_recovery", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
 
-    val FURY_ON_KILL = CustomAttributeType("fury_on_kill", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.EMPTY)
-    val RESILIENCE_ON_DAMAGE_TAKEN = CustomAttributeType("resilience_on_damage_taken", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.EMPTY)
+    val FURY_ON_KILL = CustomAttributeType("fury_on_kill", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val RESILIENCE_ON_DAMAGE_TAKEN = CustomAttributeType("resilience_on_damage_taken", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val RESILIENCE_ON_DAMAGE_TAKEN_CHANCE =
+        CustomAttributeType("resilience_on_damage_taken_chance", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
 
     val GHOSTLY_APPEARANCE = CustomAttributeType("ghostly_appearance", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.EMPTY)
 
@@ -225,6 +248,8 @@ object CustomAttributeTypes {
         SignBasedKeywords.INCREASED
     )
 
+    val HEAL_ON_KILL = CustomAttributeType("heal_on_kill", AttributeFormats.DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val HEAL_ON_MELEE_HIT = CustomAttributeType("heal_on_melee_hit", AttributeFormats.DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
     val HEAL_NEARBY_ALLIES_ON_MELEE_HIT = CustomAttributeType(
         "heal_nearby_allies_on_melee_hit",
         AttributeFormats.INT_AND_DOUBLE_ROLL,
@@ -278,11 +303,23 @@ object CustomAttributeTypes {
     val SPEED_ON_KILL = CustomAttributeType("speed_on_kill", AttributeFormats.TWO_INT_ROLL, AttributeFormats.TWO_INT_BOUNDS, AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL)
     val HASTE_ON_KILL = CustomAttributeType("haste_on_kill", AttributeFormats.TWO_INT_ROLL, AttributeFormats.TWO_INT_BOUNDS, AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL)
 
+    // beastweaver blessings
+    val BLESSING_OF_THE_BEAR = CustomAttributeType("blessing_of_the_bear", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_EAGLE = CustomAttributeType("blessing_of_the_eagle", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_MAMMOTH = CustomAttributeType("blessing_of_the_mammoth", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_RHINO = CustomAttributeType("blessing_of_the_rhino", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_SERPENT = CustomAttributeType("blessing_of_the_serpent", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_STAG = CustomAttributeType("blessing_of_the_stag", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val BLESSING_OF_THE_WOLF = CustomAttributeType("blessing_of_the_wolf", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
+
     // for use on enemies (don't use for players)
     val DROP_INCREASED_LOOT =
         CustomAttributeType("drop_increased_loot", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.EMPTY, SignBasedKeywords.INCREASED)
     val DROP_MORE_LOOT =
         CustomAttributeType("drop_more_loot", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.EMPTY, SignBasedKeywords.MORE)
+
+    // no effect, only visual
+    val ATTRIBUTES_APPLY_IN_BOTH_HANDS = CustomAttributeType("attributes_apply_in_both_hands", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
 
     // region get by key
     fun getByKey(key: String): CustomAttributeType {

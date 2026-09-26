@@ -1,11 +1,13 @@
 package de.fuballer.mcendgame.main.component.dungeon.loot
 
+import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItemInterface
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossCrystalDropCommand
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemyDeathEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.EliteAspectDropCommand
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDropCommand
 import de.fuballer.mcendgame.main.messaging.misc.MagicFindCommand
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.getTotalCustomAttributeLootMultiplier
@@ -46,6 +48,10 @@ class LootService {
         val enemyEntity = event.enemyEntity
 
         if (enemyEntity.isDungeonBoss()) return
+        if (enemyEntity is BanditEntity) {
+            dropBanditLoot(serverWorld, enemyEntity)
+            return
+        }
 
         if (enemyEntity.isElite()) dropEliteLoot(serverWorld, enemyEntity)
 
@@ -88,12 +94,13 @@ class LootService {
         val boss = event.bossEntity
 
         val type = event.bossEntity.type
-        val possibleUniques = LootSettings.BOSS_UNIQUES[type] ?: return
-        possibleUniques.forEach {
-            if (Random.nextDouble() > it.value) return@forEach
-            val item = it.key
-            val itemStack = if (item is UniqueAttributesItemInterface) item.getRolledStack(item) else item.defaultInstance
+        val uniqueDrops = LootSettings.BOSS_UNIQUES[type] ?: return
+        if (Random.nextDouble() > uniqueDrops.probability) return
 
+        val uniqueItemDrop = RandomUtil.pickOne(uniqueDrops.items).option
+        val item = uniqueItemDrop.first
+        repeat(uniqueItemDrop.second) {
+            val itemStack = if (item is UniqueAttributesItemInterface) item.getRolledStack(item) else item.defaultInstance
             boss.spawnAtLocation(serverWorld, itemStack)
         }
     }
@@ -123,8 +130,27 @@ class LootService {
         itemStack.damageValue = (itemStack.maxDamage * Random.nextDouble()).toInt()
     }
 
-    private fun dropEliteLoot(serverWorld: ServerLevel, entity: LivingEntity) {
-        val aspect = RandomUtil.pickOne(LootSettings.ASPECTS).option
-        RuntimeConfig.SERVER.execute { entity.spawnAtLocation(serverWorld, aspect.defaultInstance) }
+    private fun dropEliteLoot(
+        serverLevel: ServerLevel,
+        entity: LivingEntity,
+    ) {
+        val command = EliteAspectDropCommand(serverLevel.getDungeonAspects())
+        val cmd = CommandGateway.apply(command)
+
+        repeat(cmd.count) {
+            val aspect = RandomUtil.pickOne(LootSettings.ASPECTS).option
+            entity.spawnAtLocation(serverLevel, aspect.defaultInstance)
+        }
+    }
+
+    private fun dropBanditLoot(
+        serverWorld: ServerLevel,
+        bandit: BanditEntity,
+    ) {
+        val type = bandit.getBanditType()
+        val stack = type.rewardCrystal.defaultInstance
+        val dungeonLevel = serverWorld.getDungeonLevel()
+        stack.count = LootSettings.getBanditCrystalCount(dungeonLevel)
+        bandit.spawnAtLocation(serverWorld, stack)
     }
 }

@@ -8,13 +8,16 @@ import de.fuballer.mcendgame.main.configuration.RuntimeConfig
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGeneratedEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.OpenTrainingDungeonButtonPressedEvent
 import de.maucon.mauconframework.di.annotation.Injectable
+import de.maucon.mauconframework.di.annotation.Logging
 import de.maucon.mauconframework.event.EventGateway
 import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.core.GlobalPos
+import org.slf4j.Logger
 import kotlin.random.Random
 
 @Injectable
 class TrainingDungeonGenerationService(
+    @Logging private val log: Logger,
     private val dungeonWorldService: DungeonWorldService,
     private val dungeonBuilderService: DungeonBuilderService,
     private val trainingDummyGenerationService: TrainingDummyGenerationService,
@@ -22,6 +25,8 @@ class TrainingDungeonGenerationService(
     @EventSubscriber(sync = true)
     fun on(event: OpenTrainingDungeonButtonPressedEvent) {
         val player = event.player
+        log.info("Training dungeon opened by ${player.gameProfile.name}")
+
         val originWorld = player.level()
         val dungeonDevicePos = event.dungeonDeviceBlockEntity.blockPos
         val dungeonDeviceGlobalPos = GlobalPos(originWorld.dimension(), dungeonDevicePos)

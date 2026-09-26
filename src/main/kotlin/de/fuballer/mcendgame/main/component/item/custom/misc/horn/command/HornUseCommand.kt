@@ -1,9 +1,9 @@
 package de.fuballer.mcendgame.main.component.item.custom.misc.horn.command
 
-import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.LivingEntity
 
 data class HornUseCommand(
-    val user: Player,
+    val user: LivingEntity,
     val moreDuration: MutableList<Double> = mutableListOf(),
     val moreCooldown: MutableList<Double> = mutableListOf(),
     var isStronger: Boolean = false,

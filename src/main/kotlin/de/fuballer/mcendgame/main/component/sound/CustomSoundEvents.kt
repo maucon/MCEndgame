@@ -21,4 +21,5 @@ object CustomSoundEvents {
     val BEASTWEAVER_GROVE_MUSIC_SOUND = Music(BEASTWEAVER_GROVE_MUSIC_ENTRY, 0, 0, true)
 
     val WOLF_HOWL = RegistryUtil.registerSoundEvent("entity.wolf_howl")
+    val WOLF_HOWL_ENTRY: Holder<SoundEvent> = Holder.direct(WOLF_HOWL)
 }

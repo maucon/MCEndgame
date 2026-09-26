@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "mcendgame:item/howl_of_the_wolf"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "mcendgame:item/tooting_howl_of_the_wolf"
+    },
+    "property": "minecraft:using_item"
+  }
+}

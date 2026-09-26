@@ -13,6 +13,7 @@ class Hailstorm(
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.ADDITIONAL_PROJECTILES, 0, IntBounds(2, 2)),
         RollableCustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, 0, DoubleBounds(1.0, 2.0)),
+        RollableCustomAttribute(CustomAttributeTypes.INCREASED_PROJECTILE_DAMAGE, 0, DoubleBounds(0.04, 0.08)),
     )
 
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.MAINHAND

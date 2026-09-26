@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.client
 import de.fuballer.mcendgame.client.component.datagen.*
 import de.fuballer.mcendgame.main.component.biome.CustomBiomes
 import de.fuballer.mcendgame.main.component.dimension.CustomDimensions
+import de.fuballer.mcendgame.main.component.sound.CustomInstruments
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
 import net.minecraft.core.RegistrySetBuilder
@@ -28,5 +29,6 @@ object MCEndgameDataGenerator : DataGeneratorEntrypoint {
         registryBuilder
             .add(Registries.BIOME, CustomBiomes::bootstrap)
             .add(Registries.DIMENSION_TYPE, CustomDimensions::bootstrap)
+            .add(Registries.INSTRUMENT, CustomInstruments::bootstrap)
     }
 }

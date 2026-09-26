@@ -16,4 +16,5 @@ object CustomToolItemIds {
     val DUSK_PIERCER = RegistryKeyUtil.createItemKey("dusk_piercer")
     val GRUDGEBEARER = RegistryKeyUtil.createItemKey("grudgebearer")
     val GRAVEBREAKER = RegistryKeyUtil.createItemKey("gravebreaker")
+    val CLAWS_OF_THE_BEAR = RegistryKeyUtil.createItemKey("claws_of_the_bear")
 }

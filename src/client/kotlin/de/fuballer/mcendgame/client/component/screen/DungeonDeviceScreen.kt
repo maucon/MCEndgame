@@ -61,6 +61,7 @@ private const val LEVEL_TEXT_SCALING = 0.95f
 private val ATTRIBUTE_PANEL_TEXTURE = IdentifierUtil.default("textures/gui/container/dungeon_device_attribute_panel.png")
 private val ENEMY_ATTRIBUTES_TEXT = Component.translatable("container.mcendgame.dungeon_device.enemy_attributes")
 private val BOSS_ATTRIBUTES_TEXT = Component.translatable("container.mcendgame.dungeon_device.boss_attributes")
+private val BANDIT_ATTRIBUTES_TEXT = Component.translatable("container.mcendgame.dungeon_device.bandit_attributes")
 private const val ATTRIBUTE_PANEL_TEXTURE_EDGE_WIDTH = 4
 private const val ATTRIBUTE_PANEL_MAX_WIDTH = 150
 private const val ATTRIBUTE_HEADER_WIDGET_HEIGHT = 10
@@ -269,6 +270,13 @@ class DungeonDeviceScreen(
             y += initLevelScalingAttributeTextsPart(bossAttributes, x, y, width)
             y += 5
         }
+
+        val banditAttributes = EnemyLevelScalingSettings.getBanditLevelAttributes(dungeonLevel)
+        if (banditAttributes.isNotEmpty()) {
+            y += initLevelScalingHeader(BANDIT_ATTRIBUTES_TEXT, x, y, width) + 3
+            y += initLevelScalingAttributeTextsPart(banditAttributes, x, y, width)
+            y += 5
+        }
     }
 
     private fun getLevelScalingTextWidgetWidth(): Int {
@@ -355,7 +363,7 @@ class DungeonDeviceScreen(
 
     override fun extractBackground(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         extractTransparentBackground(graphics)
-        
+
         val textureX = (width - imageWidth) / 2
         val textureY = (height - imageHeight) / 2
 
@@ -457,14 +465,14 @@ class DungeonDeviceScreen(
     private fun onCreateDungeonButtonPress(button: Button) {
         ClientPlayNetworking.send(menu.payload)
         onClose()
-        log.info("Dungeon opened by ${inventory.player.gameProfile.name}")
+        log.info("You opened a dungeon")
     }
 
     private fun onCreateTrainingDungeonButtonPress(button: Button) {
         val payload = DungeonDeviceTrainingPayload.from(menu.payload)
         ClientPlayNetworking.send(payload)
         onClose()
-        log.info("Training dungeon opened by ${inventory.player.gameProfile.name}")
+        log.info("You opened a training dungeon")
     }
 
     private fun sendUpdateDungeonLevelPayload() {

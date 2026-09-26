@@ -22,6 +22,7 @@ class TotemEncounterService(
 ) {
     @CommandHandler
     fun on(cmd: CollectDungeonEncountersCommand) {
+        if (cmd.playerSeed.hasBeenUsed) return
         if (cmd.random.nextDouble() >= TotemEncounterSettings.BASE_PROBABILITY) return
         cmd.add(EncounterType.TOTEM)
     }
@@ -55,6 +56,7 @@ class TotemEncounterService(
 
         cmd.enemies = enemyGenerationService.generate(
             world,
+            true,
             world.getDungeonLevel(),
             enemyTypes,
             dungeonType.applyMisc,

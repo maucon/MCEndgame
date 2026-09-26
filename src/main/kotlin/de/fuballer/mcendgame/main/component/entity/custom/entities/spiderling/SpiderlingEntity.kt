@@ -1,17 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.spiderling
 
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getHitbox
-import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.getTargetX
-import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.getTargetY
-import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.getTargetZ
-import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.getUpdateCountdownTicks
-import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.setCooldown
-import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.setTargetX
-import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.setTargetY
-import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.setTargetZ
-import de.fuballer.mcendgame.main.util.extension.mixin.GoalMixinExtension.setUpdateCountdownTicks
 import net.minecraft.core.BlockPos
-import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -27,7 +17,6 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
-import kotlin.math.max
 
 class SpiderlingEntity(
     type: EntityType<out SpiderlingEntity>,
@@ -53,49 +42,8 @@ class SpiderlingEntity(
         class AttackGoal(
             mob: SpiderlingEntity,
             val speed: Double,
-            pauseWhenMobIdle: Boolean,
-        ) : MeleeAttackGoal(mob, speed, pauseWhenMobIdle) {
-            // copied from MeleeAttackGoal but replaced canSee with true
-            override fun tick() {
-                val livingEntity = mob.target ?: return
-                mob.getLookControl().setLookAt(livingEntity, 30.0f, 30.0f)
-
-                var updateCountdownTicks = getUpdateCountdownTicks()
-                val targetX = getTargetX()
-                val targetY = getTargetY()
-                val targetZ = getTargetZ()
-
-                updateCountdownTicks = (max(updateCountdownTicks - 1, 0))
-
-                if (updateCountdownTicks <= 0
-                    && (targetX == 0.0 && targetY == 0.0 && targetZ == 0.0
-                            || livingEntity.distanceToSqr(targetX, targetY, targetZ) >= 1.0
-                            || mob.getRandom().nextFloat() < 0.05f)
-                ) {
-                    setTargetX(livingEntity.x)
-                    setTargetY(livingEntity.y)
-                    setTargetZ(livingEntity.z)
-
-                    updateCountdownTicks = 4 + mob.getRandom().nextInt(7)
-                    val d = mob.distanceToSqr(livingEntity)
-                    if (d > 1024.0) {
-                        updateCountdownTicks += 10
-                    } else if (d > 256.0) {
-                        updateCountdownTicks += 5
-                    }
-
-                    if (!mob.getNavigation().moveTo(livingEntity, speed)) {
-                        updateCountdownTicks += 15
-                    }
-
-                    updateCountdownTicks = adjustedTickDelay(updateCountdownTicks)
-                }
-
-                setUpdateCountdownTicks(updateCountdownTicks)
-                setCooldown(max(ticksUntilNextAttack - 1, 0))
-                checkAndPerformAttack(livingEntity)
-            }
-
+            followingTargetEvenIfNotSeen: Boolean,
+        ) : MeleeAttackGoal(mob, speed, followingTargetEvenIfNotSeen) {
             // copied from MeleeAttackGoal but replaced canSee with true
             override fun canPerformAttack(target: LivingEntity) = isTimeToAttack && mob.isWithinMeleeAttackRange(target)
         }
@@ -116,19 +64,9 @@ class SpiderlingEntity(
 
     // copied from MobEntity but using own MAX_ATTACK_RANGE
     override fun isWithinMeleeAttackRange(entity: LivingEntity): Boolean {
-        val attackRangeComponent = activeItem.get(DataComponents.ATTACK_RANGE)
-        val maxRange: Double
-        val minRange: Double
-        if (attackRangeComponent == null) {
-            maxRange = MAX_ATTACK_RANGE
-            minRange = 0.0
-        } else {
-            maxRange = attackRangeComponent.effectiveMaxRange(this).toDouble()
-            minRange = attackRangeComponent.effectiveMinRange(this).toDouble()
-        }
-
+        val maxRange = MAX_ATTACK_RANGE
         val box = entity.getHitbox()
-        return this.getAttackBoundingBox(maxRange).intersects(box) && (minRange <= 0.0 || !this.getAttackBoundingBox(minRange).intersects(box))
+        return getAttackBoundingBox(maxRange).intersects(box)
     }
 
     override fun doPush(entity: Entity) {
