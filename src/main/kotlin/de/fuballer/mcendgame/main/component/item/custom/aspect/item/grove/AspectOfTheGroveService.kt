@@ -77,4 +77,10 @@ object AspectOfTheGroveService {
         cmd.particles.clear()
         cmd.particles.addAll(AspectOfTheGrove.BOSS_DEATH_PARTICLES)
     }
+
+    @CommandHandler
+    fun onGenerateDungeonEnemies(cmd: DungeonGenerateEnemiesCommand) {
+        if (!cmd.aspects.contains(AspectItems.ASPECT_OF_THE_GROVE)) return
+        cmd.specialEnemiesDisabled = true
+    }
 }

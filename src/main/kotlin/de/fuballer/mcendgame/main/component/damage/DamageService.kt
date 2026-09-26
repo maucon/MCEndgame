@@ -142,6 +142,9 @@ object DamageService {
         if (damageCalculationConfig.isEnderDragonDamageReduction) {
             combinedDamage = combinedDamage / 4f + min(combinedDamage, 1.0f)
         }
+
+        combinedDamage = (combinedDamage + cmd.flatDamageTaken.sum().toFloat()).coerceAtLeast(0F)
+
         return damageCalculationConfig.difficultyScaling.scaleDamage(combinedDamage)
     }
 

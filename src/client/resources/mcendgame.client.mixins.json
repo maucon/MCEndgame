@@ -7,6 +7,9 @@
     "biped.HumanoidModelMixin",
     "biped.HumanoidRenderStateMixin",
     "boss_event.BossHealthOverlayMixin",
+    "dual_wield.ItemInHandRendererDualWieldMixin",
+    "dual_wield.MinecraftDualWieldMixin",
+    "dual_wield.PlayerDualWieldMixin",
     "ghostly_appearance.GeoEntityRendererGhostlyMixin",
     "ghostly_appearance.LivingEntityRendererGhostlyMixin",
     "ghostly_appearance.LivingEntityRenderStateGhostlyMixin",
@@ -37,6 +40,8 @@
     "sound.RangeDefinedSoundEngineMixin",
     "stats.GeneralStatsListWidgetMixin",
     "stats.StatsScreenMixin",
+    "status_effect.EffectsInInventoryBeastweaverBlessingMixin",
+    "status_effect.HudBeastweaverBlessingMixin",
     "vertex_consumer.BufferBuilderSetVertexElementsMixin"
   ],
   "injectors": {

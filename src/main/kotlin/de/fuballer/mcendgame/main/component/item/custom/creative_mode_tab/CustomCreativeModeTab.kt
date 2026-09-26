@@ -47,6 +47,8 @@ object CustomCreativeModeTab {
                     output.accept(CustomArmorItems.WINDSTRIDER.defaultInstance)
                     output.accept(CustomArmorItems.BROODMOTHER.defaultInstance)
                     output.accept(CustomArmorItems.EMBERREIGN.defaultInstance)
+                    output.accept(CustomArmorItems.CROWN_OF_THE_STAG.defaultInstance)
+                    output.accept(CustomArmorItems.SKIN_OF_THE_RHINO.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(
@@ -62,12 +64,14 @@ object CustomCreativeModeTab {
                     output.accept(CustomToolItems.NIGHTREAVER.defaultInstance)
                     output.accept(CustomToolItems.GRAVEBREAKER.defaultInstance)
                     output.accept(CustomToolItems.RADIANT_DAWN.defaultInstance)
+                    output.accept(CustomToolItems.CLAWS_OF_THE_BEAR.defaultInstance)
                     output.accept(CustomToolItems.WINDSTRING.defaultInstance)
                     output.accept(CustomToolItems.HAILSTORM.defaultInstance)
                     output.accept(CustomToolItems.DUSK_PIERCER.defaultInstance)
                     output.accept(CustomMiscItems.VERDANT_ECHO.defaultInstance)
                     output.accept(CustomMiscItems.MOLTEN_ROAR.defaultInstance)
                     output.accept(CustomMiscItems.FRIGID_CRY.defaultInstance)
+                    output.accept(CustomMiscItems.HOWL_OF_THE_WOLF.defaultInstance)
                     output.accept(CustomToolItems.GRUDGEBEARER.defaultInstance)
                 }
         )

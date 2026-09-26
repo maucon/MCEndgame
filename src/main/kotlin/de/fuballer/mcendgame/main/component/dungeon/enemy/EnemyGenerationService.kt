@@ -57,7 +57,36 @@ class EnemyGenerationService(
             )
         }.toMutableList()
 
-        entities.addAll(cmd.eliteSpawnPositions.map {
+        if (!cmd.specialEnemiesDisabled && !isEncounter) entities.addAll(
+            generateSpecialEnemies(
+                dungeonWorld,
+                seedFirstTime,
+                level,
+                enemyTypes,
+                spawnPositions,
+                cmd,
+                random,
+            )
+        )
+
+        applyMisc(entities)
+
+        val command = DungeonEnemiesGeneratedCommand.of(dungeonWorld, entities)
+        CommandGateway.apply(command)
+
+        return entities
+    }
+
+    private fun generateSpecialEnemies(
+        dungeonWorld: ServerLevel,
+        seedFirstTime: Boolean,
+        level: Int,
+        enemyTypes: List<RandomOption<EntityTypeStats>>,
+        spawnPositions: List<SpawnPosition>,
+        cmd: DungeonGenerateEnemiesCommand,
+        random: Random,
+    ): Iterable<LivingEntity> {
+        val specialEnemies = cmd.eliteSpawnPositions.map {
             spawnEnemy(
                 dungeonWorld,
                 seedFirstTime,
@@ -68,9 +97,9 @@ class EnemyGenerationService(
                 cmd,
                 isForcedElite = true,
             )
-        })
+        }.toMutableList()
 
-        entities.addAll(cmd.lootGoblinSpawnPositions.map {
+        specialEnemies.addAll(cmd.lootGoblinSpawnPositions.map {
             spawnEnemy(
                 dungeonWorld,
                 seedFirstTime,
@@ -83,24 +112,17 @@ class EnemyGenerationService(
             )
         })
 
-        if (!isEncounter) {
-            entities.addAll(
-                spawnBandits(
-                    dungeonWorld,
-                    seedFirstTime,
-                    level,
-                    spawnPositions,
-                    random,
-                )
+        specialEnemies.addAll(
+            spawnBandits(
+                dungeonWorld,
+                seedFirstTime,
+                level,
+                spawnPositions,
+                random,
             )
-        }
+        )
 
-        applyMisc(entities)
-
-        val command = DungeonEnemiesGeneratedCommand.of(dungeonWorld, entities)
-        CommandGateway.apply(command)
-
-        return entities
+        return specialEnemies
     }
 
     private fun spawnEnemy(
@@ -114,7 +136,8 @@ class EnemyGenerationService(
         isForcedElite: Boolean = false,
         isForcedLootGoblin: Boolean = false,
     ): LivingEntity {
-        val isLootGoblin = isForcedLootGoblin || (seedFirstTime && EnemyGenerationSettings.randomLootGoblin(random))
+        val isLootGoblin = !generateEnemiesCommand.specialEnemiesDisabled
+                && (isForcedLootGoblin || (seedFirstTime && EnemyGenerationSettings.randomLootGoblin(random)))
 
         val validTypes = if (!isLootGoblin) types else types.filter { it.option.equipmentClass.isNot(EnemyEquipmentClass.NO_ARMOR) }
         val type = RandomUtil.pickOne(validTypes, random).option
@@ -125,7 +148,8 @@ class EnemyGenerationService(
 
         if (isLootGoblin) enemyEntity.setLootGoblin()
 
-        val isElite = isForcedElite || (seedFirstTime && EnemyGenerationSettings.randomElite(random))
+        val isElite = !generateEnemiesCommand.specialEnemiesDisabled
+                && (isForcedElite || (seedFirstTime && EnemyGenerationSettings.randomElite(random)))
         if (isElite) {
             enemyEntity.setElite()
             applyEliteEffects(enemyEntity)

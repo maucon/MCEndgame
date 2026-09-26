@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.resources.Identifier
+import kotlin.math.min
 
 class BeastweaverWolfRenderer(
     context: EntityRendererProvider.Context,
@@ -95,9 +96,10 @@ class BeastweaverWolfRenderer(
 
         val gradientOrigin = BeastweaverRenderer.GET_CAMERA_RELATIVE_ENTITY_POS(entity, partialTicks).add(0F, entity.bbHeight / 2F, 0F)
         val tickCount = entity.tickCount
+        val ticksUntilKilled = entity.maxDuration - tickCount
         val scale = entity.scale
-        val gradientStart = ((tickCount - 20F) / 40F).coerceIn(0F, 1F).clampedLerp(0F, 1F) * scale
-        val gradientEnd = (tickCount / 40F).coerceIn(0F, 1F).clampedLerp(0F, 1F) * scale
+        val gradientStart = ((min(tickCount, ticksUntilKilled) - 20F) / 40F).coerceIn(0F, 1F).clampedLerp(0F, 1F) * scale
+        val gradientEnd = (min(tickCount, ticksUntilKilled) / 40F).coerceIn(0F, 1F).clampedLerp(0F, 1F) * scale
         state.gradientData = BeastweaverGradientData(gradientOrigin.x, gradientOrigin.y, gradientOrigin.z, gradientStart, gradientEnd)
     }
 }

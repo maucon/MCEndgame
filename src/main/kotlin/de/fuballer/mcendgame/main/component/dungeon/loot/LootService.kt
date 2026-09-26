@@ -94,12 +94,13 @@ class LootService {
         val boss = event.bossEntity
 
         val type = event.bossEntity.type
-        val possibleUniques = LootSettings.BOSS_UNIQUES[type] ?: return
-        possibleUniques.forEach {
-            if (Random.nextDouble() > it.value) return@forEach
-            val item = it.key
-            val itemStack = if (item is UniqueAttributesItemInterface) item.getRolledStack(item) else item.defaultInstance
+        val uniqueDrops = LootSettings.BOSS_UNIQUES[type] ?: return
+        if (Random.nextDouble() > uniqueDrops.probability) return
 
+        val uniqueItemDrop = RandomUtil.pickOne(uniqueDrops.items).option
+        val item = uniqueItemDrop.first
+        repeat(uniqueItemDrop.second) {
+            val itemStack = if (item is UniqueAttributesItemInterface) item.getRolledStack(item) else item.defaultInstance
             boss.spawnAtLocation(serverWorld, itemStack)
         }
     }

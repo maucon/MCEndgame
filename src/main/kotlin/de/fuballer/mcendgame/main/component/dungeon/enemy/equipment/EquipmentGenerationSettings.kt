@@ -33,6 +33,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment.forBothHands(Sword.RADIANT_DAWN)),
         RandomOption(100, TaggedEquipment.forBothHands(Axe.FATESPLITTER)),
         //RandomOption(100, TaggedEquipment.forBothHands(Mace.GRAVEBREAKER)), drops from bonecrusher boss
+        //RandomOption(100, TaggedEquipment.forBothHands(Sword.CLAWS_OF_THE_BEAR)), drops from beastweaver boss
 
         RandomOption(100, TaggedEquipment(Helmet.ICEBORNE, EquipmentSlot.HEAD)),
         RandomOption(100, TaggedEquipment(Helmet.EMBERCHANT, EquipmentSlot.HEAD)),
@@ -40,6 +41,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment(Helmet.WITHER_ROSE_HELMET, EquipmentSlot.HEAD)),
         RandomOption(100, TaggedEquipment(Helmet.SUEDE_HELMET, EquipmentSlot.HEAD)),
         RandomOption(100, TaggedEquipment(Helmet.ABYSSAL_MASK, EquipmentSlot.HEAD)),
+        //RandomOption(100, TaggedEquipment(Helmet.CROWN_OF_THE_STAG, EquipmentSlot.HEAD)), drops from beastweaver boss
 
         RandomOption(100, TaggedEquipment(Chestplate.BOUND_ABYSS, EquipmentSlot.CHEST)),
         RandomOption(100, TaggedEquipment(Chestplate.DRUIDS_CHESTPLATE, EquipmentSlot.CHEST)),
@@ -47,6 +49,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment(Chestplate.SUEDE_CHESTPLATE, EquipmentSlot.CHEST)),
         RandomOption(100, TaggedEquipment(Chestplate.VOIDWEAVER, EquipmentSlot.CHEST)),
         //RandomOption(100, TaggedEquipment(Chestplate.BROODMOTHER, EquipmentSlot.CHEST)), drops from arachne boss
+        //RandomOption(100, TaggedEquipment(Chestplate.SKIN_OF_THE_RHINO, EquipmentSlot.CHEST)), drops from beastweaver boss
 
         RandomOption(100, TaggedEquipment(Leggings.LAMIAS_GIFT, EquipmentSlot.LEGS)),
         RandomOption(100, TaggedEquipment(Leggings.DRUIDS_LEGGINGS, EquipmentSlot.LEGS)),
@@ -70,6 +73,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment(Horn.VERDANT_ECHO, EquipmentSlot.OFFHAND)),
         RandomOption(100, TaggedEquipment(Horn.MOLTEN_ROAR, EquipmentSlot.OFFHAND)),
         RandomOption(100, TaggedEquipment(Horn.FRIGID_CRY, EquipmentSlot.OFFHAND)),
+        //RandomOption(100, TaggedEquipment(Horn.HOWL_OF_THE_WOLF, EquipmentSlot.OFFHAND)), drops from beastweaver boss
 
         RandomOption(100, TaggedEquipment(Shield.GRUDGEBEARER, EquipmentSlot.OFFHAND)),
     )

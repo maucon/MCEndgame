@@ -2,12 +2,14 @@ package de.fuballer.mcendgame.main.component.item.custom
 
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.BanditEntity
 import de.fuballer.mcendgame.main.component.item.custom.misc.horn.command.HornUseCommand
+import de.fuballer.mcendgame.main.util.extension.EntityExtension.isAlly
 import de.maucon.mauconframework.command.CommandGateway
 import net.minecraft.ChatFormatting
 import net.minecraft.core.Holder
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -66,10 +68,12 @@ abstract class UniqueAttributesHornItem(
         val result = super.use(world, user, hand)
         if (result == InteractionResult.FAIL) return result
 
+        val serverWorld = world as? ServerLevel ?: return result
+
         val command = HornUseCommand(user)
         val cmd = CommandGateway.apply(command)
 
-        onUse(world, user, cmd)
+        onUse(serverWorld, user, cmd)
 
         val itemStack = user.getItemInHand(hand)
         val cooldown = (baseCooldown * cmd.getCooldownFactor()).toInt()
@@ -79,7 +83,7 @@ abstract class UniqueAttributesHornItem(
     }
 
     fun banditUse(
-        level: Level,
+        level: ServerLevel,
         bandit: BanditEntity,
         hand: InteractionHand,
     ): InteractionResult {
@@ -118,5 +122,10 @@ abstract class UniqueAttributesHornItem(
         level.gameEvent(GameEvent.INSTRUMENT_PLAY, user.position(), GameEvent.Context.of(user))
     }
 
-    abstract fun onUse(world: Level, user: LivingEntity, cmd: HornUseCommand)
+    abstract fun onUse(world: ServerLevel, user: LivingEntity, cmd: HornUseCommand)
+
+    fun getNearbyAllies(
+        world: Level,
+        user: LivingEntity,
+    ) = world.getEntitiesOfClass(LivingEntity::class.java, user.boundingBox.inflate(range)) { user.isAlly(it) && user.distanceTo(it) <= range }
 }
