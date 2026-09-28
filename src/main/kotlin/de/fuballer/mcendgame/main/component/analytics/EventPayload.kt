@@ -81,11 +81,12 @@ data class PlayerLoadoutPayload(
 
 data class EntityLoadoutPayload(
     val entity: String,
+    val customName: String?,
     val armor: List<PayloadItem?>,
     val mainhand: PayloadItem?,
     val offhand: PayloadItem?,
     val effects: Map<String, Int>,
-    val schemaVersion: Int = 1,
+    val schemaVersion: Int = 2,
 )
 
 data class ScarredOnePayload(
