@@ -81,7 +81,7 @@ data class PlayerLoadoutPayload(
 
 data class EntityLoadoutPayload(
     val entity: String,
-    val customName: String,
+    val customName: String?,
     val armor: List<PayloadItem?>,
     val mainhand: PayloadItem?,
     val offhand: PayloadItem?,
