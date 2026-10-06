@@ -28,8 +28,8 @@ public abstract class PlayerAttackMixin implements PlayerEntityMixinAccessor {
     private void onAttack(
             Entity entity,
             CallbackInfo ci,
-            @Local(name = "criticalAttack") boolean criticalAttack,
-            @Local(name = "attackStrengthScale") float attackStrengthScale
+            @Local(name = "attackStrengthScale") float attackStrengthScale,
+            @Local(name = "criticalAttack") boolean criticalAttack
     ) {
         var player = (Player) (Object) this;
         if (!(player instanceof ServerPlayer)) {

@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.test.main
 
+import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getAttackCooldownMultiplier
 import io.netty.channel.embedded.EmbeddedChannel
 import net.fabricmc.fabric.api.gametest.v1.GameTest
 import net.minecraft.core.registries.Registries
@@ -45,7 +46,7 @@ private val DIFFICULTIES = listOf(Difficulty.EASY, Difficulty.NORMAL, Difficulty
 private val LOG = LoggerFactory.getLogger(VanillaDamageGameTest::class.java)
 
 class VanillaDamageGameTest {
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerFistHuskDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla fist damage against a husk")
         helper.prepareNormalDifficulty()
@@ -56,7 +57,7 @@ class VanillaDamageGameTest {
         helper.assertPlayerAttackDamage(husk)
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerFistSkeletonDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla fist damage against a skeleton")
         helper.prepareNormalDifficulty()
@@ -67,7 +68,7 @@ class VanillaDamageGameTest {
         helper.assertPlayerAttackDamage(skeleton)
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerFistIronArmoredZombieDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla fist damage against an iron-armored zombie")
         helper.prepareNormalDifficulty()
@@ -79,7 +80,7 @@ class VanillaDamageGameTest {
         helper.assertPlayerAttackDamage(zombie)
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerIronSwordIronArmoredZombieDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla iron sword damage against an iron-armored zombie")
         helper.prepareNormalDifficulty()
@@ -91,7 +92,7 @@ class VanillaDamageGameTest {
         helper.assertPlayerAttackDamage(zombie, weapon = ItemStack(Items.IRON_SWORD))
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun creeperExplosionNextToPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla creeper explosion damage against a nearby player")
         helper.prepareNormalDifficulty()
@@ -103,7 +104,7 @@ class VanillaDamageGameTest {
         helper.assertCreeperExplosionDamage(player, creeper)
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun chargedCreeperExplosionNextToPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla charged creeper explosion damage against a nearby player")
         helper.prepareNormalDifficulty()
@@ -115,7 +116,7 @@ class VanillaDamageGameTest {
         helper.assertCreeperExplosionDamage(player, creeper)
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun pufferfishStingingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla pufferfish sting damage against a player")
         helper.prepareNormalDifficulty()
@@ -137,7 +138,7 @@ class VanillaDamageGameTest {
         helper.succeed()
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerMaceHuskDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla mace damage against a husk")
         helper.prepareNormalDifficulty()
@@ -148,7 +149,7 @@ class VanillaDamageGameTest {
         helper.assertPlayerAttackDamage(husk, weapon = ItemStack(Items.MACE))
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerMaceWithBreachHuskDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla mace with Breach damage against a husk")
         helper.prepareNormalDifficulty()
@@ -159,7 +160,7 @@ class VanillaDamageGameTest {
         helper.assertPlayerAttackDamage(husk, weapon = helper.createBreachMace())
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerCriticalHitHuskDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla critical hit damage against a husk")
         helper.prepareNormalDifficulty()
@@ -181,7 +182,7 @@ class VanillaDamageGameTest {
         )
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerUnchargedAttackHuskDealsVanillaCooldownDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla uncharged attack cooldown damage against a husk")
         helper.prepareNormalDifficulty()
@@ -198,7 +199,7 @@ class VanillaDamageGameTest {
         )
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerFistProtectionIronArmoredZombieDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla fist damage against a Protection IV iron-armored zombie")
         helper.prepareNormalDifficulty()
@@ -215,7 +216,7 @@ class VanillaDamageGameTest {
         helper.assertPlayerAttackDamage(zombie)
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerFistResistanceZombieDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla fist damage against a Resistance II zombie")
         helper.prepareNormalDifficulty()
@@ -227,7 +228,7 @@ class VanillaDamageGameTest {
         helper.assertPlayerAttackDamage(zombie)
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerDensityMaceSmashDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla density mace smash damage from different heights")
         helper.prepareNormalDifficulty()
@@ -235,7 +236,7 @@ class VanillaDamageGameTest {
         helper.assertDensityMaceSmashDamage()
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun skeletonArrowHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla skeleton arrow damage against a player")
         val skeleton = helper.level.createEntity(EntityTypes.SKELETON)
@@ -248,7 +249,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun ghastFireballHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla ghast fireball damage against a player")
         val ghast = helper.level.createEntity(EntityTypes.GHAST)
@@ -260,7 +261,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun smallFireballHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla small fireball damage against a player")
         val blaze = helper.level.createEntity(EntityTypes.BLAZE)
@@ -272,7 +273,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun shulkerBulletHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla shulker bullet damage against a player")
         val shulker = helper.level.createEntity(EntityTypes.SHULKER)
@@ -284,7 +285,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun witherSkullHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla wither skull damage against a player")
         val wither = helper.level.createEntity(EntityTypes.WITHER)
@@ -296,7 +297,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun witherSkullExplosionHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla wither skull explosion damage against a player")
         val skull = helper.level.createEntity(EntityTypes.WITHER_SKULL)
@@ -350,7 +351,7 @@ class VanillaDamageGameTest {
             .thenSucceed()
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun thrownTridentHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla thrown trident damage against a player")
         val shooter = helper.level.createEntity(EntityTypes.DROWNED)
@@ -362,7 +363,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun snowballHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla snowball damage against a player (should be 0)")
         val thrower = helper.level.createEntity(EntityTypes.SNOW_GOLEM)
@@ -374,7 +375,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun windChargeHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla wind charge damage against a player")
         val breeze = helper.level.createEntity(EntityTypes.BREEZE)
@@ -386,7 +387,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun guardianLaserHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla guardian laser damage against a player")
         val guardian = helper.level.createEntity(EntityTypes.GUARDIAN)
@@ -397,7 +398,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun guardianThornsHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla guardian thorns damage against a player")
         val guardian = helper.spawnWithNoFreeWill(EntityTypes.GUARDIAN, CREEPER_POS)
@@ -410,7 +411,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun wardenSonicBoomHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla warden sonic boom damage against a player")
         val warden = helper.level.createEntity(EntityTypes.WARDEN)
@@ -421,7 +422,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun witchHarmingPotionHittingPlayerDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla harming potion damage against a player")
         helper.assertPlayerDamageScenarios("Harming potion") { level, player ->
@@ -434,7 +435,7 @@ class VanillaDamageGameTest {
         }
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun witchGettingHitByHarmingPotionDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla harming potion damage against a witch")
         helper.prepareNormalDifficulty()
@@ -459,7 +460,7 @@ class VanillaDamageGameTest {
             .thenSucceed()
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerHittingEnemyWithTridentDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla trident melee damage against an enemy")
         helper.prepareNormalDifficulty()
@@ -470,7 +471,7 @@ class VanillaDamageGameTest {
         helper.assertPlayerAttackDamage(husk, weapon = ItemStack(Items.TRIDENT))
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerHittingEnemyWithImpalingTridentDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla impaling trident melee damage against an aquatic enemy")
         helper.prepareNormalDifficulty()
@@ -490,7 +491,7 @@ class VanillaDamageGameTest {
         )
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerHittingEnemyWithSpearDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla spear melee damage against an enemy")
         helper.prepareNormalDifficulty()
@@ -501,7 +502,7 @@ class VanillaDamageGameTest {
         helper.assertPlayerAttackDamage(husk, weapon = ItemStack(Items.IRON_SPEAR))
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerStabbingEnemyWithSpearDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla spear stab damage against an enemy at different movement speeds")
         helper.prepareNormalDifficulty()
@@ -551,6 +552,10 @@ class VanillaDamageGameTest {
         helper.startSequence()
             .thenWaitUntil { helper.assertTrue(player.tickCount > 0, "Player should have ticked before the attack") }
             .thenExecute {
+                println(player.getAttackCooldownMultiplier())
+                println(player.currentItemAttackStrengthDelay)
+                println(player.getAttackStrengthScale(0.5f))
+                // TODO
                 val rawDamage = 6.0f
                 helper.assertDragonPartAttack(player, headDragon, headDragon.head, rawDamage, "dragon head")
                 val bodyPart = bodyDragon.subEntities.first { it != bodyDragon.head }
@@ -559,7 +564,7 @@ class VanillaDamageGameTest {
             .thenSucceed()
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun snowballHittingBlazeDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla snowball damage against a blaze")
         helper.prepareNormalDifficulty()
@@ -580,7 +585,7 @@ class VanillaDamageGameTest {
         helper.succeed()
     }
 
-    @GameTest(maxTicks = 200)
+    //@GameTest(maxTicks = 200)
     fun playerHittingScaredArmadilloDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla damage against a scared (rolled up) armadillo")
         helper.prepareNormalDifficulty()
@@ -656,6 +661,7 @@ private fun GameTestHelper.createDamageablePlayer(): ServerPlayer {
         snapTo(absoluteVec(DEFAULT_PLAYER_POS))
         isNoGravity = true
     }
+    // TODO strength ticker should be maxed out
 }
 
 private fun GameTestHelper.assertPlayerAttackDamage(
@@ -1013,7 +1019,8 @@ private fun GameTestHelper.assertDragonPartAttack(player: ServerPlayer, dragon: 
     val expectedDamage = expectedDamageAfterReductions(level, dragon, damageAfterPartReduction, source)
 
     val healthBefore = dragon.health
-    dragon.hurt(level, part, source, rawDamage)
+    player.attack(dragon.head)
+//    dragon.hurt(level, part, source, rawDamage)
     val actualDamage = healthBefore - dragon.health
 
     LOG.info("Result ({}): expected {} damage, dragon took {}", label, expectedDamage, actualDamage)

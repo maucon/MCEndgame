@@ -14,7 +14,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper
 import kotlin.math.ceil
 import kotlin.random.Random
 
-// skeleton arrows (bogged, stray)
+// skeleton (bogged, stray, ..) or player arrows
 object AbstractArrowCalculator : DamageCalculator {
     override fun isActive(source: DamageSource): Boolean {
         if (source.directEntity is ThrownTrident) return false
