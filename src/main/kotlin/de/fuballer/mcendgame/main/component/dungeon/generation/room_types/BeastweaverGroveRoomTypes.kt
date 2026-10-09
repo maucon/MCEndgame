@@ -13,7 +13,7 @@ object BeastweaverGroveRoomTypes {
 
     @EventSubscriber(sync = true)
     fun on(event: ServerStartedEvent) {
-        val templateManager = event.server.structureManager
+        val templateManager = event.server.structureTemplateManager
 
         BOSS_ROOM = RoomTypeLoader.load(
             templateManager, "dungeon/beastweaver_grove/boss000",

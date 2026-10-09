@@ -21,6 +21,6 @@ object FoxStats : EntityTypeStats {
     override val knockbackResistance = 0.0
 
     override fun applyMisc(entity: LivingEntity) {
-        entity.isInvulnerable = true
+        entity.setPermanentlyInvulnerable(true)
     }
 }

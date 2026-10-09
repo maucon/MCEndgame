@@ -24,8 +24,9 @@ class BlockDebrisRenderer(
         camX: Double,
         camY: Double,
         camZ: Double,
+        partialTicks: Float,
     ): Boolean {
-        if (!super.shouldRender(entity, culler, camX, camY, camZ)) return false
+        if (!super.shouldRender(entity, culler, camX, camY, camZ, partialTicks)) return false
         return entity.getBlockState() != entity.level().getBlockState(entity.blockPosition())
     }
 

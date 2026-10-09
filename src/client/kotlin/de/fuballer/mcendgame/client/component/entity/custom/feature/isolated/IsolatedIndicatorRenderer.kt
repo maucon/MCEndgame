@@ -45,8 +45,8 @@ object IsolatedIndicatorRenderer {
         matrices.translate(0.0, yOffset, 0.0)
 
         val camera = Minecraft.getInstance().gameRenderer.mainCamera()
-        matrices.mulPose(Axis.YN.rotationDegrees(state.bodyRot - camera.yRot()))
-        matrices.mulPose(Axis.XP.rotationDegrees(camera.xRot()))
+        matrices.rotateDegrees(Axis.YN, state.bodyRot - camera.yRot())
+        matrices.rotateDegrees(Axis.XP, camera.xRot())
 
         queue.submitCustomGeometry(matrices, RenderTypes.entityCutout(ICON_TEXTURE)) { entry, vertexConsumer ->
             val matrix = entry.pose()

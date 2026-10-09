@@ -15,7 +15,7 @@ class MCEndgameClientGameTest : FabricClientGameTest {
 
     override fun runTest(context: ClientGameTestContext) {
         context.worldBuilder().create().use { singleplayer ->
-            singleplayer.clientLevel.waitForChunksRender()
+            singleplayer.connection.waitForChunksRender()
 
             val pos = singleplayer.server.computeOnServer<Vec3, RuntimeException> { server ->
                 val player = server.playerList.players.first()

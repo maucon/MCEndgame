@@ -16,7 +16,7 @@ object NetherRoomTypes {
 
     @EventSubscriber(sync = true)
     fun on(event: ServerStartedEvent) {
-        val templateManager = event.server.structureManager
+        val templateManager = event.server.structureTemplateManager
 
         START_ROOM = RoomTypeLoader.load(templateManager, "dungeon/nether/start")
 

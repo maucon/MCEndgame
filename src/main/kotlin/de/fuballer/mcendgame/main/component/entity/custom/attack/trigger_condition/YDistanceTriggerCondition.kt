@@ -17,7 +17,7 @@ class YDistanceTriggerCondition(
         var min = minYOffset
         var max = maxYOffset
         if (affectedByScale) {
-            val scale = attacker.scale
+            val scale = attacker.getScale().toDouble()
             min *= scale
             max *= scale
         }

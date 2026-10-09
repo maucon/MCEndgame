@@ -36,7 +36,7 @@ class BasicAttackDamage(
             val knockbackDirection = target.position().subtract(damager.position()).normalize()
             target.takeKnockbackFrom(damager, knockback, -knockbackDirection.x, -knockbackDirection.z)
             target.needsSync = true
-            target.hurtMarked = true
+            target.syncVelocity = true
         }
 
         return true

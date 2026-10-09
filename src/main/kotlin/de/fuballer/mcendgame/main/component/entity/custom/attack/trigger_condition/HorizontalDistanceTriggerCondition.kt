@@ -17,7 +17,7 @@ class HorizontalDistanceTriggerCondition(
     ): Boolean {
         if (target == null) return false
 
-        val scale = if (affectedByScale) attacker.scale else 1F
+        val scale = if (affectedByScale) attacker.getScale().toDouble() else 1.0
         val minSqr = (minHorizontalDistance * scale).pow(2)
         val maxSqr = (maxHorizontalDistance * scale).pow(2)
         return target.position().subtract(attacker.position()).horizontalDistanceSqr() in minSqr..maxSqr

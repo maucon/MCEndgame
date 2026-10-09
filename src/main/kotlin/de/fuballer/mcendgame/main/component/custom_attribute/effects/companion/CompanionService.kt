@@ -164,7 +164,7 @@ class CompanionService {
         companion.setTame(true, false)
         companion.owner = owner
         companion.setCompanion()
-        companion.isInvulnerable = true
+        companion.setPermanentlyInvulnerable(true)
         companion.getAttribute(Attributes.FOLLOW_RANGE)?.baseValue = 24.0
         if (owner.isDungeonEnemy()) companion.setDungeonEnemy()
 

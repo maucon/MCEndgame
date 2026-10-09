@@ -28,7 +28,7 @@ class BanditRenderer(
         private fun getArmPose(bandit: BanditEntity, itemInHand: ItemStack, hand: InteractionHand?): ArmPose {
             if (itemInHand.isEmpty) return ArmPose.EMPTY
 
-            if (!bandit.swinging && itemInHand.`is`(Items.CROSSBOW) && CrossbowItem.isCharged(itemInHand)) return ArmPose.CROSSBOW_HOLD
+            if (!bandit.isSwinging() && itemInHand.`is`(Items.CROSSBOW) && CrossbowItem.isCharged(itemInHand)) return ArmPose.CROSSBOW_HOLD
 
             if (bandit.usedItemHand == hand && bandit.useItemRemainingTicks > 0) {
                 val anim = itemInHand.useAnimation
@@ -65,8 +65,8 @@ class BanditRenderer(
                 }
             }
 
-            val attack = itemInHand.get(DataComponents.SWING_ANIMATION)
-            return if (attack != null && attack.type() == SwingAnimationType.STAB && bandit.swinging) ArmPose.SPEAR
+            val attack = itemInHand.get(DataComponents.ATTACK_ANIMATION)
+            return if (attack != null && attack.type() == SwingAnimationType.STAB && bandit.isSwinging()) ArmPose.SPEAR
             else if (itemInHand.`is`(ItemTags.SPEARS)) ArmPose.SPEAR else ArmPose.ITEM
         }
     }

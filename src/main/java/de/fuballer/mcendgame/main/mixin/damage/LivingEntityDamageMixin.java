@@ -150,7 +150,7 @@ public abstract class LivingEntityDamageMixin {
         // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
         boolean tookFullDamage = true;
-        if ((float) this_.invulnerableTime > 10.0f && !source.is(DamageTypeTags.BYPASSES_COOLDOWN)) {
+        if ((float) this_.getInvulnerableTime() > 10.0f && !source.is(DamageTypeTags.BYPASSES_COOLDOWN)) {
             if (damage <= this.lastHurt) {
                 return false;
             }
@@ -159,7 +159,7 @@ public abstract class LivingEntityDamageMixin {
             tookFullDamage = false;
         } else {
             this.lastHurt = damage;
-            this_.invulnerableTime = 20;
+            this_.setInvulnerableTime(20);
             this.actuallyHurt(level, source, damage);
             this_.hurtTime = this_.hurtDuration = 10;
         }

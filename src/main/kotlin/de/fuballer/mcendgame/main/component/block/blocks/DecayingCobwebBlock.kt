@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.main.component.block.blocks
 
-import com.mojang.serialization.MapCodec
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
@@ -27,7 +26,6 @@ class DecayingCobwebBlock(
 ) : Block(settings) {
     companion object {
         const val ID = "decaying_cobweb"
-        val CODEC: MapCodec<DecayingCobwebBlock> = simpleCodec(::DecayingCobwebBlock)
 
         private const val MAX_AGE = 5
         const val TICK_INTERVAL = 20

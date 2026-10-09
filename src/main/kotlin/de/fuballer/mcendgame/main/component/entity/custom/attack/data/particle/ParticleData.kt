@@ -28,7 +28,7 @@ data class ParticleData(
     ) {
         var adjustedOffset = offset(entity)
         if (applyScale && entity is LivingEntity) {
-            adjustedOffset = adjustedOffset.scale(entity.scale.toDouble())
+            adjustedOffset = adjustedOffset.scale(entity.getScale().toDouble())
         }
         val pos = entity.position().add(adjustedOffset)
         val d = dist(entity)

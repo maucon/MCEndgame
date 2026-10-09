@@ -39,11 +39,11 @@ class FlameBreathAttack<T>(
 
             val distanceXZ = kotlin.math.sqrt(dx * dx + dz * dz)
 
-            attacker.yRot = (Math.toDegrees(atan2(dz, dx)) - 90.0).toFloat()
-            attacker.xRot = (-Math.toDegrees(atan2(dy, distanceXZ))).toFloat()
+            attacker.setYRot((Math.toDegrees(atan2(dz, dx)) - 90.0).toFloat())
+            attacker.setXRot((-Math.toDegrees(atan2(dy, distanceXZ))).toFloat())
 
-            attacker.yBodyRot = attacker.yRot
-            attacker.yHeadRot = attacker.yRot
+            attacker.yBodyRot = attacker.getYRot()
+            attacker.yHeadRot = attacker.getYRot()
         }
 
         val event = FlameBreathAttackEvent(attacker, target, damageConversion, delay, duration, angle, entityWidthOffsetFactor, entityHeightOffsetFactor)

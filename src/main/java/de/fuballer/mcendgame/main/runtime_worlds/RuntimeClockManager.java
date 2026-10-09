@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.main.runtime_worlds;
 
-import de.fuballer.mcendgame.main.mixin.runtime_worlds.clock.ClockInstanceAccessor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
 import net.minecraft.server.MinecraftServer;
@@ -34,14 +33,14 @@ public class RuntimeClockManager extends ServerClockManager {
     @Override
     public void tick() {
         if (this.advanceTime.getAsBoolean()) {
-            ((ServerClockManagerExtension) this).mcendgame$getClocks().values().forEach(ClockInstance::tick);
+            ((ServerClockManagerExtension) this).mcendgame$getClocks().values().forEach(ServerClockManager.ServerClockInstance::tick);
             this.setDirty();
         }
     }
 
     @Override
-    protected void modifyClock(final Holder<WorldClock> clock, final Consumer<? super ClockInstance> action) {
-        ClockInstance instance = this.getInstance(clock);
+    protected void modifyClock(final Holder<WorldClock> clock, final Consumer<? super ServerClockManager.ServerClockInstance> action) {
+        ServerClockManager.ServerClockInstance instance = this.getInstance(clock);
         action.accept(instance);
         Map<Holder<WorldClock>, ClockNetworkState> updates = Map.of(clock, this.packNetworkState(instance, this.server));
         this.setDirty();
@@ -64,10 +63,10 @@ public class RuntimeClockManager extends ServerClockManager {
         return new ClientboundSetTimePacket(this.getGameTime(), Util.mapValues(((ServerClockManagerExtension) this).mcendgame$getClocks(), (clock) -> this.packNetworkState(clock, this.server)));
     }
 
-    protected ClockNetworkState packNetworkState(ClockInstance instance, final MinecraftServer server) {
-        var i = (ClockInstanceAccessor) instance;
-        boolean paused = i.isPaused() || !this.advanceTime.getAsBoolean();
-        return new ClockNetworkState(i.getTotalTicks(), i.getPartialTick(), paused ? 0.0F : i.getRate());
+    protected ClockNetworkState packNetworkState(ServerClockManager.ServerClockInstance instance, final MinecraftServer server) {
+        var packed = instance.packNetworkState(server);
+        if (this.advanceTime.getAsBoolean()) return packed;
+        return new ClockNetworkState(packed.totalTicks(), packed.partialTick(), 0.0F);
     }
 
     public void tickFromLevel(RuntimeLevel level) {

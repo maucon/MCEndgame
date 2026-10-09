@@ -41,7 +41,7 @@ class ScarredOneEncounterService {
         val world = event.world
         val entity = ScarredOneEntity(CustomEntities.SCARRED_ONE, world)
         entity.setPos(encounterLocation.location.toVec3d().add(0.5, 0.0, 0.5))
-        entity.isInvulnerable = true
+        entity.setPermanentlyInvulnerable(true)
         entity.lookAt(EntityAnchorArgument.Anchor.EYES, encounterLocation.facingToLocation.toVec3d().add(0.5, 1.0, 0.5))
         world.addFreshEntity(entity)
     }

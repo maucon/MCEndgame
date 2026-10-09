@@ -3,9 +3,8 @@ package de.fuballer.mcendgame.client.accessor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.BeastweaverGradientData;
 import net.minecraft.client.model.Model;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.UvMapping;
 import org.jspecify.annotations.Nullable;
 
 public interface SubmitNodeCollectionAccessor {
@@ -17,9 +16,9 @@ public interface SubmitNodeCollectionAccessor {
             final int lightCoords,
             final int overlayCoords,
             final int tintedColor,
-            @Nullable final TextureAtlasSprite sprite,
+            @Nullable final UvMapping uvMapping,
             final int outlineColor,
-            final ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay,
+            final PoseStack.@Nullable Pose sheetedDecalPose,
             final BeastweaverGradientData gradientData
     );
 }

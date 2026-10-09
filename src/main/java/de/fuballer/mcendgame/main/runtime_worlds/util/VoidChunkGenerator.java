@@ -20,6 +20,7 @@ import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.densityfunction.SamplerContext;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -68,16 +70,12 @@ public class VoidChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void applyCarvers(WorldGenRegion chunkRegion, long seed, RandomState noiseConfig, BiomeManager world, StructureManager structureAccessor, ChunkAccess chunk) {
+    public CompletableFuture<ChunkAccess> buildTerrain(ChunkAccess chunk, Blender blender, RandomState noiseConfig, StructureManager structureAccessor, BiomeManager biomeManager, WorldGenRegion region, Set<Holder<Biome>> biomes) {
+        return CompletableFuture.completedFuture(chunk);
     }
 
     @Override
     public void createReferences(WorldGenLevel world, StructureManager accessor, ChunkAccess chunk) {
-    }
-
-    @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk) {
-        return CompletableFuture.completedFuture(chunk);
     }
 
     @Override
@@ -101,15 +99,11 @@ public class VoidChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void addDebugScreenInfo(List<String> text, RandomState noiseConfig, BlockPos pos) {
+    public void addDebugScreenInfo(List<String> text, RandomState noiseConfig, BlockPos pos, SamplerContext samplerContext) {
     }
 
     @Override
     public void applyBiomeDecoration(WorldGenLevel world, ChunkAccess chunk, StructureManager structureAccessor) {
-    }
-
-    @Override
-    public void buildSurface(WorldGenRegion region, StructureManager structures, RandomState noiseConfig, ChunkAccess chunk) {
     }
 
     @Override
@@ -128,7 +122,7 @@ public class VoidChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public WeightedList<MobSpawnSettings.SpawnerData> getMobsAt(Holder<Biome> biome, StructureManager accessor, MobCategory group, BlockPos pos) {
+    public WeightedList<MobSpawnSettings.SpawnerData> getMobsAt(Level level, StructureManager accessor, MobCategory group, BlockPos pos) {
         return WeightedList.of();
     }
 
@@ -138,6 +132,6 @@ public class VoidChunkGenerator extends ChunkGenerator {
 
     @Override
     public ChunkGeneratorStructureState createState(HolderLookup<StructureSet> structureSetRegistry, RandomState noiseConfig, long seed) {
-        return ChunkGeneratorStructureState.createForFlat(noiseConfig, seed, biomeSource, Stream.empty());
+        return ChunkGeneratorStructureState.createForFlat(noiseConfig, seed, ChunkPos.ZERO, biomeSource, Stream.empty());
     }
 }

@@ -6,8 +6,14 @@ accessible class net/minecraft/client/gui/screens/achievement/StatsScreen$Genera
 
 # runtimeWorlds
 accessible method net/minecraft/world/clock/ServerClockManager <init> (Lnet/minecraft/world/clock/PackedClockStates;)V
-accessible class net/minecraft/world/clock/ServerClockManager$ClockInstance
+accessible class net/minecraft/world/clock/ServerClockManager$ServerClockInstance
 accessible method net/minecraft/world/clock/ServerClockManager getGameTime ()J
-accessible method net/minecraft/world/clock/ServerClockManager getInstance (Lnet/minecraft/core/Holder;)Lnet/minecraft/world/clock/ServerClockManager$ClockInstance;
+accessible method net/minecraft/world/clock/ServerClockManager getInstance (Lnet/minecraft/core/Holder;)Lnet/minecraft/world/clock/ServerClockManager$ServerClockInstance;
 extendable	method	net/minecraft/world/clock/ServerClockManager modifyClock (Lnet/minecraft/core/Holder;Ljava/util/function/Consumer;)V
 accessible field net/minecraft/server/level/ServerLevel tickTime Z
+
+# custom render pipelines (private in vanilla)
+accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;)Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;
+accessible field net/minecraft/client/renderer/RenderPipelines MATRICES_FOG_SNIPPET Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;
+accessible field net/minecraft/client/renderer/RenderPipelines MATRICES_FOG_LIGHT_DIR_SNIPPET Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;
+accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_EMISSIVE_SNIPPET Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;

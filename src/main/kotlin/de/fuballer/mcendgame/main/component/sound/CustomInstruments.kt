@@ -14,6 +14,6 @@ object CustomInstruments {
     )
 
     fun bootstrap(context: BootstrapContext<Instrument>) {
-        Instruments.register(context, HOWL_OF_THE_WOLF_HORN, CustomSoundEvents.WOLF_HOWL_ENTRY, Instruments.GOAT_HORN_DURATION, Instruments.GOAT_HORN_RANGE_BLOCKS.toFloat())
+        Instruments.register(context, HOWL_OF_THE_WOLF_HORN, CustomSoundEvents.WOLF_HOWL_ENTRY, Instruments.GOAT_HORN_DURATION, Instruments.GOAT_HORN_RANGE_BLOCKS.toFloat(), Instruments.GOAT_HORN_INSTRUMENT_DAMAGE)
     }
 }

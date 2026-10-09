@@ -7,9 +7,8 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.UvMapping;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,9 +28,9 @@ public abstract class SubmitNodeStorageMixin implements SubmitNodeStorageAccesso
             final int lightCoords,
             final int overlayCoords,
             final int tintedColor,
-            @Nullable final TextureAtlasSprite sprite,
+            @Nullable final UvMapping uvMapping,
             final int outlineColor,
-            final ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay,
+            final PoseStack.@Nullable Pose sheetedDecalPose,
             final BeastweaverGradientData gradientData
     ) {
         var collector = order(0);
@@ -44,9 +43,9 @@ public abstract class SubmitNodeStorageMixin implements SubmitNodeStorageAccesso
                 lightCoords,
                 overlayCoords,
                 tintedColor,
-                sprite,
+                uvMapping,
                 outlineColor,
-                crumblingOverlay,
+                sheetedDecalPose,
                 gradientData
         );
     }

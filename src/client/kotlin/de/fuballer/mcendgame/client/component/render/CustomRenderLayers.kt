@@ -1,7 +1,6 @@
 package de.fuballer.mcendgame.client.component.render
 
 import net.minecraft.client.renderer.rendertype.LayeringTransform
-import net.minecraft.client.renderer.rendertype.OutputTarget
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.resources.Identifier
@@ -44,7 +43,6 @@ object CustomRenderLayers {
     val BEASTWEAVER_ATTACK: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.BEASTWEAVER_ATTACK_PIPELINE)
             .withTexture("Sampler0", texture)
-            .setOutputTarget(OutputTarget.MAIN_TARGET)
             .useLightmap()
             .sortOnUpload()
             .setOutline(RenderSetup.OutlineProperty.NONE)

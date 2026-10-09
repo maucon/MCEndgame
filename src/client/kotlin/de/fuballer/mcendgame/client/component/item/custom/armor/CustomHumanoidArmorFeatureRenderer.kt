@@ -290,8 +290,8 @@ class CustomHumanoidArmorFeatureRenderer<S : HumanoidRenderState, M : HumanoidMo
         glint: Boolean,
         color: Int = -1,
     ) {
-        queue.submitModel(model, state, matrices, renderLayer, light, OverlayTexture.NO_OVERLAY, color, null, state.outlineColor, null)
-        if (glint) queue.submitModel(model, state, matrices, RenderTypes.armorEntityGlint(), light, OverlayTexture.NO_OVERLAY, color, null, state.outlineColor, null)
+        queue.submitModel(model, state, matrices, renderLayer, light, OverlayTexture.NO_OVERLAY, color, null, state.outlineColor)
+        if (glint) queue.submitModel(model, state, matrices, RenderTypes.trimmedArmorGlint(), light, OverlayTexture.NO_OVERLAY, color, null, state.outlineColor)
     }
 
     override fun submit(

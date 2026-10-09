@@ -91,7 +91,7 @@ class TotemStatueBlockEntityRenderer(
 
         val rotation = state.rotation
         val rotationDeg = RotationSegment.convertToDegrees(rotation)
-        matrices.mulPose(Axis.YP.rotationDegrees(rotationDeg))
+        matrices.rotateDegrees(Axis.YP, rotationDeg)
 
         val activeTicks = state.activeTicks
         if (activeTicks > 0) {
@@ -101,7 +101,7 @@ class TotemStatueBlockEntityRenderer(
             matrices.translate(0.0, -hoverOffset, 0.0)
 
             val hoverRot = getHoverRotation(preciseTick)
-            matrices.mulPose(Axis.YP.rotationDegrees(hoverRot))
+            matrices.rotateDegrees(Axis.YP, hoverRot)
         }
 
         val modelState = TotemStatueBlockEntityModel.TotemStatueModelState()
@@ -116,8 +116,7 @@ class TotemStatueBlockEntityRenderer(
             OverlayTexture.NO_OVERLAY,
             -1,
             null,
-            0,
-            state.breakProgress
+            -1,
         )
 
         matrices.popPose()

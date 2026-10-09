@@ -356,7 +356,7 @@ open class BanditMeleeGoal(
         if (!canPerformMeleeAttack(target)) return
         if (hasToBeCrit && !canCriticalAttack()) return
 
-        banditEntity.swing(InteractionHand.MAIN_HAND)
+        banditEntity.swingForAttack(InteractionHand.MAIN_HAND)
         banditEntity.doHurtTarget(getServerLevel(banditEntity), target)
         setMeleeAttackCooldown(banditType)
 

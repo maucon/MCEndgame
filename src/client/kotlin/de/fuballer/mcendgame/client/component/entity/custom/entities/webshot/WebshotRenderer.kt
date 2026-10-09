@@ -28,8 +28,8 @@ class WebshotRenderer(
     ) {
         matrices.pushPose()
         matrices.translate(0.0f, 0.15f, 0.0f)
-        matrices.mulPose(Axis.YP.rotationDegrees(renderState.yRot + 180))
-        matrices.mulPose(Axis.XP.rotationDegrees(renderState.xRot))
+        matrices.rotateDegrees(Axis.YP, renderState.yRot + 180)
+        matrices.rotateDegrees(Axis.XP, renderState.xRot)
         model.setupAnim(renderState)
 
         queue.submitModel(
@@ -40,7 +40,6 @@ class WebshotRenderer(
             renderState.lightCoords,
             OverlayTexture.NO_OVERLAY,
             renderState.outlineColor,
-            null,
         )
         matrices.popPose()
 

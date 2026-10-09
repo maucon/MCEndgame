@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Skeleton.class)
 public class SkeletonConversionMixin {
-    @Inject(method = "setFreezeConverting", at = @At("HEAD"), cancellable = true)
-    void setConverting(boolean converting, CallbackInfo ci) {
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ConversionTracker;tick()V"), cancellable = true)
+    void setConverting(CallbackInfo ci) {
         var entity = (Skeleton) (Object) this;
         var entityConversionCommand = EntityConversionCommand.Companion.of(entity);
         var cmd = CommandGateway.INSTANCE.apply(entityConversionCommand);

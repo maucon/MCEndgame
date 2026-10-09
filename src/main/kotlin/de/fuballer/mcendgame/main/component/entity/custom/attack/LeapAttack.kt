@@ -32,7 +32,7 @@ open class LeapAttack<T>(
         val existingTarget = target ?: return
         attacker.lookAt(existingTarget, 90F, 90F)
         attacker.lookControl.setLookAt(existingTarget)
-        attacker.yBodyRot = attacker.yRot
+        attacker.yBodyRot = attacker.getYRot()
 
         val distanceVector = existingTarget.position().subtract(attacker.position())
         val newVelocity = leapType.calculateVelocity(distanceVector)

@@ -25,6 +25,7 @@ import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.AnimationState
 import net.minecraft.world.entity.Avatar
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
@@ -193,13 +194,13 @@ class ArachneEntity(
     }
 
     private fun tickScaleUpdate() {
-        if (scale == previousScale) return
-        previousScale = scale
+        if (getScale() == previousScale) return
+        previousScale = getScale()
 
-        meleeAttackGoal.setRange(MELEE_ATTACK_RANGE * scale)
-        stayInMeleeRangeGoal.setMaxDistance(MELEE_PURSUE_DISTANCE * scale)
+        meleeAttackGoal.setRange(MELEE_ATTACK_RANGE * getScale())
+        stayInMeleeRangeGoal.setMaxDistance(MELEE_PURSUE_DISTANCE * getScale())
 
-        maxStayMeleeRangeSquared = (MAX_STAY_MELEE_RANGE * scale).pow(2)
+        maxStayMeleeRangeSquared = (MAX_STAY_MELEE_RANGE * getScale()).pow(2)
     }
 
     private fun tickDealAttackDamage() {
@@ -371,7 +372,7 @@ class ArachneEntity(
         playSound(SoundEvents.SPIDER_STEP, blockSoundGroup.getVolume() * 0.15f, blockSoundGroup.getPitch())
     }
 
-    override fun getLeashOffset() = Vec3(0.0, eyeHeight * 0.9, bbWidth * 0.4)
+    override fun getLeashOffset() = Vec3(0.0, getEyeHeight() * 0.9, bbWidth * 0.4)
 
     override fun addHookedEntity(hookedUuid: UUID) {
         super.addHookedEntity(hookedUuid)
@@ -419,7 +420,7 @@ class ArachneEntity(
         dealAttackDamageDelay = 7
         lookControl.setLookAt(target)
         lookAt(target, 180F, 180F)
-        yBodyRot = yRot
+        yBodyRot = getYRot()
     }
 
     private fun dealAttackDamage() {
@@ -427,10 +428,10 @@ class ArachneEntity(
 
         var targets = serverWorld.getEntitiesOfClass(
             LivingEntity::class.java,
-            boundingBox.inflate(MELEE_ATTACK_LENGTH * scale)
+            boundingBox.inflate(MELEE_ATTACK_LENGTH * getScale())
         ) { it != this }
 
-        val forward = calculateViewVector(xRot, yBodyRot).horizontal().normalize()
+        val forward = Entity.calculateViewVector(getXRot(), yBodyRot).horizontal().normalize()
         val sideways = forward.cross(Vec3(0.0, 1.0, 0.0))
         targets = targets.filter {
             isInAttackArea(it.position().subtract(position()), forward, sideways)
@@ -439,7 +440,7 @@ class ArachneEntity(
 
         val baseDamage = getAttributeValue(Attributes.ATTACK_DAMAGE).toFloat()
         val damage = baseDamage * MELEE_DAMAGE_FACTOR
-        val knockBackDirection = calculateViewVector(xRot, yBodyRot).horizontal().normalize()
+        val knockBackDirection = Entity.calculateViewVector(getXRot(), yBodyRot).horizontal().normalize()
         val knockBackStrength = getAttributeValue(Attributes.ATTACK_KNOCKBACK) * getAttributeValue(Attributes.SCALE)
 
         targets.forEach {

@@ -20,10 +20,10 @@ import java.util.Map;
 public abstract class ServerClockManagerMixin implements ServerClockManagerExtension {
     @Shadow
     @Final
-    private Map<Holder<WorldClock>, ServerClockManager.ClockInstance> clocks;
+    private Map<Holder<WorldClock>, ServerClockManager.ServerClockInstance> clocks;
 
     @Override
-    public Map<Holder<WorldClock>, ServerClockManager.ClockInstance> mcendgame$getClocks() {
+    public Map<Holder<WorldClock>, ServerClockManager.ServerClockInstance> mcendgame$getClocks() {
         return this.clocks;
     }
 

@@ -73,7 +73,7 @@ class HowlOfTheWolf(
 
             wolf.maxDuration = baseDuration
             wolf.setDieWithoutTarget(false)
-            wolf.isInvulnerable = true
+            wolf.setPermanentlyInvulnerable(true)
 
             wolf.updateCompanionGoals(user)
 

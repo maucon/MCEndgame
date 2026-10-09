@@ -62,8 +62,8 @@ class AreaAttackDamage(
         extraRotRad: Float = 0F,
     ) {
         val yRot = if (at is LivingEntity) at.yBodyRot else at.yRot
-        val forward = at
-            .calculateViewVector(at.xRot, yRot)
+        val forward = Entity
+            .calculateViewVector(at.getXRot(), yRot)
             .horizontal()
             .yRot(extraRotRad)
             .normalize()
@@ -135,7 +135,7 @@ class AreaAttackDamage(
     ) {
         val knockBackStrength = knockback * if (applyScale) scale else 1.0
         target.needsSync = true
-        target.hurtMarked = true
+        target.syncVelocity = true
 
         when (knockbackType) {
             KnockbackType.FACING -> target.takeKnockbackFrom(damager, knockBackStrength, -forward.x, -forward.z)
