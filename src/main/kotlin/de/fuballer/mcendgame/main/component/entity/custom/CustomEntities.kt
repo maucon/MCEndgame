@@ -7,6 +7,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.B
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_wolf.BeastweaverWolfEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.block_debris.BlockDebrisEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.blood_king.BloodKingEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.blood_queen.BloodQueenEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
@@ -161,5 +163,21 @@ object CustomEntities {
             .eyeHeight(1.62F)
             .vehicleAttachment(Avatar.DEFAULT_VEHICLE_ATTACHMENT)
             .clientTrackingRange(16)
+    )
+    val BLOOD_KING = RegistryUtil.registerEntity(
+        CustomEntityIds.BLOOD_KING,
+        EntityType.Builder.of(::BloodKingEntity, MobCategory.MONSTER)
+            .sized(1.0f, 2.55f)
+            .eyeHeight(2.25f)
+            .clientTrackingRange(16)
+            .notInPeaceful()
+    )
+    val BLOOD_QUEEN = RegistryUtil.registerEntity(
+        CustomEntityIds.BLOOD_QUEEN,
+        EntityType.Builder.of(::BloodQueenEntity, MobCategory.MONSTER)
+            .sized(1.0f, 2.5f)
+            .eyeHeight(2.2f)
+            .clientTrackingRange(16)
+            .notInPeaceful()
     )
 }
