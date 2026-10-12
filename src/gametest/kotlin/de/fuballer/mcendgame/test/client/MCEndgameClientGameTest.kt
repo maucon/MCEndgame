@@ -1,5 +1,7 @@
 package de.fuballer.mcendgame.test.client
 
+import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
+import de.fuballer.mcendgame.client.component.render.CustomRenderPipelines
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext
 import net.minecraft.core.registries.BuiltInRegistries
@@ -14,6 +16,8 @@ class MCEndgameClientGameTest : FabricClientGameTest {
     }
 
     override fun runTest(context: ClientGameTestContext) {
+        verifyCustomRenderPipelines()
+
         context.worldBuilder().create().use { singleplayer ->
             singleplayer.connection.waitForChunksRender()
 
@@ -35,5 +39,30 @@ class MCEndgameClientGameTest : FabricClientGameTest {
 
             context.takeScreenshot("all_entities")
         }
+    }
+
+    /**
+     * 26.3 compiles every registered render pipeline while the shader manager reloads, so the mod's
+     * custom pipelines have to be registered before the first reload instead of lazily on first use
+     * (`CustomRenderPipelineRegisterer` does exactly that).
+     *
+     * Building them here proves the ported shader sources - which had to switch from `#moj_import` to
+     * `#include` and gained explicit `layout(location = ...)` qualifiers - still compile. A shader
+     * that fails to compile aborts the reload, so this point would never be reached.
+     */
+    private fun verifyCustomRenderPipelines() {
+        val pipelines = linkedMapOf(
+            "link" to CustomRenderPipelines.LINK_PIPELINE,
+            "ghostly" to CustomRenderPipelines.GHOSTLY_PIPELINE,
+            "bound_abyss" to CustomRenderPipelines.BOUND_ABYSS_PIPELINE,
+            "beastweaver_attack" to CustomRenderPipelines.BEASTWEAVER_ATTACK_PIPELINE,
+        )
+
+        for ((name, pipeline) in pipelines) {
+            LOG.info("Custom render pipeline '{}' is registered and compiled: {}", name, pipeline)
+        }
+
+        // Also builds the RenderTypes layered on top of those pipelines.
+        LOG.info("Custom render layer 'link' is registered: {}", CustomRenderLayers.LINK)
     }
 }

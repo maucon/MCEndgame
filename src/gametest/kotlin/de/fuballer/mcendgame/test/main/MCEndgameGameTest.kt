@@ -36,4 +36,31 @@ class MCEndgameGameTest {
     fun testDungeonOpenAndJoin(helper: GameTestHelper) {
         DungeonOpenAndJoinGameTest.testPlayerOpensAndJoinsDungeon(helper)
     }
+
+    // --- 26.3 port: mixin regression tests (see MixinPortGameTest) ---
+
+    @GameTest
+    fun testDungeonSkeletonTicksButNeverConverts(helper: GameTestHelper) {
+        MixinPortGameTest.testDungeonSkeletonTicksButNeverConverts(helper)
+    }
+
+    @GameTest
+    fun testNonDungeonSkeletonStillConverts(helper: GameTestHelper) {
+        MixinPortGameTest.testNonDungeonSkeletonStillConverts(helper)
+    }
+
+    @GameTest
+    fun testDungeonZombieDoesNotConvertInWater(helper: GameTestHelper) {
+        MixinPortGameTest.testDungeonZombieDoesNotConvertInWater(helper)
+    }
+
+    @GameTest
+    fun testDungeonClockManagerExposesClockInstances(helper: GameTestHelper) {
+        MixinPortGameTest.testDungeonClockManagerExposesClockInstances(helper)
+    }
+
+    @GameTest
+    fun testDamageStillAppliesThroughMixin(helper: GameTestHelper) {
+        MixinPortGameTest.testDamageStillAppliesThroughMixin(helper)
+    }
 }
