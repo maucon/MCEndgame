@@ -167,7 +167,7 @@ object CustomEntities {
     val BLOOD_KING = RegistryUtil.registerEntity(
         CustomEntityIds.BLOOD_KING,
         EntityType.Builder.of(::BloodKingEntity, MobCategory.MONSTER)
-            .sized(1.0f, 2.55f)
+            .sized(0.9f, 2.55f)
             .eyeHeight(2.25f)
             .clientTrackingRange(16)
             .notInPeaceful()
@@ -175,7 +175,7 @@ object CustomEntities {
     val BLOOD_QUEEN = RegistryUtil.registerEntity(
         CustomEntityIds.BLOOD_QUEEN,
         EntityType.Builder.of(::BloodQueenEntity, MobCategory.MONSTER)
-            .sized(1.0f, 2.5f)
+            .sized(0.9f, 2.5f)
             .eyeHeight(2.2f)
             .clientTrackingRange(16)
             .notInPeaceful()

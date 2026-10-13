@@ -75,7 +75,7 @@ class BloodKingEntity(
         controllers.add(
             AnimationController<BloodKingEntity>("Walk/Idle", 5)
             { test ->
-                test.setAndContinue(if (test.isMoving) DefaultAnimations.IDLE else DefaultAnimations.IDLE)
+                test.setAndContinue(if (test.isMoving) DefaultAnimations.WALK else DefaultAnimations.IDLE)
             },
         )
     }
