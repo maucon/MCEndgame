@@ -69,8 +69,6 @@ jobs:
 
   client_game_test:
     runs-on: ubuntu-24.04
-    # Backstop: the client gametest has no internal timeout and can hang indefinitely on a
-    # software renderer, which previously burned an hour of runner time before manual cancellation.
     timeout-minutes: 30
     env:
       # The runner has no GPU and Xvfb offers no hardware acceleration, so use Mesa's llvmpipe.
@@ -107,26 +105,20 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Install software OpenGL
-        # The runner image ships Xvfb but not Mesa's GLX/DRI stack. Without it Minecraft 26.3 fails
-        # to create an OpenGL backend ("Couldn't find matching GLX visual"), fails Vulkan too
-        # ("VK_KHR_surface") and then blocks instead of exiting - which previously hung the job.
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends libgl1-mesa-dri libglx-mesa0 mesa-utils
 
       - name: Verify software OpenGL under Xvfb
-        # Fail fast with a readable error instead of letting a windowless client burn the timeout.
         run: xvfb-run -a -s "-screen 0 1280x720x24" glxinfo -B
 
       - name: Run client game tests
         env:
           GITHUB_PACKAGES_NAME: ${{ github.actor }}
           GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # `timeout` (rather than only the job timeout) keeps this step's failure explicit and lets
-        # the `if: always()` screenshot upload below still run, so a hang stays diagnosable.
         run: |
           ./gradlew runDatagen
-          timeout --kill-after=30s 20m ./gradlew runProductionClientGameTest
+          timeout --kill-after=30s 20m xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX" ./gradlew runProductionClientGameTest
 
       - name: Upload test screenshots
         if: always()

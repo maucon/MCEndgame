@@ -51,10 +51,10 @@ class CustomRecipeProvider(
                 .unlockedBy("has_crystal", has(CustomTags.CRYSTAL))
                 .save(output)
 
-            dyedItem(CustomArmorItems.SUEDE_HELMET, "dyed_armor");
-            dyedItem(CustomArmorItems.SUEDE_CHESTPLATE, "dyed_armor");
-            dyedItem(CustomArmorItems.SUEDE_LEGGINGS, "dyed_armor");
-            dyedItem(CustomArmorItems.SUEDE_BOOTS, "dyed_armor");
+            dyedItem(CustomArmorItems.SUEDE_HELMET, "dyed_armor")
+            dyedItem(CustomArmorItems.SUEDE_CHESTPLATE, "dyed_armor")
+            dyedItem(CustomArmorItems.SUEDE_LEGGINGS, "dyed_armor")
+            dyedItem(CustomArmorItems.SUEDE_BOOTS, "dyed_armor")
         }
     }
 
