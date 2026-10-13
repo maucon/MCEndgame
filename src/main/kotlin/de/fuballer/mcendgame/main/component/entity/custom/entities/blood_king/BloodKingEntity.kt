@@ -1,14 +1,21 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.blood_king
 
+import com.geckolib.animatable.GeoAnimatable
 import com.geckolib.animatable.GeoEntity
 import com.geckolib.animatable.instance.AnimatableInstanceCache
 import com.geckolib.animatable.manager.AnimatableManager
 import com.geckolib.animation.AnimationController
+import com.geckolib.animation.RawAnimation
+import com.geckolib.animation.`object`.PlayState
 import com.geckolib.constant.DefaultAnimations
 import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
@@ -40,7 +47,27 @@ class BloodKingEntity(
     DisableAbleGoalsMob,
     BlockAbleMovementMob<BloodKingEntity> {
     companion object {
+        private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
+
+        private val SLASH_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
+        private val SLASH_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, SLASH_AREA)
+        private val SLASH_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slash")
+        private const val SLASH_ID = "Slash"
+        private val SLASH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLASH_ID)
+        private val SLASH_ATTACK =
+            Attack<BloodKingEntity>(
+                SLASH_ID,
+                SLASH_ANIM_DATA,
+                totalDuration = 28,
+                cooldown = 45,
+                DistanceTriggerCondition(3.0, affectedByScale = true),
+                data = listOf(
+                    DelayedDamageData(SLASH_ATTACK_DAMAGE, 12),
+                ),
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BloodKingEntity>>> = listOf(
+            RandomOption(1, SLASH_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -71,12 +98,18 @@ class BloodKingEntity(
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
 
+    private val attackAnimationController =
+        AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
+            .triggerableAnim(SLASH_ID, SLASH_ANIM)
+
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
             AnimationController<BloodKingEntity>("Walk/Idle", 5)
             { test ->
                 test.setAndContinue(if (test.isMoving) DefaultAnimations.WALK else DefaultAnimations.IDLE)
             },
+
+            attackAnimationController,
         )
     }
 
