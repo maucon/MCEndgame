@@ -109,9 +109,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends libgl1-mesa-dri libglx-mesa0 mesa-utils
 
-      - name: Verify software OpenGL under Xvfb
-        run: xvfb-run -a -s "-screen 0 1280x720x24" glxinfo -B
-
       - name: Run client game tests
         env:
           GITHUB_PACKAGES_NAME: ${{ github.actor }}
@@ -119,7 +116,7 @@ jobs:
           SDL_VIDEO_FORCE_EGL: '1'
         run: |
           ./gradlew runDatagen
-          timeout --kill-after=30s 10m xvfb-run -a -s "-screen 0 1280x720x24+32 +extension GLX" ./gradlew --no-daemon runProductionClientGameTest
+          timeout --kill-after=30s 10m ./gradlew --no-daemon runProductionClientGameTest
 
       - name: Upload test screenshots
         if: always()
