@@ -19,12 +19,7 @@ class CustomRecipeProvider(
     packOutput: FabricPackOutput,
     registryLookup: CompletableFuture<HolderLookup.Provider>,
 ) : FabricRecipeProvider(packOutput, registryLookup) {
-    /**
-     * 26.3 collects recipes and advancements through bootstrap contexts, and [RecipeProvider] already
-     * adapts them to the non-deprecated `RecipeOutput` recipe builders expect - exposed as the
-     * inherited [RecipeProvider.output] field. Building a second adapter here would mean
-     * reimplementing (and deprecating) that bridge ourselves.
-     */
+
     override fun createRecipeProvider(
         registryLookup: HolderLookup.Provider,
         recipes: BootstrapContext<Recipe<*>>,

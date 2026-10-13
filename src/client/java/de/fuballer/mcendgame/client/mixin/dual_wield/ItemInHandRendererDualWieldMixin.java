@@ -9,10 +9,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(FirstPersonHandsAndItems.class)
 public class ItemInHandRendererDualWieldMixin {
+    @Unique
     private static final float FIRST_PERSON_HAND_SWAP_HEIGHT = 1F;
 
     @Shadow
@@ -26,7 +28,7 @@ public class ItemInHandRendererDualWieldMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemSwapScale(F)F")
     )
     private float mcendgame$modifyDualWieldHandSwapScale(float swapScale, LocalPlayer player) {
-        // The off hand is the one that animates while dual wielding, so the main hand height keeps its normal value.
+        // The offhand is the one that animates while dual wielding, so the main hand height keeps its normal value.
         if (mainHandItem != player.getMainHandItem()) return swapScale;
         if (offHandItem != player.getOffhandItem()) return swapScale;
         if (!EntityExtension.INSTANCE.isDualWielding(player)) return swapScale;

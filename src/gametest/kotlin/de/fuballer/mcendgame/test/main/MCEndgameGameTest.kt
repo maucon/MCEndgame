@@ -37,8 +37,7 @@ class MCEndgameGameTest {
         DungeonOpenAndJoinGameTest.testPlayerOpensAndJoinsDungeon(helper)
     }
 
-    // --- 26.3 port: mixin regression tests (see MixinPortGameTest) ---
-
+    // --- mixin regression tests (see MixinPortGameTest) ---
     @GameTest
     fun testDungeonSkeletonTicksButNeverConverts(helper: GameTestHelper) {
         MixinPortGameTest.testDungeonSkeletonTicksButNeverConverts(helper)

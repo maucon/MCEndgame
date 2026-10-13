@@ -116,9 +116,10 @@ jobs:
         env:
           GITHUB_PACKAGES_NAME: ${{ github.actor }}
           GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SDL_VIDEO_FORCE_EGL: '1'
         run: |
           ./gradlew runDatagen
-          timeout --kill-after=30s 20m xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX" ./gradlew runProductionClientGameTest
+          timeout --kill-after=30s 10m xvfb-run -a -s "-screen 0 1280x720x24+32 +extension GLX" ./gradlew --no-daemon runProductionClientGameTest
 
       - name: Upload test screenshots
         if: always()

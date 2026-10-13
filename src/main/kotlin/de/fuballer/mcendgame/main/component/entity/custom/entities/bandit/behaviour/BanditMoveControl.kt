@@ -37,8 +37,8 @@ class BanditMoveControl(
         dist = speed / dist
         xa *= dist
         za *= dist
-        val sin = Mth.sin((mob.getYRot() * (Math.PI / 180.0).toFloat()).toDouble())
-        val cos = Mth.cos((mob.getYRot() * (Math.PI / 180.0).toFloat()).toDouble())
+        val sin = Mth.sin((mob.yRot * (Math.PI / 180.0).toFloat()).toDouble())
+        val cos = Mth.cos((mob.yRot * (Math.PI / 180.0).toFloat()).toDouble())
         val dx = xa * cos - za * sin
         val dz = za * cos + xa * sin
         if (!isWalkable(dx, dz)) {
@@ -64,7 +64,7 @@ class BanditMoveControl(
         }
 
         tickRotate(xd, zd)
-        mob.setSpeed(getModifiedSpeed())
+        mob.speed = getModifiedSpeed()
 
         if (jumping) {
             if (mob.onGround() || mob.isInLiquid && mob.isAffectedByFluids) operation = Operation.WAIT
@@ -87,7 +87,7 @@ class BanditMoveControl(
         zd: Double
     ) {
         val yRotD = (Mth.atan2(zd, xd) * 180.0f / Math.PI.toFloat()).toFloat() - 90.0f
-        mob.setYRot(rotlerp(mob.getYRot(), yRotD, 90.0f))
+        mob.yRot = rotlerp(mob.yRot, yRotD, 90.0f)
     }
 
     private fun isWalkable(dx: Float, dz: Float): Boolean {

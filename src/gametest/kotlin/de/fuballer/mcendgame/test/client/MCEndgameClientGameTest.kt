@@ -18,7 +18,6 @@ class MCEndgameClientGameTest : FabricClientGameTest {
     override fun runTest(context: ClientGameTestContext) {
         verifyCustomRenderPipelines()
 
-        // Each stage is logged so that a CI hang points at the phase it stalled in.
         LOG.info("Creating singleplayer world")
         context.worldBuilder().create().use { singleplayer ->
             LOG.info("Waiting for chunks to render")
@@ -50,15 +49,6 @@ class MCEndgameClientGameTest : FabricClientGameTest {
         }
     }
 
-    /**
-     * 26.3 compiles every registered render pipeline while the shader manager reloads, so the mod's
-     * custom pipelines have to be registered before the first reload instead of lazily on first use
-     * (`CustomRenderPipelineRegisterer` does exactly that).
-     *
-     * Building them here proves the ported shader sources - which had to switch from `#moj_import` to
-     * `#include` and gained explicit `layout(location = ...)` qualifiers - still compile. A shader
-     * that fails to compile aborts the reload, so this point would never be reached.
-     */
     private fun verifyCustomRenderPipelines() {
         val pipelines = linkedMapOf(
             "link" to CustomRenderPipelines.LINK_PIPELINE,

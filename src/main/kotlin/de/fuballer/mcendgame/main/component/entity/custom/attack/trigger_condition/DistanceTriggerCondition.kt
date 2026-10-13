@@ -21,7 +21,7 @@ class DistanceTriggerCondition(
         val squaredDistance = attacker.distanceToSqr(target)
         if (!affectedByScale) return squaredDistance in squaredMinDistance..squaredMaxDistance
 
-        val scale = attacker.getScale().toDouble()
+        val scale = attacker.scale.toDouble()
         val scaledMinDistance = minDistance * scale
         val scaledMaxDistance = maxDistance * scale
         return squaredDistance in (scaledMinDistance * scaledMinDistance)..(scaledMaxDistance * scaledMaxDistance)

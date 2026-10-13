@@ -23,12 +23,6 @@ public class MinecraftDualWieldMixin {
     @Unique
     int lastDualWieldHitTickCount = 0;
 
-    /**
-     * 26.3 splits the swing into {@code swing(InteractionHand, SwingAnimation, boolean)} and
-     * {@code startAttack} hardcodes {@link InteractionHand#MAIN_HAND}. Rewriting only the animation
-     * therefore animated the main hand with the offhand's animation, so the hand and its animation
-     * both have to be swapped together here.
-     */
     @WrapOperation(
             method = "startAttack",
             at = @At(

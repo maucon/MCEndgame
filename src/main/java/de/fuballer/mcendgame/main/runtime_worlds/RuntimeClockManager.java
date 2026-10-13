@@ -39,7 +39,7 @@ public class RuntimeClockManager extends ServerClockManager {
     }
 
     @Override
-    protected void modifyClock(final Holder<WorldClock> clock, final Consumer<? super ServerClockManager.ServerClockInstance> action) {
+    protected void modifyClock(final @NonNull Holder<WorldClock> clock, final Consumer<? super ServerClockManager.ServerClockInstance> action) {
         ServerClockManager.ServerClockInstance instance = this.getInstance(clock);
         action.accept(instance);
         Map<Holder<WorldClock>, ClockNetworkState> updates = Map.of(clock, this.packNetworkState(instance, this.server));
@@ -64,10 +64,6 @@ public class RuntimeClockManager extends ServerClockManager {
     }
 
     protected ClockNetworkState packNetworkState(ServerClockManager.ServerClockInstance instance, final MinecraftServer server) {
-        // ServerClockInstance#packNetworkState() consults the *global* ADVANCE_TIME rule, which says
-        // nothing about this runtime world: with the server-wide rule off it would report a stopped
-        // clock even while this world's own rule advances time. Pause from this manager's rule
-        // instead, like the 26.2 implementation did.
         boolean paused = instance.isPaused() || !this.advanceTime.getAsBoolean();
         return new ClockNetworkState(instance.totalTicks(), instance.partialTick(), paused ? 0.0F : instance.rate());
     }

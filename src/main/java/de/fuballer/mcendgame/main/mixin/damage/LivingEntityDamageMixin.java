@@ -150,10 +150,6 @@ public abstract class LivingEntityDamageMixin {
         // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
         boolean tookFullDamage = true;
-        // 26.3 split the old `invulnerableTime` field in two: `damageCooldownTime` keeps the hurt
-        // cooldown semantics used here, while `invulnerableTime` now means genuine temporary
-        // invulnerability and feeds isInvulnerableTo()/actuallyHurt(). Writing the latter would make
-        // every struck entity invulnerable and swallow the damage entirely.
         if ((float) this_.damageCooldownTime > 10.0f && !source.is(DamageTypeTags.BYPASSES_COOLDOWN)) {
             if (damage <= this.lastHurt) {
                 return false;
