@@ -46,6 +46,7 @@ object CustomRenderPipelines {
             .withBindGroupLayout(BindGroupLayouts.SAMPLER2)
             .withVertexBinding(0, DefaultVertexFormat.ENTITY)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
+            .withColorTargetState(ColorTargetState.DEFAULT)
             .withDepthStencilState(DepthStencilState.DEFAULT)
             .withShaderDefine("ALPHA_CUTOUT", 0.1F)
             .withShaderDefine("NO_OVERLAY")
