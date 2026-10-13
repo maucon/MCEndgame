@@ -107,17 +107,32 @@ class TotemStatueBlockEntityRenderer(
         val modelState = TotemStatueBlockEntityModel.TotemStatueModelState()
         val texture = if (activeTicks >= 0) ACTIVE_TEXTURE else TEXTURE
         val renderLayer = RenderTypes.entityCutout(texture)
+        val lightCoords = state.lightCoords
+        // 0 = no outline: entityCutout supports outlines, so -1 would draw a white one.
         queue.submitModel(
             model,
             modelState,
             matrices,
             renderLayer,
-            state.lightCoords,
+            lightCoords,
             OverlayTexture.NO_OVERLAY,
             -1,
             null,
-            -1,
+            0,
         )
+        // 26.3 moved the crumbling overlay out of submitModel into its own call.
+        state.breakProgress?.let { crumblingOverlay ->
+            queue.submitCrumblingOverlay(
+                model,
+                modelState,
+                matrices,
+                renderLayer,
+                lightCoords,
+                OverlayTexture.NO_OVERLAY,
+                -1,
+                crumblingOverlay,
+            )
+        }
 
         matrices.popPose()
     }

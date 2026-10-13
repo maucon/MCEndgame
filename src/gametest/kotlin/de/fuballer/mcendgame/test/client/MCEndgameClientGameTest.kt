@@ -18,17 +18,24 @@ class MCEndgameClientGameTest : FabricClientGameTest {
     override fun runTest(context: ClientGameTestContext) {
         verifyCustomRenderPipelines()
 
+        // Each stage is logged so that a CI hang points at the phase it stalled in.
+        LOG.info("Creating singleplayer world")
         context.worldBuilder().create().use { singleplayer ->
+            LOG.info("Waiting for chunks to render")
             singleplayer.connection.waitForChunksRender()
+            LOG.info("Chunks rendered")
 
             val pos = singleplayer.server.computeOnServer<Vec3, RuntimeException> { server ->
                 val player = server.playerList.players.first()
                 player.position()
             }
 
-            for (entityType in BuiltInRegistries.ENTITY_TYPE) {
+            val entityTypes = BuiltInRegistries.ENTITY_TYPE
+                .filter { BuiltInRegistries.ENTITY_TYPE.getKey(it) != Identifier.withDefaultNamespace("player") }
+            LOG.info("Summoning {} entity types", entityTypes.size)
+
+            for (entityType in entityTypes) {
                 val id = BuiltInRegistries.ENTITY_TYPE.getKey(entityType)
-                if (id == Identifier.withDefaultNamespace("player")) continue
 
                 LOG.info("Spawning {}", id)
                 singleplayer.server.runCommand(
@@ -37,7 +44,9 @@ class MCEndgameClientGameTest : FabricClientGameTest {
             }
             context.waitTicks(5)
 
+            LOG.info("Taking screenshot")
             context.takeScreenshot("all_entities")
+            LOG.info("Screenshot taken")
         }
     }
 

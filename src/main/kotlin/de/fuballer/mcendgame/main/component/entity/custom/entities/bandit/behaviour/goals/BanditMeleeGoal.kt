@@ -76,7 +76,7 @@ open class BanditMeleeGoal(
 
     override fun start() {
         banditEntity.getNavigation().moveTo(path, speedModifier)
-        banditEntity.setAggressive(true)
+        banditEntity.isAggressive = true
         banditEntity.isSprinting = true
         ticksUntilNextPathRecalculation = 0
         ticksUntilNextAttack = 0
@@ -88,7 +88,7 @@ open class BanditMeleeGoal(
         if (isBlocking()) stopBlocking()
         combatMode = CombatMode.MOVE
         banditEntity.isSprinting = false
-        banditEntity.setAggressive(false)
+        banditEntity.isAggressive = false
         banditEntity.getNavigation().stop()
         banditEntity.getBanditMoveControl().strafe(0F, 0F)
     }

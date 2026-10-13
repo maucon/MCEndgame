@@ -43,9 +43,9 @@ class DodgedProjectileReflectService(
 
             val newVelocity = newDirection.scale(1.6)
             val newYaw = (Math.toDegrees(kotlin.math.atan2(newVelocity.z, newVelocity.x)) - 90.0).toFloat()
-            projectile.setYRot(newYaw)
+            projectile.yRot = newYaw
             projectile.yRotO = newYaw
-            projectile.setDeltaMovement(newVelocity)
+            projectile.deltaMovement = newVelocity
             projectile.needsSync = true
 
             var loyalty = false

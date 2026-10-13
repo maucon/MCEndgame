@@ -1156,7 +1156,7 @@ class BeastweaverEntity(
         tickBlockedMovement()
         tickAttacks(level, this)
 
-        bossEvent.setProgress(health / maxHealth)
+        bossEvent.progress = health / maxHealth
     }
 
     private fun tickTransformProgress() {

@@ -46,7 +46,7 @@ class BanditMoveControl(
             strafeRight = 0.0f
         }
 
-        mob.setSpeed(speed)
+        mob.speed = speed
         mob.setZza(strafeForwards)
         mob.setXxa(strafeRight)
         operation = Operation.WAIT

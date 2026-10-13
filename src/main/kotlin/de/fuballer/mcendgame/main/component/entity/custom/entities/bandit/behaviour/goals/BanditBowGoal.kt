@@ -32,12 +32,12 @@ class BanditBowGoal(
 
     override fun start() {
         super.start()
-        banditEntity.setAggressive(true)
+        banditEntity.isAggressive = true
     }
 
     override fun stop() {
         super.stop()
-        banditEntity.setAggressive(false)
+        banditEntity.isAggressive = false
         seeTime = 0
         useBowCooldown = -1
         banditEntity.stopUsingItem()

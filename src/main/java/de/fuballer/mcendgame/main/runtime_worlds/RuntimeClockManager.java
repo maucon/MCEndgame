@@ -64,9 +64,12 @@ public class RuntimeClockManager extends ServerClockManager {
     }
 
     protected ClockNetworkState packNetworkState(ServerClockManager.ServerClockInstance instance, final MinecraftServer server) {
-        var packed = instance.packNetworkState(server);
-        if (this.advanceTime.getAsBoolean()) return packed;
-        return new ClockNetworkState(packed.totalTicks(), packed.partialTick(), 0.0F);
+        // ServerClockInstance#packNetworkState() consults the *global* ADVANCE_TIME rule, which says
+        // nothing about this runtime world: with the server-wide rule off it would report a stopped
+        // clock even while this world's own rule advances time. Pause from this manager's rule
+        // instead, like the 26.2 implementation did.
+        boolean paused = instance.isPaused() || !this.advanceTime.getAsBoolean();
+        return new ClockNetworkState(instance.totalTicks(), instance.partialTick(), paused ? 0.0F : instance.rate());
     }
 
     public void tickFromLevel(RuntimeLevel level) {
