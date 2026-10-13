@@ -211,9 +211,10 @@ class ArachneRenderer(
         frustum: Frustum,
         x: Double,
         y: Double,
-        z: Double
+        z: Double,
+        partialTicks: Float,
     ): Boolean {
-        if (super.shouldRender(entity, frustum, x, y, z)) return true
+        if (super.shouldRender(entity, frustum, x, y, z, partialTicks)) return true
 
         val world = entity.level()
         for (hookedId in entity.hookedEntityIds) {

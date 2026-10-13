@@ -7,10 +7,10 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.SubmitNodeCollection;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.feature.phase.FeatureRenderPhase;
 import net.minecraft.client.renderer.feature.phase.SimpleFeatureRenderPhase;
-import net.minecraft.client.renderer.feature.phase.TranslucentFeatureRenderPhase;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.UvMapping;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.Shadow;
 public class SubmitNodeCollectionMixin implements SubmitNodeCollectionAccessor {
     @Shadow
     @Final
-    public TranslucentFeatureRenderPhase translucentModels;
+    public FeatureRenderPhase<? super net.minecraft.client.renderer.feature.submit.TranslucentSubmit> translucentModels;
 
     @Shadow
     @Final
@@ -35,14 +35,14 @@ public class SubmitNodeCollectionMixin implements SubmitNodeCollectionAccessor {
             int lightCoords,
             int overlayCoords,
             int tintedColor,
-            @Nullable TextureAtlasSprite sprite,
+            @Nullable UvMapping uvMapping,
             int outlineColor,
-            ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay,
+            PoseStack.@Nullable Pose sheetedDecalPose,
             BeastweaverGradientData gradientData
     ) {
         PoseStack.Pose pose = poseStack.last().copy();
         ModelFeatureRenderer.Submit<S> submit = new ModelFeatureRenderer.Submit<>(
-                renderType, pose, model, state, lightCoords, overlayCoords, tintedColor, sprite, null
+                renderType, pose, model, state, lightCoords, overlayCoords, tintedColor, uvMapping, null
         );
         ((ModelFeatureRendererSubmitAccessor) (Object) submit).mcendgame$setBeastweaverGradientData(gradientData);
 

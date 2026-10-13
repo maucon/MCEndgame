@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.main.component.block.blocks.totem_statue
 
-import com.mojang.serialization.MapCodec
 import de.fuballer.mcendgame.main.component.block.CustomBlockEntityTypes
 import net.minecraft.core.BlockPos
 import net.minecraft.world.InteractionResult
@@ -66,8 +65,6 @@ class TotemStatueBlock(
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(BlockStateProperties.ROTATION_16)
     }
-
-    override fun codec(): MapCodec<out BaseEntityBlock> = simpleCodec(::TotemStatueBlock)
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = TotemStatueBlockEntity(pos, state)
 

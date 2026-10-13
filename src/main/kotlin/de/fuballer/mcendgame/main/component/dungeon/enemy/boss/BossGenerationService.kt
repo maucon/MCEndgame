@@ -50,7 +50,7 @@ class BossGenerationService {
         bossEntity.setPersistenceRequired()
         setScale(bossEntity, type, random)
 
-        bossEntity.setNoAi(true)
+        bossEntity.isNoAi = true
 
         bossEntity.setDungeonEnemy()
         bossEntity.setDungeonBoss()

@@ -6,7 +6,6 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAtt
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerCondition
 import de.fuballer.mcendgame.main.util.extension.mixin.WindChargeEntityMixinExtension.setExplosionPower
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob

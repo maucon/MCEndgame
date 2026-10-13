@@ -129,11 +129,6 @@ class BanditEntity(
         partnerReference = EntityReference.of(partner)
     }
 
-    override fun aiStep() {
-        super.aiStep()
-        updateSwingTime()
-    }
-
     override fun isWithinMeleeAttackRange(target: LivingEntity): Boolean {
         val attackRange = activeItem.get(DataComponents.ATTACK_RANGE)
         val maxRange: Double
@@ -203,8 +198,9 @@ class BanditEntity(
         attacker: LivingEntity,
         source: DamageSource,
         damage: Float,
+        fullyBlocked: Boolean,
     ) {
-        super.blockUsingItem(level, attacker, source, damage)
+        super.blockUsingItem(level, attacker, source, damage, fullyBlocked)
 
         val itemBlockingWith = getItemBlockingWith() ?: return
         val blocksAttacks = itemBlockingWith.get(DataComponents.BLOCKS_ATTACKS) ?: return

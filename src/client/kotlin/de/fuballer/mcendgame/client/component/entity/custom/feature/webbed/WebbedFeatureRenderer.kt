@@ -57,7 +57,6 @@ class WebbedFeatureRenderer<T : LivingEntityRenderState, M : EntityModel<T>>(
             light,
             OverlayTexture.NO_OVERLAY,
             state.outlineColor,
-            null,
         )
 
         matrices.popPose()

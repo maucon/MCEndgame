@@ -476,7 +476,6 @@ class ArachneEntity(
     }
 
     override fun canBeAffected(effect: MobEffectInstance): Boolean {
-        if (effect.effect == MobEffects.SLOWNESS) return false
-        return super.canBeAffected(effect)
+        return effect.effect != MobEffects.SLOWNESS && super.canBeAffected(effect)
     }
 }

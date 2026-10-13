@@ -38,12 +38,12 @@ class KeepDistanceToTargetGoal<T>(
 
     override fun start() {
         super.start()
-        entity.setAggressive(true)
+        entity.isAggressive = true
     }
 
     override fun stop() {
         super.stop()
-        entity.setAggressive(false)
+        entity.isAggressive = false
         seeingTargetTicker = 0
         entity.moveControl.strafe(0F, 0F)
         entity.navigation.stop()

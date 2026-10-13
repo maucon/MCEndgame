@@ -46,7 +46,7 @@ class BanditMoveControl(
             strafeRight = 0.0f
         }
 
-        mob.setSpeed(speed)
+        mob.speed = speed
         mob.setZza(strafeForwards)
         mob.setXxa(strafeRight)
         operation = Operation.WAIT
@@ -64,7 +64,7 @@ class BanditMoveControl(
         }
 
         tickRotate(xd, zd)
-        mob.setSpeed(getModifiedSpeed())
+        mob.speed = getModifiedSpeed()
 
         if (jumping) {
             if (mob.onGround() || mob.isInLiquid && mob.isAffectedByFluids) operation = Operation.WAIT

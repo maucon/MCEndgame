@@ -4,6 +4,7 @@ on: [ push ]
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: read
       packages: read
@@ -68,6 +69,11 @@ jobs:
 
   client_game_test:
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      # The runner has no GPU and Xvfb offers no hardware acceleration, so use Mesa's llvmpipe.
+      # Set at job level so the Gradle daemon (and the client JVM it forks) inherit it too.
+      LIBGL_ALWAYS_SOFTWARE: '1'
     permissions:
       contents: read
       packages: read
@@ -98,13 +104,19 @@ jobs:
       - name: Grant gradle permissions
         run: chmod +x ./gradlew
 
+      - name: Install software OpenGL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libgl1-mesa-dri libglx-mesa0 mesa-utils
+
       - name: Run client game tests
         env:
           GITHUB_PACKAGES_NAME: ${{ github.actor }}
           GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SDL_VIDEO_FORCE_EGL: '1'
         run: |
           ./gradlew runDatagen
-          ./gradlew runProductionClientGameTest
+          timeout --kill-after=30s 10m ./gradlew --no-daemon runProductionClientGameTest
 
       - name: Upload test screenshots
         if: always()
@@ -112,3 +124,4 @@ jobs:
         with:
           name: 'test-screenshots'
           path: run/screenshots/
+          if-no-files-found: warn

@@ -256,10 +256,10 @@ class BeastweaverEntity(
                 particle = { _, entity ->
                     if (entity !is LivingEntity) return@ParticleData ParticleTypes.ASH
 
-                    val forwardsVector = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
+                    val forwardsVector = calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
                     val sidewaysVector = forwardsVector.cross(Vec3(0.0, 1.0, 0.0))
 
-                    val scale = entity.scale
+                    val scale = entity.scale.toDouble()
 
                     val dir = forwardsVector.scale(forwards)
                         .add(sidewaysVector.scale(sideways))
@@ -270,7 +270,7 @@ class BeastweaverEntity(
                 offset = { entity ->
                     if (entity !is LivingEntity) return@ParticleData Vec3.ZERO
 
-                    val forwardsVector = entity.calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
+                    val forwardsVector = calculateViewVector(entity.xRot, entity.yBodyRot).horizontal().normalize()
                     val sidewaysVector = forwardsVector.cross(Vec3(0.0, 1.0, 0.0))
                     forwardsVector.scale(forwards)
                         .add(sidewaysVector.scale(sideways))
@@ -1156,7 +1156,7 @@ class BeastweaverEntity(
         tickBlockedMovement()
         tickAttacks(level, this)
 
-        bossEvent.setProgress(health / maxHealth)
+        bossEvent.progress = health / maxHealth
     }
 
     private fun tickTransformProgress() {

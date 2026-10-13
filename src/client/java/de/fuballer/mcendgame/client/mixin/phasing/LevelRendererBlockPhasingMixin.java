@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.client.mixin.phasing;
 
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.framegraph.FrameGraphBuilder;
 import de.fuballer.mcendgame.main.util.extension.EntityExtension;
 import net.minecraft.client.Minecraft;

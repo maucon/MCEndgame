@@ -8,6 +8,7 @@ import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.TimelineTags
+import net.minecraft.util.ARGB
 import net.minecraft.util.valueproviders.UniformInt
 import net.minecraft.world.attribute.BackgroundMusic
 import net.minecraft.world.attribute.BedRule
@@ -37,7 +38,7 @@ object CustomDimensions {
         clocks: HolderGetter<WorldClock>,
     ): DimensionType {
         val attributes = EnvironmentAttributeMap.builder()
-            .set(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, -16119286)
+            .set(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, ARGB.vector3fFromRGB24(-16119286))
             .set(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic.OVERWORLD)
             .set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false)
             .set(EnvironmentAttributes.PIGLINS_ZOMBIFY, false)

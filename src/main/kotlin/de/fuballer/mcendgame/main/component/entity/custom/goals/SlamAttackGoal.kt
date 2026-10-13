@@ -56,7 +56,7 @@ class SlamAttackGoal<T>(
 
     override fun start() {
         mob.navigation.moveTo(path, moveSpeedFactor)
-        mob.setAggressive(true)
+        mob.isAggressive = true
         updateCountdownTicks = 0
     }
 
@@ -66,7 +66,7 @@ class SlamAttackGoal<T>(
             mob.target = null
         }
 
-        mob.setAggressive(false)
+        mob.isAggressive = false
         mob.navigation.stop()
     }
 

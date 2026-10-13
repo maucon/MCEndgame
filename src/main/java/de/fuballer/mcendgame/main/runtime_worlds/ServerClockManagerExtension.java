@@ -8,7 +8,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.util.Map;
 
 public interface ServerClockManagerExtension {
-    default Map<Holder<WorldClock>, ServerClockManager.ClockInstance> mcendgame$getClocks() {
+    default Map<Holder<WorldClock>, ServerClockManager.ServerClockInstance> mcendgame$getClocks() {
         throw new UnsupportedOperationException("Implemented via Mixin.");
     }
 }

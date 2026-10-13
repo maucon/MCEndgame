@@ -49,6 +49,11 @@ class BoundAbyssVertexConsumer(
         return this
     }
 
+    override fun setUv3(u: Float, v: Float): VertexConsumer {
+        delegate.setUv3(u, v)
+        return this
+    }
+
     override fun setNormal(x: Float, y: Float, z: Float): VertexConsumer {
         delegate.setNormal(x, y, z)
         return this

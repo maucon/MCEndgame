@@ -47,8 +47,8 @@ class SpellFireballRenderer(
     ) {
         poseStack.pushPose()
         poseStack.scale(-1.0F, -1.0F, 1.0F)
-        poseStack.mulPose(Axis.YP.rotationDegrees(180 + state.yRot))
-        poseStack.mulPose(Axis.XP.rotationDegrees(state.xRot))
+        poseStack.rotateDegrees(Axis.YP, 180 + state.yRot)
+        poseStack.rotateDegrees(Axis.XP, state.xRot)
         model.setupAnim(state)
 
         queue.submitModel(
@@ -59,7 +59,6 @@ class SpellFireballRenderer(
             state.lightCoords,
             OverlayTexture.NO_OVERLAY,
             state.outlineColor,
-            null,
         )
 
         submitOuter(state, poseStack, queue, cameraState)
@@ -84,7 +83,6 @@ class SpellFireballRenderer(
             COLOR,
             null,
             state.outlineColor,
-            null
         )
     }
 

@@ -92,7 +92,7 @@ class SkeletonMageEntity(
         )
 
         playShootFireballSound()
-        swing(InteractionHand.MAIN_HAND)
+        swingForAttack(InteractionHand.MAIN_HAND)
     }
 
     private fun getFireballVelocity(

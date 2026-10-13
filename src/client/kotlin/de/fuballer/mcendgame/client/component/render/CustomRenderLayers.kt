@@ -1,13 +1,14 @@
 package de.fuballer.mcendgame.client.component.render
 
+import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.client.renderer.rendertype.LayeringTransform
-import net.minecraft.client.renderer.rendertype.OutputTarget
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Util
 import java.util.function.Function
 
+@Injectable // initialize CustomRenderLayers render types
 object CustomRenderLayers {
     val LINK: RenderType = RenderType.create(
         "link",
@@ -17,7 +18,7 @@ object CustomRenderLayers {
     )
 
     fun ghostly(texture: Identifier) = GHOSTLY.apply(texture)
-    val GHOSTLY: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
+    val GHOSTLY: Function<Identifier, RenderType> = Util.memoize { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.GHOSTLY_PIPELINE)
             .withTexture("Sampler0", texture)
             .useOverlay()
@@ -28,7 +29,7 @@ object CustomRenderLayers {
     }
 
     fun boundAbyss(texture: Identifier) = BOUND_ABYSS.apply(texture)
-    val BOUND_ABYSS: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
+    val BOUND_ABYSS: Function<Identifier, RenderType> = Util.memoize { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.BOUND_ABYSS_PIPELINE)
             .withTexture("Sampler0", texture)
             .useLightmap()
@@ -36,15 +37,14 @@ object CustomRenderLayers {
             .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
             .affectsCrumbling()
             .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
-            .createRenderSetup();
+            .createRenderSetup()
         RenderType.create("bound_abyss", renderSetup)
     }
 
     fun beastweaverAttack(texture: Identifier) = BEASTWEAVER_ATTACK.apply(texture)
-    val BEASTWEAVER_ATTACK: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
+    val BEASTWEAVER_ATTACK: Function<Identifier, RenderType> = Util.memoize { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.BEASTWEAVER_ATTACK_PIPELINE)
             .withTexture("Sampler0", texture)
-            .setOutputTarget(OutputTarget.MAIN_TARGET)
             .useLightmap()
             .sortOnUpload()
             .setOutline(RenderSetup.OutlineProperty.NONE)

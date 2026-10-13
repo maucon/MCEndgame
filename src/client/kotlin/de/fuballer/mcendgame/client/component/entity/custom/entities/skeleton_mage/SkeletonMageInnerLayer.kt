@@ -40,7 +40,6 @@ class SkeletonMageInnerLayer<M : EntityModel<SkeletonMageRenderState>>(
             -1,
             null,
             state.outlineColor,
-            null
         )
     }
 }

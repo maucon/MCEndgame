@@ -89,7 +89,6 @@
     "runtime_worlds.MinecraftServerAccess",
     "runtime_worlds.MinecraftServerMixin",
     "runtime_worlds.ServerLevelMixin",
-    "runtime_worlds.clock.ClockInstanceAccessor",
     "runtime_worlds.clock.PlayerListMixin",
     "runtime_worlds.clock.ServerClockManagerMixin",
     "runtime_worlds.registry.MappedRegistryMixin",

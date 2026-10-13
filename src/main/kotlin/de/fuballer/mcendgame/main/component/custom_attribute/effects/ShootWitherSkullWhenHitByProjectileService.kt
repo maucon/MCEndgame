@@ -47,7 +47,7 @@ class ShootWitherSkullWhenHitByProjectileService {
         } else {
             shooter.lookAngle
         }.normalize()
-        skull.setDeltaMovement(direction)
+        skull.deltaMovement = direction
 
         RuntimeConfig.SERVER.execute { world.addFreshEntity(skull) }
     }

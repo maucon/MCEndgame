@@ -44,7 +44,7 @@ class StayInRangeGoal(
 
     override fun start() {
         entity.navigation.moveTo(path, moveSpeedFactor)
-        entity.setAggressive(true)
+        entity.isAggressive = true
         updateCountdownTicks = 0
     }
 
@@ -54,7 +54,7 @@ class StayInRangeGoal(
             entity.target = null
         }
 
-        entity.setAggressive(false)
+        entity.isAggressive = false
         entity.navigation.stop()
     }
 

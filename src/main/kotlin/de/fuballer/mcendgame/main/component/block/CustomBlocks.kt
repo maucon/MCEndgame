@@ -34,7 +34,7 @@ object CustomBlocks {
             .requiresCorrectToolForDrops()
             .noLootTable()
             .strength(4.0f)
-            .pushReaction(PushReaction.DESTROY),
+            .pushReaction(PushReaction.POPPED),
         CustomBlockItemIds.DECAYING_COBWEB,
     )
 
@@ -67,7 +67,7 @@ object CustomBlocks {
             .noOcclusion()
             .isValidSpawn(Blocks::never)
             .noTerrainParticles()
-            .pushReaction(PushReaction.BLOCK),
+            .pushReaction(PushReaction.IMMOVEABLE),
         CustomBlockItemIds.DUNGEON_ENEMY_BLOCKER,
     )
 }

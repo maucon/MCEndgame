@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.client.component.render
 
-import com.mojang.blaze3d.GpuFormat
-import com.mojang.blaze3d.vertex.VertexFormat
+import com.mojang.renderpearl.api.GpuFormat
+import com.mojang.renderpearl.api.vertex.VertexFormat
 
 object CustomVertexFormats {
     private val POSITION_FORMAT: GpuFormat = GpuFormat.RGB32_FLOAT

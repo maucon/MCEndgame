@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.main.component.block.blocks.dungeon_device
 
-import com.mojang.serialization.MapCodec
 import de.maucon.mauconframework.event.EventGateway
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
@@ -19,8 +18,6 @@ class DungeonDeviceBlock(
     companion object {
         const val ID = "dungeon_device"
     }
-
-    override fun codec(): MapCodec<out BaseEntityBlock> = simpleCodec(::DungeonDeviceBlock)
 
     override fun useWithoutItem(state: BlockState, world: Level, pos: BlockPos, player: Player, hit: BlockHitResult): InteractionResult {
         if (!world.isClientSide) {
