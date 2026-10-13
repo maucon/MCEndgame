@@ -226,6 +226,54 @@
 					}
 				}
 			}
+		},
+		"move.walk": {
+			"loop": true,
+			"bones": {
+				"leftLeg": {
+					"rotation": {
+						"vector": ["-math.to_deg(1.4) * math.cos(math.to_deg(query.limb_swing) * 0.6662 + 180) * query.limb_swing_amount", 0, 0]
+					}
+				},
+				"rightLeg": {
+					"rotation": {
+						"vector": ["-math.to_deg(1.4) * math.cos(math.to_deg(query.limb_swing) * 0.6662) * query.limb_swing_amount", 0, 0]
+					}
+				},
+				"leftArm": {
+					"rotation": {
+						"vector": ["-math.to_deg(1) * math.cos(math.to_deg(query.limb_swing) * 0.6662) * query.limb_swing_amount", 0, 0]
+					}
+				},
+				"rightArm": {
+					"rotation": {
+						"vector": ["-math.to_deg(0.5) * math.cos(math.to_deg(query.limb_swing) * 0.6662 + 180) * query.limb_swing_amount", 0, 0]
+					}
+				},
+				"sword": {
+					"rotation": {
+						"vector": ["-math.to_deg(-0.3) * math.cos(math.to_deg(query.limb_swing) * 0.6662 + 180) * query.limb_swing_amount", 0, 0]
+					}
+				},
+				"leftWing": {
+					"rotation": {
+						"vector": [
+							0,
+							"-math.to_deg(-0.1) * math.cos(math.to_deg(query.limb_swing) * 0.6662) * query.limb_swing_amount",
+							"math.to_deg(-0.02) * math.cos(math.to_deg(query.limb_swing) * 0.6662) * query.limb_swing_amount"
+						]
+					}
+				},
+				"rightWing": {
+					"rotation": {
+						"vector": [
+							0,
+							"-math.to_deg(0.1) * math.cos(math.to_deg(query.limb_swing) * 0.6662 + 180) * query.limb_swing_amount",
+							"math.to_deg(0.02) * math.cos(math.to_deg(query.limb_swing) * 0.6662 + 180) * query.limb_swing_amount"
+						]
+					}
+				}
+			}
 		}
 	}
 }
