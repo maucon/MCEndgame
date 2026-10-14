@@ -20,6 +20,7 @@ object CustomRenderLayers {
     fun ghostly(texture: Identifier) = GHOSTLY.apply(texture)
     val GHOSTLY: Function<Identifier, RenderType> = Util.memoize { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.GHOSTLY_PIPELINE)
+            .setOitPipelines(CustomRenderPipelines.GHOSTLY_OIT)
             .withTexture("Sampler0", texture)
             .useOverlay()
             .sortOnUpload()

@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.client.renderer.BindGroupLayouts
 import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.client.renderer.oit.OitPipelineSet
 
 object CustomRenderPipelines {
     val LINK_PIPELINE: RenderPipeline = RenderPipelines.register(
@@ -24,6 +25,15 @@ object CustomRenderPipelines {
             .withDepthStencilState(DepthStencilState.DEFAULT)
             .build() // FIXME #286 water not rendering behind it
     )
+
+    val GHOSTLY_OIT: OitPipelineSet = OitPipelineSet.builder(
+        "ghostly",
+        RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
+            .withShaderDefine("ALPHA_CUTOUT", 0.1f)
+            .withShaderDefine("PER_FACE_LIGHTING")
+            .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+            .withCull(false)
+    ).build()
 
     val GHOSTLY_PIPELINE: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
