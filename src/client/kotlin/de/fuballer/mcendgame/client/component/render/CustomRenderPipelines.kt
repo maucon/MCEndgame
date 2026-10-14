@@ -1,18 +1,26 @@
 package de.fuballer.mcendgame.client.component.render
 
-import com.mojang.renderpearl.api.pipeline.BlendFunction
-import com.mojang.renderpearl.api.pipeline.ColorTargetState
-import com.mojang.renderpearl.api.pipeline.CompareOp
-import com.mojang.renderpearl.api.pipeline.DepthStencilState
-import com.mojang.renderpearl.api.pipeline.PrimitiveTopology
-import com.mojang.renderpearl.api.pipeline.RenderPipeline
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
+import com.mojang.renderpearl.api.pipeline.*
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.client.renderer.BindGroupLayouts
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.oit.OitPipelineSet
 
 object CustomRenderPipelines {
+    private val noWrite = DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false)
+
+    val LINK_OIT: OitPipelineSet = OitPipelineSet.builder(
+        "link",
+        RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
+            .withVertexShader("core/position_color")
+            .withFragmentShader("core/position_color")
+            .withCull(false)
+            .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR_LIGHTMAP)
+            .withPrimitiveTopology(PrimitiveTopology.TRIANGLE_STRIP)
+            .withDepthStencilState(DepthStencilState.DEFAULT)
+    ).build()
+
     val LINK_PIPELINE: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
             .withLocation("pipeline/link")
@@ -22,8 +30,7 @@ object CustomRenderPipelines {
             .withCull(false)
             .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR_LIGHTMAP)
             .withPrimitiveTopology(PrimitiveTopology.TRIANGLE_STRIP)
-            .withDepthStencilState(DepthStencilState.DEFAULT)
-            .build() // FIXME #286 water not rendering behind it
+            .build()
     )
 
     val GHOSTLY_OIT: OitPipelineSet = OitPipelineSet.builder(
@@ -42,9 +49,9 @@ object CustomRenderPipelines {
             .withShaderDefine("PER_FACE_LIGHTING")
             .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
             .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withDepthStencilState(DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false))
             .withCull(false)
-            .withDepthStencilState(DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, true))
-            .build() // FIXME #286 water not rendering behind it
+            .build()
     )
 
     val BOUND_ABYSS_PIPELINE: RenderPipeline = RenderPipelines.register(
@@ -64,6 +71,21 @@ object CustomRenderPipelines {
             .withCull(false)
             .build()
     )
+
+    val BEASTWEAVER_ATTACK_OIT: OitPipelineSet = OitPipelineSet.builder(
+        "beastweaver_attack",
+        RenderPipeline.builder(RenderPipelines.MATRICES_FOG_LIGHT_DIR_SNIPPET)
+            .withVertexShader(IdentifierUtil.default("core/beastweaver_attack"))
+            .withFragmentShader(IdentifierUtil.default("core/beastweaver_attack"))
+            .withShaderDefine("ALPHA_CUTOUT", 0.1f)
+            .withShaderDefine("EMISSIVE")
+            .withShaderDefine("NO_OVERLAY")
+            .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
+            .withVertexBinding(0, CustomVertexFormats.BEASTWEAVER_ATTACK)
+            .withPrimitiveTopology(PrimitiveTopology.QUADS)
+            .withDepthStencilState(DepthStencilState.DEFAULT)
+            .withCull(false)
+    ).build()
 
     val BEASTWEAVER_ATTACK_PIPELINE: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.MATRICES_FOG_LIGHT_DIR_SNIPPET)
