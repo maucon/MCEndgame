@@ -13,6 +13,7 @@ object CustomRenderLayers {
     val LINK: RenderType = RenderType.create(
         "link",
         RenderSetup.builder(CustomRenderPipelines.LINK_PIPELINE)
+            .setOitPipelines(CustomRenderPipelines.LINK_OIT)
             .useLightmap()
             .createRenderSetup()
     )
@@ -20,8 +21,9 @@ object CustomRenderLayers {
     fun ghostly(texture: Identifier) = GHOSTLY.apply(texture)
     val GHOSTLY: Function<Identifier, RenderType> = Util.memoize { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.GHOSTLY_PIPELINE)
+            .setOitPipelines(CustomRenderPipelines.GHOSTLY_OIT)
             .withTexture("Sampler0", texture)
-            .useOverlay()
+            .affectsCrumbling()
             .sortOnUpload()
             .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
             .createRenderSetup()
@@ -44,6 +46,7 @@ object CustomRenderLayers {
     fun beastweaverAttack(texture: Identifier) = BEASTWEAVER_ATTACK.apply(texture)
     val BEASTWEAVER_ATTACK: Function<Identifier, RenderType> = Util.memoize { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.BEASTWEAVER_ATTACK_PIPELINE)
+            .setOitPipelines(CustomRenderPipelines.BEASTWEAVER_ATTACK_OIT)
             .withTexture("Sampler0", texture)
             .useLightmap()
             .sortOnUpload()
