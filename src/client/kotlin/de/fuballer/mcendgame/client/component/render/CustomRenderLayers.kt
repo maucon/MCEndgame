@@ -23,7 +23,7 @@ object CustomRenderLayers {
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.GHOSTLY_PIPELINE)
             .setOitPipelines(CustomRenderPipelines.GHOSTLY_OIT)
             .withTexture("Sampler0", texture)
-            .useOverlay()
+            .affectsCrumbling()
             .sortOnUpload()
             .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
             .createRenderSetup()

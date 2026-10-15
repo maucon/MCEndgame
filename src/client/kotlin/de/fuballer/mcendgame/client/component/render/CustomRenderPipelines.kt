@@ -33,25 +33,29 @@ object CustomRenderPipelines {
             .build()
     )
 
-    val GHOSTLY_OIT: OitPipelineSet = OitPipelineSet.builder(
-        "ghostly",
-        RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
-            .withShaderDefine("ALPHA_CUTOUT", 0.1f)
-            .withShaderDefine("PER_FACE_LIGHTING")
-            .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
-            .withCull(false)
-    ).build()
-
     val GHOSTLY_PIPELINE: RenderPipeline = RenderPipelines.register(
         RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
-            .withLocation("pipeline/ghostly")
+            .withLocation("pipeline/entity_translucent_emissive")
             .withShaderDefine("ALPHA_CUTOUT", 0.1f)
             .withShaderDefine("PER_FACE_LIGHTING")
             .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
             .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
-            .withDepthStencilState(DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false))
             .withCull(false)
+            .withDepthStencilState(DepthStencilState.DEFAULT)
             .build()
+    )
+
+    val GHOSTLY_OIT: OitPipelineSet = RenderPipelines.register(
+        OitPipelineSet.builder(
+            "entity_emissive",
+            RenderPipeline.builder(RenderPipelines.OIT_ENTITY_SNIPPET)
+                .withCull(false)
+                .withDepthStencilState(DepthStencilState.DEFAULT)
+        ).withAccumulateModifier { accumulate: RenderPipeline.Builder ->
+            accumulate.withShaderDefine("PER_FACE_LIGHTING")
+                .withShaderDefine("EMISSIVE")
+                .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+        }.build()
     )
 
     val BOUND_ABYSS_PIPELINE: RenderPipeline = RenderPipelines.register(
