@@ -1,5 +1,7 @@
 package de.fuballer.mcendgame.main.component.dungeon.teleport
 
+import de.fuballer.mcendgame.main.component.dungeon.teleport.portal.DungeonPortalRepository
+import de.fuballer.mcendgame.main.component.portal.teleport.TeleportExtensions.teleportTo
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
 import de.fuballer.mcendgame.main.messaging.misc.GetRespawnCommand
 import de.fuballer.mcendgame.main.messaging.misc.PlayerAfterDimensionChangeEvent
@@ -23,7 +25,9 @@ import net.minecraft.world.phys.Vec3
 import java.util.UUID
 
 @Injectable
-class DungeonLeaveService {
+class DungeonLeaveService(
+    private val dungeonPortalRepo: DungeonPortalRepository,
+) {
     private val playersToProcess = mutableSetOf<UUID>()
 
     @Initializer
@@ -76,6 +80,10 @@ class DungeonLeaveService {
         player: ServerPlayer,
         dungeonWorld: ServerLevel,
     ): Boolean {
+        // Prefer the portal the player entered through; fall back to the top of the dungeon device.
+        val entryLocation = dungeonPortalRepo.findEntryLocation(dungeonWorld, player.uuid)
+        if (entryLocation != null && player.teleportTo(entryLocation)) return true
+
         val exitPos = dungeonWorld.getDungeonExitPos()
         val targetWorld = RuntimeConfig.SERVER.getLevel(exitPos.dimension) ?: return false
 
