@@ -91,6 +91,7 @@ object AnalyticsUtil {
 
     fun getEntityLoadoutData(killer: LivingEntity) = EntityLoadoutPayload(
         entity = BuiltInRegistries.ENTITY_TYPE.getKey(killer.type).toString(),
+        customName = if (killer is Player) null else killer.customName?.string,
         armor = getArmorItems(killer),
         mainhand = getMainhandItems(killer),
         offhand = getOffhandItems(killer),
