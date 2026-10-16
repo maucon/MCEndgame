@@ -136,12 +136,17 @@ public abstract class LivingEntityDamageMixin {
 
         var tookFullDamage = true;
         if (withinIFrames) {
+            // DamageService::applyDamage decides whether this hit wins against the previous one
+            // ("bigger hit wins") and records the outcome, so the result must be read *after*
+            // actuallyHurt. Reading it before would use the previous hit's outcome and wrongly
+            // absorb a stronger hit that follows a fully absorbed weaker one.
+            this.actuallyHurt(level, finalSource, damage - this.lastHurt);
+
             if (!EntityMixinExtension.INSTANCE.getLastHitWasApplied(this_)) {
                 // hit was fully absorbed by the "bigger hit wins"
                 return false;
             }
 
-            this.actuallyHurt(level, finalSource, damage - this.lastHurt);
             tookFullDamage = false;
         } else {
             this_.invulnerableTime = 20;

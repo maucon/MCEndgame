@@ -31,7 +31,6 @@ import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.*
 import net.minecraft.world.phys.Vec3
 import org.slf4j.LoggerFactory
-import kotlin.math.abs
 import kotlin.math.sqrt
 
 private val DEFAULT_VICTIM_POS = Vec3(0.5, 2.0, 0.5)
@@ -39,7 +38,6 @@ private val CONTROL_VICTIM_POS = Vec3(0.5, 2.0, 3.5)
 private val DEFAULT_PLAYER_POS = Vec3(1.5, 2.0, 0.5)
 private val CREEPER_POS = Vec3(4.5, 2.0, 0.5)
 private val CHARGED_CREEPER_POS = Vec3(6.5, 2.0, 0.5)
-private const val DAMAGE_EPSILON = 0.01f
 private const val EXPLOSION_DAMAGE_EPSILON = 0.1f
 private val SMASH_TEST_HEIGHTS = listOf(2.0, 3.0, 5.0, 8.0, 12.0, 20.0)
 private val DIFFICULTIES = listOf(Difficulty.EASY, Difficulty.NORMAL, Difficulty.HARD)
@@ -648,17 +646,6 @@ private class PlayerDamageExpectation(
     val labelSuffix: String,
 )
 
-private fun GameTestHelper.prepareNormalDifficulty() {
-    level.server.worldData.difficulty = Difficulty.NORMAL
-}
-
-private fun prepareVictim(victim: LivingEntity) {
-    victim.health = victim.maxHealth
-    victim.absorptionAmount = 0.0f
-    victim.removeAllEffects()
-    victim.isNoGravity = true
-}
-
 private fun GameTestHelper.createDamageablePlayer(): ServerPlayer {
     val player = makeMockServerPlayer(GameType.SURVIVAL) as ServerPlayer
     val cookie = CommonListenerCookie.createInitial(player.gameProfile, false)
@@ -908,18 +895,6 @@ private fun LivingEntity.equipFullIronArmor(
     setItemSlot(EquipmentSlot.CHEST, chestplate)
     setItemSlot(EquipmentSlot.LEGS, leggings)
     setItemSlot(EquipmentSlot.FEET, boots)
-}
-
-private fun GameTestHelper.assertDamageEquals(
-    actualDamage: Float,
-    expectedDamage: Float,
-    label: String,
-    epsilon: Float = DAMAGE_EPSILON,
-) {
-    assertTrue(
-        abs(actualDamage - expectedDamage) <= epsilon,
-        "$label: expected $expectedDamage but was $actualDamage"
-    )
 }
 
 private fun GameTestHelper.prepareDifficulty(difficulty: Difficulty) {

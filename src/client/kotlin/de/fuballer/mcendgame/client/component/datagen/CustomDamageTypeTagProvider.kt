@@ -23,10 +23,20 @@ class CustomDamageTypeTagProvider(
             .addOptionalElement(CustomDamageTypes.SPELL.identifier())
             .addOptionalElement(CustomDamageTypes.GENERIC_ATTACK.identifier())
             .addOptionalElement(CustomDamageTypes.GENERIC_ATTACK_UNBLOCKABLE.identifier())
+            .addOptionalElement(CustomDamageTypes.TRUE_DAMAGE.identifier())
 
         getOrCreateRawBuilder(DamageTypeTags.BYPASSES_SHIELD)
             .addOptionalElement(CustomDamageTypes.GENERIC_ATTACK_UNBLOCKABLE.identifier())
             .addOptionalElement(CustomDamageTypes.SPELL.identifier())
+            .addOptionalElement(CustomDamageTypes.TRUE_DAMAGE.identifier())
+
+        // True damage is applied verbatim, so it must not be reduced by armor or absorbed by
+        // invulnerability frames.
+        getOrCreateRawBuilder(DamageTypeTags.BYPASSES_ARMOR)
+            .addOptionalElement(CustomDamageTypes.TRUE_DAMAGE.identifier())
+
+        getOrCreateRawBuilder(DamageTypeTags.BYPASSES_COOLDOWN)
+            .addOptionalElement(CustomDamageTypes.TRUE_DAMAGE.identifier())
 
         getOrCreateRawBuilder(CustomTags.MELEE_ATTACK)
             .addElement(DamageTypes.PLAYER_ATTACK.identifier())
@@ -75,6 +85,7 @@ class CustomDamageTypeTagProvider(
             .addElement(DamageTypes.BAD_RESPAWN_POINT.identifier())
             .addElement(DamageTypes.OUTSIDE_BORDER.identifier())
             .addElement(DamageTypes.GENERIC_KILL.identifier())
+            .addOptionalElement(CustomDamageTypes.TRUE_DAMAGE.identifier())
 
         getOrCreateRawBuilder(DamageTypeTags.SULFUR_CUBE_WITH_BLOCK_IMMUNE_TO)
             .addOptionalElement(CustomDamageTypes.SWEEPING.identifier())

@@ -21,6 +21,13 @@ class CustomDamageTypeProvider(
             generateDamageTypeJSON(CustomDamageTypes.SPELL.identifier().path)
                 .let { DataProvider.saveStable(writer, it, getPath(CustomDamageTypes.SPELL.identifier().path)) },
 
+            // True damage always applies its exact amount: it never scales with difficulty.
+            generateDamageTypeJSON(
+                messageId = "generic",
+                exhaustion = 0.0,
+                scaleWithDifficulty = "never",
+            ).let { DataProvider.saveStable(writer, it, getPath(CustomDamageTypes.TRUE_DAMAGE.identifier().path)) },
+
             generateDamageTypeJSON()
                 .let { DataProvider.saveStable(writer, it, getPath(CustomDamageTypes.GENERIC_ATTACK.identifier().path)) },
 

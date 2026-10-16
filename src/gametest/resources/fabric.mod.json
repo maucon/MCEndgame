@@ -8,6 +8,8 @@
     "fabric-gametest": [
       "de.fuballer.mcendgame.test.main.BasicGameTest",
       "de.fuballer.mcendgame.test.main.VanillaDamageGameTest",
+      "de.fuballer.mcendgame.test.main.DamageSystemGameTest",
+      "de.fuballer.mcendgame.test.main.KnockbackGameTest",
       "de.fuballer.mcendgame.test.main.DungeonGameTest"
     ],
     "fabric-client-gametest": [

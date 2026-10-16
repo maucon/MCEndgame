@@ -64,6 +64,24 @@ object DamageDealing {
     )
 
     /**
+     * Deals true damage to this entity: the exact amount is applied and no damage reduction
+     * (armor, protection, resistance, flat reductions, ...) is taken into account. True damage
+     * also ignores invulnerability frames, cannot be dodged and causes no knockback.
+     *
+     * @param damageAmount the exact amount of damage to deal
+     * @param causingEntity the entity causing the damage, if any (e.g. a boss for a damage over time effect)
+     */
+    fun Entity.dealTrueDamage(
+        damageAmount: Float,
+        causingEntity: Entity? = null,
+    ) = dealDamage(
+        CustomDamageTypes.TRUE_DAMAGE,
+        DamageCategory.TRUE_DAMAGE,
+        damageAmount,
+        causingEntity,
+    )
+
+    /**
      * Deals damage to this entity using the custom damage system.
      *
      * @param damageType the kind of attack
