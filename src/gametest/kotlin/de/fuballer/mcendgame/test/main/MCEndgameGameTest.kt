@@ -52,6 +52,11 @@ class MCEndgameGameTest {
         DungeonOpenAndJoinGameTest.testRejoiningPlayerIsEjectedAtEntryPortal(helper)
     }
 
+    @GameTest
+    fun testDeathRespawnPrefersEntryPortal(helper: GameTestHelper) {
+        DungeonOpenAndJoinGameTest.testDeathRespawnPrefersEntryPortal(helper)
+    }
+
     // --- mixin regression tests (see MixinPortGameTest) ---
     @GameTest
     fun testDungeonSkeletonTicksButNeverConverts(helper: GameTestHelper) {

@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.main.component.block.CustomBlocks
 import de.fuballer.mcendgame.main.component.block.blocks.dungeon_device.DungeonDeviceBlockEntity
 import de.fuballer.mcendgame.main.component.portal.PortalEntity
 import de.fuballer.mcendgame.main.messaging.dungeon.OpenDungeonButtonPressedEvent
+import de.fuballer.mcendgame.main.messaging.misc.GetRespawnCommand
 import de.fuballer.mcendgame.main.messaging.portal.PortalUsedEvent
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getDungeonLevel
@@ -13,6 +14,7 @@ import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDu
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getOpener
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getTotalBossCount
 import de.fuballer.mcendgame.test.main.DungeonOpenAndJoinGameTest.testPlayerOpensAndJoinsDungeon
+import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.event.EventGateway
 import io.netty.channel.embedded.EmbeddedChannel
 import net.minecraft.core.BlockPos
@@ -195,6 +197,19 @@ object DungeonOpenAndJoinGameTest {
             player.teleport(TeleportTransition(dungeonWorld, dungeonTarget.coordinates, Vec3.ZERO, 0.0F, 0.0F) {})
             helper.assertTrue(player.level().isDungeonWorld(), "The player should be inside the dungeon")
 
+            // Death respawn must also fall back to the top of the device
+            val respawn = CommandGateway.apply(GetRespawnCommand(player)).respawn
+                ?: throw helper.assertionException("A player inside a dungeon should get a forced respawn")
+            val respawnData = respawn.respawnData()
+            helper.assertTrue(
+                respawnData.dimension() == originWorld.dimension(),
+                "Death respawn should stay in the origin world, but was ${respawnData.dimension().identifier()}"
+            )
+            helper.assertTrue(
+                respawnData.pos() == devicePos.offset(0, 1, 0),
+                "Death respawn should fall back to the top of the dungeon device at ${devicePos.offset(0, 1, 0)}, but was ${respawnData.pos()}"
+            )
+
             val leavePortal = findLeavePortal(dungeonWorld, dungeonTarget.coordinates)
                 ?: throw helper.assertionException("The dungeon should contain a leave portal near its start")
             val fallback = leavePortal.teleportLocation
@@ -254,6 +269,44 @@ object DungeonOpenAndJoinGameTest {
                 LOG.info("Rejoining player was ejected to the entry portal at {}", player.position())
                 helper.succeed()
             }
+        }
+    }
+
+    /**
+     * A player that dies inside a dungeon respawns at the entry portal they used, keeping its rotation.
+     */
+    fun testDeathRespawnPrefersEntryPortal(helper: GameTestHelper) {
+        val originWorld = helper.level
+        val devicePos = helper.absolutePos(DEVICE_POS)
+        val player = openDungeon(helper)
+
+        helper.runAfterDelay(1) {
+            val entryPortal = findEntryPortal(originWorld, devicePos)
+                ?: throw helper.assertionException("Entry portals should spawn around the dungeon device")
+            val entryPosition = entryPortal.position()
+            val entryBlockPos = BlockPos.containing(entryPosition)
+
+            entryPortal.interact(player, InteractionHand.MAIN_HAND, entryPosition)
+            helper.assertTrue(player.level().isDungeonWorld(), "Using an entry portal should move the player into the dungeon")
+
+            // What ServerPlayerRespawnMixin asks for when the player dies inside the dungeon
+            val respawn = CommandGateway.apply(GetRespawnCommand(player)).respawn
+                ?: throw helper.assertionException("A player inside a dungeon should get a forced respawn")
+            val respawnData = respawn.respawnData()
+
+            helper.assertTrue(
+                respawnData.dimension() == originWorld.dimension(),
+                "The player should respawn in the origin world, but was ${respawnData.dimension().identifier()}"
+            )
+            helper.assertTrue(
+                respawnData.pos() == entryBlockPos,
+                "The player should respawn at the entry portal block $entryBlockPos, but was ${respawnData.pos()}"
+            )
+            assertRotation(helper, respawnData.yaw(), entryPortal.yRot, "yaw")
+            assertRotation(helper, respawnData.pitch(), entryPortal.xRot, "pitch")
+
+            LOG.info("Death respawn resolved to the entry portal block {} (yaw {}, pitch {})", respawnData.pos(), respawnData.yaw(), respawnData.pitch())
+            helper.succeed()
         }
     }
 
