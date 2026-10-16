@@ -30,8 +30,6 @@ class CustomDamageTypeTagProvider(
             .addOptionalElement(CustomDamageTypes.SPELL.identifier())
             .addOptionalElement(CustomDamageTypes.TRUE_DAMAGE.identifier())
 
-        // True damage is applied verbatim, so it must not be reduced by armor or absorbed by
-        // invulnerability frames.
         getOrCreateRawBuilder(DamageTypeTags.BYPASSES_ARMOR)
             .addOptionalElement(CustomDamageTypes.TRUE_DAMAGE.identifier())
 

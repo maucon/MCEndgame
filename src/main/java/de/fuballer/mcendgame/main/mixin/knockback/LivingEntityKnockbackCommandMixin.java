@@ -14,10 +14,6 @@ public class LivingEntityKnockbackCommandMixin {
         AttackKnockbackUtil.INSTANCE.takeKnockbackFrom(instance, source.getEntity(), power, xd, zd);
     }
 
-    // blockedByItem is intentionally NOT redirected. Its knockback is a fixed recoil of the
-    // attacker caused by the blocker, not attack knockback, so it must stay vanilla and must not be
-    // scaled by the MORE_ATTACK_KNOCKBACK of either entity.
-
     @Redirect(method = "causeExtraKnockback", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDDLnet/minecraft/world/damagesource/DamageSource;FZ)V"))
     void redirectTakeKnockbackInKnockbackTarget(LivingEntity instance, double power, double xd, double zd, DamageSource source, float damage, boolean comesFromEffect) {
         var self = (LivingEntity) (Object) this;

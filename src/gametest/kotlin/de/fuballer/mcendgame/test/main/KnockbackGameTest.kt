@@ -10,7 +10,6 @@ import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealGen
 import net.fabricmc.fabric.api.gametest.v1.GameTest
 import net.minecraft.gametest.framework.GameTestHelper
 import net.minecraft.world.entity.EntityTypes
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.phys.Vec3
 import org.slf4j.LoggerFactory
@@ -43,8 +42,8 @@ class KnockbackGameTest {
         helper.startSequence()
             .thenWaitUntil { helper.assertTrue(vanillaVictim.tickCount > 0, "Victims should have ticked") }
             .thenExecute {
-                vanillaVictim.setDeltaMovement(Vec3.ZERO)
-                utilVictim.setDeltaMovement(Vec3.ZERO)
+                vanillaVictim.deltaMovement = Vec3.ZERO
+                utilVictim.deltaMovement = Vec3.ZERO
 
                 val source = helper.level.damageSources().mobAttack(attacker)
                 vanillaVictim.knockback(VANILLA_KNOCKBACK_POWER, 2.0, 1.0, source, 0f)
@@ -75,8 +74,8 @@ class KnockbackGameTest {
         helper.startSequence()
             .thenWaitUntil { helper.assertTrue(normalVictim.tickCount > 0, "Victims should have ticked") }
             .thenExecute {
-                normalVictim.setDeltaMovement(Vec3.ZERO)
-                resistantVictim.setDeltaMovement(Vec3.ZERO)
+                normalVictim.deltaMovement = Vec3.ZERO
+                resistantVictim.deltaMovement = Vec3.ZERO
 
                 normalVictim.takeKnockbackFrom(attacker, VANILLA_KNOCKBACK_POWER, 2.0, 1.0)
                 resistantVictim.takeKnockbackFrom(attacker, VANILLA_KNOCKBACK_POWER, 2.0, 1.0)
@@ -106,7 +105,7 @@ class KnockbackGameTest {
         helper.startSequence()
             .thenWaitUntil { helper.assertTrue(victim.tickCount > 0, "Victim should have ticked") }
             .thenExecute {
-                victim.setDeltaMovement(Vec3.ZERO)
+                victim.deltaMovement = Vec3.ZERO
                 victim.dealGenericAttackDamage(6f, attacker)
 
                 // The custom attack code applies its knockback explicitly, so the damage itself must
@@ -137,7 +136,7 @@ class KnockbackGameTest {
 
                 victim.hurtServer(helper.level, source, 5f)
                 // The first hit knocks the victim back, so reset it to isolate the absorbed hit.
-                victim.setDeltaMovement(Vec3.ZERO)
+                victim.deltaMovement = Vec3.ZERO
 
                 victim.hurtServer(helper.level, source, 3f)
 
@@ -163,7 +162,7 @@ class KnockbackGameTest {
         helper.startSequence()
             .thenWaitUntil { helper.assertTrue(victim.tickCount > 0, "Victim should have ticked") }
             .thenExecute {
-                victim.setDeltaMovement(Vec3.ZERO)
+                victim.deltaMovement = Vec3.ZERO
                 val source = helper.level.damageSources().mobAttack(attacker)
                 victim.hurtServer(helper.level, source, 6f)
 
@@ -200,8 +199,8 @@ class KnockbackGameTest {
         helper.startSequence()
             .thenWaitUntil { helper.assertTrue(plainVictim.tickCount > 0, "Victims should have ticked") }
             .thenExecute {
-                plainVictim.setDeltaMovement(Vec3.ZERO)
-                scaledVictim.setDeltaMovement(Vec3.ZERO)
+                plainVictim.deltaMovement = Vec3.ZERO
+                scaledVictim.deltaMovement = Vec3.ZERO
 
                 plainVictim.takeKnockbackFrom(plainAttacker, VANILLA_KNOCKBACK_POWER, 2.0, 1.0)
                 scaledVictim.takeKnockbackFrom(scaledAttacker, VANILLA_KNOCKBACK_POWER, 2.0, 1.0)

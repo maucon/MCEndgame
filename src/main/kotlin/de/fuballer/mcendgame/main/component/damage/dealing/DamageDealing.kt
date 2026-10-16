@@ -69,7 +69,7 @@ object DamageDealing {
      * also ignores invulnerability frames, cannot be dodged and causes no knockback.
      *
      * @param damageAmount the exact amount of damage to deal
-     * @param causingEntity the entity causing the damage, if any (e.g. a boss for a damage over time effect)
+     * @param causingEntity the entity causing the damage, if any (e.g. a boss for damage over time effect)
      */
     fun Entity.dealTrueDamage(
         damageAmount: Float,
