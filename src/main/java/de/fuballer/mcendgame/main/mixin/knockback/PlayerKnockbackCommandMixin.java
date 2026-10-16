@@ -16,6 +16,6 @@ public class PlayerKnockbackCommandMixin {
     )
     void redirectTakeKnockback(LivingEntity instance, double power, double xd, double zd, DamageSource source, float damage, boolean comesFromEffect) {
         var player = (Player) (Object) this;
-        AttackKnockbackUtil.INSTANCE.takeKnockbackFrom(instance, player, power, xd, zd);
+        AttackKnockbackUtil.INSTANCE.takeKnockbackFrom(instance, player, power, xd, zd, source, damage);
     }
 }

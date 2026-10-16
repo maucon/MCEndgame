@@ -57,7 +57,7 @@ enum class DamageCategory(
 
     fun calculate(amount: Float, victim: LivingEntity, source: DamageSource, cmd: DamageCalculationCommand): Float =
         calculators.firstOrNull { it.isActive(source) }
-            ?.also { log.info("damageCalculator: ${it.javaClass.simpleName}") }
+            ?.also { log.debug("damageCalculator: ${it.javaClass.simpleName}") }
             ?.calculateDamage(amount, victim, source, cmd)
             ?: throw IllegalStateException("No active DamageCalculator for category=$this, source=$source")
 

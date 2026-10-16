@@ -19,8 +19,14 @@ class CustomDamageTypeTagProvider(
     override fun getName() = "${MCEndgame.MOD_ID}DamageTypeTagsProvider"
 
     override fun addTags(arg: HolderLookup.Provider) {
+        // Generic attack damage is only ever dealt through the custom attack code
+        // (BasicAttackDamage / AreaAttackDamage / SlamAttacker / Arachne), which applies its
+        // knockback explicitly via AttackKnockbackUtil. Without this the vanilla default
+        // knockback from LivingEntity.hurtServer would be applied on top of it, i.e. twice.
         getOrCreateRawBuilder(DamageTypeTags.NO_KNOCKBACK)
             .addOptionalElement(CustomDamageTypes.SPELL.identifier())
+            .addOptionalElement(CustomDamageTypes.GENERIC_ATTACK.identifier())
+            .addOptionalElement(CustomDamageTypes.GENERIC_ATTACK_UNBLOCKABLE.identifier())
 
         getOrCreateRawBuilder(DamageTypeTags.BYPASSES_SHIELD)
             .addOptionalElement(CustomDamageTypes.GENERIC_ATTACK_UNBLOCKABLE.identifier())

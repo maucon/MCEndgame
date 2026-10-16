@@ -238,7 +238,6 @@ public abstract class LivingEntityDamageMixin {
         }
 
         dmg = damageOptional.get();
-        System.out.println("LivingEntityDamageMixin::applyDamage: dmg=" + dmg);
         //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
         //dmg = this_.getDamageAfterArmorAbsorb(source, dmg);

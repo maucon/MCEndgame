@@ -15,6 +15,6 @@ public class RamTargetKnockbackCommandMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDDLnet/minecraft/world/damagesource/DamageSource;F)V")
     )
     void redirectTakeKnockback(LivingEntity instance, double power, double xd, double zd, DamageSource source, float damage) {
-        AttackKnockbackUtil.INSTANCE.takeKnockbackFrom(instance, source.getEntity(), power, xd, zd);
+        AttackKnockbackUtil.INSTANCE.takeKnockbackFrom(instance, source.getEntity(), power, xd, zd, source, damage);
     }
 }

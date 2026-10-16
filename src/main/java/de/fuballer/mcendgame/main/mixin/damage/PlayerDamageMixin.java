@@ -108,7 +108,6 @@ public abstract class PlayerDamageMixin extends LivingEntity {
             }
 
             dmg = damageOptional.get();
-            System.out.println("PlayerDamageMixing::applyDamage: dmg=" + dmg);
             //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             //dmg = this.getDamageAfterArmorAbsorb(source, dmg);
             //dmg = this.getDamageAfterMagicAbsorb(source, dmg);

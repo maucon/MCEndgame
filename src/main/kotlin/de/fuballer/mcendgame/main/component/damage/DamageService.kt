@@ -68,8 +68,6 @@ object DamageService {
         val calculated = incomingDamage.category.calculate(incomingDamage.amount, victim, damageSource, cmd)
         val categorizedDamage = CategorizedDamage(incomingDamage.category to calculated)
 
-        println("categorizedDamage=$categorizedDamage")
-
         return DamageSourceResult.Applied(categorizedDamage, cmd, vanillaDamageContext, damageSource)
     }
 
@@ -133,7 +131,9 @@ object DamageService {
         entity: LivingEntity,
         source: DamageSource
     ): Boolean {
-        if (!source.`is`(CustomTags.BYPASS_DODGE)) return false;
+        // Damage types in BYPASS_DODGE (environmental damage such as fire, fall, drown, ...) can
+        // never be dodged. Everything else - attacks and projectiles in particular - can.
+        if (source.`is`(CustomTags.BYPASS_DODGE)) return false;
 
         val dodgeCalculationCommand = DodgeCalculationCommand.of(entity, source)
             .let { CommandGateway.apply(it) }
