@@ -12,10 +12,13 @@ import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGeneratedEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.OpenDungeonButtonPressedEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.OpenTrainingDungeonButtonPressedEvent
+import de.fuballer.mcendgame.main.messaging.portal.PortalUsedEvent
+import de.fuballer.mcendgame.main.messaging.portal.ResolvePortalTeleportLocationCommand
 import de.fuballer.mcendgame.main.util.extension.BlockPosExtension.toVec3d
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.toCenter
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getDungeonBossSpawnPosition
+import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.server.level.ServerLevel
@@ -94,6 +97,39 @@ class DungeonPortalService(
         val id = event.blockEntity.blockPos.hashCode()
         val entity = dungeonPortalRepo.findById(id) ?: return
         clearPortalsAndDeleteEntity(entity)
+    }
+
+    /**
+     * Remembers where a player entered a dungeon, so they can leave through the same portal again.
+     * Entry portals are single-use, so the portal entity is already gone by the time the player exits.
+     */
+    @EventSubscriber(sync = true)
+    fun on(event: PortalUsedEvent) {
+        val dungeonWorld = event.teleportLocation?.world ?: return
+        if (!dungeonWorld.isDungeonWorld()) return
+
+        val dungeonPortalEntity = dungeonPortalRepo.findByDungeonWorld(dungeonWorld) ?: return
+        val originWorld = event.portal.level() as? ServerLevel ?: return
+
+        dungeonPortalEntity.entryLocations[event.player.uuid] = TeleportLocation(
+            originWorld,
+            event.portal.position(),
+            event.portal.xRot,
+            event.portal.yRot,
+        )
+    }
+
+    /**
+     * Sends players leaving a dungeon back to the portal they entered through. Players without a known
+     * entry portal keep the fallback destination, which is on top of the dungeon device.
+     */
+    @CommandHandler
+    fun on(cmd: ResolvePortalTeleportLocationCommand) {
+        val portalWorld = cmd.portal.level() as? ServerLevel ?: return
+        if (!portalWorld.isDungeonWorld()) return
+
+        cmd.teleportLocation = dungeonPortalRepo.findEntryLocation(portalWorld, cmd.player.uuid)
+            ?: cmd.teleportLocation
     }
 
     private fun spawnLeavePortal(

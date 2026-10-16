@@ -5,10 +5,12 @@ import de.fuballer.mcendgame.main.component.portal.teleport.TeleportLocation
 import de.maucon.mauconframework.stereotype.Entity
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.EntityReference
+import java.util.*
 
 class DungeonPortalEntity(
     override var id: Int,
     val dungeonWorld: ServerLevel,
     val leaveLocation: TeleportLocation,
-    val portals: MutableList<EntityReference<PortalEntity>>
+    val portals: MutableList<EntityReference<PortalEntity>>,
+    val entryLocations: MutableMap<UUID, TeleportLocation> = mutableMapOf(),
 ) : Entity<Int>

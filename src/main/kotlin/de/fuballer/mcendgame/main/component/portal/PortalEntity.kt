@@ -80,7 +80,7 @@ class PortalEntity(
         if (level().isClientSide) return InteractionResult.PASS
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS
 
-        val event = PortalUsedEvent(player, teleportLocation)
+        val event = PortalUsedEvent(player, this, teleportLocation)
         EventGateway.publish(event)
 
         if (singleUse) {

@@ -37,6 +37,26 @@ class MCEndgameGameTest {
         DungeonOpenAndJoinGameTest.testPlayerOpensAndJoinsDungeon(helper)
     }
 
+    @GameTest
+    fun testPlayerExitsAtEntryPortal(helper: GameTestHelper) {
+        DungeonOpenAndJoinGameTest.testPlayerExitsAtEntryPortal(helper)
+    }
+
+    @GameTest
+    fun testPlayerExitsAtDeviceWithoutEntryPortal(helper: GameTestHelper) {
+        DungeonOpenAndJoinGameTest.testPlayerExitsAtDeviceWithoutEntryPortal(helper)
+    }
+
+    @GameTest
+    fun testRejoiningPlayerIsEjectedAtEntryPortal(helper: GameTestHelper) {
+        DungeonOpenAndJoinGameTest.testRejoiningPlayerIsEjectedAtEntryPortal(helper)
+    }
+
+    @GameTest
+    fun testDeathRespawnPrefersEntryPortal(helper: GameTestHelper) {
+        DungeonOpenAndJoinGameTest.testDeathRespawnPrefersEntryPortal(helper)
+    }
+
     // --- mixin regression tests (see MixinPortGameTest) ---
     @GameTest
     fun testDungeonSkeletonTicksButNeverConverts(helper: GameTestHelper) {

@@ -1,5 +1,7 @@
 package de.fuballer.mcendgame.main.component.dungeon.teleport
 
+import de.fuballer.mcendgame.main.component.dungeon.teleport.portal.DungeonPortalRepository
+import de.fuballer.mcendgame.main.component.portal.teleport.TeleportExtensions.teleportTo
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
 import de.fuballer.mcendgame.main.messaging.misc.GetRespawnCommand
 import de.fuballer.mcendgame.main.messaging.misc.PlayerAfterDimensionChangeEvent
@@ -14,6 +16,7 @@ import de.maucon.mauconframework.event.EventSubscriber
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
+import net.minecraft.core.BlockPos
 import net.minecraft.core.GlobalPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -23,7 +26,9 @@ import net.minecraft.world.phys.Vec3
 import java.util.UUID
 
 @Injectable
-class DungeonLeaveService {
+class DungeonLeaveService(
+    private val dungeonPortalRepo: DungeonPortalRepository,
+) {
     private val playersToProcess = mutableSetOf<UUID>()
 
     @Initializer
@@ -64,6 +69,13 @@ class DungeonLeaveService {
         val world = cmd.player.level()
         if (!world.isDungeonWorld()) return
 
+        // Prefer the portal the player entered through; fall back to the top of the dungeon device.
+        val entryRespawn = findEntryRespawn(world, cmd.player)
+        if (entryRespawn != null) {
+            cmd.respawn = ServerPlayer.RespawnConfig(entryRespawn, true)
+            return
+        }
+
         val exitPos = world.getDungeonExitPos()
         val actualPos = GlobalPos(exitPos.dimension, exitPos.pos.offset(0, 1, 0))
         cmd.respawn = ServerPlayer.RespawnConfig(
@@ -72,10 +84,24 @@ class DungeonLeaveService {
         )
     }
 
+    private fun findEntryRespawn(dungeonWorld: ServerLevel, player: ServerPlayer): LevelData.RespawnData? {
+        val entryLocation = dungeonPortalRepo.findEntryLocation(dungeonWorld, player.uuid) ?: return null
+
+        val entryPos = GlobalPos(
+            entryLocation.world.dimension(),
+            BlockPos.containing(entryLocation.coordinates),
+        )
+        return LevelData.RespawnData(entryPos, entryLocation.yRot, entryLocation.xRot)
+    }
+
     private fun teleportToDungeonExitPos(
         player: ServerPlayer,
         dungeonWorld: ServerLevel,
     ): Boolean {
+        // Prefer the portal the player entered through; fall back to the top of the dungeon device.
+        val entryLocation = dungeonPortalRepo.findEntryLocation(dungeonWorld, player.uuid)
+        if (entryLocation != null && player.teleportTo(entryLocation)) return true
+
         val exitPos = dungeonWorld.getDungeonExitPos()
         val targetWorld = RuntimeConfig.SERVER.getLevel(exitPos.dimension) ?: return false
 
