@@ -9,6 +9,7 @@ import com.geckolib.animation.RawAnimation
 import com.geckolib.animation.`object`.PlayState
 import com.geckolib.constant.DefaultAnimations
 import com.geckolib.util.GeckoLibUtil
+import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
@@ -21,6 +22,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMo
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
 import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -101,6 +103,19 @@ class BloodKingEntity(
     private val attackAnimationController =
         AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
             .triggerableAnim(SLASH_ID, SLASH_ANIM)
+            .setParticleKeyframeHandler { event ->
+                if (!level().isClientSide) return@setParticleKeyframeHandler
+
+                val keyFrameData = event.keyframeData
+                if (keyFrameData.effect == "flame") {
+                    val pos = GeoEntityLocatorService.getLocatorPos(uuid, keyFrameData.locatorName) ?: return@setParticleKeyframeHandler
+                    level().addParticle(
+                        ParticleTypes.FLAME,
+                        pos.x, pos.y, pos.z,
+                        0.0, 0.0, 0.0,
+                    )
+                }
+            }
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
