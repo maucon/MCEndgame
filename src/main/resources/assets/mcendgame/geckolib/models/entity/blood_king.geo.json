@@ -7,8 +7,8 @@
 				"texture_width": 256,
 				"texture_height": 256,
 				"visible_bounds_width": 7,
-				"visible_bounds_height": 4.5,
-				"visible_bounds_offset": [0, 1.75, 0]
+				"visible_bounds_height": 5.5,
+				"visible_bounds_offset": [0, 2.25, 0]
 			},
 			"bones": [
 				{
@@ -240,7 +240,12 @@
 						{"origin": [-8.5, 11.25, -2], "size": [2, 7, 3], "uv": [103, 58]},
 						{"origin": [-7.5, 20.25, -6], "size": [1, 34, 12], "uv": [96, 0]},
 						{"origin": [-10, 18.25, -4.5], "size": [5, 2, 8], "uv": [95, 47]}
-					]
+					],
+					"locators": {
+						"swordParticle0": [-7.5, 27.25, 1],
+						"swordParticle1": [-7.5, 37.25, 1],
+						"swordParticle2": [-7.5, 47.25, 1]
+					}
 				},
 				{
 					"name": "rightPauldron",

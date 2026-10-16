@@ -514,6 +514,68 @@
 						}
 					}
 				}
+			},
+			"particle_effects": {
+				"0.5833": {
+					"effect": "flame",
+					"locator": "swordParticle2"
+				},
+				"0.5834": {
+					"effect": "flame",
+					"locator": "swordParticle1"
+				},
+				"0.5835": {
+					"effect": "flame",
+					"locator": "swordParticle0"
+				},
+				"0.625": {
+					"effect": "flame",
+					"locator": "swordParticle2"
+				},
+				"0.6251": {
+					"effect": "flame",
+					"locator": "swordParticle1"
+				},
+				"0.6252": {
+					"effect": "flame",
+					"locator": "swordParticle0"
+				},
+				"0.6667": {
+					"effect": "flame",
+					"locator": "swordParticle2"
+				},
+				"0.6668": {
+					"effect": "flame",
+					"locator": "swordParticle1"
+				},
+				"0.6669": {
+					"effect": "flame",
+					"locator": "swordParticle0"
+				},
+				"0.7083": {
+					"effect": "flame",
+					"locator": "swordParticle2"
+				},
+				"0.7084": {
+					"effect": "flame",
+					"locator": "swordParticle1"
+				},
+				"0.7085": {
+					"effect": "flame",
+					"locator": "swordParticle0"
+				},
+				"0.75": {
+					"effect": "flame",
+					"locator": "swordParticle2"
+				},
+				"0.7501": {
+					"effect": "flame",
+					"locator": "swordParticle1"
+				},
+				"0.7502": {
+					"effect": "flame",
+					"locator": "swordParticle0"
+				}
 			}
 		}
 	}
