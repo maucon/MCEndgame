@@ -15,16 +15,12 @@ class PortalService {
     fun on(event: PortalUsedEvent) {
         val player = event.player
 
-        // Give handlers the chance to send the player somewhere player-specific (e.g. the dungeon
-        // portal a player entered through); falls back to the portal's own destination otherwise.
         val command = CommandGateway.apply(
             ResolvePortalTeleportLocationCommand(player, event.portal, event.teleportLocation)
         )
         val resolvedLocation = command.teleportLocation
 
-        val teleportSuccessful = teleport(player, resolvedLocation) ||
-            // The player-specific destination could not be reached; never leave the player stuck.
-            (resolvedLocation != event.teleportLocation && teleport(player, event.teleportLocation))
+        val teleportSuccessful = teleport(player, resolvedLocation) || (resolvedLocation != event.teleportLocation && teleport(player, event.teleportLocation))
 
         if (!teleportSuccessful) {
             player.sendSystemMessage(PortalSettings.TELEPORTATION_FAILED_MESSAGE)
