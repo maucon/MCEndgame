@@ -8,8 +8,6 @@ import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.oit.OitPipelineSet
 
 object CustomRenderPipelines {
-    private val noWrite = DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false)
-
     val LINK_OIT: OitPipelineSet = OitPipelineSet.builder(
         "link",
         RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
