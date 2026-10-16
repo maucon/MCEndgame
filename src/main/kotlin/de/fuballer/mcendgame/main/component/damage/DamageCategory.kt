@@ -1,16 +1,7 @@
 package de.fuballer.mcendgame.main.component.damage
 
-import com.mojang.logging.LogUtils
 import de.fuballer.mcendgame.main.component.damage.calculator.DamageCalculator
-import de.fuballer.mcendgame.main.component.damage.calculator.attack_damage.AbstractArrowCalculator
-import de.fuballer.mcendgame.main.component.damage.calculator.attack_damage.BaseAttackDamageCalculator
-import de.fuballer.mcendgame.main.component.damage.calculator.attack_damage.GenericAttackCalculator
-import de.fuballer.mcendgame.main.component.damage.calculator.attack_damage.KineticAttackDamageCalculator
-import de.fuballer.mcendgame.main.component.damage.calculator.attack_damage.MaceSmashAttackCalculator
-import de.fuballer.mcendgame.main.component.damage.calculator.attack_damage.MeleeAttackCalculator
-import de.fuballer.mcendgame.main.component.damage.calculator.attack_damage.PierceAttackDamageCalculator
-import de.fuballer.mcendgame.main.component.damage.calculator.attack_damage.PotionCalculator
-import de.fuballer.mcendgame.main.component.damage.calculator.attack_damage.TridentProjectileCalculator
+import de.fuballer.mcendgame.main.component.damage.calculator.attack_damage.*
 import de.fuballer.mcendgame.main.component.damage.calculator.spell_damage.BaseSpellDamageCalculator
 import de.fuballer.mcendgame.main.component.damage.calculator.spell_damage.SpellDamageCalculator
 import de.fuballer.mcendgame.main.component.damage.calculator.true_damage.TrueDamageCalculator
@@ -53,11 +44,8 @@ enum class DamageCategory(
         listOf(TrueDamageCalculator)
     );
 
-    private val log = LogUtils.getLogger()
-
     fun calculate(amount: Float, victim: LivingEntity, source: DamageSource, cmd: DamageCalculationCommand): Float =
         calculators.firstOrNull { it.isActive(source) }
-            ?.also { log.debug("damageCalculator: ${it.javaClass.simpleName}") }
             ?.calculateDamage(amount, victim, source, cmd)
             ?: throw IllegalStateException("No active DamageCalculator for category=$this, source=$source")
 

@@ -131,9 +131,7 @@ object DamageService {
         entity: LivingEntity,
         source: DamageSource
     ): Boolean {
-        // Damage types in BYPASS_DODGE (environmental damage such as fire, fall, drown, ...) can
-        // never be dodged. Everything else - attacks and projectiles in particular - can.
-        if (source.`is`(CustomTags.BYPASS_DODGE)) return false;
+        if (source.`is`(CustomTags.BYPASS_DODGE)) return false
 
         val dodgeCalculationCommand = DodgeCalculationCommand.of(entity, source)
             .let { CommandGateway.apply(it) }

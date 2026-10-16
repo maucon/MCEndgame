@@ -17,7 +17,7 @@ public class LivingEntityKnockbackCommandMixin {
     @Redirect(method = "blockedByItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDDLnet/minecraft/world/damagesource/DamageSource;F)V"))
     void redirectTakeKnockbackInKnockback(LivingEntity instance, double power, double xd, double zd, DamageSource source, float damage) {
         var self = (LivingEntity) (Object) this;
-        AttackKnockbackUtil.INSTANCE.takeKnockbackFrom(instance, self, power, xd, zd, source, damage);
+        AttackKnockbackUtil.INSTANCE.takeKnockbackFrom(instance, self, power, xd, zd, source, damage); // FIXME: self is taking knockback scaled by itself?
     }
 
     @Redirect(method = "causeExtraKnockback", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDDLnet/minecraft/world/damagesource/DamageSource;FZ)V"))

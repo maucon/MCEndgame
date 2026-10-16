@@ -20,7 +20,7 @@ import net.minecraft.world.entity.Entity
  */
 object DamageDealing {
     /**
-     * Deals generic attack damage to this entity.
+     * Deals generic attack damage to this entity without dealing any knockback.
      *
      * @param damageAmount the amount of damage to deal
      * @param causingEntity the entity causing the damage (e.g. skeleton)
