@@ -14,6 +14,7 @@ class CustomParticleFactoryRegisterer {
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.CLOUD_TORUS, CloudTorusParticle::Factory)
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.HORIZONTAL_FLAME_BREATH, HorizontalFlameBreathParticle::Factory)
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.MOVE_TO_TARGET_FLAME, MoveToTargetFlameParticle::Factory)
-        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.DIRECTIONAL_SWEEP_ATTACK, DirectionalAttackSweepParticle::Factory)
+        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.DIRECTIONAL_SWEEP_ATTACK, DirectionalSweepParticle::Factory)
+        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.DIRECTIONAL_SWEEP_FLAME, DirectionalFlameSweepParticle::Factory)
     }
 }
