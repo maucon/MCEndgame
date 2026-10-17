@@ -17,6 +17,10 @@ public abstract class LivingEntityDamageAccessorMixin implements LivingEntityDam
     private boolean lastHitWasApplied = true;
     @Unique
     private float lastResisted = 0f;
+    @Unique
+    private boolean pendingDamageEvent = false;
+    @Unique
+    private float pendingDamageEventAmount = 0f;
 
     @Override
     public boolean mcendgame$isInInvulnerabilityFrames() {
@@ -56,5 +60,27 @@ public abstract class LivingEntityDamageAccessorMixin implements LivingEntityDam
     @Override
     public void mcendgame$setLastHurt(float value) {
         this.lastHurt = value;
+    }
+
+    @Override
+    public boolean mcendgame$hasPendingDamageEvent() {
+        return this.pendingDamageEvent;
+    }
+
+    @Override
+    public void mcendgame$setPendingDamageEvent(float amount) {
+        this.pendingDamageEvent = true;
+        this.pendingDamageEventAmount = amount;
+    }
+
+    @Override
+    public float mcendgame$getPendingDamageEventAmount() {
+        return this.pendingDamageEventAmount;
+    }
+
+    @Override
+    public void mcendgame$clearPendingDamageEvent() {
+        this.pendingDamageEvent = false;
+        this.pendingDamageEventAmount = 0f;
     }
 }

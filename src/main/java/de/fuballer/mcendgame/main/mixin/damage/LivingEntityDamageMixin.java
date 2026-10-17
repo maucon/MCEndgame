@@ -2,8 +2,10 @@ package de.fuballer.mcendgame.main.mixin.damage;
 
 import de.fuballer.mcendgame.main.component.damage.DamageService;
 import de.fuballer.mcendgame.main.component.damage.data.DamageSourceDraft;
+import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDamagedEvent;
 import de.fuballer.mcendgame.main.mixin.access.EntityAccessMixin;
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension;
+import de.maucon.mauconframework.event.EventGateway;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -71,6 +73,8 @@ public abstract class LivingEntityDamageMixin {
     @Unique
     private boolean callHurtServer(ServerLevel level, DamageSource source, float damage) {
         LivingEntity this_ = (LivingEntity) (Object) this;
+
+        EntityMixinExtension.INSTANCE.clearPendingDamageEvent(this_);
 
         //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
         // Make source a DamageSourceDraft if not already
@@ -213,6 +217,11 @@ public abstract class LivingEntityDamageMixin {
         if ((entity = source.getEntity()) instanceof ServerPlayer) {
             ServerPlayer sourcePlayer = (ServerPlayer) entity;
             net.minecraft.advancements.triggers.CriteriaTriggers.PLAYER_HURT_ENTITY.trigger(sourcePlayer, this_, source, originalDamage, damage, blocked);
+        }
+        if (EntityMixinExtension.INSTANCE.hasPendingDamageEvent(this_)) {
+            float eventDamage = EntityMixinExtension.INSTANCE.getPendingDamageEventAmount(this_);
+            EntityMixinExtension.INSTANCE.clearPendingDamageEvent(this_);
+            EventGateway.INSTANCE.publish(new LivingEntityDamagedEvent(this_, source, eventDamage));
         }
         return success;
     }

@@ -40,7 +40,13 @@ jobs:
           GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./gradlew runDatagen
-          ./gradlew build
+          ./gradlew build -x runGameTest
+
+      - name: Run server game tests
+        env:
+          GITHUB_PACKAGES_NAME: ${{ github.actor }}
+          GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew runGameTest
 
       - name: Store reports
         if: failure()

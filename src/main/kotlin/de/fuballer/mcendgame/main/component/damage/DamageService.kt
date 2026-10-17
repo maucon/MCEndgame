@@ -5,14 +5,15 @@ import de.fuballer.mcendgame.main.component.damage.data.*
 import de.fuballer.mcendgame.main.component.damage.dodge.DodgeCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.ignore_damage.IgnoreDamageCommand
 import de.fuballer.mcendgame.main.component.tags.CustomTags
-import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDamagedEvent
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDodgedEvent
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.clearPendingDamageEvent
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getLastHurt
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getLastResisted
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isInInvulnerabilityFrames
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setLastHitWasApplied
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setLastHurt
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setLastResisted
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setPendingDamageEvent
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.event.EventGateway
 import net.minecraft.server.level.ServerLevel
@@ -78,6 +79,8 @@ object DamageService {
         victim: LivingEntity,
         source: DamageSource
     ): Optional<Float> {
+        victim.clearPendingDamageEvent()
+
         val (reducedTotal, resistedTotal) = calculateIncomingDamage(victim, source)
         val damageTotal = reducedTotal.coerceAtLeast(0f)
 
@@ -111,8 +114,8 @@ object DamageService {
             (source.entity as ServerPlayer).awardStat(Stats.DAMAGE_DEALT_RESISTED, (damageResisted * 10.0f).roundToInt())
         }
 
-        val event = LivingEntityDamagedEvent(victim, source, dmg)
-        EventGateway.publish(event)
+        // The event is published by the hurtServer mixin after health has been reduced.
+        victim.setPendingDamageEvent(dmg)
 
         return Optional.of(dmg)
     }

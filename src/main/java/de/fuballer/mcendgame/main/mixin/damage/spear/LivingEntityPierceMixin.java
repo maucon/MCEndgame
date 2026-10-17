@@ -6,7 +6,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
@@ -26,6 +28,7 @@ public class LivingEntityPierceMixin {
         if (pierceType == null) {
             return original;
         }
+        PierceContext.CURRENT.remove();
 
         var damageType = switch (pierceType) {
             case PIERCE -> CustomDamageTypes.INSTANCE.getPIERCE_ATTACK();
@@ -33,5 +36,14 @@ public class LivingEntityPierceMixin {
         };
 
         return CustomDamageTypes.INSTANCE.of(world, damageType, original.getEntity(), original.getDirectEntity());
+    }
+
+    /**
+     * Also clear the context when stabAttack does not reach hurtServer (e.g. kinetic attacks that
+     * only apply knockback), otherwise the value leaks to the next unrelated stab on this thread.
+     */
+    @Inject(method = "stabAttack", at = @At("RETURN"))
+    private void clearPierceContext(CallbackInfoReturnable<Boolean> cir) {
+        PierceContext.CURRENT.remove();
     }
 }

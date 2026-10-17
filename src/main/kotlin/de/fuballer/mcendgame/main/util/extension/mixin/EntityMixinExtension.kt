@@ -202,4 +202,24 @@ object EntityMixinExtension {
         val accessor = this as LivingEntityDamageAccessor
         return accessor.`mcendgame$getLastHurt`()
     }
+
+    fun LivingEntity.setPendingDamageEvent(amount: Float) {
+        val accessor = this as LivingEntityDamageAccessor
+        accessor.`mcendgame$setPendingDamageEvent`(amount)
+    }
+
+    fun LivingEntity.hasPendingDamageEvent(): Boolean {
+        val accessor = this as LivingEntityDamageAccessor
+        return accessor.`mcendgame$hasPendingDamageEvent`()
+    }
+
+    fun LivingEntity.getPendingDamageEventAmount(): Float {
+        val accessor = this as LivingEntityDamageAccessor
+        return accessor.`mcendgame$getPendingDamageEventAmount`()
+    }
+
+    fun LivingEntity.clearPendingDamageEvent() {
+        val accessor = this as LivingEntityDamageAccessor
+        accessor.`mcendgame$clearPendingDamageEvent`()
+    }
 }

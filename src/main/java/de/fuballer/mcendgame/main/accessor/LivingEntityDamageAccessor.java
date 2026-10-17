@@ -16,4 +16,12 @@ public interface LivingEntityDamageAccessor {
     float mcendgame$getLastHurt();
 
     void mcendgame$setLastHurt(float value);
+
+    boolean mcendgame$hasPendingDamageEvent();
+
+    void mcendgame$setPendingDamageEvent(float amount);
+
+    float mcendgame$getPendingDamageEventAmount();
+
+    void mcendgame$clearPendingDamageEvent();
 }

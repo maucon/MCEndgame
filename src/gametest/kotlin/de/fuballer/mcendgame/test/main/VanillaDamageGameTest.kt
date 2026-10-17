@@ -1,5 +1,11 @@
 package de.fuballer.mcendgame.test.main
 
+import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asDoubleRoll
+import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
+import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
+import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealGenericAttackDamage
+import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealSpellDamage
+import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
 import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getAttackCooldownMultiplier
 import io.netty.channel.embedded.EmbeddedChannel
 import net.fabricmc.fabric.api.gametest.v1.GameTest
@@ -31,6 +37,8 @@ import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.*
 import net.minecraft.world.phys.Vec3
 import org.slf4j.LoggerFactory
+import kotlin.math.abs
+import kotlin.math.floor
 import kotlin.math.sqrt
 
 private val DEFAULT_VICTIM_POS = Vec3(0.5, 2.0, 0.5)
@@ -40,11 +48,65 @@ private val CREEPER_POS = Vec3(4.5, 2.0, 0.5)
 private val CHARGED_CREEPER_POS = Vec3(6.5, 2.0, 0.5)
 private const val EXPLOSION_DAMAGE_EPSILON = 0.1f
 private val SMASH_TEST_HEIGHTS = listOf(2.0, 3.0, 5.0, 8.0, 12.0, 20.0)
-private val DIFFICULTIES = listOf(Difficulty.EASY, Difficulty.NORMAL, Difficulty.HARD)
+private val DIFFICULTIES = listOf(Difficulty.EASY, Difficulty.NORMAL, Difficulty.HARD, Difficulty.PEACEFUL)
 
 private val LOG = LoggerFactory.getLogger(VanillaDamageGameTest::class.java)
 
 class VanillaDamageGameTest {
+    @GameTest(maxTicks = 200)
+    fun playerTakesNoMeleeDamageOnPeaceful(helper: GameTestHelper) {
+        LOG.info("Testing that player melee damage is disabled on PEACEFUL")
+        helper.prepareNormalDifficulty()
+
+        val attacker = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, CREEPER_POS)
+        val player = helper.createDamageablePlayer()
+
+        helper.startSequence()
+            .thenWaitUntil { helper.assertTrue(player.tickCount > 0, "Player should have ticked before the attack") }
+            .thenExecute {
+                val healthBefore = player.health
+                try {
+                    helper.prepareDifficulty(Difficulty.PEACEFUL)
+                    val source = helper.level.damageSources().mobAttack(attacker)
+                    player.hurtServer(helper.level, source, 3.0f)
+                } finally {
+                    helper.prepareDifficulty(Difficulty.NORMAL)
+                }
+
+                val actualDamage = healthBefore - player.health
+                LOG.info("Result (PEACEFUL melee): player took {} damage", actualDamage)
+                helper.assertDamageEquals(actualDamage, 0.0f, "PEACEFUL melee damage")
+            }
+            .thenSucceed()
+    }
+
+    @GameTest(maxTicks = 200)
+    fun playerTakesNoCustomDamageOnPeaceful(helper: GameTestHelper) {
+        LOG.info("Testing that custom damage is disabled on PEACEFUL")
+        helper.prepareNormalDifficulty()
+
+        val attacker = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, CREEPER_POS)
+        val player = helper.createDamageablePlayer()
+
+        helper.startSequence()
+            .thenWaitUntil { helper.assertTrue(player.tickCount > 0, "Player should have ticked before the attack") }
+            .thenExecute {
+                val healthBefore = player.health
+                try {
+                    helper.prepareDifficulty(Difficulty.PEACEFUL)
+                    player.dealGenericAttackDamage(6.0f, attacker)
+                    player.dealSpellDamage(attacker, flatDamage = 5.0)
+                } finally {
+                    helper.prepareDifficulty(Difficulty.NORMAL)
+                }
+
+                val actualDamage = healthBefore - player.health
+                LOG.info("Result (PEACEFUL custom damage): player took {} damage", actualDamage)
+                helper.assertDamageEquals(actualDamage, 0.0f, "PEACEFUL custom damage")
+            }
+            .thenSucceed()
+    }
+
     @GameTest(maxTicks = 200)
     fun playerFistHuskDealsVanillaDamage(helper: GameTestHelper) {
         LOG.info("Testing vanilla fist damage against a husk")
@@ -638,6 +700,171 @@ class VanillaDamageGameTest {
             }
             .thenSucceed()
     }
+
+    @GameTest(maxTicks = 200)
+    fun fallDamageMatchesVanillaForArmorConfigs(helper: GameTestHelper) {
+        LOG.info("Testing fall damage with no armor, iron armor and the Rhino chestplate")
+        helper.prepareNormalDifficulty()
+
+        val fallDistance = 10.0
+        val source = helper.level.damageSources().fall()
+        helper.assertEnvironmentalDamage(
+            label = "Fall damage",
+            source = source,
+            rawDamage = { player -> calculateRawFallDamage(player, fallDistance) },
+            applyDamage = { _, player, damageSource ->
+                player.fallDistance = fallDistance
+                player.causeFallDamage(fallDistance, 1.0f, damageSource)
+            },
+        )
+    }
+
+    @GameTest(maxTicks = 200)
+    fun lavaDamageMatchesVanillaForArmorConfigs(helper: GameTestHelper) {
+        LOG.info("Testing lava damage with no armor, iron armor and the Rhino chestplate")
+        helper.prepareNormalDifficulty()
+
+        helper.assertEnvironmentalDamage(
+            label = "Lava damage",
+            source = helper.level.damageSources().lava(),
+            rawDamage = { 4.0f },
+            applyDamage = { level, player, damageSource -> player.hurtServer(level, damageSource, 4.0f) },
+        )
+    }
+
+    @GameTest(maxTicks = 200)
+    fun fireDamageMatchesVanillaForArmorConfigs(helper: GameTestHelper) {
+        LOG.info("Testing fire damage with no armor, iron armor and the Rhino chestplate")
+        helper.prepareNormalDifficulty()
+
+        helper.assertEnvironmentalDamage(
+            label = "Fire damage",
+            source = helper.level.damageSources().onFire(),
+            rawDamage = { 1.0f },
+            applyDamage = { level, player, damageSource -> player.hurtServer(level, damageSource, 1.0f) },
+        )
+    }
+
+    @GameTest(maxTicks = 200)
+    fun suffocationDamageMatchesVanillaForArmorConfigs(helper: GameTestHelper) {
+        LOG.info("Testing suffocation damage with no armor, iron armor and the Rhino chestplate")
+        helper.prepareNormalDifficulty()
+
+        helper.assertEnvironmentalDamage(
+            label = "Suffocation damage",
+            source = helper.level.damageSources().inWall(),
+            rawDamage = { 1.0f },
+            applyDamage = { level, player, damageSource -> player.hurtServer(level, damageSource, 1.0f) },
+        )
+    }
+}
+
+private enum class EnvironmentalDamageConfig {
+    NO_ARMOR,
+    IRON_ARMOR,
+    RHINO_CHESTPLATE,
+}
+
+private fun GameTestHelper.assertEnvironmentalDamage(
+    label: String,
+    source: DamageSource,
+    rawDamage: (ServerPlayer) -> Float,
+    applyDamage: (ServerLevel, ServerPlayer, DamageSource) -> Unit,
+) {
+    val configs = EnvironmentalDamageConfig.entries
+    val players = configs.associateWith { config ->
+        createDamageablePlayer().also { player ->
+            when (config) {
+                EnvironmentalDamageConfig.NO_ARMOR -> Unit
+                EnvironmentalDamageConfig.IRON_ARMOR -> player.equipFullIronArmor()
+                EnvironmentalDamageConfig.RHINO_CHESTPLATE -> player.setItemSlot(
+                    EquipmentSlot.CHEST,
+                    CustomArmorItems.SKIN_OF_THE_RHINO.defaultInstance,
+                )
+            }
+        }
+    }
+    val initialTicks = players.values.associateWith { it.tickCount }
+
+    startSequence()
+        .thenWaitUntil {
+            assertTrue(
+                players.values.all { it.tickCount > initialTicks.getValue(it) },
+                "Environmental damage victims should have ticked after the setup",
+            )
+        }
+        .thenExecute {
+            val actualByConfig = mutableMapOf<EnvironmentalDamageConfig, Float>()
+
+            for ((config, player) in players) {
+                val raw = rawDamage(player)
+                val expected = expectedEnvironmentalDamage(level, player, raw, source)
+                val healthBefore = player.health
+
+                applyDamage(level, player, source)
+                val actualDamage = healthBefore - player.health
+                actualByConfig[config] = actualDamage
+
+                LOG.info(
+                    "Result ({} / {}): expected {} damage, player took {} (raw {})",
+                    label,
+                    config,
+                    expected,
+                    actualDamage,
+                    raw,
+                )
+                assertDamageEquals(actualDamage, expected, "$label (${config.name})")
+            }
+
+            val noArmor = actualByConfig.getValue(EnvironmentalDamageConfig.NO_ARMOR)
+            val ironArmor = actualByConfig.getValue(EnvironmentalDamageConfig.IRON_ARMOR)
+            val rhino = actualByConfig.getValue(EnvironmentalDamageConfig.RHINO_CHESTPLATE)
+
+            // Fall, lava, fire and in-wall damage all bypass armor, so plain armor must not change
+            // the result. The Rhino chestplate's flat damage reduction must still apply.
+            assertTrue(
+                abs(ironArmor - noArmor) <= DAMAGE_EPSILON,
+                "$label: plain iron armor should not change damage that bypasses armor ($ironArmor vs $noArmor)",
+            )
+            assertTrue(
+                rhino < noArmor,
+                "$label: Rhino chestplate flat reduction should lower damage ($rhino vs $noArmor)",
+            )
+        }
+        .thenSucceed()
+}
+
+private fun expectedEnvironmentalDamage(
+    level: ServerLevel,
+    player: ServerPlayer,
+    rawDamage: Float,
+    source: DamageSource,
+): Float {
+    // Environmental damage goes through the same reduction pipeline. Flat damage taken is added
+    // after armor/protection/resistance in DamageService.calculateIncomingDamage.
+    val afterReductions = expectedDamageAfterReductions(level, player, rawDamage, source)
+    return (afterReductions + player.flatDamageTaken()).coerceAtLeast(0.0f)
+}
+
+private fun LivingEntity.flatDamageTaken(): Float =
+    getAllCustomAttributes()[CustomAttributeTypes.FLAT_DAMAGE_TAKEN]
+        ?.sumOf { it.rolls[0].asDoubleRoll().getValue() }
+        ?.toFloat()
+        ?: 0.0f
+
+private fun calculateRawFallDamage(
+    player: ServerPlayer,
+    fallDistance: Double,
+    damageMultiplier: Float = 1.0f,
+): Float {
+    val safeFallDistance = player.getAttributeValue(Attributes.SAFE_FALL_DISTANCE)
+    val fallDamageMultiplier = player.getAttributeValue(Attributes.FALL_DAMAGE_MULTIPLIER)
+    // Mirrors LivingEntity.calculateFallPower/calculateFallDamage.
+    val fallPower = fallDistance + 1.0E-6 - safeFallDistance
+    return floor(fallPower * damageMultiplier * fallDamageMultiplier)
+        .toInt()
+        .coerceAtLeast(0)
+        .toFloat()
 }
 
 private class PlayerDamageExpectation(
@@ -905,6 +1132,7 @@ private fun GameTestHelper.prepareDifficulty(difficulty: Difficulty) {
 // Vanilla difficulty scaling of damage a player receives (matches vanilla Player.hurtServer).
 private fun scalePlayerDamage(difficulty: Difficulty, rawDamage: Float): Float {
     return when (difficulty) {
+        Difficulty.PEACEFUL -> 0.0f
         Difficulty.EASY -> minOf(rawDamage / 2.0f + 1.0f, rawDamage)
         Difficulty.HARD -> rawDamage * 1.5f
         else -> rawDamage

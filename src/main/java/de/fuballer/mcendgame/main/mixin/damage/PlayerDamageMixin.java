@@ -54,7 +54,10 @@ public abstract class PlayerDamageMixin extends LivingEntity {
 
                 if (source.scalesWithDifficulty()) {
                     if (level.getDifficulty() == Difficulty.PEACEFUL) {
-                        damage = 0.0F;
+                        // Vanilla stops here. Passing zero damage down is not enough: the calculators
+                        // recompute damage from attributes and custom damage uses its own incoming
+                        // amount, so continuing would still apply full damage on PEACEFUL.
+                        return false;
                     }
 
                     if (level.getDifficulty() == Difficulty.EASY) {
@@ -72,6 +75,10 @@ public abstract class PlayerDamageMixin extends LivingEntity {
                         difficultyScaling = DifficultyScaling.HARD;
                         //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
                     }
+                }
+
+                if (damage == 0.0F) {
+                    return false;
                 }
 
                 //return damage == 0.0F ? false : super.hurtServer(level, source, damage);

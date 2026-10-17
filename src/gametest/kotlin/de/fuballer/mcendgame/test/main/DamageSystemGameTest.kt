@@ -8,6 +8,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttribu
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealGenericAttackDamage
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealTrueDamage
 import de.fuballer.mcendgame.main.component.status_effect.CustomStatusEffects
+import de.fuballer.mcendgame.main.context.PierceContext
 import net.fabricmc.fabric.api.gametest.v1.GameTest
 import net.minecraft.gametest.framework.GameTestHelper
 import net.minecraft.world.damagesource.CombatRules
@@ -322,6 +323,62 @@ class DamageSystemGameTest {
 
                 LOG.info("Result: weaker hit after the frames expired dealt {} (expected {})", actualDamage, expectedDamage)
                 helper.assertDamageEquals(actualDamage, expectedDamage, "Weaker hit after invulnerability frames expired")
+            }
+            .thenSucceed()
+    }
+
+    @GameTest(maxTicks = 200)
+    fun stabAttackClearsPierceContext(helper: GameTestHelper) {
+        LOG.info("Testing that a stab attack clears the pierce context and survives a weapon without a kinetic component")
+        helper.prepareNormalDifficulty()
+
+        val attacker = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, VICTIM_POS)
+        val victim = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, SECOND_VICTIM_POS)
+        prepareVictim(victim)
+        attacker.setItemSlot(EquipmentSlot.MAINHAND, ItemStack(Items.IRON_SWORD))
+
+        helper.startSequence()
+            .thenWaitUntil {
+                helper.assertTrue(attacker.tickCount > 0 && victim.tickCount > 0, "Entities should have ticked")
+            }
+            .thenExecute {
+                val healthBefore = victim.health
+                try {
+                    PierceContext.CURRENT.set(PierceContext.PierceType.KINETIC)
+                    attacker.stabAttack(EquipmentSlot.MAINHAND, victim, 4.0f, true, false, false)
+                } finally {
+                    PierceContext.CURRENT.remove()
+                }
+
+                helper.assertTrue(victim.health < healthBefore, "The stab should still deal damage")
+                helper.assertTrue(PierceContext.CURRENT.get() == null, "The pierce context should be cleared after the stab")
+            }
+            .thenSucceed()
+    }
+
+    @GameTest(maxTicks = 200)
+    fun damageLessStabAttackClearsPierceContext(helper: GameTestHelper) {
+        LOG.info("Testing that a damage-less stab attack clears the pierce context")
+        helper.prepareNormalDifficulty()
+
+        val attacker = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, VICTIM_POS)
+        val victim = helper.spawnWithNoFreeWill(EntityTypes.ZOMBIE, SECOND_VICTIM_POS)
+        prepareVictim(victim)
+        attacker.setItemSlot(EquipmentSlot.MAINHAND, ItemStack(Items.IRON_SWORD))
+
+        helper.startSequence()
+            .thenWaitUntil {
+                helper.assertTrue(attacker.tickCount > 0 && victim.tickCount > 0, "Entities should have ticked")
+            }
+            .thenExecute {
+                try {
+                    PierceContext.CURRENT.set(PierceContext.PierceType.KINETIC)
+                    attacker.stabAttack(EquipmentSlot.MAINHAND, victim, 4.0f, false, false, false)
+                } finally {
+                    PierceContext.CURRENT.remove()
+                }
+
+                helper.assertTrue(PierceContext.CURRENT.get() == null, "The pierce context should be cleared after a damage-less stab")
             }
             .thenSucceed()
     }
