@@ -1,0 +1,76 @@
+package de.fuballer.mcendgame.main.component.damage.calculator.attack_damage
+
+import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
+import de.fuballer.mcendgame.main.component.damage.DamageUtil
+import de.fuballer.mcendgame.main.component.damage.calculator.DamageCalculator
+import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
+import de.fuballer.mcendgame.main.util.extension.DamageTypeExtension.isOf
+import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getAttackCooldownMultiplier
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.animal.fish.Pufferfish
+import net.minecraft.world.entity.monster.Guardian
+import net.minecraft.world.entity.player.Player
+
+object MeleeAttackCalculator : DamageCalculator {
+    override fun isActive(source: DamageSource): Boolean {
+        if (source.entity !is LivingEntity) return false
+        if (source.entity is Pufferfish) return false
+        if (source.entity is Guardian) return false
+
+        return source.type().isOf(DamageTypes.MOB_ATTACK)
+                || source.type().isOf(DamageTypes.MOB_ATTACK_NO_AGGRO)
+                || source.type().isOf(DamageTypes.PLAYER_ATTACK)
+                || source.type().isOf(CustomDamageTypes.SWEEPING)
+    }
+
+    override fun calculateDamage(
+        originalDamage: Float,
+        attacked: LivingEntity,
+        source: DamageSource,
+        event: DamageCalculationCommand
+    ): Float {
+        val attacker = source.entity as? LivingEntity ?: return originalDamage
+
+        val baseDamage = calculateBaseAttackDamage(event, attacker, source)
+        val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
+        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
+        val critMulti = calculateCriticalMultiplier(event)
+        val attackCooldown = getAttackCooldown(source)
+        val attackDamageMulti = calculateAttackCooldownMulti(attackCooldown)
+
+        return ((baseDamage * attackDamageMulti * critMulti + enchantmentDamage * attackCooldown) * damageMulti).toFloat()
+    }
+
+    private fun calculateBaseAttackDamage(
+        event: DamageCalculationCommand,
+        attacker: LivingEntity,
+        source: DamageSource
+    ): Double {
+        var baseDamage = if (attacker.isAutoSpinAttack) 8.0
+        else DamageUtil.getAttackDamageBaseValue(event, attacker)
+
+        if (source.type().isOf(CustomDamageTypes.SWEEPING)) {
+            val sweepingRatio = attacker.getAttributeValue(Attributes.SWEEPING_DAMAGE_RATIO)
+            baseDamage = 1.0 + sweepingRatio * baseDamage
+        }
+
+        return baseDamage
+    }
+
+    private fun calculateCriticalMultiplier(event: DamageCalculationCommand): Double {
+        if (!event.isCritical) return 1.0
+        return 1.5 + event.criticalDamageMulti.sum()
+    }
+
+    private fun getAttackCooldown(source: DamageSource): Double {
+        val sourceEntity = source.directEntity as? Player ?: return 1.0
+        return sourceEntity.getAttackCooldownMultiplier().toDouble()
+    }
+
+    private fun calculateAttackCooldownMulti(attackCooldown: Double): Double {
+        return 0.2 + attackCooldown * attackCooldown * 0.8
+    }
+}

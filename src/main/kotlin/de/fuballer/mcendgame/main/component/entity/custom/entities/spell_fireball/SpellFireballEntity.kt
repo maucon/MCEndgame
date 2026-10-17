@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball
 
-import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealSpellDamage
+import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealSpellDamage
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
@@ -74,7 +74,7 @@ class SpellFireballEntity(
 
     private fun damageTarget(target: Entity) {
         val livingOwner = getOwner() as? LivingEntity ?: return
-        val damageDealt = target.dealSpellDamage(1.0, livingOwner, this)
+        val damageDealt = target.dealSpellDamage(livingOwner, this)
 
         if (damageDealt && (target as? LivingEntity)?.getEffect(MobEffects.FIRE_RESISTANCE) == null) {
             target.remainingFireTicks = TARGET_FIRE_TICKS

@@ -312,8 +312,6 @@ object CustomAttributeTypes {
     val BLESSING_OF_THE_STAG = CustomAttributeType("blessing_of_the_stag", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
     val BLESSING_OF_THE_WOLF = CustomAttributeType("blessing_of_the_wolf", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.BENEFICIAL)
 
-    val NO_ATTACK_DAMAGE = CustomAttributeType("no_attack_damage", AttributeFormats.EMPTY_ROLL, AttributeFormats.EMPTY_BOUNDS, AttributeAffinities.DETRIMENTAL)
-
     // for use on enemies (don't use for players)
     val DROP_INCREASED_LOOT =
         CustomAttributeType("drop_increased_loot", AttributeFormats.SIGNED_PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.EMPTY, SignBasedKeywords.INCREASED)

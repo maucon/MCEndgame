@@ -29,6 +29,7 @@ object CustomTags {
 
     val MELEE_ATTACK: TagKey<DamageType> = createDamageTypeTag("melee_attack")
     val BLOCK_PHASING_IMMUNE: TagKey<DamageType> = createDamageTypeTag("block_phasing_immune")
+    val BYPASS_DODGE: TagKey<DamageType> = createDamageTypeTag("bypass_dodge")
 
     private fun createItemTag(id: String) = TagKey.create(Registries.ITEM, IdentifierUtil.default(id))
     private fun createBlockTag(id: String) = TagKey.create(Registries.BLOCK, IdentifierUtil.default(id))

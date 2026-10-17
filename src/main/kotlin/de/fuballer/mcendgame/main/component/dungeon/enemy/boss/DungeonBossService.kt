@@ -58,8 +58,8 @@ object DungeonBossService {
 
     @EventSubscriber(sync = true)
     fun on(event: LivingEntityDamagedEvent) {
-        if (!event.damaged.isDungeonBoss()) return
-        val mobEntity = event.damaged as? Mob ?: return
+        if (!event.victim.isDungeonBoss()) return
+        val mobEntity = event.victim as? Mob ?: return
         if (!mobEntity.isNoAi) return
 
         val player = event.damageSource.entity as? Player

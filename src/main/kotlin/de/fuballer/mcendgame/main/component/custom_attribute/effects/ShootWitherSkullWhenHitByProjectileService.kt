@@ -23,7 +23,7 @@ class ShootWitherSkullWhenHitByProjectileService {
         val projectile = damageSource.directEntity ?: return
         if (projectile !is Projectile) return
 
-        val damaged = event.damaged
+        val damaged = event.victim
         val attributes = damaged.getAllCustomAttributes()[CustomAttributeTypes.SHOOT_WITHER_SKULL_WHEN_HIT_BY_PROJECTILE] ?: return
 
         val attacker = damageSource.entity

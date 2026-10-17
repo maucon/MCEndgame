@@ -361,7 +361,6 @@
   "attribute.mcendgame.blessing_of_the_serpent": " Blessing of the Serpent",
   "attribute.mcendgame.blessing_of_the_stag": " Blessing of the Stag",
   "attribute.mcendgame.blessing_of_the_wolf": " Blessing of the Wolf",
-  "attribute.mcendgame.no_attack_damage": " Deal no Attack Damage",
   "attribute.mcendgame.attributes_apply_in_both_hands": " Attributes apply in both Hands",
 
   "effect.mcendgame.fury": "Fury",
@@ -477,5 +476,6 @@
   "tag.item.mcendgame.phasing_blocking": "Phasing Blocking",
   "tag.item.mcendgame.no_phasing_slow_and_fog": "No Phasing Slow and Fog",
   "tag.item.mcendgame.melee_attack": "Melee Attack",
-  "tag.item.mcendgame.block_phasing_immune": "Block Phasing Immune"
+  "tag.item.mcendgame.block_phasing_immune": "Block Phasing Immune",
+  "tag.item.mcendgame.bypass_dodge": "Bypass Dodge"
 }

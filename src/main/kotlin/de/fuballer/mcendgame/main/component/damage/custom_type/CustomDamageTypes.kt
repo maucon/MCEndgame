@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level
 object CustomDamageTypes {
     val SWEEPING: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("sweeping"))
     val SPELL: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("spell"))
+    val TRUE_DAMAGE: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("true_damage"))
     val GENERIC_ATTACK: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("generic_attack"))
     val GENERIC_ATTACK_UNBLOCKABLE: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("generic_attack_unblockable"))
     val PIERCE_ATTACK: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, IdentifierUtil.default("pierce_attack"))
@@ -21,7 +22,7 @@ object CustomDamageTypes {
     fun of(
         world: Level,
         key: ResourceKey<DamageType>,
-        causingEntity: Entity,
+        causingEntity: Entity?,
         directEntity: Entity? = causingEntity,
     ): DamageSource {
         val damageType = world.registryAccess()
