@@ -15,6 +15,8 @@ class BonecrusherRenderer<R>(
     context: EntityRendererProvider.Context
 ) : GeoEntityRenderer<BonecrusherEntity, R>(context, BonecrusherModel()) where R : LivingEntityRenderState, R : GeoRenderState {
     init {
+        shadowRadius = 0.55f
+
         withRenderLayer(IsolatedGeoLayer(this))
     }
 

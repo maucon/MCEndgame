@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.client.component.particle
 
+import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
 import de.fuballer.mcendgame.main.component.particle.DirectionalSweepParticleEffect
 import net.minecraft.client.Camera
 import net.minecraft.client.multiplayer.ClientLevel
@@ -41,7 +42,7 @@ open class DirectionalSweepParticle(
         else setSpriteFromAge(sprites)
     }
 
-    public override fun getLayer(): Layer = Layer.OPAQUE
+    public override fun getLayer(): Layer = CustomRenderLayers.PARTICLE_OPAQUE_NO_CULL
 
     override fun extract(
         particleTypeRenderState: QuadParticleRenderState,
