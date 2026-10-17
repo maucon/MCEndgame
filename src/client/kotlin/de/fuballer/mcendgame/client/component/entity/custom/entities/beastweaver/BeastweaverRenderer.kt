@@ -24,6 +24,8 @@ class BeastweaverRenderer<R>(
     context: EntityRendererProvider.Context
 ) : GeoEntityRenderer<BeastweaverEntity, R>(context, BeastweaverModel()) where R : LivingEntityRenderState, R : GeoRenderState {
     init {
+        shadowRadius = 0.5f
+
         withRenderLayer(
             CustomBonesProgressingTextureGeoLayer(
                 this,

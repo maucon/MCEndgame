@@ -1,9 +1,11 @@
 package de.fuballer.mcendgame.client.component.render
 
+import net.minecraft.client.particle.SingleQuadParticle.Layer
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.client.renderer.rendertype.LayeringTransform
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.client.renderer.texture.TextureAtlas
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Util
 import java.util.function.Function
@@ -51,4 +53,6 @@ object CustomRenderLayers {
             .createRenderSetup()
         RenderType.create("beastweaver_attack", renderSetup)
     }
+
+    val PARTICLE_OPAQUE_NO_CULL: Layer = Layer(false, TextureAtlas.LOCATION_PARTICLES, CustomRenderPipelines.OPAQUE_PARTICLE_NO_CULL)
 }

@@ -15,6 +15,8 @@ class ElfDuelistRenderer<R>(
     context: EntityRendererProvider.Context
 ) : GeoEntityRenderer<ElfDuelistEntity, R>(context, ElfDuelistModel()) where R : LivingEntityRenderState, R : GeoRenderState {
     init {
+        shadowRadius = 0.5f
+
         withRenderLayer(IsolatedGeoLayer(this))
     }
 

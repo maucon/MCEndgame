@@ -27,6 +27,10 @@ class BloodKingRenderer<R>(
         private val UUID_TICKET = DataTicket.create("uuid", object : TypeToken<UUID>() {})
     }
 
+    init {
+        shadowRadius = 0.65f
+    }
+
     override fun addRenderData(animatable: BloodKingEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
         renderState.addGeckolibData(UUID_TICKET, animatable.uuid)
     }
