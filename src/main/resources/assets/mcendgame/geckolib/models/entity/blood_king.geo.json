@@ -6,9 +6,9 @@
 				"identifier": "geometry.unknown",
 				"texture_width": 256,
 				"texture_height": 256,
-				"visible_bounds_width": 7,
-				"visible_bounds_height": 5.5,
-				"visible_bounds_offset": [0, 2.25, 0]
+				"visible_bounds_width": 8,
+				"visible_bounds_height": 4.5,
+				"visible_bounds_offset": [0, 1.75, 0]
 			},
 			"bones": [
 				{
@@ -243,8 +243,7 @@
 					],
 					"locators": {
 						"swordParticle0": [-7.5, 27.25, 1],
-						"swordParticle1": [-7.5, 37.25, 1],
-						"swordParticle2": [-7.5, 47.25, 1]
+						"swordParticle1": [-7.5, 37.25, 1]
 					}
 				},
 				{

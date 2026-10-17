@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.client.component.particle
 
-import de.fuballer.mcendgame.main.component.particle.DirectionalAttackSweepParticleEffect
+import de.fuballer.mcendgame.main.component.particle.DirectionalSweepParticleEffect
 import net.minecraft.client.Camera
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.particle.Particle
@@ -12,7 +12,7 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
 
-class DirectionalAttackSweepParticle(
+open class DirectionalSweepParticle(
     level: ClientLevel,
     x: Double,
     y: Double,
@@ -62,10 +62,10 @@ class DirectionalAttackSweepParticle(
     }
 
     class Factory(
-        private val sprites: SpriteSet
-    ) : ParticleProvider<DirectionalAttackSweepParticleEffect> {
+        private val sprites: SpriteSet,
+    ) : ParticleProvider<DirectionalSweepParticleEffect> {
         override fun createParticle(
-            effect: DirectionalAttackSweepParticleEffect,
+            effect: DirectionalSweepParticleEffect,
             clientWorld: ClientLevel,
             x: Double,
             y: Double,
@@ -75,7 +75,7 @@ class DirectionalAttackSweepParticle(
             zAux: Double,
             random: RandomSource,
         ): Particle {
-            return DirectionalAttackSweepParticle(
+            return DirectionalSweepParticle(
                 clientWorld,
                 x, y, z,
                 effect.size,

@@ -10,31 +10,31 @@ import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import java.util.function.Function
 
-class DirectionalAttackSweepParticleEffect(
+class DirectionalSweepParticleEffect(
     val size: Double,
     val xDir: Double,
     val yDir: Double,
     val zDir: Double,
 ) : ParticleOptions {
     companion object {
-        val CODEC: MapCodec<DirectionalAttackSweepParticleEffect> = RecordCodecBuilder.mapCodec(
+        val CODEC: MapCodec<DirectionalSweepParticleEffect> = RecordCodecBuilder.mapCodec(
             Function { instance ->
                 instance.group(
                     Codec.DOUBLE.fieldOf("size").forGetter(Function { particleEffect -> particleEffect.size }),
                     Codec.DOUBLE.fieldOf("xDir").forGetter(Function { particleEffect -> particleEffect.xDir }),
                     Codec.DOUBLE.fieldOf("yDir").forGetter(Function { particleEffect -> particleEffect.yDir }),
                     Codec.DOUBLE.fieldOf("zDir").forGetter(Function { particleEffect -> particleEffect.zDir }),
-                ).apply(instance, ::DirectionalAttackSweepParticleEffect)
+                ).apply(instance, ::DirectionalSweepParticleEffect)
             }
         )
 
-        val PACKET_CODEC: StreamCodec<RegistryFriendlyByteBuf, DirectionalAttackSweepParticleEffect> =
+        val PACKET_CODEC: StreamCodec<RegistryFriendlyByteBuf, DirectionalSweepParticleEffect> =
             StreamCodec.composite(
                 ByteBufCodecs.DOUBLE, { it.size },
                 ByteBufCodecs.DOUBLE, { it.xDir },
                 ByteBufCodecs.DOUBLE, { it.yDir },
                 ByteBufCodecs.DOUBLE, { it.zDir },
-                ::DirectionalAttackSweepParticleEffect
+                ::DirectionalSweepParticleEffect
             )
     }
 

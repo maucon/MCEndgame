@@ -30,11 +30,17 @@ object CustomParticleTypes {
         { _ -> MoveToTargetFlameParticleEffect.CODEC },
         { _ -> MoveToTargetFlameParticleEffect.PACKET_CODEC },
     )
-    val DIRECTIONAL_SWEEP_ATTACK = registerComplex<DirectionalAttackSweepParticleEffect>(
+    val DIRECTIONAL_SWEEP_ATTACK = registerComplex<DirectionalSweepParticleEffect>(
         "directional_sweep_attack",
         true,
-        { _ -> DirectionalAttackSweepParticleEffect.CODEC },
-        { _ -> DirectionalAttackSweepParticleEffect.PACKET_CODEC },
+        { _ -> DirectionalSweepParticleEffect.CODEC },
+        { _ -> DirectionalSweepParticleEffect.PACKET_CODEC },
+    )
+    val DIRECTIONAL_SWEEP_FLAME = registerComplex<DirectionalFlameSweepParticleEffect>(
+        "directional_sweep_flame",
+        true,
+        { _ -> DirectionalFlameSweepParticleEffect.CODEC },
+        { _ -> DirectionalFlameSweepParticleEffect.PACKET_CODEC },
     )
 
     private fun registerSimple(name: String): SimpleParticleType =
