@@ -41,7 +41,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAble
 import de.fuballer.mcendgame.main.component.entity.types.boss.beastweaver.BeastweaverVineStats
 import de.fuballer.mcendgame.main.component.entity.types.boss.beastweaver.BeastweaverWolfStats
 import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
-import de.fuballer.mcendgame.main.component.particle.DirectionalAttackSweepParticleEffect
+import de.fuballer.mcendgame.main.component.particle.DirectionalSweepParticleEffect
 import de.fuballer.mcendgame.main.component.sound.CustomSoundEvents
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.getDistanceToGround
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.getHealthPercentage
@@ -265,7 +265,7 @@ class BeastweaverEntity(
                         .add(sidewaysVector.scale(sideways))
                         .add(0.0, height * scale - entity.eyeHeight, 0.0)
 
-                    DirectionalAttackSweepParticleEffect(size * scale, dir.x, dir.y, dir.z)
+                    DirectionalSweepParticleEffect(size * scale, dir.x, dir.y, dir.z)
                 },
                 offset = { entity ->
                     if (entity !is LivingEntity) return@ParticleData Vec3.ZERO
