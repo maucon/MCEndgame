@@ -13,11 +13,9 @@ import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtensio
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getOpener
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getTotalBossCount
-import de.fuballer.mcendgame.test.main.DungeonOpenAndJoinGameTest.testPlayerOpensAndJoinsDungeon
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.event.EventGateway
 import io.netty.channel.embedded.EmbeddedChannel
-import net.fabricmc.fabric.api.gametest.v1.GameTest
 import net.minecraft.core.BlockPos
 import net.minecraft.gametest.framework.GameTestHelper
 import net.minecraft.network.Connection
@@ -37,15 +35,6 @@ import net.minecraft.world.phys.Vec3
 import org.slf4j.LoggerFactory
 import kotlin.math.abs
 
-// Covers the whole generated layout (rooms start at the origin and extend a few hundred blocks)
-private val DUNGEON_AREA = AABB.ofSize(Vec3(0.0, 0.0, 0.0), 2000.0, 500.0, 2000.0)
-private val DEVICE_POS = BlockPos(0, 1, 0)
-private val LOG = LoggerFactory.getLogger(DungeonGameTest::class.java)
-
-private const val PORTAL_SEARCH_RADIUS = 6.0
-private const val POSITION_TOLERANCE = 0.5
-private const val ROTATION_TOLERANCE = 0.01f
-
 /**
  * End-to-end server gametests for the dungeon entry/exit flow at the Dungeon Device:
  *  - a player opens a dungeon and joins it through an entry portal
@@ -58,7 +47,16 @@ private const val ROTATION_TOLERANCE = 0.01f
  *  - joining/leaving: [PortalUsedEvent], which `PortalEntity.interact` publishes when the
  *    player interacts with a portal
  */
-class DungeonGameTest {
+object DungeonGameTest {
+    // Covers the whole generated layout (rooms start at the origin and extend a few hundred blocks)
+    private val DUNGEON_AREA = AABB.ofSize(Vec3(0.0, 0.0, 0.0), 2000.0, 500.0, 2000.0)
+    private val DEVICE_POS = BlockPos(0, 1, 0)
+    private val LOG = LoggerFactory.getLogger(DungeonGameTest::class.java)
+
+    private const val PORTAL_SEARCH_RADIUS = 6.0
+    private const val POSITION_TOLERANCE = 0.5
+    private const val ROTATION_TOLERANCE = 0.01f
+
     fun testPlayerOpensAndJoinsDungeon(helper: GameTestHelper) {
         val originWorld = helper.level
 

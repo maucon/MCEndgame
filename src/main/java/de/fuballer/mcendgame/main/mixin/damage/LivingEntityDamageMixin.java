@@ -157,20 +157,20 @@ public abstract class LivingEntityDamageMixin {
 
         //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
-        //boolean tookFullDamage = true;
-        //if ((float) this_.invulnerableTime > 10.0f && !source.is(DamageTypeTags.BYPASSES_COOLDOWN)) {
-        //    if (damage <= this.lastHurt) {
-        //        return false;
-        //    }
-        //    this.actuallyHurt(level, source, damage - this.lastHurt);
-        //    this.lastHurt = damage;
-        //    tookFullDamage = false;
-        //} else {
-        //    this.lastHurt = damage;
-        //    this_.invulnerableTime = 20;
-        //    this.actuallyHurt(level, source, damage);
-        //    this_.hurtTime = this_.hurtDuration = 10;
-        //}
+//        boolean tookFullDamage = true;
+//        if ((float)this.damageCooldownTime > 10.0f && !source.is(DamageTypeTags.BYPASSES_COOLDOWN)) {
+//            if (damage <= this.lastHurt) {
+//                return false;
+//            }
+//            this.actuallyHurt(level, source, damage - this.lastHurt);
+//            this.lastHurt = damage;
+//            tookFullDamage = false;
+//        } else {
+//            this.lastHurt = damage;
+//            this.damageCooldownTime = 20;
+//            this.actuallyHurt(level, source, damage);
+//            this.hurtTime = this.hurtDuration = 10;
+//        }
         this.resolveMobResponsibleForDamage(source);
         this.resolvePlayerResponsibleForDamage(source);
         if (tookFullDamage) {

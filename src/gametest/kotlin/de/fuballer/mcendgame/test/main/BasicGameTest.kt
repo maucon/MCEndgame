@@ -32,30 +32,30 @@ class BasicGameTest {
 
     @GameTest
     fun testDungeonOpenAndJoin(helper: GameTestHelper) {
-        DungeonOpenAndJoinGameTest.testPlayerOpensAndJoinsDungeon(helper)
+        DungeonGameTest.testPlayerOpensAndJoinsDungeon(helper)
     }
 
     @GameTest
     fun testPlayerExitsAtEntryPortal(helper: GameTestHelper) {
-        DungeonOpenAndJoinGameTest.testPlayerExitsAtEntryPortal(helper)
+        DungeonGameTest.testPlayerExitsAtEntryPortal(helper)
     }
 
     @GameTest
     fun testPlayerExitsAtDeviceWithoutEntryPortal(helper: GameTestHelper) {
-        DungeonOpenAndJoinGameTest.testPlayerExitsAtDeviceWithoutEntryPortal(helper)
+        DungeonGameTest.testPlayerExitsAtDeviceWithoutEntryPortal(helper)
     }
 
     @GameTest
     fun testRejoiningPlayerIsEjectedAtEntryPortal(helper: GameTestHelper) {
-        DungeonOpenAndJoinGameTest.testRejoiningPlayerIsEjectedAtEntryPortal(helper)
+        DungeonGameTest.testRejoiningPlayerIsEjectedAtEntryPortal(helper)
     }
 
     @GameTest
     fun testDeathRespawnPrefersEntryPortal(helper: GameTestHelper) {
-        DungeonOpenAndJoinGameTest.testDeathRespawnPrefersEntryPortal(helper)
+        DungeonGameTest.testDeathRespawnPrefersEntryPortal(helper)
     }
 
-    // --- mixin regression tests (see MixinPortGameTest) ---
+    // --- mixin regression tests ---
     @GameTest
     fun testDungeonSkeletonTicksButNeverConverts(helper: GameTestHelper) {
         MixinPortGameTest.testDungeonSkeletonTicksButNeverConverts(helper)
