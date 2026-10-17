@@ -302,8 +302,8 @@ class DamageSystemGameTest {
             }
             .thenWaitUntil {
                 helper.assertTrue(
-                    victim.invulnerableTime <= 10,
-                    "Invulnerability frames should expire (invulnerableTime was ${victim.invulnerableTime})"
+                    victim.damageCooldownTime <= 10,
+                    "Invulnerability frames should expire (damageCooldownTime was ${victim.damageCooldownTime})"
                 )
             }
             .thenExecute {
