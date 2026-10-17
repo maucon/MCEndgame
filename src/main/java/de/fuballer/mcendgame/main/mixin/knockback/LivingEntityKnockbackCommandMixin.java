@@ -14,12 +14,6 @@ public class LivingEntityKnockbackCommandMixin {
         AttackKnockbackUtil.INSTANCE.takeKnockbackFrom(instance, source.getEntity(), power, xd, zd);
     }
 
-    @Redirect(method = "blockedByItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDDLnet/minecraft/world/damagesource/DamageSource;F)V"))
-    void redirectTakeKnockbackInKnockback(LivingEntity instance, double power, double xd, double zd, DamageSource source, float damage) {
-        var self = (LivingEntity) (Object) this;
-        AttackKnockbackUtil.INSTANCE.takeKnockbackFrom(instance, self, power, xd, zd);
-    }
-
     @Redirect(method = "causeExtraKnockback", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDDLnet/minecraft/world/damagesource/DamageSource;FZ)V"))
     void redirectTakeKnockbackInKnockbackTarget(LivingEntity instance, double power, double xd, double zd, DamageSource source, float damage, boolean comesFromEffect) {
         var self = (LivingEntity) (Object) this;

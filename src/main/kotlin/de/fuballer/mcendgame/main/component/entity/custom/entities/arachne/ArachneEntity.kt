@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.arachne
 
 import de.fuballer.mcendgame.main.component.block.CustomBlocks
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile.AdditionalProjectilesUtil
-import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealGenericAttackDamage
+import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealGenericAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.component.entity.custom.entities.mount.DirectionalMovementEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.webhook.WebhookEntity

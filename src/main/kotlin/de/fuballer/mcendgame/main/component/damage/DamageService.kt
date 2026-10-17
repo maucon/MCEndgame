@@ -1,93 +1,127 @@
 package de.fuballer.mcendgame.main.component.damage
 
 import com.mojang.logging.LogUtils
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.SpellResistanceSettings
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.dodge.DodgeSettings
-import de.fuballer.mcendgame.main.component.damage.calculator.*
-import de.fuballer.mcendgame.main.component.damage.dealing.DamageCalculationConfig
-import de.fuballer.mcendgame.main.component.damage.dealing.ExtendedDamageSource
+import de.fuballer.mcendgame.main.component.damage.data.*
 import de.fuballer.mcendgame.main.component.damage.dodge.DodgeCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.ignore_damage.IgnoreDamageCommand
+import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDodgedEvent
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.clearPendingDamageEvent
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getLastHurt
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getLastResisted
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isInInvulnerabilityFrames
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setLastHitWasApplied
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setLastHurt
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setLastResisted
+import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setPendingDamageEvent
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.event.EventGateway
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.stats.Stats
 import net.minecraft.tags.DamageTypeTags
-import net.minecraft.world.damagesource.CombatRules
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.item.enchantment.EnchantmentHelper
-import kotlin.math.min
+import java.util.*
+import kotlin.math.max
 import kotlin.math.roundToInt
 
-private val DAMAGE_CALCULATORS = listOf(
-    CreeperExplosionCalculator,
-    PufferfishTouchCalculator,
-    PierceAttackDamageCalculator,
-    KineticAttackDamageCalculator,
-    SpellDamageCalculator,
-    EnderDragonCalculator,
-    WitherSkullCalculator,
-    WitherExplosionCalculator,
-    SonicBoomCalculator,
-    GuardianMagicCalculator,
-    GuardianThornsCalculator,
-    TridentProjectileCalculator,
-    SmallFireballCalculator,
-    FireballCalculator,
-    AbstractArrowCalculator,
-    SnowballCalculator,
-    WindChargeCalculator,
-    ThornsCalculator,
-    MagicDamageCalculator,
-    PotionCalculator,
-    MaceSmashAttackCalculator,
-    GenericAttackCalculator,
-    MeleeAttackCalculator,
-    ShulkerBulletCalculator,
-    OtherProjectilesCalculator, // do not move
-    BaseDamageCalculator // do not move
-)
-
+// TODO check for knockback. is it applied once or double? check sulfur cube / check custom knockback attacks
+// TODO AttackKnockbackUtil
 object DamageService {
     private val log = LogUtils.getLogger()
 
-    fun calculateFinalDamage(
-        entity: LivingEntity,
-        world: ServerLevel,
-        source: ExtendedDamageSource,
-        originalDamage: Float
-    ): DamageCalculationResult {
-        val damageCalculationConfig = source.damageCalculationConfig
-
-        if (isDamageIgnored(entity, source)) {
-            return DamageCalculationResult.noDamage()
-        }
-        if (isDamageDodged(entity, source)) {
-            return DamageCalculationResult.noDamage()
+    fun createDamageSourceResult(
+        victim: LivingEntity,
+        serverLevel: ServerLevel,
+        damageSource: DamageSourceDraft,
+        damage: Float,
+    ): DamageSourceResult {
+        if (isDamageIgnored(victim, damageSource)) {
+            return DamageSourceResult.NoDamage(damageSource)
         }
 
-        val damageCalculationCommand = DamageCalculationCommand.of(entity, world, source, damageCalculationConfig.attackAttributes, damageCalculationConfig.shieldBlocked)
-        damageCalculationCommand.moreDamage.addAll(damageCalculationConfig.vanillaMoreDamage)
-        damageCalculationCommand.moreDamageTaken.addAll(damageCalculationConfig.vanillaMoreDamageTaken)
+        val vanillaDamageContext = damageSource.vanillaDamageContext
+        val customDamageContext = damageSource.customDamageContext
+
+        val damageCalculationCommand = DamageCalculationCommand.of(
+            victim,
+            serverLevel,
+            damageSource,
+            customDamageContext.extraAttackerAttributes,
+            vanillaDamageContext.isBlocked()
+        )
+        damageCalculationCommand.moreDamageTaken.addAll(vanillaDamageContext.getVictimMoreDamageTaken())
 
         val cmd = CommandGateway.apply(damageCalculationCommand)
 
         if (cmd.isShieldBlocking) {
-            return DamageCalculationResult.normalDamage(0f)
+            return DamageSourceResult.ZeroDamage(damageSource)
         }
 
-        val finalAmount = calculateFinalDamage(originalDamage, entity, source, damageCalculationConfig, cmd)
-        return DamageCalculationResult.normalDamage(finalAmount)
+        if (isDamageDodged(victim, damageSource)) {
+            return DamageSourceResult.NoDamage(damageSource)
+        }
+
+        val incomingDamage = customDamageContext.incomingDamage
+            ?: IncomingDamage(DamageCategory.ATTACK_DAMAGE, damage) // vanilla is attack damage only
+
+        val calculated = incomingDamage.category.calculate(incomingDamage.amount, victim, damageSource, cmd)
+        val categorizedDamage = CategorizedDamage(incomingDamage.category to calculated)
+
+        return DamageSourceResult.Applied(categorizedDamage, cmd, vanillaDamageContext, damageSource)
+    }
+
+    /**
+     * Has side effects, only use in damage-related mixins.
+     */
+    fun applyDamage(
+        victim: LivingEntity,
+        source: DamageSource
+    ): Optional<Float> {
+        victim.clearPendingDamageEvent()
+
+        val (reducedTotal, resistedTotal) = calculateIncomingDamage(victim, source)
+        val damageTotal = reducedTotal.coerceAtLeast(0f)
+
+        victim.setLastHitWasApplied(true)
+
+        var damageToApply = damageTotal
+        var damageResisted = resistedTotal
+        if (victim.isInInvulnerabilityFrames()) {
+            val isStronger = damageTotal > victim.getLastHurt()
+            victim.setLastHitWasApplied(isStronger)
+
+            if (!isStronger) return Optional.empty()
+
+            damageToApply = damageTotal - victim.getLastHurt()
+            damageResisted = max(0f, resistedTotal - victim.getLastResisted())
+        }
+        victim.setLastHurt(damageTotal)
+        victim.setLastResisted(resistedTotal)
+
+        val dmg = damageToApply
+
+        // from LivingEntity.getDamageAfterArmorAbsorb
+        if (!source.`is`(DamageTypeTags.BYPASSES_ARMOR)) {
+            victim.hurtArmor(source, dmg) // FIXME: maybe only attack/spell damage part?
+        }
+
+        // from LivingEntity.getDamageAfterMagicAbsorb
+        if (victim is ServerPlayer) {
+            victim.awardStat(Stats.DAMAGE_RESISTED, (damageResisted * 10.0f).roundToInt())
+        } else if (source.entity is ServerPlayer) {
+            (source.entity as ServerPlayer).awardStat(Stats.DAMAGE_DEALT_RESISTED, (damageResisted * 10.0f).roundToInt())
+        }
+
+        victim.setPendingDamageEvent(dmg)
+
+        return Optional.of(dmg)
     }
 
     private fun isDamageIgnored(
         entity: LivingEntity,
-        source: ExtendedDamageSource
+        source: DamageSource
     ): Boolean {
         val cmd = IgnoreDamageCommand.of(entity, source)
             .let { CommandGateway.apply(it) }
@@ -97,11 +131,9 @@ object DamageService {
 
     private fun isDamageDodged(
         entity: LivingEntity,
-        source: ExtendedDamageSource
+        source: DamageSource
     ): Boolean {
-        val key = source.typeHolder().unwrapKey()
-        if (key.isEmpty) return false
-        if (DodgeSettings.BYPASS_DODGE.contains(key.get())) return false
+        if (source.`is`(CustomTags.BYPASS_DODGE)) return false
 
         val dodgeCalculationCommand = DodgeCalculationCommand.of(entity, source)
             .let { CommandGateway.apply(it) }
@@ -115,118 +147,28 @@ object DamageService {
         return false
     }
 
-    /** calculates the final damage dealt to the hit pool of the target */
-    fun calculateFinalDamage(
-        originalDamage: Float,
-        attacked: LivingEntity,
-        source: ExtendedDamageSource,
-        damageCalculationConfig: DamageCalculationConfig,
-        cmd: DamageCalculationCommand
-    ): Float {
-        val damageCalculator = DAMAGE_CALCULATORS.firstOrNull { it.isActive(source) }!!
-
-        var attackDamage = damageCalculator.calculateAttackDamage(originalDamage, attacked, source, cmd)
-        var spellDamage = damageCalculator.calculateSpellDamage(originalDamage, attacked, source, cmd)
-
-        log.debug("${attacked.javaClass.simpleName} [${damageCalculator.javaClass.simpleName}]: originalDamage: $originalDamage --> calculated damage: ${attackDamage + spellDamage} ($attackDamage + $spellDamage)")
-
-        attackDamage = calculateAttackDamageReduction(attackDamage, attacked, source, cmd)
-        spellDamage = calculateSpellDamageReduction(spellDamage, attacked, source, cmd)
-
-        var combinedDamage = attackDamage + spellDamage
-
-        // Special damage calculation
-        if (damageCalculationConfig.isArmadilloDamageReduction) {
-            combinedDamage = (combinedDamage - 1f) / 2f
-        }
-        if (damageCalculationConfig.isEnderDragonDamageReduction) {
-            combinedDamage = combinedDamage / 4f + min(combinedDamage, 1.0f)
-        }
-
-        combinedDamage = (combinedDamage + cmd.flatDamageTaken.sum().toFloat()).coerceAtLeast(0F)
-
-        return damageCalculationConfig.difficultyScaling.scaleDamage(combinedDamage)
-    }
-
-    private fun calculateAttackDamageReduction(
-        damage: Float,
-        attacked: LivingEntity,
+    private fun calculateIncomingDamage(
+        victim: LivingEntity,
         source: DamageSource,
-        cmd: DamageCalculationCommand
-    ): Float {
-        var attackDamage = applyArmorToDamage(damage, source, attacked)
-        attackDamage = modifyAppliedDamage(source, attackDamage, attacked)
-        return DamageUtil.applyDamageTakenAttributes(attackDamage, cmd)
-    }
-
-    private fun calculateSpellDamageReduction(
-        damage: Float,
-        attacked: LivingEntity,
-        source: DamageSource,
-        cmd: DamageCalculationCommand
-    ): Float {
-        var spellDamage = applySpellResistanceToDamage(damage, cmd)
-        spellDamage = modifyAppliedDamage(source, spellDamage, attacked)
-        return DamageUtil.applyDamageTakenAttributes(spellDamage, cmd)
-    }
-
-    private fun applyArmorToDamage(
-        amount: Float,
-        source: DamageSource,
-        entity: LivingEntity
-    ): Float {
-        var amount = amount
-        if (source.`is`(DamageTypeTags.BYPASSES_ARMOR)) return amount
-
-        val armorToughness = entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS).toFloat()
-        amount = DamageUtil.reduceAttackDamageByArmor(entity, amount, source, entity.armorValue.toFloat(), armorToughness)
-
-        return amount
-    }
-
-    private fun applySpellResistanceToDamage(
-        amount: Float,
-        cmd: DamageCalculationCommand,
-    ): Float {
-        var amount = amount
-        val spellResistance = min(SpellResistanceSettings.LIMIT, cmd.spellResistance.sum()).toFloat()
-        amount *= 1 - spellResistance
-
-        return amount
-    }
-
-    private fun modifyAppliedDamage(
-        source: DamageSource,
-        amount: Float,
-        entity: LivingEntity
-    ): Float {
-        var amount = amount
-
-        if (!source.`is`(DamageTypeTags.BYPASSES_EFFECTS)) {
-            if (entity.hasEffect(MobEffects.RESISTANCE) && !source.`is`(DamageTypeTags.BYPASSES_RESISTANCE)) {
-                val resistance = entity.getEffect(MobEffects.RESISTANCE)!!.amplifier + 1
-
-                val resistancePercent = resistance * 0.2f
-                val resistedDamage = min(amount * resistancePercent, amount)
-                amount -= resistedDamage
-
-                if (resistedDamage > 0.0f && resistedDamage < 3.4028235E37f) {
-                    if (entity is ServerPlayer) {
-                        entity.awardStat(Stats.DAMAGE_RESISTED, (resistedDamage * 10.0f).roundToInt())
-                    } else if (source.entity is ServerPlayer) {
-                        (source.entity as ServerPlayer).awardStat(Stats.DAMAGE_DEALT_RESISTED, (resistedDamage * 10.0f).roundToInt())
-                    }
-                }
+    ): DamageReductionResult {
+        // only DamageSourceResult.Applied does apply damage to the victim otherwise return zero
+        if (source !is DamageSourceResult.Applied) {
+            if (source !is DamageSourceResult) {
+                log.error("Expected DamageSourceResult but got ${source.javaClass.simpleName} - dealing no damage")
             }
+            return DamageReductionResult.zero()
         }
 
-        if (amount <= 0.0f) return 0.0f
-        if (source.`is`(DamageTypeTags.BYPASSES_ENCHANTMENTS)) return amount
-        val serverWorld = entity.level() as? ServerLevel ?: return amount
+        // FIXME should spell/true damage scale with difficulty?
+        val scaledDamageInstance = source.categorizedDamage.transformDamage { _, damage ->
+            val reduced = source.vanillaDamageContext.getCustomDamageReduction().invoke(damage)
+            source.vanillaDamageContext.getDifficultyScaling().scaleDamage(reduced)
+        }
 
-        val protectionAmount = EnchantmentHelper.getDamageProtection(serverWorld, entity, source)
-        amount = CombatRules.getDamageAfterMagicAbsorb(amount, protectionAmount)
+        val cmd = source.damageCalculationCommand
+        val afterDamageReduction = scaledDamageInstance.getAfterDamageReduction(victim, source, cmd)
 
-        return amount
+        val flatDamageTaken = cmd.flatDamageTaken.sum().toFloat()
+        return afterDamageReduction + DamageReductionResult(flatDamageTaken, 0f)
     }
 }

@@ -199,11 +199,11 @@ object MixinPortGameTest {
             "The hurt cooldown (damageCooldownTime) should be armed after taking damage"
         )
         helper.assertTrue(
-            victim.getInvulnerableTime() == 0,
+            victim.invulnerableTime == 0,
             "Taking damage must not flag the victim as temporarily invulnerable"
         )
 
-        LOG.info("Victim health went from {} to {}, invulnerable for {} ticks", healthBefore, victim.health, victim.getInvulnerableTime())
+        LOG.info("Victim health went from {} to {}, invulnerable for {} ticks", healthBefore, victim.health, victim.invulnerableTime)
         helper.succeed()
     }
 

@@ -9,11 +9,10 @@ import net.minecraft.resources.Identifier
 import net.minecraft.world.phys.Vec3
 import org.slf4j.LoggerFactory
 
+private val LOG = LoggerFactory.getLogger(MCEndgameClientGameTest::class.java)
+
 @Suppress("UnstableApiUsage")
 class MCEndgameClientGameTest : FabricClientGameTest {
-    companion object {
-        private val LOG = LoggerFactory.getLogger(this::class.java.simpleName)
-    }
 
     override fun runTest(context: ClientGameTestContext) {
         verifyCustomRenderPipelines()

@@ -1,11 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.fire_geysers
 
-import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
-import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
-import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
-import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
-import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
-import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealDamage
+import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealSpellDamage
 import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
 import de.fuballer.mcendgame.main.util.BlockPosUtil
@@ -27,8 +22,6 @@ import net.minecraft.world.phys.AABB
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
-
-private val NO_AD_ATTRIBUTE = CustomAttribute(CustomAttributeTypes.NO_ATTACK_DAMAGE)
 
 @Injectable
 class FireGeysersAttackService(
@@ -213,14 +206,7 @@ class FireGeysersAttackService(
         scheduler.delayed(delay + indicatorDuration) {
             val targets = getTargets(world, positions, attacker)
             targets.forEach {
-                it.dealDamage(
-                    listOf(
-                        NO_AD_ATTRIBUTE,
-                        CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(burstSpellDamage))),
-                    ),
-                    CustomDamageTypes.SPELL,
-                    attacker,
-                )
+                it.dealSpellDamage(attacker, flatDamage = burstSpellDamage)
                 it.igniteForTicks(80)
                 it.setAndSyncVelocity(it.deltaMovement.add(0.0, 1.0, 0.0))
             }
@@ -229,14 +215,7 @@ class FireGeysersAttackService(
         scheduler.repeatingForDuration(delay + indicatorDuration, 2, pillarDuration) {
             val targets = getTargets(world, positions, attacker)
             targets.forEach {
-                it.dealDamage(
-                    listOf(
-                        NO_AD_ATTRIBUTE,
-                        CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(durationDamage))),
-                    ),
-                    CustomDamageTypes.SPELL,
-                    attacker,
-                )
+                it.dealSpellDamage(attacker, flatDamage = durationDamage)
                 it.igniteForTicks(80)
             }
         }

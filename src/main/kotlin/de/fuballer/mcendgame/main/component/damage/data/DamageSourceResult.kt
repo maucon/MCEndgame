@@ -1,0 +1,32 @@
+package de.fuballer.mcendgame.main.component.damage.data
+
+import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
+import net.minecraft.world.damagesource.DamageSource
+
+sealed class DamageSourceResult(damageSource: DamageSource) : DamageSource(
+    damageSource.typeHolder(),
+    damageSource.directEntity,
+    damageSource.entity
+) {
+    val isDamageApplying: Boolean
+        get() = this !is NoDamage
+
+    open fun getRawDamage(): Float = 0f
+
+    class Applied(
+        val categorizedDamage: CategorizedDamage,
+        val damageCalculationCommand: DamageCalculationCommand,
+        val vanillaDamageContext: VanillaDamageContext,
+        damageSource: DamageSource
+    ) : DamageSourceResult(damageSource) {
+        override fun getRawDamage() = categorizedDamage.getRawDamage()
+    }
+
+    class ZeroDamage(
+        damageSource: DamageSource
+    ) : DamageSourceResult(damageSource)
+
+    class NoDamage(
+        damageSource: DamageSource
+    ) : DamageSourceResult(damageSource)
+}

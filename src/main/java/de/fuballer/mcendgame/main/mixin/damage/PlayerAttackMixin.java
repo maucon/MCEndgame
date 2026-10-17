@@ -25,11 +25,11 @@ public abstract class PlayerAttackMixin implements PlayerEntityMixinAccessor {
                     target = "Lnet/minecraft/world/entity/player/Player;isSweepAttack(ZZZ)Z"
             )
     )
-    private void onCriticalAttackSet(
+    private void onAttack(
             Entity entity,
             CallbackInfo ci,
-            @Local(name = "criticalAttack") boolean criticalAttack,
-            @Local(name = "attackStrengthScale") float attackStrengthScale
+            @Local(name = "attackStrengthScale") float attackStrengthScale,
+            @Local(name = "criticalAttack") boolean criticalAttack
     ) {
         var player = (Player) (Object) this;
         if (!(player instanceof ServerPlayer)) {

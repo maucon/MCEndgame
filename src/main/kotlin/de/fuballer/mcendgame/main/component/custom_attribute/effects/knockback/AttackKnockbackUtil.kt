@@ -2,73 +2,63 @@ package de.fuballer.mcendgame.main.component.custom_attribute.effects.knockback
 
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityKnockbackLivingEntityCommand
 import de.maucon.mauconframework.command.CommandGateway
-import net.minecraft.core.registries.Registries
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.phys.Vec3
 
 object AttackKnockbackUtil {
-    fun LivingEntity.takeKnockbackFrom(
-        attacker: Entity?,
-        power: Double,
-        x: Double,
-        z: Double,
-    ) {
-        // TODO #287 damage source and amount should be legit
+    /**
+     * Applies knockback to this entity exactly like `LivingEntity.knockback`, but with the power
+     * scaled by [attacker]'s MORE_ATTACK_KNOCKBACK attribute.
+     */
+    fun LivingEntity.takeKnockbackFrom(attacker: Entity?, power: Double, x: Double, z: Double) {
         if (attacker == null) return
-
-        val damageType = attacker.level().registryAccess()
-            .lookupOrThrow(Registries.DAMAGE_TYPE)
-            .get(DamageTypes.GENERIC.identifier())
-            .get()
-        val source = DamageSource(damageType)
-        val damage = 0F
-
-        if (attacker !is LivingEntity) return knockback(power, x, z, source, damage)
-
-        val command = LivingEntityKnockbackLivingEntityCommand(this, attacker, power)
-        val cmd = CommandGateway.apply(command)
-
-        knockback(cmd.power, x, z, source, damage)
+        knockback(applyAttackKnockback(attacker, power), x, z, attacker.knockbackSource(), 0f)
     }
 
-    fun LivingEntity.takeKnockbackFrom(
-        attacker: Entity?,
-        strength: Double,
-        x: Double,
-        y: Double,
-        z: Double,
-    ) {
-        // TODO #287 damage source and amount should be legit
+    /**
+     * Like [takeKnockbackFrom], but with a custom y velocity. `LivingEntity.knockback` always uses
+     * a y velocity of 0, so this mirrors its math with a custom y component instead.
+     */
+    fun LivingEntity.takeKnockbackFrom(attacker: Entity?, power: Double, x: Double, y: Double, z: Double) {
         if (attacker == null) return
+        applyKnockback(applyAttackKnockback(attacker, power), x, y, z)
+    }
 
-        val damageType = attacker.level().registryAccess()
-            .lookupOrThrow(Registries.DAMAGE_TYPE)
-            .get(DamageTypes.GENERIC.identifier())
-            .get()
-        val source = DamageSource(damageType)
-        val damage = 0F
+    /**
+     * Applies [attacker]'s MORE_ATTACK_KNOCKBACK attributes to the given knockback power.
+     */
+    private fun LivingEntity.applyAttackKnockback(attacker: Entity, power: Double): Double {
+        if (attacker !is LivingEntity) return power
+        return CommandGateway.apply(LivingEntityKnockbackLivingEntityCommand(this, attacker, power)).power
+    }
 
-        if (attacker !is LivingEntity) return knockback(strength, x, z, source, damage)
-
-        val command = LivingEntityKnockbackLivingEntityCommand(this, attacker, strength)
-        val cmd = CommandGateway.apply(command)
-        var power = cmd.power
-
-        // similar to LivingEntity.knockback() but with custom y velocity
-        power *= 1.0 - getAttributeValue(Attributes.KNOCKBACK_RESISTANCE)
-        if (power <= 0.0) return
+    /**
+     * Mirrors the tail of
+     * `LivingEntity.knockback(double, double, double, DamageSource, float, boolean)` with a custom
+     * y component. Kept in sync with vanilla: the power is reduced by KNOCKBACK_RESISTANCE and the
+     * resulting direction is blended into the current velocity.
+     */
+    private fun LivingEntity.applyKnockback(power: Double, x: Double, y: Double, z: Double) {
+        val resistedPower = power * (1.0 - getAttributeValue(Attributes.KNOCKBACK_RESISTANCE))
+        if (resistedPower <= 0.0) return
         if (x * x + y * y + z * z < 1.0E-5F) return
 
         needsSync = true
-        val deltaVector = Vec3(x, y, z).normalize().scale(power)
+        val direction = Vec3(x, y, z).normalize().scale(resistedPower)
         setDeltaMovement(
-            deltaMovement.x / 2.0 - deltaVector.x,
-            deltaMovement.y / 2.0 - deltaVector.y,
-            deltaMovement.z / 2.0 - deltaVector.z
+            deltaMovement.x / 2.0 - direction.x,
+            deltaMovement.y / 2.0 - direction.y,
+            deltaMovement.z / 2.0 - direction.z,
         )
     }
+
+    /**
+     * `LivingEntity.knockback` requires a [DamageSource] argument but never reads it. Use one that
+     * at least names the entity that caused the knockback.
+     */
+    private fun Entity.knockbackSource(): DamageSource =
+        if (this is LivingEntity) damageSources().mobAttack(this) else damageSources().generic()
 }

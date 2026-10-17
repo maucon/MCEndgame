@@ -1,11 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.flame_breath
 
-import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
-import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
-import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
-import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
-import de.fuballer.mcendgame.main.component.damage.custom_type.CustomDamageTypes
-import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealDamage
+import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealSpellDamage
 import de.fuballer.mcendgame.main.component.particle.HorizontalFlameBreathParticleEffect
 import de.fuballer.mcendgame.main.functional.scheduler.Scheduler
 import de.maucon.mauconframework.di.annotation.Injectable
@@ -24,7 +19,6 @@ import kotlin.math.min
 import kotlin.random.Random
 
 private val HORIZONTAL_VECTOR = Vec3(1.0, 0.0, 1.0)
-private val NO_AD_ATTRIBUTE = CustomAttribute(CustomAttributeTypes.NO_ATTACK_DAMAGE)
 
 @Injectable
 class FlameBreathAttackService(
@@ -160,14 +154,7 @@ class FlameBreathAttackService(
 
                 val dotProduct = direction.dot(directionVectorToEntity)
                 if (dotProduct >= cosThreshold) {
-                    entity.dealDamage(
-                        listOf(
-                            NO_AD_ATTRIBUTE,
-                            CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(spellDamage))),
-                        ),
-                        CustomDamageTypes.SPELL,
-                        attacker,
-                    )
+                    entity.dealSpellDamage(attacker, flatDamage = spellDamage)
                     entity.igniteForTicks(80)
                 }
             }
