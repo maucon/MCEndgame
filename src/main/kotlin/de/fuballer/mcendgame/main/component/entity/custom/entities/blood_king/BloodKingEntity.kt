@@ -64,16 +64,34 @@ class BloodKingEntity(
             Attack<BloodKingEntity>(
                 SLASH_ID,
                 SLASH_ANIM_DATA,
-                totalDuration = 28,
-                cooldown = 45,
+                totalDuration = 35,
+                cooldown = 0,
                 DistanceTriggerCondition(3.0, affectedByScale = true),
                 data = listOf(
                     DelayedDamageData(SLASH_ATTACK_DAMAGE, 12),
                 ),
             )
 
+        private val STAB_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
+        private val STAB_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, STAB_AREA)
+        private val STAB_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.stab")
+        private const val STAB_ID = "Stab"
+        private val STAB_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, STAB_ID)
+        private val STAB_ATTACK =
+            Attack<BloodKingEntity>(
+                STAB_ID,
+                STAB_ANIM_DATA,
+                totalDuration = 35,
+                cooldown = 0,
+                DistanceTriggerCondition(4.0, affectedByScale = true),
+                data = listOf(
+                    DelayedDamageData(STAB_ATTACK_DAMAGE, 12),
+                ),
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BloodKingEntity>>> = listOf(
             RandomOption(1, SLASH_ATTACK),
+            RandomOption(1, STAB_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -107,6 +125,7 @@ class BloodKingEntity(
     private val attackAnimationController =
         AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
             .triggerableAnim(SLASH_ID, SLASH_ANIM)
+            .triggerableAnim(STAB_ID, STAB_ANIM)
             .setParticleKeyframeHandler { event ->
                 if (!level().isClientSide) return@setParticleKeyframeHandler
 
@@ -135,15 +154,10 @@ class BloodKingEntity(
 
                 val level = level()
                 when (keyFrameData.sound) {
-                    "sword_take_swing" -> {
-                        level.playLocalSound(this, SoundEvents.BREEZE_LAND, SoundSource.HOSTILE, 1.0f, 0.75f)
-                        level.playLocalSound(this, SoundEvents.BLAZE_BURN, SoundSource.HOSTILE, 0.9f, 1.1f)
-                    }
-
-                    "sword_flame_sweep" -> {
-                        level.playLocalSound(this, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.HOSTILE, 1.0f, 1.0f)
-                        level.playLocalSound(this, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE, 0.6f, 1.0f)
-                    }
+                    "breeze_land" -> level.playLocalSound(this, SoundEvents.BREEZE_LAND, SoundSource.HOSTILE, 1.0f, 0.75f)
+                    "blaze_burn" -> level.playLocalSound(this, SoundEvents.BLAZE_BURN, SoundSource.HOSTILE, 0.9f, 1.1f)
+                    "player_attack_sweep" -> level.playLocalSound(this, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.HOSTILE, 1.0f, 1.0f)
+                    "firecharge_use" -> level.playLocalSound(this, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE, 0.6f, 1.0f)
                 }
             }
 
