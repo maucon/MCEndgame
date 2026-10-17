@@ -1,41 +1,86 @@
 package de.fuballer.mcendgame.main.mixin.damage;
 
 import de.fuballer.mcendgame.main.accessor.LivingEntityDamageAccessor;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityDamageAccessorMixin implements LivingEntityDamageAccessor {
     @Shadow
-    private DamageSource lastDamageSource;
-    @Shadow
-    private long lastDamageStamp;
+    protected float lastHurt;
 
-    @Shadow
-    protected abstract void playSecondaryHurtSound(DamageSource source);
-
-    @Shadow
-    protected abstract boolean checkTotemDeathProtection(DamageSource killingDamage);
+    @Unique
+    private boolean isInInvulnerabilityFrames = false;
+    @Unique
+    private boolean lastHitWasApplied = true;
+    @Unique
+    private float lastResisted = 0f;
+    @Unique
+    private boolean pendingDamageEvent = false;
+    @Unique
+    private float pendingDamageEventAmount = 0f;
 
     @Override
-    public void mcendgame$setLastDamageSource(DamageSource damageSource) {
-        this.lastDamageSource = damageSource;
+    public boolean mcendgame$isInInvulnerabilityFrames() {
+        return this.isInInvulnerabilityFrames;
     }
 
     @Override
-    public void mcendgame$setLastDamageTime(long time) {
-        this.lastDamageStamp = time;
+    public void mcendgame$setInInvulnerabilityFrames(boolean value) {
+        this.isInInvulnerabilityFrames = value;
     }
 
     @Override
-    public void mcendgame$playThornsSound(DamageSource damageSource) {
-        this.playSecondaryHurtSound(damageSource);
+    public boolean mcendgame$lastHitWasApplied() {
+        return this.lastHitWasApplied;
     }
 
     @Override
-    public boolean mcendgame$tryUseDeathProtector(DamageSource source) {
-        return this.checkTotemDeathProtection(source);
+    public void mcendgame$setLastHitWasApplied(boolean value) {
+        this.lastHitWasApplied = value;
+    }
+
+    @Override
+    public float mcendgame$getLastResisted() {
+        return this.lastResisted;
+    }
+
+    @Override
+    public void mcendgame$setLastResisted(float value) {
+        this.lastResisted = value;
+    }
+
+    @Override
+    public float mcendgame$getLastHurt() {
+        return this.lastHurt;
+    }
+
+    @Override
+    public void mcendgame$setLastHurt(float value) {
+        this.lastHurt = value;
+    }
+
+    @Override
+    public boolean mcendgame$hasPendingDamageEvent() {
+        return this.pendingDamageEvent;
+    }
+
+    @Override
+    public void mcendgame$setPendingDamageEvent(float amount) {
+        this.pendingDamageEvent = true;
+        this.pendingDamageEventAmount = amount;
+    }
+
+    @Override
+    public float mcendgame$getPendingDamageEventAmount() {
+        return this.pendingDamageEventAmount;
+    }
+
+    @Override
+    public void mcendgame$clearPendingDamageEvent() {
+        this.pendingDamageEvent = false;
+        this.pendingDamageEventAmount = 0f;
     }
 }

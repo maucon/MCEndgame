@@ -19,7 +19,7 @@ class ResilienceOnDamageTakenService {
     fun on(event: LivingEntityDamagedEvent) {
         if (event.amount <= 0) return
 
-        val damaged = event.damaged
+        val damaged = event.victim
         val customAttributes = damaged.getAllCustomAttributes()
         val stacksGained = getGuaranteedCount(customAttributes) + getChanceCount(customAttributes)
         if (stacksGained == 0) return

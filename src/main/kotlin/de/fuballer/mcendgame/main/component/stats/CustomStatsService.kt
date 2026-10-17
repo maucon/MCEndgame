@@ -94,7 +94,7 @@ class CustomStatsService {
 
     @EventSubscriber
     fun onDamageDealt(event: LivingEntityDamagedEvent) {
-        val damaged = event.damaged
+        val damaged = event.victim
 
         if (!damaged.isDungeonEnemy()) return
         if (!damaged.level().isDungeonWorld()) return
@@ -106,7 +106,7 @@ class CustomStatsService {
 
     @EventSubscriber
     fun onDamageTaken(event: LivingEntityDamagedEvent) {
-        val player = event.damaged as? ServerPlayer ?: return
+        val player = event.victim as? ServerPlayer ?: return
 
         if (!player.level().isDungeonWorld()) return
         if (event.damageSource.type().isOf(DamageTypes.GENERIC_KILL)) return

@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.interfaces
 
 import de.fuballer.mcendgame.main.component.custom_attribute.effects.knockback.AttackKnockbackUtil.takeKnockbackFrom
-import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealingExtension.dealGenericAttackDamage
+import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealGenericAttackDamage
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
