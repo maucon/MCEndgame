@@ -70,4 +70,11 @@ object CustomRenderPipelines {
             .withCull(false)
             .build()
     )
+
+    val OPAQUE_PARTICLE_NO_CULL: RenderPipeline = RenderPipelines.register(
+        RenderPipeline.builder(RenderPipelines.PARTICLE_SNIPPET)
+            .withLocation(IdentifierUtil.default("pipeline/opaque_particle_no_cull"))
+            .withCull(false)
+            .build()
+    )
 }

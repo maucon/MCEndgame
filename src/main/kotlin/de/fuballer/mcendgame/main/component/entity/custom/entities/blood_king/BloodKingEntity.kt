@@ -16,6 +16,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAtta
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
@@ -42,6 +44,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
 
 class BloodKingEntity(
     type: EntityType<out BloodKingEntity>,
@@ -69,6 +72,47 @@ class BloodKingEntity(
                 DistanceTriggerCondition(3.0, affectedByScale = true),
                 data = listOf(
                     DelayedDamageData(SLASH_ATTACK_DAMAGE, 12),
+
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.BREEZE_LAND,
+                            { 1.0f },
+                            { Random.nextDouble(0.7, 0.8).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        3,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.BLAZE_BURN,
+                            { 0.9f },
+                            { Random.nextDouble(1.0, 1.1).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        3,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.PLAYER_ATTACK_SWEEP,
+                            { 0.9f },
+                            { Random.nextDouble(0.95, 1.05).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        10,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.FIRECHARGE_USE,
+                            { 0.6f },
+                            { Random.nextDouble(0.95, 1.05).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        10,
+                    ),
                 ),
             )
 
@@ -86,12 +130,123 @@ class BloodKingEntity(
                 DistanceTriggerCondition(4.0, affectedByScale = true),
                 data = listOf(
                     DelayedDamageData(STAB_ATTACK_DAMAGE, 12),
+
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.BREEZE_LAND,
+                            { 1.0f },
+                            { Random.nextDouble(0.7, 0.8).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        2,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.BLAZE_BURN,
+                            { 0.9f },
+                            { Random.nextDouble(1.0, 1.1).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        2,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.PLAYER_ATTACK_SWEEP,
+                            { 0.9f },
+                            { Random.nextDouble(0.95, 1.05).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        10,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.FIRECHARGE_USE,
+                            { 0.6f },
+                            { Random.nextDouble(0.95, 1.05).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        10,
+                    ),
                 ),
+            )
+        
+        private val SLAM_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
+        private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, SLAM_AREA)
+        private val SLAM_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slam")
+        private const val SLAM_ID = "Slam"
+        private val SLAM_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLAM_ID)
+        private val SLAM_ATTACK =
+            Attack<BloodKingEntity>(
+                SLAM_ID,
+                SLAM_ANIM_DATA,
+                totalDuration = 40,
+                cooldown = 100,
+                DistanceTriggerCondition(4.0, affectedByScale = true),
+                data = listOf(
+                    DelayedDamageData(SLAM_ATTACK_DAMAGE, 14),
+
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.BREEZE_LAND,
+                            { 1.0f },
+                            { Random.nextDouble(0.7, 0.8).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        3,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.BLAZE_BURN,
+                            { 0.9f },
+                            { Random.nextDouble(1.0, 1.1).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        3,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.PLAYER_ATTACK_SWEEP,
+                            { 0.9f },
+                            { Random.nextDouble(0.95, 1.05).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        12,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.FIRECHARGE_USE,
+                            { 0.6f },
+                            { Random.nextDouble(0.95, 1.05).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        12,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.DRAGON_FIREBALL_EXPLODE,
+                            { 0.6f },
+                            { Random.nextDouble(0.95, 1.05).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        12,
+                    ),
+                ),
+                blockMovementDuration = 26,
             )
 
         private val ATTACKS: List<RandomOption<out Attack<BloodKingEntity>>> = listOf(
             RandomOption(1, SLASH_ATTACK),
             RandomOption(1, STAB_ATTACK),
+            RandomOption(1, SLAM_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -126,6 +281,7 @@ class BloodKingEntity(
         AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
             .triggerableAnim(SLASH_ID, SLASH_ANIM)
             .triggerableAnim(STAB_ID, STAB_ANIM)
+            .triggerableAnim(SLAM_ID, SLAM_ANIM)
             .setParticleKeyframeHandler { event ->
                 if (!level().isClientSide) return@setParticleKeyframeHandler
 
@@ -147,17 +303,6 @@ class BloodKingEntity(
                         pos.x, pos.y - 0.5 * scale, pos.z,
                         0.0, 0.0, 0.0,
                     )
-                }
-            }
-            .setSoundKeyframeHandler { event ->
-                val keyFrameData = event.keyframeData
-
-                val level = level()
-                when (keyFrameData.sound) {
-                    "breeze_land" -> level.playLocalSound(this, SoundEvents.BREEZE_LAND, SoundSource.HOSTILE, 1.0f, 0.75f)
-                    "blaze_burn" -> level.playLocalSound(this, SoundEvents.BLAZE_BURN, SoundSource.HOSTILE, 0.9f, 1.1f)
-                    "player_attack_sweep" -> level.playLocalSound(this, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.HOSTILE, 1.0f, 1.0f)
-                    "firecharge_use" -> level.playLocalSound(this, SoundEvents.FIRECHARGE_USE, SoundSource.HOSTILE, 0.6f, 1.0f)
                 }
             }
 

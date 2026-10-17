@@ -13,6 +13,9 @@ import kotlin.math.PI
 class BloodQueenRenderer<R>(
     context: EntityRendererProvider.Context
 ) : GeoEntityRenderer<BloodQueenEntity, R>(context, BloodQueenModel()) where R : LivingEntityRenderState, R : GeoRenderState {
+    init {
+        shadowRadius = 0.6f
+    }
 
     override fun adjustModelBonesForRender(renderPassInfo: RenderPassInfo<R>, snapshots: BoneSnapshots) {
         super.adjustModelBonesForRender(renderPassInfo, snapshots)
