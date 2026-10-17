@@ -6,7 +6,6 @@ import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttribu
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealGenericAttackDamage
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealSpellDamage
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
-import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getAttackCooldownMultiplier
 import io.netty.channel.embedded.EmbeddedChannel
 import net.fabricmc.fabric.api.gametest.v1.GameTest
 import net.minecraft.core.registries.Registries

@@ -114,7 +114,6 @@ object DamageService {
             (source.entity as ServerPlayer).awardStat(Stats.DAMAGE_DEALT_RESISTED, (damageResisted * 10.0f).roundToInt())
         }
 
-        // The event is published by the hurtServer mixin after health has been reduced.
         victim.setPendingDamageEvent(dmg)
 
         return Optional.of(dmg)

@@ -25,8 +25,6 @@ object KineticAttackDamageCalculator : DamageCalculator {
 
         val baseDamage = DamageUtil.getAttackDamageBaseValue(event, attacker)
         val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
-        // The KINETIC context can be stale/injected independently of the held weapon; do not crash
-        // the server if the weapon no longer has a kinetic component.
         val kineticWeapon = attacker.weaponItem.get(DataComponents.KINETIC_WEAPON) ?: return originalDamage
         val damageMultiplier = kineticWeapon.damageMultiplier()
 

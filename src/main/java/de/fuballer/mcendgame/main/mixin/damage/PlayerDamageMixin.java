@@ -54,9 +54,6 @@ public abstract class PlayerDamageMixin extends LivingEntity {
 
                 if (source.scalesWithDifficulty()) {
                     if (level.getDifficulty() == Difficulty.PEACEFUL) {
-                        // Vanilla stops here. Passing zero damage down is not enough: the calculators
-                        // recompute damage from attributes and custom damage uses its own incoming
-                        // amount, so continuing would still apply full damage on PEACEFUL.
                         return false;
                     }
 

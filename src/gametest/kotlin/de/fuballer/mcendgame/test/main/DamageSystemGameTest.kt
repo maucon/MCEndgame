@@ -145,7 +145,7 @@ class DamageSystemGameTest {
                 val plainDamage = plainHealthBefore - plain.health
 
                 val flatHealthBefore = withFlatDamage.health
-                withFlatDamage.dealGenericAttackDamage(6f, plain)
+                withFlatDamage.dealGenericAttackDamage(6f, withFlatDamage)
                 val flatDamage = flatHealthBefore - withFlatDamage.health
 
                 LOG.info("Result: plain took {}, with +3 flat damage taken took {}", plainDamage, flatDamage)
