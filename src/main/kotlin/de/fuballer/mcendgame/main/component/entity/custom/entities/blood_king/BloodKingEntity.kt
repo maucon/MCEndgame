@@ -25,6 +25,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttac
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
 import de.fuballer.mcendgame.main.component.particle.DirectionalFlameSweepParticleEffect
 import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -172,8 +174,9 @@ class BloodKingEntity(
                         10,
                     ),
                 ),
+                blockMovementDuration = 15,
             )
-        
+
         private val SLAM_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
         private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, SLAM_AREA)
         private val SLAM_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slam")
@@ -286,25 +289,87 @@ class BloodKingEntity(
                 if (!level().isClientSide) return@setParticleKeyframeHandler
 
                 val keyFrameData = event.keyframeData
-                if (keyFrameData.effect == "sword_flame_sweep") {
-                    val pos = GeoEntityLocatorService.getLocatorPos(uuid, keyFrameData.locatorName) ?: return@setParticleKeyframeHandler
-                    val swordPos0 = GeoEntityLocatorService.getLocatorPos(uuid, "swordParticle0") ?: return@setParticleKeyframeHandler
-                    val swordPos1 = GeoEntityLocatorService.getLocatorPos(uuid, "swordParticle1") ?: return@setParticleKeyframeHandler
+                when (keyFrameData.effect) {
+                    "sword_flame_sweep" -> {
+                        val pos0 = GeoEntityLocatorService.getLocatorPos(uuid, "swordParticle0") ?: return@setParticleKeyframeHandler
+                        val pos1 = GeoEntityLocatorService.getLocatorPos(uuid, "swordParticle1") ?: return@setParticleKeyframeHandler
 
-                    val dir = swordPos1.subtract(swordPos0)
-                    val axis = Vec3(0.0, 1.0, 0.0).cross(dir).normalize()
-                    val angle = Math.toRadians(20.0)
-                    val rotatedDir = dir
-                        .scale(cos(angle))
-                        .add(axis.cross(dir).scale(sin(angle)))
+                        val dir = pos1.subtract(pos0)
+                        val axis = Vec3(0.0, 1.0, 0.0).cross(dir).normalize()
+                        val angle = Math.toRadians(20.0)
+                        val rotatedDir = dir
+                            .scale(cos(angle))
+                            .add(axis.cross(dir).scale(sin(angle)))
 
-                    level().addParticle(
-                        DirectionalFlameSweepParticleEffect(1.5 * scale, rotatedDir.x, rotatedDir.y, rotatedDir.z),
-                        pos.x, pos.y - 0.5 * scale, pos.z,
-                        0.0, 0.0, 0.0,
-                    )
+                        level().addParticle(
+                            DirectionalFlameSweepParticleEffect(1.5 * scale, rotatedDir.x, rotatedDir.y, rotatedDir.z),
+                            pos0.x, pos0.y - 0.5 * scale, pos0.z,
+                            0.0, 0.0, 0.0,
+                        )
+                    }
+
+                    "sword_flame_stab" -> {
+                        val pos0 = GeoEntityLocatorService.getLocatorPos(uuid, "swordParticle0") ?: return@setParticleKeyframeHandler
+                        val pos1 = GeoEntityLocatorService.getLocatorPos(uuid, "swordParticle1") ?: return@setParticleKeyframeHandler
+                        val dir = pos1.subtract(pos0)
+
+                        createStabParticles(pos0, dir, 2, ParticleTypes.FLAME)
+                        createStabParticles(pos0, dir, 1, ParticleTypes.SMOKE)
+                    }
+
+                    "flame_slam" -> {
+                        val pos = GeoEntityLocatorService.getLocatorPos(uuid, keyFrameData.locatorName) ?: return@setParticleKeyframeHandler
+                        createSlamParticles(pos, 20, ParticleTypes.FLAME)
+                        createSlamParticles(pos, 12, ParticleTypes.SMOKE)
+                        createSlamParticles(pos, 5, ParticleTypes.LARGE_SMOKE)
+                    }
                 }
             }
+
+    private fun createStabParticles(
+        pos: Vec3,
+        dir: Vec3,
+        count: Int,
+        type: SimpleParticleType,
+    ) {
+        val normalizedDir = dir.normalize()
+        repeat(count) {
+            val pos = pos.subtract(normalizedDir.scale(Random.nextDouble(0.1, 0.3))).add(
+                Random.nextDouble(-0.1, 0.1) * scale,
+                Random.nextDouble(-0.1, 0.1) * scale,
+                Random.nextDouble(-0.1, 0.1) * scale,
+            )
+            val velocity = normalizedDir.scale(Random.nextDouble(0.15, 0.5)).add(
+                Random.nextDouble(-0.05, 0.05),
+                Random.nextDouble(-0.05, 0.05),
+                Random.nextDouble(-0.05, 0.05),
+            ).scale(scale.toDouble())
+
+            level().addParticle(
+                type,
+                pos.x, pos.y, pos.z,
+                velocity.x, velocity.y, velocity.z,
+            )
+        }
+    }
+
+    private fun createSlamParticles(
+        pos: Vec3,
+        count: Int,
+        type: SimpleParticleType,
+    ) {
+        repeat(count) {
+            level().addParticle(
+                type,
+                pos.x + Random.nextDouble(-0.25, 0.25) * scale,
+                pos.y + Random.nextDouble(-0.25, 0.0) * scale,
+                pos.z + Random.nextDouble(-0.25, 0.25) * scale,
+                Random.nextDouble(-0.4, 0.4) * scale,
+                Random.nextDouble(-0.2, 0.4) * scale,
+                Random.nextDouble(-0.4, 0.4) * scale,
+            )
+        }
+    }
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(

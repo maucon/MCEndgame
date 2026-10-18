@@ -879,6 +879,32 @@
 						}
 					}
 				}
+			},
+			"particle_effects": {
+				"0.5": {
+					"effect": "sword_flame_stab",
+					"locator": "swordParticle0"
+				},
+				"0.5417": {
+					"effect": "sword_flame_stab",
+					"locator": "swordParticle0"
+				},
+				"0.5833": {
+					"effect": "sword_flame_stab",
+					"locator": "swordParticle0"
+				},
+				"0.625": {
+					"effect": "sword_flame_stab",
+					"locator": "swordParticle0"
+				},
+				"0.6667": {
+					"effect": "sword_flame_stab",
+					"locator": "swordParticle0"
+				},
+				"0.7083": {
+					"effect": "sword_flame_stab",
+					"locator": "swordParticle0"
+				}
 			}
 		},
 		"attack.slam": {
@@ -1294,6 +1320,10 @@
 				"0.625": {
 					"effect": "sword_flame_sweep",
 					"locator": "swordParticle0"
+				},
+				"0.7083": {
+					"effect": "flame_slam",
+					"locator": "swordParticle1"
 				}
 			}
 		}
