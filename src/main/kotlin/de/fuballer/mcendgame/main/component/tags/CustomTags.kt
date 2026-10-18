@@ -27,6 +27,8 @@ object CustomTags {
     val PHASING_BLOCKING: TagKey<Block> = createBlockTag("phasing_blocking")
     val NO_PHASING_SLOW_AND_FOG: TagKey<Block> = createBlockTag("no_phasing_slow_and_fog")
 
+    val SCORCH_PALETTE: TagKey<Block> = createBlockTag("scorch_palette")
+
     val MELEE_ATTACK: TagKey<DamageType> = createDamageTypeTag("melee_attack")
     val BLOCK_PHASING_IMMUNE: TagKey<DamageType> = createDamageTypeTag("block_phasing_immune")
 
