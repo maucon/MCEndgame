@@ -14,6 +14,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
@@ -24,15 +25,22 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMo
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
 import de.fuballer.mcendgame.main.component.particle.DirectionalFlameSweepParticleEffect
+import de.fuballer.mcendgame.main.component.tags.CustomTags
+import de.fuballer.mcendgame.main.util.BlockPosUtil
 import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.particles.SimpleParticleType
+import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -43,6 +51,7 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.*
 import net.minecraft.world.phys.Vec3
 import kotlin.math.cos
 import kotlin.math.sin
@@ -191,6 +200,24 @@ class BloodKingEntity(
                 DistanceTriggerCondition(4.0, affectedByScale = true),
                 data = listOf(
                     DelayedDamageData(ULTIMATE_ATTACK_DAMAGE, 14),
+
+                    object : DelayedAttackData(32) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? BloodKingEntity)?.scorchGround(4, level)
+                        }
+                    },
+
+                    object : DelayedAttackData(64) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? BloodKingEntity)?.scorchGround(7, level)
+                        }
+                    },
+
+                    object : DelayedAttackData(98) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? BloodKingEntity)?.scorchGround(10, level)
+                        }
+                    },
 
                     DelayedSoundData(TAKE_SWING_SOUND, 6),
                     DelayedSoundData(FIRE_SOUND, 6),
@@ -392,7 +419,94 @@ class BloodKingEntity(
         tickAttacks(level, this)
     }
 
+    override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
+        if (source.`is`(DamageTypes.HOT_FLOOR)) return true
+        return super.isInvulnerableTo(level, source)
+    }
+
     override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.PLAYER_HURT
 
     override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
+
+    private fun scorchGround(
+        maxBlockSteps: Int,
+        level: ServerLevel,
+    ) {
+        val registry = level.registryAccess().lookupOrThrow(Registries.BLOCK)
+        val scorchPalette = registry.getOrThrow(CustomTags.SCORCH_PALETTE).map { it.value() }
+
+        val positions = BlockPosUtil.findConnected(level, blockPosition().below(), maxBlockSteps)
+        positions.forEach { scorchBlock(it, level, scorchPalette) }
+    }
+
+    private fun scorchBlock(
+        pos: BlockPos,
+        level: ServerLevel,
+        scorchPalette: List<Block>,
+    ) {
+        val originalState = level.getBlockState(pos)
+        val block = originalState.block
+
+        if (originalState.isAir) return
+        if (originalState.`is`(CustomTags.SCORCH_PALETTE)) return
+
+        if (block is SlabBlock) {
+            val newState = scorchPalette.filterIsInstance<SlabBlock>().random().defaultBlockState()
+                .setValue(SlabBlock.TYPE, originalState.getValue(SlabBlock.TYPE))
+
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+
+        if (block is StairBlock) {
+            val newState = scorchPalette.filterIsInstance<StairBlock>().random().defaultBlockState()
+                .setValue(StairBlock.FACING, originalState.getValue(StairBlock.FACING))
+                .setValue(StairBlock.HALF, originalState.getValue(StairBlock.HALF))
+                .setValue(StairBlock.SHAPE, originalState.getValue(StairBlock.SHAPE))
+
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+
+        if (block is WallBlock) {
+            val newState = scorchPalette.filterIsInstance<WallBlock>().random().defaultBlockState()
+                .setValue(WallBlock.EAST, originalState.getValue(WallBlock.EAST))
+                .setValue(WallBlock.NORTH, originalState.getValue(WallBlock.NORTH))
+                .setValue(WallBlock.WEST, originalState.getValue(WallBlock.WEST))
+                .setValue(WallBlock.SOUTH, originalState.getValue(WallBlock.SOUTH))
+                .setValue(WallBlock.UP, originalState.getValue(WallBlock.UP))
+
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+
+        if (block is FenceBlock) {
+            val newState = scorchPalette.filterIsInstance<FenceBlock>().random().defaultBlockState()
+                .setValue(FenceBlock.EAST, originalState.getValue(FenceBlock.EAST))
+                .setValue(FenceBlock.NORTH, originalState.getValue(FenceBlock.NORTH))
+                .setValue(FenceBlock.WEST, originalState.getValue(FenceBlock.WEST))
+                .setValue(FenceBlock.SOUTH, originalState.getValue(FenceBlock.SOUTH))
+
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+
+        if (block is ButtonBlock) {
+            val newState = scorchPalette.filterIsInstance<ButtonBlock>().random().defaultBlockState()
+                .setValue(ButtonBlock.FACE, originalState.getValue(ButtonBlock.FACE))
+
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+
+        if (originalState.isRedstoneConductor(level, pos)) {
+            val newState = scorchPalette.filter { it.defaultBlockState().isRedstoneConductor(level, pos) }.random().defaultBlockState()
+            level.setBlockAndUpdate(pos, newState)
+        }
+
+        if (originalState.`is`(CustomTags.DUNGEON_BREAKABLE) || originalState.`is`(Blocks.WATER)) {
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+            return
+        }
+    }
 }

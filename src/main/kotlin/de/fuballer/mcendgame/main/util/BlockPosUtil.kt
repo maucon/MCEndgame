@@ -54,6 +54,51 @@ object BlockPosUtil {
         return possiblePositions
     }
 
+    // connected by solid blocks, non-air non-solid blocks are contained in list but are treated as empty for connections
+    fun findConnected(
+        level: Level,
+        startPos: BlockPos,
+        steps: Int,
+    ): List<BlockPos> {
+        val squaredRadius = steps * steps
+
+        val possiblePositions = mutableListOf<BlockPos>()
+
+        var heads = listOf(startPos)
+        val checkedPositions = mutableSetOf(startPos)
+        while (heads.isNotEmpty()) {
+            val newHeads = mutableListOf<BlockPos>()
+
+            for (head in heads) {
+                if (head.distSqr(startPos) > squaredRadius) continue
+
+                val state = level.getBlockState(head)
+                if(state.isAir) continue
+                possiblePositions.add(head)
+                if(!state.isRedstoneConductor(level, head)) continue
+
+                val neighbors = listOf(
+                    head.north(),
+                    head.south(),
+                    head.east(),
+                    head.west(),
+                    head.above(),
+                    head.below()
+                )
+
+                for (neighbor in neighbors) {
+                    if (neighbor in checkedPositions) continue
+                    checkedPositions.add(neighbor)
+                    newHeads.add(neighbor)
+                }
+            }
+
+            heads = newHeads
+        }
+
+        return possiblePositions
+    }
+
     fun getHighestY(
         level: ServerLevel,
         pos: BlockPos,
