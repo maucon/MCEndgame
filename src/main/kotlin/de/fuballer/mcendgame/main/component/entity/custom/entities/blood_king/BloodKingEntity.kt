@@ -60,6 +60,54 @@ class BloodKingEntity(
     companion object {
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
+        private val TAKE_SWING_SOUND = RangeDefinedSoundData(
+            SoundEvents.BREEZE_LAND,
+            { 1.0f },
+            { Random.nextDouble(0.7, 0.8).toFloat() },
+            SoundSource.HOSTILE,
+            range = 24.0,
+        )
+        private val FIRE_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.BLAZE_BURN,
+                { 0.9f },
+                { Random.nextDouble(1.0, 1.1).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+        private val SWEEP_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.PLAYER_ATTACK_SWEEP,
+                { 0.9f },
+                { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+        private val FIRE_HIT_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.FIRECHARGE_USE,
+                { 0.6f },
+                { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+        private val FIRE_SLAM_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.DRAGON_FIREBALL_EXPLODE,
+                { 0.6f },
+                { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 48.0,
+            )
+        private val BLOCK_HIT_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.DEEPSLATE_BREAK,
+                { 1.0f },
+                { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+
         private val SLASH_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
         private val SLASH_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, SLASH_AREA)
         private val SLASH_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slash")
@@ -75,46 +123,10 @@ class BloodKingEntity(
                 data = listOf(
                     DelayedDamageData(SLASH_ATTACK_DAMAGE, 12),
 
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.BREEZE_LAND,
-                            { 1.0f },
-                            { Random.nextDouble(0.7, 0.8).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        3,
-                    ),
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.BLAZE_BURN,
-                            { 0.9f },
-                            { Random.nextDouble(1.0, 1.1).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        3,
-                    ),
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.PLAYER_ATTACK_SWEEP,
-                            { 0.9f },
-                            { Random.nextDouble(0.95, 1.05).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        10,
-                    ),
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.FIRECHARGE_USE,
-                            { 0.6f },
-                            { Random.nextDouble(0.95, 1.05).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        10,
-                    ),
+                    DelayedSoundData(TAKE_SWING_SOUND, 3),
+                    DelayedSoundData(FIRE_SOUND, 3),
+                    DelayedSoundData(SWEEP_SOUND, 10),
+                    DelayedSoundData(FIRE_HIT_SOUND, 10),
                 ),
             )
 
@@ -133,46 +145,10 @@ class BloodKingEntity(
                 data = listOf(
                     DelayedDamageData(STAB_ATTACK_DAMAGE, 12),
 
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.BREEZE_LAND,
-                            { 1.0f },
-                            { Random.nextDouble(0.7, 0.8).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        2,
-                    ),
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.BLAZE_BURN,
-                            { 0.9f },
-                            { Random.nextDouble(1.0, 1.1).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        2,
-                    ),
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.PLAYER_ATTACK_SWEEP,
-                            { 0.9f },
-                            { Random.nextDouble(0.95, 1.05).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        10,
-                    ),
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.FIRECHARGE_USE,
-                            { 0.6f },
-                            { Random.nextDouble(0.95, 1.05).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        10,
-                    ),
+                    DelayedSoundData(TAKE_SWING_SOUND, 2),
+                    DelayedSoundData(FIRE_SOUND, 2),
+                    DelayedSoundData(SWEEP_SOUND, 10),
+                    DelayedSoundData(FIRE_HIT_SOUND, 10),
                 ),
                 blockMovementDuration = 15,
             )
@@ -192,64 +168,54 @@ class BloodKingEntity(
                 data = listOf(
                     DelayedDamageData(SLAM_ATTACK_DAMAGE, 14),
 
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.BREEZE_LAND,
-                            { 1.0f },
-                            { Random.nextDouble(0.7, 0.8).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        3,
-                    ),
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.BLAZE_BURN,
-                            { 0.9f },
-                            { Random.nextDouble(1.0, 1.1).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        3,
-                    ),
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.PLAYER_ATTACK_SWEEP,
-                            { 0.9f },
-                            { Random.nextDouble(0.95, 1.05).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        12,
-                    ),
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.FIRECHARGE_USE,
-                            { 0.6f },
-                            { Random.nextDouble(0.95, 1.05).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        12,
-                    ),
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.DRAGON_FIREBALL_EXPLODE,
-                            { 0.6f },
-                            { Random.nextDouble(0.95, 1.05).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        12,
-                    ),
+                    DelayedSoundData(TAKE_SWING_SOUND, 3),
+                    DelayedSoundData(FIRE_SOUND, 3),
+                    DelayedSoundData(SWEEP_SOUND, 12),
+                    DelayedSoundData(FIRE_HIT_SOUND, 12),
+                    DelayedSoundData(FIRE_SLAM_SOUND, 12),
                 ),
                 blockMovementDuration = 26,
+            )
+
+        private val ULTIMATE_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
+        private val ULTIMATE_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, ULTIMATE_AREA)
+        private val ULTIMATE_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.ultimate")
+        private const val ULTIMATE_ID = "Ultimate"
+        private val ULTIMATE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, ULTIMATE_ID)
+        private val ULTIMATE_ATTACK =
+            Attack<BloodKingEntity>(
+                ULTIMATE_ID,
+                ULTIMATE_ANIM_DATA,
+                totalDuration = 148,
+                cooldown = 300,
+                DistanceTriggerCondition(4.0, affectedByScale = true),
+                data = listOf(
+                    DelayedDamageData(ULTIMATE_ATTACK_DAMAGE, 14),
+
+                    DelayedSoundData(TAKE_SWING_SOUND, 6),
+                    DelayedSoundData(FIRE_SOUND, 6),
+                    DelayedSoundData(BLOCK_HIT_SOUND, 28),
+                    DelayedSoundData(FIRE_HIT_SOUND, 28),
+                    DelayedSoundData(FIRE_SLAM_SOUND, 32),
+
+                    DelayedSoundData(FIRE_SOUND, 52),
+                    DelayedSoundData(BLOCK_HIT_SOUND, 60),
+                    DelayedSoundData(FIRE_HIT_SOUND, 60),
+                    DelayedSoundData(FIRE_SLAM_SOUND, 64),
+
+                    DelayedSoundData(FIRE_SOUND, 85),
+                    DelayedSoundData(BLOCK_HIT_SOUND, 94),
+                    DelayedSoundData(FIRE_HIT_SOUND, 94),
+                    DelayedSoundData(FIRE_SLAM_SOUND, 98),
+                ),
+                blockMovementDuration = 136,
             )
 
         private val ATTACKS: List<RandomOption<out Attack<BloodKingEntity>>> = listOf(
             RandomOption(1, SLASH_ATTACK),
             RandomOption(1, STAB_ATTACK),
             RandomOption(1, SLAM_ATTACK),
+            RandomOption(1, ULTIMATE_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -285,6 +251,7 @@ class BloodKingEntity(
             .triggerableAnim(SLASH_ID, SLASH_ANIM)
             .triggerableAnim(STAB_ID, STAB_ANIM)
             .triggerableAnim(SLAM_ID, SLAM_ANIM)
+            .triggerableAnim(ULTIMATE_ID, ULTIMATE_ANIM)
             .setParticleKeyframeHandler { event ->
                 if (!level().isClientSide) return@setParticleKeyframeHandler
 
