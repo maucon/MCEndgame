@@ -20,7 +20,7 @@ object CustomRenderLayers {
     )
 
     fun ghostly(texture: Identifier) = GHOSTLY.apply(texture)
-    val GHOSTLY: Function<Identifier, RenderType> = Util.memoize { texture ->
+    val GHOSTLY: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.GHOSTLY_PIPELINE)
             .withTexture("Sampler0", texture)
             .useOverlay()
@@ -31,7 +31,7 @@ object CustomRenderLayers {
     }
 
     fun boundAbyss(texture: Identifier) = BOUND_ABYSS.apply(texture)
-    val BOUND_ABYSS: Function<Identifier, RenderType> = Util.memoize { texture ->
+    val BOUND_ABYSS: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.BOUND_ABYSS_PIPELINE)
             .withTexture("Sampler0", texture)
             .useLightmap()
@@ -44,7 +44,7 @@ object CustomRenderLayers {
     }
 
     fun beastweaverAttack(texture: Identifier) = BEASTWEAVER_ATTACK.apply(texture)
-    val BEASTWEAVER_ATTACK: Function<Identifier, RenderType> = Util.memoize { texture ->
+    val BEASTWEAVER_ATTACK: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.BEASTWEAVER_ATTACK_PIPELINE)
             .withTexture("Sampler0", texture)
             .useLightmap()
