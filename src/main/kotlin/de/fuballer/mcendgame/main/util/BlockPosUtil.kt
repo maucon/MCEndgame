@@ -75,7 +75,7 @@ object BlockPosUtil {
                 val state = level.getBlockState(head)
                 if (state.isAir) continue
                 possiblePositions.add(head)
-                if (!state.isRedstoneConductor(level, head)) continue
+                if (state.getCollisionShape(level, head).isEmpty) continue
 
                 val neighbors = listOf(
                     head.north(),

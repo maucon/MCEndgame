@@ -192,17 +192,14 @@ class BloodKingEntity(
             delay: Int,
             scorchRadius: Double,
             explosionParticleCount: Int,
+            smokeParticleCount: Int,
+            lavaParticleCount: Int,
             particleRange: Vec3,
         ) = listOf(
             DelayedSoundData(FIRE_SOUND, delay),
             DelayedSoundData(BLOCK_HIT_SOUND, delay + 8),
             DelayedSoundData(FIRE_HIT_SOUND, delay + 8),
             DelayedSoundData(FIRE_SLAM_SOUND, delay + 12),
-            object : DelayedAttackData(delay + 12) {
-                override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
-                    (entity as? BloodKingEntity)?.scorchGround(scorchRadius, level)
-                }
-            },
             DelayedParticleData(
                 ParticleData(
                     particle = { _, _ -> ParticleTypes.EXPLOSION },
@@ -217,7 +214,7 @@ class BloodKingEntity(
                 ParticleData(
                     particle = { _, _ -> ParticleTypes.SMOKE },
                     offset = { Vec3.ZERO },
-                    count = explosionParticleCount * 2,
+                    count = smokeParticleCount,
                     dist = { particleRange.multiply(1.0, 0.6, 1.0) },
                     speed = 1.0,
                 ),
@@ -227,12 +224,17 @@ class BloodKingEntity(
                 ParticleData(
                     particle = { _, _ -> ParticleTypes.LAVA },
                     offset = { Vec3.ZERO },
-                    count = explosionParticleCount,
+                    count = lavaParticleCount,
                     dist = { particleRange.multiply(1.0, 0.6, 1.0) },
                     speed = 1.0,
                 ),
                 delay + 12,
             ),
+            object : DelayedAttackData(delay + 14) {
+                override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                    (entity as? BloodKingEntity)?.scorchGround(scorchRadius, level)
+                }
+            },
         )
 
         private val ULTIMATE_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
@@ -252,9 +254,9 @@ class BloodKingEntity(
 
                     DelayedSoundData(TAKE_SWING_SOUND, 6),
 
-                    *getUltimateStepData(20, 4.0, 15, Vec3(3.5, 2.0, 3.5)).toTypedArray(),
-                    *getUltimateStepData(52, 7.0, 45, Vec3(6.5, 3.0, 6.5)).toTypedArray(),
-                    *getUltimateStepData(86, 10.0, 75, Vec3(9.5, 4.0, 9.5)).toTypedArray(),
+                    *getUltimateStepData(20, 4.0, 20, 15, 10, Vec3(3.5, 2.0, 3.5)).toTypedArray(),
+                    *getUltimateStepData(52, 7.0, 70, 30, 20, Vec3(6.5, 3.0, 6.5)).toTypedArray(),
+                    *getUltimateStepData(86, 10.0, 180, 100, 50, Vec3(9.5, 4.0, 9.5)).toTypedArray(),
                 ),
                 blockMovementDuration = 136,
             )
@@ -457,19 +459,41 @@ class BloodKingEntity(
         val scorchPalette = registry.getOrThrow(CustomTags.SCORCH_PALETTE).map { it.value() }
 
         val positions = BlockPosUtil.findConnected(level, blockPosition().below(), maxDistance * scale)
-        positions.forEach { scorchBlock(it, level, scorchPalette) }
+
+        val maxSquared = maxDistance * maxDistance
+        positions.forEach {
+            val distSquared = it.distToCenterSqr(position())
+            val scorchProbability = 1.0 - distSquared / maxSquared
+            scorchBlock(it, level, scorchPalette, scorchProbability)
+        }
     }
 
     private fun scorchBlock(
         pos: BlockPos,
         level: ServerLevel,
         scorchPalette: List<Block>,
+        scorchProbability: Double,
     ) {
         val originalState = level.getBlockState(pos)
         val block = originalState.block
 
         if (originalState.isAir) return
         if (originalState.`is`(CustomTags.SCORCH_PALETTE)) return
+
+        if (originalState.`is`(CustomTags.DUNGEON_BREAKABLE) || originalState.`is`(Blocks.WATER)) {
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+            return
+        }
+
+        if (block is ButtonBlock) {
+            val newState = scorchPalette.filterIsInstance<ButtonBlock>().random().defaultBlockState()
+                .setValue(ButtonBlock.FACE, originalState.getValue(ButtonBlock.FACE))
+
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+
+        if (Random.nextDouble() > scorchProbability) return
 
         if (block is SlabBlock) {
             val newState = scorchPalette.filterIsInstance<SlabBlock>().random().defaultBlockState()
@@ -512,21 +536,9 @@ class BloodKingEntity(
             return
         }
 
-        if (block is ButtonBlock) {
-            val newState = scorchPalette.filterIsInstance<ButtonBlock>().random().defaultBlockState()
-                .setValue(ButtonBlock.FACE, originalState.getValue(ButtonBlock.FACE))
-
-            level.setBlockAndUpdate(pos, newState)
-            return
-        }
-
         if (originalState.isRedstoneConductor(level, pos)) {
             val newState = scorchPalette.filter { it.defaultBlockState().isRedstoneConductor(level, pos) }.random().defaultBlockState()
             level.setBlockAndUpdate(pos, newState)
-        }
-
-        if (originalState.`is`(CustomTags.DUNGEON_BREAKABLE) || originalState.`is`(Blocks.WATER)) {
-            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
             return
         }
     }
