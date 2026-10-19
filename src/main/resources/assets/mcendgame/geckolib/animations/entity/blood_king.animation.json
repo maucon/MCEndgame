@@ -2150,11 +2150,11 @@
 				},
 				"3.0417": {
 					"effect": "flame_slam",
-					"locator": "swordParticle1"
+					"locator": "swordUltimateParticle1"
 				},
 				"4.75": {
 					"effect": "flame_slam",
-					"locator": "swordParticle1"
+					"locator": "swordParticle0"
 				}
 			}
 		}

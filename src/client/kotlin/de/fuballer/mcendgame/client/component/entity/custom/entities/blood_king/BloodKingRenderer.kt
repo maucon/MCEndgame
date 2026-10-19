@@ -21,7 +21,7 @@ class BloodKingRenderer<R>(
         private val LOCATORS = listOf(
             "swordParticle0",
             "swordParticle1",
-            "swordParticle2",
+            "swordUltimateParticle1",
         )
 
         private val UUID_TICKET = DataTicket.create("uuid", object : TypeToken<UUID>() {})

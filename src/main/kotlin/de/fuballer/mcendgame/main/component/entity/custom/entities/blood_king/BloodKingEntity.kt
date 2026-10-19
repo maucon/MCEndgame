@@ -17,6 +17,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnim
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.DelayedParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
@@ -186,6 +188,53 @@ class BloodKingEntity(
                 blockMovementDuration = 26,
             )
 
+        private fun getUltimateStepData(
+            delay: Int,
+            scorchRadius: Double,
+            explosionParticleCount: Int,
+            particleRange: Vec3,
+        ) = listOf(
+            DelayedSoundData(FIRE_SOUND, delay),
+            DelayedSoundData(BLOCK_HIT_SOUND, delay + 8),
+            DelayedSoundData(FIRE_HIT_SOUND, delay + 8),
+            DelayedSoundData(FIRE_SLAM_SOUND, delay + 12),
+            object : DelayedAttackData(delay + 12) {
+                override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                    (entity as? BloodKingEntity)?.scorchGround(scorchRadius, level)
+                }
+            },
+            DelayedParticleData(
+                ParticleData(
+                    particle = { _, _ -> ParticleTypes.EXPLOSION },
+                    offset = { Vec3.ZERO },
+                    count = explosionParticleCount,
+                    dist = { particleRange },
+                    speed = 1.0,
+                ),
+                delay + 12,
+            ),
+            DelayedParticleData(
+                ParticleData(
+                    particle = { _, _ -> ParticleTypes.SMOKE },
+                    offset = { Vec3.ZERO },
+                    count = explosionParticleCount * 2,
+                    dist = { particleRange.multiply(1.0, 0.6, 1.0) },
+                    speed = 1.0,
+                ),
+                delay + 12,
+            ),
+            DelayedParticleData(
+                ParticleData(
+                    particle = { _, _ -> ParticleTypes.LAVA },
+                    offset = { Vec3.ZERO },
+                    count = explosionParticleCount,
+                    dist = { particleRange.multiply(1.0, 0.6, 1.0) },
+                    speed = 1.0,
+                ),
+                delay + 12,
+            ),
+        )
+
         private val ULTIMATE_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
         private val ULTIMATE_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, ULTIMATE_AREA)
         private val ULTIMATE_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.ultimate")
@@ -201,39 +250,11 @@ class BloodKingEntity(
                 data = listOf(
                     DelayedDamageData(ULTIMATE_ATTACK_DAMAGE, 14),
 
-                    object : DelayedAttackData(32) {
-                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
-                            (entity as? BloodKingEntity)?.scorchGround(4, level)
-                        }
-                    },
-
-                    object : DelayedAttackData(64) {
-                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
-                            (entity as? BloodKingEntity)?.scorchGround(7, level)
-                        }
-                    },
-
-                    object : DelayedAttackData(98) {
-                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
-                            (entity as? BloodKingEntity)?.scorchGround(10, level)
-                        }
-                    },
-
                     DelayedSoundData(TAKE_SWING_SOUND, 6),
-                    DelayedSoundData(FIRE_SOUND, 6),
-                    DelayedSoundData(BLOCK_HIT_SOUND, 28),
-                    DelayedSoundData(FIRE_HIT_SOUND, 28),
-                    DelayedSoundData(FIRE_SLAM_SOUND, 32),
 
-                    DelayedSoundData(FIRE_SOUND, 52),
-                    DelayedSoundData(BLOCK_HIT_SOUND, 60),
-                    DelayedSoundData(FIRE_HIT_SOUND, 60),
-                    DelayedSoundData(FIRE_SLAM_SOUND, 64),
-
-                    DelayedSoundData(FIRE_SOUND, 85),
-                    DelayedSoundData(BLOCK_HIT_SOUND, 94),
-                    DelayedSoundData(FIRE_HIT_SOUND, 94),
-                    DelayedSoundData(FIRE_SLAM_SOUND, 98),
+                    *getUltimateStepData(20, 4.0, 15, Vec3(3.5, 2.0, 3.5)).toTypedArray(),
+                    *getUltimateStepData(52, 7.0, 45, Vec3(6.5, 3.0, 6.5)).toTypedArray(),
+                    *getUltimateStepData(86, 10.0, 75, Vec3(9.5, 4.0, 9.5)).toTypedArray(),
                 ),
                 blockMovementDuration = 136,
             )
@@ -429,13 +450,13 @@ class BloodKingEntity(
     override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
 
     private fun scorchGround(
-        maxBlockSteps: Int,
+        maxDistance: Double,
         level: ServerLevel,
     ) {
         val registry = level.registryAccess().lookupOrThrow(Registries.BLOCK)
         val scorchPalette = registry.getOrThrow(CustomTags.SCORCH_PALETTE).map { it.value() }
 
-        val positions = BlockPosUtil.findConnected(level, blockPosition().below(), maxBlockSteps)
+        val positions = BlockPosUtil.findConnected(level, blockPosition().below(), maxDistance * scale)
         positions.forEach { scorchBlock(it, level, scorchPalette) }
     }
 
