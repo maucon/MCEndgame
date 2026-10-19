@@ -58,9 +58,9 @@ object BlockPosUtil {
     fun findConnected(
         level: Level,
         startPos: BlockPos,
-        steps: Int,
+        maxDistance: Double,
     ): List<BlockPos> {
-        val squaredRadius = steps * steps
+        val squaredRadius = maxDistance * maxDistance
 
         val possiblePositions = mutableListOf<BlockPos>()
 
@@ -73,9 +73,9 @@ object BlockPosUtil {
                 if (head.distSqr(startPos) > squaredRadius) continue
 
                 val state = level.getBlockState(head)
-                if(state.isAir) continue
+                if (state.isAir) continue
                 possiblePositions.add(head)
-                if(!state.isRedstoneConductor(level, head)) continue
+                if (!state.isRedstoneConductor(level, head)) continue
 
                 val neighbors = listOf(
                     head.north(),
