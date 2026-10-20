@@ -11,6 +11,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.blood_king.Bl
 import de.fuballer.mcendgame.main.component.entity.custom.entities.blood_queen.BloodQueenEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikeEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.skeleton_mage.SkeletonMageEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball.SpellFireballEntity
@@ -179,5 +180,14 @@ object CustomEntities {
             .eyeHeight(2.2f)
             .clientTrackingRange(16)
             .notInPeaceful()
+    )
+    val MAGMA_SPIKE = RegistryUtil.registerEntity(
+        CustomEntityIds.MAGMA_SPIKE,
+        EntityType.Builder.of(::MagmaSpikeEntity, MobCategory.MISC)
+            .noLootTable()
+            .sized(0.5f, 0.8f)
+            .clientTrackingRange(6)
+            .updateInterval(2)
+            .dontTrackDeltas()
     )
 }
