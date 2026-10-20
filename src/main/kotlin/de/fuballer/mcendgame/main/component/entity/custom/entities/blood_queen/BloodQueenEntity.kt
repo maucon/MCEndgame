@@ -172,7 +172,7 @@ class BloodQueenEntity(
     override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.PLAYER_HURT
 
     override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
-    
+
     override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
         if (source.`is`(DamageTypes.HOT_FLOOR)) return true
         return super.isInvulnerableTo(level, source)
@@ -182,31 +182,22 @@ class BloodQueenEntity(
         val target = this.target ?: return
         val minY = min(target.y, y)
         val maxY = max(target.y, y) + 1.0
-        val angleTowardsTarget = Mth.atan2(target.z - z, target.x - x).toFloat()
+        val angleToTarget = Mth.atan2(target.z - z, target.x - x).toFloat()
 
-        if (distanceToSqr(target) < 9.0) {
-            for (i in 0..4) {
-                val angle = angleTowardsTarget + i * Math.PI.toFloat() * 0.4f
-                createMagmaSpikeEntity(x + Mth.cos(angle.toDouble()) * 1.5, z + Mth.sin(angle.toDouble()) * 1.5, minY, maxY, angle, 0)
-            }
-
-            for (i in 0..7) {
-                val angle = angleTowardsTarget + i * Math.PI.toFloat() * 2.0f / 8.0f + (Math.PI * 2.0 / 5.0).toFloat()
-                createMagmaSpikeEntity(x + Mth.cos(angle.toDouble()) * 2.5, z + Mth.sin(angle.toDouble()) * 2.5, minY, maxY, angle, 3)
-            }
-        } else {
-            for (i in 0..15) {
-                val reach = 1.25 * (i + 1)
-                val spellSpeed = 1 * i
-                createMagmaSpikeEntity(
-                    x + Mth.cos(angleTowardsTarget.toDouble()) * reach,
-                    z + Mth.sin(angleTowardsTarget.toDouble()) * reach,
-                    minY,
-                    maxY,
-                    angleTowardsTarget,
-                    spellSpeed
-                )
-            }
+        val spikesCount = 15 // TODO
+        for (i in 0..spikesCount) {
+            val reach = 1.25 * (i + 1)
+            val spellSpeed = 1 * i
+            createMagmaSpikeEntity(
+                x + Mth.cos(angleToTarget.toDouble()) * reach,
+                z + Mth.sin(angleToTarget.toDouble()) * reach,
+                minY,
+                maxY,
+                angleToTarget - Mth.HALF_PI,
+                Math.toRadians(45.0 - (45.0 * i / spikesCount)).toFloat(),
+                0.75f + (0.5f * i / spikesCount),
+                spellSpeed,
+            )
         }
     }
 
@@ -215,34 +206,34 @@ class BloodQueenEntity(
         z: Double,
         minY: Double,
         maxY: Double,
-        angle: Float,
+        yRotRad: Float,
+        xzRotRad: Float,
+        scale: Float,
         delayTicks: Int,
     ) {
         var pos = BlockPos.containing(x, maxY, z)
         var success = false
         var topOffset = 0.0
-
         do {
             val below = pos.below()
             val belowState: BlockState = level().getBlockState(below)
-            if (belowState.isFaceSturdy(level(), below, Direction.UP)) {
-                if (!level().isEmptyBlock(pos)) {
-                    val blockState: BlockState = level().getBlockState(pos)
-                    val shape = blockState.getCollisionShape(level(), pos)
-                    if (!shape.isEmpty) {
-                        topOffset = shape.max(Direction.Axis.Y)
-                    }
-                }
+            if (!belowState.isFaceSturdy(level(), below, Direction.UP)) {
+                pos = pos.below()
+                continue
+            }
 
+            if (level().isEmptyBlock(pos)) {
                 success = true
                 break
             }
 
-            pos = pos.below()
+            val blockState: BlockState = level().getBlockState(pos)
+            val shape = blockState.getCollisionShape(level(), pos)
+            if (!shape.isEmpty) topOffset = shape.max(Direction.Axis.Y)
         } while (pos.y >= Mth.floor(minY) - 1)
 
         if (success) {
-            level().addFreshEntity(MagmaSpikeEntity(level(), x, pos.y + topOffset, z, angle, delayTicks, this))
+            level().addFreshEntity(MagmaSpikeEntity(level(), x, pos.y + topOffset, z, yRotRad, xzRotRad, scale, delayTicks, this))
             level().gameEvent(GameEvent.ENTITY_PLACE, Vec3(x, pos.y + topOffset, z), GameEvent.Context.of(this))
         }
     }

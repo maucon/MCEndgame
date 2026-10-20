@@ -13,7 +13,7 @@
 			"bones": [
 				{
 					"name": "magma_spike",
-					"pivot": [0, 0, 0],
+					"pivot": [0, 0, 4],
 					"cubes": [
 						{"origin": [-4, 0, -4], "size": [8, 13, 8], "uv": [0, 0]}
 					]

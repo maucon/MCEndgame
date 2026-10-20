@@ -6,6 +6,8 @@ import com.geckolib.animatable.manager.AnimatableManager
 import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
@@ -21,16 +23,20 @@ class MagmaSpikeEntity(
     level: Level,
 ) : Entity(type, level), GeoAnimatable, TraceableEntity {
     companion object {
-        const val ATTACK_DURATION: Int = 10
-        const val LIFE_OFFSET: Int = 1
-        const val PARTICLE_TRIGGER_TICKS: Int = 7
+        const val EMERGE_TICKS: Int = 4
+        const val HOLD_EMERGED_TICKS: Int = 15
+        const val RETRACT_TICKS: Int = 15
+        const val TICKS_UNTIL_RETRACT: Int = EMERGE_TICKS + HOLD_EMERGED_TICKS
+        const val TOTAL_TICKS: Int = EMERGE_TICKS + HOLD_EMERGED_TICKS + TICKS_UNTIL_RETRACT
+        const val PARTICLE_TRIGGER_TICK: Int = 1
         const val DAMAGE_TICKS: Int = 4
-        private const val DEFAULT_WARMUP_DELAY = 0
+        val DATA_XZ_ROT_RAD: EntityDataAccessor<Float> = SynchedEntityData.defineId(MagmaSpikeEntity::class.java, EntityDataSerializers.FLOAT)
+        val DATA_SCALE: EntityDataAccessor<Float> = SynchedEntityData.defineId(MagmaSpikeEntity::class.java, EntityDataSerializers.FLOAT)
     }
 
-    private var warmupDelayTicks = 0
+    private var progressTicks = 0
     private var sentSpikeEvent = false
-    private var lifeTicks = ATTACK_DURATION + LIFE_OFFSET
+    private var lifeTicks = 0
     private var clientSideAttackStarted = false
     private var owner: EntityReference<LivingEntity>? = null
 
@@ -39,13 +45,17 @@ class MagmaSpikeEntity(
         x: Double,
         y: Double,
         z: Double,
-        rotationRadians: Float,
-        warmupDelayTicks: Int,
+        yRotRad: Float,
+        xzRotRad: Float,
+        scale: Float,
+        delay: Int,
         owner: LivingEntity?,
     ) : this(CustomEntities.MAGMA_SPIKE, level) {
-        this.warmupDelayTicks = warmupDelayTicks
+        progressTicks = -delay
         setOwner(owner)
-        yRot = rotationRadians * (180.0f / Math.PI.toFloat())
+        yRot = yRotRad * (180.0f / Math.PI.toFloat())
+        entityData.set(DATA_XZ_ROT_RAD, xzRotRad)
+        entityData.set(DATA_SCALE, scale)
         setPos(x, y, z)
     }
 
@@ -55,7 +65,9 @@ class MagmaSpikeEntity(
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
     }
 
-    protected override fun defineSynchedData(entityData: SynchedEntityData.Builder) {
+    protected override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        builder.define(DATA_XZ_ROT_RAD, 0.0f)
+        builder.define(DATA_SCALE, 1f)
     }
 
     fun setOwner(owner: LivingEntity?) {
@@ -65,12 +77,16 @@ class MagmaSpikeEntity(
     override fun getOwner(): LivingEntity? = EntityReference.getLivingEntity(owner, level())
 
     override fun readAdditionalSaveData(input: ValueInput) {
-        warmupDelayTicks = input.getIntOr("Warmup", 0)
+        progressTicks = input.getIntOr("ProgressTicks", 0)
+        entityData.set(DATA_XZ_ROT_RAD, input.getFloatOr("XZRotRad", 0.0f))
+        entityData.set(DATA_SCALE, input.getFloatOr("Scale", 1.0f))
         owner = EntityReference.read(input, "Owner")
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
-        output.putInt("Warmup", warmupDelayTicks)
+        output.putInt("ProgressTicks", progressTicks)
+        output.putFloat("XZRotRad", entityData.get(DATA_XZ_ROT_RAD))
+        output.putFloat("Scale", entityData.get(DATA_SCALE))
         EntityReference.store(owner, output, "Owner")
     }
 
@@ -78,7 +94,7 @@ class MagmaSpikeEntity(
         super.tick()
         if (level().isClientSide) {
             if (!clientSideAttackStarted) return
-            if (--lifeTicks == PARTICLE_TRIGGER_TICKS) {
+            if (++lifeTicks == PARTICLE_TRIGGER_TICK) {
                 val x = x + (random.nextDouble() * 2.0 - 1.0) * bbWidth * 0.5
                 val y = y + 0.05 + random.nextDouble()
                 val z = z + (random.nextDouble() * 2.0 - 1.0) * bbWidth * 0.5
@@ -87,21 +103,23 @@ class MagmaSpikeEntity(
                 val zd = (random.nextDouble() * 2.0 - 1.0) * 0.3
                 level().addParticle(ParticleTypes.LAVA, x, y + 1.0, z, xd, yd, zd)
             }
-        } else if (--warmupDelayTicks < 0) {
-            if (warmupDelayTicks == -DAMAGE_TICKS) {
-                for (entity in level().getEntitiesOfClass(LivingEntity::class.java, boundingBox.inflate(0.2, 0.0, 0.2))) {
-                    dealDamageTo(entity)
-                }
-            }
+            return
+        }
 
-            if (!sentSpikeEvent) {
-                level().broadcastEntityEvent(this, 4.toByte())
-                sentSpikeEvent = true
+        if (++progressTicks < 0) return
+        if (progressTicks == DAMAGE_TICKS) {
+            for (entity in level().getEntitiesOfClass(LivingEntity::class.java, boundingBox.inflate(0.2, 0.0, 0.2))) {
+                dealDamageTo(entity)
             }
+        }
 
-            if (--lifeTicks < 0) {
-                discard()
-            }
+        if (!sentSpikeEvent) {
+            level().broadcastEntityEvent(this, 4.toByte())
+            sentSpikeEvent = true
+        }
+
+        if (++lifeTicks > TOTAL_TICKS) {
+            discard()
         }
     }
 
@@ -132,11 +150,12 @@ class MagmaSpikeEntity(
         }
     }
 
-    fun getAnimationProgress(a: Float): Float {
+    fun getEmergedPercentage(partialTick: Float): Float {
         if (!clientSideAttackStarted) return 0.0f
 
-        val remainingLife = lifeTicks - LIFE_OFFSET
-        return if (remainingLife <= 0) 1.0f else 1.0f - (remainingLife - a) / ATTACK_DURATION
+        val preciseTicks = lifeTicks + partialTick
+        if (preciseTicks < EMERGE_TICKS) return preciseTicks / EMERGE_TICKS
+        return 1.0f - ((preciseTicks - TICKS_UNTIL_RETRACT) / RETRACT_TICKS).coerceIn(0.0f, 1.0f)
     }
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float) = false
