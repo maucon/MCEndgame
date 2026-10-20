@@ -18,6 +18,8 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher
 import de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher.BonecrusherRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.elf_duelist.ElfDuelistRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.elf_duelist.ElfDuelistRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.magma_spike.MagmaSpikeRenderState
+import de.fuballer.mcendgame.client.component.entity.custom.entities.magma_spike.MagmaSpikeRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.PortalRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type.default_.DefaultPortalEntityModel
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type.legacy.LegacyPortalEntityModel
@@ -94,6 +96,7 @@ object EntityModelRegisterer {
 
         EntityRenderers.register(CustomEntities.BLOOD_KING) { state -> BloodKingRenderer<BloodKingRenderState>(state) }
         EntityRenderers.register(CustomEntities.BLOOD_QUEEN) { state -> BloodQueenRenderer<BloodQueenRenderState>(state) }
+        EntityRenderers.register(CustomEntities.MAGMA_SPIKE) { state -> MagmaSpikeRenderer<MagmaSpikeRenderState>(state) }
 
         EntityRenderers.register(CustomEntities.SCARRED_ONE) { state -> ScarredOneRenderer<ScarredOneRenderState>(state) }
 

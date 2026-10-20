@@ -25,4 +25,5 @@ object CustomEntityIds {
     val BANDIT = RegistryKeyUtil.createEntityKey("bandit")
     val BLOOD_KING = RegistryKeyUtil.createEntityKey("blood_king")
     val BLOOD_QUEEN = RegistryKeyUtil.createEntityKey("blood_queen")
+    val MAGMA_SPIKE = RegistryKeyUtil.createEntityKey("magma_spike")
 }

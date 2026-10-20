@@ -1,30 +1,37 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.blood_queen
 
+import com.geckolib.animatable.GeoAnimatable
 import com.geckolib.animatable.GeoEntity
 import com.geckolib.animatable.instance.AnimatableInstanceCache
 import com.geckolib.animatable.manager.AnimatableManager
 import com.geckolib.animation.AnimationController
+import com.geckolib.animation.RawAnimation
+import com.geckolib.animation.`object`.PlayState
 import com.geckolib.constant.DefaultAnimations
 import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
-import de.fuballer.mcendgame.main.component.entity.custom.goals.ChangeTargetGoal
-import de.fuballer.mcendgame.main.component.entity.custom.goals.CustomAttacksGoal
-import de.fuballer.mcendgame.main.component.entity.custom.goals.DisableAbleLookAroundGoal
-import de.fuballer.mcendgame.main.component.entity.custom.goals.DisableAbleLookAtEntityGoal
-import de.fuballer.mcendgame.main.component.entity.custom.goals.DisableAbleWanderAroundFarGoal
-import de.fuballer.mcendgame.main.component.entity.custom.goals.StayInRangeGoal
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikeEntity
+import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
 import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.LivingEntity.createLivingAttributes
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -35,6 +42,11 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.gameevent.GameEvent
+import net.minecraft.world.phys.Vec3
+import kotlin.math.max
+import kotlin.math.min
 
 class BloodQueenEntity(
     type: EntityType<out BloodQueenEntity>,
@@ -46,7 +58,29 @@ class BloodQueenEntity(
     DisableAbleGoalsMob,
     BlockAbleMovementMob<BloodQueenEntity> {
     companion object {
+        private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
+
+        private val MAGMA_SPIKES_LINE_ANIM: RawAnimation = RawAnimation.begin().thenPlay("misc.idle")
+        private const val MAGMA_SPIKES_LINE_ID = "Magma Spikes Line"
+        private val MAGMA_SPIKES_LINE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_LINE_ID)
+        private val MAGMA_SPIKES_LINE_ATTACK =
+            Attack<BloodQueenEntity>(
+                MAGMA_SPIKES_LINE_ID,
+                MAGMA_SPIKES_LINE_ANIM_DATA,
+                totalDuration = 35,
+                cooldown = 0,
+                DistanceTriggerCondition(5.0, 15.0, affectedByScale = true),
+                data = listOf(
+                    object : DelayedAttackData(5) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? BloodQueenEntity)?.castMagmaSpikesLine()
+                        }
+                    },
+                ),
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BloodQueenEntity>>> = listOf(
+            RandomOption(1, MAGMA_SPIKES_LINE_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -77,12 +111,18 @@ class BloodQueenEntity(
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
 
+    private val attackAnimationController =
+        AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
+            .triggerableAnim(MAGMA_SPIKES_LINE_ID, MAGMA_SPIKES_LINE_ANIM)
+
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
             AnimationController<BloodQueenEntity>("Walk/Idle", 5)
             { test ->
                 test.setAndContinue(if (test.isMoving) DefaultAnimations.IDLE else DefaultAnimations.IDLE)
             },
+
+            attackAnimationController,
         )
     }
 
@@ -132,4 +172,78 @@ class BloodQueenEntity(
     override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.PLAYER_HURT
 
     override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
+    
+    override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
+        if (source.`is`(DamageTypes.HOT_FLOOR)) return true
+        return super.isInvulnerableTo(level, source)
+    }
+
+    fun castMagmaSpikesLine() {
+        val target = this.target ?: return
+        val minY = min(target.y, y)
+        val maxY = max(target.y, y) + 1.0
+        val angleTowardsTarget = Mth.atan2(target.z - z, target.x - x).toFloat()
+
+        if (distanceToSqr(target) < 9.0) {
+            for (i in 0..4) {
+                val angle = angleTowardsTarget + i * Math.PI.toFloat() * 0.4f
+                createMagmaSpikeEntity(x + Mth.cos(angle.toDouble()) * 1.5, z + Mth.sin(angle.toDouble()) * 1.5, minY, maxY, angle, 0)
+            }
+
+            for (i in 0..7) {
+                val angle = angleTowardsTarget + i * Math.PI.toFloat() * 2.0f / 8.0f + (Math.PI * 2.0 / 5.0).toFloat()
+                createMagmaSpikeEntity(x + Mth.cos(angle.toDouble()) * 2.5, z + Mth.sin(angle.toDouble()) * 2.5, minY, maxY, angle, 3)
+            }
+        } else {
+            for (i in 0..15) {
+                val reach = 1.25 * (i + 1)
+                val spellSpeed = 1 * i
+                createMagmaSpikeEntity(
+                    x + Mth.cos(angleTowardsTarget.toDouble()) * reach,
+                    z + Mth.sin(angleTowardsTarget.toDouble()) * reach,
+                    minY,
+                    maxY,
+                    angleTowardsTarget,
+                    spellSpeed
+                )
+            }
+        }
+    }
+
+    private fun createMagmaSpikeEntity(
+        x: Double,
+        z: Double,
+        minY: Double,
+        maxY: Double,
+        angle: Float,
+        delayTicks: Int,
+    ) {
+        var pos = BlockPos.containing(x, maxY, z)
+        var success = false
+        var topOffset = 0.0
+
+        do {
+            val below = pos.below()
+            val belowState: BlockState = level().getBlockState(below)
+            if (belowState.isFaceSturdy(level(), below, Direction.UP)) {
+                if (!level().isEmptyBlock(pos)) {
+                    val blockState: BlockState = level().getBlockState(pos)
+                    val shape = blockState.getCollisionShape(level(), pos)
+                    if (!shape.isEmpty) {
+                        topOffset = shape.max(Direction.Axis.Y)
+                    }
+                }
+
+                success = true
+                break
+            }
+
+            pos = pos.below()
+        } while (pos.y >= Mth.floor(minY) - 1)
+
+        if (success) {
+            level().addFreshEntity(MagmaSpikeEntity(level(), x, pos.y + topOffset, z, angle, delayTicks, this))
+            level().gameEvent(GameEvent.ENTITY_PLACE, Vec3(x, pos.y + topOffset, z), GameEvent.Context.of(this))
+        }
+    }
 }
