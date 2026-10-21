@@ -17,6 +17,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAtt
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.StrafeTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerConditionGroup
 import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikeEntity
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
@@ -80,16 +82,48 @@ class BloodQueenEntity(
 
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
-        private val MAGMA_SPIKES_LINE_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.spikes_line")
-        private const val MAGMA_SPIKES_LINE_ID = "Magma Spikes Line"
-        private val MAGMA_SPIKES_LINE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_LINE_ID)
-        private val MAGMA_SPIKES_LINE_ATTACK =
+        private val MAGMA_SPIKES_LINE_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.spikes_line_left")
+        private const val MAGMA_SPIKES_LINE_LEFT_ID = "Magma Spikes Line Left"
+        private val MAGMA_SPIKES_LINE_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_LINE_LEFT_ID)
+        private val MAGMA_SPIKES_LINE_LEFT_ATTACK =
             Attack<BloodQueenEntity>(
-                MAGMA_SPIKES_LINE_ID,
-                MAGMA_SPIKES_LINE_ANIM_DATA,
+                MAGMA_SPIKES_LINE_LEFT_ID,
+                MAGMA_SPIKES_LINE_LEFT_ANIM_DATA,
                 totalDuration = 35,
                 cooldown = 0,
-                DistanceTriggerCondition(5.0, 25.0, affectedByScale = true),
+                TriggerConditionGroup(
+                    TriggerConditionGroup.TriggerConditionJoinType.AND,
+                    listOf(
+                        DistanceTriggerCondition(5.0, 25.0, affectedByScale = true),
+                        StrafeTriggerCondition(minRight = 0.0f),
+                    ),
+                ),
+                data = listOf(
+                    DelayedSoundData(SWEEP_SOUND, 12),
+                    object : DelayedAttackData(12) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? BloodQueenEntity)?.castMagmaSpikesLine()
+                        }
+                    },
+                ),
+            )
+
+        private val MAGMA_SPIKES_LINE_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.spikes_line_right")
+        private const val MAGMA_SPIKES_LINE_RIGHT_ID = "Magma Spikes Line Right"
+        private val MAGMA_SPIKES_LINE_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_LINE_RIGHT_ID)
+        private val MAGMA_SPIKES_LINE_RIGHT_ATTACK =
+            Attack<BloodQueenEntity>(
+                MAGMA_SPIKES_LINE_RIGHT_ID,
+                MAGMA_SPIKES_LINE_RIGHT_ANIM_DATA,
+                totalDuration = 35,
+                cooldown = 0,
+                TriggerConditionGroup(
+                    TriggerConditionGroup.TriggerConditionJoinType.AND,
+                    listOf(
+                        DistanceTriggerCondition(5.0, 25.0, affectedByScale = true),
+                        StrafeTriggerCondition(maxRight = 0.0f),
+                    ),
+                ),
                 data = listOf(
                     DelayedSoundData(SWEEP_SOUND, 12),
                     object : DelayedAttackData(12) {
@@ -101,7 +135,8 @@ class BloodQueenEntity(
             )
 
         private val ATTACKS: List<RandomOption<out Attack<BloodQueenEntity>>> = listOf(
-            RandomOption(1, MAGMA_SPIKES_LINE_ATTACK),
+            RandomOption(1, MAGMA_SPIKES_LINE_LEFT_ATTACK),
+            RandomOption(1, MAGMA_SPIKES_LINE_RIGHT_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -134,7 +169,8 @@ class BloodQueenEntity(
 
     private val attackAnimationController =
         AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
-            .triggerableAnim(MAGMA_SPIKES_LINE_ID, MAGMA_SPIKES_LINE_ANIM)
+            .triggerableAnim(MAGMA_SPIKES_LINE_LEFT_ID, MAGMA_SPIKES_LINE_LEFT_ANIM)
+            .triggerableAnim(MAGMA_SPIKES_LINE_RIGHT_ID, MAGMA_SPIKES_LINE_RIGHT_ANIM)
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
@@ -148,7 +184,7 @@ class BloodQueenEntity(
     }
 
     private val attackGoal = CustomAttacksGoal(this)
-    private val stayInMeleeRangeGoal = StayInRangeGoal(this, 1.0, 2.5)
+    private val keepDistanceToTargetGoal = KeepDistanceToTargetGoal(this, 1.0, 12F, 20F)
     private val wanderGoal = DisableAbleWanderAroundFarGoal(this, 0.7)
     private val lookAtPlayerGoal = DisableAbleLookAtEntityGoal(this, Player::class.java, 8F)
     private val lookAroundGoal = DisableAbleLookAroundGoal(this)
@@ -159,7 +195,7 @@ class BloodQueenEntity(
 
     private fun initDynamicGoals() {
         goalSelector.addGoal(2, attackGoal)
-        goalSelector.addGoal(3, stayInMeleeRangeGoal)
+        goalSelector.addGoal(3, keepDistanceToTargetGoal)
         goalSelector.addGoal(5, wanderGoal)
         goalSelector.addGoal(6, lookAtPlayerGoal)
         goalSelector.addGoal(7, lookAroundGoal)
@@ -176,7 +212,7 @@ class BloodQueenEntity(
     override fun updateGoals() {
         val movementBlocked = isMovementBlocked()
         attackGoal.isDisabled = movementBlocked
-        stayInMeleeRangeGoal.isDisabled = movementBlocked
+        keepDistanceToTargetGoal.isDisabled = movementBlocked
         wanderGoal.isDisabled = movementBlocked
         lookAtPlayerGoal.isDisabled = movementBlocked
         lookAroundGoal.isDisabled = movementBlocked
