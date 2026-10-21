@@ -36,7 +36,7 @@ class MagmaSpikeRenderer<R>(
 
             val emergedPercentage = renderPassInfo.getGeckolibData(EMERGED_PERCENTAGE) ?: 0.0f
             val offset = -14f * (1.0f - emergedPercentage)
-            it.translateZ += offset * sin(angle)
+            it.translateZ -= offset * sin(angle)
             it.translateY += offset * cos(angle)
         }
     }
