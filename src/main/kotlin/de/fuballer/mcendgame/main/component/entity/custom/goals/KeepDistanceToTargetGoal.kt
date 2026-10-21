@@ -2,7 +2,6 @@ package de.fuballer.mcendgame.main.component.entity.custom.goals
 
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.monster.RangedAttackMob
 import java.util.*
 
 class KeepDistanceToTargetGoal<T>(
@@ -10,7 +9,7 @@ class KeepDistanceToTargetGoal<T>(
     private val speed: Double,
     minDistance: Float,
     maxDistance: Float,
-) : DisableAbleGoal() where  T : RangedAttackMob, T : Mob {
+) : DisableAbleGoal() where T : Mob {
     private val squaredMinDistance: Float
     private val squaredMaxDistance: Float
     private var seeingTargetTicker = 0

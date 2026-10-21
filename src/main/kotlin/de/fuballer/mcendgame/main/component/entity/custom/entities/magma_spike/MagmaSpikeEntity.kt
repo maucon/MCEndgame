@@ -147,7 +147,7 @@ class MagmaSpikeEntity(
 
         if (++progressTicks < 0) return
         if (progressTicks == DAMAGE_TICK) {
-            val inflate = if (isLarge()) 0.5 else 0.25
+            val inflate = if (isLarge()) 0.8 else 0.4
             level().getEntitiesOfClass(LivingEntity::class.java, boundingBox.inflate(inflate))
                 .forEach { dealDamageTo(it) }
         }
