@@ -71,6 +71,12 @@ class BloodQueenEntity(
         private const val FINAL_SPIKE_SCALE = 2.5f
         private const val FINAL_SPIKE_DELAY = 0
 
+        private const val SLAM_RING_DELAY = 6
+        private const val SPIKES_SLAM_MIN_SCALE = 0.75f
+        private const val SPIKES_SLAM_MAX_SCALE = 1.5f
+        private val SLAM_RING_SPIKE_COUNT = listOf(8, 10, 12)
+        private const val SLAM_RING_RADIUS = 1.25
+
         private val SWEEP_SOUND =
             RangeDefinedSoundData(
                 SoundEvents.PLAYER_ATTACK_SWEEP,
@@ -134,9 +140,50 @@ class BloodQueenEntity(
                 ),
             )
 
+        private val MAGMA_SPIKES_SLAM_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.spikes_slam")
+        private const val MAGMA_SPIKES_SLAM_ID = "Magma Spikes Slam"
+        private val MAGMA_SPIKES_SLAM_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_SLAM_ID)
+        private val MAGMA_SPIKES_SLAM_ATTACK =
+            Attack<BloodQueenEntity>(
+                MAGMA_SPIKES_SLAM_ID,
+                MAGMA_SPIKES_SLAM_ANIM_DATA,
+                totalDuration = 45,
+                cooldown = 0,
+                DistanceTriggerCondition(5.0, affectedByScale = true),
+                data = listOf(
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.AMETHYST_BLOCK_CHIME,
+                            { Random.nextDouble(1.8, 2.0).toFloat() },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        5,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.GENERIC_EXPLODE.value(),
+                            { 0.8f },
+                            { Random.nextDouble(0.95, 1.05).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        18,
+                    ),
+                    object : DelayedAttackData(18) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? BloodQueenEntity)?.castMagmaSpikesSlam()
+                        }
+                    },
+                ),
+                blockMovementDuration = 40,
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BloodQueenEntity>>> = listOf(
             RandomOption(1, MAGMA_SPIKES_LINE_LEFT_ATTACK),
             RandomOption(1, MAGMA_SPIKES_LINE_RIGHT_ATTACK),
+            RandomOption(1, MAGMA_SPIKES_SLAM_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -171,6 +218,7 @@ class BloodQueenEntity(
         AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
             .triggerableAnim(MAGMA_SPIKES_LINE_LEFT_ID, MAGMA_SPIKES_LINE_LEFT_ANIM)
             .triggerableAnim(MAGMA_SPIKES_LINE_RIGHT_ID, MAGMA_SPIKES_LINE_RIGHT_ANIM)
+            .triggerableAnim(MAGMA_SPIKES_SLAM_ID, MAGMA_SPIKES_SLAM_ANIM)
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
@@ -233,6 +281,30 @@ class BloodQueenEntity(
     override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
         if (source.`is`(DamageTypes.HOT_FLOOR)) return true
         return super.isInvulnerableTo(level, source)
+    }
+
+    fun castMagmaSpikesSlam() {
+        SLAM_RING_SPIKE_COUNT.forEachIndexed { index, count ->
+            val ringPercentage = (index + 1).toFloat() / SLAM_RING_SPIKE_COUNT.size
+            val randomAngle = Random.nextFloat() * Mth.TWO_PI
+
+            for (i in 0 until count) {
+                val angle = randomAngle + Mth.TWO_PI.toDouble() * i / count
+                val reach = SLAM_RING_RADIUS * (index + 1)
+
+                createMagmaSpikeEntity(
+                    x + Mth.cos(angle) * reach,
+                    z + Mth.sin(angle) * reach,
+                    y,
+                    y + 1.0,
+                    yRotRad = (angle - Mth.HALF_PI).toFloat(),
+                    xzRotRad = Math.toRadians(45.0 - (45.0 * ringPercentage)).toFloat(),
+                    scale = SPIKES_SLAM_MIN_SCALE + ((SPIKES_SLAM_MAX_SCALE - SPIKES_SLAM_MIN_SCALE) * ringPercentage),
+                    delayTicks = (SLAM_RING_DELAY * ringPercentage).toInt(),
+                    false,
+                )
+            }
+        }
     }
 
     fun castMagmaSpikesLine() {
