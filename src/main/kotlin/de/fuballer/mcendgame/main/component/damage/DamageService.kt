@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.main.component.damage.data.*
 import de.fuballer.mcendgame.main.component.damage.dodge.DodgeCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.ignore_damage.IgnoreDamageCommand
 import de.fuballer.mcendgame.main.component.tags.CustomTags
+import de.fuballer.mcendgame.main.configuration.RuntimeConfig
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDodgedEvent
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.clearPendingDamageEvent
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getLastHurt
@@ -26,8 +27,6 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-// TODO check for knockback. is it applied once or double? check sulfur cube / check custom knockback attacks
-// TODO AttackKnockbackUtil
 object DamageService {
     private val log = LogUtils.getLogger()
 
@@ -69,6 +68,10 @@ object DamageService {
         val calculated = incomingDamage.category.calculate(incomingDamage.amount, victim, damageSource, cmd)
         val categorizedDamage = CategorizedDamage(incomingDamage.category to calculated)
 
+        debug {
+            "${victim.javaClass.simpleName}: ${incomingDamage.category} raw=${incomingDamage.amount} calculated=$calculated " +
+                    "moreDamageTaken=${cmd.moreDamageTaken} flatDamageTaken=${cmd.flatDamageTaken}"
+        }
         return DamageSourceResult.Applied(categorizedDamage, cmd, vanillaDamageContext, damageSource)
     }
 
@@ -83,6 +86,7 @@ object DamageService {
 
         val (reducedTotal, resistedTotal) = calculateIncomingDamage(victim, source)
         val damageTotal = reducedTotal.coerceAtLeast(0f)
+        debug { "${victim.javaClass.simpleName}: damage=$damageTotal resisted=$resistedTotal" }
 
         victim.setLastHitWasApplied(true)
 
@@ -116,6 +120,10 @@ object DamageService {
 
         victim.setPendingDamageEvent(dmg)
 
+        debug {
+            "${victim.javaClass.simpleName} took $dmg damage (total=$damageTotal resisted=$damageResisted " +
+                    "source=${source.msgId} attacker=${source.entity?.javaClass?.simpleName})"
+        }
         return Optional.of(dmg)
     }
 
@@ -170,5 +178,9 @@ object DamageService {
 
         val flatDamageTaken = cmd.flatDamageTaken.sum().toFloat()
         return afterDamageReduction + DamageReductionResult(flatDamageTaken, 0f)
+    }
+
+    private inline fun debug(msg: () -> String) {
+        if (RuntimeConfig.USER_CONFIG.damageDebug) log.info("[DAMAGE-DEBUG] ${msg()}")
     }
 }

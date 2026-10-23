@@ -2,10 +2,12 @@ package de.fuballer.mcendgame.main.configuration
 
 import com.google.gson.JsonElement
 import com.mojang.serialization.JsonOps
-import de.fuballer.mcendgame.main.runtime_worlds.RuntimeWorlds
+import de.fuballer.mcendgame.main.component.config.UserConfig
 import de.fuballer.mcendgame.main.messaging.server.ServerStartingEvent
+import de.fuballer.mcendgame.main.runtime_worlds.RuntimeWorlds
 import de.maucon.mauconframework.di.annotation.Configuration
 import de.maucon.mauconframework.event.EventSubscriber
+import de.maucon.mauconframework.initializer.Initializer
 import net.minecraft.resources.RegistryOps
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.storage.LevelResource
@@ -17,6 +19,7 @@ object RuntimeConfig {
     lateinit var SERVER: MinecraftServer
     lateinit var WORLD_SAVE_PATH: Path
     lateinit var REGISTRY_OPS: RegistryOps<JsonElement>
+    lateinit var USER_CONFIG: UserConfig
 
     @EventSubscriber(sync = true)
     fun on(event: ServerStartingEvent) {
@@ -26,5 +29,10 @@ object RuntimeConfig {
         this.RUNTIME_WORLDS = RuntimeWorlds.create(server)
         this.WORLD_SAVE_PATH = server.getWorldPath(LevelResource.ROOT)
         this.REGISTRY_OPS = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess())
+    }
+
+    @Initializer
+    fun init(userConfig: UserConfig) {
+        this.USER_CONFIG = userConfig
     }
 }
