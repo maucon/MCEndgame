@@ -24,9 +24,14 @@ import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
+import de.fuballer.mcendgame.main.util.extension.mixin.MoveControlMixinExtension.getStrafeForwards
+import de.fuballer.mcendgame.main.util.extension.mixin.MoveControlMixinExtension.getStrafeRight
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -64,6 +69,8 @@ class BloodQueenEntity(
     DisableAbleGoalsMob,
     BlockAbleMovementMob<BloodQueenEntity> {
     companion object {
+        private val LEAN_ANIM: RawAnimation = RawAnimation.begin().thenPlay("misc.lean")
+
         private const val SPIKES_LINE_OFFSET = 1.25
         private const val SPIKES_LINE_DELAY = 6
         private const val SPIKES_LINE_MIN_SCALE = 0.75f
@@ -199,6 +206,11 @@ class BloodQueenEntity(
                 .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.1)
                 .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 0.65)
         }
+
+        private val STRAFE_RIGHT: EntityDataAccessor<Float> = SynchedEntityData.defineId(BloodQueenEntity::class.java, EntityDataSerializers.FLOAT)
+        private val STRAFE_FORWARDS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BloodQueenEntity::class.java, EntityDataSerializers.FLOAT)
+
+        private const val LEAN_CHANGE = 0.1F
     }
 
     override var blockAbleMovementEntity = this
@@ -211,8 +223,19 @@ class BloodQueenEntity(
     override val attackCooldowns: MutableMap<Attack<BloodQueenEntity>, Int> = mutableMapOf()
     override val attackDataInstances = mutableListOf<DelayedAttackDataInstance>()
 
+    var leanRight = 0F
+    var lastLeanRight = 0F
+    var leanForwards = 0F
+    var lastLeanForwards = 0F
+
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
+
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(STRAFE_RIGHT, 0F)
+        builder.define(STRAFE_FORWARDS, 0F)
+    }
 
     private val attackAnimationController =
         AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
@@ -223,11 +246,13 @@ class BloodQueenEntity(
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
             AnimationController<BloodQueenEntity>("Walk/Idle", 5)
-            { test ->
-                test.setAndContinue(if (test.isMoving) DefaultAnimations.IDLE else DefaultAnimations.IDLE)
-            },
+            { test -> test.setAndContinue(if (test.isMoving) DefaultAnimations.IDLE else DefaultAnimations.IDLE) },
 
             attackAnimationController,
+
+            AnimationController<BloodQueenEntity>("Lean", 5)
+            { test -> if (test.isMoving) test.setAndContinue(LEAN_ANIM) else PlayState.STOP }
+                .additiveAnimations(),
         )
     }
 
@@ -269,10 +294,36 @@ class BloodQueenEntity(
     override fun tick() {
         super.tick()
 
-        val level = level() as? ServerLevel ?: return
+        val level = level()
+        if (level !is ServerLevel) {
+            tickLean()
+            return
+        }
+
         tickBlockedMovement()
         tickAttacks(level, this)
+        tickStrafe()
     }
+
+    private fun tickStrafe() {
+        entityData.set(STRAFE_RIGHT, moveControl.getStrafeRight())
+        entityData.set(STRAFE_FORWARDS, moveControl.getStrafeForwards())
+    }
+
+    private fun tickLean() {
+        lastLeanRight = leanRight
+        val strafeRight = entityData.get(STRAFE_RIGHT)
+        val rightChange = if (strafeRight < 0) LEAN_CHANGE else if (strafeRight > 0) -LEAN_CHANGE else 0F
+        leanRight = (leanRight + rightChange).coerceIn(-1F, 1F)
+
+        lastLeanForwards = leanForwards
+        val strafeForwards = entityData.get(STRAFE_FORWARDS)
+        val forwardsChange = if (strafeForwards < 0) LEAN_CHANGE else if (strafeForwards > 0) -LEAN_CHANGE else 0F
+        leanForwards = (leanForwards + forwardsChange).coerceIn(-1F, 1F)
+    }
+
+    fun getLeanRight(tickProgress: Float) = Mth.lerp(tickProgress, lastLeanRight, leanRight)
+    fun getLeanForwards(tickProgress: Float) = Mth.lerp(tickProgress, lastLeanForwards, leanForwards)
 
     override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.PLAYER_HURT
 
