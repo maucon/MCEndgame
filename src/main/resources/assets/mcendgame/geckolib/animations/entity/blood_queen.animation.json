@@ -2107,6 +2107,61 @@
 					}
 				}
 			}
+		},
+		"misc.lean": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"rotation": {
+						"vector": ["3 * query.mcendgame_lean_forwards", 0, "-3 * query.mcendgame_lean_right"]
+					}
+				},
+				"upperBody": {
+					"rotation": {
+						"vector": ["4 * query.mcendgame_lean_forwards", 0, "-4 * query.mcendgame_lean_right"]
+					}
+				},
+				"chest": {
+					"rotation": {
+						"vector": ["5 * query.mcendgame_lean_forwards", 0, "-5 * query.mcendgame_lean_right"]
+					}
+				},
+				"head": {
+					"rotation": {
+						"vector": ["-6 * query.mcendgame_lean_forwards", 0, "8 * query.mcendgame_lean_right"]
+					}
+				},
+				"leftArm": {
+					"rotation": {
+						"vector": [0, 0, "math.min(10 * query.mcendgame_lean_right, 5)"]
+					}
+				},
+				"rightArm": {
+					"rotation": {
+						"vector": [0, 0, "math.max(10 * query.mcendgame_lean_right, -5)"]
+					}
+				},
+				"leftTentacle": {
+					"rotation": {
+						"vector": [0, 0, "8 * query.mcendgame_lean_right"]
+					}
+				},
+				"leftLowerTentacle": {
+					"rotation": {
+						"vector": [0, 0, "8 * query.mcendgame_lean_right"]
+					}
+				},
+				"rightTentacle": {
+					"rotation": {
+						"vector": [0, 0, "8 * query.mcendgame_lean_right"]
+					}
+				},
+				"rightLowerTentacle": {
+					"rotation": {
+						"vector": [0, 0, "8 * query.mcendgame_lean_right"]
+					}
+				}
+			}
 		}
 	}
 }
