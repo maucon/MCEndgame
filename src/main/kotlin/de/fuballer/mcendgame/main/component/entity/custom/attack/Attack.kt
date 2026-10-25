@@ -38,7 +38,7 @@ open class Attack<T>(
         attacker: T,
         target: LivingEntity?,
     ) {
-        animationData.triggerAnimation(attacker, attackSpeed(attacker))
+        animationData?.triggerAnimation(attacker, attackSpeed(attacker))
 
         if (blockMovementDuration == 0) return
         val blockAbleMovementMob = attacker as? BlockAbleMovementMob<*> ?: return
