@@ -57,10 +57,13 @@ import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.VoxelShape
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
@@ -415,7 +418,25 @@ class BloodQueenEntity(
         tickBlockedMovement()
         tickAttacks(level, this)
         tickStrafe()
+        floatLiquid()
     }
+
+    private fun floatLiquid() {
+        if (!(isInLava || isInWater)) return
+
+        val context = CollisionContext.of(this)
+        if (context.isAbove(liquidCollisionShape, blockPosition(), true)) {
+            val aboveFluidState = level().getFluidState(blockPosition().above())
+            if (!aboveFluidState.`is`(FluidTags.LAVA) && !aboveFluidState.`is`(FluidTags.WATER)) {
+                setOnGround(true)
+                return
+            }
+        }
+
+        deltaMovement = deltaMovement.scale(0.5).add(0.0, 0.05, 0.0)
+    }
+
+    override fun getLiquidCollisionShape(): VoxelShape = Block.column(16.0, 0.0, 16.0)
 
     private fun tickStrafe() {
         entityData.set(STRAFE_RIGHT, moveControl.getStrafeRight())
