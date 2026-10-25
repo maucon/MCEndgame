@@ -7,8 +7,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttac
 data class AttackAnimationData(
     val startPose: AttackPose,
     val endPose: AttackPose,
-    private val animControllerId: String,
-    private val animId: String,
+    private val animControllerId: String?,
+    private val animId: String?,
 ) {
     fun triggerAnimation(
         animateAble: GeoEntity,
@@ -17,6 +17,7 @@ data class AttackAnimationData(
         if (attackSpeed > 0 && animateAble is CustomAttacksMob<*>)
             animateAble.setAttackAnimationSpeed(attackSpeed.toFloat())
 
+        if (animControllerId == null || animId == null) return
         animateAble.triggerAnim(animControllerId, animId)
     }
 }

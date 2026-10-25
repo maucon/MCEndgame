@@ -14,6 +14,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.DelayedParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
@@ -24,11 +26,13 @@ import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
+import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.util.extension.mixin.MoveControlMixinExtension.getStrafeForwards
 import de.fuballer.mcendgame.main.util.extension.mixin.MoveControlMixinExtension.getStrafeRight
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
@@ -48,6 +52,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.ai.util.LandRandomPos
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
@@ -87,6 +92,15 @@ class BloodQueenEntity(
         private val SWEEP_SOUND =
             RangeDefinedSoundData(
                 SoundEvents.PLAYER_ATTACK_SWEEP,
+                { 0.9f },
+                { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+
+        private val FIRECHARGE_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.FIRECHARGE_USE,
                 { 0.9f },
                 { Random.nextDouble(0.95, 1.05).toFloat() },
                 SoundSource.HOSTILE,
@@ -187,10 +201,107 @@ class BloodQueenEntity(
                 blockMovementDuration = 40,
             )
 
+        private const val TELEPORT_MIN_PLAYER_DISTANCE = 8.0
+        private const val TELEPORT_MIN_PLAYER_DISTANCE_SQUARED = TELEPORT_MIN_PLAYER_DISTANCE * TELEPORT_MIN_PLAYER_DISTANCE
+        private const val TELEPORT_HORIZONTAL_RANGE = 16
+        private const val TELEPORT_VERTICAL_RANGE = 7
+        private const val TELEPORT_ATTEMPTS = 20
+
+        private const val TELEPORT_ID = "Teleport"
+        private val TELEPORT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, null, null)
+        private val TELEPORT_ATTACK =
+            Attack<BloodQueenEntity>(
+                TELEPORT_ID,
+                TELEPORT_ANIM_DATA,
+                totalDuration = 7,
+                cooldown = 0,
+                DistanceTriggerCondition(5.0, affectedByScale = true),
+                data = listOf(
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.FIRE_AMBIENT,
+                            { 1.0F },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        0,
+                    ),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> CustomParticleTypes.REVERSE_FLAME },
+                            offset = { Vec3(0.0, 1.0, 0.0) },
+                            count = 30,
+                            dist = { Vec3(0.3, 0.5, 0.3) },
+                            speed = 1.0,
+                        ),
+                        0,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.ENDERMAN_TELEPORT,
+                            { 1.0F },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        5,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.LAVA_EXTINGUISH,
+                            { 1.0F },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        5,
+                    ),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.LAVA },
+                            offset = { Vec3.ZERO },
+                            count = 3,
+                            dist = { Vec3(0.1, 0.0, 0.1) },
+                            speed = 1.0,
+                        ),
+                        5,
+                    ),
+                    object : DelayedAttackData(6) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? BloodQueenEntity)?.teleportEscape()
+                        }
+                    },
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.FLAME },
+                            offset = { Vec3.ZERO },
+                            count = 30,
+                            dist = { Vec3.ZERO },
+                            speed = 1.0,
+                        ),
+                        7,
+                    ),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.LAVA },
+                            offset = { Vec3.ZERO },
+                            count = 5,
+                            dist = { Vec3(0.1, 0.0, 0.1) },
+                            speed = 1.0,
+                        ),
+                        7,
+                    ),
+                    DelayedSoundData(FIRECHARGE_SOUND, 11)
+                ),
+                blockMovementDuration = 7,
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BloodQueenEntity>>> = listOf(
             RandomOption(1, MAGMA_SPIKES_LINE_LEFT_ATTACK),
             RandomOption(1, MAGMA_SPIKES_LINE_RIGHT_ATTACK),
             RandomOption(1, MAGMA_SPIKES_SLAM_ATTACK),
+            RandomOption(1, TELEPORT_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -313,13 +424,24 @@ class BloodQueenEntity(
     private fun tickLean() {
         lastLeanRight = leanRight
         val strafeRight = entityData.get(STRAFE_RIGHT)
-        val rightChange = if (strafeRight < 0) LEAN_CHANGE else if (strafeRight > 0) -LEAN_CHANGE else 0F
-        leanRight = (leanRight + rightChange).coerceIn(-1F, 1F)
+        leanRight = getNewLean(strafeRight, leanRight)
 
         lastLeanForwards = leanForwards
         val strafeForwards = entityData.get(STRAFE_FORWARDS)
-        val forwardsChange = if (strafeForwards < 0) LEAN_CHANGE else if (strafeForwards > 0) -LEAN_CHANGE else 0F
-        leanForwards = (leanForwards + forwardsChange).coerceIn(-1F, 1F)
+        leanForwards = getNewLean(strafeForwards, leanForwards)
+    }
+
+    private fun getNewLean(
+        strafe: Float,
+        currentLean: Float,
+    ) = when {
+        strafe < 0 -> (currentLean + LEAN_CHANGE).coerceAtMost(1F)
+        strafe > 0 -> (currentLean - LEAN_CHANGE).coerceAtLeast(-1F)
+        else -> when {
+            currentLean > 0F -> (currentLean - LEAN_CHANGE).coerceAtLeast(0F)
+            currentLean < 0F -> (currentLean + LEAN_CHANGE).coerceAtMost(0F)
+            else -> 0F
+        }
     }
 
     fun getLeanRight(tickProgress: Float) = Mth.lerp(tickProgress, lastLeanRight, leanRight)
@@ -420,5 +542,28 @@ class BloodQueenEntity(
             level().addFreshEntity(MagmaSpikeEntity(level(), x, pos.y + topOffset, z, yRotRad, xzRotRad, scale, delayTicks, this, large))
             level().gameEvent(GameEvent.ENTITY_PLACE, Vec3(x, pos.y + topOffset, z), GameEvent.Context.of(this))
         }
+    }
+
+    fun teleportEscape(): Boolean {
+        val level = level() as? ServerLevel ?: return false
+
+        repeat(TELEPORT_ATTEMPTS) {
+            val pos = LandRandomPos.getPos(this, TELEPORT_HORIZONTAL_RANGE, TELEPORT_VERTICAL_RANGE) ?: return@repeat
+
+            val players = level.players()
+            if (players.any { !it.isSpectator && it.distanceToSqr(pos) < TELEPORT_MIN_PLAYER_DISTANCE_SQUARED }) return@repeat
+
+            val path = navigation.createPath(BlockPos.containing(pos), 0) ?: return@repeat
+            if (!path.canReach()) return@repeat
+
+            teleportTo(pos.x, pos.y, pos.z)
+            navigation.stop()
+
+            target?.also { lookAt(it, 360F, 360F) }
+
+            return true
+        }
+
+        return false
     }
 }
