@@ -40,9 +40,9 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
@@ -59,6 +59,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.gameevent.GameEvent
+import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.phys.Vec3
 import kotlin.math.max
 import kotlin.math.min
@@ -307,7 +308,7 @@ class BloodQueenEntity(
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
                 .add(Attributes.FOLLOW_RANGE, 64.0)
-                .add(Attributes.MOVEMENT_SPEED, 0.3)
+                .add(Attributes.MOVEMENT_SPEED, 0.4)
                 .add(Attributes.ATTACK_DAMAGE, 3.0)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.5)
                 .add(Attributes.ARMOR, 0.0)
@@ -451,10 +452,7 @@ class BloodQueenEntity(
 
     override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
 
-    override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
-        if (source.`is`(DamageTypes.HOT_FLOOR)) return true
-        return super.isInvulnerableTo(level, source)
-    }
+    override fun canStandOnFluid(fluid: FluidState) = fluid.`is`(FluidTags.LAVA) || fluid.`is`(FluidTags.WATER)
 
     fun castMagmaSpikesSlam() {
         SLAM_RING_SPIKE_COUNT.forEachIndexed { index, count ->
@@ -528,14 +526,14 @@ class BloodQueenEntity(
                 continue
             }
 
-            if (level().isEmptyBlock(pos)) {
-                success = true
-                break
+            if (!level().isEmptyBlock(pos)) {
+                val blockState: BlockState = level().getBlockState(pos)
+                val shape = blockState.getCollisionShape(level(), pos)
+                if (!shape.isEmpty) topOffset = shape.max(Direction.Axis.Y)
             }
 
-            val blockState: BlockState = level().getBlockState(pos)
-            val shape = blockState.getCollisionShape(level(), pos)
-            if (!shape.isEmpty) topOffset = shape.max(Direction.Axis.Y)
+            success = true
+            break
         } while (pos.y >= Mth.floor(minY) - 1)
 
         if (success) {

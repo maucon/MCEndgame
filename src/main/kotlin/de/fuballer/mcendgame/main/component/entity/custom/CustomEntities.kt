@@ -172,6 +172,7 @@ object CustomEntities {
             .eyeHeight(2.25f)
             .clientTrackingRange(16)
             .notInPeaceful()
+            .fireImmune()
     )
     val BLOOD_QUEEN = RegistryUtil.registerEntity(
         CustomEntityIds.BLOOD_QUEEN,
@@ -180,6 +181,7 @@ object CustomEntities {
             .eyeHeight(2.2f)
             .clientTrackingRange(16)
             .notInPeaceful()
+            .fireImmune()
     )
     val MAGMA_SPIKE = RegistryUtil.registerEntity(
         CustomEntityIds.MAGMA_SPIKE,

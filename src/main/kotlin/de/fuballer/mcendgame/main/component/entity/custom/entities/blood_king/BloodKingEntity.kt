@@ -442,11 +442,6 @@ class BloodKingEntity(
         tickAttacks(level, this)
     }
 
-    override fun isInvulnerableTo(level: ServerLevel, source: DamageSource): Boolean {
-        if (source.`is`(DamageTypes.HOT_FLOOR)) return true
-        return super.isInvulnerableTo(level, source)
-    }
-
     override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.PLAYER_HURT
 
     override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
