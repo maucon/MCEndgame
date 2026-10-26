@@ -9,6 +9,7 @@ import com.geckolib.animation.RawAnimation
 import com.geckolib.animation.`object`.PlayState
 import com.geckolib.constant.DefaultAnimations
 import com.geckolib.util.GeckoLibUtil
+import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
@@ -22,6 +23,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_conditi
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.StrafeTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerConditionGroup
 import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikeEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball.SpellFireballUtil
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
@@ -33,6 +35,7 @@ import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
@@ -64,8 +67,7 @@ import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
-import kotlin.math.max
-import kotlin.math.min
+import kotlin.math.*
 import kotlin.random.Random
 
 class BloodQueenEntity(
@@ -107,6 +109,15 @@ class BloodQueenEntity(
                 SoundEvents.FIRECHARGE_USE,
                 { 0.9f },
                 { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+
+        private val FIRE_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.FIRE_AMBIENT,
+                { 1.0F },
+                { Random.nextDouble(0.9, 1.0).toFloat() },
                 SoundSource.HOSTILE,
                 range = 24.0,
             )
@@ -221,16 +232,7 @@ class BloodQueenEntity(
                 cooldown = 0,
                 DistanceTriggerCondition(5.0, affectedByScale = true),
                 data = listOf(
-                    DelayedSoundData(
-                        RangeDefinedSoundData(
-                            SoundEvents.FIRE_AMBIENT,
-                            { 1.0F },
-                            { Random.nextDouble(0.9, 1.0).toFloat() },
-                            SoundSource.HOSTILE,
-                            range = 24.0,
-                        ),
-                        0,
-                    ),
+                    DelayedSoundData(FIRE_SOUND, 0),
                     DelayedParticleData(
                         ParticleData(
                             particle = { _, _ -> CustomParticleTypes.REVERSE_FLAME },
@@ -301,11 +303,67 @@ class BloodQueenEntity(
                 blockMovementDuration = 7,
             )
 
+        private val FIREBALL_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.throw_fireball_right")
+        private const val FIREBALL_RIGHT_ID = "Fireball Right"
+        private val FIREBALL_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, FIREBALL_RIGHT_ID)
+        private val FIREBALL_RIGHT_ATTACK =
+            Attack<BloodQueenEntity>(
+                FIREBALL_RIGHT_ID,
+                FIREBALL_RIGHT_ANIM_DATA,
+                totalDuration = 35,
+                cooldown = 0,
+                TriggerConditionGroup(
+                    TriggerConditionGroup.TriggerConditionJoinType.AND,
+                    listOf(
+                        DistanceTriggerCondition(5.0, 35.0, affectedByScale = true),
+                        StrafeTriggerCondition(maxRight = 0.0f),
+                    ),
+                ),
+                data = listOf(
+                    DelayedSoundData(FIRE_SOUND, 0),
+                    DelayedSoundData(FIRECHARGE_SOUND, 19),
+                    object : DelayedAttackData(19) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? BloodQueenEntity)?.throwFireball(true)
+                        }
+                    },
+                ),
+            )
+
+        private val FIREBALL_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.throw_fireball_left")
+        private const val FIREBALL_LEFT_ID = "Fireball Left"
+        private val FIREBALL_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, FIREBALL_LEFT_ID)
+        private val FIREBALL_LEFT_ATTACK =
+            Attack<BloodQueenEntity>(
+                FIREBALL_LEFT_ID,
+                FIREBALL_LEFT_ANIM_DATA,
+                totalDuration = 35,
+                cooldown = 0,
+                TriggerConditionGroup(
+                    TriggerConditionGroup.TriggerConditionJoinType.AND,
+                    listOf(
+                        DistanceTriggerCondition(5.0, 35.0, affectedByScale = true),
+                        StrafeTriggerCondition(minRight = 0.0f),
+                    ),
+                ),
+                data = listOf(
+                    DelayedSoundData(FIRE_SOUND, 0),
+                    DelayedSoundData(FIRECHARGE_SOUND, 19),
+                    object : DelayedAttackData(19) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? BloodQueenEntity)?.throwFireball(false)
+                        }
+                    },
+                ),
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BloodQueenEntity>>> = listOf(
             RandomOption(1, MAGMA_SPIKES_LINE_LEFT_ATTACK),
             RandomOption(1, MAGMA_SPIKES_LINE_RIGHT_ATTACK),
             RandomOption(1, MAGMA_SPIKES_SLAM_ATTACK),
             RandomOption(1, TELEPORT_ATTACK),
+            RandomOption(1, FIREBALL_RIGHT_ATTACK),
+            RandomOption(1, FIREBALL_LEFT_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -357,6 +415,20 @@ class BloodQueenEntity(
             .triggerableAnim(MAGMA_SPIKES_LINE_LEFT_ID, MAGMA_SPIKES_LINE_LEFT_ANIM)
             .triggerableAnim(MAGMA_SPIKES_LINE_RIGHT_ID, MAGMA_SPIKES_LINE_RIGHT_ANIM)
             .triggerableAnim(MAGMA_SPIKES_SLAM_ID, MAGMA_SPIKES_SLAM_ANIM)
+            .triggerableAnim(FIREBALL_RIGHT_ID, FIREBALL_RIGHT_ANIM)
+            .triggerableAnim(FIREBALL_LEFT_ID, FIREBALL_LEFT_ANIM)
+            .setParticleKeyframeHandler { event ->
+                if (!level().isClientSide) return@setParticleKeyframeHandler
+
+                val keyFrameData = event.keyframeData
+                when (keyFrameData.effect) {
+                    "create_fireball" -> {
+                        val pos = GeoEntityLocatorService.getLocatorPos(uuid, keyFrameData.locatorName) ?: return@setParticleKeyframeHandler
+                        createFireballParticles(pos, 1, ParticleTypes.FLAME)
+                        createFireballParticles(pos, 1, ParticleTypes.SMOKE)
+                    }
+                }
+            }
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
@@ -584,5 +656,46 @@ class BloodQueenEntity(
         }
 
         return false
+    }
+
+    fun throwFireball(right: Boolean) {
+        val serverLevel = level() as? ServerLevel ?: return
+        val existingTarget = target ?: return
+        SpellFireballUtil.shoot(
+            this,
+            existingTarget,
+            getFireballStartPos(right),
+            { distance -> max(1, (distance * 3).pow(0.8).toInt()) },
+            serverLevel,
+        )
+    }
+
+    private fun getFireballStartPos(right: Boolean): Vec3 {
+        val rotRad = yBodyRot * (Math.PI / 180.0)
+        return position().add(
+            Vec3(
+                (if (right) -1.0 else 1.0) * cos(rotRad) - sin(rotRad),
+                3.5,
+                (if (right) -1.0 else 1.0) * sin(rotRad) + cos(rotRad),
+            ).scale(scale.toDouble())
+        )
+    }
+
+    private fun createFireballParticles(
+        pos: Vec3,
+        count: Int,
+        type: SimpleParticleType,
+    ) {
+        repeat(count) {
+            level().addParticle(
+                type,
+                pos.x + Random.nextDouble(-0.1, 0.1) * scale,
+                pos.y + Random.nextDouble(-0.1, 0.1) * scale,
+                pos.z + Random.nextDouble(-0.1, 0.1) * scale,
+                Random.nextDouble(-0.1, 0.1) * scale,
+                Random.nextDouble(-0.1, 0.1) * scale,
+                Random.nextDouble(-0.1, 0.1) * scale,
+            )
+        }
     }
 }

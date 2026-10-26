@@ -12,6 +12,14 @@
 			},
 			"bones": [
 				{
+					"name": "bb_main",
+					"pivot": [0, 0, 0],
+					"locators": {
+						"fireballRight": [-16, 56, 16],
+						"fireballLeft": [16, 56, 16]
+					}
+				},
+				{
 					"name": "body",
 					"pivot": [0, 21, 0]
 				},
