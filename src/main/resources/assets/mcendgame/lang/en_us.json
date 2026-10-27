@@ -278,6 +278,7 @@
   "attribute.mcendgame.gain_enemy_armor_on_kill": " Gain %s%% of Enemy Armor for %ss on Kill",
   "attribute.mcendgame.increased_spell_damage": "%s%% %s Spell Damage",
   "attribute.mcendgame.more_spell_damage": " %s%% %s Spell Damage",
+  "attribute.mcendgame.flat_projectile_damage": "%s Projectile Damage",
   "attribute.mcendgame.increased_projectile_damage": "%s%% %s Projectile Damage",
   "attribute.mcendgame.more_projectile_damage": " %s%% %s Projectile Damage",
   "attribute.mcendgame.more_backstab_damage": " %s%% %s Backstab Damage",

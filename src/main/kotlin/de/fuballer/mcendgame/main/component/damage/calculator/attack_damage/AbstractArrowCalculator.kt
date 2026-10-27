@@ -14,36 +14,36 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper
 import kotlin.math.ceil
 import kotlin.random.Random
 
-// skeleton (bogged, stray, ..) or player arrows
+// skeleton (bogged, stray, ...) or player arrows
 object AbstractArrowCalculator : DamageCalculator {
-    override fun isActive(source: DamageSource): Boolean {
-        if (source.directEntity is ThrownTrident) return false
-        return source.directEntity is AbstractArrow
-    }
+    override fun isActive(source: DamageSource) =
+        source.directEntity !is ThrownTrident
+                && source.directEntity is AbstractArrow
 
     override fun calculateDamage(
         originalDamage: Float,
         attacked: LivingEntity,
         source: DamageSource,
-        event: DamageCalculationCommand
+        cmd: DamageCalculationCommand
     ): Float {
         val attacker = source.entity as? LivingEntity ?: return originalDamage
 
-        val baseDamage = calculateBaseAttackDamage(source)
+        val baseDamage = calculateBaseAttackDamage(source, cmd)
         val enchantmentDamage = calculateEnchantmentDamage(attacker, attacked, source)
         val projectileSpeedMulti = calculateOtherMultiplier(source)
 
         val arrowDamage = ceil(projectileSpeedMulti * (baseDamage + enchantmentDamage))
 
-        val criticalDamage = calculateCriticalDamage(event, arrowDamage)
-        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
+        val criticalDamage = calculateCriticalDamage(cmd, arrowDamage)
+        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(cmd)
 
         return ((arrowDamage + criticalDamage) * damageMulti).toFloat()
     }
 
-    private fun calculateBaseAttackDamage(source: DamageSource): Double {
+    private fun calculateBaseAttackDamage(source: DamageSource, cmd: DamageCalculationCommand): Double {
         val persistentProjectile = source.directEntity as AbstractArrow
-        return persistentProjectile.getDamage()
+        val flatDmg = cmd.flatProjectileDamage.sum()
+        return persistentProjectile.getDamage() + flatDmg
     }
 
     private fun calculateEnchantmentDamage(attacker: LivingEntity, attacked: LivingEntity, source: DamageSource): Double {
