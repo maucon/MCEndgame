@@ -12,6 +12,7 @@ object EnemyLevelScalingSettings {
     fun getEnemyLevelAttributes(level: Int) = mutableListOf(
         CustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, roll = DoubleRoll(DoubleBounds(2.0 * level))),
         CustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, roll = DoubleRoll(DoubleBounds(1.5 * level))),
+        CustomAttribute(CustomAttributeTypes.FLAT_PROJECTILE_DAMAGE, roll = DoubleRoll(DoubleBounds(1.0 * level))),
     ).also {
         if (level >= 5) it.add(
             CustomAttribute(

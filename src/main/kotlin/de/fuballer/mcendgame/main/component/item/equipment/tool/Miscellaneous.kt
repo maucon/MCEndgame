@@ -192,22 +192,11 @@ enum class Miscellaneous(
             RandomOption(
                 weight = 1000,
                 TieredRollableCustomAttribute(
-                    VanillaAttributeTypes.INCREASED_ATTACK_DAMAGE,
+                    CustomAttributeTypes.FLAT_PROJECTILE_DAMAGE,
                     listOf(
-                        LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(0.03, 0.06))),
-                        LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, AttributeTierData(2, DoubleBounds(0.06, 0.09))),
-                        LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, AttributeTierData(1, DoubleBounds(0.09, 0.12))),
-                    )
-                )
-            ),
-            RandomOption(
-                weight = 1000,
-                TieredRollableCustomAttribute(
-                    VanillaAttributeTypes.ATTACK_DAMAGE,
-                    listOf(
-                        LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(0.6, 1.4))),
-                        LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, AttributeTierData(2, DoubleBounds(1.4, 2.2))),
-                        LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, AttributeTierData(1, DoubleBounds(2.2, 3.0))),
+                        LevelRestrictedRandomOption(weight = 50, tier = 1, requiredLevel = 0, AttributeTierData(3, DoubleBounds(0.3, 0.7))),
+                        LevelRestrictedRandomOption(weight = 10, tier = 2, requiredLevel = 5, AttributeTierData(2, DoubleBounds(0.7, 1.1))),
+                        LevelRestrictedRandomOption(weight = 1, tier = 3, requiredLevel = 10, AttributeTierData(1, DoubleBounds(1.1, 1.5))),
                     )
                 )
             ),

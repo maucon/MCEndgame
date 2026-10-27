@@ -13,9 +13,9 @@ object BaseSpellDamageCalculator : DamageCalculator {
         originalDamage: Float,
         attacked: LivingEntity,
         source: DamageSource,
-        event: DamageCalculationCommand
+        cmd: DamageCalculationCommand
     ): Float {
-        val damageMulti = DamageUtil.calculateSpellDamageMultiplier(event)
+        val damageMulti = DamageUtil.calculateSpellDamageMultiplier(cmd)
         return (originalDamage * damageMulti).toFloat()
     }
 }

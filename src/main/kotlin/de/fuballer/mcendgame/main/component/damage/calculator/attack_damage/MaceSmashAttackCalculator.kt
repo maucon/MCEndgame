@@ -24,14 +24,14 @@ object MaceSmashAttackCalculator : DamageCalculator {
         originalDamage: Float,
         attacked: LivingEntity,
         source: DamageSource,
-        event: DamageCalculationCommand
+        cmd: DamageCalculationCommand
     ): Float {
         val attacker = source.entity as? Player ?: return originalDamage
 
-        val baseDamage = DamageUtil.getAttackDamageBaseValue(event, attacker)
+        val baseDamage = DamageUtil.getAttackDamageBaseValue(cmd, attacker)
         val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
-        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
-        val critMulti = calculateCriticalMultiplier(event)
+        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(cmd)
+        val critMulti = calculateCriticalMultiplier(cmd)
         val attackCooldown = getAttackCooldown(source)
         val attackDamageMulti = calculateAttackCooldownMulti(attackCooldown)
 
