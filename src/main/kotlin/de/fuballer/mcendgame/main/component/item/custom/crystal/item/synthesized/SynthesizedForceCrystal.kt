@@ -17,9 +17,13 @@ class SynthesizedForceCrystal(
 
     override val forcedAttributes = mutableMapOf<Equipment, EquipmentAttributes>()
         .fromExisting(
-            WEAPONS_WITH_SHIELD,
+            MELEE_WEAPONS_WITH_SHIELDS,
             CopyExistingData(VanillaAttributeTypes.ATTACK_DAMAGE),
             CopyExistingData(VanillaAttributeTypes.INCREASED_ATTACK_DAMAGE),
+            CopyExistingData(CustomAttributeTypes.INCREASED_DAMAGE),
+        ).fromExisting(
+            RANGED_WEAPONS,
+            CopyExistingData(CustomAttributeTypes.FLAT_PROJECTILE_DAMAGE),
             CopyExistingData(CustomAttributeTypes.INCREASED_DAMAGE),
         ).fromExisting(
             HELMETS_AND_BOOTS,

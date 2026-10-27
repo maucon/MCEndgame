@@ -54,7 +54,7 @@ object AbstractArrowCalculator : DamageCalculator {
     }
 
     private fun calculateCriticalDamage(cmd: DamageCalculationCommand, amount: Double): Int {
-        if (!cmd.isCritical) return 0
+        if (!cmd.isCritical || amount <= 0) return 0
         val critMultiDamage = amount * cmd.criticalDamageMulti.sum()
         return Random.nextInt(amount.toInt() / 2 + 2) + critMultiDamage.toInt()
     }
