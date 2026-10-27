@@ -15,12 +15,12 @@ object SpellDamageCalculator : DamageCalculator {
         originalDamage: Float,
         attacked: LivingEntity,
         source: DamageSource,
-        event: DamageCalculationCommand
+        cmd: DamageCalculationCommand
     ): Float {
-        val baseDamage = calculateBaseSpellDamage(event)
-        val damageMulti = DamageUtil.calculateSpellDamageMultiplier(event)
+        val baseDamage = calculateBaseSpellDamage(cmd)
+        val damageMulti = DamageUtil.calculateSpellDamageMultiplier(cmd)
 
-        val critMulti = calculateCriticalMultiplier(event)
+        val critMulti = calculateCriticalMultiplier(cmd)
         return (baseDamage * critMulti * damageMulti).toFloat()
     }
 

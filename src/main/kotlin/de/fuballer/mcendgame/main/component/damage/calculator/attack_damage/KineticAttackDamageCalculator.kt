@@ -19,11 +19,11 @@ object KineticAttackDamageCalculator : DamageCalculator {
         originalDamage: Float,
         attacked: LivingEntity,
         source: DamageSource,
-        event: DamageCalculationCommand
+        cmd: DamageCalculationCommand
     ): Float {
         val attacker = source.entity as? LivingEntity ?: return originalDamage
 
-        val baseDamage = DamageUtil.getAttackDamageBaseValue(event, attacker)
+        val baseDamage = DamageUtil.getAttackDamageBaseValue(cmd, attacker)
         val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
         val kineticWeapon = attacker.weaponItem.get(DataComponents.KINETIC_WEAPON) ?: return originalDamage
         val damageMultiplier = kineticWeapon.damageMultiplier()
@@ -33,7 +33,7 @@ object KineticAttackDamageCalculator : DamageCalculator {
         val attackedMovement = attackerRotation.dot(KineticWeapon.getMotion(attacked))
         val relativeMovement = max(0.0, attackerMovement - attackedMovement)
 
-        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
+        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(cmd)
 
         return ((baseDamage + enchantmentDamage + floor(damageMultiplier * relativeMovement)) * damageMulti).toFloat()
     }

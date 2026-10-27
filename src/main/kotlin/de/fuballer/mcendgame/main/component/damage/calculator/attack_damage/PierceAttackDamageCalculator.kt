@@ -15,13 +15,13 @@ object PierceAttackDamageCalculator : DamageCalculator {
         originalDamage: Float,
         attacked: LivingEntity,
         source: DamageSource,
-        event: DamageCalculationCommand
+        cmd: DamageCalculationCommand
     ): Float {
         val attacker = source.entity as? LivingEntity ?: return originalDamage
 
-        val baseDamage = DamageUtil.getAttackDamageBaseValue(event, attacker)
+        val baseDamage = DamageUtil.getAttackDamageBaseValue(cmd, attacker)
         val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
-        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
+        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(cmd)
 
         return ((baseDamage + enchantmentDamage) * damageMulti).toFloat()
     }

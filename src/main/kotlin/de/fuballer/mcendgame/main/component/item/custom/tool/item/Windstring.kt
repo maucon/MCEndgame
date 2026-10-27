@@ -12,7 +12,7 @@ class Windstring(
 ) : UniqueAttributesBowItem(settings) {
     override fun getCustomAttributes() = listOf(
         RollableCustomAttribute(CustomAttributeTypes.BOW_PULL_TICKS, 0, IntBounds(-6, -4)),
-        RollableCustomAttribute(CustomAttributeTypes.INCREASED_PROJECTILE_DAMAGE, 0, DoubleBounds(0.05, 0.1)),
+        RollableCustomAttribute(CustomAttributeTypes.FLAT_PROJECTILE_DAMAGE, 0, DoubleBounds(0.3, 0.6)),
     )
 
     override fun getAttributeModifierSlot() = EquipmentSlotGroup.MAINHAND

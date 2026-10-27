@@ -18,10 +18,10 @@ object PotionCalculator : DamageCalculator {
         originalDamage: Float,
         attacked: LivingEntity,
         source: DamageSource,
-        event: DamageCalculationCommand
+        cmd: DamageCalculationCommand
     ): Float {
         // potion damage only increased by generic damage increases
-        val damageMulti = DamageUtil.calculateGenericDamageMultiplier(event)
+        val damageMulti = DamageUtil.calculateGenericDamageMultiplier(cmd)
         return (originalDamage * damageMulti).toFloat()
     }
 }
