@@ -3,7 +3,8 @@ package de.fuballer.mcendgame.main.component.damage.calculator.attack_damage
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
 import de.fuballer.mcendgame.main.component.damage.DamageUtil
 import de.fuballer.mcendgame.main.component.damage.calculator.DamageCalculator
-import de.fuballer.mcendgame.main.util.extension.mixin.PersistentProjectileEntityMixinExtension.getDamage
+import de.fuballer.mcendgame.main.util.extension.mixin.AbstractArrowMixinExtension.getDamage
+import de.fuballer.mcendgame.main.util.extension.mixin.AbstractArrowMixinExtension.getDamageFactor
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.LivingEntity
@@ -35,9 +36,10 @@ object AbstractArrowCalculator : DamageCalculator {
         val arrowDamage = ceil(projectileSpeedMulti * (baseDamage + enchantmentDamage))
 
         val criticalDamage = calculateCriticalDamage(cmd, arrowDamage)
-        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(cmd)
+        val damageMulti = DamageUtil.calculateGenericDamageMultiplier(cmd)
+        val damageFactor = (source.directEntity as AbstractArrow).getDamageFactor()
 
-        return ((arrowDamage + criticalDamage) * damageMulti).toFloat()
+        return ((arrowDamage + criticalDamage) * damageMulti * damageFactor).toFloat()
     }
 
     private fun calculateBaseAttackDamage(source: DamageSource, cmd: DamageCalculationCommand): Double {
