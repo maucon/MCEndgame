@@ -21,6 +21,8 @@ class BloodQueenRenderer<R>(
         private val LOCATORS = listOf(
             "fireballRight",
             "fireballLeft",
+            "fistRight",
+            "fistLeft",
         )
 
         private val UUID_TICKET = DataTicket.create("uuid", object : TypeToken<UUID>() {})

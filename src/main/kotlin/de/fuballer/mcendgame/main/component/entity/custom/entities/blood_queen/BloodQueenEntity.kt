@@ -12,9 +12,11 @@ import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.DelayedParticleData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
@@ -357,6 +359,44 @@ class BloodQueenEntity(
                 ),
             )
 
+        private val PUNCH_RIGHT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
+        private val PUNCH_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, PUNCH_RIGHT_AREA)
+        private val PUNCH_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.punch_right")
+        private const val PUNCH_RIGHT_ID = "Punch Right"
+        private val PUNCH_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, PUNCH_RIGHT_ID)
+        private val PUNCH_RIGHT_ATTACK =
+            Attack<BloodQueenEntity>(
+                PUNCH_RIGHT_ID,
+                PUNCH_RIGHT_ANIM_DATA,
+                totalDuration = 25,
+                cooldown = 0,
+                DistanceTriggerCondition(4.0, affectedByScale = true),
+                data = listOf(
+                    DelayedSoundData(FIRE_SOUND, 0),
+                    DelayedSoundData(FIRECHARGE_SOUND, 14),
+                    DelayedDamageData(PUNCH_RIGHT_ATTACK_DAMAGE, 14),
+                ),
+            )
+
+        private val PUNCH_LEFT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
+        private val PUNCH_LEFT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, PUNCH_LEFT_AREA)
+        private val PUNCH_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.punch_left")
+        private const val PUNCH_LEFT_ID = "Punch Left"
+        private val PUNCH_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, PUNCH_LEFT_ID)
+        private val PUNCH_LEFT_ATTACK =
+            Attack<BloodQueenEntity>(
+                PUNCH_LEFT_ID,
+                PUNCH_LEFT_ANIM_DATA,
+                totalDuration = 25,
+                cooldown = 0,
+                DistanceTriggerCondition(4.0, affectedByScale = true),
+                data = listOf(
+                    DelayedSoundData(FIRE_SOUND, 0),
+                    DelayedSoundData(FIRECHARGE_SOUND, 14),
+                    DelayedDamageData(PUNCH_LEFT_ATTACK_DAMAGE, 14),
+                ),
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BloodQueenEntity>>> = listOf(
             RandomOption(1, MAGMA_SPIKES_LINE_LEFT_ATTACK),
             RandomOption(1, MAGMA_SPIKES_LINE_RIGHT_ATTACK),
@@ -364,6 +404,8 @@ class BloodQueenEntity(
             RandomOption(1, TELEPORT_ATTACK),
             RandomOption(1, FIREBALL_RIGHT_ATTACK),
             RandomOption(1, FIREBALL_LEFT_ATTACK),
+            RandomOption(1, PUNCH_RIGHT_ATTACK),
+            RandomOption(1, PUNCH_LEFT_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -417,15 +459,24 @@ class BloodQueenEntity(
             .triggerableAnim(MAGMA_SPIKES_SLAM_ID, MAGMA_SPIKES_SLAM_ANIM)
             .triggerableAnim(FIREBALL_RIGHT_ID, FIREBALL_RIGHT_ANIM)
             .triggerableAnim(FIREBALL_LEFT_ID, FIREBALL_LEFT_ANIM)
+            .triggerableAnim(PUNCH_RIGHT_ID, PUNCH_RIGHT_ANIM)
+            .triggerableAnim(PUNCH_LEFT_ID, PUNCH_LEFT_ANIM)
             .setParticleKeyframeHandler { event ->
                 if (!level().isClientSide) return@setParticleKeyframeHandler
 
                 val keyFrameData = event.keyframeData
                 when (keyFrameData.effect) {
-                    "create_fireball" -> {
+                    "create_flame" -> {
                         val pos = GeoEntityLocatorService.getLocatorPos(uuid, keyFrameData.locatorName) ?: return@setParticleKeyframeHandler
-                        createFireballParticles(pos, 1, ParticleTypes.FLAME)
-                        createFireballParticles(pos, 1, ParticleTypes.SMOKE)
+                        createFlameParticles(pos, 1, ParticleTypes.FLAME)
+                        createFlameParticles(pos, 1, ParticleTypes.SMOKE)
+                    }
+
+                    "flame_punch" -> {
+                        val pos = GeoEntityLocatorService.getLocatorPos(uuid, keyFrameData.locatorName) ?: return@setParticleKeyframeHandler
+                        createFlameParticles(pos, 10, ParticleTypes.FLAME)
+                        createFlameParticles(pos, 10, ParticleTypes.SMOKE)
+                        createFlameParticles(pos, 1, ParticleTypes.EXPLOSION)
                     }
                 }
             }
@@ -681,7 +732,7 @@ class BloodQueenEntity(
         )
     }
 
-    private fun createFireballParticles(
+    private fun createFlameParticles(
         pos: Vec3,
         count: Int,
         type: SimpleParticleType,
