@@ -19,7 +19,7 @@ object TridentProjectileCalculator : DamageCalculator {
         val attacker = source.entity as? LivingEntity ?: return originalDamage
 
         val baseDamage = 8.0 + cmd.flatProjectileDamage.sum()
-        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(cmd)
+        val damageMulti = DamageUtil.calculateGenericDamageMultiplier(cmd)
         val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
 
         return ((baseDamage + enchantmentDamage) * damageMulti).toFloat()
