@@ -22,6 +22,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.P
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikesUtil
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
@@ -39,7 +40,6 @@ import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
@@ -188,6 +188,49 @@ class BloodKingEntity(
                 blockMovementDuration = 26,
             )
 
+        private const val SLAM_SPIKES_ID = "Slam Spikes"
+        private val SLAM_SPIKES_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLAM_SPIKES_ID)
+        private val SLAM_SPIKES_ATTACK =
+            Attack<BloodKingEntity>(
+                SLAM_SPIKES_ID,
+                SLAM_SPIKES_ANIM_DATA,
+                totalDuration = 40,
+                cooldown = 200,
+                DistanceTriggerCondition(6.0, 20.0, affectedByScale = true),
+                data = listOf(
+                    DelayedDamageData(SLAM_ATTACK_DAMAGE, 14),
+
+                    DelayedSoundData(TAKE_SWING_SOUND, 3),
+                    DelayedSoundData(FIRE_SOUND, 3),
+                    DelayedSoundData(SWEEP_SOUND, 12),
+                    DelayedSoundData(FIRE_HIT_SOUND, 12),
+                    DelayedSoundData(FIRE_SLAM_SOUND, 12),
+
+                    object : DelayedAttackData(12) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            if (target == null) return
+
+                            val rotRad = entity.yBodyRot * (Math.PI / 180.0)
+                            val origin = entity.position().add(Vec3(-2.0 * sin(rotRad), 0.0, 2.0 * cos(rotRad)).scale(entity.scale.toDouble()))
+
+                            MagmaSpikesUtil.castMagmaSpikesLine(
+                                entity,
+                                target,
+                                origin = origin,
+                                offset = 2.0f,
+                                delay = 6 + (0.5 * origin.distanceTo(target.position())).toInt(),
+                                minScale = 1.0f,
+                                maxScale = 2.0f,
+                                finalScale = 3.5f,
+                                finalDelay = 0,
+                                level,
+                            )
+                        }
+                    },
+                ),
+                blockMovementDuration = 26,
+            )
+
         private fun getUltimateStepData(
             delay: Int,
             scorchRadius: Double,
@@ -265,6 +308,7 @@ class BloodKingEntity(
             RandomOption(1, SLASH_ATTACK),
             RandomOption(1, STAB_ATTACK),
             RandomOption(1, SLAM_ATTACK),
+            RandomOption(1, SLAM_SPIKES_ATTACK),
             RandomOption(1, ULTIMATE_ATTACK),
         )
 
@@ -301,6 +345,7 @@ class BloodKingEntity(
             .triggerableAnim(SLASH_ID, SLASH_ANIM)
             .triggerableAnim(STAB_ID, STAB_ANIM)
             .triggerableAnim(SLAM_ID, SLAM_ANIM)
+            .triggerableAnim(SLAM_SPIKES_ID, SLAM_ANIM)
             .triggerableAnim(ULTIMATE_ID, ULTIMATE_ANIM)
             .setParticleKeyframeHandler { event ->
                 if (!level().isClientSide) return@setParticleKeyframeHandler

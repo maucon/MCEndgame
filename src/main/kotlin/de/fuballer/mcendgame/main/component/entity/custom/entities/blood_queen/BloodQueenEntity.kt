@@ -24,7 +24,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.Rang
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.StrafeTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerConditionGroup
-import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikeEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikesUtil
 import de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball.SpellFireballUtil
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
@@ -35,7 +35,6 @@ import de.fuballer.mcendgame.main.util.extension.mixin.MoveControlMixinExtension
 import de.fuballer.mcendgame.main.util.extension.mixin.MoveControlMixinExtension.getStrafeRight
 import de.fuballer.mcendgame.main.util.random.RandomOption
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -63,13 +62,14 @@ import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
-import kotlin.math.*
+import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.pow
+import kotlin.math.sin
 import kotlin.random.Random
 
 class BloodQueenEntity(
@@ -83,19 +83,6 @@ class BloodQueenEntity(
     BlockAbleMovementMob<BloodQueenEntity> {
     companion object {
         private val LEAN_ANIM: RawAnimation = RawAnimation.begin().thenPlay("misc.lean")
-
-        private const val SPIKES_LINE_OFFSET = 1.25
-        private const val SPIKES_LINE_DELAY = 6
-        private const val SPIKES_LINE_MIN_SCALE = 0.75f
-        private const val SPIKES_LINE_MAX_SCALE = 1.5f
-        private const val FINAL_SPIKE_SCALE = 2.5f
-        private const val FINAL_SPIKE_DELAY = 0
-
-        private const val SLAM_RING_DELAY = 6
-        private const val SPIKES_SLAM_MIN_SCALE = 0.75f
-        private const val SPIKES_SLAM_MAX_SCALE = 1.5f
-        private val SLAM_RING_SPIKE_COUNT = listOf(8, 10, 12)
-        private const val SLAM_RING_RADIUS = 1.25
 
         private val SWEEP_SOUND =
             RangeDefinedSoundData(
@@ -126,6 +113,24 @@ class BloodQueenEntity(
 
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
+        private val SPIKES_LINE_DATA_DELAYED = object : DelayedAttackData(12) {
+            override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                if (target == null) return
+                MagmaSpikesUtil.castMagmaSpikesLine(
+                    entity,
+                    target,
+                    origin = entity.position(),
+                    offset = 1.25f,
+                    delay = 6 + (0.25 * entity.distanceTo(target)).toInt(),
+                    minScale = 0.75f,
+                    maxScale = 1.5f,
+                    finalScale = 2.5f,
+                    finalDelay = 0,
+                    level,
+                )
+            }
+        }
+
         private val MAGMA_SPIKES_LINE_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.spikes_line_left")
         private const val MAGMA_SPIKES_LINE_LEFT_ID = "Magma Spikes Line Left"
         private val MAGMA_SPIKES_LINE_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_LINE_LEFT_ID)
@@ -144,11 +149,7 @@ class BloodQueenEntity(
                 ),
                 data = listOf(
                     DelayedSoundData(SWEEP_SOUND, 12),
-                    object : DelayedAttackData(12) {
-                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
-                            (entity as? BloodQueenEntity)?.castMagmaSpikesLine()
-                        }
-                    },
+                    SPIKES_LINE_DATA_DELAYED,
                 ),
             )
 
@@ -170,11 +171,7 @@ class BloodQueenEntity(
                 ),
                 data = listOf(
                     DelayedSoundData(SWEEP_SOUND, 12),
-                    object : DelayedAttackData(12) {
-                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
-                            (entity as? BloodQueenEntity)?.castMagmaSpikesLine()
-                        }
-                    },
+                    SPIKES_LINE_DATA_DELAYED,
                 ),
             )
 
@@ -211,7 +208,15 @@ class BloodQueenEntity(
                     ),
                     object : DelayedAttackData(18) {
                         override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
-                            (entity as? BloodQueenEntity)?.castMagmaSpikesSlam()
+                            MagmaSpikesUtil.castMagmaSpikesSlam(
+                                entity,
+                                ringDelay = 6,
+                                minScale = 0.75f,
+                                maxScale = 1.5f,
+                                ringSpikeCount = listOf(8, 10, 12),
+                                ringRadius = 1.25f,
+                                level,
+                            )
                         }
                     },
                 ),
@@ -597,94 +602,6 @@ class BloodQueenEntity(
     override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
 
     override fun canStandOnFluid(fluid: FluidState) = fluid.`is`(FluidTags.LAVA) || fluid.`is`(FluidTags.WATER)
-
-    fun castMagmaSpikesSlam() {
-        SLAM_RING_SPIKE_COUNT.forEachIndexed { index, count ->
-            val ringPercentage = (index + 1).toFloat() / SLAM_RING_SPIKE_COUNT.size
-            val randomAngle = Random.nextFloat() * Mth.TWO_PI
-
-            for (i in 0 until count) {
-                val angle = randomAngle + Mth.TWO_PI.toDouble() * i / count
-                val reach = SLAM_RING_RADIUS * (index + 1)
-
-                createMagmaSpikeEntity(
-                    x + Mth.cos(angle) * reach,
-                    z + Mth.sin(angle) * reach,
-                    y,
-                    y + 1.0,
-                    yRotRad = (angle - Mth.HALF_PI).toFloat(),
-                    xzRotRad = Math.toRadians(45.0 - (45.0 * ringPercentage)).toFloat(),
-                    scale = SPIKES_SLAM_MIN_SCALE + ((SPIKES_SLAM_MAX_SCALE - SPIKES_SLAM_MIN_SCALE) * ringPercentage),
-                    delayTicks = (SLAM_RING_DELAY * ringPercentage).toInt(),
-                    false,
-                )
-            }
-        }
-    }
-
-    fun castMagmaSpikesLine() {
-        val target = this.target ?: return
-        val minY = min(target.y, y)
-        val maxY = max(target.y, y) + 1.0
-        val angleToTarget = Mth.atan2(target.z - z, target.x - x).toFloat()
-
-        val distanceToTarget = distanceTo(target)
-        val spikesCount = (distanceToTarget / SPIKES_LINE_OFFSET).toInt() + 1
-        for (i in 1..spikesCount) {
-            val reach = SPIKES_LINE_OFFSET * i
-            val spikeIndexPercentage = i / spikesCount.toFloat()
-            val isFinal = i == spikesCount
-            createMagmaSpikeEntity(
-                x + Mth.cos(angleToTarget.toDouble()) * reach,
-                z + Mth.sin(angleToTarget.toDouble()) * reach,
-                minY,
-                maxY,
-                yRotRad = angleToTarget - Mth.HALF_PI,
-                xzRotRad = Math.toRadians(45.0 - (45.0 * spikeIndexPercentage)).toFloat(),
-                scale = if (isFinal) FINAL_SPIKE_SCALE else SPIKES_LINE_MIN_SCALE + ((SPIKES_LINE_MAX_SCALE - SPIKES_LINE_MIN_SCALE) * spikeIndexPercentage),
-                delayTicks = (SPIKES_LINE_DELAY * spikeIndexPercentage).toInt() + if (isFinal) FINAL_SPIKE_DELAY else 0,
-                isFinal,
-            )
-        }
-    }
-
-    private fun createMagmaSpikeEntity(
-        x: Double,
-        z: Double,
-        minY: Double,
-        maxY: Double,
-        yRotRad: Float,
-        xzRotRad: Float,
-        scale: Float,
-        delayTicks: Int,
-        large: Boolean,
-    ) {
-        var pos = BlockPos.containing(x, maxY, z)
-        var success = false
-        var topOffset = 0.0
-        do {
-            val below = pos.below()
-            val belowState: BlockState = level().getBlockState(below)
-            if (!belowState.isFaceSturdy(level(), below, Direction.UP)) {
-                pos = pos.below()
-                continue
-            }
-
-            if (!level().isEmptyBlock(pos)) {
-                val blockState: BlockState = level().getBlockState(pos)
-                val shape = blockState.getCollisionShape(level(), pos)
-                if (!shape.isEmpty) topOffset = shape.max(Direction.Axis.Y)
-            }
-
-            success = true
-            break
-        } while (pos.y >= Mth.floor(minY) - 1)
-
-        if (success) {
-            level().addFreshEntity(MagmaSpikeEntity(level(), x, pos.y + topOffset, z, yRotRad, xzRotRad, scale, delayTicks, this, large))
-            level().gameEvent(GameEvent.ENTITY_PLACE, Vec3(x, pos.y + topOffset, z), GameEvent.Context.of(this))
-        }
-    }
 
     fun teleportEscape(): Boolean {
         val level = level() as? ServerLevel ?: return false
