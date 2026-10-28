@@ -36,7 +36,7 @@ object AbstractArrowCalculator : DamageCalculator {
         val arrowDamage = ceil(projectileSpeedMulti * (baseDamage + enchantmentDamage))
 
         val criticalDamage = calculateCriticalDamage(cmd, arrowDamage)
-        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(cmd)
+        val damageMulti = DamageUtil.calculateGenericDamageMultiplier(cmd)
         val damageFactor = (source.directEntity as AbstractArrow).getDamageFactor()
 
         return ((arrowDamage + criticalDamage) * damageMulti * damageFactor).toFloat()
