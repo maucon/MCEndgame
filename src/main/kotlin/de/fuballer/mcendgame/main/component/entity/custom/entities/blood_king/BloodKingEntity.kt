@@ -27,6 +27,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
+import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.component.particle.DirectionalFlameSweepParticleEffect
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.util.BlockPosUtil
@@ -49,6 +50,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.ai.util.LandRandomPos
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
@@ -94,7 +96,7 @@ class BloodKingEntity(
                 SoundSource.HOSTILE,
                 range = 24.0,
             )
-        private val FIRE_HIT_SOUND =
+        private val FIRECHARGE_SOUND =
             RangeDefinedSoundData(
                 SoundEvents.FIRECHARGE_USE,
                 { 0.6f },
@@ -137,7 +139,7 @@ class BloodKingEntity(
                     DelayedSoundData(TAKE_SWING_SOUND, 3),
                     DelayedSoundData(FIRE_SOUND, 3),
                     DelayedSoundData(SWEEP_SOUND, 10),
-                    DelayedSoundData(FIRE_HIT_SOUND, 10),
+                    DelayedSoundData(FIRECHARGE_SOUND, 10),
                 ),
             )
 
@@ -159,7 +161,7 @@ class BloodKingEntity(
                     DelayedSoundData(TAKE_SWING_SOUND, 2),
                     DelayedSoundData(FIRE_SOUND, 2),
                     DelayedSoundData(SWEEP_SOUND, 10),
-                    DelayedSoundData(FIRE_HIT_SOUND, 10),
+                    DelayedSoundData(FIRECHARGE_SOUND, 10),
                 ),
                 blockMovementDuration = 15,
             )
@@ -182,7 +184,7 @@ class BloodKingEntity(
                     DelayedSoundData(TAKE_SWING_SOUND, 3),
                     DelayedSoundData(FIRE_SOUND, 3),
                     DelayedSoundData(SWEEP_SOUND, 12),
-                    DelayedSoundData(FIRE_HIT_SOUND, 12),
+                    DelayedSoundData(FIRECHARGE_SOUND, 12),
                     DelayedSoundData(FIRE_SLAM_SOUND, 12),
                 ),
                 blockMovementDuration = 26,
@@ -203,7 +205,7 @@ class BloodKingEntity(
                     DelayedSoundData(TAKE_SWING_SOUND, 3),
                     DelayedSoundData(FIRE_SOUND, 3),
                     DelayedSoundData(SWEEP_SOUND, 12),
-                    DelayedSoundData(FIRE_HIT_SOUND, 12),
+                    DelayedSoundData(FIRECHARGE_SOUND, 12),
                     DelayedSoundData(FIRE_SLAM_SOUND, 12),
 
                     object : DelayedAttackData(12) {
@@ -241,7 +243,7 @@ class BloodKingEntity(
         ) = listOf(
             DelayedSoundData(FIRE_SOUND, delay),
             DelayedSoundData(BLOCK_HIT_SOUND, delay + 8),
-            DelayedSoundData(FIRE_HIT_SOUND, delay + 8),
+            DelayedSoundData(FIRECHARGE_SOUND, delay + 8),
             DelayedSoundData(FIRE_SLAM_SOUND, delay + 12),
             DelayedParticleData(
                 ParticleData(
@@ -304,12 +306,95 @@ class BloodKingEntity(
                 blockMovementDuration = 136,
             )
 
+        private const val TELEPORT_ID = "Teleport"
+        private val TELEPORT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, null, null)
+        private val TELEPORT_ATTACK =
+            Attack<BloodKingEntity>(
+                TELEPORT_ID,
+                TELEPORT_ANIM_DATA,
+                totalDuration = 7,
+                cooldown = 200,
+                DistanceTriggerCondition(7.0, 20.0, affectedByScale = true),
+                data = listOf(
+                    DelayedSoundData(FIRE_SOUND, 0),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> CustomParticleTypes.REVERSE_FLAME },
+                            offset = { Vec3(0.0, 1.0, 0.0) },
+                            count = 30,
+                            dist = { Vec3(0.3, 0.5, 0.3) },
+                            speed = 1.0,
+                        ),
+                        0,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.ENDERMAN_TELEPORT,
+                            { 1.0F },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        5,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.LAVA_EXTINGUISH,
+                            { 1.0F },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        5,
+                    ),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.LAVA },
+                            offset = { Vec3.ZERO },
+                            count = 3,
+                            dist = { Vec3(0.1, 0.0, 0.1) },
+                            speed = 1.0,
+                        ),
+                        5,
+                    ),
+                    object : DelayedAttackData(6) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            if (target == null) return
+                            (entity as? BloodKingEntity)?.teleportNearTarget(target, 2.5, 3.0)
+                        }
+                    },
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.FLAME },
+                            offset = { Vec3.ZERO },
+                            count = 30,
+                            dist = { Vec3.ZERO },
+                            speed = 1.0,
+                        ),
+                        7,
+                    ),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.LAVA },
+                            offset = { Vec3.ZERO },
+                            count = 5,
+                            dist = { Vec3(0.1, 0.0, 0.1) },
+                            speed = 1.0,
+                        ),
+                        7,
+                    ),
+                    DelayedSoundData(FIRECHARGE_SOUND, 11)
+                ),
+                blockMovementDuration = 7,
+            )
+
         private val ATTACKS: List<RandomOption<out Attack<BloodKingEntity>>> = listOf(
             RandomOption(1, SLASH_ATTACK),
             RandomOption(1, STAB_ATTACK),
             RandomOption(1, SLAM_ATTACK),
             RandomOption(1, SLAM_SPIKES_ATTACK),
             RandomOption(1, ULTIMATE_ATTACK),
+            RandomOption(1, TELEPORT_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {
@@ -581,5 +666,43 @@ class BloodKingEntity(
             level.setBlockAndUpdate(pos, newState)
             return
         }
+    }
+
+    fun teleportNearTarget(
+        target: LivingEntity,
+        minDistance: Double,
+        maxDistance: Double,
+        attempts: Int = 16,
+    ): Boolean {
+        val minDistanceSqr = minDistance * minDistance
+        val maxDistanceSqr = maxDistance * maxDistance
+
+        repeat(attempts) {
+            val distance = minDistance + random.nextDouble() * (maxDistance - minDistance)
+            val angle = random.nextDouble() * Math.PI * 2.0
+
+            val x = target.x + cos(angle) * distance
+            val z = target.z + sin(angle) * distance
+            val y = target.blockY
+
+            val blockPos = BlockPos.containing(x, y.toDouble(), z)
+            val validPos = LandRandomPos.movePosUpOutOfSolid(this, blockPos) ?: return@repeat
+            val pos = Vec3(validPos.x + 0.5, validPos.y.toDouble(), validPos.z + 0.5)
+
+            val distanceSqr = pos.distanceToSqr(target.position())
+            if (distanceSqr !in minDistanceSqr..maxDistanceSqr) return@repeat
+
+            val path = navigation.createPath(validPos, 0) ?: return@repeat
+            if (!path.canReach()) return@repeat
+
+            teleportTo(pos.x, pos.y, pos.z)
+            navigation.stop()
+
+            target.also { lookAt(it, 360F, 360F) }
+
+            return true
+        }
+
+        return false
     }
 }
