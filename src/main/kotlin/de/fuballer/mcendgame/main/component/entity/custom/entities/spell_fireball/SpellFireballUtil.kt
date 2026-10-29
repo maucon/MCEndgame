@@ -18,6 +18,7 @@ object SpellFireballUtil {
         startPos: Vec3,
         travelTicks: (Double) -> Int,
         serverLevel: ServerLevel,
+        scale: Float = 1F,
     ) {
         val distance = Vec3(
             target.x - startPos.x,
@@ -33,7 +34,11 @@ object SpellFireballUtil {
             shooter,
             startPos,
             velocity,
-            { SpellFireballEntity(CustomEntities.SPELL_FIREBALL, serverLevel) },
+            {
+                val entity = SpellFireballEntity(CustomEntities.SPELL_FIREBALL, serverLevel)
+                entity.setScale(scale)
+                return@shootProjectile entity
+            },
             { projectile, spreadVelocity, _ ->
                 Projectile.spawnProjectileUsingShoot(
                     projectile,

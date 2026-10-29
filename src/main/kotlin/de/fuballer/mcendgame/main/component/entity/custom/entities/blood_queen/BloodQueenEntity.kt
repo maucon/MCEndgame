@@ -635,6 +635,7 @@ class BloodQueenEntity(
             getFireballStartPos(right),
             { distance -> max(1, (distance * 3).pow(0.8).toInt()) },
             serverLevel,
+            scale = 2F,
         )
     }
 
