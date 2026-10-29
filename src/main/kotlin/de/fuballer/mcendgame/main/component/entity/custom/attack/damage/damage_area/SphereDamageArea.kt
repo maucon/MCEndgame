@@ -1,6 +1,7 @@
 package de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area
 
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.getDistanceToGround
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
@@ -11,7 +12,7 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class RadiusDamageArea(
+class SphereDamageArea(
     private val radius: Double,
     private val forwardOffset: Double = 0.0, // positive -> forward
     private val sideOffset: Double = 0.0, // positive -> right
@@ -86,8 +87,36 @@ class RadiusDamageArea(
         originEntity: Entity,
         forward: Vec3,
         sideways: Vec3,
-        scale: Double
+        scale: Double,
     ) {
-        // TODO only for debug
+        val center = getCenter(originEntity, scale, forward, sideways)
+        val r = radius * scale
+
+        val latitudeCount = 24
+        val longitudeCount = 48
+
+        for (i in 0..latitudeCount) {
+            val latitude = -Math.PI / 2.0 + Math.PI * i / latitudeCount
+            val ringRadius = r * cos(latitude)
+            val y = r * sin(latitude)
+
+            val pointsInRing = (longitudeCount * cos(latitude)).toInt().coerceAtLeast(1)
+
+            for (j in 0 until pointsInRing) {
+                val longitude = 2.0 * Math.PI * j / pointsInRing
+
+                val x = center.x + ringRadius * cos(longitude)
+                val py = center.y + y
+                val z = center.z + ringRadius * sin(longitude)
+
+                world.sendParticles(
+                    ParticleTypes.END_ROD,
+                    x, py, z,
+                    1,
+                    0.0, 0.0, 0.0,
+                    0.0
+                )
+            }
+        }
     }
 }

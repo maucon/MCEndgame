@@ -14,7 +14,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area.BoxDamageArea
-import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area.RadiusDamageArea
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area.SphereDamageArea
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
@@ -289,7 +289,7 @@ class BloodKingEntity(
                 AreaAttackDamage(
                     2.0F,
                     knockbackStrength,
-                    RadiusDamageArea(damageRadius, 0.0, 0.0, 0.0),
+                    SphereDamageArea(damageRadius, 0.0, 0.0, 0.0),
                     blockable = false,
                 ),
                 delay + 14,
