@@ -13,6 +13,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorServic
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area.BoxDamageArea
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area.RadiusDamageArea
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
@@ -121,8 +123,8 @@ class BloodKingEntity(
                 range = 24.0,
             )
 
-        private val SLASH_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
-        private val SLASH_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, SLASH_AREA)
+        private val SLASH_AREA = BoxDamageArea(4.0, 2.5, 1.75, -0.1, 0.35, 0.75)
+        private val SLASH_ATTACK_DAMAGE = AreaAttackDamage(1.0F, 1.0, SLASH_AREA)
         private val SLASH_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slash")
         private const val SLASH_ID = "Slash"
         private val SLASH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLASH_ID)
@@ -143,8 +145,9 @@ class BloodKingEntity(
                 ),
             )
 
-        private val STAB_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
-        private val STAB_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, STAB_AREA)
+        private val STAB_AREA = BoxDamageArea(4.5, 0.5, 0.5, 0.5, 0.5, 1.5)
+        private val STAB_ATTACK_DAMAGE =
+            AreaAttackDamage(0.75F, 2.5, STAB_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, disableBlockingShield = 5.0F, knockbackWhenBlocked = true)
         private val STAB_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.stab")
         private const val STAB_ID = "Stab"
         private val STAB_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, STAB_ID)
@@ -166,8 +169,8 @@ class BloodKingEntity(
                 blockMovementDuration = 15,
             )
 
-        private val SLAM_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
-        private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, SLAM_AREA)
+        private val SLAM_AREA = BoxDamageArea(5.0, 2.5, 1.5, 0.75, 0.3, 1.5)
+        private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(1.0F, 1.0, SLAM_AREA)
         private val SLAM_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slam")
         private const val SLAM_ID = "Slam"
         private val SLAM_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLAM_ID)
@@ -235,6 +238,8 @@ class BloodKingEntity(
 
         private fun getUltimateStepData(
             delay: Int,
+            damageRadius: Double,
+            knockbackStrength: Double,
             scorchRadius: Double,
             explosionParticleCount: Int,
             smokeParticleCount: Int,
@@ -280,10 +285,17 @@ class BloodKingEntity(
                     (entity as? BloodKingEntity)?.scorchGround(scorchRadius, level)
                 }
             },
+            DelayedDamageData(
+                AreaAttackDamage(
+                    2.0F,
+                    knockbackStrength,
+                    RadiusDamageArea(damageRadius, 0.0, 0.0, 0.0),
+                    blockable = false,
+                ),
+                delay + 14,
+            ),
         )
 
-        private val ULTIMATE_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
-        private val ULTIMATE_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, ULTIMATE_AREA)
         private val ULTIMATE_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.ultimate")
         private const val ULTIMATE_ID = "Ultimate"
         private val ULTIMATE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, ULTIMATE_ID)
@@ -295,13 +307,11 @@ class BloodKingEntity(
                 cooldown = 300,
                 DistanceTriggerCondition(4.0, affectedByScale = true),
                 data = listOf(
-                    DelayedDamageData(ULTIMATE_ATTACK_DAMAGE, 14),
-
                     DelayedSoundData(TAKE_SWING_SOUND, 6),
 
-                    *getUltimateStepData(20, 4.0, 20, 15, 10, Vec3(3.5, 2.0, 3.5)).toTypedArray(),
-                    *getUltimateStepData(52, 7.0, 70, 30, 20, Vec3(6.5, 3.0, 6.5)).toTypedArray(),
-                    *getUltimateStepData(86, 10.0, 180, 100, 50, Vec3(9.5, 4.0, 9.5)).toTypedArray(),
+                    *getUltimateStepData(20, 5.0, 3.0, 4.0, 20, 15, 10, Vec3(3.5, 2.0, 3.5)).toTypedArray(),
+                    *getUltimateStepData(52, 8.0, 4.0, 7.0, 70, 30, 20, Vec3(6.5, 3.0, 6.5)).toTypedArray(),
+                    *getUltimateStepData(86, 11.0, 5.0, 10.0, 180, 100, 50, Vec3(9.5, 4.0, 9.5)).toTypedArray(),
                 ),
                 blockMovementDuration = 136,
             )

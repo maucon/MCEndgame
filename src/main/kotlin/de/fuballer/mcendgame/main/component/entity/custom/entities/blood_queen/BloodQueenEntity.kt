@@ -13,6 +13,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorServic
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area.BoxDamageArea
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
@@ -113,6 +114,8 @@ class BloodQueenEntity(
 
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
+        private const val MELEE_RANGE = 4.5
+
         private val SPIKES_LINE_DATA_DELAYED = object : DelayedAttackData(12) {
             override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
                 if (target == null) return
@@ -143,7 +146,7 @@ class BloodQueenEntity(
                 TriggerConditionGroup(
                     TriggerConditionGroup.TriggerConditionJoinType.AND,
                     listOf(
-                        DistanceTriggerCondition(5.0, 25.0, affectedByScale = true),
+                        DistanceTriggerCondition(MELEE_RANGE, 25.0, affectedByScale = true),
                         StrafeTriggerCondition(minRight = 0.0f),
                     ),
                 ),
@@ -165,7 +168,7 @@ class BloodQueenEntity(
                 TriggerConditionGroup(
                     TriggerConditionGroup.TriggerConditionJoinType.AND,
                     listOf(
-                        DistanceTriggerCondition(5.0, 25.0, affectedByScale = true),
+                        DistanceTriggerCondition(MELEE_RANGE, 25.0, affectedByScale = true),
                         StrafeTriggerCondition(maxRight = 0.0f),
                     ),
                 ),
@@ -184,7 +187,7 @@ class BloodQueenEntity(
                 MAGMA_SPIKES_SLAM_ANIM_DATA,
                 totalDuration = 45,
                 cooldown = 0,
-                DistanceTriggerCondition(5.0, affectedByScale = true),
+                DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
                 data = listOf(
                     DelayedSoundData(
                         RangeDefinedSoundData(
@@ -237,7 +240,7 @@ class BloodQueenEntity(
                 TELEPORT_ANIM_DATA,
                 totalDuration = 7,
                 cooldown = 0,
-                DistanceTriggerCondition(5.0, affectedByScale = true),
+                DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
                 data = listOf(
                     DelayedSoundData(FIRE_SOUND, 0),
                     DelayedParticleData(
@@ -322,7 +325,7 @@ class BloodQueenEntity(
                 TriggerConditionGroup(
                     TriggerConditionGroup.TriggerConditionJoinType.AND,
                     listOf(
-                        DistanceTriggerCondition(5.0, 35.0, affectedByScale = true),
+                        DistanceTriggerCondition(MELEE_RANGE, 35.0, affectedByScale = true),
                         StrafeTriggerCondition(maxRight = 0.0f),
                     ),
                 ),
@@ -349,7 +352,7 @@ class BloodQueenEntity(
                 TriggerConditionGroup(
                     TriggerConditionGroup.TriggerConditionJoinType.AND,
                     listOf(
-                        DistanceTriggerCondition(5.0, 35.0, affectedByScale = true),
+                        DistanceTriggerCondition(MELEE_RANGE, 35.0, affectedByScale = true),
                         StrafeTriggerCondition(minRight = 0.0f),
                     ),
                 ),
@@ -364,8 +367,8 @@ class BloodQueenEntity(
                 ),
             )
 
-        private val PUNCH_RIGHT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
-        private val PUNCH_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, PUNCH_RIGHT_AREA)
+        private val PUNCH_RIGHT_AREA = BoxDamageArea(4.0, 0.5, 0.5, 0.0, 0.5, 1.5)
+        private val PUNCH_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 3.0, PUNCH_RIGHT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, knockbackWhenBlocked = true)
         private val PUNCH_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.punch_right")
         private const val PUNCH_RIGHT_ID = "Punch Right"
         private val PUNCH_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, PUNCH_RIGHT_ID)
@@ -375,7 +378,7 @@ class BloodQueenEntity(
                 PUNCH_RIGHT_ANIM_DATA,
                 totalDuration = 25,
                 cooldown = 0,
-                DistanceTriggerCondition(4.0, affectedByScale = true),
+                DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
                 data = listOf(
                     DelayedSoundData(FIRE_SOUND, 0),
                     DelayedSoundData(FIRECHARGE_SOUND, 14),
@@ -383,8 +386,8 @@ class BloodQueenEntity(
                 ),
             )
 
-        private val PUNCH_LEFT_AREA = AreaAttackDamage.DamageArea(3.25, 1.6, 1.75, -0.1, 0.35, 0.75)
-        private val PUNCH_LEFT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 1.0, PUNCH_LEFT_AREA)
+        private val PUNCH_LEFT_AREA = BoxDamageArea(4.0, 0.5, 0.5, 0.0, -0.5, 1.5)
+        private val PUNCH_LEFT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 3.0, PUNCH_LEFT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, knockbackWhenBlocked = true)
         private val PUNCH_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.punch_left")
         private const val PUNCH_LEFT_ID = "Punch Left"
         private val PUNCH_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, PUNCH_LEFT_ID)
@@ -394,7 +397,7 @@ class BloodQueenEntity(
                 PUNCH_LEFT_ANIM_DATA,
                 totalDuration = 25,
                 cooldown = 0,
-                DistanceTriggerCondition(4.0, affectedByScale = true),
+                DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
                 data = listOf(
                     DelayedSoundData(FIRE_SOUND, 0),
                     DelayedSoundData(FIRECHARGE_SOUND, 14),

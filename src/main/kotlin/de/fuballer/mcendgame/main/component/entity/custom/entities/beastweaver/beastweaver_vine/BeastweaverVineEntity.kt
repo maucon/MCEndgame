@@ -9,6 +9,7 @@ import com.geckolib.animation.RawAnimation
 import com.geckolib.animation.`object`.PlayState
 import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area.BoxDamageArea
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.status_effect.StatusEffectData
 import net.minecraft.core.particles.BlockParticleOption
 import net.minecraft.core.particles.ParticleTypes
@@ -53,7 +54,7 @@ class BeastweaverVineEntity(
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
         private val SLAM_ATTACK_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slam")
         private const val SLAM_ATTACK_ID = "Slam Attack"
-        private val SLAM_ATTACK_AREA = AreaAttackDamage.DamageArea(4.5, 1.5, 1.0, -0.5, 0.0, 0.5)
+        private val SLAM_ATTACK_AREA = BoxDamageArea(4.5, 1.5, 1.0, -0.5, 0.0, 0.5)
         private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(
             damageFactor = 0.5f,
             knockbackFactor = 1.0,
