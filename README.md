@@ -125,22 +125,22 @@ See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame/wiki/Analytics
 
 ### Installation
 
-1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft **26.3**
+1. Install [Fabric Loader](https://fabricmc.net/use/) for your Minecraft version
 2. Download [Fabric API](https://modrinth.com/mod/fabric-api)
 3. Download MCEndgame from [Releases](https://github.com/maucon/MCEndgame/releases), [Modrinth](https://modrinth.com/mod/mcendgame/)
    or [CurseForge](https://www.curseforge.com/minecraft/mc-mods/mcendgame)
-4. Download all [required dependencies](#dependencies)
+4. Download the [required dependencies](#dependencies)
 5. Place all `.jar` files into your mods folder
 6. Launch the game
 
 ### Dependencies
 
-| Dependency                                                                | Version                |
-|---------------------------------------------------------------------------|------------------------|
-| [Fabric Loader](https://fabricmc.net/use/)                                | ≥ 0.19.3               |
-| [Fabric API](https://modrinth.com/mod/fabric-api)                         | ≥ 0.152.1+26.2         |
-| [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) | ≥ 1.13.12+kotlin.2.4.0 |
-| [Geckolib](https://modrinth.com/mod/geckolib)                             | ~5.5.3                 |
+- [Fabric Loader](https://fabricmc.net/use/)
+- [Fabric API](https://modrinth.com/mod/fabric-api)
+- [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin)
+- [Geckolib](https://modrinth.com/mod/geckolib)
+
+> Note: Specific version requirements are listed in [fabric.mod.json](src/main/resources/fabric.mod.json)
 
 ### Building from Source
 
