@@ -125,7 +125,7 @@ See the [Analytics Wiki Page](https://github.com/maucon/MCEndgame/wiki/Analytics
 
 ### Installation
 
-1. Install [Fabric Loader](https://fabricmc.net/use/) for your Minecraft version
+1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft **26.3**
 2. Download [Fabric API](https://modrinth.com/mod/fabric-api)
 3. Download MCEndgame from [Releases](https://github.com/maucon/MCEndgame/releases), [Modrinth](https://modrinth.com/mod/mcendgame/)
    or [CurseForge](https://www.curseforge.com/minecraft/mc-mods/mcendgame)
