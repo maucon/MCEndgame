@@ -116,6 +116,22 @@ enum class DungeonType(
         biome = CustomBiomes.BEASTWEAVER_GROVE_DUNGEON,
         gameTime = 14700,
     ),
+    BURNING_CATHEDRAL(
+        listOf(
+            RandomOption(1, DungeonLayoutType.BURNING_CATHEDRAL),
+        ),
+        listOf(
+            RandomOption(1, FoxStats),
+        ),
+        listOf(
+            RandomOption(1, BloodKingBossStats),
+            RandomOption(1, BloodQueenBossStats),
+        ),
+        enemyCount = 0,
+        bossCount = 2,
+        biome = CustomBiomes.BURNING_CATHEDRAL_DUNGEON,
+        gameTime = 18000,
+    ),
     TRAINING(
         listOf(
             RandomOption(1, DungeonLayoutType.TRAINING),

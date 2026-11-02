@@ -18,6 +18,7 @@ object CustomBiomes {
     val STRONGHOLD_DUNGEON: ResourceKey<Biome> = of("stronghold_dungeon")
     val DESERT_DUNGEON: ResourceKey<Biome> = of("desert_dungeon")
     val BEASTWEAVER_GROVE_DUNGEON: ResourceKey<Biome> = of("beastweaver_grove")
+    val BURNING_CATHEDRAL_DUNGEON: ResourceKey<Biome> = of("burning_cathedral")
 
     private fun of(id: String) = ResourceKey.create(Registries.BIOME, IdentifierUtil.default(id))
 
@@ -25,6 +26,7 @@ object CustomBiomes {
         context.register(STRONGHOLD_DUNGEON, createStrongholdDungeon())
         context.register(DESERT_DUNGEON, createDesertDungeon())
         context.register(BEASTWEAVER_GROVE_DUNGEON, createBeastweaverDungeon())
+        context.register(BURNING_CATHEDRAL_DUNGEON, createBurningCathedralDungeon())
     }
 
     private fun createStrongholdDungeon(): Biome {
@@ -60,6 +62,17 @@ object CustomBiomes {
             .generationSettings(BiomeGenerationSettings.PlainBuilder().build())
             .mobSpawnSettings(MobSpawnSettings.Builder().build())
             .setAttribute(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic(CustomSoundEvents.BEASTWEAVER_GROVE_MUSIC_SOUND))
+            .build()
+    }
+
+    private fun createBurningCathedralDungeon(): Biome {
+        return Biome.BiomeBuilder()
+            .hasPrecipitation(false)
+            .temperature(2.0f)
+            .downfall(0.0f)
+            .specialEffects(BiomeSpecialEffects.Builder().waterColor(0x5C0000).build())
+            .generationSettings(BiomeGenerationSettings.PlainBuilder().build())
+            .mobSpawnSettings(MobSpawnSettings.Builder().build())
             .build()
     }
 }

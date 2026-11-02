@@ -10,4 +10,5 @@ enum class DungeonLayoutType(
     NETHER({ LinearLayoutGenerator(NetherRoomTypes.START_ROOM, NetherRoomTypes.BOSS_ROOM, NetherRoomTypes.ROOMS) }),
     DESERT({ LinearLayoutGenerator(DesertRoomTypes.START_ROOM, DesertRoomTypes.BOSS_ROOM, DesertRoomTypes.ROOMS) }),
     BEASTWEAVER_GROVE({ SingleRoomLayoutGenerator(BeastweaverGroveRoomTypes.BOSS_ROOM) }),
+    BURNING_CATHEDRAL({ SingleRoomLayoutGenerator(BurningCathedralRoomTypes.BOSS_ROOM) }),
 }

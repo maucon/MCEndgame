@@ -73,6 +73,7 @@
   "item.mcendgame.aspect_of_eminence": "Aspect of Eminence",
   "item.mcendgame.aspect_of_ancestors": "Aspect of Ancestors",
   "item.mcendgame.aspect_of_the_grove": "Aspect of the Grove",
+  "item.mcendgame.scorched_sigil": "Scorched Sigil",
   "item.mcendgame.aspect_of_outlaws": "Aspect of Outlaws",
   "item.mcendgame.aspect_of_kin": "Aspect of Kin",
 
@@ -101,6 +102,8 @@
   "item.mcendgame.aspect.description.ancestors": "Dungeon contains an additional Totem Encounter",
   "item.mcendgame.aspect.description.grove_0": "Dungeon only contains the Beastweaver",
   "item.mcendgame.aspect.description.grove_1": "Dungeon is at least Level %s",
+  "item.mcendgame.aspect.description.scorched_0": "Dungeon only contains the ???",
+  "item.mcendgame.aspect.description.scorched_1": "Dungeon is at least Level %s",
   "item.mcendgame.aspect.description.outlaws": "Dungeon contains %s additional Bandits",
   "item.mcendgame.aspect.description.kin": "Bandits appear in pairs",
 

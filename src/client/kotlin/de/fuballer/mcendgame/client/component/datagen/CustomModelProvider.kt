@@ -83,6 +83,7 @@ class CustomModelProvider(
         generator.generateFlatItem(AspectItems.ASPECT_OF_THE_GROVE, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_TYRANNY, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_ZEAL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.SCORCHED_SIGIL, ModelTemplates.FLAT_ITEM)
 
         generator.generateFlatItem(CrystalItems.CALIBRATION_CRYSTAL, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(CrystalItems.SACRIFICIAL_CRYSTAL, ModelTemplates.FLAT_ITEM)

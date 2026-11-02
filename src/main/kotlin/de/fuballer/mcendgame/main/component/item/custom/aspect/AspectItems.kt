@@ -16,6 +16,7 @@ import de.fuballer.mcendgame.main.component.item.custom.aspect.item.impatience.A
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.kin.AspectOfKin
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.outlaws.AspectOfOutlaws
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.savagery.AspectOfSavagery
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.sigil.scorched.ScorchedSigil
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.tyranny.AspectOfTyranny
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.zeal.AspectOfZeal
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
@@ -41,5 +42,11 @@ object AspectItems {
     val ASPECT_OF_KIN = RegistryUtil.registerAspectItem(::AspectOfKin, AspectItemIds.ASPECT_OF_KIN)
     val ASPECT_OF_ASCENSION = RegistryUtil.registerAspectItem(::AspectOfAscension, AspectItemIds.ASPECT_OF_ASCENSION)
     val ASPECT_OF_GHOSTS = RegistryUtil.registerAspectItem(::AspectOfGhosts, AspectItemIds.ASPECT_OF_GHOSTS)
+    val SCORCHED_SIGIL = RegistryUtil.registerAspectItem(::ScorchedSigil, AspectItemIds.SCORCHED_SIGIL)
     val ASPECT_OF_THE_GROVE = RegistryUtil.registerAspectItem(::AspectOfTheGrove, AspectItemIds.ASPECT_OF_THE_GROVE)
+
+    val SIGILS = listOf(
+        ASPECT_OF_THE_GROVE,
+        SCORCHED_SIGIL,
+    )
 }

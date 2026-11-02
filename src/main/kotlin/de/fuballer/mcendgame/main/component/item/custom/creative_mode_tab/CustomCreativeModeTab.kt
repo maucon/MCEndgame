@@ -99,6 +99,7 @@ object CustomCreativeModeTab {
                     output.accept(AspectItems.ASPECT_OF_OUTLAWS.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_KIN.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_ASCENSION.defaultInstance)
+                    output.accept(AspectItems.SCORCHED_SIGIL.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(
