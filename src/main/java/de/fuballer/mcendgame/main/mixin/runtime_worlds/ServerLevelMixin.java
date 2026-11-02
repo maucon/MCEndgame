@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
-@Mixin(value = ServerLevel.class)
+@Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin implements ServerLevelAccessor {
     @Unique
     private static final int TICK_TIMEOUT = 20 * 15;
