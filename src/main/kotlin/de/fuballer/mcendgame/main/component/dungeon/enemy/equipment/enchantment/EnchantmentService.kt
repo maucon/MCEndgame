@@ -41,6 +41,12 @@ class EnchantmentService {
             val potentialEnchant = RandomUtil.pickOne(enchants, random).option
             val potentialEnchantEntry = enchantmentRegistry.getOrThrow(potentialEnchant.enchantment)
 
+            val existingLevel = pickedEnchantments[potentialEnchantEntry]
+            if (existingLevel != null) {
+                pickedEnchantments[potentialEnchantEntry] = maxOf(existingLevel, potentialEnchant.level)
+                return@repeat
+            }
+
             val compatible = EnchantmentHelper.isEnchantmentCompatible(pickedEnchantments.keys, potentialEnchantEntry)
             if (!compatible) return@repeat
 
