@@ -3,11 +3,15 @@ package de.fuballer.mcendgame.main.component.biome
 import de.fuballer.mcendgame.main.component.sound.CustomSoundEvents
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import de.maucon.mauconframework.di.annotation.Injectable
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.ResourceKey
+import net.minecraft.util.ARGB
+import net.minecraft.world.attribute.AmbientParticle
 import net.minecraft.world.attribute.BackgroundMusic
 import net.minecraft.world.attribute.EnvironmentAttributes
+import net.minecraft.world.attribute.modifier.ListModifier
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.biome.BiomeGenerationSettings
 import net.minecraft.world.level.biome.BiomeSpecialEffects
@@ -71,6 +75,11 @@ object CustomBiomes {
             .temperature(2.0f)
             .downfall(0.0f)
             .specialEffects(BiomeSpecialEffects.Builder().waterColor(0x5C0000).build())
+            .setAttribute(EnvironmentAttributes.BLOCK_LIGHT_TINT, ARGB.vector3fFromRGB24(0x650A0A))
+            .setAttribute(EnvironmentAttributes.FOG_COLOR, ARGB.vector3fFromRGB24(0x650A0A))
+            .setAttribute(EnvironmentAttributes.FOG_START_DISTANCE, -10.0f)
+            .setAttribute(EnvironmentAttributes.FOG_END_DISTANCE, 50.0f)
+            .modifyAttribute(EnvironmentAttributes.AMBIENT_PARTICLES, ListModifier.append(), AmbientParticle.of(ParticleTypes.CRIMSON_SPORE, 0.025F))
             .generationSettings(BiomeGenerationSettings.PlainBuilder().build())
             .mobSpawnSettings(MobSpawnSettings.Builder().build())
             .build()
