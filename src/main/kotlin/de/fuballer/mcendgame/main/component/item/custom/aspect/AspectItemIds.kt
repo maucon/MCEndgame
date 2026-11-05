@@ -19,9 +19,9 @@ object AspectItemIds {
     val ASPECT_OF_EMINENCE = RegistryKeyUtil.createItemKey("aspect_of_eminence")
     val ASPECT_OF_ANCESTORS = RegistryKeyUtil.createItemKey("aspect_of_ancestors")
     val ASPECT_OF_DUALITY = RegistryKeyUtil.createItemKey("aspect_of_duality")
-    val ASPECT_OF_THE_GROVE = RegistryKeyUtil.createItemKey("aspect_of_the_grove")
     val ASPECT_OF_OUTLAWS = RegistryKeyUtil.createItemKey("aspect_of_outlaws")
     val ASPECT_OF_KIN = RegistryKeyUtil.createItemKey("aspect_of_kin")
     val ASPECT_OF_ASCENSION = RegistryKeyUtil.createItemKey("aspect_of_ascension")
+    val VERDANT_SIGIL = RegistryKeyUtil.createItemKey("verdant_sigil")
     val SCORCHED_SIGIL = RegistryKeyUtil.createItemKey("scorched_sigil")
 }

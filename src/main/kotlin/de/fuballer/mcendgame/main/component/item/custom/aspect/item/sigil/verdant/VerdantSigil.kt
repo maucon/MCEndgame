@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.item.custom.aspect.item.grove
+package de.fuballer.mcendgame.main.component.item.custom.aspect.item.sigil.verdant
 
 import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
@@ -13,7 +13,7 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.world.phys.Vec3
 import kotlin.random.Random
 
-class AspectOfTheGrove(
+class VerdantSigil(
     settings: Properties,
 ) : SigilItem(settings) {
     companion object {
@@ -37,8 +37,8 @@ class AspectOfTheGrove(
     }
 
     override val description = mutableListOf(
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "grove_0"),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "grove_1", minBossLevel),
+        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "verdant_0"),
+        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "verdant_1", minBossLevel),
     )
 
     override val bossDeathParticles = listOf(

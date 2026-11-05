@@ -10,7 +10,7 @@ import de.fuballer.mcendgame.main.component.item.custom.aspect.item.fortitude.As
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.fortune.AspectOfFortune
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.ghosts.AspectOfGhosts
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.greed.AspectOfGreed
-import de.fuballer.mcendgame.main.component.item.custom.aspect.item.grove.AspectOfTheGrove
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.sigil.verdant.VerdantSigil
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.hordes.AspectOfHordes
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.impatience.AspectOfImpatience
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.kin.AspectOfKin
@@ -43,10 +43,10 @@ object AspectItems {
     val ASPECT_OF_ASCENSION = RegistryUtil.registerAspectItem(::AspectOfAscension, AspectItemIds.ASPECT_OF_ASCENSION)
     val ASPECT_OF_GHOSTS = RegistryUtil.registerAspectItem(::AspectOfGhosts, AspectItemIds.ASPECT_OF_GHOSTS)
     val SCORCHED_SIGIL = RegistryUtil.registerAspectItem(::ScorchedSigil, AspectItemIds.SCORCHED_SIGIL)
-    val ASPECT_OF_THE_GROVE = RegistryUtil.registerAspectItem(::AspectOfTheGrove, AspectItemIds.ASPECT_OF_THE_GROVE)
+    val VERDANT_SIGIL = RegistryUtil.registerAspectItem(::VerdantSigil, AspectItemIds.VERDANT_SIGIL)
 
     val SIGILS = listOf(
-        ASPECT_OF_THE_GROVE,
+        VERDANT_SIGIL,
         SCORCHED_SIGIL,
     )
 }
