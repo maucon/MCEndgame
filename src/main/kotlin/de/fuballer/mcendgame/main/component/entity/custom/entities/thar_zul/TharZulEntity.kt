@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.entity.custom.entities.blood_king
+package de.fuballer.mcendgame.main.component.entity.custom.entities.thar_zul
 
 import com.geckolib.animatable.GeoAnimatable
 import com.geckolib.animatable.GeoEntity
@@ -63,15 +63,15 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-class BloodKingEntity(
-    type: EntityType<out BloodKingEntity>,
+class TharZulEntity(
+    type: EntityType<out TharZulEntity>,
     world: Level,
 ) : PathfinderMob(type, world),
     GeoEntity,
     Enemy,
-    CustomAttacksMob<BloodKingEntity>,
+    CustomAttacksMob<TharZulEntity>,
     DisableAbleGoalsMob,
-    BlockAbleMovementMob<BloodKingEntity> {
+    BlockAbleMovementMob<TharZulEntity> {
     companion object {
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
@@ -129,7 +129,7 @@ class BloodKingEntity(
         private const val SLASH_ID = "Slash"
         private val SLASH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLASH_ID)
         private val SLASH_ATTACK =
-            Attack<BloodKingEntity>(
+            Attack<TharZulEntity>(
                 SLASH_ID,
                 SLASH_ANIM_DATA,
                 totalDuration = 35,
@@ -152,7 +152,7 @@ class BloodKingEntity(
         private const val STAB_ID = "Stab"
         private val STAB_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, STAB_ID)
         private val STAB_ATTACK =
-            Attack<BloodKingEntity>(
+            Attack<TharZulEntity>(
                 STAB_ID,
                 STAB_ANIM_DATA,
                 totalDuration = 35,
@@ -175,7 +175,7 @@ class BloodKingEntity(
         private const val SLAM_ID = "Slam"
         private val SLAM_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLAM_ID)
         private val SLAM_ATTACK =
-            Attack<BloodKingEntity>(
+            Attack<TharZulEntity>(
                 SLAM_ID,
                 SLAM_ANIM_DATA,
                 totalDuration = 40,
@@ -196,7 +196,7 @@ class BloodKingEntity(
         private const val SLAM_SPIKES_ID = "Slam Spikes"
         private val SLAM_SPIKES_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLAM_SPIKES_ID)
         private val SLAM_SPIKES_ATTACK =
-            Attack<BloodKingEntity>(
+            Attack<TharZulEntity>(
                 SLAM_SPIKES_ID,
                 SLAM_SPIKES_ANIM_DATA,
                 totalDuration = 40,
@@ -282,7 +282,7 @@ class BloodKingEntity(
             ),
             object : DelayedAttackData(delay + 14) {
                 override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
-                    (entity as? BloodKingEntity)?.scorchGround(scorchRadius, level)
+                    (entity as? TharZulEntity)?.scorchGround(scorchRadius, level)
                 }
             },
             DelayedDamageData(
@@ -300,7 +300,7 @@ class BloodKingEntity(
         private const val ULTIMATE_ID = "Ultimate"
         private val ULTIMATE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, ULTIMATE_ID)
         private val ULTIMATE_ATTACK =
-            Attack<BloodKingEntity>(
+            Attack<TharZulEntity>(
                 ULTIMATE_ID,
                 ULTIMATE_ANIM_DATA,
                 totalDuration = 148,
@@ -319,7 +319,7 @@ class BloodKingEntity(
         private const val TELEPORT_ID = "Teleport"
         private val TELEPORT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, null, null)
         private val TELEPORT_ATTACK =
-            Attack<BloodKingEntity>(
+            Attack<TharZulEntity>(
                 TELEPORT_ID,
                 TELEPORT_ANIM_DATA,
                 totalDuration = 7,
@@ -370,7 +370,7 @@ class BloodKingEntity(
                     object : DelayedAttackData(6) {
                         override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
                             if (target == null) return
-                            (entity as? BloodKingEntity)?.teleportNearTarget(target, 2.5, 3.0)
+                            (entity as? TharZulEntity)?.teleportNearTarget(target, 2.5, 3.0)
                         }
                     },
                     DelayedParticleData(
@@ -398,7 +398,7 @@ class BloodKingEntity(
                 blockMovementDuration = 7,
             )
 
-        private val ATTACKS: List<RandomOption<out Attack<BloodKingEntity>>> = listOf(
+        private val ATTACKS: List<RandomOption<out Attack<TharZulEntity>>> = listOf(
             RandomOption(1, SLASH_ATTACK),
             RandomOption(1, STAB_ATTACK),
             RandomOption(1, SLAM_ATTACK),
@@ -429,7 +429,7 @@ class BloodKingEntity(
     override var attackPose = AttackPose.DEFAULT
     override var attackDuration = 0
     override val attacks = ATTACKS
-    override val attackCooldowns: MutableMap<Attack<BloodKingEntity>, Int> = mutableMapOf()
+    override val attackCooldowns: MutableMap<Attack<TharZulEntity>, Int> = mutableMapOf()
     override val attackDataInstances = mutableListOf<DelayedAttackDataInstance>()
 
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
@@ -530,7 +530,7 @@ class BloodKingEntity(
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
-            AnimationController<BloodKingEntity>("Walk/Idle", 5)
+            AnimationController<TharZulEntity>("Walk/Idle", 5)
             { test ->
                 test.setAndContinue(if (test.isMoving) DefaultAnimations.WALK else DefaultAnimations.IDLE)
             },

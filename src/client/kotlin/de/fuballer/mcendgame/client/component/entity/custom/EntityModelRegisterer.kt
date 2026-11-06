@@ -10,10 +10,10 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.beastweaver_wolf.BeastweaverWolfRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.block_debris.BlockDebrisRenderer
-import de.fuballer.mcendgame.client.component.entity.custom.entities.blood_king.BloodKingRenderState
-import de.fuballer.mcendgame.client.component.entity.custom.entities.blood_king.BloodKingRenderer
-import de.fuballer.mcendgame.client.component.entity.custom.entities.blood_queen.BloodQueenRenderState
-import de.fuballer.mcendgame.client.component.entity.custom.entities.blood_queen.BloodQueenRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.thar_zul.TharZulRenderState
+import de.fuballer.mcendgame.client.component.entity.custom.entities.thar_zul.TharZulRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.thal_veyra.ThalVeyraRenderState
+import de.fuballer.mcendgame.client.component.entity.custom.entities.thal_veyra.ThalVeyraRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher.BonecrusherRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher.BonecrusherRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.elf_duelist.ElfDuelistRenderState
@@ -94,8 +94,8 @@ object EntityModelRegisterer {
         EntityRenderers.register(CustomEntities.BEASTWEAVER_WOLF, ::BeastweaverWolfRenderer)
         EntityRenderers.register(CustomEntities.BEASTWEAVER_VINE) { state -> BeastweaverVineRenderer<BeastweaverVineRenderState>(state) }
 
-        EntityRenderers.register(CustomEntities.BLOOD_KING) { state -> BloodKingRenderer<BloodKingRenderState>(state) }
-        EntityRenderers.register(CustomEntities.BLOOD_QUEEN) { state -> BloodQueenRenderer<BloodQueenRenderState>(state) }
+        EntityRenderers.register(CustomEntities.THAR_ZUL) { state -> TharZulRenderer<TharZulRenderState>(state) }
+        EntityRenderers.register(CustomEntities.THAL_VEYRA) { state -> ThalVeyraRenderer<ThalVeyraRenderState>(state) }
         EntityRenderers.register(CustomEntities.MAGMA_SPIKE) { state -> MagmaSpikeRenderer<MagmaSpikeRenderState>(state) }
 
         EntityRenderers.register(CustomEntities.SCARRED_ONE) { state -> ScarredOneRenderer<ScarredOneRenderState>(state) }

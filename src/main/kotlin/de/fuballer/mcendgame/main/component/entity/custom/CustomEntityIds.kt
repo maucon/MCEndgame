@@ -23,7 +23,7 @@ object CustomEntityIds {
     val BEASTWEAVER_WOLF = RegistryKeyUtil.createEntityKey("beastweaver_wolf")
     val BEASTWEAVER_VINE = RegistryKeyUtil.createEntityKey("beastweaver_vine")
     val BANDIT = RegistryKeyUtil.createEntityKey("bandit")
-    val BLOOD_KING = RegistryKeyUtil.createEntityKey("blood_king")
-    val BLOOD_QUEEN = RegistryKeyUtil.createEntityKey("blood_queen")
+    val THAR_ZUL = RegistryKeyUtil.createEntityKey("thar_zul")
+    val THAL_VEYRA = RegistryKeyUtil.createEntityKey("thal_veyra")
     val MAGMA_SPIKE = RegistryKeyUtil.createEntityKey("magma_spike")
 }

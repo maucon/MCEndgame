@@ -124,8 +124,8 @@ enum class DungeonType(
             RandomOption(1, FoxStats),
         ),
         listOf(
-            RandomOption(1, BloodKingBossStats),
-            RandomOption(1, BloodQueenBossStats),
+            RandomOption(1, TharZulBossStats),
+            RandomOption(1, ThalVeyraBossStats),
         ),
         enemyCount = 0,
         bossCount = 2,

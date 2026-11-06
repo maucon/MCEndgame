@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.entity.custom.entities.blood_queen
+package de.fuballer.mcendgame.main.component.entity.custom.entities.thal_veyra
 
 import com.geckolib.animatable.GeoAnimatable
 import com.geckolib.animatable.GeoEntity
@@ -73,15 +73,15 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.random.Random
 
-class BloodQueenEntity(
-    type: EntityType<out BloodQueenEntity>,
+class ThalVeyraEntity(
+    type: EntityType<out ThalVeyraEntity>,
     world: Level,
 ) : PathfinderMob(type, world),
     GeoEntity,
     Enemy,
-    CustomAttacksMob<BloodQueenEntity>,
+    CustomAttacksMob<ThalVeyraEntity>,
     DisableAbleGoalsMob,
-    BlockAbleMovementMob<BloodQueenEntity> {
+    BlockAbleMovementMob<ThalVeyraEntity> {
     companion object {
         private val LEAN_ANIM: RawAnimation = RawAnimation.begin().thenPlay("misc.lean")
 
@@ -138,7 +138,7 @@ class BloodQueenEntity(
         private const val MAGMA_SPIKES_LINE_LEFT_ID = "Magma Spikes Line Left"
         private val MAGMA_SPIKES_LINE_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_LINE_LEFT_ID)
         private val MAGMA_SPIKES_LINE_LEFT_ATTACK =
-            Attack<BloodQueenEntity>(
+            Attack<ThalVeyraEntity>(
                 MAGMA_SPIKES_LINE_LEFT_ID,
                 MAGMA_SPIKES_LINE_LEFT_ANIM_DATA,
                 totalDuration = 35,
@@ -160,7 +160,7 @@ class BloodQueenEntity(
         private const val MAGMA_SPIKES_LINE_RIGHT_ID = "Magma Spikes Line Right"
         private val MAGMA_SPIKES_LINE_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_LINE_RIGHT_ID)
         private val MAGMA_SPIKES_LINE_RIGHT_ATTACK =
-            Attack<BloodQueenEntity>(
+            Attack<ThalVeyraEntity>(
                 MAGMA_SPIKES_LINE_RIGHT_ID,
                 MAGMA_SPIKES_LINE_RIGHT_ANIM_DATA,
                 totalDuration = 35,
@@ -182,7 +182,7 @@ class BloodQueenEntity(
         private const val MAGMA_SPIKES_SLAM_ID = "Magma Spikes Slam"
         private val MAGMA_SPIKES_SLAM_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_SLAM_ID)
         private val MAGMA_SPIKES_SLAM_ATTACK =
-            Attack<BloodQueenEntity>(
+            Attack<ThalVeyraEntity>(
                 MAGMA_SPIKES_SLAM_ID,
                 MAGMA_SPIKES_SLAM_ANIM_DATA,
                 totalDuration = 45,
@@ -235,7 +235,7 @@ class BloodQueenEntity(
         private const val TELEPORT_ID = "Teleport"
         private val TELEPORT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, null, null)
         private val TELEPORT_ATTACK =
-            Attack<BloodQueenEntity>(
+            Attack<ThalVeyraEntity>(
                 TELEPORT_ID,
                 TELEPORT_ANIM_DATA,
                 totalDuration = 7,
@@ -285,7 +285,7 @@ class BloodQueenEntity(
                     ),
                     object : DelayedAttackData(6) {
                         override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
-                            (entity as? BloodQueenEntity)?.teleportEscape()
+                            (entity as? ThalVeyraEntity)?.teleportEscape()
                         }
                     },
                     DelayedParticleData(
@@ -317,7 +317,7 @@ class BloodQueenEntity(
         private const val FIREBALL_RIGHT_ID = "Fireball Right"
         private val FIREBALL_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, FIREBALL_RIGHT_ID)
         private val FIREBALL_RIGHT_ATTACK =
-            Attack<BloodQueenEntity>(
+            Attack<ThalVeyraEntity>(
                 FIREBALL_RIGHT_ID,
                 FIREBALL_RIGHT_ANIM_DATA,
                 totalDuration = 35,
@@ -334,7 +334,7 @@ class BloodQueenEntity(
                     DelayedSoundData(FIRECHARGE_SOUND, 19),
                     object : DelayedAttackData(19) {
                         override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
-                            (entity as? BloodQueenEntity)?.throwFireball(true)
+                            (entity as? ThalVeyraEntity)?.throwFireball(true)
                         }
                     },
                 ),
@@ -344,7 +344,7 @@ class BloodQueenEntity(
         private const val FIREBALL_LEFT_ID = "Fireball Left"
         private val FIREBALL_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, FIREBALL_LEFT_ID)
         private val FIREBALL_LEFT_ATTACK =
-            Attack<BloodQueenEntity>(
+            Attack<ThalVeyraEntity>(
                 FIREBALL_LEFT_ID,
                 FIREBALL_LEFT_ANIM_DATA,
                 totalDuration = 35,
@@ -361,7 +361,7 @@ class BloodQueenEntity(
                     DelayedSoundData(FIRECHARGE_SOUND, 19),
                     object : DelayedAttackData(19) {
                         override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
-                            (entity as? BloodQueenEntity)?.throwFireball(false)
+                            (entity as? ThalVeyraEntity)?.throwFireball(false)
                         }
                     },
                 ),
@@ -373,7 +373,7 @@ class BloodQueenEntity(
         private const val PUNCH_RIGHT_ID = "Punch Right"
         private val PUNCH_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, PUNCH_RIGHT_ID)
         private val PUNCH_RIGHT_ATTACK =
-            Attack<BloodQueenEntity>(
+            Attack<ThalVeyraEntity>(
                 PUNCH_RIGHT_ID,
                 PUNCH_RIGHT_ANIM_DATA,
                 totalDuration = 25,
@@ -392,7 +392,7 @@ class BloodQueenEntity(
         private const val PUNCH_LEFT_ID = "Punch Left"
         private val PUNCH_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, PUNCH_LEFT_ID)
         private val PUNCH_LEFT_ATTACK =
-            Attack<BloodQueenEntity>(
+            Attack<ThalVeyraEntity>(
                 PUNCH_LEFT_ID,
                 PUNCH_LEFT_ANIM_DATA,
                 totalDuration = 25,
@@ -405,7 +405,7 @@ class BloodQueenEntity(
                 ),
             )
 
-        private val ATTACKS: List<RandomOption<out Attack<BloodQueenEntity>>> = listOf(
+        private val ATTACKS: List<RandomOption<out Attack<ThalVeyraEntity>>> = listOf(
             RandomOption(1, MAGMA_SPIKES_LINE_LEFT_ATTACK),
             RandomOption(1, MAGMA_SPIKES_LINE_RIGHT_ATTACK),
             RandomOption(1, MAGMA_SPIKES_SLAM_ATTACK),
@@ -430,8 +430,8 @@ class BloodQueenEntity(
                 .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 0.65)
         }
 
-        private val STRAFE_RIGHT: EntityDataAccessor<Float> = SynchedEntityData.defineId(BloodQueenEntity::class.java, EntityDataSerializers.FLOAT)
-        private val STRAFE_FORWARDS: EntityDataAccessor<Float> = SynchedEntityData.defineId(BloodQueenEntity::class.java, EntityDataSerializers.FLOAT)
+        private val STRAFE_RIGHT: EntityDataAccessor<Float> = SynchedEntityData.defineId(ThalVeyraEntity::class.java, EntityDataSerializers.FLOAT)
+        private val STRAFE_FORWARDS: EntityDataAccessor<Float> = SynchedEntityData.defineId(ThalVeyraEntity::class.java, EntityDataSerializers.FLOAT)
 
         private const val LEAN_CHANGE = 0.1F
     }
@@ -443,7 +443,7 @@ class BloodQueenEntity(
     override var attackPose = AttackPose.DEFAULT
     override var attackDuration = 0
     override val attacks = ATTACKS
-    override val attackCooldowns: MutableMap<Attack<BloodQueenEntity>, Int> = mutableMapOf()
+    override val attackCooldowns: MutableMap<Attack<ThalVeyraEntity>, Int> = mutableMapOf()
     override val attackDataInstances = mutableListOf<DelayedAttackDataInstance>()
 
     var leanRight = 0F
@@ -491,12 +491,12 @@ class BloodQueenEntity(
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
-            AnimationController<BloodQueenEntity>("Walk/Idle", 5)
+            AnimationController<ThalVeyraEntity>("Walk/Idle", 5)
             { test -> test.setAndContinue(if (test.isMoving) DefaultAnimations.IDLE else DefaultAnimations.IDLE) },
 
             attackAnimationController,
 
-            AnimationController<BloodQueenEntity>("Lean", 5)
+            AnimationController<ThalVeyraEntity>("Lean", 5)
             { test -> if (test.isMoving) test.setAndContinue(LEAN_ANIM) else PlayState.STOP }
                 .additiveAnimations(),
         )

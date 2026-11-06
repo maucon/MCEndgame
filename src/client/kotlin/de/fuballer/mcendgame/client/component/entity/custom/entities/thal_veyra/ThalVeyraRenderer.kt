@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.client.component.entity.custom.entities.blood_king
+package de.fuballer.mcendgame.client.component.entity.custom.entities.thal_veyra
 
 import com.geckolib.constant.DataTickets
 import com.geckolib.constant.dataticket.DataTicket
@@ -8,30 +8,31 @@ import com.geckolib.renderer.base.GeoRenderState
 import com.geckolib.renderer.base.RenderPassInfo
 import com.google.common.reflect.TypeToken
 import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
-import de.fuballer.mcendgame.main.component.entity.custom.entities.blood_king.BloodKingEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.thal_veyra.ThalVeyraEntity
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import java.util.*
 import kotlin.math.PI
 
-class BloodKingRenderer<R>(
+class ThalVeyraRenderer<R>(
     context: EntityRendererProvider.Context
-) : GeoEntityRenderer<BloodKingEntity, R>(context, BloodKingModel()) where R : LivingEntityRenderState, R : GeoRenderState {
+) : GeoEntityRenderer<ThalVeyraEntity, R>(context, ThalVeyraModel()) where R : LivingEntityRenderState, R : GeoRenderState {
     companion object {
         private val LOCATORS = listOf(
-            "swordParticle0",
-            "swordParticle1",
-            "swordUltimateParticle1",
+            "fireballRight",
+            "fireballLeft",
+            "fistRight",
+            "fistLeft",
         )
 
         private val UUID_TICKET = DataTicket.create("uuid", object : TypeToken<UUID>() {})
     }
-
+    
     init {
-        shadowRadius = 0.65f
+        shadowRadius = 0.6f
     }
 
-    override fun addRenderData(animatable: BloodKingEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
+    override fun addRenderData(animatable: ThalVeyraEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
         renderState.addGeckolibData(UUID_TICKET, animatable.uuid)
     }
 

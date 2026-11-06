@@ -3,12 +3,12 @@ package de.fuballer.mcendgame.main.component.entity.types.boss
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
-import de.fuballer.mcendgame.main.component.entity.custom.entities.blood_king.BloodKingEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.thal_veyra.ThalVeyraEntity
 import net.minecraft.world.entity.EntityType
 import kotlin.random.Random
 
-object BloodKingBossStats : EntityTypeStats {
-    override val type: EntityType<BloodKingEntity> = CustomEntities.BLOOD_KING
+object ThalVeyraBossStats : EntityTypeStats {
+    override val type: EntityType<ThalVeyraEntity> = CustomEntities.THAL_VEYRA
 
     override val equipmentClass = EnemyEquipmentClass.NO_EQUIPMENT
     override val canBeInvisible = false

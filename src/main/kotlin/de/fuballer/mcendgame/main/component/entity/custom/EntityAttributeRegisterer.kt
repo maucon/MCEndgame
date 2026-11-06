@@ -5,8 +5,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.Bandit
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.BeakburnEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineEntity
-import de.fuballer.mcendgame.main.component.entity.custom.entities.blood_king.BloodKingEntity
-import de.fuballer.mcendgame.main.component.entity.custom.entities.blood_queen.BloodQueenEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.thar_zul.TharZulEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.thal_veyra.ThalVeyraEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
@@ -38,7 +38,7 @@ object EntityAttributeRegisterer {
         FabricDefaultAttributeRegistry.register(CustomEntities.BEASTWEAVER_WOLF, Wolf.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.BEASTWEAVER_VINE, BeastweaverVineEntity.createAttributes())
         FabricDefaultAttributeRegistry.register(CustomEntities.BANDIT, BanditEntity.createAttributes())
-        FabricDefaultAttributeRegistry.register(CustomEntities.BLOOD_KING, BloodKingEntity.createAttributes())
-        FabricDefaultAttributeRegistry.register(CustomEntities.BLOOD_QUEEN, BloodQueenEntity.createAttributes())
+        FabricDefaultAttributeRegistry.register(CustomEntities.THAR_ZUL, TharZulEntity.createAttributes())
+        FabricDefaultAttributeRegistry.register(CustomEntities.THAL_VEYRA, ThalVeyraEntity.createAttributes())
     }
 }
