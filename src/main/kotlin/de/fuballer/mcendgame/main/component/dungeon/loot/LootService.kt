@@ -81,7 +81,7 @@ class LootService {
         val finalCrystalCount = empoweredCrystalCount.toInt() + if (Random.nextDouble() < empoweredCrystalCount % 1) 1 else 0
 
         val crystalItems = RandomUtil.pickLevelRestrictedWithRepeats(LootSettings.CRYSTALS, 1, dungeonLevel, finalCrystalCount).toMutableList()
-        val command = DungeonBossCrystalDropCommand(dungeonLevel, serverLevel.getDungeonAspects(), crystalItems, lootMultiplier)
+        val command = DungeonBossCrystalDropCommand(dungeonLevel, serverLevel.getDungeonAspects(), crystalItems, lootMultiplier, event.final)
         val cmd = CommandGateway.apply(command)
         val itemStacks = cmd.crystalItems.map { it.defaultInstance }
 

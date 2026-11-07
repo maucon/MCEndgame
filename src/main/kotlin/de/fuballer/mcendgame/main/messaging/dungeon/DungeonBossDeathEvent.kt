@@ -12,4 +12,5 @@ data class DungeonBossDeathEvent(
     val world: Level,
     val bossEntity: Mob,
     val killer: LivingEntity?,
+    val final: Boolean,
 )

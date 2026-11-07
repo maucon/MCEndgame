@@ -87,7 +87,7 @@ class AreaAttackDamage(
         if (applyStatusEffects && hitTargets) applyStatusEffects(damagedTargets)
     }
 
-    private fun getScale(damager: Mob) = if (applyScale) damager.getAttributeValue(Attributes.SCALE) else 1.0
+    private fun getScale(damager: Mob) = if (applyScale) damager.scale.toDouble() else 1.0
 
     private fun getTargets(
         world: ServerLevel,

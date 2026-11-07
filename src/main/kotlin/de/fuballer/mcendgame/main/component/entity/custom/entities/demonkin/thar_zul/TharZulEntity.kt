@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.entity.custom.entities.thar_zul
+package de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul
 
 import com.geckolib.animatable.GeoAnimatable
 import com.geckolib.animatable.GeoEntity
@@ -24,11 +24,14 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.P
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.DemonkinUtil
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thal_veyra.ThalVeyraEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikesUtil
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.PairedMob
 import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.component.particle.DirectionalFlameSweepParticleEffect
 import de.fuballer.mcendgame.main.component.tags.CustomTags
@@ -38,15 +41,15 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.core.registries.Registries
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.PathfinderMob
+import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
@@ -58,6 +61,8 @@ import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.*
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 import kotlin.math.cos
 import kotlin.math.sin
@@ -71,8 +76,12 @@ class TharZulEntity(
     Enemy,
     CustomAttacksMob<TharZulEntity>,
     DisableAbleGoalsMob,
-    BlockAbleMovementMob<TharZulEntity> {
+    BlockAbleMovementMob<TharZulEntity>,
+    PairedMob {
     companion object {
+        private const val MAX_EMPOWER_TICKS = 600
+        private const val EMPOWER_SCALE = 0.3F
+
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
         private val TAKE_SWING_SOUND = RangeDefinedSoundData(
@@ -143,9 +152,10 @@ class TharZulEntity(
                     DelayedSoundData(SWEEP_SOUND, 10),
                     DelayedSoundData(FIRECHARGE_SOUND, 10),
                 ),
+                attackSpeed = { mob -> 1.0 + 0.25 * mob.getEmpowerPercentage() },
             )
 
-        private val STAB_AREA = BoxDamageArea(4.5, 0.5, 0.5, 0.5, 0.5, 1.5)
+        private val STAB_AREA = BoxDamageArea(4.5, 0.75, 0.75, 0.5, 0.5, 1.5)
         private val STAB_ATTACK_DAMAGE =
             AreaAttackDamage(0.75F, 2.5, STAB_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, disableBlockingShield = 5.0F, knockbackWhenBlocked = true)
         private val STAB_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.stab")
@@ -167,6 +177,7 @@ class TharZulEntity(
                     DelayedSoundData(FIRECHARGE_SOUND, 10),
                 ),
                 blockMovementDuration = 15,
+                attackSpeed = { mob -> 1.0 + 0.25 * mob.getEmpowerPercentage() },
             )
 
         private val SLAM_AREA = BoxDamageArea(5.0, 2.5, 1.5, 0.75, 0.3, 1.5)
@@ -191,6 +202,7 @@ class TharZulEntity(
                     DelayedSoundData(FIRE_SLAM_SOUND, 12),
                 ),
                 blockMovementDuration = 26,
+                attackSpeed = { mob -> 1.0 + 0.25 * mob.getEmpowerPercentage() },
             )
 
         private const val SLAM_SPIKES_ID = "Slam Spikes"
@@ -234,6 +246,7 @@ class TharZulEntity(
                     },
                 ),
                 blockMovementDuration = 26,
+                attackSpeed = { mob -> 1.0 + 0.25 * mob.getEmpowerPercentage() },
             )
 
         private fun getUltimateStepData(
@@ -314,6 +327,7 @@ class TharZulEntity(
                     *getUltimateStepData(86, 11.0, 5.0, 10.0, 180, 100, 50, Vec3(9.5, 4.0, 9.5)).toTypedArray(),
                 ),
                 blockMovementDuration = 136,
+                attackSpeed = { mob -> 1.0 + 0.5 * mob.getEmpowerPercentage() },
             )
 
         private const val TELEPORT_ID = "Teleport"
@@ -420,7 +434,14 @@ class TharZulEntity(
                 .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.1)
                 .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 0.65)
         }
+
+        private val EMPOWER_TICKS: EntityDataAccessor<Int> = SynchedEntityData.defineId(TharZulEntity::class.java, EntityDataSerializers.INT)
+
+        private val ATTACK_ANIMATION_SPEED: EntityDataAccessor<Float> = SynchedEntityData.defineId(TharZulEntity::class.java, EntityDataSerializers.FLOAT)
     }
+
+    override var partnerReference: EntityReference<LivingEntity>? = null
+    var foundPartner = false
 
     override var blockAbleMovementEntity = this
     override var blockedMovementTicks = 0
@@ -434,6 +455,20 @@ class TharZulEntity(
 
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
+
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(EMPOWER_TICKS, 0)
+        builder.define(ATTACK_ANIMATION_SPEED, 1F)
+    }
+
+    override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
+        super.onSyncedDataUpdated(accessor)
+        if (accessor == EMPOWER_TICKS) refreshDimensions()
+
+        if (!level().isClientSide) return
+        if (accessor == ATTACK_ANIMATION_SPEED) attackAnimationController.animationSpeed = entityData.get(ATTACK_ANIMATION_SPEED).toDouble()
+    }
 
     private val attackAnimationController =
         AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
@@ -580,6 +615,35 @@ class TharZulEntity(
         val level = level() as? ServerLevel ?: return
         tickBlockedMovement()
         tickAttacks(level, this)
+        tickPartner()
+        tickEmpower()
+    }
+
+    private fun tickEmpower() {
+        if (isFullyEmpowered()) return
+
+        val partner = getPartner() ?: return
+        if (!partner.isDeadOrDying) return
+
+        increaseEmpowerTicks()
+
+        DemonkinUtil.createEmpowerParticles(this)
+    }
+
+    private fun getEmpowerTicks() = entityData.get(EMPOWER_TICKS)
+
+    private fun setEmpowerTicks(ticks: Int) = entityData.set(EMPOWER_TICKS, ticks)
+
+    private fun increaseEmpowerTicks() = entityData.set(EMPOWER_TICKS, getEmpowerTicks() + 1)
+
+    fun isFullyEmpowered() = getEmpowerTicks() >= MAX_EMPOWER_TICKS
+
+    private fun getEmpowerPercentage() = getEmpowerTicks() / MAX_EMPOWER_TICKS.toFloat()
+
+    private fun tickPartner() {
+        if (foundPartner) return
+        if (tickCount % 20 != 0) return
+        findPartner(this, 100.0, ThalVeyraEntity::class.java)
     }
 
     override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.PLAYER_HURT
@@ -714,5 +778,45 @@ class TharZulEntity(
         }
 
         return false
+    }
+
+    override fun getLevel() = level()
+
+    override fun tickDeath() {
+        if (++deathTime <= 20) return
+        if (level().isClientSide) return
+        if (isRemoved) return
+
+        val partner = getPartner()
+        if (partner?.isAlive == true && (partner as? ThalVeyraEntity)?.isFullyEmpowered() != true) return
+
+        level().broadcastEntityEvent(this, 60.toByte())
+        remove(RemovalReason.KILLED)
+    }
+
+    override fun sanitizeScale(scale: Float): Float {
+        return super.sanitizeScale(scale) * (1F + EMPOWER_SCALE * getEmpowerPercentage())
+    }
+
+    override fun setAttackAnimationSpeed(attackSpeed: Float) {
+        entityData.set(ATTACK_ANIMATION_SPEED, attackSpeed)
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+
+        output.putInt("empower_ticks", getEmpowerTicks())
+
+        EntityReference.store(partnerReference, output, "partner")
+        output.putBoolean("found_partner", foundPartner)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+
+        setEmpowerTicks(input.getIntOr("empower_ticks", 0))
+
+        partnerReference = EntityReference.readWithOldOwnerConversion(input, "partner", level())
+        foundPartner = input.getBooleanOr("found_partner", false)
     }
 }

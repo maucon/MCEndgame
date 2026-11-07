@@ -30,6 +30,7 @@ class VerdantSigil(
     override fun getCrystalItems(
         level: Int,
         lootMultiplier: Double,
+        finalBoss: Boolean,
     ): List<CrystalItem> {
         val probability = level / 10.0 * lootMultiplier
         val count = probability.toInt() + if (Random.nextDouble() < probability % 1) 1 else 0

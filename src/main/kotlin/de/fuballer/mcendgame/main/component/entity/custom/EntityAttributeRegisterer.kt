@@ -5,8 +5,8 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.Bandit
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beakburn.BeakburnEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineEntity
-import de.fuballer.mcendgame.main.component.entity.custom.entities.thar_zul.TharZulEntity
-import de.fuballer.mcendgame.main.component.entity.custom.entities.thal_veyra.ThalVeyraEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul.TharZulEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thal_veyra.ThalVeyraEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity

@@ -8,7 +8,7 @@ import com.geckolib.renderer.base.GeoRenderState
 import com.geckolib.renderer.base.RenderPassInfo
 import com.google.common.reflect.TypeToken
 import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
-import de.fuballer.mcendgame.main.component.entity.custom.entities.thar_zul.TharZulEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul.TharZulEntity
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import java.util.*

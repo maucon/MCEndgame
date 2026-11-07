@@ -30,7 +30,10 @@ class ScorchedSigil(
     override fun getCrystalItems(
         level: Int,
         lootMultiplier: Double,
+        finalBoss: Boolean,
     ): List<CrystalItem> {
+        if (!finalBoss) return listOf()
+
         val probability = level / 10.0 * lootMultiplier
         val count = probability.toInt() + if (Random.nextDouble() < probability % 1) 1 else 0
         return List(count) { CrystalItems.CORRUPTION_CRYSTAL } // TODO add double corrupt

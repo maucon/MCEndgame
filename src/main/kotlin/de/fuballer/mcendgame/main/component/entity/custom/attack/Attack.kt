@@ -12,11 +12,11 @@ open class Attack<T>(
     val id: String,
     val animationData: AttackAnimationData,
     private val totalDuration: Int,
-    val cooldown: (Mob) -> Int,
+    val cooldown: (T) -> Int,
     private val trigger: TriggerCondition,
     private val data: List<DelayedAttackData>,
     private val blockMovementDuration: Int = 0,
-    private val attackSpeed: (Mob) -> Double = { 1.0 },
+    private val attackSpeed: (T) -> Double = { 1.0 },
 ) where T : Mob, T : GeoEntity {
     constructor(
         id: String,
@@ -26,7 +26,7 @@ open class Attack<T>(
         trigger: TriggerCondition,
         data: List<DelayedAttackData>,
         blockMovementDuration: Int = 0,
-        attackSpeed: (Mob) -> Double = { 1.0 },
+        attackSpeed: (T) -> Double = { 1.0 },
     ) : this(id, animationData, totalDuration, { cooldown }, trigger, data, blockMovementDuration, attackSpeed)
 
     open fun canStart(
@@ -38,7 +38,7 @@ open class Attack<T>(
         attacker: T,
         target: LivingEntity?,
     ) {
-        animationData?.triggerAnimation(attacker, attackSpeed(attacker))
+        animationData.triggerAnimation(attacker, attackSpeed(attacker))
 
         if (blockMovementDuration == 0) return
         val blockAbleMovementMob = attacker as? BlockAbleMovementMob<*> ?: return

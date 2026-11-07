@@ -18,7 +18,7 @@ abstract class SigilItem(
     abstract fun getDropProbability(level: Int): Double
     abstract val dungeonType: DungeonType
 
-    open fun getCrystalItems(level: Int, lootMultiplier: Double): List<CrystalItem> = listOf()
+    open fun getCrystalItems(level: Int, lootMultiplier: Double, finalBoss: Boolean): List<CrystalItem> = listOf()
 
     open val bossDeathSounds: List<SoundData> = listOf()
     open val bossDeathParticles: List<ParticleData> = listOf()

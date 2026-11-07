@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.client.component.entity.custom.entities.thar_zul
 
 import com.geckolib.model.GeoModel
 import com.geckolib.renderer.base.GeoRenderState
-import de.fuballer.mcendgame.main.component.entity.custom.entities.thar_zul.TharZulEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul.TharZulEntity
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 
 class TharZulModel : GeoModel<TharZulEntity>() {

@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.entity.custom.entities.thal_veyra
+package de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thal_veyra
 
 import com.geckolib.animatable.GeoAnimatable
 import com.geckolib.animatable.GeoEntity
@@ -25,12 +25,15 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.Rang
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.StrafeTriggerCondition
 import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerConditionGroup
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.DemonkinUtil
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul.TharZulEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikesUtil
 import de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball.SpellFireballUtil
 import de.fuballer.mcendgame.main.component.entity.custom.goals.*
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.PairedMob
 import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.util.extension.mixin.MoveControlMixinExtension.getStrafeForwards
 import de.fuballer.mcendgame.main.util.extension.mixin.MoveControlMixinExtension.getStrafeRight
@@ -48,10 +51,7 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.tags.FluidTags
 import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.PathfinderMob
+import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.goal.FloatGoal
@@ -64,6 +64,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.material.FluidState
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
@@ -81,8 +83,12 @@ class ThalVeyraEntity(
     Enemy,
     CustomAttacksMob<ThalVeyraEntity>,
     DisableAbleGoalsMob,
-    BlockAbleMovementMob<ThalVeyraEntity> {
+    BlockAbleMovementMob<ThalVeyraEntity>,
+    PairedMob {
     companion object {
+        private const val MAX_EMPOWER_TICKS = 600
+        private const val EMPOWER_SCALE = 0.2F
+
         private val LEAN_ANIM: RawAnimation = RawAnimation.begin().thenPlay("misc.lean")
 
         private val SWEEP_SOUND =
@@ -154,6 +160,7 @@ class ThalVeyraEntity(
                     DelayedSoundData(SWEEP_SOUND, 12),
                     SPIKES_LINE_DATA_DELAYED,
                 ),
+                attackSpeed = { mob -> 1.0 + 0.2 * mob.getEmpowerPercentage() },
             )
 
         private val MAGMA_SPIKES_LINE_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.spikes_line_right")
@@ -176,6 +183,7 @@ class ThalVeyraEntity(
                     DelayedSoundData(SWEEP_SOUND, 12),
                     SPIKES_LINE_DATA_DELAYED,
                 ),
+                attackSpeed = { mob -> 1.0 + 0.2 * mob.getEmpowerPercentage() },
             )
 
         private val MAGMA_SPIKES_SLAM_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.spikes_slam")
@@ -224,6 +232,7 @@ class ThalVeyraEntity(
                     },
                 ),
                 blockMovementDuration = 40,
+                attackSpeed = { mob -> 1.0 + 0.3 * mob.getEmpowerPercentage() },
             )
 
         private const val TELEPORT_MIN_PLAYER_DISTANCE = 8.0
@@ -239,7 +248,7 @@ class ThalVeyraEntity(
                 TELEPORT_ID,
                 TELEPORT_ANIM_DATA,
                 totalDuration = 7,
-                cooldown = 0,
+                cooldown = { entity -> if ((entity as ThalVeyraEntity).hasPartner()) 150 else 300 },
                 DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
                 data = listOf(
                     DelayedSoundData(FIRE_SOUND, 0),
@@ -338,6 +347,7 @@ class ThalVeyraEntity(
                         }
                     },
                 ),
+                attackSpeed = { mob -> 1.0 + 0.5 * mob.getEmpowerPercentage() },
             )
 
         private val FIREBALL_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.throw_fireball_left")
@@ -365,9 +375,10 @@ class ThalVeyraEntity(
                         }
                     },
                 ),
+                attackSpeed = { mob -> 1.0 + 0.5 * mob.getEmpowerPercentage() },
             )
 
-        private val PUNCH_RIGHT_AREA = BoxDamageArea(4.0, 0.5, 0.5, 0.0, 0.5, 1.5)
+        private val PUNCH_RIGHT_AREA = BoxDamageArea(4.0, 0.75, 0.75, 0.0, 0.5, 1.5)
         private val PUNCH_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 3.0, PUNCH_RIGHT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, knockbackWhenBlocked = true)
         private val PUNCH_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.punch_right")
         private const val PUNCH_RIGHT_ID = "Punch Right"
@@ -384,6 +395,7 @@ class ThalVeyraEntity(
                     DelayedSoundData(FIRECHARGE_SOUND, 14),
                     DelayedDamageData(PUNCH_RIGHT_ATTACK_DAMAGE, 14),
                 ),
+                attackSpeed = { mob -> 1.0 + 0.4 * mob.getEmpowerPercentage() },
             )
 
         private val PUNCH_LEFT_AREA = BoxDamageArea(4.0, 0.5, 0.5, 0.0, -0.5, 1.5)
@@ -403,6 +415,7 @@ class ThalVeyraEntity(
                     DelayedSoundData(FIRECHARGE_SOUND, 14),
                     DelayedDamageData(PUNCH_LEFT_ATTACK_DAMAGE, 14),
                 ),
+                attackSpeed = { mob -> 1.0 + 0.4 * mob.getEmpowerPercentage() },
             )
 
         private val ATTACKS: List<RandomOption<out Attack<ThalVeyraEntity>>> = listOf(
@@ -430,11 +443,18 @@ class ThalVeyraEntity(
                 .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 0.65)
         }
 
+        private val EMPOWER_TICKS: EntityDataAccessor<Int> = SynchedEntityData.defineId(ThalVeyraEntity::class.java, EntityDataSerializers.INT)
+
+        private val ATTACK_ANIMATION_SPEED: EntityDataAccessor<Float> = SynchedEntityData.defineId(ThalVeyraEntity::class.java, EntityDataSerializers.FLOAT)
+
         private val STRAFE_RIGHT: EntityDataAccessor<Float> = SynchedEntityData.defineId(ThalVeyraEntity::class.java, EntityDataSerializers.FLOAT)
         private val STRAFE_FORWARDS: EntityDataAccessor<Float> = SynchedEntityData.defineId(ThalVeyraEntity::class.java, EntityDataSerializers.FLOAT)
 
         private const val LEAN_CHANGE = 0.1F
     }
+
+    override var partnerReference: EntityReference<LivingEntity>? = null
+    var foundPartner = false
 
     override var blockAbleMovementEntity = this
     override var blockedMovementTicks = 0
@@ -458,6 +478,17 @@ class ThalVeyraEntity(
         super.defineSynchedData(builder)
         builder.define(STRAFE_RIGHT, 0F)
         builder.define(STRAFE_FORWARDS, 0F)
+        builder.define(EMPOWER_TICKS, 0)
+        builder.define(ATTACK_ANIMATION_SPEED, 1F)
+    }
+
+    override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
+        super.onSyncedDataUpdated(accessor)
+
+        if (accessor == EMPOWER_TICKS) refreshDimensions()
+
+        if (!level().isClientSide) return
+        if (accessor == ATTACK_ANIMATION_SPEED) attackAnimationController.animationSpeed = entityData.get(ATTACK_ANIMATION_SPEED).toDouble()
     }
 
     private val attackAnimationController =
@@ -550,6 +581,35 @@ class ThalVeyraEntity(
         tickAttacks(level, this)
         tickStrafe()
         floatLiquid()
+        tickPartner()
+        tickEmpower()
+    }
+
+    private fun tickEmpower() {
+        if (isFullyEmpowered()) return
+
+        val partner = getPartner() ?: return
+        if (!partner.isDeadOrDying) return
+
+        increaseEmpowerTicks()
+
+        DemonkinUtil.createEmpowerParticles(this)
+    }
+
+    private fun getEmpowerTicks() = entityData.get(EMPOWER_TICKS)
+
+    private fun setEmpowerTicks(ticks: Int) = entityData.set(EMPOWER_TICKS, ticks)
+
+    private fun increaseEmpowerTicks() = entityData.set(EMPOWER_TICKS, getEmpowerTicks() + 1)
+
+    fun isFullyEmpowered() = getEmpowerTicks() >= MAX_EMPOWER_TICKS
+
+    private fun getEmpowerPercentage() = getEmpowerTicks() / MAX_EMPOWER_TICKS.toFloat()
+
+    private fun tickPartner() {
+        if (foundPartner) return
+        if (tickCount % 20 != 0) return
+        findPartner(this, 100.0, TharZulEntity::class.java)
     }
 
     private fun floatLiquid() {
@@ -669,5 +729,45 @@ class ThalVeyraEntity(
                 Random.nextDouble(-0.1, 0.1) * scale,
             )
         }
+    }
+
+    override fun getLevel() = level()
+
+    override fun tickDeath() {
+        if (++deathTime <= 20) return
+        if (level().isClientSide) return
+        if (isRemoved) return
+
+        val partner = getPartner()
+        if (partner?.isAlive == true && (partner as? TharZulEntity)?.isFullyEmpowered() != true) return
+
+        level().broadcastEntityEvent(this, 60.toByte())
+        remove(RemovalReason.KILLED)
+    }
+
+    override fun sanitizeScale(scale: Float): Float {
+        return super.sanitizeScale(scale) * (1F + EMPOWER_SCALE * getEmpowerPercentage())
+    }
+
+    override fun setAttackAnimationSpeed(attackSpeed: Float) {
+        entityData.set(ATTACK_ANIMATION_SPEED, attackSpeed)
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+
+        output.putInt("empower_ticks", getEmpowerTicks())
+
+        EntityReference.store(partnerReference, output, "partner")
+        output.putBoolean("found_partner", foundPartner)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+
+        setEmpowerTicks(input.getIntOr("empower_ticks", 0))
+
+        partnerReference = EntityReference.readWithOldOwnerConversion(input, "partner", level())
+        foundPartner = input.getBooleanOr("found_partner", false)
     }
 }

@@ -1225,7 +1225,7 @@ class BeastweaverEntity(
     private fun getTransformDimensionsYScale() = 1F + entityData.get(TRANSFORM_PROGRESS) * 0.065F
 
     override fun sanitizeScale(scale: Float): Float {
-        return super.sanitizeScale(scale) * 1F + entityData.get(TRANSFORM_PROGRESS) * TRANSFORM_ADDITIONAL_SCALE
+        return super.sanitizeScale(scale) * (1F + entityData.get(TRANSFORM_PROGRESS) * TRANSFORM_ADDITIONAL_SCALE)
     }
 
     fun startRhinoCharge() {

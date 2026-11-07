@@ -61,7 +61,7 @@ object SigilService {
 
             val crystalItems = cmd.crystalItems
             crystalItems.clear()
-            crystalItems.addAll(sigil.getCrystalItems(cmd.dungeonLevel, cmd.lootMultiplier))
+            crystalItems.addAll(sigil.getCrystalItems(cmd.dungeonLevel, cmd.lootMultiplier, cmd.finalBoss))
             return
         }
     }

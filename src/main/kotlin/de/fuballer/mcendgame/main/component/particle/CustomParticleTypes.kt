@@ -31,6 +31,12 @@ object CustomParticleTypes {
         { _ -> MoveToTargetFlameParticleEffect.CODEC },
         { _ -> MoveToTargetFlameParticleEffect.PACKET_CODEC },
     )
+    val DEMONKIN_EMPOWER = registerComplex<DemonkinEmpowerParticleEffect>(
+        "demonkin_empower",
+        false,
+        { _ -> DemonkinEmpowerParticleEffect.CODEC },
+        { _ -> DemonkinEmpowerParticleEffect.PACKET_CODEC },
+    )
     val DIRECTIONAL_SWEEP_ATTACK = registerComplex<DirectionalSweepParticleEffect>(
         "directional_sweep_attack",
         true,

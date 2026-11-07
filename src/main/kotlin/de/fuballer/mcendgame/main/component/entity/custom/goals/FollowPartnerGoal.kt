@@ -1,11 +1,10 @@
 package de.fuballer.mcendgame.main.component.entity.custom.goals
 
-import net.minecraft.world.entity.EntityReference
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.PairedMob
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.PathfinderMob
 import net.minecraft.world.entity.ai.goal.Goal
 import net.minecraft.world.entity.ai.navigation.PathNavigation
-import net.minecraft.world.level.Level
 import net.minecraft.world.level.pathfinder.PathType
 import java.util.*
 
@@ -14,7 +13,7 @@ class FollowPartnerGoal<T>(
     private val speedModifier: Double,
     private val startDistance: Double,
     private val stopDistance: Double,
-) : Goal() where T : PathfinderMob, T : FollowPartnerGoal.PairedMob {
+) : Goal() where T : PathfinderMob, T : PairedMob {
     private var partner: LivingEntity? = null
     private var navigation: PathNavigation = mob.navigation
     private var timeToRecalcPath = 0
@@ -57,13 +56,5 @@ class FollowPartnerGoal<T>(
 
         timeToRecalcPath = adjustedTickDelay(10)
         navigation.moveTo(partner!!, speedModifier)
-    }
-
-    interface PairedMob {
-        var partnerReference: EntityReference<LivingEntity>?
-
-        fun getPartner() = EntityReference.getLivingEntity(partnerReference, getLevel())
-
-        fun getLevel(): Level
     }
 }

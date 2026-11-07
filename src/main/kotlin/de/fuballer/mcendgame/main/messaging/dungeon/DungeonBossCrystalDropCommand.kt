@@ -8,4 +8,5 @@ data class DungeonBossCrystalDropCommand(
     val aspects: Map<AspectItem, Int>,
     val crystalItems: MutableList<CrystalItem>,
     val lootMultiplier: Double,
+    val finalBoss: Boolean,
 )

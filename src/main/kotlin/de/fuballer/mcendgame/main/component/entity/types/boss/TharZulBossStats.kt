@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.main.component.entity.types.boss
 import de.fuballer.mcendgame.main.component.entity.EnemyEquipmentClass
 import de.fuballer.mcendgame.main.component.entity.EntityTypeStats
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
-import de.fuballer.mcendgame.main.component.entity.custom.entities.thar_zul.TharZulEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul.TharZulEntity
 import net.minecraft.world.entity.EntityType
 import kotlin.random.Random
 

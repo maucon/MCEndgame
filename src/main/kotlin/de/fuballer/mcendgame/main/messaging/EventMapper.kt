@@ -13,6 +13,8 @@ import de.fuballer.mcendgame.main.util.extension.ItemStackExtension.isSameIgnori
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonBoss
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonEnemy
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getBossesKilled
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getTotalBossCount
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventGateway
 import de.maucon.mauconframework.event.EventSubscriber
@@ -64,15 +66,6 @@ object EventMapper {
 
         val dungeonEnemyDeathEvent = DungeonEnemyDeathEvent(event.isClient, event.world, enemyEntity, event.killer)
         EventGateway.publish(dungeonEnemyDeathEvent)
-    }
-
-    @EventSubscriber(sync = true)
-    fun onDungeonBossDeath(event: DungeonEnemyDeathEvent) {
-        val bossEntity = event.enemyEntity as? Mob ?: return
-        if (!bossEntity.isDungeonBoss()) return
-
-        val dungeonBossDeathEvent = DungeonBossDeathEvent(event.isClient, event.world, bossEntity, event.killer)
-        EventGateway.publish(dungeonBossDeathEvent)
     }
 
     @Initializer

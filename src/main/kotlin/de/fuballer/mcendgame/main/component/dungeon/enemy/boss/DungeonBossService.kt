@@ -2,10 +2,12 @@ package de.fuballer.mcendgame.main.component.dungeon.enemy.boss
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.addCustomAttribute
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonFinalBossDeathEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossKilledMessageCommand
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemyDeathEvent
 import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDamagedEvent
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.isDungeonBoss
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getBossesKilled
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonAspects
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getTotalBossCount
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.increaseBossesKilled
 import de.maucon.mauconframework.command.CommandGateway
@@ -19,18 +21,23 @@ import net.minecraft.world.entity.player.Player
 @Injectable
 object DungeonBossService {
     @EventSubscriber(sync = true)
-    fun on(event: DungeonBossDeathEvent) {
+    fun on(event: DungeonEnemyDeathEvent) {
+        val entity = event.enemyEntity as? Mob ?: return
+        if (!entity.isDungeonBoss()) return
+
         val world = event.world as? ServerLevel ?: return
         world.increaseBossesKilled()
-
-        playBossDeathEffects(world, event.bossEntity)
-
         val finalBoss = world.getBossesKilled() == world.getTotalBossCount()
-        sendBossKilledMessage(world, finalBoss)
 
-        if (!finalBoss) return
-        val finalBossKilledEvent = DungeonFinalBossDeathEvent.of(event)
-        EventGateway.publish(finalBossKilledEvent)
+        val dungeonBossDeathEvent = DungeonBossDeathEvent(event.isClient, event.world, entity, event.killer, finalBoss)
+        EventGateway.publish(dungeonBossDeathEvent)
+    }
+
+    @EventSubscriber(sync = true)
+    fun on(event: DungeonBossDeathEvent) {
+        val world = event.world as? ServerLevel ?: return
+        playBossDeathEffects(world, event.bossEntity)
+        sendBossKilledMessage(world, event.bossEntity, event.final)
     }
 
     private fun playBossDeathEffects(
@@ -51,9 +58,13 @@ object DungeonBossService {
 
     private fun sendBossKilledMessage(
         level: ServerLevel,
+        boss: Mob,
         finalBoss: Boolean,
     ) {
-        level.players().forEach { it.sendSystemMessage(DungeonBossSettings.getBossKilledMessage(finalBoss)) }
+        val command = DungeonBossKilledMessageCommand(level.getDungeonAspects(), boss, finalBoss, DungeonBossSettings.getBossKilledMessage(finalBoss))
+        val cmd = CommandGateway.apply(command)
+        if (!cmd.shouldSend) return
+        level.players().forEach { it.sendSystemMessage(cmd.message) }
     }
 
     @EventSubscriber(sync = true)

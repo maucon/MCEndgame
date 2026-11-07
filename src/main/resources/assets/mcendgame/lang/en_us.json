@@ -439,7 +439,12 @@
 
   "text.mcendgame.dungeon.boss_killed": "Boss killed!",
   "text.mcendgame.dungeon.remaining_bosses_enhanced": " Remaining Bosses are enhanced.",
-  "text.mcendgame.dungeon.no_bosses_remaining": " No remaining Bosses.",
+  "text.mcendgame.dungeon.no_bosses_remaining": " No remainig Bosses.",
+  "text.mcendgame.dungeon.thar_zul_killed": "Thar'Zul has been slain.",
+  "text.mcendgame.dungeon.thal_veyra_killed": "Thal'Veyra has been slain.",
+  "text.mcendgame.dungeon.thar_zul_empower": " Thar'Zul draws power from her fallen corpse!",
+  "text.mcendgame.dungeon.thal_veyra_empower": " Thal'Veyra draws power from his fallen corpse!",
+  "text.mcendgame.dungeon.demonkin_killed": " The demonkin have been vanquished.",
 
   "text.mcendgame.dungeon.device.level": "Level: %s",
 

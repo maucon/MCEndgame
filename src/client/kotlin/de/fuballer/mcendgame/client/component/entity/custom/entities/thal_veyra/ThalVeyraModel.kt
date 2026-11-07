@@ -2,7 +2,7 @@ package de.fuballer.mcendgame.client.component.entity.custom.entities.thal_veyra
 
 import com.geckolib.model.GeoModel
 import com.geckolib.renderer.base.GeoRenderState
-import de.fuballer.mcendgame.main.component.entity.custom.entities.thal_veyra.ThalVeyraEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thal_veyra.ThalVeyraEntity
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 
 class ThalVeyraModel : GeoModel<ThalVeyraEntity>() {

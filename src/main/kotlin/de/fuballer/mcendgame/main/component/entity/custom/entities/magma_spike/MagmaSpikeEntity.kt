@@ -173,9 +173,8 @@ class MagmaSpikeEntity(
         val damageSource = if (currentOwner == null) damageSources().magic() else damageSources().indirectMagic(this, currentOwner)
         if (entity.hurtServer(serverLevel, damageSource, if (isLarge()) 10.0f else 6.0f)) {
             EnchantmentHelper.doPostAttackEffects(serverLevel, entity, damageSource)
+            entity.setAndSyncVelocity(entity.deltaMovement.scale(0.5).add(0.0, 0.35 * getScale(), 0.0))
         }
-
-        entity.setAndSyncVelocity(entity.deltaMovement.scale(0.5).add(0.0, 0.35 * getScale(), 0.0))
     }
 
     override fun handleEntityEvent(id: @EntityEvent.Value Byte) {
