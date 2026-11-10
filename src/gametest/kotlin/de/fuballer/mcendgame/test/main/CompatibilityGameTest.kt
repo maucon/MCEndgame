@@ -1,20 +1,24 @@
 package de.fuballer.mcendgame.test.main
 
 import io.netty.channel.embedded.EmbeddedChannel
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
 import net.fabricmc.fabric.api.gametest.v1.GameTest
+import net.minecraft.core.BlockPos
 import net.minecraft.gametest.framework.GameTestHelper
 import net.minecraft.network.Connection
 import net.minecraft.network.protocol.PacketFlow
 import net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.CommonListenerCookie
+import net.minecraft.world.entity.EntitySpawnReason
 import net.minecraft.world.entity.EntityTypes
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.GameType
+import net.minecraft.world.level.entity.EntityTypeTest
+import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import org.slf4j.LoggerFactory
 
@@ -94,7 +98,7 @@ class CompatibilityGameTest {
         helper.assertTrue(
             CompatibilityProbe.allowDeath.get() > 0,
             "ServerLivingEntityEvents.ALLOW_DEATH never fired; Better Revive relies on it to enter the downed state " +
-                "and create a grave instead of the vanilla death screen"
+                    "and create a grave instead of the vanilla death screen"
         )
         helper.succeed()
     }
@@ -104,18 +108,9 @@ class CompatibilityGameTest {
         helper.prepareNormalDifficulty()
 
         val player = helper.createProbePlayer()
-        CompatibilityProbe.reset(player)
-
-        // This is what Better Revive does: it cancels the death, enters its downed state and heals.
-        // Fabric events cannot be unregistered, so the listener only ever vetoes this one player.
-        ServerLivingEntityEvents.ALLOW_DEATH.register { entity, _, _ ->
-            if (entity === player) {
-                player.health = player.maxHealth
-                false
-            } else {
-                true
-            }
-        }
+        // The probe's ALLOW_DEATH listener (registered once) vetoes the death and heals the player,
+        // which is what Better Revive does before entering its downed state.
+        CompatibilityProbe.reset(player, vetoDeath = true)
 
         player.hurtServer(helper.level, helper.level.damageSources().genericKill(), 1_000.0f)
 
@@ -125,6 +120,36 @@ class CompatibilityGameTest {
         )
         helper.assertTrue(player.health > 0.0f, "The player should still be alive after the veto")
         helper.succeed()
+    }
+
+    @GameTest(maxTicks = 400)
+    fun testDungeonMobDeathKeepsTailHookAndLootSuppression(helper: GameTestHelper) {
+        helper.prepareNormalDifficulty()
+        val player = DungeonGameTest.openDungeon(helper)
+        val dungeonWorld = DungeonGameTest.findDungeonWorld(helper.level.server)
+            ?: throw helper.assertionException("Opening the dungeon should generate a dungeon world")
+        val pig = EntityTypes.PIG.spawn(dungeonWorld, BlockPos(0, 100, 0), EntitySpawnReason.COMMAND)
+            ?: throw helper.assertionException("Could not spawn the probe mob in the dungeon world")
+        pig.isNoGravity = true
+        pig.health = 0.01f
+        CompatibilityProbe.reset(pig)
+        pig.hurtServer(dungeonWorld, dungeonWorld.damageSources().playerAttack(player), 1.0f)
+        helper.assertTrue(pig.isDeadOrDying, "The dungeon probe mob should have died")
+        helper.assertTrue(
+            CompatibilityProbe.dropAllDeathLootTail.get() > 0,
+            "A TAIL hook on LivingEntity#dropAllDeathLoot never ran in a dungeon world; kill skill XP would be lost there"
+        )
+        helper.runAfterDelay(1) {
+            val drops = dungeonWorld.getEntities(
+                EntityTypeTest.forClass(ItemEntity::class.java),
+                AABB.ofSize(pig.position(), 8.0, 8.0, 8.0),
+            ) { true }
+            helper.assertTrue(
+                drops.isEmpty(),
+                "Dungeon loot suppression must still skip vanilla drops, but found ${drops.map { it.item }}"
+            )
+            helper.succeed()
+        }
     }
 
     private fun GameTestHelper.createProbePlayer(): ServerPlayer {

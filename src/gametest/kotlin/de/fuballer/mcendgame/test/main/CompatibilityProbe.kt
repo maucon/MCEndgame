@@ -20,6 +20,10 @@ object CompatibilityProbe {
     var target: LivingEntity? = null
 
     @JvmField
+    @Volatile
+    var vetoTarget: LivingEntity? = null
+
+    @JvmField
     val allowDamage = AtomicInteger()
 
     @JvmField
@@ -47,12 +51,19 @@ object CompatibilityProbe {
         }
         ServerLivingEntityEvents.ALLOW_DEATH.register { entity, _, _ ->
             if (entity === target) allowDeath.incrementAndGet()
-            true
+            if (entity === vetoTarget) {
+                // This is what Better Revive does: cancel the death, enter its downed state and heal.
+                entity.health = entity.maxHealth
+                false
+            } else {
+                true
+            }
         }
     }
 
-    fun reset(entity: LivingEntity?) {
+    fun reset(entity: LivingEntity?, vetoDeath: Boolean = false) {
         target = entity
+        vetoTarget = if (vetoDeath) entity else null
         allowDamage.set(0)
         afterDamage.set(0)
         allowDeath.set(0)
