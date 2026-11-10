@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.component.block
 import de.fuballer.mcendgame.main.component.block.blocks.DecayingCobwebBlock
 import de.fuballer.mcendgame.main.component.block.blocks.DungeonEnemyBlockerBlock
 import de.fuballer.mcendgame.main.component.block.blocks.crystalforge.CrystalForgeBlock
+import de.fuballer.mcendgame.main.component.block.blocks.demonic_crucible.DemonicCrucibleBlock
 import de.fuballer.mcendgame.main.component.block.blocks.dungeon_device.DungeonDeviceBlock
 import de.fuballer.mcendgame.main.component.block.blocks.totem_statue.TotemStatueBlock
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
@@ -69,5 +70,14 @@ object CustomBlocks {
             .noTerrainParticles()
             .pushReaction(PushReaction.IMMOVEABLE),
         CustomBlockItemIds.DUNGEON_ENEMY_BLOCKER,
+    )
+
+    val DEMONIC_CRUCIBLE = RegistryUtil.registerBlock(
+        ::DemonicCrucibleBlock,
+        Properties.of()
+            .strength(-1.0F, 3600000.0F)
+            .noLootTable()
+            .noOcclusion(),
+        CustomBlockItemIds.DEMONIC_CRUCIBLE,
     )
 }

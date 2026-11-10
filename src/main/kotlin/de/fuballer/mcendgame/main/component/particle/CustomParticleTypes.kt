@@ -19,6 +19,7 @@ object CustomParticleTypes {
     val SMOKE_PILLAR = registerSimple("smoke_pillar")
     val CLOUD_TORUS = registerSimple("cloud_torus")
     val REVERSE_FLAME = registerSimple("reverse_flame")
+    val DEMONIC_CRUCIBLE_CHARGE = registerSimple("demonic_crucible_charge")
     val HORIZONTAL_FLAME_BREATH = registerComplex<HorizontalFlameBreathParticleEffect>(
         "horizontal_flame_breath",
         false,

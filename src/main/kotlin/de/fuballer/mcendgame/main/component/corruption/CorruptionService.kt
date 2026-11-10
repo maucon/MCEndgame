@@ -19,11 +19,19 @@ import kotlin.jvm.optionals.getOrNull
 object CorruptionService {
     fun corrupt(
         stack: ItemStack,
+        times: Int = 1,
     ): ItemStack {
-        val possibleOutcomes = CorruptionSettings.CORRUPTION_OUTCOMES.filter { it.option.canApply(stack) }
-        val outcome = RandomUtil.pickOne(possibleOutcomes).option
+        var result = stack.copy()
 
-        val result = outcome.apply(stack.copy())
+        repeat(times) {
+            if (result.isEmpty) return@repeat
+
+            val possibleOutcomes = CorruptionSettings.CORRUPTION_OUTCOMES.filter { it.option.canApply(result) }
+            val outcome = RandomUtil.pickOne(possibleOutcomes).option
+
+            result = outcome.apply(result)
+        }
+
         result.setCorrupted()
 
         return result

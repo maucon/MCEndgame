@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.client.component.block
 
+import de.fuballer.mcendgame.client.component.block.demonic_crucible.DemonicCrucibleBlockEntityRenderer
 import de.fuballer.mcendgame.client.component.block.totem_statue.TotemStatueBlockEntityRenderer
 import de.fuballer.mcendgame.main.component.block.CustomBlockEntityTypes
 import de.maucon.mauconframework.di.annotation.Injectable
@@ -11,5 +12,6 @@ class BlockEntityRendererRegisterer {
     @Initializer
     fun init() {
         BlockEntityRenderers.register(CustomBlockEntityTypes.TOTEM_STATUE) { ctx -> TotemStatueBlockEntityRenderer(ctx) }
+        BlockEntityRenderers.register(CustomBlockEntityTypes.DEMONIC_CRUCIBLE) { ctx -> DemonicCrucibleBlockEntityRenderer(ctx) }
     }
 }

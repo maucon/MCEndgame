@@ -163,6 +163,7 @@ object CustomCreativeModeTab {
                     output.accept(CustomBlocks.CRYSTAL_FORGE)
                     output.accept(CustomBlocks.DECAYING_COBWEB)
                     output.accept(CustomBlocks.TOTEM_STATUE)
+                    output.accept(CustomBlocks.DEMONIC_CRUCIBLE)
                 }
         )
     }
