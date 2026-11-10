@@ -6,6 +6,7 @@ import de.fuballer.mcendgame.main.messaging.misc.LivingEntityDamagedEvent;
 import de.fuballer.mcendgame.main.mixin.access.EntityAccessMixin;
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension;
 import de.maucon.mauconframework.event.EventGateway;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -91,6 +92,12 @@ public abstract class LivingEntityDamageMixin {
             return false;
         }
         if (source.is(DamageTypeTags.IS_FIRE) && this_.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+            return false;
+        }
+        // Fabric fires this right before the sleeping check. Because MCEndgame replaces the vanilla
+        // hurtServer body, the Fabric mixin that normally invokes it never runs, so we dispatch it
+        // here to keep other mods (damage modifiers, immunities, ...) working.
+        if (!ServerLivingEntityEvents.ALLOW_DAMAGE.invoker().allowDamage(this_, source, damage)) {
             return false;
         }
         if (this_.isSleeping()) {
@@ -187,7 +194,8 @@ public abstract class LivingEntityDamageMixin {
                 this_.dealDefaultKnockback(source, damage, blocked);
             }
         }
-        if (this_.isDeadOrDying()) {
+        if (this_.isDeadOrDying()
+                && ServerLivingEntityEvents.ALLOW_DEATH.invoker().allowDeath(this_, source, damage)) {
             if (!this.checkTotemDeathProtection(source)) {
                 if (tookFullDamage) {
                     this_.makeSound(this.getDeathSound());
@@ -222,6 +230,11 @@ public abstract class LivingEntityDamageMixin {
             float eventDamage = EntityMixinExtension.INSTANCE.getPendingDamageEventAmount(this_);
             EntityMixinExtension.INSTANCE.clearPendingDamageEvent(this_);
             EventGateway.INSTANCE.publish(new LivingEntityDamagedEvent(this_, source, eventDamage));
+        }
+        // Fabric fires AFTER_DAMAGE from the tail of hurtServer (only while the entity survived).
+        // The vanilla body never runs while MCEndgame replaces it, so dispatch it manually.
+        if (!this_.isDeadOrDying()) {
+            ServerLivingEntityEvents.AFTER_DAMAGE.invoker().afterDamage(this_, source, originalDamage, damage, blocked);
         }
         return success;
     }
