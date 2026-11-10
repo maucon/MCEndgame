@@ -22,18 +22,6 @@ public abstract class LivingEntityEventsMixin {
     @Shadow
     protected int lastHurtByPlayerMemoryTime;
 
-    @Shadow
-    protected abstract void dropCustomDeathLoot(ServerLevel world, DamageSource damageSource, boolean bl);
-
-    @Shadow
-    protected abstract void dropExperience(ServerLevel world, Entity attacker);
-
-    @Shadow
-    protected abstract void dropEquipment(ServerLevel world);
-
-    @Shadow
-    protected abstract void dropFromLootTable(ServerLevel world, DamageSource damageSource, boolean bl);
-
     @Unique
     private LivingEntityDropCommand mcendgame$dropCommand;
 
@@ -47,14 +35,20 @@ public abstract class LivingEntityEventsMixin {
         }
     }
 
+    // ---------------------------------------------------------------------------
+    // region Death drop control
+    //
+    // dropAllDeathLoot() performs four vanilla drop calls. The drop command is
+    // resolved once at HEAD (so listeners can set per-death flags), then each
+    // call is wrapped and skipped when its flag is disabled.
+    // ---------------------------------------------------------------------------
+
     /**
-     * Resolve the drop flags once per death. Unlike the previous implementation we do not cancel
-     * {@code dropAllDeathLoot}; the vanilla body keeps running so TAIL injectors from other mods
-     * (e.g. Pufferfish's Skills, which awards kill skill XP there) still execute. Only the four
-     * vanilla drop calls are wrapped and skipped according to the command flags.
+     * Resolves the drop flags once per death, before any drop call runs.
+     * The resulting command is stored and read by the wrappers below.
      */
     @Inject(method = "dropAllDeathLoot", at = @At("HEAD"))
-    private void mcendgame$prepareDropCommand(ServerLevel world, DamageSource damageSource, CallbackInfo ci) {
+    private void mcendgame$prepareDropCommand(ServerLevel level, DamageSource source, CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
         boolean causedByPlayer = this.lastHurtByPlayerMemoryTime > 0;
 
@@ -71,10 +65,10 @@ public abstract class LivingEntityEventsMixin {
                     target = "Lnet/minecraft/world/entity/LivingEntity;dropFromLootTable(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;Z)V"
             )
     )
-    private void mcendgame$dropFromLootTable(LivingEntity self, ServerLevel world, DamageSource damageSource, boolean causedByPlayer, Operation<Void> operation) {
+    private void mcendgame$dropFromLootTable(LivingEntity self, ServerLevel level, DamageSource source, boolean playerKilled, Operation<Void> operation) {
         var cmd = this.mcendgame$dropCommand;
         if (cmd == null || cmd.getDropLoot()) {
-            operation.call(self, world, damageSource, causedByPlayer);
+            operation.call(self, level, source, playerKilled);
         }
     }
 
@@ -85,10 +79,10 @@ public abstract class LivingEntityEventsMixin {
                     target = "Lnet/minecraft/world/entity/LivingEntity;dropCustomDeathLoot(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;Z)V"
             )
     )
-    private void mcendgame$dropCustomDeathLoot(LivingEntity self, ServerLevel world, DamageSource damageSource, boolean causedByPlayer, Operation<Void> operation) {
+    private void mcendgame$dropCustomDeathLoot(LivingEntity self, ServerLevel level, DamageSource source, boolean killedByPlayer, Operation<Void> operation) {
         var cmd = this.mcendgame$dropCommand;
         if (cmd == null || cmd.getDropEquipment()) {
-            operation.call(self, world, damageSource, causedByPlayer);
+            operation.call(self, level, source, killedByPlayer);
         }
     }
 
@@ -99,10 +93,10 @@ public abstract class LivingEntityEventsMixin {
                     target = "Lnet/minecraft/world/entity/LivingEntity;dropEquipment(Lnet/minecraft/server/level/ServerLevel;)V"
             )
     )
-    private void mcendgame$dropEquipment(LivingEntity self, ServerLevel world, Operation<Void> operation) {
+    private void mcendgame$dropEquipment(LivingEntity self, ServerLevel level, Operation<Void> operation) {
         var cmd = this.mcendgame$dropCommand;
         if (cmd == null || cmd.getDropInventory()) {
-            operation.call(self, world);
+            operation.call(self, level);
         }
     }
 
@@ -113,10 +107,11 @@ public abstract class LivingEntityEventsMixin {
                     target = "Lnet/minecraft/world/entity/LivingEntity;dropExperience(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/Entity;)V"
             )
     )
-    private void mcendgame$dropExperience(LivingEntity self, ServerLevel world, Entity attacker, Operation<Void> operation) {
+    private void mcendgame$dropExperience(LivingEntity self, ServerLevel level, Entity killer, Operation<Void> operation) {
         var cmd = this.mcendgame$dropCommand;
         if (cmd == null || cmd.getDropExperience()) {
-            operation.call(self, world, attacker);
+            operation.call(self, level, killer);
         }
     }
+    // endregion
 }

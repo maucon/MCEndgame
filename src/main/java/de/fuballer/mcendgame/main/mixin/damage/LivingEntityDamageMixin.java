@@ -94,12 +94,12 @@ public abstract class LivingEntityDamageMixin {
         if (source.is(DamageTypeTags.IS_FIRE) && this_.hasEffect(MobEffects.FIRE_RESISTANCE)) {
             return false;
         }
-        // Fabric fires this right before the sleeping check. Because MCEndgame replaces the vanilla
-        // hurtServer body, the Fabric mixin that normally invokes it never runs, so we dispatch it
-        // here to keep other mods (damage modifiers, immunities, ...) working.
+        //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+        // Fabric fires ALLOW_DAMAGE right before the sleeping check.
         if (!ServerLivingEntityEvents.ALLOW_DAMAGE.invoker().allowDamage(this_, source, damage)) {
             return false;
         }
+        //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
         if (this_.isSleeping()) {
             this_.stopSleeping();
         }
@@ -231,11 +231,12 @@ public abstract class LivingEntityDamageMixin {
             EntityMixinExtension.INSTANCE.clearPendingDamageEvent(this_);
             EventGateway.INSTANCE.publish(new LivingEntityDamagedEvent(this_, source, eventDamage));
         }
+        //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
         // Fabric fires AFTER_DAMAGE from the tail of hurtServer (only while the entity survived).
-        // The vanilla body never runs while MCEndgame replaces it, so dispatch it manually.
         if (!this_.isDeadOrDying()) {
             ServerLivingEntityEvents.AFTER_DAMAGE.invoker().afterDamage(this_, source, originalDamage, damage, blocked);
         }
+        //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
         return success;
     }
 
