@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.component.item.custom.aspect
 
-import de.fuballer.mcendgame.main.component.item.custom.aspect.item.sigil.SigilItem
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.special.key.KeyItem
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.core.NonNullList
 import net.minecraft.world.item.ItemStack
@@ -28,7 +28,7 @@ class AspectService {
             disabledAspects.addAll(item.disabledAspects)
 
             affectingAspects[item] = (affectingAspects[item] ?: 0) + 1
-            if (item is SigilItem) return affectingAspects
+            if (item is KeyItem) return affectingAspects
         }
 
         return affectingAspects

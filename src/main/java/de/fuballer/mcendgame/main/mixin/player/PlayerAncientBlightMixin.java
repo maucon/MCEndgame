@@ -28,7 +28,7 @@ public abstract class PlayerAncientBlightMixin {
         if (player.isSpectator()) return;
         if (!player.isInWater()) return;
         var pos = player.blockPosition();
-        if (!level.getBiome(pos).is(CustomBiomes.INSTANCE.getBEASTWEAVER_GROVE_DUNGEON())) return;
+        if (!level.getBiome(pos).is(CustomBiomes.INSTANCE.getBEASTWEAVERS_GROVE_DUNGEON())) return;
 
         var amplifier = ticksInAncientBlightWater / 20;
         var effectInstance = new MobEffectInstance(effectHolder, 19, amplifier, true, true);

@@ -17,9 +17,9 @@ class AspectOfGhosts(
     override val tier = 1
     override val limit = 1
     override val description = mutableListOf(
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ghosts_0", FORCED_DUNGEON_LEVEL),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ghosts_1"),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ghosts_2", Component.translatable("item.mcendgame.geistergaloschen"))
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ghosts_0", FORCED_DUNGEON_LEVEL),
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ghosts_1"),
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ghosts_2", Component.translatable("item.mcendgame.geistergaloschen"))
     )
     override val disabledAspects = listOf(AspectItems.ASPECT_OF_IMPATIENCE)
 }

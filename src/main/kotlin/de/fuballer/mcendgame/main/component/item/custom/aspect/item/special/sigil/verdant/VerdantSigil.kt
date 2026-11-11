@@ -1,13 +1,12 @@
-package de.fuballer.mcendgame.main.component.item.custom.aspect.item.sigil.verdant
+package de.fuballer.mcendgame.main.component.item.custom.aspect.item.special.sigil.verdant
 
 import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
-import de.fuballer.mcendgame.main.component.item.custom.aspect.item.sigil.SigilItem
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.special.sigil.SigilItem
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
 import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.phys.Vec3
@@ -25,7 +24,7 @@ class VerdantSigil(
     override val minDropLevel = 10
     override fun getDropProbability(level: Int) = if (level < minDropLevel) 0.0 else BASE_DROP_PROBABILITY + DROP_PROBABILITY_PER_LEVEL * (level - minDropLevel)
 
-    override val dungeonType = DungeonType.BEASTWEAVER_GROVE
+    override val dungeonType = DungeonType.BEASTWEAVERS_GROVE
 
     override fun getCrystalItems(
         level: Int,
@@ -36,11 +35,6 @@ class VerdantSigil(
         val count = probability.toInt() + if (Random.nextDouble() < probability % 1) 1 else 0
         return List(count) { CrystalItems.IMITATION_CRYSTAL }
     }
-
-    override val description = mutableListOf(
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "verdant_0"),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "verdant_1", minBossLevel),
-    )
 
     override val bossDeathParticles = listOf(
         ParticleData(

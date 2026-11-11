@@ -1,8 +1,11 @@
-package de.fuballer.mcendgame.main.component.item.custom.aspect.item.sigil
+package de.fuballer.mcendgame.main.component.item.custom.aspect.item.special.sigil
 
 import de.fuballer.mcendgame.main.component.dungeon.enemy.boss.DungeonBossDeathEffectsCommand
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
-import de.fuballer.mcendgame.main.messaging.dungeon.*
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.special.key.KeyItem
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossCrystalDropCommand
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateCommand
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonAspects
 import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonLevel
 import de.maucon.mauconframework.command.CommandHandler
@@ -19,9 +22,10 @@ object SigilService {
         val serverLevel = event.world as? ServerLevel ?: return
         val dungeonLevel = serverLevel.getDungeonLevel()
 
+        if (serverLevel.getDungeonAspects().keys.any { it is KeyItem }) return
+
         AspectItems.SIGILS.forEach { sigil ->
             if (sigil !is SigilItem) return@forEach
-            if (serverLevel.getDungeonAspects().contains(sigil)) return@forEach
 
             if (dungeonLevel < sigil.minDropLevel) return@forEach
 
@@ -34,20 +38,9 @@ object SigilService {
     }
 
     @CommandHandler
-    fun onSelectDungeonType(cmd: SelectDungeonTypeCommand) {
-        AspectItems.SIGILS.forEach { sigil ->
-            if (sigil !is SigilItem) return@forEach
-            if (!cmd.aspects.contains(sigil)) return@forEach
-            cmd.dungeonType = sigil.dungeonType
-            return
-        }
-    }
-
-    @CommandHandler
     fun onGenerateLayout(cmd: DungeonGenerateCommand) {
-        AspectItems.SIGILS.forEach { sigil ->
-            if (sigil !is SigilItem) return@forEach
-            if (!cmd.aspects.contains(sigil)) return@forEach
+        cmd.aspects.keys.forEach { aspect ->
+            val sigil = aspect as? SigilItem ?: return@forEach
             cmd.dungeonLevel = max(cmd.dungeonLevel, sigil.minBossLevel)
             return
         }
@@ -55,10 +48,8 @@ object SigilService {
 
     @CommandHandler
     fun onDungeonBossCrystalDrop(cmd: DungeonBossCrystalDropCommand) {
-        AspectItems.SIGILS.forEach { sigil ->
-            if (sigil !is SigilItem) return@forEach
-            if (!cmd.aspects.contains(sigil)) return@forEach
-
+        cmd.aspects.keys.forEach { aspect ->
+            val sigil = aspect as? SigilItem ?: return@forEach
             val crystalItems = cmd.crystalItems
             crystalItems.clear()
             crystalItems.addAll(sigil.getCrystalItems(cmd.dungeonLevel, cmd.lootMultiplier, cmd.finalBoss))
@@ -67,46 +58,14 @@ object SigilService {
     }
 
     @CommandHandler
-    fun onIncreaseProgress(cmd: DungeonPlayerIncreaseProgressCommand) {
-        AspectItems.SIGILS.forEach { sigil ->
-            if (sigil !is SigilItem) return@forEach
-            if (!cmd.aspects.contains(sigil)) return@forEach
-            cmd.progressBlocked = true
-            return
-        }
-    }
-
-    @CommandHandler
-    fun onDecreaseProgress(cmd: DungeonPlayerDecreaseProgressCommand) {
-        AspectItems.SIGILS.forEach { sigil ->
-            if (sigil !is SigilItem) return@forEach
-            if (!cmd.aspects.contains(sigil)) return@forEach
-            cmd.decreaseBlocked = true
-            return
-        }
-    }
-
-    @CommandHandler
     fun onDungeonBossDeathEffects(cmd: DungeonBossDeathEffectsCommand) {
-        val aspects = cmd.level.getDungeonAspects()
-        AspectItems.SIGILS.forEach { sigil ->
-            if (sigil !is SigilItem) return@forEach
-            if (!aspects.contains(sigil)) return@forEach
+        cmd.level.getDungeonAspects().keys.forEach { aspect ->
+            val sigil = aspect as? SigilItem ?: return@forEach
 
             cmd.particles.clear()
             cmd.particles.addAll(sigil.bossDeathParticles)
             cmd.sounds.clear()
             cmd.sounds.addAll(sigil.bossDeathSounds)
-            return
-        }
-    }
-
-    @CommandHandler
-    fun onGenerateDungeonEnemies(cmd: DungeonGenerateEnemiesCommand) {
-        AspectItems.SIGILS.forEach { sigil ->
-            if (sigil !is SigilItem) return@forEach
-            if (!cmd.aspects.contains(sigil)) return@forEach
-            cmd.specialEnemiesDisabled = true
             return
         }
     }

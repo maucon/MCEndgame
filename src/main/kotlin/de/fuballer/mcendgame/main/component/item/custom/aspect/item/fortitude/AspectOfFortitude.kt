@@ -21,8 +21,8 @@ class AspectOfFortitude(
     override val tier = 2
     override val limit = 2
     override val description = mutableListOf(
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "fortitude_0", AttributeFormats.formatDouble(LESS_DAMAGE_TAKEN * 100)),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "fortitude_1", AttributeFormats.formatDouble(INCREASED_LOOT * 100)),
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "fortitude_0", AttributeFormats.formatDouble(LESS_DAMAGE_TAKEN * 100)),
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "fortitude_1", AttributeFormats.formatDouble(INCREASED_LOOT * 100)),
     )
     override val disabledAspects = listOf<AspectItem>()
 }

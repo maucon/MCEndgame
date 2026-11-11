@@ -10,13 +10,14 @@ import de.fuballer.mcendgame.main.component.item.custom.aspect.item.fortitude.As
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.fortune.AspectOfFortune
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.ghosts.AspectOfGhosts
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.greed.AspectOfGreed
-import de.fuballer.mcendgame.main.component.item.custom.aspect.item.sigil.verdant.VerdantSigil
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.hordes.AspectOfHordes
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.impatience.AspectOfImpatience
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.kin.AspectOfKin
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.outlaws.AspectOfOutlaws
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.savagery.AspectOfSavagery
-import de.fuballer.mcendgame.main.component.item.custom.aspect.item.sigil.scorched.ScorchedSigil
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.special.key.demonic.DemonicKey
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.special.sigil.scorched.ScorchedSigil
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.special.sigil.verdant.VerdantSigil
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.tyranny.AspectOfTyranny
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.zeal.AspectOfZeal
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
@@ -42,6 +43,9 @@ object AspectItems {
     val ASPECT_OF_KIN = RegistryUtil.registerAspectItem(::AspectOfKin, AspectItemIds.ASPECT_OF_KIN)
     val ASPECT_OF_ASCENSION = RegistryUtil.registerAspectItem(::AspectOfAscension, AspectItemIds.ASPECT_OF_ASCENSION)
     val ASPECT_OF_GHOSTS = RegistryUtil.registerAspectItem(::AspectOfGhosts, AspectItemIds.ASPECT_OF_GHOSTS)
+
+    val DEMONIC_KEY = RegistryUtil.registerAspectItem(::DemonicKey, AspectItemIds.DEMONIC_KEY)
+
     val SCORCHED_SIGIL = RegistryUtil.registerAspectItem(::ScorchedSigil, AspectItemIds.SCORCHED_SIGIL)
     val VERDANT_SIGIL = RegistryUtil.registerAspectItem(::VerdantSigil, AspectItemIds.VERDANT_SIGIL)
 

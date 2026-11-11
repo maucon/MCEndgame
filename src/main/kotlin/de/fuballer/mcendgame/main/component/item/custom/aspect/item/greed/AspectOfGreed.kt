@@ -12,6 +12,6 @@ class AspectOfGreed(
 
     override val tier = 2
     override val limit = 4
-    override val description = mutableListOf(Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "greed", ADDITIONAL_LOOT_GOBLINS))
+    override val description = mutableListOf(Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "greed", ADDITIONAL_LOOT_GOBLINS))
     override val disabledAspects = listOf<AspectItem>()
 }

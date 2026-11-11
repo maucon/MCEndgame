@@ -13,8 +13,8 @@ abstract class AspectItem(
     settings: Properties,
 ) : Item(settings) {
     companion object {
-        const val TRANSLATABLE_BASE_KEY = "item.mcendgame.aspect."
-        const val TRANSLATABLE_DESCRIPTION_KEY = TRANSLATABLE_BASE_KEY + "description."
+        const val ASPECT_TRANSLATABLE_BASE_KEY = "item.mcendgame.aspect."
+        const val ASPECT_TRANSLATABLE_DESCRIPTION_KEY = ASPECT_TRANSLATABLE_BASE_KEY + "description."
     }
 
     abstract val tier: Int
@@ -31,7 +31,7 @@ abstract class AspectItem(
         description.forEach {
             list.add(it.withStyle { style -> style.withItalic(false).withColor(ChatFormatting.GRAY) })
         }
-        list.add(Component.translatable(TRANSLATABLE_BASE_KEY + "limit", limit).withStyle { style -> style.withItalic(false).withColor(ChatFormatting.DARK_GRAY) })
+        list.add(Component.translatable(ASPECT_TRANSLATABLE_BASE_KEY + "limit", limit).withStyle { style -> style.withItalic(false).withColor(ChatFormatting.DARK_GRAY) })
 
         stack.set(DataComponents.LORE, ItemLore(list))
 

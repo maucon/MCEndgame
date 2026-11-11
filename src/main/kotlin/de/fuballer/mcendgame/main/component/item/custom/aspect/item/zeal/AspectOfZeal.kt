@@ -12,6 +12,6 @@ class AspectOfZeal(
 
     override val tier = 2
     override val limit = 4
-    override val description = mutableListOf(Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "zeal", ADDITIONAL_PROGRESS))
+    override val description = mutableListOf(Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "zeal", ADDITIONAL_PROGRESS))
     override val disabledAspects = listOf<AspectItem>()
 }

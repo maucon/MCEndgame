@@ -8,6 +8,6 @@ class AspectOfDominion(
 ) : AspectItem(settings) {
     override val tier = 2
     override val limit = 2
-    override val description = mutableListOf(Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "dominion"))
+    override val description = mutableListOf(Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "dominion"))
     override val disabledAspects = listOf<AspectItem>()
 }

@@ -72,10 +72,11 @@
   "item.mcendgame.aspect_of_savagery": "Aspect of Savagery",
   "item.mcendgame.aspect_of_eminence": "Aspect of Eminence",
   "item.mcendgame.aspect_of_ancestors": "Aspect of Ancestors",
-  "item.mcendgame.verdant_sigil": "Verdant Sigil",
-  "item.mcendgame.scorched_sigil": "Scorched Sigil",
   "item.mcendgame.aspect_of_outlaws": "Aspect of Outlaws",
   "item.mcendgame.aspect_of_kin": "Aspect of Kin",
+  "item.mcendgame.verdant_sigil": "Verdant Sigil",
+  "item.mcendgame.scorched_sigil": "Scorched Sigil",
+  "item.mcendgame.demonic_key": "Demonic Key",
 
   "item.mcendgame.aspect.limit": "Limit: %s",
   "item.mcendgame.aspect.description.tyranny": "Dungeon contains %s additional Elites",
@@ -100,12 +101,11 @@
   "item.mcendgame.aspect.description.savagery_1": "Enemies drop %s%% increased Loot",
   "item.mcendgame.aspect.description.eminence": "Normal Equipment has a %s%% chance for an additional Attribute",
   "item.mcendgame.aspect.description.ancestors": "Dungeon contains an additional Totem Encounter",
-  "item.mcendgame.aspect.description.verdant_0": "Dungeon only contains the Beastweaver",
-  "item.mcendgame.aspect.description.verdant_1": "Dungeon is at least Level %s",
-  "item.mcendgame.aspect.description.scorched_0": "Dungeon only contains the ???",
-  "item.mcendgame.aspect.description.scorched_1": "Dungeon is at least Level %s",
   "item.mcendgame.aspect.description.outlaws": "Dungeon contains %s additional Bandits",
   "item.mcendgame.aspect.description.kin": "Bandits appear in pairs",
+  "item.mcendgame.aspect.key.description.disable_aspects": "Aspects are disabled",
+  "item.mcendgame.aspect.key.sigil.description.dungeon_type": "Grants access to the ",
+  "item.mcendgame.aspect.key.sigil.description.min_dungeon_level": "Dungeon is at least Level %s",
 
   "item.mcendgame.calibration_crystal": "Calibration Crystal",
   "item.mcendgame.sacrifice_crystal": "Sacrifice Crystal",
@@ -489,5 +489,13 @@
   "tag.item.mcendgame.no_phasing_slow_and_fog": "No Phasing Slow and Fog",
   "tag.item.mcendgame.melee_attack": "Melee Attack",
   "tag.item.mcendgame.block_phasing_immune": "Block Phasing Immune",
-  "tag.item.mcendgame.bypass_dodge": "Bypass Dodge"
+  "tag.item.mcendgame.bypass_dodge": "Bypass Dodge",
+
+  "mcendgame.dungeon_type.stronghold": "Stronghold",
+  "mcendgame.dungeon_type.nether": "Nether",
+  "mcendgame.dungeon_type.desert": "Desert",
+  "mcendgame.dungeon_type.beastweavers_grove": "Beastweavers Grove",
+  "mcendgame.dungeon_type.burning_cathedral": "Burning Cathedral",
+  "mcendgame.dungeon_type.demonic_crucible": "Demonic Crucible",
+  "mcendgame.dungeon_type.training": "Training"
 }

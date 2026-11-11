@@ -12,6 +12,6 @@ class AspectOfHordes(
 
     override val tier = 2
     override val limit = 4
-    override val description = mutableListOf(Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "hordes", (INCREASED_ENEMIES * 100).toInt()))
+    override val description = mutableListOf(Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "hordes", (INCREASED_ENEMIES * 100).toInt()))
     override val disabledAspects = listOf<AspectItem>()
 }

@@ -95,10 +95,13 @@ object CustomCreativeModeTab {
                     output.accept(AspectItems.ASPECT_OF_EMINENCE.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_ANCESTORS.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_DUALITY.defaultInstance)
-                    output.accept(AspectItems.VERDANT_SIGIL.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_OUTLAWS.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_KIN.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_ASCENSION.defaultInstance)
+
+                    output.accept(AspectItems.DEMONIC_KEY.defaultInstance)
+
+                    output.accept(AspectItems.VERDANT_SIGIL.defaultInstance)
                     output.accept(AspectItems.SCORCHED_SIGIL.defaultInstance)
                 }
         )

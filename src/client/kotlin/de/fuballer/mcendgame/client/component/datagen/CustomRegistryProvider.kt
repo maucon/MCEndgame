@@ -26,7 +26,7 @@ class CustomRegistryProvider(
             .ifPresent(entries::add)
         biomes.get(CustomBiomes.DESERT_DUNGEON)
             .ifPresent(entries::add)
-        biomes.get(CustomBiomes.BEASTWEAVER_GROVE_DUNGEON)
+        biomes.get(CustomBiomes.BEASTWEAVERS_GROVE_DUNGEON)
             .ifPresent(entries::add)
 
         registries.lookupOrThrow(Registries.INSTRUMENT)

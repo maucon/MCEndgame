@@ -21,8 +21,8 @@ class AspectOfSavagery(
     override val tier = 2
     override val limit = 2
     override val description = mutableListOf(
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "savagery_0", AttributeFormats.formatDouble(MORE_DAMAGE * 100)),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "savagery_1", AttributeFormats.formatDouble(INCREASED_LOOT * 100)),
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "savagery_0", AttributeFormats.formatDouble(MORE_DAMAGE * 100)),
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "savagery_1", AttributeFormats.formatDouble(INCREASED_LOOT * 100)),
     )
     override val disabledAspects = listOf<AspectItem>()
 }

@@ -1,17 +1,13 @@
-package de.fuballer.mcendgame.main.component.item.custom.aspect.item.sigil.scorched
+package de.fuballer.mcendgame.main.component.item.custom.aspect.item.special.sigil.scorched
 
 import de.fuballer.mcendgame.main.component.dungeon.type.DungeonType
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
-import de.fuballer.mcendgame.main.component.item.custom.aspect.item.sigil.SigilItem
-import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
-import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
+import de.fuballer.mcendgame.main.component.item.custom.aspect.item.special.sigil.SigilItem
 import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.phys.Vec3
-import kotlin.random.Random
 
 class ScorchedSigil(
     settings: Properties,
@@ -26,23 +22,6 @@ class ScorchedSigil(
     override fun getDropProbability(level: Int) = if (level < minDropLevel) 0.0 else BASE_DROP_PROBABILITY + DROP_PROBABILITY_PER_LEVEL * (level - minDropLevel)
 
     override val dungeonType = DungeonType.BURNING_CATHEDRAL
-
-    override fun getCrystalItems(
-        level: Int,
-        lootMultiplier: Double,
-        finalBoss: Boolean,
-    ): List<CrystalItem> {
-        if (!finalBoss) return listOf()
-
-        val probability = level / 10.0 * lootMultiplier
-        val count = probability.toInt() + if (Random.nextDouble() < probability % 1) 1 else 0
-        return List(count) { CrystalItems.CORRUPTION_CRYSTAL } // TODO add double corrupt
-    }
-
-    override val description = mutableListOf(
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "scorched_0"),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "scorched_1", minBossLevel),
-    )
 
     override val bossDeathParticles = listOf(
         ParticleData(

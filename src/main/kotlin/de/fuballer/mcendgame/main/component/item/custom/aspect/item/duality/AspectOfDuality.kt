@@ -9,8 +9,8 @@ class AspectOfDuality(
     override val tier = 2
     override val limit = 1
     override val description = mutableListOf(
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "duality_0"),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "duality_1"),
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "duality_0"),
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "duality_1"),
     )
     override val disabledAspects = listOf<AspectItem>()
 }

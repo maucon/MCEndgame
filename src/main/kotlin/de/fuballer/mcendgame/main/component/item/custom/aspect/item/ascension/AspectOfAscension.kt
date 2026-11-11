@@ -21,9 +21,9 @@ class AspectOfAscension(
     override val tier = 2
     override val limit = 1
     override val description = mutableListOf(
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ascension_0", AttributeFormats.formatDouble(-MORE_DAMAGE_TAKEN * 100)),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ascension_1", AttributeFormats.formatDouble(MORE_DAMAGE_DEALT * 100)),
-        Component.translatable(TRANSLATABLE_DESCRIPTION_KEY + "ascension_2"),
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ascension_0", AttributeFormats.formatDouble(-MORE_DAMAGE_TAKEN * 100)),
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ascension_1", AttributeFormats.formatDouble(MORE_DAMAGE_DEALT * 100)),
+        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ascension_2"),
     )
     override val disabledAspects = listOf<AspectItem>()
 }

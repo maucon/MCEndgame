@@ -80,9 +80,12 @@ class CustomModelProvider(
         generator.generateFlatItem(AspectItems.ASPECT_OF_IMPATIENCE, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_OUTLAWS, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_SAVAGERY, ModelTemplates.FLAT_ITEM)
-        generator.generateFlatItem(AspectItems.VERDANT_SIGIL, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_TYRANNY, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_ZEAL, ModelTemplates.FLAT_ITEM)
+
+        generator.generateFlatItem(AspectItems.DEMONIC_KEY, ModelTemplates.FLAT_ITEM)
+
+        generator.generateFlatItem(AspectItems.VERDANT_SIGIL, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.SCORCHED_SIGIL, ModelTemplates.FLAT_ITEM)
 
         generator.generateFlatItem(CrystalItems.CALIBRATION_CRYSTAL, ModelTemplates.FLAT_ITEM)

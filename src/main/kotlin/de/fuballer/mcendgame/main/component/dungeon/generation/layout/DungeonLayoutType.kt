@@ -9,6 +9,7 @@ enum class DungeonLayoutType(
     STRONGHOLD({ LinearLayoutGenerator(StrongholdRoomTypes.START_ROOM, StrongholdRoomTypes.BOSS_ROOM, StrongholdRoomTypes.ROOMS) }),
     NETHER({ LinearLayoutGenerator(NetherRoomTypes.START_ROOM, NetherRoomTypes.BOSS_ROOM, NetherRoomTypes.ROOMS) }),
     DESERT({ LinearLayoutGenerator(DesertRoomTypes.START_ROOM, DesertRoomTypes.BOSS_ROOM, DesertRoomTypes.ROOMS) }),
-    BEASTWEAVER_GROVE({ SingleRoomLayoutGenerator(BeastweaverGroveRoomTypes.BOSS_ROOM) }),
+    BEASTWEAVERS_GROVE({ SingleRoomLayoutGenerator(BeastweaverGroveRoomTypes.BOSS_ROOM) }),
     BURNING_CATHEDRAL({ SingleRoomLayoutGenerator(BurningCathedralRoomTypes.BOSS_ROOM) }),
+    DEMONIC_CRUCIBLE({ SingleRoomLayoutGenerator(DemonicCrucibleRoomTypes.ROOM) }),
 }
