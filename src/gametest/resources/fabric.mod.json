@@ -4,12 +4,16 @@
   "version": "1.0.0-test",
   "name": "MCEndgame-Test",
   "environment": "*",
+  "mixins": [
+    "mcendgame-test.mixins.json"
+  ],
   "entrypoints": {
     "fabric-gametest": [
       "de.fuballer.mcendgame.test.main.BasicGameTest",
       "de.fuballer.mcendgame.test.main.VanillaDamageGameTest",
       "de.fuballer.mcendgame.test.main.DamageSystemGameTest",
-      "de.fuballer.mcendgame.test.main.KnockbackGameTest"
+      "de.fuballer.mcendgame.test.main.KnockbackGameTest",
+      "de.fuballer.mcendgame.test.main.CompatibilityGameTest"
     ],
     "fabric-client-gametest": [
       "de.fuballer.mcendgame.test.client.MCEndgameClientGameTest"
