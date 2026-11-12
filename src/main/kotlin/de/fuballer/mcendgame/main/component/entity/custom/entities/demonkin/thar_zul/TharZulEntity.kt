@@ -9,6 +9,8 @@ import com.geckolib.animation.RawAnimation
 import com.geckolib.animation.`object`.PlayState
 import com.geckolib.constant.DefaultAnimations
 import com.geckolib.util.GeckoLibUtil
+import de.fuballer.mcendgame.main.component.boss_event.BossEventType
+import de.fuballer.mcendgame.main.component.boss_event.BossEventTypePayload
 import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
@@ -37,6 +39,8 @@ import de.fuballer.mcendgame.main.component.particle.DirectionalFlameSweepPartic
 import de.fuballer.mcendgame.main.component.tags.CustomTags
 import de.fuballer.mcendgame.main.util.BlockPosUtil
 import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.particles.SimpleParticleType
@@ -44,10 +48,14 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.server.level.ServerBossEvent
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.util.Mth
+import net.minecraft.world.BossEvent
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
@@ -455,6 +463,16 @@ class TharZulEntity(
     override val attackCooldowns: MutableMap<Attack<TharZulEntity>, Int> = mutableMapOf()
     override val attackDataInstances = mutableListOf<DelayedAttackDataInstance>()
 
+    private val bossEvent: ServerBossEvent =
+        ServerBossEvent(
+            Mth.createInsecureUUID(random),
+            displayName.copy()
+                .withStyle(ChatFormatting.DARK_RED)
+                .withStyle(ChatFormatting.BOLD),
+            BossEvent.BossBarColor.RED,
+            BossEvent.BossBarOverlay.PROGRESS,
+        )
+
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
     override fun getAnimatableInstanceCache() = cache
 
@@ -619,6 +637,9 @@ class TharZulEntity(
         super.tick()
 
         val level = level() as? ServerLevel ?: return
+
+        bossEvent.progress = health / maxHealth
+
         if (isDeadOrDying) return
         tickBlockedMovement()
         tickAttacks(level, this)
@@ -808,6 +829,24 @@ class TharZulEntity(
 
     override fun setAttackAnimationSpeed(attackSpeed: Float) {
         entityData.set(ATTACK_ANIMATION_SPEED, attackSpeed)
+    }
+
+    override fun setNoAi(flag: Boolean) {
+        super.setNoAi(flag)
+        bossEvent.isVisible = !flag
+    }
+
+    override fun startSeenByPlayer(player: ServerPlayer) {
+        super.startSeenByPlayer(player)
+        bossEvent.addPlayer(player)
+
+        val payload = BossEventTypePayload(bossEvent.id, BossEventType.THAR_ZUL)
+        ServerPlayNetworking.send(player, payload)
+    }
+
+    override fun stopSeenByPlayer(player: ServerPlayer) {
+        super.stopSeenByPlayer(player)
+        bossEvent.removePlayer(player)
     }
 
     override fun addAdditionalSaveData(output: ValueOutput) {
