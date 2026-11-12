@@ -89,6 +89,8 @@ class ThalVeyraEntity(
         private const val MAX_EMPOWER_TICKS = 600
         private const val EMPOWER_SCALE = 0.2F
 
+        val DEATH_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("misc.die")
+
         private val LEAN_ANIM: RawAnimation = RawAnimation.begin().thenPlay("misc.lean")
 
         private val SWEEP_SOUND =
@@ -523,7 +525,13 @@ class ThalVeyraEntity(
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
             AnimationController<ThalVeyraEntity>("Walk/Idle", 5)
-            { test -> test.setAndContinue(if (test.isMoving) DefaultAnimations.IDLE else DefaultAnimations.IDLE) },
+            { test ->
+                if (test.animatable.isDeadOrDying) {
+                    test.setAndContinue(DEATH_ANIM)
+                } else {
+                    test.setAndContinue(if (test.isMoving) DefaultAnimations.WALK else DefaultAnimations.IDLE)
+                }
+            },
 
             attackAnimationController,
 
@@ -577,6 +585,7 @@ class ThalVeyraEntity(
             return
         }
 
+        if (isDeadOrDying) return
         tickBlockedMovement()
         tickAttacks(level, this)
         tickStrafe()
@@ -594,6 +603,7 @@ class ThalVeyraEntity(
         increaseEmpowerTicks()
 
         DemonkinUtil.createEmpowerParticles(this)
+        if (tickCount % 10 == 0) DemonkinUtil.playEmpowerSounds(this)
     }
 
     private fun getEmpowerTicks() = entityData.get(EMPOWER_TICKS)

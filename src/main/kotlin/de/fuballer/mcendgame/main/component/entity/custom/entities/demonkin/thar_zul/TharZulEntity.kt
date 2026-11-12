@@ -82,6 +82,8 @@ class TharZulEntity(
         private const val MAX_EMPOWER_TICKS = 600
         private const val EMPOWER_SCALE = 0.3F
 
+        val DEATH_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("misc.die")
+
         private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
 
         private val TAKE_SWING_SOUND = RangeDefinedSoundData(
@@ -565,9 +567,13 @@ class TharZulEntity(
 
     override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
         controllers.add(
-            AnimationController<TharZulEntity>("Walk/Idle", 5)
+            AnimationController<TharZulEntity>("Walk/Idle/Death", 5)
             { test ->
-                test.setAndContinue(if (test.isMoving) DefaultAnimations.WALK else DefaultAnimations.IDLE)
+                if (test.animatable.isDeadOrDying) {
+                    test.setAndContinue(DEATH_ANIM)
+                } else {
+                    test.setAndContinue(if (test.isMoving) DefaultAnimations.WALK else DefaultAnimations.IDLE)
+                }
             },
 
             attackAnimationController,
@@ -613,6 +619,7 @@ class TharZulEntity(
         super.tick()
 
         val level = level() as? ServerLevel ?: return
+        if (isDeadOrDying) return
         tickBlockedMovement()
         tickAttacks(level, this)
         tickPartner()
@@ -628,6 +635,7 @@ class TharZulEntity(
         increaseEmpowerTicks()
 
         DemonkinUtil.createEmpowerParticles(this)
+        if (tickCount % 10 == 0) DemonkinUtil.playEmpowerSounds(this)
     }
 
     private fun getEmpowerTicks() = entityData.get(EMPOWER_TICKS)

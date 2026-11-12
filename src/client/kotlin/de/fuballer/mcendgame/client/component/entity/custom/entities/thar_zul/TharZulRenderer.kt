@@ -11,6 +11,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorServic
 import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul.TharZulEntity
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import net.minecraft.client.renderer.texture.OverlayTexture
 import java.util.*
 import kotlin.math.PI
 
@@ -33,6 +34,12 @@ class TharZulRenderer<R>(
 
     override fun addRenderData(animatable: TharZulEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
         renderState.addGeckolibData(UUID_TICKET, animatable.uuid)
+        renderState.hasRedOverlay = animatable.hurtTime > 0
+        renderState.deathTime = 0f
+    }
+
+    override fun getPackedOverlay(animatable: TharZulEntity, relatedObject: Void?, u: Float, partialTick: Float): Int {
+        return OverlayTexture.pack(OverlayTexture.u(u), OverlayTexture.v(animatable.hurtTime > 0))
     }
 
     override fun adjustModelBonesForRender(renderPassInfo: RenderPassInfo<R>, snapshots: BoneSnapshots) {
