@@ -145,7 +145,6 @@ object CorruptionService {
         return possibleEnchants.filter { !presentEnchants.contains(it) }
     }
 
-    //TODO make enchants that are removed (via data packs for example) not selectable
     private fun getPossibleEnchants(
         stack: ItemStack,
     ): List<ResourceKey<Enchantment>> {
