@@ -48,6 +48,11 @@ object CustomToolItems {
         Item.Properties().sword(CustomToolMaterials.RADIANT_DAWN, 7F, -3.2F),
         CustomToolItemIds.RADIANT_DAWN
     )
+    val SEETHING_MALICE = UniqueItemRegistry.registerToolItem(
+        ::SeethingMalice,
+        Item.Properties().sword(CustomToolMaterials.SEETHING_MALICE, 7F, -3.2F),
+        CustomToolItemIds.SEETHING_MALICE
+    )
     val WINDSTRING = UniqueItemRegistry.registerToolItem(
         ::Windstring,
         Item.Properties().durability(500),
