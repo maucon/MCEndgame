@@ -50,7 +50,7 @@ object CustomToolItems {
     )
     val SEETHING_MALICE = UniqueItemRegistry.registerToolItem(
         ::SeethingMalice,
-        Item.Properties().sword(CustomToolMaterials.SEETHING_MALICE, 7F, -3.2F),
+        Item.Properties().sword(CustomToolMaterials.SEETHING_MALICE, 7F, -3.2F).useCooldown(8.0F),
         CustomToolItemIds.SEETHING_MALICE
     )
     val WINDSTRING = UniqueItemRegistry.registerToolItem(

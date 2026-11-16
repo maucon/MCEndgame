@@ -17,6 +17,8 @@ import kotlin.random.Random
 object MagmaSpikesUtil {
     fun castMagmaSpikesLine(
         caster: LivingEntity,
+        damagePercentage: Double,
+        largeDamagePercentage: Double,
         target: Entity,
         origin: Vec3,
         offset: Float,
@@ -39,6 +41,8 @@ object MagmaSpikesUtil {
             val isFinal = i == spikesCount
             createMagmaSpikeEntity(
                 caster,
+                damagePercentage,
+                largeDamagePercentage,
                 origin.x + Mth.cos(angleToTarget.toDouble()) * reach,
                 origin.z + Mth.sin(angleToTarget.toDouble()) * reach,
                 minY,
@@ -55,6 +59,7 @@ object MagmaSpikesUtil {
 
     fun castMagmaSpikesSlam(
         caster: LivingEntity,
+        damagePercentage: Double,
         ringDelay: Int,
         minScale: Float,
         maxScale: Float,
@@ -72,6 +77,8 @@ object MagmaSpikesUtil {
 
                 createMagmaSpikeEntity(
                     caster,
+                    damagePercentage,
+                    damagePercentage,
                     caster.x + Mth.cos(angle) * reach,
                     caster.z + Mth.sin(angle) * reach,
                     caster.y,
@@ -89,6 +96,8 @@ object MagmaSpikesUtil {
 
     private fun createMagmaSpikeEntity(
         caster: LivingEntity,
+        damagePercentage: Double,
+        largeDamagePercentage: Double,
         x: Double,
         z: Double,
         minY: Double,
@@ -122,7 +131,7 @@ object MagmaSpikesUtil {
         } while (pos.y >= Mth.floor(minY) - 1)
 
         if (success) {
-            level.addFreshEntity(MagmaSpikeEntity(level, x, pos.y + topOffset, z, yRotRad, xzRotRad, scale, delayTicks, caster, large))
+            level.addFreshEntity(MagmaSpikeEntity(level, x, pos.y + topOffset, z, yRotRad, xzRotRad, scale, delayTicks, caster, damagePercentage, largeDamagePercentage, large))
             level.gameEvent(GameEvent.ENTITY_PLACE, Vec3(x, pos.y + topOffset, z), GameEvent.Context.of(caster))
         }
     }

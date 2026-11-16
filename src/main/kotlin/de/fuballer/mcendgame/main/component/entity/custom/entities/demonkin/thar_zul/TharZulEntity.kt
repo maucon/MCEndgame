@@ -242,6 +242,8 @@ class TharZulEntity(
 
                             MagmaSpikesUtil.castMagmaSpikesLine(
                                 entity,
+                                damagePercentage = 1.0,
+                                largeDamagePercentage = 1.5,
                                 target,
                                 origin = origin,
                                 offset = 2.0f,

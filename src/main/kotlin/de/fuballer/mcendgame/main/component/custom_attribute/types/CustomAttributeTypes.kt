@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.AttributeFormats
 import de.fuballer.mcendgame.main.component.custom_attribute.affinity.AttributeAffinities
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttributeType
 import de.fuballer.mcendgame.main.component.custom_attribute.sign_based_keyword.SignBasedKeywords
+import net.minecraft.ChatFormatting
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.memberProperties
 
@@ -296,6 +297,16 @@ object CustomAttributeTypes {
             AttributeFormats.DOUBLE_AND_INT_AND_PERCENT_ROLL,
             AttributeFormats.DOUBLE_AND_INT_AND_PERCENT_BOUNDS,
             AttributeAffinities.TRIPLE_BENEFICIAL,
+        )
+
+    // only for Seething Malice
+    val MAGMA_SPIKES_SLAM_ON_USE =
+        CustomAttributeType(
+            "magma_spikes_slam_on_use",
+            AttributeFormats.PERCENT_ROLL,
+            AttributeFormats.PERCENT_BOUNDS,
+            AttributeAffinities.BENEFICIAL,
+            color = ChatFormatting.AQUA,
         )
 
     val SLOWNESS_ON_HIT = CustomAttributeType("slowness_on_hit", AttributeFormats.TWO_INT_ROLL, AttributeFormats.TWO_INT_BOUNDS, AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL)

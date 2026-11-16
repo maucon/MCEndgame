@@ -136,6 +136,8 @@ class ThalVeyraEntity(
                 if (target == null) return
                 MagmaSpikesUtil.castMagmaSpikesLine(
                     entity,
+                    damagePercentage = 1.0,
+                    largeDamagePercentage = 1.5,
                     target,
                     origin = entity.position(),
                     offset = 1.25f,
@@ -230,6 +232,7 @@ class ThalVeyraEntity(
                         override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
                             MagmaSpikesUtil.castMagmaSpikesSlam(
                                 entity,
+                                damagePercentage = 1.0,
                                 ringDelay = 6,
                                 minScale = 0.75f,
                                 maxScale = 1.5f,

@@ -18,7 +18,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 private const val LANGUAGE_KEY_PREFIX = "attribute.mcendgame."
-private val ATTRIBUTE_LINE_COLOR = ChatFormatting.BLUE
 private val ATTRIBUTE_LINE_DETAILS_COLOR = ChatFormatting.DARK_GRAY
 private val TIER_DETAIL_COLOR = ChatFormatting.AQUA
 
@@ -43,6 +42,7 @@ class CustomAttributesRenderer {
 
     private fun buildAttributeLine(attribute: CustomAttribute, detailed: Boolean): Component {
         val type = attribute.type
+        val typeColor = type.color
         val rolls = attribute.rolls
         val signBasedKeywords = type.signBasedKeywords
         val flipSign = signBasedKeywords.zip(rolls).map { it.first != null && it.second.isNegative() }
@@ -55,7 +55,7 @@ class CustomAttributesRenderer {
             }
             val array = getWithSignBasedKeywords(rollTexts, signBasedKeywords, flipSign).toTypedArray()
             return Component.translatable("$LANGUAGE_KEY_PREFIX${type.key}", *array)
-                .withStyle(ATTRIBUTE_LINE_COLOR)
+                .withStyle(typeColor)
         }
 
         val notEnhancedRolls = flippedRolls.map(AttributeRoll<*>::getWithoutEnhancement)
@@ -64,14 +64,14 @@ class CustomAttributesRenderer {
         val enhancementTexts = getFormattedEnhancementTexts(rolls)
         val formattedRollsWithBounds = formattedRolls.indices.map { i ->
             Component.literal(formattedRolls[i])
-                .withStyle(ATTRIBUTE_LINE_COLOR)
+                .withStyle(typeColor)
                 .append(boundsTexts[i])
                 .append(enhancementTexts[i])
         }
         val array = getWithSignBasedKeywords(formattedRollsWithBounds, signBasedKeywords, flipSign).toTypedArray()
 
         return Component.translatable("$LANGUAGE_KEY_PREFIX${type.key}", *array)
-            .withStyle(ATTRIBUTE_LINE_COLOR)
+            .withStyle(typeColor)
             .append(getFormattedTier(attribute.tier))
     }
 

@@ -4,6 +4,7 @@ import com.geckolib.animatable.GeoAnimatable
 import com.geckolib.animatable.instance.AnimatableInstanceCache
 import com.geckolib.animatable.manager.AnimatableManager
 import com.geckolib.util.GeckoLibUtil
+import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealSpellDamage
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import net.minecraft.core.particles.ParticleTypes
@@ -15,7 +16,6 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
-import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
@@ -43,6 +43,8 @@ class MagmaSpikeEntity(
     private var lifeTicks = 0
     private var clientSideAttackStarted = false
     private var owner: EntityReference<LivingEntity>? = null
+    private var damagePercentage = 0.0
+    private var largeDamagePercentage = 0.0
 
     constructor(
         level: Level,
@@ -54,10 +56,14 @@ class MagmaSpikeEntity(
         scale: Float,
         delay: Int,
         owner: LivingEntity?,
+        damagePercentage: Double,
+        largeDamagePercentage: Double,
         large: Boolean,
     ) : this(CustomEntities.MAGMA_SPIKE, level) {
         progressTicks = -delay
         setOwner(owner)
+        this.damagePercentage = damagePercentage
+        this.largeDamagePercentage = largeDamagePercentage
         yRot = yRotRad * (180.0f / Math.PI.toFloat())
         entityData.set(DATA_XZ_ROT_RAD, xzRotRad)
         entityData.set(DATA_SCALE, scale)
@@ -163,16 +169,14 @@ class MagmaSpikeEntity(
     }
 
     private fun dealDamageTo(entity: LivingEntity) {
-        val serverLevel = level() as? ServerLevel ?: return
-        val currentOwner = getOwner()
+        if (level().isClientSide) return
+        val currentOwner = getOwner() ?: return
         if (!entity.isAlive) return
         if (entity.isInvulnerable) return
         if (entity == currentOwner) return
 
-        // TODO get damage from owner & use mcendgame system
-        val damageSource = if (currentOwner == null) damageSources().magic() else damageSources().indirectMagic(this, currentOwner)
-        if (entity.hurtServer(serverLevel, damageSource, if (isLarge()) 10.0f else 6.0f)) {
-            EnchantmentHelper.doPostAttackEffects(serverLevel, entity, damageSource)
+        val perc = if (isLarge()) largeDamagePercentage else damagePercentage
+        if (entity.dealSpellDamage(currentOwner, this, perc)) {
             entity.setAndSyncVelocity(entity.deltaMovement.scale(0.5).add(0.0, 0.35 * getScale(), 0.0))
         }
     }

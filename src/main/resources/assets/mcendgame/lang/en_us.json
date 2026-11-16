@@ -346,6 +346,7 @@
   "attribute.mcendgame.stealth": " Stealth",
   "attribute.mcendgame.more_damage_against_isolated": " %s%% %s Damage against Isolated Targets",
   "attribute.mcendgame.burn_enemy_on_walk": " Every %s Blocks walked burn a random Enemy within %s Blocks for %s%% Spell Damage",
+  "attribute.mcendgame.magma_spikes_slam_on_use": "Magma Spikes Slam",
   "attribute.mcendgame.stacking_more_attack_speed_on_melee_hit": " Gain Stacking %s%% %s Attack Speed on Melee Hit for %ss",
   "attribute.mcendgame.heal_on_kill": " Heal %s Health on Kill",
   "attribute.mcendgame.heal_on_melee_hit": " Heal %s Health on Melee Hit",

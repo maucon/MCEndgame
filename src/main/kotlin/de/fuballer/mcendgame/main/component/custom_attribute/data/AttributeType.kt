@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.main.component.custom_attribute.sign_based_keyword.
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.util.minecraft.CodecUtil
+import net.minecraft.ChatFormatting
 import net.minecraft.core.Holder
 import net.minecraft.world.entity.ai.attributes.Attribute
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
@@ -17,6 +18,7 @@ sealed class AttributeType(
     val formatBounds: (List<AttributeBounds<*>>) -> List<String>,
     val affinities: List<AttributeAffinity>,
     val signBasedKeywords: List<SignBasedKeyword?>,
+    val color: ChatFormatting = ChatFormatting.BLUE,
 ) {
     companion object {
         val CODEC: Codec<AttributeType> = CodecUtil.ofTwo(VanillaAttributeType.CODEC, CustomAttributeType.CODEC)
@@ -31,7 +33,8 @@ class VanillaAttributeType(
     formatBounds: (List<AttributeBounds<*>>) -> List<String>,
     affinities: List<AttributeAffinity>,
     signBasedKeywords: List<SignBasedKeyword?> = listOf<SignBasedKeyword>(),
-) : AttributeType(key, formatRolls, formatBounds, affinities, signBasedKeywords) {
+    color: ChatFormatting = ChatFormatting.BLUE,
+) : AttributeType(key, formatRolls, formatBounds, affinities, signBasedKeywords, color) {
     companion object {
         val CODEC: Codec<VanillaAttributeType> =
             RecordCodecBuilder.create { instance ->
@@ -48,7 +51,8 @@ class CustomAttributeType(
     formatBounds: (List<AttributeBounds<*>>) -> List<String>,
     affinities: List<AttributeAffinity>,
     signBasedKeywords: List<SignBasedKeyword?> = listOf<SignBasedKeyword>(),
-) : AttributeType(key, formatRolls, formatBounds, affinities, signBasedKeywords) {
+    color: ChatFormatting = ChatFormatting.BLUE,
+) : AttributeType(key, formatRolls, formatBounds, affinities, signBasedKeywords, color) {
     companion object {
         val CODEC: Codec<CustomAttributeType> =
             RecordCodecBuilder.create { instance ->
