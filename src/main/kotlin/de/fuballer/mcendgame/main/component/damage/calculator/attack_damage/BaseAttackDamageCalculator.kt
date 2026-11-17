@@ -13,9 +13,9 @@ object BaseAttackDamageCalculator : DamageCalculator {
         originalDamage: Float,
         attacked: LivingEntity,
         source: DamageSource,
-        event: DamageCalculationCommand
+        cmd: DamageCalculationCommand
     ): Float {
-        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
+        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(cmd)
         return (originalDamage * damageMulti).toFloat()
     }
 }

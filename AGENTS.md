@@ -14,7 +14,7 @@ mixins and low-level runtime-world code) and published on Modrinth / CurseForge.
 
 ### Tech stack (see `gradle.properties` for exact versions)
 
-- Minecraft **26.2** (calendar versioning), **Yarn** mappings, Fabric Loom
+- Minecraft **26.3** (calendar versioning), **Yarn** mappings, Fabric Loom
 - **Kotlin 2.4.0** via Fabric Language Kotlin, **Java 25** toolchain
 - Fabric API, **GeckoLib** (entity/armor animations)
 - **maucon-framework** (`de.maucon:maucon-framework:2.0.1`) — a private dependency from

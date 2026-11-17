@@ -1,0 +1,11 @@
+{
+  "required": false,
+  "package": "de.fuballer.mcendgame.test.main.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "LivingEntityDeathLootTailProbeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

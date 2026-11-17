@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.messaging.misc.EntityShotArrowEvent
-import de.fuballer.mcendgame.main.util.extension.mixin.PersistentProjectileEntityMixinExtension.setPierceLevel
+import de.fuballer.mcendgame.main.util.extension.mixin.AbstractArrowMixinExtension.setPierceLevel
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 

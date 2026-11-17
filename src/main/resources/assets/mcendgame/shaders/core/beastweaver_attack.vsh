@@ -16,8 +16,10 @@ layout(location = 5) in vec3 Normal;
 layout(location = 6) in vec3 GradientOrigin;
 layout(location = 7) in vec2 GradientBounds;
 
+#ifndef OIT_ALPHA_ONLY
 layout(location = 0) out float sphericalVertexDistance;
 layout(location = 1) out float cylindricalVertexDistance;
+#endif
 
 layout(location = 2) out vec4 vertexColor;
 layout(location = 3) out vec2 texCoord0;
@@ -28,8 +30,10 @@ layout(location = 6) out vec2 gradientBounds;
 void main() {
     gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
 
+    #ifndef OIT_ALPHA_ONLY
     sphericalVertexDistance = fog_spherical_distance(Position);
     cylindricalVertexDistance = fog_cylindrical_distance(Position);
+    #endif
 
     vertexColor = minecraft_mix_light(Light0_Direction, Light1_Direction, Normal, Color);
 

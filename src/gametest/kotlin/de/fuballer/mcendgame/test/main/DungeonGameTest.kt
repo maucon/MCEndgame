@@ -307,7 +307,7 @@ object DungeonGameTest {
     /**
      * Places a dungeon device, spawns a connected mock player and opens a dungeon through it.
      */
-    private fun openDungeon(helper: GameTestHelper): ServerPlayer {
+    internal fun openDungeon(helper: GameTestHelper): ServerPlayer {
         helper.setBlock(DEVICE_POS, CustomBlocks.DUNGEON_DEVICE)
         val dungeonDevice = helper.getBlockEntity(DEVICE_POS, DungeonDeviceBlockEntity::class.java)
         val player = spawnMockServerPlayer(helper)
@@ -316,7 +316,7 @@ object DungeonGameTest {
         return player
     }
 
-    private fun findDungeonWorld(server: MinecraftServer): ServerLevel? =
+    internal fun findDungeonWorld(server: MinecraftServer): ServerLevel? =
         server.allLevels.firstOrNull { it.isDungeonWorld() }
 
     /**

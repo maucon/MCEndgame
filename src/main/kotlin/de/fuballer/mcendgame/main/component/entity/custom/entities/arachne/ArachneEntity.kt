@@ -13,6 +13,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.interfaces.HookAttackM
 import de.fuballer.mcendgame.main.component.entity.custom.interfaces.MeleeAttackMob
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setShieldsCooldown
+import de.fuballer.mcendgame.main.util.extension.mixin.AbstractArrowMixinExtension.setDamageFactor
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setWebbed
 import net.minecraft.core.BlockPos
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -97,7 +98,8 @@ class ArachneEntity(
         const val MELEE_ATTACK_HEIGHT = 3
 
         const val MELEE_DAMAGE_FACTOR = 1.1F
-        const val PROJECTILE_DAMAGE_FACTOR = 0.75F
+        const val PROJECTILE_BASE_DAMAGE = 10.0
+        const val PROJECTILE_DAMAGE_FACTOR = 0.75
 
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
@@ -302,13 +304,12 @@ class ArachneEntity(
         pullProgress: Float,
     ) {
         val serverLevel = level() as? ServerLevel ?: return
-        val baseDamage = getAttributeValue(Attributes.ATTACK_DAMAGE)
-        val damage = baseDamage * PROJECTILE_DAMAGE_FACTOR
         shootAt(
             target,
             { WebshotEntity(CustomEntities.WEBSHOT, serverLevel, this) },
             { projectile ->
-                (projectile as? AbstractArrow)?.setBaseDamage(damage)
+                (projectile as? AbstractArrow)?.setBaseDamage(PROJECTILE_BASE_DAMAGE)
+                (projectile as? AbstractArrow)?.setDamageFactor(PROJECTILE_DAMAGE_FACTOR)
             },
             serverLevel,
         )
@@ -324,6 +325,7 @@ class ArachneEntity(
             { projectile ->
                 addHookedEntity(projectile.uuid)
                 (projectile as? AbstractArrow)?.setBaseDamage(1.0)
+                (projectile as? AbstractArrow)?.setDamageFactor(0.1)
             },
             serverLevel,
         )

@@ -52,6 +52,7 @@ object CustomAttributeTypes {
         CustomAttributeType("increased_spell_damage", AttributeFormat.of(SIGNED_PERCENT), AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
     val MORE_SPELL_DAMAGE =
         CustomAttributeType("more_spell_damage", AttributeFormat.of(PERCENT), AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
+    val FLAT_PROJECTILE_DAMAGE = CustomAttributeType("flat_projectile_damage", AttributeFormat.of(SIGNED_DOUBLE), AttributeAffinities.BENEFICIAL)
     val INCREASED_PROJECTILE_DAMAGE =
         CustomAttributeType("increased_projectile_damage", AttributeFormat.of(SIGNED_PERCENT), AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
     val MORE_PROJECTILE_DAMAGE =
