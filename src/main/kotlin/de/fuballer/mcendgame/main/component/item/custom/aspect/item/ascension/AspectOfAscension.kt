@@ -1,8 +1,8 @@
 package de.fuballer.mcendgame.main.component.item.custom.aspect.item.ascension
 
-import de.fuballer.mcendgame.main.component.custom_attribute.AttributeFormats
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustomAttribute
+import de.fuballer.mcendgame.main.component.custom_attribute.data.ValueFormats
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItem
 import net.minecraft.network.chat.Component
@@ -21,9 +21,17 @@ class AspectOfAscension(
     override val tier = 2
     override val limit = 1
     override val description = mutableListOf(
-        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ascension_0", AttributeFormats.formatDouble(-MORE_DAMAGE_TAKEN * 100)),
-        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ascension_1", AttributeFormats.formatDouble(MORE_DAMAGE_DEALT * 100)),
-        Component.translatable(ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ascension_2"),
+        Component.translatable(
+            ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ascension_0",
+            ValueFormats.formatDouble(-MORE_DAMAGE_TAKEN * 100)
+        ),
+        Component.translatable(
+            ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ascension_1",
+            ValueFormats.formatDouble(MORE_DAMAGE_DEALT * 100)
+        ),
+        Component.translatable(
+            ASPECT_TRANSLATABLE_DESCRIPTION_KEY + "ascension_2"
+        ),
     )
     override val disabledAspects = listOf<AspectItem>()
 }
