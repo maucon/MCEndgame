@@ -65,6 +65,7 @@ object CustomCreativeModeTab {
                     output.accept(CustomToolItems.GRAVEBREAKER.defaultInstance)
                     output.accept(CustomToolItems.RADIANT_DAWN.defaultInstance)
                     output.accept(CustomToolItems.SEETHING_MALICE.defaultInstance)
+                    output.accept(CustomToolItems.SCORCHING_HUNGER.defaultInstance)
                     output.accept(CustomToolItems.CLAWS_OF_THE_BEAR.defaultInstance)
                     output.accept(CustomToolItems.WINDSTRING.defaultInstance)
                     output.accept(CustomToolItems.HAILSTORM.defaultInstance)

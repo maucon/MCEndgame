@@ -33,6 +33,7 @@ class CustomModelProvider(
         generator.generateFlatItem(CustomToolItems.FATESPLITTER, ModelTemplates.FLAT_HANDHELD_ITEM)
         generator.generateFlatItem(CustomToolItems.SERPENTS_FANG, ModelTemplates.FLAT_HANDHELD_ITEM)
         generator.generateFlatItem(CustomToolItems.NIGHTREAVER, ModelTemplates.FLAT_HANDHELD_ITEM)
+        generator.generateFlatItem(CustomToolItems.SCORCHING_HUNGER, ModelTemplates.FLAT_HANDHELD_ITEM)
         registerCustomBow(generator, CustomToolItems.WINDSTRING)
         registerCustomBow(generator, CustomToolItems.HAILSTORM)
         registerCustomBow(generator, CustomToolItems.DUSK_PIERCER)

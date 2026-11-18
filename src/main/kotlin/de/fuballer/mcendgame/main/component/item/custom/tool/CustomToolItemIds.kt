@@ -12,6 +12,7 @@ object CustomToolItemIds {
     val NIGHTREAVER = RegistryKeyUtil.createItemKey("nightreaver")
     val RADIANT_DAWN = RegistryKeyUtil.createItemKey("radiant_dawn")
     val SEETHING_MALICE = RegistryKeyUtil.createItemKey("seething_malice")
+    val SCORCHING_HUNGER = RegistryKeyUtil.createItemKey("scorching_hunger")
     val WINDSTRING = RegistryKeyUtil.createItemKey("windstring")
     val HAILSTORM = RegistryKeyUtil.createItemKey("hailstorm")
     val DUSK_PIERCER = RegistryKeyUtil.createItemKey("dusk_piercer")

@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.main.component.item.custom.tool
 
+import de.fuballer.mcendgame.main.component.item.custom.tool.item.ScorchingHunger
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.ItemTags
 
@@ -59,6 +60,14 @@ object CustomToolMaterials {
         0.0F,
         22,
         ItemTags.REPAIRS_NETHERITE_ARMOR,
+    )
+    val SCORCHING_HUNGER = ToolMaterialUtil.of(
+        BlockTags.INCORRECT_FOR_NETHERITE_TOOL,
+        2031,
+        0.0F,
+        0.0F,
+        22,
+        ItemTags.REPAIRS_GOLD_ARMOR,
     )
     val CLAWS_OF_THE_BEAR = ToolMaterialUtil.of(
         BlockTags.INCORRECT_FOR_NETHERITE_TOOL,

@@ -33,6 +33,7 @@ object EquipmentGenerationSettings {
         RandomOption(100, TaggedEquipment.forBothHands(Sword.RADIANT_DAWN)),
         RandomOption(100, TaggedEquipment.forBothHands(Axe.FATESPLITTER)),
         //RandomOption(100, TaggedEquipment.forBothHands(Sword.SEETHING_MALICE)), drops from thal veyra boss
+        //RandomOption(100, TaggedEquipment.forBothHands(Sword.SCORCHING_HUNGER)), drops from thar zul boss
         //RandomOption(100, TaggedEquipment.forBothHands(Mace.GRAVEBREAKER)), drops from bonecrusher boss
         //RandomOption(100, TaggedEquipment.forBothHands(Sword.CLAWS_OF_THE_BEAR)), drops from beastweaver boss
 

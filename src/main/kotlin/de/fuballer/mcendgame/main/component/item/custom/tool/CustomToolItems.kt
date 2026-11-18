@@ -53,6 +53,11 @@ object CustomToolItems {
         Item.Properties().sword(CustomToolMaterials.SEETHING_MALICE, 7F, -3.2F).useCooldown(8.0F),
         CustomToolItemIds.SEETHING_MALICE
     )
+    val SCORCHING_HUNGER = UniqueItemRegistry.registerToolItem(
+        ::ScorchingHunger,
+        Item.Properties().sword(CustomToolMaterials.SCORCHING_HUNGER, 7F, -2.4F),
+        CustomToolItemIds.SCORCHING_HUNGER
+    )
     val WINDSTRING = UniqueItemRegistry.registerToolItem(
         ::Windstring,
         Item.Properties().durability(500),
