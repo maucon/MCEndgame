@@ -33,6 +33,7 @@ import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
@@ -310,4 +311,9 @@ object EntityExtension {
         if (offHandStack.isEmpty) return false
         return mainHandStack.item == offHandStack.item
     }
+
+    fun LivingEntity.getEquipment(): Map<EquipmentSlot, ItemStack> =
+        EquipmentSlot.entries
+            .associateWith { getItemBySlot(it) }
+            .filter { !it.value.isEmpty }
 }

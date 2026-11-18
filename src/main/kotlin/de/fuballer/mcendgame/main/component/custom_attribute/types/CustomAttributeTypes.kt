@@ -37,6 +37,8 @@ object CustomAttributeTypes {
     val MORE_DAMAGE_TAKEN_WHILE_ON_FIRE =
         CustomAttributeType("more_damage_taken_while_on_fire", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
     val FLAT_DAMAGE_TAKEN = CustomAttributeType("flat_damage_taken", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.DETRIMENTAL)
+    val MORE_DAMAGE_TAKEN_PER_MISSING_HEART =
+        CustomAttributeType("more_damage_taken_per_missing_heart", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
 
     // OFFENSE
     val SPELL_DAMAGE = CustomAttributeType("spell_damage", AttributeFormats.SIGNED_DOUBLE_ROLL, AttributeFormats.DOUBLE_BOUNDS, AttributeAffinities.BENEFICIAL)
@@ -234,6 +236,8 @@ object CustomAttributeTypes {
         CustomAttributeType("increased_movement_speed_modifiers_affect_damage", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
     val MORE_MOVEMENT_SPEED_MODIFIERS_AFFECT_DAMAGE =
         CustomAttributeType("more_movement_speed_modifiers_affect_damage", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
+    val INCREASED_JUMP_STRENGTH_MODIFIERS_GRANT_CRITICAL_DAMAGE_MULTIPLIER =
+        CustomAttributeType("increased_jump_strength_modifiers_grant_critical_damage_multiplier", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
 
     val SHIELD_DISABLED_ON_BLOCKING_HIT = CustomAttributeType("shield_disabled_on_blocking_hit", AttributeFormats.INT_ROLL, AttributeFormats.INT_BOUNDS, AttributeAffinities.DETRIMENTAL)
     val INCREASED_DAMAGE_WHILE_SHIELD_DISABLED = CustomAttributeType(
@@ -308,6 +312,14 @@ object CustomAttributeTypes {
             AttributeAffinities.BENEFICIAL,
             color = ChatFormatting.AQUA,
         )
+
+    val ABSORB_STAT_FROM_SLAIN_BOSS = CustomAttributeType(
+        "absorb_stat_from_slain_boss",
+        AttributeFormats.EMPTY_ROLL,
+        AttributeFormats.EMPTY_BOUNDS,
+        AttributeAffinities.BENEFICIAL,
+        color = ChatFormatting.LIGHT_PURPLE,
+    )
 
     val SLOWNESS_ON_HIT = CustomAttributeType("slowness_on_hit", AttributeFormats.TWO_INT_ROLL, AttributeFormats.TWO_INT_BOUNDS, AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL)
     val STRENGTH_ON_KILL = CustomAttributeType("strength_on_kill", AttributeFormats.TWO_INT_ROLL, AttributeFormats.TWO_INT_BOUNDS, AttributeAffinities.BENEFICIAL_CONDITIONAL_BENEFICIAL)

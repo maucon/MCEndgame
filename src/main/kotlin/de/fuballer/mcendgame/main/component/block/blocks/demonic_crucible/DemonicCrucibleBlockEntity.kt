@@ -188,6 +188,6 @@ class DemonicCrucibleBlockEntity(
 
     override fun saveAdditional(view: ValueOutput) {
         super.saveAdditional(view)
-        view.store("stack", ItemStack.CODEC, stack)
+        if (!stack.isEmpty) view.store("stack", ItemStack.CODEC, stack)
     }
 }
