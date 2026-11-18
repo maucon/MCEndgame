@@ -1,5 +1,5 @@
 package de.fuballer.mcendgame.main.accessor;
 
-public interface PersistentProjectileEntityPierceLevelAccessor {
+public interface AbstractArrowPierceLevelAccessor {
     void mcendgame$callSetPierceLevel(byte level);
 }

@@ -23,6 +23,7 @@ class SynthesizedPrecisionCrystal(
         .fromExisting(
             RANGED_WEAPONS,
             CopyExistingData(CustomAttributeTypes.INCREASED_PROJECTILE_DAMAGE),
+            CopyExistingData(CustomAttributeTypes.FLAT_PROJECTILE_DAMAGE),
         ).putEquipmentAttributes(
             RANGED_WEAPONS,
             RandomOption(

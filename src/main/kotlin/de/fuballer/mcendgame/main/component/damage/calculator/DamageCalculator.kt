@@ -11,6 +11,6 @@ interface DamageCalculator {
         originalDamage: Float,
         attacked: LivingEntity,
         source: DamageSource,
-        event: DamageCalculationCommand,
+        cmd: DamageCalculationCommand,
     ): Float
 }

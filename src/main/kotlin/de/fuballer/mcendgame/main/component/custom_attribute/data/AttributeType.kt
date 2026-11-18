@@ -12,14 +12,28 @@ import net.minecraft.core.Holder
 import net.minecraft.world.entity.ai.attributes.Attribute
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 
+private val DEFAULT_COLOR = ChatFormatting.BLUE
+
 sealed class AttributeType(
+    /** Translation key suffix, see `attribute.mcendgame.<key>`. */
     val key: String,
-    val formatRolls: (List<AttributeRoll<*>>) -> List<String>,
-    val formatBounds: (List<AttributeBounds<*>>) -> List<String>,
+    /** How the rolled values and their bounds are displayed. */
+    val format: AttributeFormat,
     val affinities: List<AttributeAffinity>,
+    /**
+     * Entry `i` belongs to value `i` (null = no keyword for that value).
+     * If present, the value is displayed without its sign and the keyword
+     * (e.g. "increased"/"reduced") is inserted after it instead.
+     */
     val signBasedKeywords: List<SignBasedKeyword?>,
-    val color: ChatFormatting = ChatFormatting.BLUE,
+    val color: ChatFormatting,
+    /** If true, the detailed tooltip (shift) uses the translation `<key>.detailed`. */
+    val hasDetailedKey: Boolean,
 ) {
+    fun formatRolls(rolls: List<AttributeRoll<*>>): List<String> = format.formatRolls(rolls)
+
+    fun formatBounds(bounds: List<AttributeBounds<*>>): List<String> = format.formatBounds(bounds)
+
     companion object {
         val CODEC: Codec<AttributeType> = CodecUtil.ofTwo(VanillaAttributeType.CODEC, CustomAttributeType.CODEC)
     }
@@ -29,12 +43,17 @@ class VanillaAttributeType(
     val attribute: Holder<Attribute>,
     val scaleType: AttributeModifier.Operation,
     key: String,
-    formatRolls: (List<AttributeRoll<*>>) -> List<String>,
-    formatBounds: (List<AttributeBounds<*>>) -> List<String>,
+    format: AttributeFormat,
     affinities: List<AttributeAffinity>,
-    signBasedKeywords: List<SignBasedKeyword?> = listOf<SignBasedKeyword>(),
-    color: ChatFormatting = ChatFormatting.BLUE,
-) : AttributeType(key, formatRolls, formatBounds, affinities, signBasedKeywords, color) {
+    signBasedKeywords: List<SignBasedKeyword?> = emptyList(),
+) : AttributeType(
+    key = key,
+    format = format,
+    affinities = affinities,
+    signBasedKeywords = signBasedKeywords,
+    color = DEFAULT_COLOR,
+    hasDetailedKey = false,
+) {
     companion object {
         val CODEC: Codec<VanillaAttributeType> =
             RecordCodecBuilder.create { instance ->
@@ -47,12 +66,12 @@ class VanillaAttributeType(
 
 class CustomAttributeType(
     key: String,
-    formatRolls: (List<AttributeRoll<*>>) -> List<String>,
-    formatBounds: (List<AttributeBounds<*>>) -> List<String>,
+    format: AttributeFormat,
     affinities: List<AttributeAffinity>,
-    signBasedKeywords: List<SignBasedKeyword?> = listOf<SignBasedKeyword>(),
-    color: ChatFormatting = ChatFormatting.BLUE,
-) : AttributeType(key, formatRolls, formatBounds, affinities, signBasedKeywords, color) {
+    signBasedKeywords: List<SignBasedKeyword?> = emptyList(),
+    color: ChatFormatting = DEFAULT_COLOR,
+    hasDetailedKey: Boolean = false,
+) : AttributeType(key, format, affinities, signBasedKeywords, color, hasDetailedKey) {
     companion object {
         val CODEC: Codec<CustomAttributeType> =
             RecordCodecBuilder.create { instance ->

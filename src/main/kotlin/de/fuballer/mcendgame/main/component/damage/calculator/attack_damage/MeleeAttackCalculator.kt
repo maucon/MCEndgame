@@ -30,14 +30,14 @@ object MeleeAttackCalculator : DamageCalculator {
         originalDamage: Float,
         attacked: LivingEntity,
         source: DamageSource,
-        event: DamageCalculationCommand
+        cmd: DamageCalculationCommand
     ): Float {
         val attacker = source.entity as? LivingEntity ?: return originalDamage
 
-        val baseDamage = calculateBaseAttackDamage(event, attacker, source)
+        val baseDamage = calculateBaseAttackDamage(cmd, attacker, source)
         val enchantmentDamage = DamageUtil.calculateEnchantmentDamage(attacker, attacked, source)
-        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(event)
-        val critMulti = calculateCriticalMultiplier(event)
+        val damageMulti = DamageUtil.calculateAttackDamageMultiplier(cmd)
+        val critMulti = calculateCriticalMultiplier(cmd)
         val attackCooldown = getAttackCooldown(source)
         val attackDamageMulti = calculateAttackCooldownMulti(attackCooldown)
 
