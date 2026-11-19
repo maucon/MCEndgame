@@ -2,9 +2,11 @@ package de.fuballer.mcendgame.main.component.data_component_type
 
 import com.mojang.serialization.Codec
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
+import de.fuballer.mcendgame.main.util.extension.CodecExtension.setOf
 import de.fuballer.mcendgame.main.util.minecraft.RegistryUtil
 import de.maucon.mauconframework.di.annotation.Injectable
 import net.minecraft.core.component.DataComponentType
+import net.minecraft.resources.Identifier
 
 @Injectable
 object CustomDataComponentType {
@@ -22,5 +24,13 @@ object CustomDataComponentType {
                 .persistent(Codec.INT)
                 .build(),
             "totem_tier"
+        )
+
+    val ABSORBED_BOSS_TYPES: DataComponentType<MutableSet<Identifier>> =
+        RegistryUtil.registerDataComponentType(
+            DataComponentType.builder<MutableSet<Identifier>>()
+                .persistent(Identifier.CODEC.setOf())
+                .build(),
+            "absorbed_boss_types"
         )
 }

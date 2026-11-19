@@ -1,10 +1,13 @@
 package de.fuballer.mcendgame.main.util.extension
 
+import de.fuballer.mcendgame.main.component.data_component_type.CustomDataComponentType
 import de.fuballer.mcendgame.main.component.item.equipment.Equipment
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.component.DataComponents
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.equipment.trim.ArmorTrim
 import net.minecraft.world.item.equipment.trim.TrimMaterial
@@ -34,5 +37,16 @@ object ItemStackExtension {
                 trimPatterns.getOrThrow(pattern),
             )
         )
+    }
+
+    fun ItemStack.addAbsorbedBoss(type: EntityType<*>) {
+        val absorbedBosses = getOrDefault(CustomDataComponentType.ABSORBED_BOSS_TYPES, mutableSetOf())
+        absorbedBosses.add(BuiltInRegistries.ENTITY_TYPE.getKey(type))
+        set(CustomDataComponentType.ABSORBED_BOSS_TYPES, absorbedBosses)
+    }
+
+    fun ItemStack.hasAbsorbedBoss(type: EntityType<*>): Boolean {
+        val absorbedBosses = getOrDefault(CustomDataComponentType.ABSORBED_BOSS_TYPES, mutableSetOf())
+        return absorbedBosses.contains(BuiltInRegistries.ENTITY_TYPE.getKey(type))
     }
 }
