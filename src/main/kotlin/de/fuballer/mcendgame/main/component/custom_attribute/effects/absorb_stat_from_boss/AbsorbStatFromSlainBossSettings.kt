@@ -15,8 +15,8 @@ object AbsorbStatFromSlainBossSettings {
             RollableCustomAttribute(CustomAttributeTypes.INCREASED_JUMP_STRENGTH_MODIFIERS_GRANT_CRITICAL_DAMAGE_MULTIPLIER, 0, DoubleBounds(0.8, 1.0)),
         ),
         CustomEntities.BEAKBURN to listOf(
-            RollableCustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, 0, DoubleBounds(1.2, 1.5)),
-            RollableCustomAttribute(CustomAttributeTypes.INCREASED_SPELL_DAMAGE, 0, DoubleBounds(0.10, 0.15)),
+            RollableCustomAttribute(CustomAttributeTypes.SPELL_DAMAGE, 0, DoubleBounds(1.5, 2.0)),
+            RollableCustomAttribute(VanillaAttributeTypes.ATTACK_DAMAGE, 0, DoubleBounds(1.5, 2.0)),
         ),
         CustomEntities.BONECRUSHER to listOf(
             RollableCustomAttribute(VanillaAttributeTypes.MORE_ATTACK_SPEED, 0, DoubleBounds(-0.2, -0.15)),
@@ -30,10 +30,11 @@ object AbsorbStatFromSlainBossSettings {
             RollableCustomAttribute(CustomAttributeTypes.MORE_DAMAGE_TAKEN_PER_MISSING_HEART, 0, DoubleBounds(-0.012, -0.009)),
         ),
         CustomEntities.THAR_ZUL to listOf(
-
+            // TODO inc/more dmg with sweep attacks (also to main target)
         ),
         CustomEntities.THAL_VEYRA to listOf(
-
+            RollableCustomAttribute(CustomAttributeTypes.SPELL_IGNITE, 0),
+            RollableCustomAttribute(CustomAttributeTypes.INCREASED_SPELL_DAMAGE, 0, DoubleBounds(0.10, 0.15)),
         ),
     )
 

@@ -310,6 +310,7 @@
   "attribute.mcendgame.shoot_wither_skull_when_hit_by_projectile": "%s%% chance to shoot a Wither Skull when Hit by a Projectile",
   "attribute.mcendgame.explode_when_taking_damage": " Explode when Taking Damage, dealing %s%% Spell Damage",
   "attribute.mcendgame.burning_enemies_explode_when_killed": " Burning Enemies you kill Explode, dealing %s%% Spell Damage",
+  "attribute.mcendgame.spell_ignite": " Spells Ignite",
   "attribute.mcendgame.increased_health_recovery": "%s%% %s Health Recovery",
   "attribute.mcendgame.more_health_recovery": " %s%% %s Health Recovery",
   "attribute.mcendgame.fury_on_kill": " Gain a Stack of Fury on Kill",

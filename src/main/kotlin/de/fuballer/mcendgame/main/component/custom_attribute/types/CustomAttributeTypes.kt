@@ -1,6 +1,5 @@
 package de.fuballer.mcendgame.main.component.custom_attribute.types
 
-import de.fuballer.mcendgame.main.component.custom_attribute.AttributeFormats
 import de.fuballer.mcendgame.main.component.custom_attribute.affinity.AttributeAffinities
 import de.fuballer.mcendgame.main.component.custom_attribute.data.AttributeFormat
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttributeType
@@ -42,7 +41,7 @@ object CustomAttributeTypes {
         CustomAttributeType("more_damage_taken_while_on_fire", AttributeFormat.of(PERCENT), AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
     val FLAT_DAMAGE_TAKEN = CustomAttributeType("flat_damage_taken", AttributeFormat.of(SIGNED_DOUBLE), AttributeAffinities.DETRIMENTAL)
     val MORE_DAMAGE_TAKEN_PER_MISSING_HEART =
-        CustomAttributeType("more_damage_taken_per_missing_heart", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
+        CustomAttributeType("more_damage_taken_per_missing_heart", AttributeFormat.of(PERCENT), AttributeAffinities.DETRIMENTAL, SignBasedKeywords.MORE)
 
     // OFFENSE
     val SPELL_DAMAGE = CustomAttributeType("spell_damage", AttributeFormat.of(SIGNED_DOUBLE), AttributeAffinities.BENEFICIAL)
@@ -140,6 +139,7 @@ object CustomAttributeTypes {
 
     val BURNING_ENEMIES_EXPLODE_WHEN_KILLED =
         CustomAttributeType("burning_enemies_explode_when_killed", AttributeFormat.of(PERCENT), AttributeAffinities.BENEFICIAL)
+    val SPELL_IGNITE = CustomAttributeType("spell_ignite", AttributeFormat.NONE, AttributeAffinities.BENEFICIAL)
 
     val INCREASED_HEALTH_RECOVERY =
         CustomAttributeType("increased_health_recovery", AttributeFormat.of(SIGNED_PERCENT), AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
@@ -190,7 +190,7 @@ object CustomAttributeTypes {
     val MORE_MOVEMENT_SPEED_MODIFIERS_AFFECT_DAMAGE =
         CustomAttributeType("more_movement_speed_modifiers_affect_damage", AttributeFormat.of(PERCENT), AttributeAffinities.BENEFICIAL)
     val INCREASED_JUMP_STRENGTH_MODIFIERS_GRANT_CRITICAL_DAMAGE_MULTIPLIER =
-        CustomAttributeType("increased_jump_strength_modifiers_grant_critical_damage_multiplier", AttributeFormats.PERCENT_ROLL, AttributeFormats.PERCENT_BOUNDS, AttributeAffinities.BENEFICIAL)
+        CustomAttributeType("increased_jump_strength_modifiers_grant_critical_damage_multiplier", AttributeFormat.of(PERCENT), AttributeAffinities.BENEFICIAL)
 
     val SHIELD_DISABLED_ON_BLOCKING_HIT = CustomAttributeType("shield_disabled_on_blocking_hit", AttributeFormat.of(INT), AttributeAffinities.DETRIMENTAL)
     val INCREASED_DAMAGE_WHILE_SHIELD_DISABLED = CustomAttributeType(
@@ -253,10 +253,10 @@ object CustomAttributeTypes {
         color = ChatFormatting.AQUA,
         hasDetailedKey = true
     )
+
     val ABSORB_STAT_FROM_SLAIN_BOSS = CustomAttributeType(
         "absorb_stat_from_slain_boss",
-        AttributeFormats.EMPTY_ROLL,
-        AttributeFormats.EMPTY_BOUNDS,
+        AttributeFormat.NONE,
         AttributeAffinities.BENEFICIAL,
         color = ChatFormatting.LIGHT_PURPLE,
     )
