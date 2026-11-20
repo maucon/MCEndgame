@@ -7,6 +7,7 @@ import de.fuballer.mcendgame.main.component.corruption.CorruptionService
 import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.fuballer.mcendgame.main.util.extension.EntityExtension.setAndSyncVelocity
 import de.fuballer.mcendgame.main.util.extension.ItemStackExtension.isForgeable
+import de.maucon.mauconframework.event.EventGateway
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.particles.ParticleTypes
@@ -19,6 +20,7 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Prediction
 import net.minecraft.util.ProblemReporter.ScopedCollector
+import net.minecraft.world.entity.EntityReference
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
@@ -31,6 +33,7 @@ import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
 import org.slf4j.Logger
+import java.util.*
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.math.min
 import kotlin.random.Random
@@ -47,6 +50,7 @@ class DemonicCrucibleBlockEntity(
     }
 
     var stack: ItemStack = ItemStack.EMPTY
+    var stackOwner: UUID? = null
     var prevStack: ItemStack = ItemStack.EMPTY
     var progressTicks = 0
     private var nextHeartbeat = getHeartbeatCooldown()
@@ -65,6 +69,7 @@ class DemonicCrucibleBlockEntity(
 
         if (isStackValid(itemStack)) {
             stack = itemStack.consumeAndReturn(1, player)
+            stackOwner = player.uuid
             level.playSound(null, player, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.PLAYERS, 1f, 1f)
         } else {
             stack = ItemStack.EMPTY
@@ -98,7 +103,6 @@ class DemonicCrucibleBlockEntity(
 
         if (progressTicks < PROGRESS_DURATION) return
 
-
         level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
         level.sendParticles(ParticleTypes.CLOUD, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 10, 1.0, 1.0, 1.0, 0.1)
         level.sendParticles(ParticleTypes.EXPLOSION, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 20, 2.5, 2.5, 2.5, 1.0)
@@ -111,6 +115,8 @@ class DemonicCrucibleBlockEntity(
         val stackEntity = ItemEntity(level, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, corruptedStack)
         level.addFreshEntity(stackEntity)
         stackEntity.setAndSyncVelocity(DROPPED_ITEM_VELOCITY)
+
+        getStackOwner()?.also { EventGateway.publish(DemonicCrucibleUsedEvent(it)) }
 
         setRemoved()
     }
@@ -181,13 +187,19 @@ class DemonicCrucibleBlockEntity(
         }
     }
 
-    override fun loadAdditional(view: ValueInput) {
-        super.loadAdditional(view)
-        stack = view.read("stack", ItemStack.CODEC).getOrDefault(ItemStack.EMPTY)
-    }
+    private fun getStackOwner(): Player? = stackOwner?.let { uuid -> (level as? ServerLevel)?.server?.playerList?.getPlayer(uuid) }
 
     override fun saveAdditional(view: ValueOutput) {
         super.saveAdditional(view)
         if (!stack.isEmpty) view.store("stack", ItemStack.CODEC, stack)
+
+        stackOwner?.let { view.putString("stack_owner", it.toString()) }
+    }
+
+    override fun loadAdditional(view: ValueInput) {
+        super.loadAdditional(view)
+        stack = view.read("stack", ItemStack.CODEC).getOrDefault(ItemStack.EMPTY)
+
+        stackOwner = view.getString("stack_owner").orElse(null)?.let { UUID.fromString(it) }
     }
 }
