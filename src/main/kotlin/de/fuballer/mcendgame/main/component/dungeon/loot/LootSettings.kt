@@ -77,6 +77,14 @@ object LootSettings {
             RandomOption(1, Pair(CustomToolItems.CLAWS_OF_THE_BEAR, 2)),
             RandomOption(1, Pair(CustomMiscItems.HOWL_OF_THE_WOLF, 1))
         ),
+        CustomEntities.THAR_ZUL to BossUniqueItemDrops(
+            probability = 0.3,
+            RandomOption(1, Pair(CustomToolItems.SCORCHING_HUNGER, 1)),
+        ),
+        CustomEntities.THAL_VEYRA to BossUniqueItemDrops(
+            probability = 0.3,
+            RandomOption(1, Pair(CustomToolItems.SEETHING_MALICE, 1)),
+        ),
     )
 
     data class BossUniqueItemDrops(
