@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.mixin.item.bow;
 
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.BowPullUtil;
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.bow_pull.BowPullUtil;
 import de.fuballer.mcendgame.main.util.extension.EntityExtension;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BowItem;

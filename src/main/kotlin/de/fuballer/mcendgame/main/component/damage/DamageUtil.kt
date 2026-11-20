@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.component.damage
 
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.SpellResistanceSettings
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.spell_resistance.SpellResistanceSettings
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.CombatRules
 import net.minecraft.world.damagesource.DamageSource
