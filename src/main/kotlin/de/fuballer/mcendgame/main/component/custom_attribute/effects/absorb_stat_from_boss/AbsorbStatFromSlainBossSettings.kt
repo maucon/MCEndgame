@@ -44,6 +44,6 @@ object AbsorbStatFromSlainBossSettings {
 
     val ATTRIBUTE_ABSORBED_MESSAGE: Component =
         Component.translatable("text.mcendgame.attribute_absorbed").withStyle { style -> style.withBold(false).withColor(ChatFormatting.LIGHT_PURPLE) }
-    val ATTRIBUTE_ALREADY_ABSORBED_MESSAGE: Component =
+    val CANNOT_ABSORB_ATTRIBUTE_MESSAGE: Component =
         Component.translatable("text.mcendgame.cannot_absorb_attribute").withStyle { style -> style.withBold(false).withColor(ChatFormatting.GRAY) }
 }

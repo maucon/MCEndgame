@@ -38,6 +38,12 @@ object CustomParticleTypes {
         { _ -> DemonkinEmpowerParticleEffect.CODEC },
         { _ -> DemonkinEmpowerParticleEffect.PACKET_CODEC },
     )
+    val ABSORB_BOSS_POWER = registerComplex<AbsorbBossPowerParticleEffect>(
+        "absorb_boss_power",
+        false,
+        { _ -> AbsorbBossPowerParticleEffect.CODEC },
+        { _ -> AbsorbBossPowerParticleEffect.PACKET_CODEC },
+    )
     val DIRECTIONAL_SWEEP_ATTACK = registerComplex<DirectionalSweepParticleEffect>(
         "directional_sweep_attack",
         true,
