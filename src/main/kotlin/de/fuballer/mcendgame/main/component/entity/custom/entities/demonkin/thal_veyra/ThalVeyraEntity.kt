@@ -777,6 +777,11 @@ class ThalVeyraEntity(
         remove(RemovalReason.KILLED)
     }
 
+    override fun handleKillingBlow() {
+        super.handleKillingBlow()
+        attackAnimationController.stopTriggeredAnimation()
+    }
+
     override fun sanitizeScale(scale: Float): Float {
         return super.sanitizeScale(scale) * (1F + EMPOWER_SCALE * getEmpowerPercentage())
     }
