@@ -187,7 +187,7 @@ object CustomEntities {
         CustomEntityIds.MAGMA_SPIKE,
         EntityType.Builder.of(::MagmaSpikeEntity, MobCategory.MISC)
             .noLootTable()
-            .sized(0.5f, 0.8f)
+            .sized(MagmaSpikeEntity.WIDTH, MagmaSpikeEntity.HEIGHT)
             .clientTrackingRange(6)
             .updateInterval(2)
             .dontTrackDeltas()

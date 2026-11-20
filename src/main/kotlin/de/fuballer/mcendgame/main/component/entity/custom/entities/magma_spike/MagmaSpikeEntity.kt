@@ -26,6 +26,9 @@ class MagmaSpikeEntity(
     level: Level,
 ) : Entity(type, level), GeoAnimatable, TraceableEntity {
     companion object {
+        const val WIDTH = 0.5f
+        const val HEIGHT = 0.8f
+
         const val EMERGE_TICKS: Int = 4
         const val HOLD_EMERGED_TICKS: Int = 15
         const val RETRACT_TICKS: Int = 15

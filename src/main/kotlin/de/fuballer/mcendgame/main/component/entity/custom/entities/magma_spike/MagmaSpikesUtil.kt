@@ -7,8 +7,8 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.gameevent.GameEvent
+import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import kotlin.math.max
 import kotlin.math.min
@@ -29,7 +29,7 @@ object MagmaSpikesUtil {
         finalDelay: Int,
         level: ServerLevel,
     ) {
-        val minY = min(target.y, origin.y)
+        val minY = min(target.y, origin.y) - 0.1
         val maxY = max(target.y, origin.y) + 1.0
         val angleToTarget = Mth.atan2(target.z - origin.z, target.x - origin.x).toFloat()
 
@@ -81,8 +81,8 @@ object MagmaSpikesUtil {
                     damagePercentage,
                     caster.x + Mth.cos(angle) * reach,
                     caster.z + Mth.sin(angle) * reach,
-                    caster.y,
-                    caster.y + 1.0,
+                    caster.y - 1.1,
+                    caster.y + 2.0,
                     yRotRad = (angle - Mth.HALF_PI).toFloat(),
                     xzRotRad = Math.toRadians(45.0 - (45.0 * ringPercentage)).toFloat(),
                     scale = minScale + ((maxScale - minScale) * ringPercentage),
@@ -112,27 +112,33 @@ object MagmaSpikesUtil {
         var pos = BlockPos.containing(x, maxY, z)
         var success = false
         var topOffset = 0.0
-        do {
+
+        while (pos.y >= Mth.floor(minY) - 1) {
             val below = pos.below()
-            val belowState: BlockState = level.getBlockState(below)
-            if (!belowState.isFaceSturdy(level, below, Direction.UP)) {
-                pos = pos.below()
-                continue
+            val belowState = level.getBlockState(below)
+            val collisionShape = belowState.getCollisionShape(level, below)
+
+            if (!collisionShape.isEmpty) {
+                val surfaceHeight = collisionShape.max(Direction.Axis.Y)
+                val spawnY = below.y + surfaceHeight
+
+                val scaledHalfWidth = MagmaSpikeEntity.WIDTH / 2 * scale
+                val box = AABB(x - scaledHalfWidth, spawnY, z - scaledHalfWidth, x + scaledHalfWidth, spawnY + MagmaSpikeEntity.HEIGHT * scale, z + scaledHalfWidth)
+                if (level.noCollision(box)) {
+                    topOffset = surfaceHeight
+                    pos = below
+                    success = true
+                    break
+                }
             }
 
-            if (!level.isEmptyBlock(pos)) {
-                val blockState: BlockState = level.getBlockState(pos)
-                val shape = blockState.getCollisionShape(level, pos)
-                if (!shape.isEmpty) topOffset = shape.max(Direction.Axis.Y)
-            }
-
-            success = true
-            break
-        } while (pos.y >= Mth.floor(minY) - 1)
+            pos = pos.below()
+        }
 
         if (success) {
-            level.addFreshEntity(MagmaSpikeEntity(level, x, pos.y + topOffset, z, yRotRad, xzRotRad, scale, delayTicks, caster, damagePercentage, largeDamagePercentage, large))
-            level.gameEvent(GameEvent.ENTITY_PLACE, Vec3(x, pos.y + topOffset, z), GameEvent.Context.of(caster))
+            val spawnY = pos.y + topOffset
+            level.addFreshEntity(MagmaSpikeEntity(level, x, spawnY, z, yRotRad, xzRotRad, scale, delayTicks, caster, damagePercentage, largeDamagePercentage, large))
+            level.gameEvent(GameEvent.ENTITY_PLACE, Vec3(x, spawnY, z), GameEvent.Context.of(caster))
         }
     }
 }
