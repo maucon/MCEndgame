@@ -9,6 +9,8 @@ import de.fuballer.mcendgame.main.util.extension.ItemStackExtension.addAbsorbedB
 import de.fuballer.mcendgame.main.util.extension.ItemStackExtension.hasAbsorbedBoss
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
+import net.minecraft.network.chat.Component
+import net.minecraft.world.entity.player.Player
 
 @Injectable
 class AbsorbStatFromSlainBossService {
@@ -16,13 +18,20 @@ class AbsorbStatFromSlainBossService {
     fun on(event: DungeonBossDeathEvent) {
         val equipment = event.killer?.getEquipment() ?: return
 
+        var message: Component? = null
         equipment.forEach { (_, stack) ->
             val bossType = event.bossEntity.type
-            if (stack.hasAbsorbedBoss(bossType)) return@forEach
 
             val attributes = stack.getCustomAttributes().toMutableList()
             val absorbAttribute = attributes.firstOrNull { it.type == CustomAttributeTypes.ABSORB_STAT_FROM_SLAIN_BOSS } ?: return@forEach
+
+            if (stack.hasAbsorbedBoss(bossType)) {
+                if (message == null) message = AbsorbStatFromSlainBossSettings.ATTRIBUTE_ALREADY_ABSORBED_MESSAGE
+                return@forEach
+            }
+
             val newAttributes = AbsorbStatFromSlainBossSettings.getAttributeForBoss(bossType, absorbAttribute.slot) ?: return@forEach
+            message = AbsorbStatFromSlainBossSettings.ATTRIBUTE_ABSORBED_MESSAGE
 
             val index = attributes.indexOf(absorbAttribute)
             attributes.removeAt(index)
@@ -31,5 +40,7 @@ class AbsorbStatFromSlainBossService {
             stack.addAbsorbedBoss(bossType)
             stack.setCustomAttributes(attributes, absorbAttribute.slot)
         }
+
+        message?.let { (event.killer as? Player)?.sendSystemMessage(it) }
     }
 }

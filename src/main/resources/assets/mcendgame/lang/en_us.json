@@ -456,6 +456,9 @@
   "text.mcendgame.dungeon.thal_veyra_empower": " Thal'Veyra draws power from his fallen corpse!",
   "text.mcendgame.dungeon.demonkin_killed": " The demonkin have been vanquished.",
 
+  "text.mcendgame.attribute_absorbed": "Your item has absorbed the bosses power.",
+  "text.mcendgame.cannot_absorb_attribute": "Your item cannot absorb more power from this boss.",
+
   "text.mcendgame.dungeon.device.level": "Level: %s",
 
   "text.mcendgame.scarred_one.effect_targets.enemies": "Enemies gain:",

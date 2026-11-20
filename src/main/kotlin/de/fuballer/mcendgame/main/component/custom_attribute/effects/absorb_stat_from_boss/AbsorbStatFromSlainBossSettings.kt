@@ -5,6 +5,8 @@ import de.fuballer.mcendgame.main.component.custom_attribute.data.RollableCustom
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
+import net.minecraft.ChatFormatting
+import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlotGroup
 
@@ -39,4 +41,9 @@ object AbsorbStatFromSlainBossSettings {
     )
 
     fun getAttributeForBoss(type: EntityType<*>, slot: EquipmentSlotGroup) = BOSS_ATTRIBUTES[type]?.map { it.roll(slot) }
+
+    val ATTRIBUTE_ABSORBED_MESSAGE: Component =
+        Component.translatable("text.mcendgame.attribute_absorbed").withStyle { style -> style.withBold(false).withColor(ChatFormatting.LIGHT_PURPLE) }
+    val ATTRIBUTE_ALREADY_ABSORBED_MESSAGE: Component =
+        Component.translatable("text.mcendgame.cannot_absorb_attribute").withStyle { style -> style.withBold(false).withColor(ChatFormatting.GRAY) }
 }
