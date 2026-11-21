@@ -94,6 +94,7 @@ class CustomBlockTagProvider(
 
         builder(CustomTags.DUNGEON_INTERACTABLE)
             .add(CustomBlockItemIds.TOTEM_STATUE)
+            .add(CustomBlockItemIds.DEMONIC_CRUCIBLE)
             .add(BlockItemIds.REDSTONE_DUST)
             .add(BlockItemIds.LEVER)
             .forceAddTag(BlockTags.BUTTONS)

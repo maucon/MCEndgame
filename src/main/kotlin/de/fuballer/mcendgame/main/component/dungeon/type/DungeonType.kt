@@ -149,7 +149,7 @@ enum class DungeonType(
         listOf(),
         enemyCount = 0,
         bossCount = 0,
-        biome = CustomBiomes.BURNING_CATHEDRAL_DUNGEON,
+        biome = CustomBiomes.DEMONIC_CRUCIBLE_DUNGEON,
         gameTime = 18000,
         translatable = Component.translatable(TRANSLATABLE_BASE_KEY + "demonic_crucible"),
     ),

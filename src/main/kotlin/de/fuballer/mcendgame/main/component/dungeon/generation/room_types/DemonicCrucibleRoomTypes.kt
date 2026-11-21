@@ -15,7 +15,7 @@ object DemonicCrucibleRoomTypes {
         val templateManager = event.server.structureTemplateManager
 
         ROOM = RoomTypeLoader.load(
-            templateManager, "dungeon/demonic_crucible/room",
+            templateManager, "dungeon/demonic_crucible/demonic_crucible",
         )
     }
 }

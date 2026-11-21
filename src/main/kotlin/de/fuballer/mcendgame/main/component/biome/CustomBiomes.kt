@@ -23,6 +23,7 @@ object CustomBiomes {
     val DESERT_DUNGEON: ResourceKey<Biome> = of("desert_dungeon")
     val BEASTWEAVERS_GROVE_DUNGEON: ResourceKey<Biome> = of("beastweaver_grove")
     val BURNING_CATHEDRAL_DUNGEON: ResourceKey<Biome> = of("burning_cathedral")
+    val DEMONIC_CRUCIBLE_DUNGEON: ResourceKey<Biome> = of("demonic_crucible")
 
     private fun of(id: String) = ResourceKey.create(Registries.BIOME, IdentifierUtil.default(id))
 
@@ -31,6 +32,7 @@ object CustomBiomes {
         context.register(DESERT_DUNGEON, createDesertDungeon())
         context.register(BEASTWEAVERS_GROVE_DUNGEON, createBeastweaverDungeon())
         context.register(BURNING_CATHEDRAL_DUNGEON, createBurningCathedralDungeon())
+        context.register(DEMONIC_CRUCIBLE_DUNGEON, createDemonicCrucibleDungeon())
     }
 
     private fun createStrongholdDungeon(): Biome {
@@ -70,18 +72,26 @@ object CustomBiomes {
     }
 
     private fun createBurningCathedralDungeon(): Biome {
-        return Biome.BiomeBuilder()
-            .hasPrecipitation(false)
-            .temperature(2.0f)
-            .downfall(0.0f)
-            .specialEffects(BiomeSpecialEffects.Builder().waterColor(0x5C0000).build())
-            .setAttribute(EnvironmentAttributes.BLOCK_LIGHT_TINT, ARGB.vector3fFromRGB24(0x650A0A))
-            .setAttribute(EnvironmentAttributes.FOG_COLOR, ARGB.vector3fFromRGB24(0x650A0A))
-            .setAttribute(EnvironmentAttributes.FOG_START_DISTANCE, -10.0f)
+        return createDemonicBase()
+            .setAttribute(EnvironmentAttributes.FOG_START_DISTANCE, 15.0f)
             .setAttribute(EnvironmentAttributes.FOG_END_DISTANCE, 50.0f)
-            .modifyAttribute(EnvironmentAttributes.AMBIENT_PARTICLES, ListModifier.append(), AmbientParticle.of(ParticleTypes.CRIMSON_SPORE, 0.025F))
-            .generationSettings(BiomeGenerationSettings.PlainBuilder().build())
-            .mobSpawnSettings(MobSpawnSettings.Builder().build())
             .build()
     }
+
+    private fun createDemonicCrucibleDungeon(): Biome {
+        return createDemonicBase()
+            .setAttribute(EnvironmentAttributes.FOG_START_DISTANCE, 5.0f)
+            .setAttribute(EnvironmentAttributes.FOG_END_DISTANCE, 20.0f)
+            .build()
+    }
+
+    private fun createDemonicBase(): Biome.BiomeBuilder = Biome.BiomeBuilder()
+        .hasPrecipitation(false)
+        .temperature(2.0f)
+        .downfall(0.0f)
+        .specialEffects(BiomeSpecialEffects.Builder().waterColor(0x5C0000).build())
+        .setAttribute(EnvironmentAttributes.FOG_COLOR, ARGB.vector3fFromRGB24(0x650A0A))
+        .modifyAttribute(EnvironmentAttributes.AMBIENT_PARTICLES, ListModifier.append(), AmbientParticle.of(ParticleTypes.CRIMSON_SPORE, 0.025F))
+        .generationSettings(BiomeGenerationSettings.PlainBuilder().build())
+        .mobSpawnSettings(MobSpawnSettings.Builder().build())
 }
