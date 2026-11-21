@@ -9,6 +9,7 @@ import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.world.entity.LivingEntity
 
+// same as Fire Aspect I
 private const val IGNITE_TICKS = 80
 
 @Injectable
