@@ -1,6 +1,6 @@
 package de.fuballer.mcendgame.main.mixin.goal;
 
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.BowPullUtil;
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.bow_pull.BowPullUtil;
 import de.fuballer.mcendgame.main.util.extension.EntityExtension;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
@@ -40,6 +40,7 @@ public class RangedBowAttackGoalMixin {
 
     @Unique
     private Monster accessActor() {
+        @SuppressWarnings("rawtypes")
         var accessor = (RangedBowAttackGoalAccessor) this;
         return accessor.getMob();
     }

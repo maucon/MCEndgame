@@ -3,7 +3,7 @@ package de.fuballer.mcendgame.main.component.dungeon.enemy
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleBounds
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.SpellResistanceSettings
+import de.fuballer.mcendgame.main.component.custom_attribute.effects.spell_resistance.SpellResistanceSettings
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.custom_attribute.types.VanillaAttributeTypes
 import kotlin.math.min

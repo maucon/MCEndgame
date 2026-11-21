@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.custom_attribute.effects
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.movement_speed
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributeUtil
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes

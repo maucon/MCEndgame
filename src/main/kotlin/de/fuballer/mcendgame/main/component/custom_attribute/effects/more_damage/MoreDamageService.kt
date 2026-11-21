@@ -1,30 +1,30 @@
-package de.fuballer.mcendgame.main.component.custom_attribute.effects
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.more_damage
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asDoubleRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
 import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttributeType
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
 import de.fuballer.mcendgame.main.component.damage.DamageCalculationCommand
-import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectSpellDamageCommand
+import de.fuballer.mcendgame.main.messaging.collect_attribute.CollectGenericMoreDamageCommand
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 
 @Injectable
-class SpellDamageService {
+class MoreDamageService {
     @CommandHandler
     fun on(cmd: DamageCalculationCommand) {
-        cmd.spellDamage.addAll(getDamage(cmd.damagerAttributes))
+        cmd.moreDamage.addAll(getMoreDamage(cmd.damagerAttributes))
     }
 
     @CommandHandler
-    fun on(cmd: CollectSpellDamageCommand) {
-        cmd.flat.addAll(getDamage(cmd.attributes))
+    fun on(cmd: CollectGenericMoreDamageCommand) {
+        cmd.more.addAll(getMoreDamage(cmd.attributes))
     }
 
-    private fun getDamage(
+    private fun getMoreDamage(
         attributes: Map<CustomAttributeType, List<CustomAttribute>>,
     ): List<Double> {
-        val attr = attributes[CustomAttributeTypes.SPELL_DAMAGE] ?: return listOf()
+        val attr = attributes[CustomAttributeTypes.MORE_DAMAGE] ?: return listOf()
         return attr.map { it.rolls[0].asDoubleRoll().getValue() }
     }
 }

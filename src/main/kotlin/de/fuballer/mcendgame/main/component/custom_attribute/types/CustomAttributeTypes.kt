@@ -66,6 +66,8 @@ object CustomAttributeTypes {
     val MORE_ATTACK_DAMAGE_PER_ARMOR =
         CustomAttributeType("more_attack_damage_per_armor", AttributeFormat.of(PERCENT), AttributeAffinities.BENEFICIAL, SignBasedKeywords.MORE)
     val MELEE_DAMAGE_CAN_NOT_BE_DODGED = CustomAttributeType("melee_damage_can_not_be_dodged", AttributeFormat.NONE, AttributeAffinities.BENEFICIAL)
+    val INCREASED_SWEEPING_DAMAGE =
+        CustomAttributeType("increased_sweeping_damage", AttributeFormat.of(SIGNED_PERCENT), AttributeAffinities.BENEFICIAL, SignBasedKeywords.INCREASED)
 
     // BOW
     val BOW_PULL_TICKS = CustomAttributeType("bow_pull_ticks", AttributeFormat.of(SIGNED_INT), AttributeAffinities.DETRIMENTAL)

@@ -279,6 +279,7 @@
   "attribute.mcendgame.spell_damage": "%s Spell Damage",
   "attribute.mcendgame.increased_damage": "%s%% %s Damage",
   "attribute.mcendgame.more_damage": " %s%% %s Damage",
+  "attribute.mcendgame.increased_sweeping_damage": " %s%% %s Damage with Sweeping Attacks",
   "attribute.mcendgame.more_damage_per_missing_heart": " %s%% %s Damage per missing Heart",
   "attribute.mcendgame.more_attack_damage_per_armor": " %s%% %s Attack Damage per Armor",
   "attribute.mcendgame.melee_damage_can_not_be_dodged": " Your Melee Damage can not be Dodged",
