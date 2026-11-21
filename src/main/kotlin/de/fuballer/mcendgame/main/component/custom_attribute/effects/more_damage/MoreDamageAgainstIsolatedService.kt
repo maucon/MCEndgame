@@ -1,4 +1,4 @@
-package de.fuballer.mcendgame.main.component.custom_attribute.effects
+package de.fuballer.mcendgame.main.component.custom_attribute.effects.more_damage
 
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributeUtil.isIsolated
 import de.fuballer.mcendgame.main.component.custom_attribute.data.DoubleRoll

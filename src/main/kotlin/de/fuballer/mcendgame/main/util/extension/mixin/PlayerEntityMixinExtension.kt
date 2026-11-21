@@ -44,6 +44,11 @@ object PlayerEntityMixinExtension {
         return accessor.`mcendgame$getLastAttackWasCritical`()
     }
 
+    fun Player.wasLastAttackSweeping(): Boolean {
+        val accessor = this as PlayerEntityMixinAccessor
+        return accessor.`mcendgame$getLastAttackWasSweeping`()
+    }
+
     fun Player.isInsideDungeon(): Boolean {
         val accessor = this as PlayerEntityInsideDungeonAccessor
         return accessor.`mcendgame$isInsideDungeon`()

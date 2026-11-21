@@ -70,7 +70,7 @@ object DamageService {
 
         debug {
             "${victim.javaClass.simpleName}: ${incomingDamage.category} raw=${incomingDamage.amount} calculated=$calculated " +
-                    "moreDamageTaken=${cmd.moreDamageTaken} flatDamageTaken=${cmd.flatDamageTaken}"
+                    "moreDamageTaken=${cmd.moreDamageTaken} flatDamageTaken=${cmd.flatDamageTaken} type=${damageSource.type().msgId}"
         }
         return DamageSourceResult.Applied(categorizedDamage, cmd, vanillaDamageContext, damageSource)
     }
