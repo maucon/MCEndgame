@@ -71,6 +71,7 @@ jobs:
           curl -X POST ${{ secrets.WEBHOOK_URL }} \
             -H "Content-Type: application/json" \
             -H "x-webhook-auth: ${{ secrets.WEBHOOK_AUTH }}" \
+            -H "x-proxy-auth: ${{ secrets.PROXY_AUTH }}" \
             -d "{\"artifact-id\": \"${{ steps.artifact-upload.outputs.artifact-id }}\"}"
 
   client_game_test:
