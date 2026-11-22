@@ -67,11 +67,17 @@ jobs:
 
       - name: Notify webhook
         if: github.ref == 'refs/heads/master'
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          WEBHOOK_AUTH: ${{ secrets.WEBHOOK_AUTH }}
+          PROXY_AUTH: ${{ secrets.PROXY_AUTH }}
+          ARTIFACT_ID: ${{ steps.artifact-upload.outputs.artifact-id }}
         run: |
-          curl -X POST ${{ secrets.WEBHOOK_URL }} \
+          curl -X POST "$WEBHOOK_URL" \
             -H "Content-Type: application/json" \
-            -H "x-webhook-auth: ${{ secrets.WEBHOOK_AUTH }}" \
-            -d "{\"artifact-id\": \"${{ steps.artifact-upload.outputs.artifact-id }}\"}"
+            -H "x-webhook-auth: $WEBHOOK_AUTH" \
+            -H "x-proxy-auth: $PROXY_AUTH" \
+            -d "{\"artifact-id\": \"$ARTIFACT_ID\"}"
 
   client_game_test:
     runs-on: ubuntu-24.04
