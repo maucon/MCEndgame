@@ -7,11 +7,14 @@ import com.geckolib.renderer.base.BoneSnapshots
 import com.geckolib.renderer.base.GeoRenderState
 import com.geckolib.renderer.base.RenderPassInfo
 import com.google.common.reflect.TypeToken
+import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
 import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
 import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thal_veyra.ThalVeyraEntity
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.resources.Identifier
 import java.util.*
 import kotlin.math.PI
 
@@ -65,4 +68,6 @@ class ThalVeyraRenderer<R>(
             }
         }
     }
+
+    override fun getRenderType(renderState: R, texture: Identifier): RenderType = CustomRenderLayers.demonkinEmissive(texture)
 }

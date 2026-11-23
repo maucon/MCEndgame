@@ -1,7 +1,7 @@
 package de.fuballer.mcendgame.client.component.render
 
-import net.minecraft.client.particle.SingleQuadParticle.Layer
 import de.maucon.mauconframework.di.annotation.Injectable
+import net.minecraft.client.particle.SingleQuadParticle.Layer
 import net.minecraft.client.renderer.rendertype.LayeringTransform
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
@@ -58,4 +58,19 @@ object CustomRenderLayers {
     }
 
     val PARTICLE_OPAQUE_NO_CULL: Layer = Layer(false, TextureAtlas.LOCATION_PARTICLES, CustomRenderPipelines.OPAQUE_PARTICLE_NO_CULL)
+
+    fun demonkinEmissive(texture: Identifier) = DEMONKIN_EMISSIVE.apply(texture)
+    val DEMONKIN_EMISSIVE: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
+        val renderSetup = RenderSetup.builder(CustomRenderPipelines.DEMONKIN_EMISSIVE)
+            .setOitPipelines(CustomRenderPipelines.OIT_DEMONKIN_EMISSIVE)
+            .withTexture("Sampler0", texture)
+            .useLightmap()
+            .useOverlay()
+            .sortOnUpload()
+            .createRenderSetup()
+        RenderType.create(
+            "demonkin_emissive",
+            renderSetup,
+        )
+    }
 }
