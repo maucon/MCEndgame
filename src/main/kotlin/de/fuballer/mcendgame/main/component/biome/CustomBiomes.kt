@@ -73,8 +73,8 @@ object CustomBiomes {
 
     private fun createBurningCathedralDungeon(): Biome {
         return createDemonicBase()
-            .setAttribute(EnvironmentAttributes.FOG_START_DISTANCE, 15.0f)
-            .setAttribute(EnvironmentAttributes.FOG_END_DISTANCE, 50.0f)
+            .setAttribute(EnvironmentAttributes.FOG_START_DISTANCE, 25.0f)
+            .setAttribute(EnvironmentAttributes.FOG_END_DISTANCE, 75.0f)
             .build()
     }
 
