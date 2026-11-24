@@ -30,6 +30,7 @@ enum class DungeonType(
     val gameTime: Int = 18000,
     val applyMisc: (List<LivingEntity>) -> Unit = {},
     val translatable: Component,
+    val bossActivationDistance: Double = 20.0,
 ) { // Note: dungeon seed uses ordinal to save dungeon type
     STRONGHOLD(
         listOf(
@@ -140,6 +141,7 @@ enum class DungeonType(
         biome = CustomBiomes.BURNING_CATHEDRAL_DUNGEON,
         gameTime = 18000,
         translatable = Component.translatable(TRANSLATABLE_BASE_KEY + "burning_cathedral"),
+        bossActivationDistance = 50.0,
     ),
     DEMONIC_CRUCIBLE(
         listOf(

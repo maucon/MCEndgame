@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.mixin.enemy.boss;
 import de.fuballer.mcendgame.main.accessor.MobEntityDungeonBossAccessor;
 import de.fuballer.mcendgame.main.component.dungeon.enemy.boss.DungeonBossService;
 import de.fuballer.mcendgame.main.component.dungeon.generation.data.SpawnPosition;
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -56,7 +57,10 @@ public class MobDungeonBossMixin implements MobEntityDungeonBossAccessor {
         if (!entity.isNoAi()) return;
         if (!(entity.level() instanceof ServerLevel serverWorld)) return;
 
-        var players = serverWorld.getEntitiesOfClass(Player.class, entity.getBoundingBox().inflate(20.0, 5.0, 20.0));
+        var dungeonType = WorldMixinExtension.INSTANCE.getDungeonType(serverWorld);
+        var activationDistance = dungeonType.getBossActivationDistance();
+        var activationBox = entity.getBoundingBox().inflate(activationDistance);
+        var players = serverWorld.getEntitiesOfClass(Player.class, activationBox);
         players = players.stream().filter(player -> !player.hasInfiniteMaterials()).toList();
 
         for (Player player : players) {
