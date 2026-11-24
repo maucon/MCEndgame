@@ -443,7 +443,7 @@ class ThalVeyraEntity(
 
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()
-                .add(Attributes.FOLLOW_RANGE, 64.0)
+                .add(Attributes.FOLLOW_RANGE, 96.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.4)
                 .add(Attributes.ATTACK_DAMAGE, 3.0)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.5)
@@ -709,8 +709,17 @@ class ThalVeyraEntity(
 
             val path = navigation.createPath(BlockPos.containing(pos), 0) ?: return@repeat
             if (!path.canReach()) return@repeat
+            val pathEnd = path.endNode ?: return@repeat
 
-            teleportTo(pos.x, pos.y, pos.z)
+            val pathEndPos = Vec3(pathEnd.x + 0.5, pathEnd.y.toDouble(), pathEnd.z + 0.5)
+            val entityBox = boundingBox.move(
+                pathEndPos.x - this.x,
+                pathEndPos.y - this.y,
+                pathEndPos.z + 0.5 - this.z
+            )
+            if (!level().noCollision(this, entityBox)) return@repeat
+
+            teleportTo(pathEndPos.x, pathEndPos.y, pathEndPos.z)
             navigation.stop()
 
             target?.also { lookAt(it, 360F, 360F) }
