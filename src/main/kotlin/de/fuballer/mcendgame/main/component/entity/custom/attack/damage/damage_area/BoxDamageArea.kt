@@ -50,6 +50,8 @@ class BoxDamageArea(
         return entityMinHeight <= areaMaxHeight && entityMaxHeight >= areaMinHeight
     }
 
+    override fun getMaxDistanceToCenter(scale: Double): Double = sqrt((forwardRange / 2).pow(2) + sideRange.pow(2) + heightRange.pow(2)) * scale
+
     // using Separating Axis Theorem
     private fun intersectsHorizontal(
         boundingBox: AABB,

@@ -11,7 +11,7 @@ import net.minecraft.world.entity.Mob
 open class Attack<T>(
     val id: String,
     val animationData: AttackAnimationData,
-    private val totalDuration: Int,
+    private val totalDuration: (T) -> Int,
     val cooldown: (T) -> Int,
     private val trigger: TriggerCondition,
     private val data: List<DelayedAttackData>,
@@ -22,6 +22,28 @@ open class Attack<T>(
         id: String,
         animationData: AttackAnimationData,
         totalDuration: Int,
+        cooldown: Int,
+        trigger: TriggerCondition,
+        data: List<DelayedAttackData>,
+        blockMovementDuration: Int = 0,
+        attackSpeed: (T) -> Double = { 1.0 },
+    ) : this(id, animationData, { totalDuration }, { cooldown }, trigger, data, blockMovementDuration, attackSpeed)
+
+    constructor(
+        id: String,
+        animationData: AttackAnimationData,
+        totalDuration: Int,
+        cooldown: (T) -> Int,
+        trigger: TriggerCondition,
+        data: List<DelayedAttackData>,
+        blockMovementDuration: Int = 0,
+        attackSpeed: (T) -> Double = { 1.0 },
+    ) : this(id, animationData, { totalDuration }, cooldown, trigger, data, blockMovementDuration, attackSpeed)
+
+    constructor(
+        id: String,
+        animationData: AttackAnimationData,
+        totalDuration: (T) -> Int,
         cooldown: Int,
         trigger: TriggerCondition,
         data: List<DelayedAttackData>,
@@ -47,7 +69,7 @@ open class Attack<T>(
 
     open fun getAttackDataInstances(attacker: T, target: LivingEntity?) = data.mapNotNull { it.getInstance(target, attackSpeed(attacker)) }
 
-    fun getTotalDuration(attacker: T) = (totalDuration / attackSpeed(attacker)).toInt()
+    fun getTotalDuration(attacker: T) = (totalDuration(attacker) / attackSpeed(attacker)).toInt()
 
     private fun getBlockMovementDuration(attacker: T) = (blockMovementDuration / attackSpeed(attacker)).toInt()
 }

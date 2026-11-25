@@ -22,6 +22,8 @@ abstract class DamageArea {
         sideways: Vec3,
     ): Vec3
 
+    abstract fun getMaxDistanceToCenter(scale: Double): Double
+
     abstract fun getAxisAlignedBoxApproximation(
         originEntity: Entity,
         scale: Double,

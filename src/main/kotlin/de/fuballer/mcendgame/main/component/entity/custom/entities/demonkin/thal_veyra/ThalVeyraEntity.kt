@@ -137,7 +137,7 @@ class ThalVeyraEntity(
                 MagmaSpikesUtil.castMagmaSpikesLine(
                     entity,
                     damagePercentage = 1.0,
-                    largeDamagePercentage = 1.5,
+                    largeDamagePercentage = 0.95,
                     target,
                     origin = entity.position(),
                     offset = 1.25f,
@@ -158,7 +158,7 @@ class ThalVeyraEntity(
             Attack<ThalVeyraEntity>(
                 MAGMA_SPIKES_LINE_LEFT_ID,
                 MAGMA_SPIKES_LINE_LEFT_ANIM_DATA,
-                totalDuration = 35,
+                totalDuration = { mob -> 65 - (25 * mob.getEmpowerPercentage()).toInt() },
                 cooldown = 0,
                 TriggerConditionGroup(
                     TriggerConditionGroup.TriggerConditionJoinType.AND,
@@ -181,7 +181,7 @@ class ThalVeyraEntity(
             Attack<ThalVeyraEntity>(
                 MAGMA_SPIKES_LINE_RIGHT_ID,
                 MAGMA_SPIKES_LINE_RIGHT_ANIM_DATA,
-                totalDuration = 35,
+                totalDuration = { mob -> 65 - (25 * mob.getEmpowerPercentage()).toInt() },
                 cooldown = 0,
                 TriggerConditionGroup(
                     TriggerConditionGroup.TriggerConditionJoinType.AND,
@@ -204,7 +204,7 @@ class ThalVeyraEntity(
             Attack<ThalVeyraEntity>(
                 MAGMA_SPIKES_SLAM_ID,
                 MAGMA_SPIKES_SLAM_ANIM_DATA,
-                totalDuration = 45,
+                totalDuration = { mob -> 70 - (20 * mob.getEmpowerPercentage()).toInt() },
                 cooldown = 0,
                 DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
                 data = listOf(
@@ -232,7 +232,7 @@ class ThalVeyraEntity(
                         override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
                             MagmaSpikesUtil.castMagmaSpikesSlam(
                                 entity,
-                                damagePercentage = 1.0,
+                                damagePercentage = 1.2,
                                 ringDelay = 6,
                                 minScale = 0.75f,
                                 maxScale = 1.5f,
@@ -259,8 +259,8 @@ class ThalVeyraEntity(
             Attack<ThalVeyraEntity>(
                 TELEPORT_ID,
                 TELEPORT_ANIM_DATA,
-                totalDuration = 7,
-                cooldown = { entity -> if ((entity as ThalVeyraEntity).hasPartner()) 150 else 300 },
+                totalDuration = { 7 },
+                cooldown = { entity -> if ((entity).hasPartner()) 150 else 300 },
                 DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
                 data = listOf(
                     DelayedSoundData(FIRE_SOUND, 0),
@@ -341,7 +341,7 @@ class ThalVeyraEntity(
             Attack<ThalVeyraEntity>(
                 FIREBALL_RIGHT_ID,
                 FIREBALL_RIGHT_ANIM_DATA,
-                totalDuration = 35,
+                totalDuration = { mob -> 60 - (20 * mob.getEmpowerPercentage()).toInt() },
                 cooldown = 0,
                 TriggerConditionGroup(
                     TriggerConditionGroup.TriggerConditionJoinType.AND,
@@ -369,7 +369,7 @@ class ThalVeyraEntity(
             Attack<ThalVeyraEntity>(
                 FIREBALL_LEFT_ID,
                 FIREBALL_LEFT_ANIM_DATA,
-                totalDuration = 35,
+                totalDuration = { mob -> 60 - (20 * mob.getEmpowerPercentage()).toInt() },
                 cooldown = 0,
                 TriggerConditionGroup(
                     TriggerConditionGroup.TriggerConditionJoinType.AND,
@@ -391,7 +391,7 @@ class ThalVeyraEntity(
             )
 
         private val PUNCH_RIGHT_AREA = BoxDamageArea(4.0, 0.75, 0.75, 0.0, 0.5, 1.5)
-        private val PUNCH_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 3.0, PUNCH_RIGHT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, knockbackWhenBlocked = true)
+        private val PUNCH_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.8F, 4.0, PUNCH_RIGHT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, knockbackWhenBlocked = true)
         private val PUNCH_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.punch_right")
         private const val PUNCH_RIGHT_ID = "Punch Right"
         private val PUNCH_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, PUNCH_RIGHT_ID)
@@ -399,7 +399,7 @@ class ThalVeyraEntity(
             Attack<ThalVeyraEntity>(
                 PUNCH_RIGHT_ID,
                 PUNCH_RIGHT_ANIM_DATA,
-                totalDuration = 25,
+                totalDuration = { mob -> 40 - (15 * mob.getEmpowerPercentage()).toInt() },
                 cooldown = 0,
                 DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
                 data = listOf(
@@ -411,7 +411,7 @@ class ThalVeyraEntity(
             )
 
         private val PUNCH_LEFT_AREA = BoxDamageArea(4.0, 0.5, 0.5, 0.0, -0.5, 1.5)
-        private val PUNCH_LEFT_ATTACK_DAMAGE = AreaAttackDamage(0.75F, 3.0, PUNCH_LEFT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, knockbackWhenBlocked = true)
+        private val PUNCH_LEFT_ATTACK_DAMAGE = AreaAttackDamage(0.8F, 4.0, PUNCH_LEFT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, knockbackWhenBlocked = true)
         private val PUNCH_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.punch_left")
         private const val PUNCH_LEFT_ID = "Punch Left"
         private val PUNCH_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, PUNCH_LEFT_ID)
@@ -419,7 +419,7 @@ class ThalVeyraEntity(
             Attack<ThalVeyraEntity>(
                 PUNCH_LEFT_ID,
                 PUNCH_LEFT_ANIM_DATA,
-                totalDuration = 25,
+                totalDuration = { mob -> 40 - (15 * mob.getEmpowerPercentage()).toInt() },
                 cooldown = 0,
                 DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
                 data = listOf(
@@ -431,14 +431,14 @@ class ThalVeyraEntity(
             )
 
         private val ATTACKS: List<RandomOption<out Attack<ThalVeyraEntity>>> = listOf(
-            RandomOption(1, MAGMA_SPIKES_LINE_LEFT_ATTACK),
-            RandomOption(1, MAGMA_SPIKES_LINE_RIGHT_ATTACK),
-            RandomOption(1, MAGMA_SPIKES_SLAM_ATTACK),
-            RandomOption(1, TELEPORT_ATTACK),
-            RandomOption(1, FIREBALL_RIGHT_ATTACK),
-            RandomOption(1, FIREBALL_LEFT_ATTACK),
-            RandomOption(1, PUNCH_RIGHT_ATTACK),
-            RandomOption(1, PUNCH_LEFT_ATTACK),
+            RandomOption(2, MAGMA_SPIKES_LINE_LEFT_ATTACK),
+            RandomOption(2, MAGMA_SPIKES_LINE_RIGHT_ATTACK),
+            RandomOption(2, MAGMA_SPIKES_SLAM_ATTACK),
+            RandomOption(3, TELEPORT_ATTACK),
+            RandomOption(3, FIREBALL_RIGHT_ATTACK),
+            RandomOption(3, FIREBALL_LEFT_ATTACK),
+            RandomOption(3, PUNCH_RIGHT_ATTACK),
+            RandomOption(3, PUNCH_LEFT_ATTACK),
         )
 
         fun createAttributes(): AttributeSupplier.Builder {

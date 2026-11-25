@@ -15,7 +15,6 @@ import net.minecraft.world.entity.Avatar
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
-import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.phys.Vec3
 import kotlin.math.min
 
@@ -28,6 +27,7 @@ class AreaAttackDamage(
     blockable: Boolean = true,
     disableBlockingShield: Float = 0.0F,
     knockbackWhenBlocked: Boolean = false,
+    private val distanceDamageFactor: (Float, Float) -> Float = { distPerc, damage -> damage },
 ) : AttackDamage(damageFactor, knockbackFactor, blockable, disableBlockingShield, knockbackWhenBlocked) {
     private var createParticles: Boolean = false
     private var particleCount: Int = 0
@@ -113,7 +113,11 @@ class AreaAttackDamage(
 
         val damagedTargets = mutableListOf<LivingEntity>()
         targets.forEach {
-            val dealtDamage = it.dealGenericAttackDamage(damage, damager, blockable)
+            val distanceToCenter = it.position().distanceTo(slamCenter)
+            val maxDistanceToCenter = area.getMaxDistanceToCenter(if (applyScale) scale else 1.0)
+            val scaledDamage = distanceDamageFactor((distanceToCenter / maxDistanceToCenter).toFloat(), damage)
+
+            val dealtDamage = it.dealGenericAttackDamage(scaledDamage, damager, blockable)
             if (dealtDamage) damagedTargets.add(it)
             if (disableBlockingShield > 0 && it is Avatar && it.isBlocking) it.setShieldsCooldown(disableBlockingShield)
             if (dealtDamage || knockbackWhenBlocked) applyKnockback(it, damager, knockback, scale, forward, sideways, slamCenter)

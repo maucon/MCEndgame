@@ -151,7 +151,7 @@ class TharZulEntity(
             Attack<TharZulEntity>(
                 SLASH_ID,
                 SLASH_ANIM_DATA,
-                totalDuration = 35,
+                totalDuration = { mob -> 45 - (10 * mob.getEmpowerPercentage()).toInt() },
                 cooldown = 0,
                 DistanceTriggerCondition(3.0, affectedByScale = true),
                 data = listOf(
@@ -167,7 +167,7 @@ class TharZulEntity(
 
         private val STAB_AREA = BoxDamageArea(4.5, 0.75, 0.75, 0.5, 0.5, 1.5)
         private val STAB_ATTACK_DAMAGE =
-            AreaAttackDamage(0.75F, 2.5, STAB_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, disableBlockingShield = 5.0F, knockbackWhenBlocked = true)
+            AreaAttackDamage(1.0F, 2.5, STAB_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, disableBlockingShield = 5.0F, knockbackWhenBlocked = true)
         private val STAB_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.stab")
         private const val STAB_ID = "Stab"
         private val STAB_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, STAB_ID)
@@ -175,7 +175,7 @@ class TharZulEntity(
             Attack<TharZulEntity>(
                 STAB_ID,
                 STAB_ANIM_DATA,
-                totalDuration = 35,
+                totalDuration = { mob -> 45 - (10 * mob.getEmpowerPercentage()).toInt() },
                 cooldown = 0,
                 DistanceTriggerCondition(4.0, affectedByScale = true),
                 data = listOf(
@@ -191,7 +191,7 @@ class TharZulEntity(
             )
 
         private val SLAM_AREA = BoxDamageArea(5.0, 2.5, 1.5, 0.75, 0.3, 1.5)
-        private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(1.0F, 1.0, SLAM_AREA)
+        private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(0.9F, 1.0, SLAM_AREA)
         private val SLAM_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slam")
         private const val SLAM_ID = "Slam"
         private val SLAM_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLAM_ID)
@@ -199,7 +199,7 @@ class TharZulEntity(
             Attack<TharZulEntity>(
                 SLAM_ID,
                 SLAM_ANIM_DATA,
-                totalDuration = 40,
+                totalDuration = { mob -> 50 - (10 * mob.getEmpowerPercentage()).toInt() },
                 cooldown = 100,
                 DistanceTriggerCondition(4.0, affectedByScale = true),
                 data = listOf(
@@ -221,8 +221,8 @@ class TharZulEntity(
             Attack<TharZulEntity>(
                 SLAM_SPIKES_ID,
                 SLAM_SPIKES_ANIM_DATA,
-                totalDuration = 40,
-                cooldown = 200,
+                totalDuration = { mob -> 50 - (10 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = { entity -> if ((entity).hasPartner()) 300 else 150 },
                 DistanceTriggerCondition(6.0, 20.0, affectedByScale = true),
                 data = listOf(
                     DelayedDamageData(SLAM_ATTACK_DAMAGE, 14),
@@ -242,8 +242,8 @@ class TharZulEntity(
 
                             MagmaSpikesUtil.castMagmaSpikesLine(
                                 entity,
-                                damagePercentage = 1.0,
-                                largeDamagePercentage = 1.5,
+                                damagePercentage = 0.85,
+                                largeDamagePercentage = 0.95,
                                 target,
                                 origin = origin,
                                 offset = 2.0f,
@@ -316,6 +316,10 @@ class TharZulEntity(
                     knockbackStrength,
                     SphereDamageArea(damageRadius, 0.0, 0.0, 0.0),
                     blockable = false,
+                    distanceDamageFactor = { distPerc, damage ->
+                        val t = ((distPerc - 0.3F) / 0.7F).coerceIn(0.0F, 1.0F)
+                        damage * (1F - t * 0.75F)
+                    },
                 ),
                 delay + 14,
             ),
@@ -328,8 +332,8 @@ class TharZulEntity(
             Attack<TharZulEntity>(
                 ULTIMATE_ID,
                 ULTIMATE_ANIM_DATA,
-                totalDuration = 148,
-                cooldown = 300,
+                totalDuration = { 148 },
+                cooldown = { mob -> if (mob.hasPartner()) 500 else 250 },
                 DistanceTriggerCondition(4.0, affectedByScale = true),
                 data = listOf(
                     DelayedSoundData(TAKE_SWING_SOUND, 6),
@@ -348,8 +352,8 @@ class TharZulEntity(
             Attack<TharZulEntity>(
                 TELEPORT_ID,
                 TELEPORT_ANIM_DATA,
-                totalDuration = 7,
-                cooldown = 200,
+                totalDuration = { 7 },
+                cooldown = { mob -> if (mob.hasPartner()) 200 else 125 },
                 DistanceTriggerCondition(7.0, 20.0, affectedByScale = true),
                 data = listOf(
                     DelayedSoundData(FIRE_SOUND, 0),
@@ -425,8 +429,8 @@ class TharZulEntity(
             )
 
         private val ATTACKS: List<RandomOption<out Attack<TharZulEntity>>> = listOf(
-            RandomOption(1, SLASH_ATTACK),
-            RandomOption(1, STAB_ATTACK),
+            RandomOption(2, SLASH_ATTACK),
+            RandomOption(2, STAB_ATTACK),
             RandomOption(1, SLAM_ATTACK),
             RandomOption(1, SLAM_SPIKES_ATTACK),
             RandomOption(1, ULTIMATE_ATTACK),

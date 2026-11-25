@@ -19,13 +19,12 @@ class SphereDamageArea(
     private val heightOffset: Double = 0.0, // positive -> up
     private val offsetToGround: Boolean = false,
 ) : DamageArea() {
-
     override fun intersects(
         entity: LivingEntity,
         originEntity: Entity,
         forward: Vec3,
         sideways: Vec3,
-        scale: Double
+        scale: Double,
     ): Boolean {
         val center = getCenter(originEntity, scale, forward, sideways)
         return entity.distanceToSqr(center) <= (radius * scale).pow(2)
@@ -35,7 +34,7 @@ class SphereDamageArea(
         originEntity: Entity,
         scale: Double,
         forward: Vec3,
-        sideways: Vec3
+        sideways: Vec3,
     ): Vec3 {
         var center = originEntity.position()
             .add(forward.scale(forwardOffset * scale))
@@ -46,6 +45,8 @@ class SphereDamageArea(
 
         return center
     }
+
+    override fun getMaxDistanceToCenter(scale: Double): Double = radius * scale
 
     override fun getAxisAlignedBoxApproximation(
         originEntity: Entity,
