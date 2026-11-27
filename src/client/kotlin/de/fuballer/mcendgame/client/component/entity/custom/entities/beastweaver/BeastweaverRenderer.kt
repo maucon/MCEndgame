@@ -7,6 +7,7 @@ import com.geckolib.renderer.base.BoneSnapshots
 import com.geckolib.renderer.base.GeoRenderState
 import com.geckolib.renderer.base.RenderPassInfo
 import com.google.common.reflect.TypeToken
+import de.fuballer.mcendgame.client.component.entity.custom.feature.isolated.IsolatedGeoLayer
 import de.fuballer.mcendgame.client.component.render.geo_layers.CustomBonesProgressingTextureGeoLayer
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.BeastweaverEntity
 import de.fuballer.mcendgame.main.util.ColorUtil
@@ -25,6 +26,8 @@ class BeastweaverRenderer<R>(
 ) : GeoEntityRenderer<BeastweaverEntity, R>(context, BeastweaverModel()) where R : LivingEntityRenderState, R : GeoRenderState {
     init {
         shadowRadius = 0.5f
+
+        withRenderLayer(IsolatedGeoLayer(this))
 
         withRenderLayer(
             CustomBonesProgressingTextureGeoLayer(

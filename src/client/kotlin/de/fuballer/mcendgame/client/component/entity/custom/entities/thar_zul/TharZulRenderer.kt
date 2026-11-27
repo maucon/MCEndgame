@@ -6,19 +6,20 @@ import com.geckolib.renderer.GeoEntityRenderer
 import com.geckolib.renderer.base.BoneSnapshots
 import com.geckolib.renderer.base.GeoRenderState
 import com.geckolib.renderer.base.RenderPassInfo
+import com.geckolib.renderer.layer.builtin.CustomBoneTextureGeoLayer
 import com.google.common.reflect.TypeToken
+import de.fuballer.mcendgame.client.component.entity.custom.feature.isolated.IsolatedGeoLayer
 import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
 import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
 import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul.TharZulEntity
+import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import java.util.*
 import kotlin.math.PI
-
 
 class TharZulRenderer<R>(
     context: EntityRendererProvider.Context
@@ -35,6 +36,10 @@ class TharZulRenderer<R>(
 
     init {
         shadowRadius = 0.65f
+
+        withRenderLayer(IsolatedGeoLayer(this))
+
+        withRenderLayer(CustomBoneTextureGeoLayer(this, "blade", IdentifierUtil.default("textures/entity/thar_zul/thar_zul_blade.png")))
     }
 
     override fun addRenderData(animatable: TharZulEntity, relatedObject: Void?, renderState: R, partialTick: Float) {

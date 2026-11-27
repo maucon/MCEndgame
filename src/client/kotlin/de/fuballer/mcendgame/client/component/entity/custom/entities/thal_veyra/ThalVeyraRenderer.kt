@@ -7,6 +7,7 @@ import com.geckolib.renderer.base.BoneSnapshots
 import com.geckolib.renderer.base.GeoRenderState
 import com.geckolib.renderer.base.RenderPassInfo
 import com.google.common.reflect.TypeToken
+import de.fuballer.mcendgame.client.component.entity.custom.feature.isolated.IsolatedGeoLayer
 import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
 import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
 import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thal_veyra.ThalVeyraEntity
@@ -34,6 +35,8 @@ class ThalVeyraRenderer<R>(
 
     init {
         shadowRadius = 0.6f
+
+        withRenderLayer(IsolatedGeoLayer(this))
     }
 
     override fun addRenderData(animatable: ThalVeyraEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
