@@ -69,6 +69,7 @@ import net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.*
+import net.minecraft.world.level.pathfinder.PathType
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
@@ -142,7 +143,7 @@ class TharZulEntity(
                 range = 24.0,
             )
 
-        private val SLASH_AREA = BoxDamageArea(4.0, 2.5, 1.75, -0.1, 0.35, 0.75)
+        private val SLASH_AREA = BoxDamageArea(4.0, 2.5, 1.75, -0.1, 0.35, 0.5)
         private val SLASH_ATTACK_DAMAGE = AreaAttackDamage(1.0F, 1.0, SLASH_AREA)
         private val SLASH_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slash")
         private const val SLASH_ID = "Slash"
@@ -165,7 +166,7 @@ class TharZulEntity(
                 attackSpeed = { mob -> 1.0 + 0.25 * mob.getEmpowerPercentage() },
             )
 
-        private val STAB_AREA = BoxDamageArea(4.5, 0.75, 0.75, 0.5, 0.5, 1.5)
+        private val STAB_AREA = BoxDamageArea(4.5, 0.75, 1.25, 0.5, 0.5, 1.0)
         private val STAB_ATTACK_DAMAGE =
             AreaAttackDamage(1.0F, 2.5, STAB_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, disableBlockingShield = 5.0F, knockbackWhenBlocked = true)
         private val STAB_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.stab")
@@ -612,6 +613,11 @@ class TharZulEntity(
 
     init {
         initDynamicGoals()
+
+        setPathfindingMalus(PathType.FIRE, 0F)
+        setPathfindingMalus(PathType.FIRE_IN_NEIGHBOR, 0F)
+        setPathfindingMalus(PathType.DAMAGING, 0F)
+        setPathfindingMalus(PathType.DAMAGE_CAUTIOUS, 0F)
     }
 
     private fun initDynamicGoals() {
@@ -681,7 +687,7 @@ class TharZulEntity(
         findPartner(this, 100.0, ThalVeyraEntity::class.java)
     }
 
-    override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.PLAYER_HURT
+    override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.WITHER_HURT
 
     override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
 

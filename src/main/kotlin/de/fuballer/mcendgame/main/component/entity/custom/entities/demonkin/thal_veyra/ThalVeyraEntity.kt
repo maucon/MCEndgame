@@ -71,6 +71,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.material.FluidState
+import net.minecraft.world.level.pathfinder.PathType
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.Vec3
@@ -569,6 +570,12 @@ class ThalVeyraEntity(
 
     init {
         initDynamicGoals()
+
+        setPathfindingMalus(PathType.FIRE, 0F)
+        setPathfindingMalus(PathType.FIRE_IN_NEIGHBOR, 0F)
+        setPathfindingMalus(PathType.DAMAGING, 0F)
+        setPathfindingMalus(PathType.DAMAGE_CAUTIOUS, 0F)
+        setPathfindingMalus(PathType.LAVA, 0F)
     }
 
     private fun initDynamicGoals() {
@@ -692,7 +699,7 @@ class ThalVeyraEntity(
     fun getLeanRight(tickProgress: Float) = Mth.lerp(tickProgress, lastLeanRight, leanRight)
     fun getLeanForwards(tickProgress: Float) = Mth.lerp(tickProgress, lastLeanForwards, leanForwards)
 
-    override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.PLAYER_HURT
+    override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.WITHER_HURT
 
     override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
 
