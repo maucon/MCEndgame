@@ -1,10 +1,16 @@
 package de.fuballer.mcendgame.main.component.custom_attribute
 
+import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.asDoubleRoll
 import de.fuballer.mcendgame.main.component.custom_attribute.CustomAttributesExtensions.getAllCustomAttributes
+import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttribute
+import de.fuballer.mcendgame.main.component.custom_attribute.data.CustomAttributeType
 import de.fuballer.mcendgame.main.component.custom_attribute.types.CustomAttributeTypes
+import net.minecraft.core.Holder
 import net.minecraft.world.entity.Avatar
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
+import net.minecraft.world.entity.ai.attributes.Attribute
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import kotlin.math.abs
 
 private const val ISOLATED_RADIUS = 5.0
@@ -26,4 +32,22 @@ object CustomAttributeUtil {
         level().getEntities(this, boundingBox.inflate(ISOLATED_RADIUS))
         { it != attacker && (it is Mob || it is Avatar) && it.distanceToSqr(this) <= ISOLATED_RADIUS_SQUARED }
             .isEmpty()
+
+    fun getVanillaAttributeAlsoAffectOtherValues(
+        entity: LivingEntity,
+        customAttributes: Map<CustomAttributeType, List<CustomAttribute>>,
+        attributeType: CustomAttributeType,
+        vanillaAttribute: Holder<Attribute>,
+        operation: AttributeModifier.Operation,
+    ): List<Double> {
+        val attr = customAttributes[attributeType] ?: return listOf()
+        val effectiveness = attr.sumOf { it.rolls[0].asDoubleRoll().getValue() }
+
+        val movementSpeedInstance = entity.getAttribute(vanillaAttribute) ?: return listOf()
+        return movementSpeedInstance.modifiers
+            .filter { it.operation == operation }
+            .map { it.amount * effectiveness }
+            .toList()
+    }
+
 }

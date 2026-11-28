@@ -74,6 +74,7 @@
     "living_entity.LivingEntityWorldAttributesMixin",
     "mob_entity.MobAccessor",
     "mob_entity.MobTargetCommandMixin",
+    "move_control.MoveControlAccessor",
     "phasing.AbstractBlockStateBlockPhasingMixin",
     "phasing.EntityBlockPhasingMixin",
     "phasing.LivingEntityBlockPhasingMixin",

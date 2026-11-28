@@ -11,7 +11,7 @@ object TotemEncounterSettings {
 
     fun getEnemyCount(level: Int): Int {
         val random = Random.nextDouble(1 + level * 0.1)
-        val additional = random.toInt() + if (Random.nextDouble() < random % 1) 1 else 0
+        val additional = RandomUtil.rollCount(random)
         return 3 + additional
     }
 

@@ -2,6 +2,7 @@ package de.fuballer.mcendgame.main.component.dungeon.enemy
 
 import de.fuballer.mcendgame.main.component.dungeon.enemy.potion_effect.PotionEffect
 import de.fuballer.mcendgame.main.util.random.RandomOption
+import de.fuballer.mcendgame.main.util.random.RandomUtil
 import de.fuballer.mcendgame.main.util.random.SortableRandomOption
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
@@ -63,6 +64,6 @@ object EnemyGenerationSettings {
     ): Int {
         val range = level * 0.2
         val pick = random.nextDouble(range)
-        return pick.toInt() + if (random.nextDouble() < pick % 1) 1 else 0
+        return RandomUtil.rollCount(pick, random)
     }
 }

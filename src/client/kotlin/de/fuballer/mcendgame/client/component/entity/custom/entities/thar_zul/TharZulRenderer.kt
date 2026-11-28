@@ -1,0 +1,79 @@
+package de.fuballer.mcendgame.client.component.entity.custom.entities.thar_zul
+
+import com.geckolib.constant.DataTickets
+import com.geckolib.constant.dataticket.DataTicket
+import com.geckolib.renderer.GeoEntityRenderer
+import com.geckolib.renderer.base.BoneSnapshots
+import com.geckolib.renderer.base.GeoRenderState
+import com.geckolib.renderer.base.RenderPassInfo
+import com.geckolib.renderer.layer.builtin.CustomBoneTextureGeoLayer
+import com.google.common.reflect.TypeToken
+import de.fuballer.mcendgame.client.component.entity.custom.feature.isolated.IsolatedGeoLayer
+import de.fuballer.mcendgame.client.component.render.CustomRenderLayers
+import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul.TharZulEntity
+import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.resources.Identifier
+import java.util.*
+import kotlin.math.PI
+
+class TharZulRenderer<R>(
+    context: EntityRendererProvider.Context
+) : GeoEntityRenderer<TharZulEntity, R>(context, TharZulModel()) where R : LivingEntityRenderState, R : GeoRenderState {
+    companion object {
+        private val LOCATORS = listOf(
+            "swordParticle0",
+            "swordParticle1",
+            "swordUltimateParticle1",
+        )
+
+        private val UUID_TICKET = DataTicket.create("uuid", object : TypeToken<UUID>() {})
+    }
+
+    init {
+        shadowRadius = 0.65f
+
+        withRenderLayer(IsolatedGeoLayer(this))
+
+        withRenderLayer(CustomBoneTextureGeoLayer(this, "blade", IdentifierUtil.default("textures/entity/thar_zul/thar_zul_blade.png")))
+    }
+
+    override fun addRenderData(animatable: TharZulEntity, relatedObject: Void?, renderState: R, partialTick: Float) {
+        renderState.addGeckolibData(UUID_TICKET, animatable.uuid)
+        renderState.hasRedOverlay = animatable.hurtTime > 0
+        renderState.deathTime = 0f
+    }
+
+    override fun getPackedOverlay(animatable: TharZulEntity, relatedObject: Void?, u: Float, partialTick: Float): Int {
+        return OverlayTexture.pack(OverlayTexture.u(u), OverlayTexture.v(animatable.hurtTime > 0))
+    }
+
+    override fun adjustModelBonesForRender(renderPassInfo: RenderPassInfo<R>, snapshots: BoneSnapshots) {
+        super.adjustModelBonesForRender(renderPassInfo, snapshots)
+
+        snapshots.get("head").ifPresent {
+            var pitch = renderPassInfo.getGeckolibData(DataTickets.ENTITY_PITCH)!!
+            pitch = Math.clamp(pitch, -35F, 35F)
+            it.rotX += -pitch * PI.toFloat() / 180F
+
+            var yaw = renderPassInfo.getGeckolibData(DataTickets.ENTITY_YAW)!!
+            yaw = Math.clamp(yaw, -45F, 45F)
+            it.rotY += -yaw * PI.toFloat() / 180F
+        }
+
+        val state = renderPassInfo.renderState()
+        val uuid = state.getGeckolibData(UUID_TICKET)!!
+
+        LOCATORS.forEach {
+            renderPassInfo.addLocatorPositionListener(it) { worldPos, modelPos, localPos ->
+                GeoEntityLocatorService.addLocatorPos(uuid, it, worldPos)
+            }
+        }
+    }
+
+    override fun getRenderType(renderState: R, texture: Identifier): RenderType = CustomRenderLayers.demonkinEmissive(texture)
+}

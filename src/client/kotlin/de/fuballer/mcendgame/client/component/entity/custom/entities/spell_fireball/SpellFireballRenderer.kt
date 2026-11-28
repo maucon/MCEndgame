@@ -49,6 +49,10 @@ class SpellFireballRenderer(
         poseStack.scale(-1.0F, -1.0F, 1.0F)
         poseStack.rotateDegrees(Axis.YP, 180 + state.yRot)
         poseStack.rotateDegrees(Axis.XP, state.xRot)
+
+        val scale = state.scale
+        poseStack.scale(scale, scale, scale)
+
         model.setupAnim(state)
 
         queue.submitModel(
@@ -97,5 +101,7 @@ class SpellFireballRenderer(
         val horizontal = velocity.horizontalDistance()
         state.yRot = (Mth.atan2(velocity.z, velocity.x) * Mth.RAD_TO_DEG).toFloat() - 90f
         state.xRot = (-(Mth.atan2(velocity.y, horizontal) * Mth.RAD_TO_DEG)).toFloat()
+
+        state.scale = entity.getScale()
     }
 }

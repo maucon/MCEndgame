@@ -10,10 +10,16 @@ import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.beastweaver.beastweaver_wolf.BeastweaverWolfRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.block_debris.BlockDebrisRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.thar_zul.TharZulRenderState
+import de.fuballer.mcendgame.client.component.entity.custom.entities.thar_zul.TharZulRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.thal_veyra.ThalVeyraRenderState
+import de.fuballer.mcendgame.client.component.entity.custom.entities.thal_veyra.ThalVeyraRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher.BonecrusherRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.bonecrusher.BonecrusherRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.elf_duelist.ElfDuelistRenderState
 import de.fuballer.mcendgame.client.component.entity.custom.entities.elf_duelist.ElfDuelistRenderer
+import de.fuballer.mcendgame.client.component.entity.custom.entities.magma_spike.MagmaSpikeRenderState
+import de.fuballer.mcendgame.client.component.entity.custom.entities.magma_spike.MagmaSpikeRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.PortalRenderer
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type.default_.DefaultPortalEntityModel
 import de.fuballer.mcendgame.client.component.entity.custom.entities.portal.type.legacy.LegacyPortalEntityModel
@@ -87,6 +93,10 @@ object EntityModelRegisterer {
         EntityRenderers.register(CustomEntities.BEASTWEAVER) { state -> BeastweaverRenderer<BeastweaverRenderState>(state) }
         EntityRenderers.register(CustomEntities.BEASTWEAVER_WOLF, ::BeastweaverWolfRenderer)
         EntityRenderers.register(CustomEntities.BEASTWEAVER_VINE) { state -> BeastweaverVineRenderer<BeastweaverVineRenderState>(state) }
+
+        EntityRenderers.register(CustomEntities.THAR_ZUL) { state -> TharZulRenderer<TharZulRenderState>(state) }
+        EntityRenderers.register(CustomEntities.THAL_VEYRA) { state -> ThalVeyraRenderer<ThalVeyraRenderState>(state) }
+        EntityRenderers.register(CustomEntities.MAGMA_SPIKE) { state -> MagmaSpikeRenderer<MagmaSpikeRenderState>(state) }
 
         EntityRenderers.register(CustomEntities.SCARRED_ONE) { state -> ScarredOneRenderer<ScarredOneRenderState>(state) }
 

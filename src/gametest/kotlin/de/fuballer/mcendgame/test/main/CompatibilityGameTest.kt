@@ -1,5 +1,6 @@
 package de.fuballer.mcendgame.test.main
 
+import de.fuballer.mcendgame.main.util.extension.mixin.PlayerEntityMixinExtension.getDungeonSeed
 import io.netty.channel.embedded.EmbeddedChannel
 import net.fabricmc.fabric.api.gametest.v1.GameTest
 import net.minecraft.core.BlockPos
@@ -126,7 +127,7 @@ class CompatibilityGameTest {
     fun testDungeonMobDeathKeepsTailHookAndLootSuppression(helper: GameTestHelper) {
         helper.prepareNormalDifficulty()
         val player = DungeonGameTest.openDungeon(helper)
-        val dungeonWorld = DungeonGameTest.findDungeonWorld(helper.level.server)
+        val dungeonWorld = DungeonGameTest.findDungeonWorld(helper.level.server, player.getDungeonSeed()?.seed)
             ?: throw helper.assertionException("Opening the dungeon should generate a dungeon world")
         val pig = EntityTypes.PIG.spawn(dungeonWorld, BlockPos(0, 100, 0), EntitySpawnReason.COMMAND)
             ?: throw helper.assertionException("Could not spawn the probe mob in the dungeon world")

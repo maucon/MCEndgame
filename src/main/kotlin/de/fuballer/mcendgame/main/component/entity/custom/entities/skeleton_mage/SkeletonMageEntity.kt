@@ -1,8 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom.entities.skeleton_mage
 
-import de.fuballer.mcendgame.main.component.custom_attribute.effects.projectile.AdditionalProjectilesUtil
-import de.fuballer.mcendgame.main.component.entity.custom.CustomEntities
-import de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball.SpellFireballEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball.SpellFireballUtil
 import de.fuballer.mcendgame.main.component.entity.custom.goals.KeepDistanceToTargetGoal
 import de.fuballer.mcendgame.main.component.entity.custom.goals.NoMovementProjectileAttackGoal
 import net.minecraft.server.level.ServerLevel
@@ -21,9 +19,6 @@ import net.minecraft.world.entity.animal.wolf.Wolf
 import net.minecraft.world.entity.monster.Enemy
 import net.minecraft.world.entity.monster.skeleton.Skeleton
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.entity.projectile.Projectile
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 import kotlin.math.cos
@@ -61,60 +56,17 @@ class SkeletonMageEntity(
     override fun performRangedAttack(target: LivingEntity, power: Float) {
         val serverLevel = level() as? ServerLevel ?: return
 
-        val shootPos = getShootPos()
-        val distance = Vec3(
-            target.x - shootPos.x,
-            target.y + target.bbHeight / 2 - shootPos.y,
-            target.z - shootPos.z,
-        )
-        val velocity = getFireballVelocity(distance)
-
-        val itemStack = ItemStack(Items.AIR)
-        val projectilePower = velocity.length().toFloat()
-
-        AdditionalProjectilesUtil.shootProjectile(
+        SpellFireballUtil.shoot(
             this,
-            shootPos,
-            velocity,
-            { SpellFireballEntity(CustomEntities.SPELL_FIREBALL, serverLevel) },
-            { projectile, spreadVelocity, _ ->
-                Projectile.spawnProjectileUsingShoot(
-                    projectile,
-                    serverLevel,
-                    itemStack,
-                    spreadVelocity.x,
-                    spreadVelocity.y,
-                    spreadVelocity.z,
-                    projectilePower,
-                    1.5F,
-                )
-            }
+            target,
+            getShootPos(),
+            { distance -> max(1, (distance * 3).pow(0.8).toInt()) },
+            serverLevel,
         )
 
         playShootFireballSound()
         swingForAttack(InteractionHand.MAIN_HAND)
     }
-
-    private fun getFireballVelocity(
-        distance: Vec3,
-    ): Vec3 {
-        val ticks = getFireballTravelTicks(distance.length())
-        val horizontalDistance = distance.horizontalDistance()
-
-        val tickInertia = SpellFireballEntity.INERTIA.pow(ticks)
-        val denominator = 100 * (1 - tickInertia)
-        if (denominator < 1e-8) return distance.normalize()
-
-        val horizontalVelocity = horizontalDistance / denominator
-        val gravityTimes100 = SpellFireballEntity.GRAVITY * 100
-        val yVelocity = (distance.y + gravityTimes100 * ticks) / denominator - gravityTimes100
-
-        val horizontalVelocityVec = distance.multiply(1.0, 0.0, 1.0).normalize().multiply(horizontalVelocity, 1.0, horizontalVelocity)
-        val velocityVec = Vec3(horizontalVelocityVec.x, yVelocity, horizontalVelocityVec.z)
-        return velocityVec
-    }
-
-    private fun getFireballTravelTicks(distance: Double) = max(1, (distance * 3).pow(0.8).toInt())
 
     private fun getShootPos() = Vec3(
         x - (bbWidth + 1.0) * 0.5 * sin(yBodyRot * (Math.PI / 180.0)),

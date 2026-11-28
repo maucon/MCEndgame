@@ -33,6 +33,7 @@ class CustomModelProvider(
         generator.generateFlatItem(CustomToolItems.FATESPLITTER, ModelTemplates.FLAT_HANDHELD_ITEM)
         generator.generateFlatItem(CustomToolItems.SERPENTS_FANG, ModelTemplates.FLAT_HANDHELD_ITEM)
         generator.generateFlatItem(CustomToolItems.NIGHTREAVER, ModelTemplates.FLAT_HANDHELD_ITEM)
+        generator.generateFlatItem(CustomToolItems.SCORCHING_HUNGER, ModelTemplates.FLAT_HANDHELD_ITEM)
         registerCustomBow(generator, CustomToolItems.WINDSTRING)
         registerCustomBow(generator, CustomToolItems.HAILSTORM)
         registerCustomBow(generator, CustomToolItems.DUSK_PIERCER)
@@ -80,9 +81,13 @@ class CustomModelProvider(
         generator.generateFlatItem(AspectItems.ASPECT_OF_IMPATIENCE, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_OUTLAWS, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_SAVAGERY, ModelTemplates.FLAT_ITEM)
-        generator.generateFlatItem(AspectItems.ASPECT_OF_THE_GROVE, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_TYRANNY, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(AspectItems.ASPECT_OF_ZEAL, ModelTemplates.FLAT_ITEM)
+
+        generator.generateFlatItem(AspectItems.DEMONIC_KEY, ModelTemplates.FLAT_ITEM)
+
+        generator.generateFlatItem(AspectItems.VERDANT_SIGIL, ModelTemplates.FLAT_ITEM)
+        generator.generateFlatItem(AspectItems.SCORCHED_SIGIL, ModelTemplates.FLAT_ITEM)
 
         generator.generateFlatItem(CrystalItems.CALIBRATION_CRYSTAL, ModelTemplates.FLAT_ITEM)
         generator.generateFlatItem(CrystalItems.SACRIFICIAL_CRYSTAL, ModelTemplates.FLAT_ITEM)

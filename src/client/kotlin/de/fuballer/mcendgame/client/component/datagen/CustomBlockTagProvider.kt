@@ -94,6 +94,7 @@ class CustomBlockTagProvider(
 
         builder(CustomTags.DUNGEON_INTERACTABLE)
             .add(CustomBlockItemIds.TOTEM_STATUE)
+            .add(CustomBlockItemIds.DEMONIC_CRUCIBLE)
             .add(BlockItemIds.REDSTONE_DUST)
             .add(BlockItemIds.LEVER)
             .forceAddTag(BlockTags.BUTTONS)
@@ -106,5 +107,15 @@ class CustomBlockTagProvider(
 
         builder(CustomTags.NO_PHASING_SLOW_AND_FOG)
             .add(BlockItemIds.SCAFFOLDING)
+
+        builder(CustomTags.SCORCH_PALETTE) // must contain at least one: button, slab, stair, wall, fence and redstone conductor (full block)
+            .add(BlockItemIds.MAGMA_BLOCK)
+            .add(BlockItemIds.NETHERRACK)
+            .add(BlockItemIds.BASALT)
+            .add(BlockItemIds.NETHER_BRICK_STAIRS)
+            .add(BlockItemIds.NETHER_BRICK_SLAB)
+            .add(BlockItemIds.NETHER_BRICK_WALL)
+            .add(BlockItemIds.NETHER_BRICK_FENCE)
+            .add(BlockItemIds.POLISHED_BLACKSTONE_BUTTON)
     }
 }

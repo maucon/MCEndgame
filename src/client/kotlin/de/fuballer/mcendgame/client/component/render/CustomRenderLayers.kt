@@ -1,9 +1,11 @@
 package de.fuballer.mcendgame.client.component.render
 
 import de.maucon.mauconframework.di.annotation.Injectable
+import net.minecraft.client.particle.SingleQuadParticle.Layer
 import net.minecraft.client.renderer.rendertype.LayeringTransform
 import net.minecraft.client.renderer.rendertype.RenderSetup
 import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.client.renderer.texture.TextureAtlas
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Util
 import java.util.function.Function
@@ -19,7 +21,7 @@ object CustomRenderLayers {
     )
 
     fun ghostly(texture: Identifier) = GHOSTLY.apply(texture)
-    val GHOSTLY: Function<Identifier, RenderType> = Util.memoize { texture ->
+    val GHOSTLY: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.GHOSTLY_PIPELINE)
             .setOitPipelines(CustomRenderPipelines.GHOSTLY_OIT)
             .withTexture("Sampler0", texture)
@@ -31,7 +33,7 @@ object CustomRenderLayers {
     }
 
     fun boundAbyss(texture: Identifier) = BOUND_ABYSS.apply(texture)
-    val BOUND_ABYSS: Function<Identifier, RenderType> = Util.memoize { texture ->
+    val BOUND_ABYSS: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.BOUND_ABYSS_PIPELINE)
             .withTexture("Sampler0", texture)
             .useLightmap()
@@ -44,7 +46,7 @@ object CustomRenderLayers {
     }
 
     fun beastweaverAttack(texture: Identifier) = BEASTWEAVER_ATTACK.apply(texture)
-    val BEASTWEAVER_ATTACK: Function<Identifier, RenderType> = Util.memoize { texture ->
+    val BEASTWEAVER_ATTACK: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
         val renderSetup = RenderSetup.builder(CustomRenderPipelines.BEASTWEAVER_ATTACK_PIPELINE)
             .setOitPipelines(CustomRenderPipelines.BEASTWEAVER_ATTACK_OIT)
             .withTexture("Sampler0", texture)
@@ -53,5 +55,22 @@ object CustomRenderLayers {
             .setOutline(RenderSetup.OutlineProperty.NONE)
             .createRenderSetup()
         RenderType.create("beastweaver_attack", renderSetup)
+    }
+
+    val PARTICLE_OPAQUE_NO_CULL: Layer = Layer(false, TextureAtlas.LOCATION_PARTICLES, CustomRenderPipelines.OPAQUE_PARTICLE_NO_CULL)
+
+    fun demonkinEmissive(texture: Identifier) = DEMONKIN_EMISSIVE.apply(texture)
+    val DEMONKIN_EMISSIVE: Function<Identifier, RenderType> = Util.memoize<Identifier, RenderType> { texture ->
+        val renderSetup = RenderSetup.builder(CustomRenderPipelines.DEMONKIN_EMISSIVE)
+            .setOitPipelines(CustomRenderPipelines.OIT_DEMONKIN_EMISSIVE)
+            .withTexture("Sampler0", texture)
+            .useLightmap()
+            .useOverlay()
+            .sortOnUpload()
+            .createRenderSetup()
+        RenderType.create(
+            "demonkin_emissive",
+            renderSetup,
+        )
     }
 }

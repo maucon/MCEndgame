@@ -4,6 +4,7 @@ import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.initializer.Initializer
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry
+import net.minecraft.client.particle.PortalParticle
 
 @Injectable
 class CustomParticleFactoryRegisterer {
@@ -12,8 +13,13 @@ class CustomParticleFactoryRegisterer {
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.FLAME_PILLAR, FlamePillarParticle::Factory)
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.SMOKE_PILLAR, SmokePillarParticle::Factory)
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.CLOUD_TORUS, CloudTorusParticle::Factory)
+        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.REVERSE_FLAME, ReverseFlameParticle::Factory)
+        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.DEMONIC_CRUCIBLE_CHARGE, PortalParticle::Provider)
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.HORIZONTAL_FLAME_BREATH, HorizontalFlameBreathParticle::Factory)
         ParticleProviderRegistry.getInstance().register(CustomParticleTypes.MOVE_TO_TARGET_FLAME, MoveToTargetFlameParticle::Factory)
-        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.DIRECTIONAL_SWEEP_ATTACK, DirectionalAttackSweepParticle::Factory)
+        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.DEMONKIN_EMPOWER, DemonkinEmpowerParticle::Factory)
+        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.ABSORB_BOSS_POWER, AbsorbBossPowerParticle::Factory)
+        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.DIRECTIONAL_SWEEP_ATTACK, DirectionalSweepParticle::Factory)
+        ParticleProviderRegistry.getInstance().register(CustomParticleTypes.DIRECTIONAL_SWEEP_FLAME, DirectionalFlameSweepParticle::Factory)
     }
 }

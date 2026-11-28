@@ -7,9 +7,9 @@ import de.fuballer.mcendgame.main.component.item.custom.UniqueAttributesItemInte
 import de.fuballer.mcendgame.main.component.item.custom.armor.CustomArmorItems
 import de.fuballer.mcendgame.main.component.item.custom.aspect.AspectItems
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
+import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemiesGeneratedCommand
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemyDeathEvent
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonFinalBossDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGenerateCommand
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.dropsAspectOfGhosts
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.setDropsAspectOfGhosts
@@ -63,7 +63,8 @@ object AspectOfGhostsService {
     }
 
     @EventSubscriber(sync = true)
-    fun onDungeonBossDeath(event: DungeonFinalBossDeathEvent) {
+    fun onDungeonBossDeath(event: DungeonBossDeathEvent) {
+        if (!event.final) return
         val serverWorld = event.world as? ServerLevel ?: return
         if (!serverWorld.getDungeonAspects().contains(AspectItems.ASPECT_OF_GHOSTS)) return
 

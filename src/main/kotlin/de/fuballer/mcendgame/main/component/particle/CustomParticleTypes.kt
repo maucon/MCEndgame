@@ -18,6 +18,8 @@ object CustomParticleTypes {
     val FLAME_PILLAR = registerSimple("flame_pillar")
     val SMOKE_PILLAR = registerSimple("smoke_pillar")
     val CLOUD_TORUS = registerSimple("cloud_torus")
+    val REVERSE_FLAME = registerSimple("reverse_flame")
+    val DEMONIC_CRUCIBLE_CHARGE = registerSimple("demonic_crucible_charge")
     val HORIZONTAL_FLAME_BREATH = registerComplex<HorizontalFlameBreathParticleEffect>(
         "horizontal_flame_breath",
         false,
@@ -30,11 +32,29 @@ object CustomParticleTypes {
         { _ -> MoveToTargetFlameParticleEffect.CODEC },
         { _ -> MoveToTargetFlameParticleEffect.PACKET_CODEC },
     )
-    val DIRECTIONAL_SWEEP_ATTACK = registerComplex<DirectionalAttackSweepParticleEffect>(
+    val DEMONKIN_EMPOWER = registerComplex<DemonkinEmpowerParticleEffect>(
+        "demonkin_empower",
+        false,
+        { _ -> DemonkinEmpowerParticleEffect.CODEC },
+        { _ -> DemonkinEmpowerParticleEffect.PACKET_CODEC },
+    )
+    val ABSORB_BOSS_POWER = registerComplex<AbsorbBossPowerParticleEffect>(
+        "absorb_boss_power",
+        false,
+        { _ -> AbsorbBossPowerParticleEffect.CODEC },
+        { _ -> AbsorbBossPowerParticleEffect.PACKET_CODEC },
+    )
+    val DIRECTIONAL_SWEEP_ATTACK = registerComplex<DirectionalSweepParticleEffect>(
         "directional_sweep_attack",
         true,
-        { _ -> DirectionalAttackSweepParticleEffect.CODEC },
-        { _ -> DirectionalAttackSweepParticleEffect.PACKET_CODEC },
+        { _ -> DirectionalSweepParticleEffect.CODEC },
+        { _ -> DirectionalSweepParticleEffect.PACKET_CODEC },
+    )
+    val DIRECTIONAL_SWEEP_FLAME = registerComplex<DirectionalFlameSweepParticleEffect>(
+        "directional_sweep_flame",
+        true,
+        { _ -> DirectionalFlameSweepParticleEffect.CODEC },
+        { _ -> DirectionalFlameSweepParticleEffect.PACKET_CODEC },
     )
 
     private fun registerSimple(name: String): SimpleParticleType =

@@ -1,0 +1,899 @@
+package de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul
+
+import com.geckolib.animatable.GeoAnimatable
+import com.geckolib.animatable.GeoEntity
+import com.geckolib.animatable.instance.AnimatableInstanceCache
+import com.geckolib.animatable.manager.AnimatableManager
+import com.geckolib.animation.AnimationController
+import com.geckolib.animation.RawAnimation
+import com.geckolib.animation.`object`.PlayState
+import com.geckolib.constant.DefaultAnimations
+import com.geckolib.util.GeckoLibUtil
+import de.fuballer.mcendgame.main.component.boss_event.BossEventType
+import de.fuballer.mcendgame.main.component.boss_event.BossEventTypePayload
+import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
+import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
+import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area.BoxDamageArea
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area.SphereDamageArea
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.DelayedParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.DemonkinUtil
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thal_veyra.ThalVeyraEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikesUtil
+import de.fuballer.mcendgame.main.component.entity.custom.goals.*
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.PairedMob
+import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
+import de.fuballer.mcendgame.main.component.particle.DirectionalFlameSweepParticleEffect
+import de.fuballer.mcendgame.main.component.tags.CustomTags
+import de.fuballer.mcendgame.main.util.BlockPosUtil
+import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.ChatFormatting
+import net.minecraft.core.BlockPos
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.core.particles.SimpleParticleType
+import net.minecraft.core.registries.Registries
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.server.level.ServerBossEvent
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.util.Mth
+import net.minecraft.world.BossEvent
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.FloatGoal
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.ai.util.LandRandomPos
+import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.npc.villager.Villager
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.*
+import net.minecraft.world.level.pathfinder.PathType
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.Vec3
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.random.Random
+
+class TharZulEntity(
+    type: EntityType<out TharZulEntity>,
+    world: Level,
+) : PathfinderMob(type, world),
+    GeoEntity,
+    Enemy,
+    CustomAttacksMob<TharZulEntity>,
+    DisableAbleGoalsMob,
+    BlockAbleMovementMob<TharZulEntity>,
+    PairedMob {
+    companion object {
+        private const val MAX_EMPOWER_TICKS = 600
+        private const val EMPOWER_SCALE = 0.3F
+
+        val DEATH_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("misc.die")
+
+        private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
+
+        private val TAKE_SWING_SOUND = RangeDefinedSoundData(
+            SoundEvents.BREEZE_LAND,
+            { 1.0f },
+            { Random.nextDouble(0.7, 0.8).toFloat() },
+            SoundSource.HOSTILE,
+            range = 24.0,
+        )
+        private val FIRE_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.BLAZE_BURN,
+                { 0.9f },
+                { Random.nextDouble(1.0, 1.1).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+        private val SWEEP_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.PLAYER_ATTACK_SWEEP,
+                { 0.9f },
+                { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+        private val FIRECHARGE_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.FIRECHARGE_USE,
+                { 0.6f },
+                { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+        private val FIRE_SLAM_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.DRAGON_FIREBALL_EXPLODE,
+                { 0.6f },
+                { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 48.0,
+            )
+        private val BLOCK_HIT_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.DEEPSLATE_BREAK,
+                { 1.0f },
+                { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+
+        private val SLASH_AREA = BoxDamageArea(4.0, 2.5, 1.75, -0.1, 0.35, 0.5)
+        private val SLASH_ATTACK_DAMAGE = AreaAttackDamage(1.0F, 1.0, SLASH_AREA)
+        private val SLASH_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slash")
+        private const val SLASH_ID = "Slash"
+        private val SLASH_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLASH_ID)
+        private val SLASH_ATTACK =
+            Attack<TharZulEntity>(
+                SLASH_ID,
+                SLASH_ANIM_DATA,
+                totalDuration = { mob -> 45 - (10 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = 0,
+                DistanceTriggerCondition(3.0, affectedByScale = true),
+                data = listOf(
+                    DelayedDamageData(SLASH_ATTACK_DAMAGE, 12),
+
+                    DelayedSoundData(TAKE_SWING_SOUND, 3),
+                    DelayedSoundData(FIRE_SOUND, 3),
+                    DelayedSoundData(SWEEP_SOUND, 10),
+                    DelayedSoundData(FIRECHARGE_SOUND, 10),
+                ),
+                attackSpeed = { mob -> 1.0 + 0.25 * mob.getEmpowerPercentage() },
+            )
+
+        private val STAB_AREA = BoxDamageArea(4.5, 0.75, 1.25, 0.5, 0.5, 1.0)
+        private val STAB_ATTACK_DAMAGE =
+            AreaAttackDamage(1.0F, 2.5, STAB_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, disableBlockingShield = 5.0F, knockbackWhenBlocked = true)
+        private val STAB_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.stab")
+        private const val STAB_ID = "Stab"
+        private val STAB_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, STAB_ID)
+        private val STAB_ATTACK =
+            Attack<TharZulEntity>(
+                STAB_ID,
+                STAB_ANIM_DATA,
+                totalDuration = { mob -> 45 - (10 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = 0,
+                DistanceTriggerCondition(4.0, affectedByScale = true),
+                data = listOf(
+                    DelayedDamageData(STAB_ATTACK_DAMAGE, 12),
+
+                    DelayedSoundData(TAKE_SWING_SOUND, 2),
+                    DelayedSoundData(FIRE_SOUND, 2),
+                    DelayedSoundData(SWEEP_SOUND, 10),
+                    DelayedSoundData(FIRECHARGE_SOUND, 10),
+                ),
+                blockMovementDuration = 15,
+                attackSpeed = { mob -> 1.0 + 0.25 * mob.getEmpowerPercentage() },
+            )
+
+        private val SLAM_AREA = BoxDamageArea(5.0, 2.5, 1.5, 0.75, 0.3, 1.5)
+        private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(0.9F, 1.0, SLAM_AREA)
+        private val SLAM_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slam")
+        private const val SLAM_ID = "Slam"
+        private val SLAM_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLAM_ID)
+        private val SLAM_ATTACK =
+            Attack<TharZulEntity>(
+                SLAM_ID,
+                SLAM_ANIM_DATA,
+                totalDuration = { mob -> 50 - (10 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = 100,
+                DistanceTriggerCondition(4.0, affectedByScale = true),
+                data = listOf(
+                    DelayedDamageData(SLAM_ATTACK_DAMAGE, 14),
+
+                    DelayedSoundData(TAKE_SWING_SOUND, 3),
+                    DelayedSoundData(FIRE_SOUND, 3),
+                    DelayedSoundData(SWEEP_SOUND, 12),
+                    DelayedSoundData(FIRECHARGE_SOUND, 12),
+                    DelayedSoundData(FIRE_SLAM_SOUND, 12),
+                ),
+                blockMovementDuration = 26,
+                attackSpeed = { mob -> 1.0 + 0.25 * mob.getEmpowerPercentage() },
+            )
+
+        private const val SLAM_SPIKES_ID = "Slam Spikes"
+        private val SLAM_SPIKES_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, SLAM_SPIKES_ID)
+        private val SLAM_SPIKES_ATTACK =
+            Attack<TharZulEntity>(
+                SLAM_SPIKES_ID,
+                SLAM_SPIKES_ANIM_DATA,
+                totalDuration = { mob -> 50 - (10 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = { entity -> if ((entity).hasPartner()) 300 else 150 },
+                DistanceTriggerCondition(6.0, 20.0, affectedByScale = true),
+                data = listOf(
+                    DelayedDamageData(SLAM_ATTACK_DAMAGE, 14),
+
+                    DelayedSoundData(TAKE_SWING_SOUND, 3),
+                    DelayedSoundData(FIRE_SOUND, 3),
+                    DelayedSoundData(SWEEP_SOUND, 12),
+                    DelayedSoundData(FIRECHARGE_SOUND, 12),
+                    DelayedSoundData(FIRE_SLAM_SOUND, 12),
+
+                    object : DelayedAttackData(12) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            if (target == null) return
+
+                            val rotRad = entity.yBodyRot * (Math.PI / 180.0)
+                            val origin = entity.position().add(Vec3(-2.0 * sin(rotRad), 0.0, 2.0 * cos(rotRad)).scale(entity.scale.toDouble()))
+
+                            MagmaSpikesUtil.castMagmaSpikesLine(
+                                entity,
+                                damagePercentage = 0.85,
+                                largeDamagePercentage = 0.95,
+                                target,
+                                origin = origin,
+                                offset = 2.0f,
+                                delay = 6 + (0.5 * origin.distanceTo(target.position())).toInt(),
+                                minScale = 1.0f,
+                                maxScale = 2.0f,
+                                finalScale = 3.5f,
+                                finalDelay = 0,
+                                level,
+                            )
+                        }
+                    },
+                ),
+                blockMovementDuration = 26,
+                attackSpeed = { mob -> 1.0 + 0.25 * mob.getEmpowerPercentage() },
+            )
+
+        private fun getUltimateStepData(
+            delay: Int,
+            damageRadius: Double,
+            knockbackStrength: Double,
+            scorchRadius: Double,
+            explosionParticleCount: Int,
+            smokeParticleCount: Int,
+            lavaParticleCount: Int,
+            particleRange: Vec3,
+        ) = listOf(
+            DelayedSoundData(FIRE_SOUND, delay),
+            DelayedSoundData(BLOCK_HIT_SOUND, delay + 8),
+            DelayedSoundData(FIRECHARGE_SOUND, delay + 8),
+            DelayedSoundData(FIRE_SLAM_SOUND, delay + 12),
+            DelayedParticleData(
+                ParticleData(
+                    particle = { _, _ -> ParticleTypes.EXPLOSION },
+                    offset = { Vec3.ZERO },
+                    count = explosionParticleCount,
+                    dist = { particleRange },
+                    speed = 1.0,
+                ),
+                delay + 12,
+            ),
+            DelayedParticleData(
+                ParticleData(
+                    particle = { _, _ -> ParticleTypes.SMOKE },
+                    offset = { Vec3.ZERO },
+                    count = smokeParticleCount,
+                    dist = { particleRange.multiply(1.0, 0.6, 1.0) },
+                    speed = 1.0,
+                ),
+                delay + 12,
+            ),
+            DelayedParticleData(
+                ParticleData(
+                    particle = { _, _ -> ParticleTypes.LAVA },
+                    offset = { Vec3.ZERO },
+                    count = lavaParticleCount,
+                    dist = { particleRange.multiply(1.0, 0.6, 1.0) },
+                    speed = 1.0,
+                ),
+                delay + 12,
+            ),
+            object : DelayedAttackData(delay + 14) {
+                override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                    (entity as? TharZulEntity)?.scorchGround(scorchRadius, level)
+                }
+            },
+            DelayedDamageData(
+                AreaAttackDamage(
+                    2.0F,
+                    knockbackStrength,
+                    SphereDamageArea(damageRadius, 0.0, 0.0, 0.0),
+                    blockable = false,
+                    distanceDamageFactor = { distPerc, damage ->
+                        val t = ((distPerc - 0.3F) / 0.7F).coerceIn(0.0F, 1.0F)
+                        damage * (1F - t * 0.75F)
+                    },
+                ),
+                delay + 14,
+            ),
+        )
+
+        private val ULTIMATE_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.ultimate")
+        private const val ULTIMATE_ID = "Ultimate"
+        private val ULTIMATE_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, ULTIMATE_ID)
+        private val ULTIMATE_ATTACK =
+            Attack<TharZulEntity>(
+                ULTIMATE_ID,
+                ULTIMATE_ANIM_DATA,
+                totalDuration = { 148 },
+                cooldown = { mob -> if (mob.hasPartner()) 500 else 250 },
+                DistanceTriggerCondition(4.0, affectedByScale = true),
+                data = listOf(
+                    DelayedSoundData(TAKE_SWING_SOUND, 6),
+
+                    *getUltimateStepData(20, 5.0, 3.0, 4.0, 20, 15, 10, Vec3(3.5, 2.0, 3.5)).toTypedArray(),
+                    *getUltimateStepData(52, 8.0, 4.0, 7.0, 70, 30, 20, Vec3(6.5, 3.0, 6.5)).toTypedArray(),
+                    *getUltimateStepData(86, 11.0, 5.0, 10.0, 180, 100, 50, Vec3(9.5, 4.0, 9.5)).toTypedArray(),
+                ),
+                blockMovementDuration = 136,
+                attackSpeed = { mob -> 1.0 + 0.5 * mob.getEmpowerPercentage() },
+            )
+
+        private const val TELEPORT_ID = "Teleport"
+        private val TELEPORT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, null, null)
+        private val TELEPORT_ATTACK =
+            Attack<TharZulEntity>(
+                TELEPORT_ID,
+                TELEPORT_ANIM_DATA,
+                totalDuration = { 7 },
+                cooldown = { mob -> if (mob.hasPartner()) 200 else 125 },
+                DistanceTriggerCondition(7.0, 20.0, affectedByScale = true),
+                data = listOf(
+                    DelayedSoundData(FIRE_SOUND, 0),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> CustomParticleTypes.REVERSE_FLAME },
+                            offset = { Vec3(0.0, 1.0, 0.0) },
+                            count = 30,
+                            dist = { Vec3(0.3, 0.5, 0.3) },
+                            speed = 1.0,
+                        ),
+                        0,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.ENDERMAN_TELEPORT,
+                            { 1.0F },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        5,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.LAVA_EXTINGUISH,
+                            { 1.0F },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        5,
+                    ),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.LAVA },
+                            offset = { Vec3.ZERO },
+                            count = 3,
+                            dist = { Vec3(0.1, 0.0, 0.1) },
+                            speed = 1.0,
+                        ),
+                        5,
+                    ),
+                    object : DelayedAttackData(6) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            if (target == null) return
+                            (entity as? TharZulEntity)?.teleportNearTarget(target, 2.5, 3.0)
+                        }
+                    },
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.FLAME },
+                            offset = { Vec3.ZERO },
+                            count = 30,
+                            dist = { Vec3.ZERO },
+                            speed = 1.0,
+                        ),
+                        7,
+                    ),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.LAVA },
+                            offset = { Vec3.ZERO },
+                            count = 5,
+                            dist = { Vec3(0.1, 0.0, 0.1) },
+                            speed = 1.0,
+                        ),
+                        7,
+                    ),
+                    DelayedSoundData(FIRECHARGE_SOUND, 11)
+                ),
+                blockMovementDuration = 7,
+            )
+
+        private val ATTACKS: List<RandomOption<out Attack<TharZulEntity>>> = listOf(
+            RandomOption(2, SLASH_ATTACK),
+            RandomOption(2, STAB_ATTACK),
+            RandomOption(1, SLAM_ATTACK),
+            RandomOption(1, SLAM_SPIKES_ATTACK),
+            RandomOption(1, ULTIMATE_ATTACK),
+            RandomOption(1, TELEPORT_ATTACK),
+        )
+
+        fun createAttributes(): AttributeSupplier.Builder {
+            return createLivingAttributes()
+                .add(Attributes.FOLLOW_RANGE, 96.0)
+                .add(Attributes.MOVEMENT_SPEED, 0.3)
+                .add(Attributes.ATTACK_DAMAGE, 3.0)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.5)
+                .add(Attributes.ARMOR, 0.0)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)
+                .add(Attributes.MOVEMENT_EFFICIENCY, 0.85)
+                .add(Attributes.SAFE_FALL_DISTANCE, 10.0)
+                .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.1)
+                .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 0.65)
+        }
+
+        private val EMPOWER_TICKS: EntityDataAccessor<Int> = SynchedEntityData.defineId(TharZulEntity::class.java, EntityDataSerializers.INT)
+
+        private val ATTACK_ANIMATION_SPEED: EntityDataAccessor<Float> = SynchedEntityData.defineId(TharZulEntity::class.java, EntityDataSerializers.FLOAT)
+    }
+
+    override var partnerReference: EntityReference<LivingEntity>? = null
+    var foundPartner = false
+
+    override var blockAbleMovementEntity = this
+    override var blockedMovementTicks = 0
+    override var blockedMovementAirborne = false
+
+    override var attackPose = AttackPose.DEFAULT
+    override var attackDuration = 0
+    override val attacks = ATTACKS
+    override val attackCooldowns: MutableMap<Attack<TharZulEntity>, Int> = mutableMapOf()
+    override val attackDataInstances = mutableListOf<DelayedAttackDataInstance>()
+
+    private val bossEvent: ServerBossEvent =
+        ServerBossEvent(
+            Mth.createInsecureUUID(random),
+            displayName.copy()
+                .withStyle(ChatFormatting.DARK_RED)
+                .withStyle(ChatFormatting.BOLD),
+            BossEvent.BossBarColor.RED,
+            BossEvent.BossBarOverlay.PROGRESS,
+        )
+
+    private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
+    override fun getAnimatableInstanceCache() = cache
+
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(EMPOWER_TICKS, 0)
+        builder.define(ATTACK_ANIMATION_SPEED, 1F)
+    }
+
+    override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
+        super.onSyncedDataUpdated(accessor)
+        if (accessor == EMPOWER_TICKS) refreshDimensions()
+
+        if (!level().isClientSide) return
+        if (accessor == ATTACK_ANIMATION_SPEED) attackAnimationController.animationSpeed = entityData.get(ATTACK_ANIMATION_SPEED).toDouble()
+    }
+
+    private val attackAnimationController =
+        AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
+            .triggerableAnim(SLASH_ID, SLASH_ANIM)
+            .triggerableAnim(STAB_ID, STAB_ANIM)
+            .triggerableAnim(SLAM_ID, SLAM_ANIM)
+            .triggerableAnim(SLAM_SPIKES_ID, SLAM_ANIM)
+            .triggerableAnim(ULTIMATE_ID, ULTIMATE_ANIM)
+            .setParticleKeyframeHandler { event ->
+                if (!level().isClientSide) return@setParticleKeyframeHandler
+
+                val keyFrameData = event.keyframeData
+                when (keyFrameData.effect) {
+                    "sword_flame_sweep" -> {
+                        val pos0 = GeoEntityLocatorService.getLocatorPos(uuid, "swordParticle0") ?: return@setParticleKeyframeHandler
+                        val pos1 = GeoEntityLocatorService.getLocatorPos(uuid, "swordParticle1") ?: return@setParticleKeyframeHandler
+
+                        val dir = pos1.subtract(pos0)
+                        val axis = Vec3(0.0, 1.0, 0.0).cross(dir).normalize()
+                        val angle = Math.toRadians(20.0)
+                        val rotatedDir = dir
+                            .scale(cos(angle))
+                            .add(axis.cross(dir).scale(sin(angle)))
+
+                        level().addParticle(
+                            DirectionalFlameSweepParticleEffect(1.5 * scale, rotatedDir.x, rotatedDir.y, rotatedDir.z),
+                            pos0.x, pos0.y - 0.5 * scale, pos0.z,
+                            0.0, 0.0, 0.0,
+                        )
+                    }
+
+                    "sword_flame_stab" -> {
+                        val pos0 = GeoEntityLocatorService.getLocatorPos(uuid, "swordParticle0") ?: return@setParticleKeyframeHandler
+                        val pos1 = GeoEntityLocatorService.getLocatorPos(uuid, "swordParticle1") ?: return@setParticleKeyframeHandler
+                        val dir = pos1.subtract(pos0)
+
+                        createStabParticles(pos0, dir, 2, ParticleTypes.FLAME)
+                        createStabParticles(pos0, dir, 1, ParticleTypes.SMOKE)
+                    }
+
+                    "flame_slam" -> {
+                        val pos = GeoEntityLocatorService.getLocatorPos(uuid, keyFrameData.locatorName) ?: return@setParticleKeyframeHandler
+                        createSlamParticles(pos, 20, ParticleTypes.FLAME)
+                        createSlamParticles(pos, 12, ParticleTypes.SMOKE)
+                        createSlamParticles(pos, 5, ParticleTypes.LARGE_SMOKE)
+                    }
+                }
+            }
+
+    private fun createStabParticles(
+        pos: Vec3,
+        dir: Vec3,
+        count: Int,
+        type: SimpleParticleType,
+    ) {
+        val normalizedDir = dir.normalize()
+        repeat(count) {
+            val pos = pos.subtract(normalizedDir.scale(Random.nextDouble(0.1, 0.3))).add(
+                Random.nextDouble(-0.1, 0.1) * scale,
+                Random.nextDouble(-0.1, 0.1) * scale,
+                Random.nextDouble(-0.1, 0.1) * scale,
+            )
+            val velocity = normalizedDir.scale(Random.nextDouble(0.15, 0.5)).add(
+                Random.nextDouble(-0.05, 0.05),
+                Random.nextDouble(-0.05, 0.05),
+                Random.nextDouble(-0.05, 0.05),
+            ).scale(scale.toDouble())
+
+            level().addParticle(
+                type,
+                pos.x, pos.y, pos.z,
+                velocity.x, velocity.y, velocity.z,
+            )
+        }
+    }
+
+    private fun createSlamParticles(
+        pos: Vec3,
+        count: Int,
+        type: SimpleParticleType,
+    ) {
+        repeat(count) {
+            level().addParticle(
+                type,
+                pos.x + Random.nextDouble(-0.25, 0.25) * scale,
+                pos.y + Random.nextDouble(-0.25, 0.0) * scale,
+                pos.z + Random.nextDouble(-0.25, 0.25) * scale,
+                Random.nextDouble(-0.4, 0.4) * scale,
+                Random.nextDouble(-0.2, 0.4) * scale,
+                Random.nextDouble(-0.4, 0.4) * scale,
+            )
+        }
+    }
+
+    override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
+        controllers.add(
+            AnimationController<TharZulEntity>("Walk/Idle/Death", 5)
+            { test ->
+                if (test.animatable.isDeadOrDying) {
+                    test.setAndContinue(DEATH_ANIM)
+                } else {
+                    test.setAndContinue(if (test.isMoving) DefaultAnimations.WALK else DefaultAnimations.IDLE)
+                }
+            },
+
+            attackAnimationController,
+        )
+    }
+
+    private val attackGoal = CustomAttacksGoal(this)
+    private val stayInMeleeRangeGoal = StayInRangeGoal(this, 1.0, 2.5)
+    private val wanderGoal = DisableAbleWanderAroundFarGoal(this, 0.7)
+    private val lookAtPlayerGoal = DisableAbleLookAtEntityGoal(this, Player::class.java, 8F)
+    private val lookAroundGoal = DisableAbleLookAroundGoal(this)
+
+    init {
+        initDynamicGoals()
+
+        setPathfindingMalus(PathType.FIRE, 0F)
+        setPathfindingMalus(PathType.FIRE_IN_NEIGHBOR, 0F)
+        setPathfindingMalus(PathType.DAMAGING, 0F)
+        setPathfindingMalus(PathType.DAMAGE_CAUTIOUS, 0F)
+    }
+
+    private fun initDynamicGoals() {
+        goalSelector.addGoal(2, attackGoal)
+        goalSelector.addGoal(3, stayInMeleeRangeGoal)
+        goalSelector.addGoal(5, wanderGoal)
+        goalSelector.addGoal(6, lookAtPlayerGoal)
+        goalSelector.addGoal(7, lookAroundGoal)
+    }
+
+    override fun registerGoals() {
+        goalSelector.addGoal(1, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { e -> e is Player || e is Villager }))
+        goalSelector.addGoal(4, FloatGoal(this))
+
+        targetSelector.addGoal(0, HurtByTargetGoal(this))
+        targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, false))
+    }
+
+    override fun updateGoals() {
+        val movementBlocked = isMovementBlocked()
+        attackGoal.isDisabled = movementBlocked
+        stayInMeleeRangeGoal.isDisabled = movementBlocked
+        wanderGoal.isDisabled = movementBlocked
+        lookAtPlayerGoal.isDisabled = movementBlocked
+        lookAroundGoal.isDisabled = movementBlocked
+    }
+
+    override fun tick() {
+        super.tick()
+
+        val level = level() as? ServerLevel ?: return
+
+        bossEvent.progress = health / maxHealth
+
+        if (isDeadOrDying) return
+        tickBlockedMovement()
+        tickAttacks(level, this)
+        tickPartner()
+        tickEmpower()
+    }
+
+    private fun tickEmpower() {
+        if (isFullyEmpowered()) return
+
+        val partner = getPartner() ?: return
+        if (!partner.isDeadOrDying) return
+
+        increaseEmpowerTicks()
+
+        DemonkinUtil.createEmpowerParticles(this)
+        if (tickCount % 10 == 0) DemonkinUtil.playEmpowerSounds(this)
+    }
+
+    private fun getEmpowerTicks() = entityData.get(EMPOWER_TICKS)
+
+    private fun setEmpowerTicks(ticks: Int) = entityData.set(EMPOWER_TICKS, ticks)
+
+    private fun increaseEmpowerTicks() = entityData.set(EMPOWER_TICKS, getEmpowerTicks() + 1)
+
+    fun isFullyEmpowered() = getEmpowerTicks() >= MAX_EMPOWER_TICKS
+
+    private fun getEmpowerPercentage() = getEmpowerTicks() / MAX_EMPOWER_TICKS.toFloat()
+
+    private fun tickPartner() {
+        if (foundPartner) return
+        if (tickCount % 20 != 0) return
+        findPartner(this, 100.0, ThalVeyraEntity::class.java)
+    }
+
+    override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.WITHER_HURT
+
+    override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
+
+    private fun scorchGround(
+        maxDistance: Double,
+        level: ServerLevel,
+    ) {
+        val registry = level.registryAccess().lookupOrThrow(Registries.BLOCK)
+        val scorchPalette = registry.getOrThrow(CustomTags.SCORCH_PALETTE).map { it.value() }
+
+        val positions = BlockPosUtil.findConnected(level, blockPosition().below(), maxDistance * scale)
+
+        val maxSquared = maxDistance * maxDistance
+        positions.forEach {
+            val distSquared = it.distToCenterSqr(position())
+            val scorchProbability = 1.0 - distSquared / maxSquared
+            scorchBlock(it, level, scorchPalette, scorchProbability)
+        }
+    }
+
+    private fun scorchBlock(
+        pos: BlockPos,
+        level: ServerLevel,
+        scorchPalette: List<Block>,
+        scorchProbability: Double,
+    ) {
+        val originalState = level.getBlockState(pos)
+        val block = originalState.block
+
+        if (originalState.isAir) return
+        if (originalState.`is`(CustomTags.SCORCH_PALETTE)) return
+
+        if (originalState.`is`(CustomTags.DUNGEON_BREAKABLE) || originalState.`is`(Blocks.WATER)) {
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+            return
+        }
+
+        if (block is ButtonBlock) { // always scorch buttons
+            val newState = scorchPalette.filterIsInstance<ButtonBlock>().random().defaultBlockState()
+                .setValue(ButtonBlock.FACE, originalState.getValue(ButtonBlock.FACE))
+
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+
+        if (Random.nextDouble() > scorchProbability) return
+
+        if (block is SlabBlock) {
+            val newState = scorchPalette.filterIsInstance<SlabBlock>().random().defaultBlockState()
+                .setValue(SlabBlock.TYPE, originalState.getValue(SlabBlock.TYPE))
+
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+
+        if (block is StairBlock) {
+            val newState = scorchPalette.filterIsInstance<StairBlock>().random().defaultBlockState()
+                .setValue(StairBlock.FACING, originalState.getValue(StairBlock.FACING))
+                .setValue(StairBlock.HALF, originalState.getValue(StairBlock.HALF))
+                .setValue(StairBlock.SHAPE, originalState.getValue(StairBlock.SHAPE))
+
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+
+        if (block is WallBlock) {
+            val newState = scorchPalette.filterIsInstance<WallBlock>().random().defaultBlockState()
+                .setValue(WallBlock.EAST, originalState.getValue(WallBlock.EAST))
+                .setValue(WallBlock.NORTH, originalState.getValue(WallBlock.NORTH))
+                .setValue(WallBlock.WEST, originalState.getValue(WallBlock.WEST))
+                .setValue(WallBlock.SOUTH, originalState.getValue(WallBlock.SOUTH))
+                .setValue(WallBlock.UP, originalState.getValue(WallBlock.UP))
+
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+
+        if (block is FenceBlock) {
+            val newState = scorchPalette.filterIsInstance<FenceBlock>().random().defaultBlockState()
+                .setValue(FenceBlock.EAST, originalState.getValue(FenceBlock.EAST))
+                .setValue(FenceBlock.NORTH, originalState.getValue(FenceBlock.NORTH))
+                .setValue(FenceBlock.WEST, originalState.getValue(FenceBlock.WEST))
+                .setValue(FenceBlock.SOUTH, originalState.getValue(FenceBlock.SOUTH))
+
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+
+        if (originalState.isRedstoneConductor(level, pos)) {
+            val newState = scorchPalette.filter { it.defaultBlockState().isRedstoneConductor(level, pos) }.random().defaultBlockState()
+            level.setBlockAndUpdate(pos, newState)
+            return
+        }
+    }
+
+    fun teleportNearTarget(
+        target: LivingEntity,
+        minDistance: Double,
+        maxDistance: Double,
+        attempts: Int = 16,
+    ): Boolean {
+        val minDistanceSqr = minDistance * minDistance
+        val maxDistanceSqr = maxDistance * maxDistance
+
+        repeat(attempts) {
+            val distance = minDistance + random.nextDouble() * (maxDistance - minDistance)
+            val angle = random.nextDouble() * Math.PI * 2.0
+
+            val x = target.x + cos(angle) * distance
+            val z = target.z + sin(angle) * distance
+            val y = target.blockY
+
+            val blockPos = BlockPos.containing(x, y.toDouble(), z)
+            val validPos = LandRandomPos.movePosUpOutOfSolid(this, blockPos) ?: return@repeat
+            val pos = Vec3(validPos.x + 0.5, validPos.y.toDouble(), validPos.z + 0.5)
+
+            val distanceSqr = pos.distanceToSqr(target.position())
+            if (distanceSqr !in minDistanceSqr..maxDistanceSqr) return@repeat
+
+            val path = navigation.createPath(validPos, 0) ?: return@repeat
+            if (!path.canReach()) return@repeat
+            val pathEnd = path.endNode ?: return@repeat
+
+            val pathEndPos = Vec3(pathEnd.x + 0.5, pathEnd.y.toDouble(), pathEnd.z + 0.5)
+            val entityBox = boundingBox.move(
+                pathEndPos.x - this.x,
+                pathEndPos.y - this.y,
+                pathEndPos.z - this.z
+            )
+            if (!level().noCollision(this, entityBox)) return@repeat
+
+            teleportTo(pathEndPos.x, pathEndPos.y, pathEndPos.z)
+            navigation.stop()
+
+            target.also { lookAt(it, 360F, 360F) }
+
+            return true
+        }
+
+        return false
+    }
+
+    override fun getLevel() = level()
+
+    override fun tickDeath() {
+        if (++deathTime <= 20) return
+        if (level().isClientSide) return
+        if (isRemoved) return
+
+        val partner = getPartner()
+        if (partner?.isAlive == true && (partner as? ThalVeyraEntity)?.isFullyEmpowered() != true) return
+
+        level().broadcastEntityEvent(this, 60.toByte())
+        remove(RemovalReason.KILLED)
+    }
+
+    override fun handleKillingBlow() {
+        super.handleKillingBlow()
+        attackAnimationController.stopTriggeredAnimation()
+    }
+
+    override fun sanitizeScale(scale: Float): Float {
+        return super.sanitizeScale(scale) * (1F + EMPOWER_SCALE * getEmpowerPercentage())
+    }
+
+    override fun setAttackAnimationSpeed(attackSpeed: Float) {
+        entityData.set(ATTACK_ANIMATION_SPEED, attackSpeed)
+    }
+
+    override fun setNoAi(flag: Boolean) {
+        super.setNoAi(flag)
+        bossEvent.isVisible = !flag
+    }
+
+    override fun startSeenByPlayer(player: ServerPlayer) {
+        super.startSeenByPlayer(player)
+        bossEvent.addPlayer(player)
+
+        val payload = BossEventTypePayload(bossEvent.id, BossEventType.THAR_ZUL)
+        ServerPlayNetworking.send(player, payload)
+    }
+
+    override fun stopSeenByPlayer(player: ServerPlayer) {
+        super.stopSeenByPlayer(player)
+        bossEvent.removePlayer(player)
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+
+        output.putInt("empower_ticks", getEmpowerTicks())
+
+        EntityReference.store(partnerReference, output, "partner")
+        output.putBoolean("found_partner", foundPartner)
+
+        addAttackCooldownsSaveData(output)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+
+        setEmpowerTicks(input.getIntOr("empower_ticks", 0))
+
+        partnerReference = EntityReference.readWithOldOwnerConversion(input, "partner", level())
+        foundPartner = input.getBooleanOr("found_partner", false)
+
+        readAttackCooldownsSaveData(input)
+    }
+}

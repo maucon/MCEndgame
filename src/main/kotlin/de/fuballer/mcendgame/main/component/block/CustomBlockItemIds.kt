@@ -3,6 +3,7 @@ package de.fuballer.mcendgame.main.component.block
 import de.fuballer.mcendgame.main.component.block.blocks.DecayingCobwebBlock
 import de.fuballer.mcendgame.main.component.block.blocks.DungeonEnemyBlockerBlock
 import de.fuballer.mcendgame.main.component.block.blocks.crystalforge.CrystalForgeBlock
+import de.fuballer.mcendgame.main.component.block.blocks.demonic_crucible.DemonicCrucibleBlock
 import de.fuballer.mcendgame.main.component.block.blocks.dungeon_device.DungeonDeviceBlock
 import de.fuballer.mcendgame.main.component.block.blocks.totem_statue.TotemStatueBlock
 import de.fuballer.mcendgame.main.util.minecraft.RegistryKeyUtil
@@ -14,6 +15,7 @@ object CustomBlockItemIds {
     val CRYSTAL_FORGE = create(CrystalForgeBlock.ID)
     val TOTEM_STATUE = create(TotemStatueBlock.ID)
     val DUNGEON_ENEMY_BLOCKER = create(DungeonEnemyBlockerBlock.ID)
+    val DEMONIC_CRUCIBLE = create(DemonicCrucibleBlock.ID)
 
     fun create(name: String): BlockItemId {
         val blockKey = RegistryKeyUtil.createBlockKey(name)

@@ -34,6 +34,7 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import org.slf4j.LoggerFactory
 import kotlin.math.abs
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonSeed as getWorldDungeonSeed
 
 /**
  * End-to-end server gametests for the dungeon entry/exit flow at the Dungeon Device:
@@ -73,7 +74,7 @@ object DungeonGameTest {
         EventGateway.publish(OpenDungeonButtonPressedEvent(dungeonDevice, player))
 
         // Generation runs synchronously on the server thread, so the dungeon world exists now.
-        val dungeonWorld = findDungeonWorld(originWorld.server)
+        val dungeonWorld = findDungeonWorld(originWorld.server, player.getDungeonSeed()?.seed)
             ?: throw helper.assertionException("Opening the dungeon should generate a dungeon world")
         LOG.info(
             "Dungeon world generated: {} (dungeon level {}, boss count {}, opener {})",
@@ -316,8 +317,12 @@ object DungeonGameTest {
         return player
     }
 
-    internal fun findDungeonWorld(server: MinecraftServer): ServerLevel? =
-        server.allLevels.firstOrNull { it.isDungeonWorld() }
+    /**
+     * Finds the dungeon world that was generated for [seed]. Dungeon worlds of other tests and leftovers
+     * of earlier batches can be present at the same time, so looking up the first dungeon world is not enough.
+     */
+    internal fun findDungeonWorld(server: MinecraftServer, seed: Long? = null): ServerLevel? =
+        server.allLevels.firstOrNull { it.isDungeonWorld() && (seed == null || it.getWorldDungeonSeed() == seed) }
 
     /**
      * Creates a connected ServerPlayer inside the test level.
@@ -327,7 +332,7 @@ object DungeonGameTest {
      * [net.minecraft.server.players.PlayerList.placeNewPlayer] joins it into the level
      * over an embedded (in-memory) connection.
      */
-    private fun spawnMockServerPlayer(helper: GameTestHelper): ServerPlayer {
+    internal fun spawnMockServerPlayer(helper: GameTestHelper): ServerPlayer {
         val server = helper.level.server
         val player = helper.makeMockServerPlayer(GameType.SURVIVAL) as ServerPlayer
 

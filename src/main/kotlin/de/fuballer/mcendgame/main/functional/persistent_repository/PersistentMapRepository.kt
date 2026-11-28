@@ -15,7 +15,7 @@ import de.maucon.mauconframework.stereotype.extension.InMemoryMapRepository
 import org.slf4j.Logger
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
-import kotlin.jvm.optionals.getOrNull
+import java.nio.file.StandardCopyOption
 
 open class PersistentMapRepository<ID, ENTITY : Entity<ID>>(
     private val log: Logger,
@@ -51,10 +51,13 @@ open class PersistentMapRepository<ID, ENTITY : Entity<ID>>(
             val content = Files.readString(getFilePath(), StandardCharsets.UTF_8)
             val jsonArray = JsonParser.parseString(content).asJsonArray
 
-            val entities = jsonArray
-                .map { codec.parse(RuntimeConfig.REGISTRY_OPS, it) }
-                .map { it.result() }
-                .mapNotNull { it.getOrNull() }
+            val entities = jsonArray.mapIndexedNotNull { index, json ->
+                codec.parse(RuntimeConfig.REGISTRY_OPS, json)
+                    .resultOrPartial { error -> log.error("Failed to read entry #$index of persistent repository '$name': $error") }
+                    .orElse(null)
+            }
+
+            if (entities.size != jsonArray.size()) backupUnreadableFile()
 
             saveAll(entities)
             log.info("Loaded ${entities.size} entities for persistent repository '$name'")
@@ -64,14 +67,22 @@ open class PersistentMapRepository<ID, ENTITY : Entity<ID>>(
         }
     }
 
+    private fun backupUnreadableFile() {
+        val backupPath = getFolderPath().resolve("$name.json.bak")
+        Files.copy(getFilePath(), backupPath, StandardCopyOption.REPLACE_EXISTING)
+        log.warn("Some entries of persistent repository '$name' could not be read, backed the file up to ${backupPath.fileName}")
+    }
+
     fun writeToFile() {
         try {
             val jsonArray = JsonArray()
 
             findAll()
-                .map { codec.encodeStart(RuntimeConfig.REGISTRY_OPS, it) }
-                .map { it.result() }
-                .mapNotNull { it.getOrNull() }
+                .map { entity ->
+                    codec.encodeStart(RuntimeConfig.REGISTRY_OPS, entity)
+                        .resultOrPartial { error -> log.error("Failed to write entity ${entity.id} of persistent repository '$name': $error") }
+                }
+                .mapNotNull { it.orElse(null) }
                 .forEach { jsonArray.add(it) }
 
             val prettyJson = gson.toJson(jsonArray)

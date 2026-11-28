@@ -12,6 +12,7 @@ import com.geckolib.util.GeckoLibUtil
 import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
 import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
 import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area.BoxDamageArea
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
 import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
@@ -52,7 +53,7 @@ class BonecrusherEntity(
 
         private val HIT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.hit")
         private const val HIT_ID = "Hit"
-        private val HIT_AREA = AreaAttackDamage.DamageArea(3.8, 1.6, 1.5, -0.2, 0.5, 0.25)
+        private val HIT_AREA = BoxDamageArea(3.8, 1.6, 1.5, -0.2, 0.5, 0.25)
         private val HIT_ATTACK_DAMAGE = AreaAttackDamage(0.7F, 0.35, HIT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING)
         private val HIT_ANIMATION_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, HIT_ID)
         private val HIT_ATTACK = Attack<BonecrusherEntity>(
@@ -68,7 +69,7 @@ class BonecrusherEntity(
 
         private val SLAM_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.slam")
         private const val SLAM_ID = "Slam"
-        private val SLAM_AREA = AreaAttackDamage.DamageArea(6.0, 3.0, 1.5, 0.5, 0.0, 0.5)
+        private val SLAM_AREA = BoxDamageArea(6.0, 3.0, 1.5, 0.5, 0.0, 0.5)
         private val SLAM_ATTACK_DAMAGE = AreaAttackDamage(1.5F, 1.0, SLAM_AREA, knockbackType = AreaAttackDamage.KnockbackType.AREA_CENTER, blockable = false)
             .setParticles(100, 0.25, ParticleTypes.CRIT, 0.5)
             .setSound(false, SoundEvents.GENERIC_EXPLODE.value(), 1F, 1F)
@@ -87,7 +88,7 @@ class BonecrusherEntity(
 
         private val TELEPORT_PRESS_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.press")
         private const val TELEPORT_PRESS_ID = "Teleport Press"
-        private val TELEPORT_PRESS_AREA = AreaAttackDamage.DamageArea(6.0, 3.0, 1.5, -2.6, 0.0, 0.5)
+        private val TELEPORT_PRESS_AREA = BoxDamageArea(6.0, 3.0, 1.5, -2.6, 0.0, 0.5)
         private val TELEPORT_PRESS_DAMAGE = AreaAttackDamage(1F, 1.0, TELEPORT_PRESS_AREA, knockbackType = AreaAttackDamage.KnockbackType.AREA_CENTER)
             .setParticles(100, 0.25, ParticleTypes.CRIT, 0.5)
             .setSound(false, SoundEvents.GENERIC_EXPLODE.value(), 1F, 1F)
@@ -112,13 +113,13 @@ class BonecrusherEntity(
             .thenPlayXTimes("attack.spin", SPIN_ATTACK_ROTATIONS)
             .thenPlay("attack.spin.end")
         private const val SPIN_ID = "Spin"
-        private val SPIN_FRONT_AREA = AreaAttackDamage.DamageArea(4.0, 3.0, 1.0, 0.0, 0.0, 0.5)
+        private val SPIN_FRONT_AREA = BoxDamageArea(4.0, 3.0, 1.0, 0.0, 0.0, 0.5)
         private val SPIN_FRONT_DAMAGE = AreaAttackDamage(1F, 0.25, SPIN_FRONT_AREA, knockbackType = AreaAttackDamage.KnockbackType.DAMAGER_CENTER, disableBlockingShield = 5F)
-        private val SPIN_BACK_AREA = AreaAttackDamage.DamageArea(4.0, 3.0, 1.0, -4.0, 0.0, 0.5)
+        private val SPIN_BACK_AREA = BoxDamageArea(4.0, 3.0, 1.0, -4.0, 0.0, 0.5)
         private val SPIN_BACK_DAMAGE = AreaAttackDamage(1F, 0.25, SPIN_BACK_AREA, knockbackType = AreaAttackDamage.KnockbackType.DAMAGER_CENTER, disableBlockingShield = 5F)
-        private val SPIN_LEFT_AREA = AreaAttackDamage.DamageArea(6.0, 2.0, 1.0, -3.0, -2.0, 0.5)
+        private val SPIN_LEFT_AREA = BoxDamageArea(6.0, 2.0, 1.0, -3.0, -2.0, 0.5)
         private val SPIN_LEFT_DAMAGE = AreaAttackDamage(1F, 0.25, SPIN_LEFT_AREA, knockbackType = AreaAttackDamage.KnockbackType.DAMAGER_CENTER, disableBlockingShield = 5F)
-        private val SPIN_RIGHT_AREA = AreaAttackDamage.DamageArea(6.0, 2.0, 1.0, -3.0, 2.0, 0.5)
+        private val SPIN_RIGHT_AREA = BoxDamageArea(6.0, 2.0, 1.0, -3.0, 2.0, 0.5)
         private val SPIN_RIGHT_DAMAGE = AreaAttackDamage(1F, 0.25, SPIN_RIGHT_AREA, knockbackType = AreaAttackDamage.KnockbackType.DAMAGER_CENTER, disableBlockingShield = 5F)
         private val SPIN_ANIMATION_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, SPIN_ANIM_CONTROLLER_ID, SPIN_ID)
         private val SPIN_ATTACK = Attack<BonecrusherEntity>(

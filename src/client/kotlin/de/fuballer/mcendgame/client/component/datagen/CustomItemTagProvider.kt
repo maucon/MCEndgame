@@ -26,6 +26,8 @@ class CustomItemTagProvider(
             .add(CustomToolItemIds.NIGHTREAVER)
             .add(CustomToolItemIds.RADIANT_DAWN)
             .add(CustomToolItemIds.CLAWS_OF_THE_BEAR)
+            .add(CustomToolItemIds.SEETHING_MALICE)
+            .add(CustomToolItemIds.SCORCHING_HUNGER)
 
         builder(ItemTags.AXES)
             .add(CustomToolItemIds.FATESPLITTER)

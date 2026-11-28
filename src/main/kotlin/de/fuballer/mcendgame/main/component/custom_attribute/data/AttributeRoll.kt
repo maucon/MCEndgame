@@ -128,7 +128,9 @@ data class DoubleRoll(
         enhancementType: AttributeRoll.EnhancementType,
         affinity: Affinity,
     ): DoubleRoll {
-        val affinityBasedValue = getAffinityBasedEnhanceValue(value, affinity)
+        var affinityBasedValue = getAffinityBasedEnhanceValue(value, affinity)
+        if (getValue() < 0) affinityBasedValue *= -1
+
         val newEnhancements = enhancements + mapOf(enhancementType to (enhancements[enhancementType] ?: 0.0) + affinityBasedValue)
         return DoubleRoll(bounds, percentRoll, newEnhancements, format)
     }
@@ -236,7 +238,9 @@ data class IntRoll(
         enhancementType: AttributeRoll.EnhancementType,
         affinity: Affinity,
     ): IntRoll {
-        val affinityBasedValue = getAffinityBasedEnhanceValue(value, affinity)
+        var affinityBasedValue = getAffinityBasedEnhanceValue(value, affinity)
+        if (getValue() < 0) affinityBasedValue *= -1
+
         val newEnhancements = enhancements + mapOf(enhancementType to (enhancements[enhancementType] ?: 0.0) + affinityBasedValue)
         return IntRoll(bounds, percentRoll, newEnhancements)
     }

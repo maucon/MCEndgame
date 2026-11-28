@@ -1,17 +1,12 @@
 package de.fuballer.mcendgame.main.component.stats
 
 import com.mojang.logging.LogUtils
+import de.fuballer.mcendgame.main.component.block.blocks.demonic_crucible.DemonicCrucibleUsedEvent
 import de.fuballer.mcendgame.main.component.dungeon.completion.DungeonCompletedEvent
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneDespawnEvent
 import de.fuballer.mcendgame.main.component.entity.custom.entities.training_dummy.TrainingDummyEntity
 import de.fuballer.mcendgame.main.component.item.custom.crystal.item.*
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.synthesized.SynthesizedCommandCrystal
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.synthesized.SynthesizedEnduranceCrystal
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.synthesized.SynthesizedFocusCrystal
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.synthesized.SynthesizedForceCrystal
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.synthesized.SynthesizedMomentumCrystal
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.synthesized.SynthesizedPrecisionCrystal
-import de.fuballer.mcendgame.main.component.item.custom.crystal.item.synthesized.SynthesizedVitalityCrystal
+import de.fuballer.mcendgame.main.component.item.custom.crystal.item.synthesized.*
 import de.fuballer.mcendgame.main.messaging.crystals.CrystalForgeUsedEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonEnemyDeathEvent
 import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGeneratingEvent
@@ -135,6 +130,11 @@ class CustomStatsService {
             is SynthesizedCommandCrystal -> player.awardStat(CustomStats.SYNTHESIZED_COMMAND_CRYSTAL_USED, 1)
             else -> log.error("Crystal stats handling not implemented for ${event.crystal}")
         }
+    }
+
+    @EventSubscriber
+    fun on(event: DemonicCrucibleUsedEvent) {
+        event.player.awardStat(CustomStats.DEMONIC_CRUCIBLE_USED)
     }
 
     @EventSubscriber

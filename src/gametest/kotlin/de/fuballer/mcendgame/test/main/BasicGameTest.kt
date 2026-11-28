@@ -80,4 +80,20 @@ class BasicGameTest {
     fun testDamageStillAppliesThroughMixin(helper: GameTestHelper) {
         MixinPortGameTest.testDamageStillAppliesThroughMixin(helper)
     }
+
+    // --- legacy item migration tests ---
+    @GameTest
+    fun testLegacyItemStillDeserializes(helper: GameTestHelper) {
+        MigrationGameTest.testLegacyItemStillDeserializes(helper)
+    }
+
+    @GameTest
+    fun testLegacyItemIsMigratedOnJoin(helper: GameTestHelper) {
+        MigrationGameTest.testLegacyItemIsMigratedOnJoin(helper)
+    }
+
+    @GameTest
+    fun testLegacyItemIsMigratedWhenTicked(helper: GameTestHelper) {
+        MigrationGameTest.testLegacyItemIsMigratedWhenTicked(helper)
+    }
 }

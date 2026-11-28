@@ -3,11 +3,15 @@ package de.fuballer.mcendgame.main.component.biome
 import de.fuballer.mcendgame.main.component.sound.CustomSoundEvents
 import de.fuballer.mcendgame.main.util.minecraft.IdentifierUtil
 import de.maucon.mauconframework.di.annotation.Injectable
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.ResourceKey
+import net.minecraft.util.ARGB
+import net.minecraft.world.attribute.AmbientParticle
 import net.minecraft.world.attribute.BackgroundMusic
 import net.minecraft.world.attribute.EnvironmentAttributes
+import net.minecraft.world.attribute.modifier.ListModifier
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.biome.BiomeGenerationSettings
 import net.minecraft.world.level.biome.BiomeSpecialEffects
@@ -17,14 +21,18 @@ import net.minecraft.world.level.biome.MobSpawnSettings
 object CustomBiomes {
     val STRONGHOLD_DUNGEON: ResourceKey<Biome> = of("stronghold_dungeon")
     val DESERT_DUNGEON: ResourceKey<Biome> = of("desert_dungeon")
-    val BEASTWEAVER_GROVE_DUNGEON: ResourceKey<Biome> = of("beastweaver_grove")
+    val BEASTWEAVERS_GROVE_DUNGEON: ResourceKey<Biome> = of("beastweaver_grove")
+    val BURNING_CATHEDRAL_DUNGEON: ResourceKey<Biome> = of("burning_cathedral")
+    val DEMONIC_CRUCIBLE_DUNGEON: ResourceKey<Biome> = of("demonic_crucible")
 
     private fun of(id: String) = ResourceKey.create(Registries.BIOME, IdentifierUtil.default(id))
 
     fun bootstrap(context: BootstrapContext<Biome>) {
         context.register(STRONGHOLD_DUNGEON, createStrongholdDungeon())
         context.register(DESERT_DUNGEON, createDesertDungeon())
-        context.register(BEASTWEAVER_GROVE_DUNGEON, createBeastweaverDungeon())
+        context.register(BEASTWEAVERS_GROVE_DUNGEON, createBeastweaverDungeon())
+        context.register(BURNING_CATHEDRAL_DUNGEON, createBurningCathedralDungeon())
+        context.register(DEMONIC_CRUCIBLE_DUNGEON, createDemonicCrucibleDungeon())
     }
 
     private fun createStrongholdDungeon(): Biome {
@@ -62,4 +70,28 @@ object CustomBiomes {
             .setAttribute(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic(CustomSoundEvents.BEASTWEAVER_GROVE_MUSIC_SOUND))
             .build()
     }
+
+    private fun createBurningCathedralDungeon(): Biome {
+        return createDemonicBase()
+            .setAttribute(EnvironmentAttributes.FOG_START_DISTANCE, 25.0f)
+            .setAttribute(EnvironmentAttributes.FOG_END_DISTANCE, 75.0f)
+            .build()
+    }
+
+    private fun createDemonicCrucibleDungeon(): Biome {
+        return createDemonicBase()
+            .setAttribute(EnvironmentAttributes.FOG_START_DISTANCE, 5.0f)
+            .setAttribute(EnvironmentAttributes.FOG_END_DISTANCE, 20.0f)
+            .build()
+    }
+
+    private fun createDemonicBase(): Biome.BiomeBuilder = Biome.BiomeBuilder()
+        .hasPrecipitation(false)
+        .temperature(2.0f)
+        .downfall(0.0f)
+        .specialEffects(BiomeSpecialEffects.Builder().waterColor(0x5C0000).build())
+        .setAttribute(EnvironmentAttributes.FOG_COLOR, ARGB.vector3fFromRGB24(0x650A0A))
+        .modifyAttribute(EnvironmentAttributes.AMBIENT_PARTICLES, ListModifier.append(), AmbientParticle.of(ParticleTypes.CRIMSON_SPORE, 0.025F))
+        .generationSettings(BiomeGenerationSettings.PlainBuilder().build())
+        .mobSpawnSettings(MobSpawnSettings.Builder().build())
 }

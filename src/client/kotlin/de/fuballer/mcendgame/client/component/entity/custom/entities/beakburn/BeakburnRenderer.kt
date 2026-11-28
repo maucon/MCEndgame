@@ -15,6 +15,8 @@ class BeakburnRenderer<R>(
     context: EntityRendererProvider.Context
 ) : GeoEntityRenderer<BeakburnEntity, R>(context, BeakburnModel()) where R : LivingEntityRenderState, R : GeoRenderState {
     init {
+        shadowRadius = 0.8f
+
         withRenderLayer(IsolatedGeoLayer(this))
     }
 

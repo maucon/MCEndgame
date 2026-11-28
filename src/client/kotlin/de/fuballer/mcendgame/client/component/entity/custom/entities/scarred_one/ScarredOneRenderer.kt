@@ -15,6 +15,8 @@ class ScarredOneRenderer<R>(
     context: EntityRendererProvider.Context
 ) : GeoEntityRenderer<ScarredOneEntity, R>(context, ScarredOneModel()) where R : LivingEntityRenderState, R : GeoRenderState {
     init {
+        shadowRadius = 0.5f
+
         withRenderLayer(IsolatedGeoLayer(this))
     }
 

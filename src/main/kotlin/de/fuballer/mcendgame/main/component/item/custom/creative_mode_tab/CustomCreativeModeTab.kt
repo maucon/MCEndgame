@@ -64,6 +64,8 @@ object CustomCreativeModeTab {
                     output.accept(CustomToolItems.NIGHTREAVER.defaultInstance)
                     output.accept(CustomToolItems.GRAVEBREAKER.defaultInstance)
                     output.accept(CustomToolItems.RADIANT_DAWN.defaultInstance)
+                    output.accept(CustomToolItems.SEETHING_MALICE.defaultInstance)
+                    output.accept(CustomToolItems.SCORCHING_HUNGER.defaultInstance)
                     output.accept(CustomToolItems.CLAWS_OF_THE_BEAR.defaultInstance)
                     output.accept(CustomToolItems.WINDSTRING.defaultInstance)
                     output.accept(CustomToolItems.HAILSTORM.defaultInstance)
@@ -95,10 +97,14 @@ object CustomCreativeModeTab {
                     output.accept(AspectItems.ASPECT_OF_EMINENCE.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_ANCESTORS.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_DUALITY.defaultInstance)
-                    output.accept(AspectItems.ASPECT_OF_THE_GROVE.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_OUTLAWS.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_KIN.defaultInstance)
                     output.accept(AspectItems.ASPECT_OF_ASCENSION.defaultInstance)
+
+                    output.accept(AspectItems.DEMONIC_KEY.defaultInstance)
+
+                    output.accept(AspectItems.VERDANT_SIGIL.defaultInstance)
+                    output.accept(AspectItems.SCORCHED_SIGIL.defaultInstance)
                 }
         )
         RegistryUtil.registerCreativeModeTab(
@@ -162,6 +168,7 @@ object CustomCreativeModeTab {
                     output.accept(CustomBlocks.CRYSTAL_FORGE)
                     output.accept(CustomBlocks.DECAYING_COBWEB)
                     output.accept(CustomBlocks.TOTEM_STATUE)
+                    output.accept(CustomBlocks.DEMONIC_CRUCIBLE)
                 }
         )
     }

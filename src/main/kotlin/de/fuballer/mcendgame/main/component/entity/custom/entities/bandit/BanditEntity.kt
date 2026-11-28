@@ -5,6 +5,7 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behavi
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.BanditPathNavigation
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bandit.behaviour.goals.BanditMeleeGoal
 import de.fuballer.mcendgame.main.component.entity.custom.goals.FollowPartnerGoal
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.PairedMob
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getHitbox
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -44,7 +45,7 @@ import kotlin.math.sqrt
 class BanditEntity(
     type: EntityType<BanditEntity>,
     level: Level,
-) : PathfinderMob(type, level), Enemy, RangedAttackMob, FollowPartnerGoal.PairedMob {
+) : PathfinderMob(type, level), Enemy, RangedAttackMob, PairedMob {
     companion object {
         fun createAttributes(): AttributeSupplier.Builder {
             return createLivingAttributes()

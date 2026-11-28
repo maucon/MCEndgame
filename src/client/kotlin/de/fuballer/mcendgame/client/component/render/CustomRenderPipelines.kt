@@ -65,8 +65,8 @@ object CustomRenderPipelines {
             .withBindGroupLayout(BindGroupLayouts.SAMPLER2)
             .withVertexBinding(0, DefaultVertexFormat.ENTITY)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
-            .withColorTargetState(ColorTargetState.DEFAULT)
             .withDepthStencilState(DepthStencilState.DEFAULT)
+            .withColorTargetState(ColorTargetState.DEFAULT)
             .withShaderDefine("ALPHA_CUTOUT", 0.1F)
             .withShaderDefine("NO_OVERLAY")
             .withShaderDefine("PER_FACE_LIGHTING")
@@ -104,5 +104,38 @@ object CustomRenderPipelines {
             .withDepthStencilState(DepthStencilState.DEFAULT)
             .withCull(false)
             .build()
+    )
+
+    val OPAQUE_PARTICLE_NO_CULL: RenderPipeline = RenderPipelines.register(
+        RenderPipeline.builder(RenderPipelines.PARTICLE_SNIPPET)
+            .withLocation(IdentifierUtil.default("pipeline/opaque_particle_no_cull"))
+            .withColorTargetState(ColorTargetState.DEFAULT)
+            .withCull(false)
+            .build()
+    )
+
+    val DEMONKIN_EMISSIVE: RenderPipeline = RenderPipelines.register(
+        RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+            .withLocation("pipeline/demonkin_emissive")
+            .withFragmentShader(IdentifierUtil.default("core/demonkin_emissive"))
+            .withShaderDefine("ALPHA_CUTOUT", 0.1F)
+            .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+            .withBindGroupLayout(BindGroupLayouts.SAMPLER2)
+            .withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withDepthStencilState(DepthStencilState.DEFAULT)
+            .withShaderDefine("PER_FACE_LIGHTING")
+            .withCull(false)
+            .build()
+    )
+    val OIT_DEMONKIN_EMISSIVE: OitPipelineSet = RenderPipelines.register(
+        OitPipelineSet.builder(
+            "demonkin_emissive",
+            RenderPipeline.builder(RenderPipelines.OIT_ENTITY_SNIPPET)
+                .withFragmentShader(IdentifierUtil.default("core/demonkin_emissive"))
+                .withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+                .withBindGroupLayout(BindGroupLayouts.SAMPLER2)
+                .withShaderDefine("PER_FACE_LIGHTING")
+                .withCull(false)
+        ).build()
     )
 }

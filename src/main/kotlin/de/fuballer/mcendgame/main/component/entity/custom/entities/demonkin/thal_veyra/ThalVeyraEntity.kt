@@ -1,0 +1,848 @@
+package de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thal_veyra
+
+import com.geckolib.animatable.GeoAnimatable
+import com.geckolib.animatable.GeoEntity
+import com.geckolib.animatable.instance.AnimatableInstanceCache
+import com.geckolib.animatable.manager.AnimatableManager
+import com.geckolib.animation.AnimationController
+import com.geckolib.animation.RawAnimation
+import com.geckolib.animation.`object`.PlayState
+import com.geckolib.constant.DefaultAnimations
+import com.geckolib.util.GeckoLibUtil
+import de.fuballer.mcendgame.main.component.boss_event.BossEventType
+import de.fuballer.mcendgame.main.component.boss_event.BossEventTypePayload
+import de.fuballer.mcendgame.main.component.entity.custom.GeoEntityLocatorService
+import de.fuballer.mcendgame.main.component.entity.custom.attack.Attack
+import de.fuballer.mcendgame.main.component.entity.custom.attack.AttackPose
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.AreaAttackDamage
+import de.fuballer.mcendgame.main.component.entity.custom.attack.damage.damage_area.BoxDamageArea
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.AttackAnimationData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedAttackDataInstance
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.DelayedDamageData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.DelayedParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.particle.ParticleData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.DelayedSoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.RangeDefinedSoundData
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.DistanceTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.StrafeTriggerCondition
+import de.fuballer.mcendgame.main.component.entity.custom.attack.trigger_condition.TriggerConditionGroup
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.DemonkinUtil
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul.TharZulEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikesUtil
+import de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball.SpellFireballUtil
+import de.fuballer.mcendgame.main.component.entity.custom.goals.*
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.BlockAbleMovementMob
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.CustomAttacksMob
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.DisableAbleGoalsMob
+import de.fuballer.mcendgame.main.component.entity.custom.interfaces.PairedMob
+import de.fuballer.mcendgame.main.component.particle.CustomParticleTypes
+import de.fuballer.mcendgame.main.util.extension.mixin.MoveControlMixinExtension.getStrafeForwards
+import de.fuballer.mcendgame.main.util.extension.mixin.MoveControlMixinExtension.getStrafeRight
+import de.fuballer.mcendgame.main.util.random.RandomOption
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.ChatFormatting
+import net.minecraft.core.BlockPos
+import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.core.particles.SimpleParticleType
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.server.level.ServerBossEvent
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.tags.FluidTags
+import net.minecraft.util.Mth
+import net.minecraft.world.BossEvent
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.*
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.FloatGoal
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal
+import net.minecraft.world.entity.ai.util.LandRandomPos
+import net.minecraft.world.entity.monster.Enemy
+import net.minecraft.world.entity.npc.villager.Villager
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.material.FluidState
+import net.minecraft.world.level.pathfinder.PathType
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.VoxelShape
+import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.random.Random
+
+class ThalVeyraEntity(
+    type: EntityType<out ThalVeyraEntity>,
+    world: Level,
+) : PathfinderMob(type, world),
+    GeoEntity,
+    Enemy,
+    CustomAttacksMob<ThalVeyraEntity>,
+    DisableAbleGoalsMob,
+    BlockAbleMovementMob<ThalVeyraEntity>,
+    PairedMob {
+    companion object {
+        private const val MAX_EMPOWER_TICKS = 600
+        private const val EMPOWER_SCALE = 0.2F
+
+        val DEATH_ANIM: RawAnimation = RawAnimation.begin().thenPlayAndHold("misc.die")
+
+        private val LEAN_ANIM: RawAnimation = RawAnimation.begin().thenPlay("misc.lean")
+
+        private val SWEEP_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.PLAYER_ATTACK_SWEEP,
+                { 0.9f },
+                { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+
+        private val FIRECHARGE_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.FIRECHARGE_USE,
+                { 0.9f },
+                { Random.nextDouble(0.95, 1.05).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+
+        private val FIRE_SOUND =
+            RangeDefinedSoundData(
+                SoundEvents.FIRE_AMBIENT,
+                { 1.0F },
+                { Random.nextDouble(0.9, 1.0).toFloat() },
+                SoundSource.HOSTILE,
+                range = 24.0,
+            )
+
+        private const val ATTACK_ANIM_CONTROLLER_ID = "Attack"
+
+        private const val MELEE_RANGE = 4.5
+
+        private val SPIKES_LINE_DATA_DELAYED = object : DelayedAttackData(12) {
+            override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                if (target == null) return
+                MagmaSpikesUtil.castMagmaSpikesLine(
+                    entity,
+                    damagePercentage = 1.0,
+                    largeDamagePercentage = 0.95,
+                    target,
+                    origin = entity.position(),
+                    offset = 1.25f,
+                    delay = 6 + (0.25 * entity.distanceTo(target)).toInt(),
+                    minScale = 0.75f,
+                    maxScale = 1.5f,
+                    finalScale = 2.5f,
+                    finalDelay = 0,
+                    level,
+                )
+            }
+        }
+
+        private val MAGMA_SPIKES_LINE_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.spikes_line_left")
+        private const val MAGMA_SPIKES_LINE_LEFT_ID = "Magma Spikes Line Left"
+        private val MAGMA_SPIKES_LINE_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_LINE_LEFT_ID)
+        private val MAGMA_SPIKES_LINE_LEFT_ATTACK =
+            Attack<ThalVeyraEntity>(
+                MAGMA_SPIKES_LINE_LEFT_ID,
+                MAGMA_SPIKES_LINE_LEFT_ANIM_DATA,
+                totalDuration = { mob -> 65 - (25 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = 0,
+                TriggerConditionGroup(
+                    TriggerConditionGroup.TriggerConditionJoinType.AND,
+                    listOf(
+                        DistanceTriggerCondition(MELEE_RANGE, 25.0, affectedByScale = true),
+                        StrafeTriggerCondition(minRight = 0.0f),
+                    ),
+                ),
+                data = listOf(
+                    DelayedSoundData(SWEEP_SOUND, 12),
+                    SPIKES_LINE_DATA_DELAYED,
+                ),
+                attackSpeed = { mob -> 1.0 + 0.2 * mob.getEmpowerPercentage() },
+            )
+
+        private val MAGMA_SPIKES_LINE_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.spikes_line_right")
+        private const val MAGMA_SPIKES_LINE_RIGHT_ID = "Magma Spikes Line Right"
+        private val MAGMA_SPIKES_LINE_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_LINE_RIGHT_ID)
+        private val MAGMA_SPIKES_LINE_RIGHT_ATTACK =
+            Attack<ThalVeyraEntity>(
+                MAGMA_SPIKES_LINE_RIGHT_ID,
+                MAGMA_SPIKES_LINE_RIGHT_ANIM_DATA,
+                totalDuration = { mob -> 65 - (25 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = 0,
+                TriggerConditionGroup(
+                    TriggerConditionGroup.TriggerConditionJoinType.AND,
+                    listOf(
+                        DistanceTriggerCondition(MELEE_RANGE, 25.0, affectedByScale = true),
+                        StrafeTriggerCondition(maxRight = 0.0f),
+                    ),
+                ),
+                data = listOf(
+                    DelayedSoundData(SWEEP_SOUND, 12),
+                    SPIKES_LINE_DATA_DELAYED,
+                ),
+                attackSpeed = { mob -> 1.0 + 0.2 * mob.getEmpowerPercentage() },
+            )
+
+        private val MAGMA_SPIKES_SLAM_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.spikes_slam")
+        private const val MAGMA_SPIKES_SLAM_ID = "Magma Spikes Slam"
+        private val MAGMA_SPIKES_SLAM_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, MAGMA_SPIKES_SLAM_ID)
+        private val MAGMA_SPIKES_SLAM_ATTACK =
+            Attack<ThalVeyraEntity>(
+                MAGMA_SPIKES_SLAM_ID,
+                MAGMA_SPIKES_SLAM_ANIM_DATA,
+                totalDuration = { mob -> 70 - (20 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = 0,
+                DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
+                data = listOf(
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.AMETHYST_BLOCK_CHIME,
+                            { Random.nextDouble(1.8, 2.0).toFloat() },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        5,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.GENERIC_EXPLODE.value(),
+                            { 0.8f },
+                            { Random.nextDouble(0.95, 1.05).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        18,
+                    ),
+                    object : DelayedAttackData(18) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            MagmaSpikesUtil.castMagmaSpikesSlam(
+                                entity,
+                                damagePercentage = 1.2,
+                                ringDelay = 6,
+                                minScale = 0.75f,
+                                maxScale = 1.5f,
+                                ringSpikeCount = listOf(8, 10, 12),
+                                ringRadius = 1.25f,
+                                level,
+                            )
+                        }
+                    },
+                ),
+                blockMovementDuration = 40,
+                attackSpeed = { mob -> 1.0 + 0.3 * mob.getEmpowerPercentage() },
+            )
+
+        private const val TELEPORT_MIN_PLAYER_DISTANCE = 8.0
+        private const val TELEPORT_MIN_PLAYER_DISTANCE_SQUARED = TELEPORT_MIN_PLAYER_DISTANCE * TELEPORT_MIN_PLAYER_DISTANCE
+        private const val TELEPORT_HORIZONTAL_RANGE = 16
+        private const val TELEPORT_VERTICAL_RANGE = 7
+        private const val TELEPORT_ATTEMPTS = 20
+
+        private const val TELEPORT_ID = "Teleport"
+        private val TELEPORT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, null, null)
+        private val TELEPORT_ATTACK =
+            Attack<ThalVeyraEntity>(
+                TELEPORT_ID,
+                TELEPORT_ANIM_DATA,
+                totalDuration = { 7 },
+                cooldown = { entity -> if ((entity).hasPartner()) 150 else 300 },
+                DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
+                data = listOf(
+                    DelayedSoundData(FIRE_SOUND, 0),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> CustomParticleTypes.REVERSE_FLAME },
+                            offset = { Vec3(0.0, 1.0, 0.0) },
+                            count = 30,
+                            dist = { Vec3(0.3, 0.5, 0.3) },
+                            speed = 1.0,
+                        ),
+                        0,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.ENDERMAN_TELEPORT,
+                            { 1.0F },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        5,
+                    ),
+                    DelayedSoundData(
+                        RangeDefinedSoundData(
+                            SoundEvents.LAVA_EXTINGUISH,
+                            { 1.0F },
+                            { Random.nextDouble(0.9, 1.0).toFloat() },
+                            SoundSource.HOSTILE,
+                            range = 24.0,
+                        ),
+                        5,
+                    ),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.LAVA },
+                            offset = { Vec3.ZERO },
+                            count = 3,
+                            dist = { Vec3(0.1, 0.0, 0.1) },
+                            speed = 1.0,
+                        ),
+                        5,
+                    ),
+                    object : DelayedAttackData(6) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? ThalVeyraEntity)?.teleportEscape()
+                        }
+                    },
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.FLAME },
+                            offset = { Vec3.ZERO },
+                            count = 30,
+                            dist = { Vec3.ZERO },
+                            speed = 1.0,
+                        ),
+                        7,
+                    ),
+                    DelayedParticleData(
+                        ParticleData(
+                            particle = { _, _ -> ParticleTypes.LAVA },
+                            offset = { Vec3.ZERO },
+                            count = 5,
+                            dist = { Vec3(0.1, 0.0, 0.1) },
+                            speed = 1.0,
+                        ),
+                        7,
+                    ),
+                    DelayedSoundData(FIRECHARGE_SOUND, 11)
+                ),
+                blockMovementDuration = 7,
+            )
+
+        private val FIREBALL_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.throw_fireball_right")
+        private const val FIREBALL_RIGHT_ID = "Fireball Right"
+        private val FIREBALL_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, FIREBALL_RIGHT_ID)
+        private val FIREBALL_RIGHT_ATTACK =
+            Attack<ThalVeyraEntity>(
+                FIREBALL_RIGHT_ID,
+                FIREBALL_RIGHT_ANIM_DATA,
+                totalDuration = { mob -> 60 - (20 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = 0,
+                TriggerConditionGroup(
+                    TriggerConditionGroup.TriggerConditionJoinType.AND,
+                    listOf(
+                        DistanceTriggerCondition(MELEE_RANGE, 35.0, affectedByScale = true),
+                        StrafeTriggerCondition(maxRight = 0.0f),
+                    ),
+                ),
+                data = listOf(
+                    DelayedSoundData(FIRE_SOUND, 0),
+                    DelayedSoundData(FIRECHARGE_SOUND, 19),
+                    object : DelayedAttackData(19) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? ThalVeyraEntity)?.throwFireball(true)
+                        }
+                    },
+                ),
+                attackSpeed = { mob -> 1.0 + 0.5 * mob.getEmpowerPercentage() },
+            )
+
+        private val FIREBALL_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.throw_fireball_left")
+        private const val FIREBALL_LEFT_ID = "Fireball Left"
+        private val FIREBALL_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, FIREBALL_LEFT_ID)
+        private val FIREBALL_LEFT_ATTACK =
+            Attack<ThalVeyraEntity>(
+                FIREBALL_LEFT_ID,
+                FIREBALL_LEFT_ANIM_DATA,
+                totalDuration = { mob -> 60 - (20 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = 0,
+                TriggerConditionGroup(
+                    TriggerConditionGroup.TriggerConditionJoinType.AND,
+                    listOf(
+                        DistanceTriggerCondition(MELEE_RANGE, 35.0, affectedByScale = true),
+                        StrafeTriggerCondition(minRight = 0.0f),
+                    ),
+                ),
+                data = listOf(
+                    DelayedSoundData(FIRE_SOUND, 0),
+                    DelayedSoundData(FIRECHARGE_SOUND, 19),
+                    object : DelayedAttackData(19) {
+                        override fun apply(level: ServerLevel, entity: Mob, target: LivingEntity?) {
+                            (entity as? ThalVeyraEntity)?.throwFireball(false)
+                        }
+                    },
+                ),
+                attackSpeed = { mob -> 1.0 + 0.5 * mob.getEmpowerPercentage() },
+            )
+
+        private val PUNCH_RIGHT_AREA = BoxDamageArea(4.0, 0.75, 0.75, 0.0, 0.5, 1.5)
+        private val PUNCH_RIGHT_ATTACK_DAMAGE = AreaAttackDamage(0.8F, 4.0, PUNCH_RIGHT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, knockbackWhenBlocked = true)
+        private val PUNCH_RIGHT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.punch_right")
+        private const val PUNCH_RIGHT_ID = "Punch Right"
+        private val PUNCH_RIGHT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, PUNCH_RIGHT_ID)
+        private val PUNCH_RIGHT_ATTACK =
+            Attack<ThalVeyraEntity>(
+                PUNCH_RIGHT_ID,
+                PUNCH_RIGHT_ANIM_DATA,
+                totalDuration = { mob -> 40 - (15 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = 0,
+                DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
+                data = listOf(
+                    DelayedSoundData(FIRE_SOUND, 0),
+                    DelayedSoundData(FIRECHARGE_SOUND, 14),
+                    DelayedDamageData(PUNCH_RIGHT_ATTACK_DAMAGE, 14),
+                ),
+                attackSpeed = { mob -> 1.0 + 0.4 * mob.getEmpowerPercentage() },
+            )
+
+        private val PUNCH_LEFT_AREA = BoxDamageArea(4.0, 0.5, 0.5, 0.0, -0.5, 1.5)
+        private val PUNCH_LEFT_ATTACK_DAMAGE = AreaAttackDamage(0.8F, 4.0, PUNCH_LEFT_AREA, knockbackType = AreaAttackDamage.KnockbackType.FACING, knockbackWhenBlocked = true)
+        private val PUNCH_LEFT_ANIM: RawAnimation = RawAnimation.begin().thenPlay("attack.punch_left")
+        private const val PUNCH_LEFT_ID = "Punch Left"
+        private val PUNCH_LEFT_ANIM_DATA = AttackAnimationData(AttackPose.DEFAULT, AttackPose.DEFAULT, ATTACK_ANIM_CONTROLLER_ID, PUNCH_LEFT_ID)
+        private val PUNCH_LEFT_ATTACK =
+            Attack<ThalVeyraEntity>(
+                PUNCH_LEFT_ID,
+                PUNCH_LEFT_ANIM_DATA,
+                totalDuration = { mob -> 40 - (15 * mob.getEmpowerPercentage()).toInt() },
+                cooldown = 0,
+                DistanceTriggerCondition(MELEE_RANGE, affectedByScale = true),
+                data = listOf(
+                    DelayedSoundData(FIRE_SOUND, 0),
+                    DelayedSoundData(FIRECHARGE_SOUND, 14),
+                    DelayedDamageData(PUNCH_LEFT_ATTACK_DAMAGE, 14),
+                ),
+                attackSpeed = { mob -> 1.0 + 0.4 * mob.getEmpowerPercentage() },
+            )
+
+        private val ATTACKS: List<RandomOption<out Attack<ThalVeyraEntity>>> = listOf(
+            RandomOption(2, MAGMA_SPIKES_LINE_LEFT_ATTACK),
+            RandomOption(2, MAGMA_SPIKES_LINE_RIGHT_ATTACK),
+            RandomOption(2, MAGMA_SPIKES_SLAM_ATTACK),
+            RandomOption(3, TELEPORT_ATTACK),
+            RandomOption(3, FIREBALL_RIGHT_ATTACK),
+            RandomOption(3, FIREBALL_LEFT_ATTACK),
+            RandomOption(3, PUNCH_RIGHT_ATTACK),
+            RandomOption(3, PUNCH_LEFT_ATTACK),
+        )
+
+        fun createAttributes(): AttributeSupplier.Builder {
+            return createLivingAttributes()
+                .add(Attributes.FOLLOW_RANGE, 96.0)
+                .add(Attributes.MOVEMENT_SPEED, 0.4)
+                .add(Attributes.ATTACK_DAMAGE, 3.0)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.5)
+                .add(Attributes.ARMOR, 0.0)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)
+                .add(Attributes.MOVEMENT_EFFICIENCY, 0.85)
+                .add(Attributes.SAFE_FALL_DISTANCE, 10.0)
+                .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.1)
+                .add(Attributes.WATER_MOVEMENT_EFFICIENCY, 0.65)
+        }
+
+        private val EMPOWER_TICKS: EntityDataAccessor<Int> = SynchedEntityData.defineId(ThalVeyraEntity::class.java, EntityDataSerializers.INT)
+
+        private val ATTACK_ANIMATION_SPEED: EntityDataAccessor<Float> = SynchedEntityData.defineId(ThalVeyraEntity::class.java, EntityDataSerializers.FLOAT)
+
+        private val STRAFE_RIGHT: EntityDataAccessor<Float> = SynchedEntityData.defineId(ThalVeyraEntity::class.java, EntityDataSerializers.FLOAT)
+        private val STRAFE_FORWARDS: EntityDataAccessor<Float> = SynchedEntityData.defineId(ThalVeyraEntity::class.java, EntityDataSerializers.FLOAT)
+
+        private const val LEAN_CHANGE = 0.1F
+    }
+
+    override var partnerReference: EntityReference<LivingEntity>? = null
+    var foundPartner = false
+
+    override var blockAbleMovementEntity = this
+    override var blockedMovementTicks = 0
+    override var blockedMovementAirborne = false
+
+    override var attackPose = AttackPose.DEFAULT
+    override var attackDuration = 0
+    override val attacks = ATTACKS
+    override val attackCooldowns: MutableMap<Attack<ThalVeyraEntity>, Int> = mutableMapOf()
+    override val attackDataInstances = mutableListOf<DelayedAttackDataInstance>()
+
+    private val bossEvent: ServerBossEvent =
+        ServerBossEvent(
+            Mth.createInsecureUUID(random),
+            displayName.copy()
+                .withStyle(ChatFormatting.DARK_RED)
+                .withStyle(ChatFormatting.BOLD),
+            BossEvent.BossBarColor.RED,
+            BossEvent.BossBarOverlay.PROGRESS,
+        )
+
+    var leanRight = 0F
+    var lastLeanRight = 0F
+    var leanForwards = 0F
+    var lastLeanForwards = 0F
+
+    private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
+    override fun getAnimatableInstanceCache() = cache
+
+    override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        super.defineSynchedData(builder)
+        builder.define(STRAFE_RIGHT, 0F)
+        builder.define(STRAFE_FORWARDS, 0F)
+        builder.define(EMPOWER_TICKS, 0)
+        builder.define(ATTACK_ANIMATION_SPEED, 1F)
+    }
+
+    override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
+        super.onSyncedDataUpdated(accessor)
+
+        if (accessor == EMPOWER_TICKS) refreshDimensions()
+
+        if (!level().isClientSide) return
+        if (accessor == ATTACK_ANIMATION_SPEED) attackAnimationController.animationSpeed = entityData.get(ATTACK_ANIMATION_SPEED).toDouble()
+    }
+
+    private val attackAnimationController =
+        AnimationController<GeoAnimatable>(ATTACK_ANIM_CONTROLLER_ID, 0) { _ -> PlayState.STOP }
+            .triggerableAnim(MAGMA_SPIKES_LINE_LEFT_ID, MAGMA_SPIKES_LINE_LEFT_ANIM)
+            .triggerableAnim(MAGMA_SPIKES_LINE_RIGHT_ID, MAGMA_SPIKES_LINE_RIGHT_ANIM)
+            .triggerableAnim(MAGMA_SPIKES_SLAM_ID, MAGMA_SPIKES_SLAM_ANIM)
+            .triggerableAnim(FIREBALL_RIGHT_ID, FIREBALL_RIGHT_ANIM)
+            .triggerableAnim(FIREBALL_LEFT_ID, FIREBALL_LEFT_ANIM)
+            .triggerableAnim(PUNCH_RIGHT_ID, PUNCH_RIGHT_ANIM)
+            .triggerableAnim(PUNCH_LEFT_ID, PUNCH_LEFT_ANIM)
+            .setParticleKeyframeHandler { event ->
+                if (!level().isClientSide) return@setParticleKeyframeHandler
+
+                val keyFrameData = event.keyframeData
+                when (keyFrameData.effect) {
+                    "create_flame" -> {
+                        val pos = GeoEntityLocatorService.getLocatorPos(uuid, keyFrameData.locatorName) ?: return@setParticleKeyframeHandler
+                        createFlameParticles(pos, 1, ParticleTypes.FLAME)
+                        createFlameParticles(pos, 1, ParticleTypes.SMOKE)
+                    }
+
+                    "flame_punch" -> {
+                        val pos = GeoEntityLocatorService.getLocatorPos(uuid, keyFrameData.locatorName) ?: return@setParticleKeyframeHandler
+                        createFlameParticles(pos, 10, ParticleTypes.FLAME)
+                        createFlameParticles(pos, 10, ParticleTypes.SMOKE)
+                        createFlameParticles(pos, 1, ParticleTypes.EXPLOSION)
+                    }
+                }
+            }
+
+    override fun registerControllers(controllers: AnimatableManager.ControllerRegistrar) {
+        controllers.add(
+            AnimationController<ThalVeyraEntity>("Walk/Idle", 5)
+            { test ->
+                if (test.animatable.isDeadOrDying) {
+                    test.setAndContinue(DEATH_ANIM)
+                } else {
+                    test.setAndContinue(DefaultAnimations.IDLE)
+                }
+            },
+
+            attackAnimationController,
+
+            AnimationController<ThalVeyraEntity>("Lean", 5)
+            { test -> if (test.isMoving) test.setAndContinue(LEAN_ANIM) else PlayState.STOP }
+                .additiveAnimations(),
+        )
+    }
+
+    private val attackGoal = CustomAttacksGoal(this)
+    private val keepDistanceToTargetGoal = KeepDistanceToTargetGoal(this, 1.0, 12F, 20F)
+    private val wanderGoal = DisableAbleWanderAroundFarGoal(this, 0.7)
+    private val lookAtPlayerGoal = DisableAbleLookAtEntityGoal(this, Player::class.java, 8F)
+    private val lookAroundGoal = DisableAbleLookAroundGoal(this)
+
+    init {
+        initDynamicGoals()
+
+        setPathfindingMalus(PathType.FIRE, 0F)
+        setPathfindingMalus(PathType.FIRE_IN_NEIGHBOR, 0F)
+        setPathfindingMalus(PathType.DAMAGING, 0F)
+        setPathfindingMalus(PathType.DAMAGE_CAUTIOUS, 0F)
+        setPathfindingMalus(PathType.LAVA, 0F)
+    }
+
+    private fun initDynamicGoals() {
+        goalSelector.addGoal(2, attackGoal)
+        goalSelector.addGoal(3, keepDistanceToTargetGoal)
+        goalSelector.addGoal(5, wanderGoal)
+        goalSelector.addGoal(6, lookAtPlayerGoal)
+        goalSelector.addGoal(7, lookAroundGoal)
+    }
+
+    override fun registerGoals() {
+        goalSelector.addGoal(1, ChangeTargetGoal(this, probability = 0.4, tryIntervalTicks = 20, 100, { e -> e is Player || e is Villager }))
+        goalSelector.addGoal(4, FloatGoal(this))
+
+        targetSelector.addGoal(0, HurtByTargetGoal(this))
+        targetSelector.addGoal(1, NearestAttackableTargetGoal(this, Player::class.java, false))
+    }
+
+    override fun updateGoals() {
+        val movementBlocked = isMovementBlocked()
+        attackGoal.isDisabled = movementBlocked
+        keepDistanceToTargetGoal.isDisabled = movementBlocked
+        wanderGoal.isDisabled = movementBlocked
+        lookAtPlayerGoal.isDisabled = movementBlocked
+        lookAroundGoal.isDisabled = movementBlocked
+    }
+
+    override fun tick() {
+        super.tick()
+
+        val level = level()
+        if (level !is ServerLevel) {
+            tickLean()
+            return
+        }
+
+        bossEvent.progress = health / maxHealth
+
+        if (isDeadOrDying) return
+        tickBlockedMovement()
+        tickAttacks(level, this)
+        tickStrafe()
+        floatLiquid()
+        tickPartner()
+        tickEmpower()
+    }
+
+    private fun tickEmpower() {
+        if (isFullyEmpowered()) return
+
+        val partner = getPartner() ?: return
+        if (!partner.isDeadOrDying) return
+
+        increaseEmpowerTicks()
+
+        DemonkinUtil.createEmpowerParticles(this)
+        if (tickCount % 10 == 0) DemonkinUtil.playEmpowerSounds(this)
+    }
+
+    private fun getEmpowerTicks() = entityData.get(EMPOWER_TICKS)
+
+    private fun setEmpowerTicks(ticks: Int) = entityData.set(EMPOWER_TICKS, ticks)
+
+    private fun increaseEmpowerTicks() = entityData.set(EMPOWER_TICKS, getEmpowerTicks() + 1)
+
+    fun isFullyEmpowered() = getEmpowerTicks() >= MAX_EMPOWER_TICKS
+
+    private fun getEmpowerPercentage() = getEmpowerTicks() / MAX_EMPOWER_TICKS.toFloat()
+
+    private fun tickPartner() {
+        if (foundPartner) return
+        if (tickCount % 20 != 0) return
+        findPartner(this, 100.0, TharZulEntity::class.java)
+    }
+
+    private fun floatLiquid() {
+        if (!(isInLava || isInWater)) return
+
+        val context = CollisionContext.of(this)
+        if (context.isAbove(liquidCollisionShape, blockPosition(), true)) {
+            val aboveFluidState = level().getFluidState(blockPosition().above())
+            if (!aboveFluidState.`is`(FluidTags.LAVA) && !aboveFluidState.`is`(FluidTags.WATER)) {
+                setOnGround(true)
+                return
+            }
+        }
+
+        deltaMovement = deltaMovement.scale(0.5).add(0.0, 0.05, 0.0)
+    }
+
+    override fun getLiquidCollisionShape(): VoxelShape = Block.column(16.0, 0.0, 16.0)
+
+    private fun tickStrafe() {
+        entityData.set(STRAFE_RIGHT, moveControl.getStrafeRight())
+        entityData.set(STRAFE_FORWARDS, moveControl.getStrafeForwards())
+    }
+
+    private fun tickLean() {
+        lastLeanRight = leanRight
+        val strafeRight = entityData.get(STRAFE_RIGHT)
+        leanRight = getNewLean(strafeRight, leanRight)
+
+        lastLeanForwards = leanForwards
+        val strafeForwards = entityData.get(STRAFE_FORWARDS)
+        leanForwards = getNewLean(strafeForwards, leanForwards)
+    }
+
+    private fun getNewLean(
+        strafe: Float,
+        currentLean: Float,
+    ) = when {
+        strafe < 0 -> (currentLean + LEAN_CHANGE).coerceAtMost(1F)
+        strafe > 0 -> (currentLean - LEAN_CHANGE).coerceAtLeast(-1F)
+        else -> when {
+            currentLean > 0F -> (currentLean - LEAN_CHANGE).coerceAtLeast(0F)
+            currentLean < 0F -> (currentLean + LEAN_CHANGE).coerceAtMost(0F)
+            else -> 0F
+        }
+    }
+
+    fun getLeanRight(tickProgress: Float) = Mth.lerp(tickProgress, lastLeanRight, leanRight)
+    fun getLeanForwards(tickProgress: Float) = Mth.lerp(tickProgress, lastLeanForwards, leanForwards)
+
+    override fun getHurtSound(source: DamageSource): SoundEvent = SoundEvents.WITHER_HURT
+
+    override fun getDeathSound(): SoundEvent = SoundEvents.PLAYER_DEATH
+
+    override fun canStandOnFluid(fluid: FluidState) = fluid.`is`(FluidTags.LAVA) || fluid.`is`(FluidTags.WATER)
+
+    fun teleportEscape(): Boolean {
+        val level = level() as? ServerLevel ?: return false
+
+        repeat(TELEPORT_ATTEMPTS) {
+            val pos = LandRandomPos.getPos(this, TELEPORT_HORIZONTAL_RANGE, TELEPORT_VERTICAL_RANGE) ?: return@repeat
+
+            val players = level.players()
+            if (players.any { !it.isSpectator && it.distanceToSqr(pos) < TELEPORT_MIN_PLAYER_DISTANCE_SQUARED }) return@repeat
+
+            val path = navigation.createPath(BlockPos.containing(pos), 0) ?: return@repeat
+            if (!path.canReach()) return@repeat
+            val pathEnd = path.endNode ?: return@repeat
+
+            val pathEndPos = Vec3(pathEnd.x + 0.5, pathEnd.y.toDouble(), pathEnd.z + 0.5)
+            val entityBox = boundingBox.move(
+                pathEndPos.x - this.x,
+                pathEndPos.y - this.y,
+                pathEndPos.z + 0.5 - this.z
+            )
+            if (!level().noCollision(this, entityBox)) return@repeat
+
+            teleportTo(pathEndPos.x, pathEndPos.y, pathEndPos.z)
+            navigation.stop()
+
+            target?.also { lookAt(it, 360F, 360F) }
+
+            return true
+        }
+
+        return false
+    }
+
+    fun throwFireball(right: Boolean) {
+        val serverLevel = level() as? ServerLevel ?: return
+        val existingTarget = target ?: return
+        SpellFireballUtil.shoot(
+            this,
+            existingTarget,
+            getFireballStartPos(right),
+            { distance -> max(1, (distance * 3).pow(0.8).toInt()) },
+            serverLevel,
+            scale = 2F,
+        )
+    }
+
+    private fun getFireballStartPos(right: Boolean): Vec3 {
+        val rotRad = yBodyRot * (Math.PI / 180.0)
+        return position().add(
+            Vec3(
+                (if (right) -1.0 else 1.0) * cos(rotRad) - sin(rotRad),
+                3.5,
+                (if (right) -1.0 else 1.0) * sin(rotRad) + cos(rotRad),
+            ).scale(scale.toDouble())
+        )
+    }
+
+    private fun createFlameParticles(
+        pos: Vec3,
+        count: Int,
+        type: SimpleParticleType,
+    ) {
+        repeat(count) {
+            level().addParticle(
+                type,
+                pos.x + Random.nextDouble(-0.1, 0.1) * scale,
+                pos.y + Random.nextDouble(-0.1, 0.1) * scale,
+                pos.z + Random.nextDouble(-0.1, 0.1) * scale,
+                Random.nextDouble(-0.1, 0.1) * scale,
+                Random.nextDouble(-0.1, 0.1) * scale,
+                Random.nextDouble(-0.1, 0.1) * scale,
+            )
+        }
+    }
+
+    override fun getLevel() = level()
+
+    override fun tickDeath() {
+        if (++deathTime <= 20) return
+        if (level().isClientSide) return
+        if (isRemoved) return
+
+        val partner = getPartner()
+        if (partner?.isAlive == true && (partner as? TharZulEntity)?.isFullyEmpowered() != true) return
+
+        level().broadcastEntityEvent(this, 60.toByte())
+        remove(RemovalReason.KILLED)
+    }
+
+    override fun handleKillingBlow() {
+        super.handleKillingBlow()
+        attackAnimationController.stopTriggeredAnimation()
+    }
+
+    override fun sanitizeScale(scale: Float): Float {
+        return super.sanitizeScale(scale) * (1F + EMPOWER_SCALE * getEmpowerPercentage())
+    }
+
+    override fun setAttackAnimationSpeed(attackSpeed: Float) {
+        entityData.set(ATTACK_ANIMATION_SPEED, attackSpeed)
+    }
+
+    override fun setNoAi(flag: Boolean) {
+        super.setNoAi(flag)
+        bossEvent.isVisible = !flag
+    }
+
+    override fun startSeenByPlayer(player: ServerPlayer) {
+        super.startSeenByPlayer(player)
+        bossEvent.addPlayer(player)
+
+        val payload = BossEventTypePayload(bossEvent.id, BossEventType.THAR_ZUL)
+        ServerPlayNetworking.send(player, payload)
+    }
+
+    override fun stopSeenByPlayer(player: ServerPlayer) {
+        super.stopSeenByPlayer(player)
+        bossEvent.removePlayer(player)
+    }
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+
+        output.putInt("empower_ticks", getEmpowerTicks())
+
+        EntityReference.store(partnerReference, output, "partner")
+        output.putBoolean("found_partner", foundPartner)
+
+        addAttackCooldownsSaveData(output)
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+
+        setEmpowerTicks(input.getIntOr("empower_ticks", 0))
+
+        partnerReference = EntityReference.readWithOldOwnerConversion(input, "partner", level())
+        foundPartner = input.getBooleanOr("found_partner", false)
+
+        readAttackCooldownsSaveData(input)
+    }
+}

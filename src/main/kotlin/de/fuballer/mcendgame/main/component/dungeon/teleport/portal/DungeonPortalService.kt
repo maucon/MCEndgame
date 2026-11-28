@@ -8,16 +8,15 @@ import de.fuballer.mcendgame.main.component.portal.teleport.TeleportLocation
 import de.fuballer.mcendgame.main.component.portal.type.DefaultPortalType
 import de.fuballer.mcendgame.main.component.portal.type.PortalType
 import de.fuballer.mcendgame.main.configuration.RuntimeConfig
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonBossDeathEvent
-import de.fuballer.mcendgame.main.messaging.dungeon.DungeonGeneratedEvent
-import de.fuballer.mcendgame.main.messaging.dungeon.OpenDungeonButtonPressedEvent
-import de.fuballer.mcendgame.main.messaging.dungeon.OpenTrainingDungeonButtonPressedEvent
+import de.fuballer.mcendgame.main.messaging.dungeon.*
 import de.fuballer.mcendgame.main.messaging.portal.PortalUsedEvent
 import de.fuballer.mcendgame.main.messaging.portal.ResolvePortalTeleportLocationCommand
 import de.fuballer.mcendgame.main.util.extension.BlockPosExtension.toVec3d
 import de.fuballer.mcendgame.main.util.extension.Vec3iExtension.toCenter
 import de.fuballer.mcendgame.main.util.extension.WorldExtension.isDungeonWorld
 import de.fuballer.mcendgame.main.util.extension.mixin.EntityMixinExtension.getDungeonBossSpawnPosition
+import de.fuballer.mcendgame.main.util.extension.mixin.WorldMixinExtension.getDungeonAspects
+import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.command.CommandHandler
 import de.maucon.mauconframework.di.annotation.Injectable
 import de.maucon.mauconframework.event.EventSubscriber
@@ -76,7 +75,10 @@ class DungeonPortalService(
         if (event.isClient) return
 
         val world = event.world as ServerLevel
-        if (!event.world.isDungeonWorld()) return
+        if (!world.isDungeonWorld()) return
+
+        val command = DungeonBossSpawnPortalCommand(world.getDungeonAspects())
+        if (!CommandGateway.apply(command).shouldCreatePortal) return
 
         val spawnPosition = event.bossEntity.getDungeonBossSpawnPosition()
         val dungeonPortalEntity = dungeonPortalRepo.findByDungeonWorld(world) ?: return

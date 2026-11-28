@@ -38,6 +38,8 @@ object CustomStats {
     val SYNTHESIZED_FOCUS_CRYSTAL_USED = CustomStatsRegistry.register("synthesized_focus_crystal_used", StatFormatter.DEFAULT)
     val SYNTHESIZED_COMMAND_CRYSTAL_USED = CustomStatsRegistry.register("synthesized_command_crystal_used", StatFormatter.DEFAULT)
 
+    val DEMONIC_CRUCIBLE_USED = CustomStatsRegistry.register("demonic_crucible_used", StatFormatter.DEFAULT)
+
     // Scarred One
     val SCARRED_ONE_ACCEPTED = CustomStatsRegistry.register("scarred_one_accepted", StatFormatter.DEFAULT)
     val SCARRED_ONE_DECLINED = CustomStatsRegistry.register("scarred_one_declined", StatFormatter.DEFAULT)

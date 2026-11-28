@@ -5,4 +5,6 @@ import net.minecraft.client.renderer.entity.state.ArrowRenderState
 
 class SpellFireballRenderState : ArrowRenderState() {
     override fun getDataMap(): Map<DataTicket<*>, Any> = mapOf()
+
+    var scale: Float = 1.0F
 }

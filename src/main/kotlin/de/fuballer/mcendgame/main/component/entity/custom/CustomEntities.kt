@@ -7,8 +7,11 @@ import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.B
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_vine.BeastweaverVineEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.beastweaver.beastweaver_wolf.BeastweaverWolfEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.block_debris.BlockDebrisEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thar_zul.TharZulEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.demonkin.thal_veyra.ThalVeyraEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.bonecrusher.BonecrusherEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.elf_duelist.ElfDuelistEntity
+import de.fuballer.mcendgame.main.component.entity.custom.entities.magma_spike.MagmaSpikeEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.scarred_one.ScarredOneEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.skeleton_mage.SkeletonMageEntity
 import de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireball.SpellFireballEntity
@@ -161,5 +164,32 @@ object CustomEntities {
             .eyeHeight(1.62F)
             .vehicleAttachment(Avatar.DEFAULT_VEHICLE_ATTACHMENT)
             .clientTrackingRange(16)
+    )
+    val THAR_ZUL = RegistryUtil.registerEntity(
+        CustomEntityIds.THAR_ZUL,
+        EntityType.Builder.of(::TharZulEntity, MobCategory.MONSTER)
+            .sized(0.9f, 2.55f)
+            .eyeHeight(2.25f)
+            .clientTrackingRange(16)
+            .notInPeaceful()
+            .fireImmune()
+    )
+    val THAL_VEYRA = RegistryUtil.registerEntity(
+        CustomEntityIds.THAL_VEYRA,
+        EntityType.Builder.of(::ThalVeyraEntity, MobCategory.MONSTER)
+            .sized(0.9f, 2.5f)
+            .eyeHeight(2.2f)
+            .clientTrackingRange(16)
+            .notInPeaceful()
+            .fireImmune()
+    )
+    val MAGMA_SPIKE = RegistryUtil.registerEntity(
+        CustomEntityIds.MAGMA_SPIKE,
+        EntityType.Builder.of(::MagmaSpikeEntity, MobCategory.MISC)
+            .noLootTable()
+            .sized(MagmaSpikeEntity.WIDTH, MagmaSpikeEntity.HEIGHT)
+            .clientTrackingRange(6)
+            .updateInterval(2)
+            .dontTrackDeltas()
     )
 }

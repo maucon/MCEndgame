@@ -53,6 +53,12 @@ enum class Sword(
     RADIANT_DAWN(
         CustomToolItems.RADIANT_DAWN,
     ),
+    SEETHING_MALICE(
+        CustomToolItems.SEETHING_MALICE,
+    ),
+    SCORCHING_HUNGER(
+        CustomToolItems.SCORCHING_HUNGER,
+    ),
     CLAWS_OF_THE_BEAR(
         CustomToolItems.CLAWS_OF_THE_BEAR,
     );

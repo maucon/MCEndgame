@@ -2,6 +2,8 @@ package de.fuballer.mcendgame.main.component.entity.custom.entities.spell_fireba
 
 import de.fuballer.mcendgame.main.component.damage.dealing.DamageDealing.dealSpellDamage
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
@@ -9,10 +11,13 @@ import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.ProjectileUtil
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.BaseFireBlock
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 
@@ -27,6 +32,17 @@ class SpellFireballEntity(
         const val GRAVITY = 0.07
         private const val PARTICLE_COOLDOWN = 1
         private const val TARGET_FIRE_TICKS = 70
+
+        val DATA_SCALE: EntityDataAccessor<Float> = SynchedEntityData.defineId(SpellFireballEntity::class.java, EntityDataSerializers.FLOAT)
+    }
+
+    protected override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        builder.define(DATA_SCALE, 1f)
+    }
+
+    override fun onSyncedDataUpdated(accessor: EntityDataAccessor<*>) {
+        super.onSyncedDataUpdated(accessor)
+        if (accessor == DATA_SCALE) refreshDimensions()
     }
 
     override fun tick() {
@@ -103,8 +119,6 @@ class SpellFireballEntity(
         }
     }
 
-    override fun defineSynchedData(entityData: SynchedEntityData.Builder) {}
-
     override fun getDefaultGravity() = GRAVITY
 
     private fun extinguish(level: ServerLevel) {
@@ -113,4 +127,19 @@ class SpellFireballEntity(
 
         discard()
     }
+
+    override fun getDimensions(pose: Pose) = super.getDimensions(pose).scale(getScale())
+
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.putFloat("Scale", getScale())
+    }
+
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        setScale(input.getFloatOr("Scale", 1.0f))
+    }
+
+    fun getScale() = entityData.get(DATA_SCALE)
+    fun setScale(scale: Float) = entityData.set(DATA_SCALE, scale)
 }

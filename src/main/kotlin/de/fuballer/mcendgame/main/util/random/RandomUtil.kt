@@ -170,6 +170,25 @@ object RandomUtil {
     }
 
     /**
+     * Converts a probability (or expected count) into an integer number of rolls.
+     *
+     * The integer part of [probability] is always granted. The fractional part is
+     * treated as the chance to grant one additional roll.
+     *
+     * Example: `2.3` yields 2 rolls, plus 1 more with a 30% chance.
+     *
+     * @param probability Expected number of rolls; must be non-negative.
+     * @param random Random generator.
+     * @return The guaranteed rolls plus the bonus roll, if it succeeded.
+     */
+    fun rollCount(
+        probability: Double,
+        random: Random = Random,
+    ): Int {
+        return probability.toInt() + if (random.nextDouble() < probability % 1) 1 else 0
+    }
+
+    /**
      * Internal helper that selects an option given a roll value.
      *
      * @throws IllegalStateException if no option can be matched.

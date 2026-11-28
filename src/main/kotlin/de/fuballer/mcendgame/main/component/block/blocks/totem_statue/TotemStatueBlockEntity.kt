@@ -192,7 +192,7 @@ class TotemStatueBlockEntity(
     override fun loadAdditional(view: ValueInput) {
         super.loadAdditional(view)
 
-        val data = view.read<TotemStatueBlockEntityData>(DATA_KEY, TotemStatueBlockEntityData.CODEC)
+        val data = view.read(DATA_KEY, TotemStatueBlockEntityData.CODEC)
             .orElseGet { TotemStatueBlockEntityData() }
         activeTicks = data.activeTicks
         activeEnemies = data.activeEnemies
