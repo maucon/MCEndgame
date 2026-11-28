@@ -10,7 +10,7 @@ import java.util.*
 object GeoEntityLocatorService {
     private val GEO_ENTITY_LOCATORS = mutableMapOf<UUID, EntityLocators>()
 
-    @EventSubscriber
+    @EventSubscriber(sync = true)
     fun on(event: ServerEndTickEvent) {
         val server = event.server
         if (server.tickCount % 20 != 9) return // % 20 = 9 so multiple things like this are spread across different ticks

@@ -882,6 +882,8 @@ class TharZulEntity(
 
         EntityReference.store(partnerReference, output, "partner")
         output.putBoolean("found_partner", foundPartner)
+
+        addAttackCooldownsSaveData(output)
     }
 
     override fun readAdditionalSaveData(input: ValueInput) {
@@ -891,5 +893,7 @@ class TharZulEntity(
 
         partnerReference = EntityReference.readWithOldOwnerConversion(input, "partner", level())
         foundPartner = input.getBooleanOr("found_partner", false)
+
+        readAttackCooldownsSaveData(input)
     }
 }
