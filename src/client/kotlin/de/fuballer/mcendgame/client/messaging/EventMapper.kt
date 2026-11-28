@@ -1,8 +1,11 @@
 package de.fuballer.mcendgame.client.messaging
 
+import de.fuballer.mcendgame.client.messaging.events.ClientEndTickEvent
 import de.maucon.mauconframework.command.CommandGateway
 import de.maucon.mauconframework.di.annotation.Injectable
+import de.maucon.mauconframework.event.EventGateway
 import de.maucon.mauconframework.initializer.Initializer
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents
@@ -12,7 +15,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 
 @Injectable
-object CommandMapper {
+object EventMapper {
     @Initializer
     fun onItemTooltip() = ItemTooltipCallback.EVENT.register { itemStack: ItemStack, context: Item.TooltipContext, tooltipType: TooltipFlag, texts: MutableList<Component> ->
         val cmd = RenderItemTooltipCommand(itemStack, context, tooltipType, texts)
@@ -29,5 +32,11 @@ object CommandMapper {
     fun collectRenderSubmits() = LevelRenderEvents.COLLECT_SUBMITS.register { context ->
         val cmd = CollectRenderSubmitsCommand(context)
         CommandGateway.apply(cmd)
+    }
+
+    @Initializer
+    fun onClientEndTick() = ClientTickEvents.END_CLIENT_TICK.register {
+        val event = ClientEndTickEvent(it)
+        EventGateway.publish(event)
     }
 }

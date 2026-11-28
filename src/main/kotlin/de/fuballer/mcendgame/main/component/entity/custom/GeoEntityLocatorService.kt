@@ -1,8 +1,6 @@
 package de.fuballer.mcendgame.main.component.entity.custom
 
-import de.fuballer.mcendgame.main.messaging.server.ServerEndTickEvent
 import de.maucon.mauconframework.di.annotation.Injectable
-import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.world.phys.Vec3
 import java.util.*
 
@@ -10,16 +8,13 @@ import java.util.*
 object GeoEntityLocatorService {
     private val GEO_ENTITY_LOCATORS = mutableMapOf<UUID, EntityLocators>()
 
-    @EventSubscriber(sync = true)
-    fun on(event: ServerEndTickEvent) {
-        val server = event.server
-        if (server.tickCount % 20 != 9) return // % 20 = 9 so multiple things like this are spread across different ticks
+    fun keepOnlyExisting(existing: Set<UUID>) {
+        if (existing.isEmpty()) {
+            GEO_ENTITY_LOCATORS.clear()
+            return
+        }
 
-        val existingEntityUuids = server.allLevels
-            .flatMap { world -> world.allEntities }
-            .mapTo(mutableSetOf()) { entity -> entity.uuid }
-
-        GEO_ENTITY_LOCATORS.keys.removeIf { it !in existingEntityUuids }
+        GEO_ENTITY_LOCATORS.keys.removeIf { !existing.contains(it) }
     }
 
     fun addLocatorPos(uuid: UUID, name: String, pos: Vec3?) {
