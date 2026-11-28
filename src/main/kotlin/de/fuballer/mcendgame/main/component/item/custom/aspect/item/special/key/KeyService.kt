@@ -21,7 +21,7 @@ object KeyService {
     @CommandHandler
     fun onIncreaseProgress(cmd: DungeonPlayerIncreaseProgressCommand) {
         cmd.aspects.keys.forEach { aspect ->
-            val key = aspect as? KeyItem ?: return@forEach
+            if (aspect !is KeyItem) return@forEach
             cmd.progressBlocked = true
             return
         }
@@ -30,7 +30,7 @@ object KeyService {
     @CommandHandler
     fun onDecreaseProgress(cmd: DungeonPlayerDecreaseProgressCommand) {
         cmd.aspects.keys.forEach { aspect ->
-            val key = aspect as? KeyItem ?: return@forEach
+            if (aspect !is KeyItem) return@forEach
             cmd.decreaseBlocked = true
             return
         }
@@ -39,7 +39,7 @@ object KeyService {
     @CommandHandler
     fun onGenerateDungeonEnemies(cmd: DungeonGenerateEnemiesCommand) {
         cmd.aspects.keys.forEach { aspect ->
-            val key = aspect as? KeyItem ?: return@forEach
+            if (aspect !is KeyItem) return@forEach
             cmd.specialEnemiesDisabled = true
             return
         }

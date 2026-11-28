@@ -15,7 +15,6 @@ import de.maucon.mauconframework.event.EventSubscriber
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.item.ItemStack
 import kotlin.random.Random
 
 @Injectable
@@ -64,7 +63,7 @@ object ScorchedSigilService {
         val probability = serverLevel.getDungeonLevel() / 10.0 * event.bossEntity.getTotalCustomAttributeLootMultiplier()
         val count = probability.toInt() + if (Random.nextDouble() < probability % 1) 1 else 0
 
-        val stack = ItemStack(AspectItems.DEMONIC_KEY, count)
+        val stack = AspectItems.DEMONIC_KEY.defaultInstance.copyWithCount(count)
         event.bossEntity.spawnAtLocation(serverLevel, stack)
     }
 }
