@@ -24,6 +24,8 @@ class BossGenerationService {
         applyMisc: (List<LivingEntity>) -> Unit,
         locations: List<SpawnPosition>,
     ) {
+        if (types.isEmpty()) return
+
         val random = Random
         val shuffledTypes = types.shuffled(random)
         val bosses = locations.mapIndexed { index, pos ->

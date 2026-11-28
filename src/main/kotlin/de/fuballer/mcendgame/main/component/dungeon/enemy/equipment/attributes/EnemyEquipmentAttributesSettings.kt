@@ -6,7 +6,7 @@ import kotlin.random.Random
 
 object EnemyEquipmentAttributesSettings {
     fun getAttributeCount(level: Int, random: Random): Int {
-        val rolls = 1 + level / 2 + if (random.nextDouble() < (level / 2.0) % 1) 1 else 0
+        val rolls = 1 + RandomUtil.rollCount(level / 2.0, random)
         return RandomUtil.pickLevelRestricted(ATTRIBUTE_COUNT, rolls, level, random)
     }
 
@@ -19,5 +19,5 @@ object EnemyEquipmentAttributesSettings {
         LevelRestrictedRandomOption(weight = 1, tier = 5, requiredLevel = 15, option = 5),
     )
 
-    fun getAttributeTierRolls(level: Int, random: Random) = 1 + level / 5 + if (random.nextDouble() < (level / 5.0) % 1) 1 else 0
+    fun getAttributeTierRolls(level: Int, random: Random) = 1 + RandomUtil.rollCount(level / 5.0, random)
 }

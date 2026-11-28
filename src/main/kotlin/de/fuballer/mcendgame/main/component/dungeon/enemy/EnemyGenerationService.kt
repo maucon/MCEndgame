@@ -41,6 +41,8 @@ class EnemyGenerationService(
         spawnPositions: List<SpawnPosition>,
         isEncounter: Boolean = false,
     ): List<LivingEntity> {
+        if (enemyTypes.isEmpty()) return emptyList()
+
         val random = Random
         val generateDungeonEnemiesCommand = DungeonGenerateEnemiesCommand.of(dungeonWorld, spawnPositions.toMutableList(), isEncounter)
         val cmd = CommandGateway.apply(generateDungeonEnemiesCommand)

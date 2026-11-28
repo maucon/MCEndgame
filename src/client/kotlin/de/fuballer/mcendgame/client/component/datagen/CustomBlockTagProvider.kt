@@ -108,7 +108,7 @@ class CustomBlockTagProvider(
         builder(CustomTags.NO_PHASING_SLOW_AND_FOG)
             .add(BlockItemIds.SCAFFOLDING)
 
-        builder(CustomTags.SCORCH_PALETTE)
+        builder(CustomTags.SCORCH_PALETTE) // must contain at least one: button, slab, stair, wall, fence and redstone conductor (full block)
             .add(BlockItemIds.MAGMA_BLOCK)
             .add(BlockItemIds.NETHERRACK)
             .add(BlockItemIds.BASALT)

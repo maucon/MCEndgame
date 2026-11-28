@@ -112,9 +112,9 @@ class AreaAttackDamage(
         val knockback = getKnockback(damager)
 
         val damagedTargets = mutableListOf<LivingEntity>()
+        val maxDistanceToCenter = area.getMaxDistanceToCenter(if (applyScale) scale else 1.0)
         targets.forEach {
             val distanceToCenter = it.position().distanceTo(slamCenter)
-            val maxDistanceToCenter = area.getMaxDistanceToCenter(if (applyScale) scale else 1.0)
             val scaledDamage = distanceDamageFactor((distanceToCenter / maxDistanceToCenter).toFloat(), damage)
 
             val dealtDamage = it.dealGenericAttackDamage(scaledDamage, damager, blockable)

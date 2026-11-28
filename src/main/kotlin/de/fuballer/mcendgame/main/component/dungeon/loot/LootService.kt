@@ -78,7 +78,7 @@ class LootService {
         val bossEntity = event.bossEntity
         val lootMultiplier = bossEntity.getTotalCustomAttributeLootMultiplier()
         val empoweredCrystalCount = baseCrystalCount * lootMultiplier
-        val finalCrystalCount = empoweredCrystalCount.toInt() + if (Random.nextDouble() < empoweredCrystalCount % 1) 1 else 0
+        val finalCrystalCount = RandomUtil.rollCount(empoweredCrystalCount)
 
         val crystalItems = RandomUtil.pickLevelRestrictedWithRepeats(LootSettings.CRYSTALS, 1, dungeonLevel, finalCrystalCount).toMutableList()
         val command = DungeonBossCrystalDropCommand(dungeonLevel, serverLevel.getDungeonAspects(), crystalItems, lootMultiplier, event.final)

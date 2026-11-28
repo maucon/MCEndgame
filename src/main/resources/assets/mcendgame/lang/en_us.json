@@ -451,14 +451,14 @@
 
   "text.mcendgame.dungeon.boss_killed": "Boss killed!",
   "text.mcendgame.dungeon.remaining_bosses_enhanced": " Remaining Bosses are enhanced.",
-  "text.mcendgame.dungeon.no_bosses_remaining": " No remainig Bosses.",
+  "text.mcendgame.dungeon.no_bosses_remaining": " No remaining Bosses.",
   "text.mcendgame.dungeon.thar_zul_killed": "Thar'Zul has been slain.",
   "text.mcendgame.dungeon.thal_veyra_killed": "Thal'Veyra has been slain.",
   "text.mcendgame.dungeon.thar_zul_empower": " Thar'Zul draws power from her fallen corpse!",
   "text.mcendgame.dungeon.thal_veyra_empower": " Thal'Veyra draws power from his fallen corpse!",
   "text.mcendgame.dungeon.demonkin_killed": " The demonkin have been vanquished.",
 
-  "text.mcendgame.attribute_absorbed": "Your item has absorbed the bosses power.",
+  "text.mcendgame.attribute_absorbed": "Your item has absorbed the boss's power.",
   "text.mcendgame.cannot_absorb_attribute": "Your item cannot absorb more power from this boss.",
 
   "text.mcendgame.dungeon.device.level": "Level: %s",
@@ -508,7 +508,7 @@
   "mcendgame.dungeon_type.stronghold": "Stronghold",
   "mcendgame.dungeon_type.nether": "Nether",
   "mcendgame.dungeon_type.desert": "Desert",
-  "mcendgame.dungeon_type.beastweavers_grove": "Beastweavers Grove",
+  "mcendgame.dungeon_type.beastweavers_grove": "Beastweaver's Grove",
   "mcendgame.dungeon_type.burning_cathedral": "Burning Cathedral",
   "mcendgame.dungeon_type.demonic_crucible": "Demonic Crucible",
   "mcendgame.dungeon_type.training": "Training"

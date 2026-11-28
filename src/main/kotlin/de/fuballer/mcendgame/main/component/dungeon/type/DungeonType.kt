@@ -31,7 +31,7 @@ enum class DungeonType(
     val applyMisc: (List<LivingEntity>) -> Unit = {},
     val translatable: Component,
     val bossActivationDistance: Double = 20.0,
-) { // Note: dungeon seed uses ordinal to save dungeon type
+) {
     STRONGHOLD(
         listOf(
             RandomOption(1, DungeonLayoutType.STRONGHOLD),

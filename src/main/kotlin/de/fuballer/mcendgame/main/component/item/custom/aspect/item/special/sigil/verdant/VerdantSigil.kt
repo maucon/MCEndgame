@@ -6,11 +6,11 @@ import de.fuballer.mcendgame.main.component.entity.custom.attack.data.sound.Rang
 import de.fuballer.mcendgame.main.component.item.custom.aspect.item.special.sigil.SigilItem
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItem
 import de.fuballer.mcendgame.main.component.item.custom.crystal.CrystalItems
+import de.fuballer.mcendgame.main.util.random.RandomUtil
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.phys.Vec3
-import kotlin.random.Random
 
 class VerdantSigil(
     settings: Properties,
@@ -32,7 +32,7 @@ class VerdantSigil(
         finalBoss: Boolean,
     ): List<CrystalItem> {
         val probability = level / 10.0 * lootMultiplier
-        val count = probability.toInt() + if (Random.nextDouble() < probability % 1) 1 else 0
+        val count  = RandomUtil.rollCount(probability)
         return List(count) { CrystalItems.IMITATION_CRYSTAL }
     }
 

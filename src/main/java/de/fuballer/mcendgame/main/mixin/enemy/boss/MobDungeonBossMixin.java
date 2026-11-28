@@ -53,9 +53,11 @@ public class MobDungeonBossMixin implements MobEntityDungeonBossAccessor {
     @Inject(method = "tick", at = @At("HEAD"))
     void tick(CallbackInfo ci) {
         if (!isDungeonBoss) return;
+
         var entity = (Mob) (Object) this;
         if (!entity.isNoAi()) return;
         if (!(entity.level() instanceof ServerLevel serverWorld)) return;
+        if (entity.tickCount % 10 != 7) return;
 
         var dungeonType = WorldMixinExtension.INSTANCE.getDungeonType(serverWorld);
         var activationDistance = dungeonType.getBossActivationDistance();

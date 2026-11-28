@@ -725,7 +725,7 @@ class TharZulEntity(
             return
         }
 
-        if (block is ButtonBlock) {
+        if (block is ButtonBlock) { // always scorch buttons
             val newState = scorchPalette.filterIsInstance<ButtonBlock>().random().defaultBlockState()
                 .setValue(ButtonBlock.FACE, originalState.getValue(ButtonBlock.FACE))
 
@@ -815,7 +815,7 @@ class TharZulEntity(
             val entityBox = boundingBox.move(
                 pathEndPos.x - this.x,
                 pathEndPos.y - this.y,
-                pathEndPos.z + 0.5 - this.z
+                pathEndPos.z - this.z
             )
             if (!level().noCollision(this, entityBox)) return@repeat
 
